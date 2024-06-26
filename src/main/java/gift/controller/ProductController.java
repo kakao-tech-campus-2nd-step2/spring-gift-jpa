@@ -33,11 +33,14 @@ public class ProductController {
 
     // 전체 상품 조회
     @GetMapping
-    public List<Product> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
-        validationService.validateProductList(products);
-        return products;
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> allProducts = productService.getAllProducts();
+        if (allProducts.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        }
+        return ResponseEntity.ok(allProducts);
     }
+
 
     // 특정 상품 조회
     @GetMapping("/{product_id}")
