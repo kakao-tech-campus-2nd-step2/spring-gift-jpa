@@ -29,4 +29,8 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return new ArrayList<>(products.values());
     }
+
+    public Product getProduct(Long productId) {
+        return products.get(productId);
+    }
 }
