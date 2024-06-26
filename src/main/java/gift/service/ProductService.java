@@ -18,13 +18,19 @@ public class ProductService {
 
     public Product createProduct(CreateProductDto productDto) {
         Product product = new Product();
+
+        if (productDto.getName() == null || productDto.getDescription() == null || productDto.getPrice() == null) {
+            throw new IllegalArgumentException("상품의 이름, 가격, 설명을 모두 입력해야합니다.");
+        }
         product.setId(id.getAndIncrement());
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
 
         products.put(product.getId(), product);
+
         return product;
+
     }
 
     public List<Product> getAllProducts() {

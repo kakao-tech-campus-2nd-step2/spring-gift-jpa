@@ -4,11 +4,9 @@ import gift.domain.Product;
 import gift.dto.CreateProductDto;
 import gift.dto.UpdateProductDto;
 import gift.service.ProductService;
-import gift.service.ValidationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -17,18 +15,20 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final ValidationService validationService;
 
-    public ProductController(ProductService productService, ValidationService validationService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.validationService = validationService;
     }
 
     // 상품 추가
     @PostMapping
-    public Product createProduct(@RequestBody CreateProductDto productDto) {
-        validationService.validateProductDto(productDto);
-        return productService.createProduct(productDto);
+    public ResponseEntity<Product> createProduct(@RequestBody CreateProductDto productDto) {
+        try{
+            Product product = productService.createProduct(productDto);
+            return ResponseEntity.ok(product);
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     // 전체 상품 조회
