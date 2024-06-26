@@ -60,7 +60,7 @@ public class ProductController {
             Product updatedProduct = productService.updateProduct(product_id, productDto);
             return ResponseEntity.ok(updatedProduct);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
@@ -71,7 +71,7 @@ public class ProductController {
             productService.deleteProduct(product_id);
             return ResponseEntity.ok().build();
         }catch (IllegalArgumentException e){
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 }
