@@ -7,10 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
-
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -24,10 +20,15 @@ public class ProductController {
     // 상품 추가
     @PostMapping
     public Product createProduct(@RequestBody CreateProductDto productDto) {
-        try {
-            return productService.createProduct(productDto);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        validateProductDto(productDto);
+        return productService.createProduct(productDto);
+    }
+
+    // 상품 정보 다 적혔는지 유효성 검사
+    private void validateProductDto(CreateProductDto productDto) {
+        if (productDto.getName() == null || productDto.getPrice() == null || productDto.getDescription() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "상품 정보를 모두 입력해야 합니다.");
         }
     }
+
 }
