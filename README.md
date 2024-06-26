@@ -10,7 +10,7 @@
 
 - [ ] 상품 데이터를 메모리에 저장해야한다.
 
-  - [ ] 상품 데이터를 저장하기 위한 Product class를 생성한다.</br>
+  - [x] 상품 데이터를 저장하기 위한 Product class를 생성한다.</br>
     - id : primary key 상품 데이터를 찾기 위한 data </br>
     - name : 상품명을 저장하기 위한 data </br>
     - price : 상품의 가격을 저장하기 위한 data </br>
