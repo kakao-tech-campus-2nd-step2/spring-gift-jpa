@@ -52,4 +52,13 @@ public class ProductService {
         products.put(productId, product);
         return product;
     }
+
+    public void deleteProduct(Long productId) {
+        Product product = products.get(productId);
+        if (product == null) {
+            throw new IllegalArgumentException("상품이 존재하지 않습니다.");
+        }
+
+        products.remove(productId);
+    }
 }

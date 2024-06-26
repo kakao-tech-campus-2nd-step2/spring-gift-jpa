@@ -60,4 +60,15 @@ public class ProductController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    // 상품 정보 삭제
+    @DeleteMapping("/{product_id}")
+    public ResponseEntity<Product> deleteProduct(@PathVariable Long product_id) {
+        try{
+            productService.deleteProduct(product_id);
+            return ResponseEntity.ok().build();
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }
