@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.domain.Product;
 import gift.dto.CreateProductDto;
+import gift.dto.UpdateProductDto;
 import gift.service.ProductService;
 import gift.service.ValidationService;
 import org.springframework.http.HttpStatus;
@@ -38,11 +39,25 @@ public class ProductController {
         return products;
     }
 
+    // 특정 상품 조회
     @GetMapping("/{product_id}")
     public ResponseEntity<Product> getProduct(@PathVariable Long product_id) {
-        Product product = productService.getProduct(product_id);
-        validationService.validateProduct(product);
-        return ResponseEntity.ok(product);
+        try{
+            Product product = productService.getProduct(product_id);
+            return ResponseEntity.ok(product);
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
+    // 상품 정보 update
+    @PutMapping("/{product_id")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long product_id, @RequestBody UpdateProductDto productDto) {
+        try {
+            Product updatedProduct = productService.updateProduct(product_id, productDto);
+            return ResponseEntity.ok(updatedProduct);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }
