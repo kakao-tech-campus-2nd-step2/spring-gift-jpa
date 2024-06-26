@@ -17,7 +17,7 @@ public class ProductController {
     private final Map<Long, Product> producstRepository = new HashMap<>();
 
     @GetMapping("/products")
-    private Response provideProductAll() {
+    public Response provideProductAll() {
 
         if (producstRepository.isEmpty()) {
             return new Response(200, "현재 모든 물건이 비어있습니다.");
@@ -28,14 +28,12 @@ public class ProductController {
             productList.add(productEntry.getValue());
         }
 
-        return new ListProductResponse(202, "ok", productList);
+        return new ListProductResponse(200, "ok", productList);
     }
 
     @GetMapping("/product")
-    private Response provideProduct(@RequestParam(value = "id",defaultValue = "0x7fffffff") int idInt) {
-        if (idInt == 0x7fffffff) {
-            return new Response(400, "쿼리가 빠졌습니다.");
-        }
+    public Response provideProduct(@RequestParam(value = "id") int idInt) {
+
         Long id = Long.valueOf(idInt);
         Product product = producstRepository.get(id);
 
@@ -48,7 +46,7 @@ public class ProductController {
     }
 
     @PostMapping("/product")
-    private Response AddProduct(@RequestBody HashMap<String, Object> map) {
+    public Response AddProduct(@RequestBody HashMap<String, Object> map) {
         Long id = Long.valueOf((int)map.get("id"));
         if (producstRepository.containsKey(id)){
             return new Response(400, "해당 id값은 이미 존재하는 값입니다.");
@@ -64,7 +62,7 @@ public class ProductController {
     }
 
     @PutMapping("/product")
-    private Response editProduct(@RequestBody HashMap<String, Object> map) {
+    public Response editProduct(@RequestBody HashMap<String, Object> map) {
         Long id = Long.valueOf((int)map.get("id"));
         if (!producstRepository.containsKey(id)){
             return new Response(400, "해당 id값은 존재하지 않습니다.");
@@ -80,10 +78,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/product")
-    private Response deleteProduct(@RequestParam(value = "id",defaultValue = "0x7fffffff") int idInt) {
-        if (idInt == 0x7fffffff) {
-            return new Response(400, "쿼리가 빠졌습니다.");
-        }
+    public Response deleteProduct(@RequestParam(value = "id") int idInt) {
         Long id = Long.valueOf(idInt);
         if (!producstRepository.containsKey(id)) {
             return new Response(400, "해당 id값은 존재하지 않습니다.");
