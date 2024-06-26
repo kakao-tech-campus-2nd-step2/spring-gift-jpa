@@ -15,6 +15,7 @@
     - name : 상품명을 저장하기 위한 data </br>
     - price : 상품의 가격을 저장하기 위한 data </br>
     - description : 상품의 설명을 저장하기 위한 data </br>
+    - imageUrl : 상품의 이미지를 저장하기 위한 data </br>
     
   - [x] 상품 데이터를 저장하기 위한 Map<Long, Product> 객체를 생성한다.
 

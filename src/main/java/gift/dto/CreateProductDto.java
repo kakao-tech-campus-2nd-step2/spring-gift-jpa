@@ -4,6 +4,7 @@ public class CreateProductDto {
     String name;
     String description;
     Integer price;
+    String imageUrl;
 
     public Object getName() {
         return this.name;
@@ -15,5 +16,9 @@ public class CreateProductDto {
 
     public Object getDescription() {
         return this.description;
+    }
+
+    public Object getImageUrl() {
+        return this.imageUrl;
     }
 }

@@ -4,6 +4,7 @@ public class UpdateProductDto {
     String name;
     String description;
     Integer price;
+    String imageUrl;
 
     public Object getName() {
         return this.name;
@@ -15,5 +16,8 @@ public class UpdateProductDto {
 
     public Object getDescription() {
         return this.description;
+    }
+    public Object getImageUrl() {
+        return this.imageUrl;
     }
 }

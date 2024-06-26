@@ -19,13 +19,14 @@ public class ProductService {
     public Product createProduct(CreateProductDto productDto) {
         Product product = new Product();
 
-        if (productDto.getName() == null || productDto.getDescription() == null || productDto.getPrice() == null) {
+        if (productDto.getName() == null || productDto.getDescription() == null || productDto.getPrice() == null || productDto.getImageUrl() == null) {
             throw new IllegalArgumentException("상품의 이름, 가격, 설명을 모두 입력해야합니다.");
         }
         product.setId(id.getAndIncrement());
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
+        product.setImageUrl(productDto.getImageUrl());
 
         products.put(product.getId(), product);
 
@@ -54,6 +55,7 @@ public class ProductService {
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
+        product.setImageUrl(productDto.getImageUrl());
 
         products.put(productId, product);
         return product;

@@ -5,6 +5,7 @@ public class Product {
     String name;
     String description;
     Integer price;
+    String imageUrl;
 
     public void setId(long andIncrement) {
         this.id = andIncrement;
@@ -20,6 +21,10 @@ public class Product {
 
     public void setDescription(Object description) {
         this.description = description.toString();
+    }
+
+    public void setImageUrl(Object imageUrl) {
+        this.imageUrl = imageUrl.toString();
     }
 
     public Long getId() {
