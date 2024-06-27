@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
+@RequestMapping("/rest")
 public class ProductController {
     private final Map<Long, Product> producstRepository = new HashMap<>();
     private final AtomicLong idGenerator = new AtomicLong();
