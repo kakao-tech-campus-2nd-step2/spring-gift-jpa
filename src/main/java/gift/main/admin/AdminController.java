@@ -20,48 +20,49 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 @Controller
+@RequestMapping("/admin")
 public class AdminController {
-    private final Map<Long, Product> producstRepository = new HashMap<>();
+    private final Map<Long, Product> productsRepository = new HashMap<>();
     private final AtomicLong idGenerator = new AtomicLong();
 
 
-    @PostConstruct
+//    @PostConstruct
     public void init() {
         long id = idGenerator.incrementAndGet();
         Product product1 = new Product(id, "test", 300, "url");
-        producstRepository.put(id, product1);
+        productsRepository.put(id, product1);
     }
 
-    @GetMapping({"/admin"})
+    @GetMapping({"","/"})
     public String adminPage(Model model) {
         model.addAttribute("products", getProduct());
         return "product";
     }
 
 
-    @GetMapping("/admin/product")
+    @GetMapping("/product")
     public String provideProduct(@RequestParam(value = "id") long id,Model model) {
-        if (!producstRepository.containsKey(id)) {
+        if (!productsRepository.containsKey(id)) {
             model.addAttribute("messages","해당아이디값은 없습니다.");
             model.addAttribute("products", getProduct());
             return "product";
         }
-        model.addAttribute("seletProduct", producstRepository.get(id));
+        model.addAttribute("seletProduct", productsRepository.get(id));
         model.addAttribute("products", getProduct());
         return "product";
 
     }
 
-    @PostMapping("/admin/product")
+    @PostMapping("/product")
     public String addProduct(@ModelAttribute ProductRequest productRequest,Model model) {
         long id = idGenerator.incrementAndGet();
-        producstRepository.put(id, MapToProductTransformer.convertToProduct(id, productRequest));
+        productsRepository.put(id, MapToProductTransformer.convertToProduct(id, productRequest));
 
         model.addAttribute("products", getProduct());
         return "product";
     }
 
-    @GetMapping("/admin/product/edit")
+    @GetMapping("/product/edit")
     public String editPage(@RequestParam(value = "id") long id, @RequestParam(value = "name") String name, @RequestParam(value = "price") int price, @RequestParam(value = "imageUrl") String imageUrl, Model model) {
 
         Product product = new Product(id, name, price, imageUrl);
@@ -72,26 +73,26 @@ public class AdminController {
     }
 
     //http://localhost:8080/spring-gift/admin/product/admin/product?id=1
-    @PutMapping(value = "/admin/product")
+    @PutMapping(value = "/product")
     public String updateProduct(@RequestParam(value = "id") long id, @ModelAttribute ProductRequest productRequest, Model model){
         System.out.println("id = " + id);
         System.out.println("productRequest = " + productRequest);
-        producstRepository.replace(id, MapToProductTransformer.convertToProduct(id, productRequest));
+        productsRepository.replace(id, MapToProductTransformer.convertToProduct(id, productRequest));
         model.asMap().clear();
         model.addAttribute("products", getProduct());
         return "product";
     }
 
-    @DeleteMapping("/admin/product")
+    @DeleteMapping("/product")
     public String deleteProduct(@RequestParam(value = "id") long id, Model model) {
-        producstRepository.remove(id);
+        productsRepository.remove(id);
         model.addAttribute("products", getProduct());
         return "product";
     }
 
     private List<Product> getProduct() {
         List<Product> productList = new ArrayList<>();
-        for (Map.Entry<Long, Product> productEntry : producstRepository.entrySet()) {
+        for (Map.Entry<Long, Product> productEntry : productsRepository.entrySet()) {
             productList.add(productEntry.getValue());
         }
 
