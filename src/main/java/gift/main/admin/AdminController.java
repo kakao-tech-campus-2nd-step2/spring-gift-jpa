@@ -41,7 +41,7 @@ public class AdminController {
 
 
     @GetMapping("/product")
-    public String provideProduct(@RequestParam(value = "id") long id,Model model) {
+    public String findProduct(@RequestParam(value = "id") long id,Model model) {
         if (!productsRepository.containsKey(id)) {
             model.addAttribute("messages","해당아이디값은 없습니다.");
             model.addAttribute("products", getProduct());
@@ -63,22 +63,15 @@ public class AdminController {
     }
 
     @GetMapping("/product/edit")
-    public String editPage(@RequestParam(value = "id") long id, @RequestParam(value = "name") String name, @RequestParam(value = "price") int price, @RequestParam(value = "imageUrl") String imageUrl, Model model) {
-
-        Product product = new Product(id, name, price, imageUrl);
+    public String editPage(@RequestParam(value = "id") long id, @ModelAttribute ProductRequest productRequest,Model model) {
+        Product product = MapToProductTransformer.convertToProduct(id, productRequest);
         model.addAttribute("product", product);
-
         return "edit";
-
     }
 
-    //http://localhost:8080/spring-gift/admin/product/admin/product?id=1
     @PutMapping(value = "/product")
     public String updateProduct(@RequestParam(value = "id") long id, @ModelAttribute ProductRequest productRequest, Model model){
-        System.out.println("id = " + id);
-        System.out.println("productRequest = " + productRequest);
         productsRepository.replace(id, MapToProductTransformer.convertToProduct(id, productRequest));
-        model.asMap().clear();
         model.addAttribute("products", getProduct());
         return "product";
     }
