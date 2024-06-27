@@ -11,17 +11,26 @@
 </head>
 </head>
 <body>
+<br>
+<br>
 <div class="container">
-<h2>Update Product</h2>
-<form th:action="@{/admin/product(id=${product.id})}" th:object="${product}" method="post">
-    <input type="hidden" name="_method" value="put">
-    <div>
-        <input type="text" id="name" placeholder="물건명" th:field="*{name}" required>
-        <input type="text" id="price" placeholder="가격" th:field="*{price}" required>
-        <input type="text" id="imageUrl" placeholder="이미지 주소" th:field="*{imageUrl}" required>
-        <button type="submit" class="btn btn-primary">등록하기</button>
+    <div class="container">
+        <h2>상품 수정하기</h2>
+        <p>상품을 수정할 수 있습니다.</p>
+    </div>
+    <div class="container">
+        <form th:action="@{/admin/product(id=${product.id})}" th:object="${product}" method="post">
+            <input type="hidden" name="_method" value="put">
+            <div>
+                <input type="text" id="name" placeholder="물건명" th:field="*{name}" required>
+                <input type="number"  id="price" placeholder="가격" th:field="*{price}" required>
+                <input type="text" id="imageUrl" placeholder="이미지 주소" th:field="*{imageUrl}" required>
+                <a href="/admin" class="btn btn-light btn-sm">이전으로 돌아가기</a>
+                <button type="submit" class="btn btn-primary btn-sm">등록하기</button>
+
+            </div>
+        </form>
     </div>
 </div>
-</form>
 </body>
 </html>
