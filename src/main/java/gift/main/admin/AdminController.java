@@ -2,15 +2,12 @@ package gift.main.admin;
 
 import gift.main.dto.ProductRequest;
 import gift.main.entity.Product;
-import gift.main.handler.MapToProductTransformer;
+import gift.main.handler.ProductTransformer;
 import gift.main.repository.ProductDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 
@@ -49,7 +46,7 @@ public class AdminController {
     @PostMapping("/product")
     public String addProduct(@ModelAttribute ProductRequest productRequest,Model model) {
         long id = idGenerator.incrementAndGet();
-        productDao.insertProduct(MapToProductTransformer.convertToProduct(id, productRequest));
+        productDao.insertProduct(ProductTransformer.convertToProduct(id, productRequest));
 
         model.addAttribute("products",  productDao.selectProductAll());
         return "product";
@@ -57,7 +54,7 @@ public class AdminController {
 
     @PutMapping(value = "/product")
     public String updateProduct(@RequestParam(value = "id") long id, @ModelAttribute ProductRequest productRequest, Model model){
-        productDao.updateProduct(id, MapToProductTransformer.convertToProduct(id, productRequest));
+        productDao.updateProduct(id, ProductTransformer.convertToProduct(id, productRequest));
         model.addAttribute("products", productDao.selectProductAll());
         return "product";
     }
@@ -80,7 +77,7 @@ public class AdminController {
 
     @GetMapping("/product/edit")
     public String editPage(@RequestParam(value = "id") long id, @ModelAttribute ProductRequest productRequest,Model model) {
-        Product product = MapToProductTransformer.convertToProduct(id, productRequest);
+        Product product = ProductTransformer.convertToProduct(id, productRequest);
         model.addAttribute("product", product);
         return "edit";
     }
