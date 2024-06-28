@@ -12,9 +12,11 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private final ProductValidation productValidation;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ProductValidation productValidation) {
         this.productRepository = productRepository;
+        this.productValidation = productValidation;
     }
     //private final Map<Long, Product> products = new HashMap<>();
     private final AtomicLong id = new AtomicLong(1);
@@ -22,7 +24,8 @@ public class ProductService {
     public Product createProduct(CreateProductDto productDto) {
         Product product = new Product();
 
-        validateProductDto(productDto);
+        productValidation.validateProductDto(productDto);
+        //validateProductDto(productDto);
 /*        if (productDto.getName() == null || productDto.getDescription() == null || productDto.getPrice() == null || productDto.getImageUrl() == null) {
             throw new IllegalArgumentException("상품의 이름, 가격, 설명을 모두 입력해야합니다.");
         }*/
@@ -44,7 +47,8 @@ public class ProductService {
 
     public Product getProduct(Long productId) {
         Product product = productRepository.findById(productId);
-        validateProductExists(productId);
+        productValidation.validateProductExists(productId, productRepository);
+        //validateProductExists(productId);
 /*        if (product == null) {
             throw new IllegalArgumentException("일치하는 상품이 없습니다.");
         }*/
@@ -53,7 +57,8 @@ public class ProductService {
 
     public Product updateProduct(Long productId, UpdateProductDto productDto) {
         Product product = productRepository.findById(productId);
-        validateProductExists(productId);
+        productValidation.validateProductExists(productId, productRepository);
+        //validateProductExists(productId);
 /*        if (product == null) {
             throw new IllegalArgumentException("일치하는 상품이 없습니다.");
         }*/
@@ -69,7 +74,8 @@ public class ProductService {
 
     public void deleteProduct(Long productId) {
         Product product = productRepository.findById(productId);
-        validateProductExists(productId);
+        productValidation.validateProductExists(productId, productRepository);
+        //validateProductExists(productId);
 /*        if (product == null) {
             throw new IllegalArgumentException("상품이 존재하지 않습니다.");
         }*/
@@ -77,6 +83,7 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
+/*
     private void validateProductDto(CreateProductDto productDto) {
         if (productDto.getName() == null || productDto.getDescription() == null || productDto.getPrice() == null || productDto.getImageUrl() == null) {
             throw new IllegalArgumentException("상품의 이름, 가격, 설명을 모두 입력해야합니다.");
@@ -88,6 +95,7 @@ public class ProductService {
             throw new IllegalArgumentException("일치하는 상품이 없습니다.");
         }
     }
+*/
 
 
 }
