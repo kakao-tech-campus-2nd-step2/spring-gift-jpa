@@ -54,7 +54,7 @@ public class ProductController {
     }
 
     // 상품 정보 update
-    @PutMapping("/{product_id")
+    @PutMapping("/{product_id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long product_id, @RequestBody UpdateProductDto productDto) {
         try {
             Product updatedProduct = productService.updateProduct(product_id, productDto);
