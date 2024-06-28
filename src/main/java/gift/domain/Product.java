@@ -7,6 +7,14 @@ public class Product {
     Integer price;
     String imageUrl;
 
+    public Product(long id, String name, String description, int price, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
     public void setId(long andIncrement) {
         this.id = andIncrement;
     }
@@ -29,5 +37,18 @@ public class Product {
 
     public Long getId() {
         return id;
+    }
+
+    public Object getName() {
+        return name;
+    }
+    public Object getPrice() {
+        return price;
+    }
+    public Object getDescription() {
+        return description;
+    }
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
