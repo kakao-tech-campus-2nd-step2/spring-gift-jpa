@@ -15,6 +15,10 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    public Product() {
+
+    }
+
     public void setId(long andIncrement) {
         this.id = andIncrement;
     }

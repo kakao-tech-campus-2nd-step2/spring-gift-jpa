@@ -3,6 +3,7 @@ package gift.service;
 import gift.domain.Product;
 import gift.dto.CreateProductDto;
 import gift.dto.UpdateProductDto;
+import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,7 +14,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ProductService {
-    private final Map<Long, Product> products = new HashMap<>();
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+    //private final Map<Long, Product> products = new HashMap<>();
     private final AtomicLong id = new AtomicLong(1);
 
     public Product createProduct(CreateProductDto productDto) {
@@ -28,7 +34,7 @@ public class ProductService {
         product.setDescription(productDto.getDescription());
         product.setImageUrl(productDto.getImageUrl());
 
-        products.put(product.getId(), product);
+        productRepository.save(product);
 
         return product;
 
