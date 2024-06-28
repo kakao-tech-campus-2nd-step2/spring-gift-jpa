@@ -68,11 +68,11 @@ public class ProductService {
     }
 
     public void deleteProduct(Long productId) {
-        Product product = products.get(productId);
+        Product product = productRepository.findById(productId);
         if (product == null) {
             throw new IllegalArgumentException("상품이 존재하지 않습니다.");
         }
 
-        products.remove(productId);
+        productRepository.deleteById(productId);
     }
 }
