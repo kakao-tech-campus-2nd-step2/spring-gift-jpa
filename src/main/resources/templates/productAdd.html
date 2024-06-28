@@ -1,0 +1,47 @@
+<!-- ProductAdd.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Add</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+  <h1>Product Add</h1>
+  <a th:href="@{/}" class="btn">Main Page</a>
+</header>
+
+<div class="container">
+  <form th:action="@{/products/add}" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="name">Product Name</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input type="number" id="price" name="price" required>
+    </div>
+    <div class="form-group">
+      <label for="imageUrl">Image URL</label>
+      <input type="text" id="imageUrl" name="imageUrl" required>
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" name="description" required></textarea>
+    </div>
+    <button type="submit" class="btn">Add Product</button>
+  </form>
+</div>
+
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+    <h2>Product Added Successfully!</h2>
+    <a th:href="@{/products/{id}(id=${product.id})}" class="btn">View Product</a>
+  </div>
+</div>
+
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>
