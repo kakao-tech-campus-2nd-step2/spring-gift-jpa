@@ -17,7 +17,7 @@ public class ProductDao {
   public void createProductTable() {
     var sql = """
       create table product(
-        id bigint,
+        id BIGINT AUTO_INCREMENT PRIMARY KEY,
         name varchar(255),
         price bigint,
         imageUrl varchar(255),
@@ -28,10 +28,10 @@ public class ProductDao {
   }
 
   public void insertProduct(Product product) {
-    var sql = "insert into product(id,name,price,imageUrl) values (?,?,?)";
-    jdbcTemplate.update(sql, product.getId(), product.getName(), product.getPrice(),
-      product.getImageUrl());
+    var sql = "insert into product(name,price,imageUrl) values (?,?,?)";
+    jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl());
   }
+
 
   public Product selectProduct(long id) {
     var sql = "select * from product where id=?";

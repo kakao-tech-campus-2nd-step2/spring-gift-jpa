@@ -3,26 +3,24 @@ package gift;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/products")
 public class ProductAdminController {
 
-  private final ProductService productService;
+  private final ProductDao productDao;
 
   @Autowired
-  public ProductAdminController(ProductService productService) {
-    this.productService = productService;
+  public ProductAdminController(ProductDao productDao) {
+    this.productDao = productDao;
   }
 
   @GetMapping
   public String listProducts(Model model) {
-    model.addAttribute("products", productService.getAllProducts());
+    model.addAttribute("products", productDao.selectAllProducts());
     return "product-list";
   }
 
@@ -34,30 +32,30 @@ public class ProductAdminController {
 
   @PostMapping("/add")
   public String addProduct(@ModelAttribute Product product) {
-    productService.addProduct(product);
+    productDao.insertProduct(product);
     return "redirect:/products";
   }
 
   @GetMapping("/edit/{id}")
   public String editProductForm(@PathVariable Long id, Model model) {
-    Product product = productService.getProductById(id);
+    Product product = productDao.selectProduct(id);
     if (product != null) {
       model.addAttribute("product", product);
       return "product-form";
     }
     return "redirect:/products";
-
   }
 
   @PostMapping("/edit/{id}")
   public String updateProduct(@PathVariable Long id, @ModelAttribute Product product) {
-    productService.updateProduct(id, product);
+    product.setId(id); // Ensure the ID is set to the existing product ID
+    productDao.updateProduct(product);
     return "redirect:/products";
   }
 
   @PostMapping("/delete/{id}")
   public String deleteProduct(@PathVariable Long id) {
-    productService.deleteProduct(id);
+    productDao.deleteProduct(id);
     return "redirect:/products";
   }
 }
