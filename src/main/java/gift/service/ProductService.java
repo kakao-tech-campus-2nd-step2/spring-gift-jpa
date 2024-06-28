@@ -53,7 +53,7 @@ public class ProductService {
     }
 
     public Product updateProduct(Long productId, UpdateProductDto productDto) {
-        Product product = products.get(productId);
+        Product product = productRepository.findById(productId);
         if (product == null) {
             throw new IllegalArgumentException("일치하는 상품이 없습니다.");
         }
@@ -63,7 +63,7 @@ public class ProductService {
         product.setDescription(productDto.getDescription());
         product.setImageUrl(productDto.getImageUrl());
 
-        products.put(productId, product);
+        productRepository.update(product);
         return product;
     }
 
