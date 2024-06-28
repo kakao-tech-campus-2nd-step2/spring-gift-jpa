@@ -5,11 +5,7 @@ import gift.dto.CreateProductDto;
 import gift.dto.UpdateProductDto;
 import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Service
