@@ -7,15 +7,6 @@ public class Product {
     private int price;
     private String imageUrl;
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", imageUrl='" + imageUrl + '\'' +
-                '}';
-    }
 
     public long getId() {
         return id;
