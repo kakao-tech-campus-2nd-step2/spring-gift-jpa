@@ -13,7 +13,10 @@ public class ProductDao {
   public ProductDao(JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
   }
-
+  public void dropProductTable() {
+    var sql = "DROP TABLE product";
+    jdbcTemplate.execute(sql);
+  }
   public void createProductTable() {
     var sql = """
       create table product(
