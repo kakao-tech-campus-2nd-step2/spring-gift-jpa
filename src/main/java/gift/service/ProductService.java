@@ -45,11 +45,11 @@ public class ProductService {
     }
 
     public Product getProduct(Long productId) {
-        Product product = products.get(productId);
+        Product product = productRepository.findById(productId);
         if (product == null) {
             throw new IllegalArgumentException("일치하는 상품이 없습니다.");
         }
-        return products.get(productId);
+        return product;
     }
 
     public Product updateProduct(Long productId, UpdateProductDto productDto) {
