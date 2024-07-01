@@ -1,6 +1,7 @@
 package gift;
 
 import jakarta.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,9 @@ public class ProductController {
 
   @GetMapping
   public List<Product> getAllProducts() {
-    return productDao.selectAllProducts();
+    List<Product> productDTO = new ArrayList<Product>();
+    productDTO=productDao.selectAllProducts();
+    return productDTO;
   }
 
   @GetMapping("/get/{id}")
@@ -59,7 +62,6 @@ public class ProductController {
       return ResponseEntity.ok(updatedProduct);
     }
     return ResponseEntity.notFound().build();
-
   }
 
   @DeleteMapping("delete/{id}")
