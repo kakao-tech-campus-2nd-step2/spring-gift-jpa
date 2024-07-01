@@ -25,10 +25,6 @@ public class ProductController {
     this.productDao = productDao;
   }
 
-  @PostConstruct
-  public void init() {
-    productDao.createProductTable();
-  }
 
   @GetMapping
   public List<Product> getAllProducts() {

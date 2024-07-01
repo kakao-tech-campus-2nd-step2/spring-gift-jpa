@@ -19,18 +19,6 @@ public class ProductDao {
     jdbcTemplate.execute(sql);
   }
 
-  public void createProductTable() {
-    var sql = """
-      create table product(
-        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-        name varchar(255),
-        price bigint,
-        imageUrl varchar(255),
-        primary key (id)
-      )
-      """;
-    jdbcTemplate.execute(sql);
-  }
 
   public void insertProduct(Product product) {
     var sql = "insert into product(name,price,imageUrl) values (?,?,?)";
