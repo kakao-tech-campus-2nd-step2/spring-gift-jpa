@@ -33,7 +33,7 @@ public class ProductController {
     return productDTO;
   }
 
-  @GetMapping("/get/{id}")
+  @GetMapping("/{id}")
   public ResponseEntity<Product> getProductById(@PathVariable Long id) {
     Product product = productDao.selectProduct(id);
     if (product != null) {
@@ -42,13 +42,13 @@ public class ProductController {
     return ResponseEntity.notFound().build();
   }
 
-  @PostMapping("/add")
+  @PostMapping
   public Product addProduct(@RequestBody Product product) {
     productDao.insertProduct(product);
     return product;
   }
 
-  @PutMapping("update/{id}")
+  @PutMapping("/{id}")
   public ResponseEntity<Product> updateProduct(@PathVariable Long id,
     @RequestBody Product updatedProduct) {
     Product existingProduct = productDao.selectProduct(id);
@@ -60,7 +60,7 @@ public class ProductController {
     return ResponseEntity.notFound().build();
   }
 
-  @DeleteMapping("delete/{id}")
+  @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
     Product existingProduct = productDao.selectProduct(id);
     if (existingProduct != null) {
