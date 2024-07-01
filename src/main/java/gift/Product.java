@@ -4,7 +4,7 @@ public class Product {
   private Long id;
   private String name;
   private int price;
-  private String imageUrl; // 새로 추가된 필드
+  private String imageUrl;
 
   public Product() {}
 

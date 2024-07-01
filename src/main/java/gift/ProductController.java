@@ -54,7 +54,7 @@ public class ProductController {
     @RequestBody Product updatedProduct) {
     Product existingProduct = productDao.selectProduct(id);
     if (existingProduct != null) {
-      updatedProduct.setId(id); // Ensure the ID is set to the existing product ID
+      updatedProduct.setId(id);
       productDao.updateProduct(updatedProduct);
       return ResponseEntity.ok(updatedProduct);
     }

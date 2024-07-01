@@ -17,6 +17,7 @@ public class ProductDao {
     var sql = "DROP TABLE product";
     jdbcTemplate.execute(sql);
   }
+
   public void createProductTable() {
     var sql = """
       create table product(

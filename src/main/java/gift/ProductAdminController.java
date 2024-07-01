@@ -30,13 +30,13 @@ public class ProductAdminController {
     return "product-form";
   }
 
-  @PostMapping("/add")
+  @PostMapping
   public String addProduct(@ModelAttribute Product product) {
     productDao.insertProduct(product);
     return "redirect:/products";
   }
 
-  @GetMapping("/edit/{id}")
+  @GetMapping("product/{id}")
   public String editProductForm(@PathVariable Long id, Model model) {
     Product product = productDao.selectProduct(id);
     if (product != null) {
@@ -46,14 +46,14 @@ public class ProductAdminController {
     return "redirect:/products";
   }
 
-  @PostMapping("/edit/{id}")
+  @PostMapping("product/{id}")
   public String updateProduct(@PathVariable Long id, @ModelAttribute Product product) {
-    product.setId(id); // Ensure the ID is set to the existing product ID
+    product.setId(id);
     productDao.updateProduct(product);
     return "redirect:/products";
   }
 
-  @PostMapping("/delete/{id}")
+  @PostMapping("/{id}")
   public String deleteProduct(@PathVariable Long id) {
     productDao.deleteProduct(id);
     return "redirect:/products";
