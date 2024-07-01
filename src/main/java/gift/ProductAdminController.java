@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/products")
+@RequestMapping("admin/products")
 public class ProductAdminController {
 
   private final ProductDao productDao;
