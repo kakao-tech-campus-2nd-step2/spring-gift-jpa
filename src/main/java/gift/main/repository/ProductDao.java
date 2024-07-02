@@ -17,7 +17,7 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long createNewID(){
+    private long createNewID(){
         long id = idGenerator.incrementAndGet();
         return id;
     }
