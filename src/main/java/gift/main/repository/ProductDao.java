@@ -6,13 +6,22 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
 @Repository
 public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
+    private final AtomicLong idGenerator = new AtomicLong();
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    public long createNewID(){
+        long id = idGenerator.incrementAndGet();
+        return id;
+    }
+
 
     public void createProductTable() {
         String sql = "CREATE TABLE IF NOT EXISTS products (" +
