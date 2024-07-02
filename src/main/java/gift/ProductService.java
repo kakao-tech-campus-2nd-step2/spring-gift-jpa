@@ -1,43 +1,50 @@
 package gift;
 
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 @Service
 public class ProductService {
-  private final Map<Long, Product> products = new HashMap<>();
-  private Long nextId = 1L;
+  private final ProductDao productDao;
+  public ProductService(ProductDao productDao){
+    this.productDao=productDao;
+  }
 
   public List<Product> getAllProducts() {
-    return new ArrayList<>(products.values());
+    List<Product> productDtos = productDao.selectAllProducts();
+    return productDtos;
   }
 
   public Product getProductById(Long id) {
-    return products.get(id);
+    return productDao.selectProduct(id);
+
   }
 
   public Product addProduct(Product product) {
-    product.setId(nextId++);
-    products.put(product.getId(), product);
+    productDao.insertProduct(product);
     return product;
   }
-
   public Product updateProduct(Long id, Product updatedProduct) {
-    Product existingProduct = products.get(id);
-    if (existingProduct != null) {
-      existingProduct.setName(updatedProduct.getName());
-      existingProduct.setPrice(updatedProduct.getPrice());
-      existingProduct.setImageUrl(updatedProduct.getImageUrl());
-      return existingProduct;
+    Product existingProduct = productDao.selectProduct(id);
+    if (existingProduct!=null){
+      updatedProduct.setId(id);
+      productDao.updateProduct(updatedProduct);
     }
-    return null;
+    return existingProduct;
   }
 
-  public Product deleteProduct(Long id) {
-    return products.remove(id);
+  public Product deleteProduct(@PathVariable Long id) {
+    Product existingProduct = productDao.selectProduct(id);
+    if (existingProduct != null) {
+      productDao.deleteProduct(id);
+    }
+    return existingProduct;
+  }
+
+  //테스트를 위한 함수
+  public void dropProductTable(){
+    productDao.dropProductTable();
   }
 }

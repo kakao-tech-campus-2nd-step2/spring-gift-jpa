@@ -27,19 +27,18 @@ public class ProductControllerTest {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
-  @Autowired
-  private ProductDao productDao;
+  private ProductService productService;
 
   private ProductController productController;
 
   @BeforeEach
   public void setUp() {
-    productController = new ProductController(productDao);
+    productController = new ProductController(productService);
   }
 
   @AfterEach
   public void tearDown() {
-    productDao.dropProductTable();
+    productService.dropProductTable();
   }
 
   @Test

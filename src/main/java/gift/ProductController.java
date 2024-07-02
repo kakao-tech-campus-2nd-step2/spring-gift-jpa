@@ -18,21 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 public class ProductController {
 
-  private final ProductDao productDao;
+  private final ProductService productService;
 
-  public ProductController(ProductDao productDao) {
-    this.productDao = productDao;
+  public ProductController(ProductService productService) {
+    this.productService = productService;
   }
 
   @GetMapping
   public List<Product> getAllProducts() {
-    List<Product> productDtos = productDao.selectAllProducts();
-    return productDtos;
+    return productService.getAllProducts();
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-    Product product = productDao.selectProduct(id);
+    Product product = productService.getProductById(id);
     if (product == null) {
       return ResponseEntity.notFound().build();
     }
@@ -41,29 +40,25 @@ public class ProductController {
 
   @PostMapping
   public Product addProduct(@RequestBody Product product) {
-    productDao.insertProduct(product);
-    return product;
+    return productService.addProduct(product);
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<Product> updateProduct(@PathVariable Long id,
     @RequestBody Product updatedProduct) {
-    Product existingProduct = productDao.selectProduct(id);
-    if (existingProduct != null) {
-      updatedProduct.setId(id);
-      productDao.updateProduct(updatedProduct);
-      return ResponseEntity.ok(updatedProduct);
+    Product existingProduct = productService.updateProduct(id,updatedProduct);
+    if (existingProduct == null) {
+      return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.notFound().build();
+    return ResponseEntity.ok(updatedProduct);
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-    Product existingProduct = productDao.selectProduct(id);
-    if (existingProduct != null) {
-      productDao.deleteProduct(id);
-      return ResponseEntity.noContent().build();
+    Product existingProduct = productService.deleteProduct(id);
+    if (existingProduct == null) {
+      return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.notFound().build();
+    return ResponseEntity.noContent().build();
   }
 }
