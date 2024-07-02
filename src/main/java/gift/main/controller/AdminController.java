@@ -1,4 +1,4 @@
-package gift.main.admin;
+package gift.main.controller;
 
 import gift.main.dto.ProductRequest;
 import gift.main.entity.Product;
