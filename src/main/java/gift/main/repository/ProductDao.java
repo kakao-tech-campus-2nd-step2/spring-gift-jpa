@@ -1,5 +1,6 @@
 package gift.main.repository;
 
+import gift.main.dto.ProductDto;
 import gift.main.entity.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -60,19 +61,28 @@ public class ProductDao {
         }
     }
 
-    public void insertProduct(Product product) {
+    public void insertProduct(ProductDto productDto) {
+        Long id = createNewID();
+
         String sql = "INSERT INTO products (id, name, price, image_url) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        jdbcTemplate.update(sql, id, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
     }
 
-    public void updateProduct(Product product) {
-        Long id = createNewID();
+    public void updateProduct(long id, ProductDto productDto) {
         String sql = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
+        jdbcTemplate.update(sql, productDto.getName(), productDto.getPrice(), productDto.getImageUrl(), id);
     }
 
     public void deleteProduct(Long id) {
         String sql = "DELETE FROM products WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    public boolean existsProduct(long id) {
+        String sql = "SELECT COUNT(*) FROM products WHERE id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count > 0;
+    }
+
+
 }

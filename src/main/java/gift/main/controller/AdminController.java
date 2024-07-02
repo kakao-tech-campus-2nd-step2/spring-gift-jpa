@@ -4,28 +4,29 @@ import gift.main.dto.ProductRequest;
 import gift.main.entity.Product;
 import gift.main.handler.ProductTransformer;
 import gift.main.repository.ProductDao;
+import gift.main.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.concurrent.atomic.AtomicLong;
 
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    private final ProductDao productDao;
-    private final AtomicLong idGenerator = new AtomicLong();
+//    private final ProductDao productDao;
+    private final ProductService productService;
 
-    public AdminController(ProductDao productDao) {
+
+    public AdminController(ProductDao productDao, ProductService productService) {
         this.productDao = productDao;
+        this.productService = productService;
         productDao.createProductTable();
     }
 
 
     @GetMapping({"","/"})
     public String adminPage(Model model) {
-        model.addAttribute("products", productDao.selectProductAll());
+        model.addAttribute("products", productService.getProducts());
         return "product";
     }
 
@@ -34,46 +35,37 @@ public class AdminController {
     public String findProduct(@RequestParam(value = "id") long id,Model model) {
         if (productDao.selectProduct(id)==null) {
             model.addAttribute("messages","해당아이디값은 없습니다.");
-            model.addAttribute("products",productDao.selectProductAll());
+            model.addAttribute("products", productService.getProducts());
             return "product";
         }
         model.addAttribute("seletProduct", productDao.selectProduct(id));
-        model.addAttribute("products", productDao.selectProductAll());
+        model.addAttribute("products", productService.getProducts());
         return "product";
 
     }
 
     @PostMapping("/product")
     public String addProduct(@ModelAttribute ProductRequest productRequest,Model model) {
-        long id = idGenerator.incrementAndGet();
-        productDao.insertProduct(ProductTransformer.convertToProduct(id, productRequest));
-
-        model.addAttribute("products",  productDao.selectProductAll());
+        productService.addProduct(productRequest);
+        model.addAttribute("products", productService.getProducts());
         return "product";
     }
 
     @PutMapping(value = "/product")
     public String updateProduct(@RequestParam(value = "id") long id, @ModelAttribute ProductRequest productRequest, Model model){
         productDao.updateProduct(id, ProductTransformer.convertToProduct(id, productRequest));
-        model.addAttribute("products", productDao.selectProductAll());
+        model.addAttribute("products", productService.getProducts());
         return "product";
     }
 
     @DeleteMapping("/product")
     public String deleteProduct(@RequestParam(value = "id") long id, Model model) {
         productDao.deleteProduct(id);
-        model.addAttribute("products", productDao.selectProductAll());
+        model.addAttribute("products", productService.getProducts());
         return "product";
     }
 
-//    private List<Product> getProduct() {
-//        List<Product> productList = new ArrayList<>();
-//        for (Map.Entry<Long, Product> productEntry : productsRepository.entrySet()) {
-//            productList.add(productEntry.getValue());
-//        }
-//
-//        return productList;
-//    }
+
 
     @GetMapping("/product/edit")
     public String editPage(@RequestParam(value = "id") long id, @ModelAttribute ProductRequest productRequest,Model model) {
