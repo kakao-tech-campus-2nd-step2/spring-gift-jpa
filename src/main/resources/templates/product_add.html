@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Add Page</title>
+    <link rel="stylesheet" th:href="@{/css/product_add.css}">
+</head>
+<body>
+<h1>Add Product</h1>
+<div>
+    <div>
+        <label for="name">Product Name:</label>
+        <input type="text" id="name" />
+    </div>
+    <div>
+        <label for="price">Price:</label>
+        <input type="number" id="price" />
+    </div>
+    <div>
+        <label for="imageUrl">Image URL:</label>
+        <input type="text" id="imageUrl" />
+    </div>
+    <div>
+        <button type="submit" id="submit-btn" onclick="add_product()">Add!</button>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function add_product() {
+        const name = document.getElementById("name").value;
+        const price = document.getElementById("price").value;
+        const imageUrl = document.getElementById("imageUrl").value;
+
+        if (!name || !price || !imageUrl) {
+            alert("모든 정보를 기입해주세요")
+            return;
+        }
+
+        const body_data = JSON.stringify({
+            name,
+            price,
+            imageUrl
+        });
+
+        fetch('/products', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: body_data
+        }).then(response => {
+            if (response.ok) {
+                alert("상품 추가가 완료되었습니다.")
+                window.location.href = '/';
+            } else {
+                alert('Error: ' + response.statusText);
+            }
+        })
+    }
+</script>
+</body>
+</html>

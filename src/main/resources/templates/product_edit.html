@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Edit Page</title>
+    <link rel="stylesheet" th:href="@{/css/product_edit.css}">
+</head>
+<body>
+<h1>Edit Product</h1>
+<div>
+    <div>
+        <label for="name">Product Name:</label>
+        <input type="text" id="name" th:placeholder="${product.name}"/>
+    </div>
+    <div>
+        <label for="price">Price:</label>
+        <input type="number" id="price" th:placeholder="${product.price}"/>
+    </div>
+    <div>
+        <label for="imageUrl">Image URL:</label>
+        <input type="text" id="imageUrl" th:placeholder="${product.imageUrl}"/>
+    </div>
+    <div>
+        <button type="submit" id="save-btn" th:onclick="'fetch_product(' + ${product.id} + ')'">Edit!</button>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function fetch_product(productId) {
+        const name = document.getElementById("name").value || null;
+        const price = document.getElementById("price").value || null;
+        const imageUrl = document.getElementById("imageUrl").value || null;
+
+        const body_data = JSON.stringify({
+            name,
+            price,
+            imageUrl
+        });
+
+        fetch('/products/' + productId, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: body_data
+        }).then(response => {
+            if (response.ok) {
+                alert("수정이 완료되었습니다.")
+                window.location.href = '/';
+            } else {
+                alert('Error: ' + response.statusText);
+            }
+        })
+    }
+</script>
+</body>
+</html>
+
