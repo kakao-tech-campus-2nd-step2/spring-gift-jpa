@@ -11,7 +11,12 @@ import java.util.List;
 
 @Service
 public class ProductService {
-    private ProductDao productDao;
+    private final ProductDao productDao;
+
+    public ProductService(ProductDao productDao) {
+        this.productDao = productDao;
+    }
+
     public List<Product> getProducts() {
         List<Product> products= productDao.selectProductAll();
         return products;
