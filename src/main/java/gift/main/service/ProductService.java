@@ -29,6 +29,14 @@ public class ProductService {
         deleteProduct(id);
     }
 
+    public void updateProduct(long id, ProductRequest productRequest) {
+        if (!productDao.existsProduct(id)) {
+            throw new IllegalArgumentException("해당 id는 없습니다.");
+        }
+        ProductDto validProduct = ProductValidator.isValidProductDto(productRequest);
+        productDao.updateProduct(id, validProduct);
+    }
+
 
 
 

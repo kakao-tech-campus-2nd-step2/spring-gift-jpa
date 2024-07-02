@@ -53,7 +53,7 @@ public class AdminController {
 
     @PutMapping(value = "/product")
     public String updateProduct(@RequestParam(value = "id") long id, @ModelAttribute ProductRequest productRequest, Model model){
-        productDao.updateProduct(id, ProductTransformer.convertToProduct(id, productRequest));
+        productService.updateProduct(id,productRequest);
         model.addAttribute("products", productService.getProducts());
         return "product";
     }
