@@ -18,7 +18,6 @@ public class AdminController {
 
 
     public AdminController(ProductDao productDao, ProductService productService) {
-        this.productDao = productDao;
         this.productService = productService;
         productDao.createProductTable();
     }
@@ -33,12 +32,8 @@ public class AdminController {
 
     @GetMapping("/product")
     public String findProduct(@RequestParam(value = "id") long id,Model model) {
-        if (productDao.selectProduct(id)==null) {
-            model.addAttribute("messages","해당아이디값은 없습니다.");
-            model.addAttribute("products", productService.getProducts());
-            return "product";
-        }
-        model.addAttribute("seletProduct", productDao.selectProduct(id));
+        Product product = productService.getProduct(id);
+        model.addAttribute("seletProduct", product);
         model.addAttribute("products", productService.getProducts());
         return "product";
 

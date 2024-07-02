@@ -37,6 +37,12 @@ public class ProductService {
         productDao.updateProduct(id, validProduct);
     }
 
+    public Product getProduct(long id) {
+        if (!productDao.existsProduct(id)) {
+            throw new IllegalArgumentException("해당 id는 없습니다.");
+        }
+        return productDao.selectProduct(id);
+    }
 
 
 
