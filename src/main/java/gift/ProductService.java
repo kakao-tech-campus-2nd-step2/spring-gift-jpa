@@ -1,8 +1,10 @@
 package gift;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 @Service
@@ -22,11 +24,11 @@ public class ProductService {
 
   }
 
-  public Product addProduct(Product product) {
+  public Product addProduct(@Valid Product product) throws MethodArgumentNotValidException{
     productDao.insertProduct(product);
     return product;
   }
-  public Product updateProduct(Long id, Product updatedProduct) {
+  public Product updateProduct(Long id, @Valid Product updatedProduct) throws MethodArgumentNotValidException {
     Product existingProduct = productDao.selectProduct(id);
     if (existingProduct!=null){
       updatedProduct.setId(id);

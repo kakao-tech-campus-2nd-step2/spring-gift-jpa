@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @SpringBootTest
 @SpringJUnitConfig(classes = ProductDao.class)
@@ -63,7 +64,7 @@ public class ProductControllerTest {
 
 
   @Test
-  public void testGetProductById() {
+  public void testGetProductById() throws MethodArgumentNotValidException {
     // 제품 추가
     Product product = new Product(1L, "Product 1", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
@@ -84,7 +85,7 @@ public class ProductControllerTest {
   }
 
   @Test
-  public void testAddProduct() {
+  public void testAddProduct() throws MethodArgumentNotValidException {
 
     Product newProduct = new Product(1L, "아이스 카페 아메리카노 T", 4500,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
@@ -101,7 +102,7 @@ public class ProductControllerTest {
   }
 
   @Test
-  void testUpdateProduct() {
+  void testUpdateProduct() throws MethodArgumentNotValidException {
     // 기존 제품 추가
     Product existingProduct = new Product(1L, "아이스 카페 아메리카노 T", 4500,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
@@ -125,7 +126,7 @@ public class ProductControllerTest {
   }
 
   @Test
-  public void testDeleteProduct() {
+  public void testDeleteProduct() throws MethodArgumentNotValidException {
     // 제품 추가
     Product product = new Product(1L, "Product 1", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
