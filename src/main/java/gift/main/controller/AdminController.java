@@ -60,7 +60,7 @@ public class AdminController {
 
     @DeleteMapping("/product")
     public String deleteProduct(@RequestParam(value = "id") long id, Model model) {
-        productDao.deleteProduct(id);
+        productService.deleteProduct(id);
         model.addAttribute("products", productService.getProducts());
         return "product";
     }
