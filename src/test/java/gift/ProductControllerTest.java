@@ -36,11 +36,6 @@ public class ProductControllerTest {
     productController = new ProductController(productService);
   }
 
-  @AfterEach
-  public void tearDown() {
-    productService.dropProductTable();
-  }
-
   @Test
   public void testGetAllProducts() {
     // 제품 추가

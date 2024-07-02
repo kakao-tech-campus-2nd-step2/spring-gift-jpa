@@ -14,11 +14,6 @@ public class ProductDao {
     this.jdbcTemplate = jdbcTemplate;
   }
 
-  public void dropProductTable() {
-    var sql = "DROP TABLE product";
-    jdbcTemplate.execute(sql);
-  }
-
   public void insertProduct(Product product) {
     var sql = "insert into product(name, price, imageUrl) values (?, ?, ?)";
     jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl());

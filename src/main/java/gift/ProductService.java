@@ -43,8 +43,4 @@ public class ProductService {
     return existingProduct;
   }
 
-  //테스트를 위한 함수
-  public void dropProductTable(){
-    productDao.dropProductTable();
-  }
 }
