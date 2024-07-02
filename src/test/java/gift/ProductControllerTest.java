@@ -12,13 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-@JdbcTest
+@SpringBootTest
 @SpringJUnitConfig(classes = ProductDao.class)
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class ProductControllerTest {
@@ -34,7 +35,6 @@ public class ProductControllerTest {
   @BeforeEach
   public void setUp() {
     productController = new ProductController(productDao);
-    productDao.createProductTable();
   }
 
   @AfterEach
@@ -71,7 +71,6 @@ public class ProductControllerTest {
   @Test
   public void testGetProductById() {
     // 제품 추가
-
     Product product = new Product(1L, "Product 1", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
     productController.addProduct(product);

@@ -26,18 +26,17 @@ public class ProductController {
 
   @GetMapping
   public List<Product> getAllProducts() {
-    List<Product> productDTO = new ArrayList<Product>();
-    productDTO=productDao.selectAllProducts();
-    return productDTO;
+    List<Product> productDtos = productDao.selectAllProducts();
+    return productDtos;
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<Product> getProductById(@PathVariable Long id) {
     Product product = productDao.selectProduct(id);
-    if (product != null) {
-      return ResponseEntity.ok(product);
+    if (product == null) {
+      return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.notFound().build();
+    return ResponseEntity.ok(product);
   }
 
   @PostMapping

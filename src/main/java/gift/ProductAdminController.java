@@ -29,10 +29,10 @@ public class ProductAdminController {
     return "product-form";
   }
 
-  @PostMapping
+  @PostMapping("/add")
   public String addProduct(@ModelAttribute Product product) {
     productDao.insertProduct(product);
-    return "redirect:/products";
+    return "redirect:/admin/products";
   }
 
   @GetMapping("product/{id}")
@@ -42,19 +42,19 @@ public class ProductAdminController {
       model.addAttribute("product", product);
       return "product-form";
     }
-    return "redirect:/products";
+    return "redirect:/admin/products";
   }
 
   @PostMapping("product/{id}")
   public String updateProduct(@PathVariable Long id, @ModelAttribute Product product) {
     product.setId(id);
     productDao.updateProduct(product);
-    return "redirect:/products";
+    return "redirect:/admin/products";
   }
 
   @PostMapping("/{id}")
   public String deleteProduct(@PathVariable Long id) {
     productDao.deleteProduct(id);
-    return "redirect:/products";
+    return "redirect:/admin/products";
   }
 }

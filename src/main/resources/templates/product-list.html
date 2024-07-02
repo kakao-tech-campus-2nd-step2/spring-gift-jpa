@@ -3,51 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Product List</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    h1 {
-      color: #333;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
-    td img {
-      max-width: 100px;
-      height: auto;
-      display: block;
-      margin: 0 auto;
-    }
-    .actions {
-      white-space: nowrap;
-    }
-    .actions a, .actions button {
-      margin-right: 5px;
-      padding: 5px 10px;
-      text-decoration: none;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: background-color 0.3s;
-    }
-    .actions a:hover, .actions button:hover {
-      background-color: #45a049;
-    }
-  </style>
+  <link rel="stylesheet" href="product-list.css">
 </head>
 <body>
 <h1>Product List</h1>
@@ -68,8 +24,8 @@
     <td th:text="${product.price}">Price</td>
     <td><img th:src="${product.imageUrl}" alt="Product Image"/></td>
     <td class="actions">
-      <a th:href="@{|/products/edit/${product.id}|}">Edit</a>
-      <form th:action="@{|/products/delete/${product.id}|}" method="post" style="display:inline;">
+      <a th:href="@{|/admin/products/product/${product.id}|}">Edit</a>
+      <form th:action="@{|/admin/products/${product.id}|}" method="post" style="display:inline;">
         <input type="hidden" name="_method" value="delete"/>
         <button type="submit">Delete</button>
       </form>
@@ -77,6 +33,6 @@
   </tr>
   </tbody>
 </table>
-<a href="/products/new" style="display:block; margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 4px;">Add New Product</a>
+<a href="/admin/products/new" style="display:block; margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 4px;">Add New Product</a>
 </body>
 </html>
