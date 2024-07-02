@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 수정</title>
+  <link rel="stylesheet" th:href="@{/stylesheet.css}">
+</head>
+<body>
+<h1>상품 수정</h1>
+<form th:action="@{'/admin/products/' + ${product.id}}" method="post" th:object="${product}">
+  <input type="hidden" name="_method" value="put">
+  <label>이름: <input type="text" th:field="*{name}" /></label><br />
+  <label>가격: <input type="number" th:field="*{price}" /></label><br />
+  <label>이미지 URL: <input type="text" th:field="*{imageUrl}" /></label><br />
+  <button type="submit">수정</button>
+</form>
+</body>
+</html>
