@@ -26,7 +26,7 @@ public class ProductService {
         if (!productDao.existsProduct(id)) {
             throw new IllegalArgumentException("해당 id는 없습니다.");
         }
-        deleteProduct(id);
+        productDao.deleteProduct(id);
     }
 
     public void updateProduct(long id, ProductRequest productRequest) {
@@ -41,3 +41,4 @@ public class ProductService {
 
 
 }
+
