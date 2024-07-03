@@ -15,15 +15,15 @@ import java.util.List;
 @RequestMapping("admin/products")
 public class ProductAdminController {
 
-  private final ProductDao productDao;
+  private final ProductService productService;
 
-  public ProductAdminController(ProductDao productDao) {
-    this.productDao = productDao;
+  public ProductAdminController(ProductService productService) {
+    this.productService = productService;
   }
 
   @GetMapping
   public String listProducts(Model model) {
-    model.addAttribute("products", productDao.selectAllProducts());
+    model.addAttribute("products", productService.getAllProducts());
     return "product-list";
   }
 
@@ -34,14 +34,14 @@ public class ProductAdminController {
   }
 
   @PostMapping("/add")
-  public String addProduct(@Valid @ModelAttribute Product product) throws MethodArgumentNotValidException{
-    productDao.insertProduct(product);
+  public String addProduct(@Valid @ModelAttribute Product product){
+    productService.addProduct(product);
     return "redirect:/admin/products";
   }
 
   @GetMapping("product/{id}")
   public String editProductForm(@PathVariable Long id, Model model) {
-    Product product = productDao.selectProduct(id);
+    Product product = productService.getProductById(id);
     if (product != null) {
       model.addAttribute("product", product);
       return "product-form";
@@ -50,15 +50,14 @@ public class ProductAdminController {
   }
 
   @PostMapping("product/{id}")
-  public String updateProduct(@PathVariable Long id,@Valid @ModelAttribute Product product) throws MethodArgumentNotValidException {
-    product.setId(id);
-    productDao.updateProduct(product);
+  public String updateProduct(@PathVariable Long id,@Valid @ModelAttribute Product product)  {
+    productService.updateProduct(id,product);
     return "redirect:/admin/products";
   }
 
   @PostMapping("/{id}")
   public String deleteProduct(@PathVariable Long id) {
-    productDao.deleteProduct(id);
+    productService.deleteProduct(id);
     return "redirect:/admin/products";
   }
 }

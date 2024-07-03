@@ -3,7 +3,6 @@ package gift;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,12 +37,12 @@ public class ProductController {
   }
 
   @PostMapping
-  public Product addProduct(@Valid @RequestBody Product product) throws MethodArgumentNotValidException {
+  public Product addProduct(@Valid @RequestBody Product product) {
     return productService.addProduct(product);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody Product updatedProduct) throws MethodArgumentNotValidException
+  public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody Product updatedProduct)
   {
     Product existingProduct = productService.updateProduct(id,updatedProduct);
     if (existingProduct == null) {

@@ -25,12 +25,12 @@ public class ProductService {
 
   }
 
-  public Product addProduct(@Valid Product product) throws MethodArgumentNotValidException{
+  public Product addProduct(@Valid Product product){
     productDao.insertProduct(product);
     return product;
   }
   
-  public Product updateProduct(Long id, @Valid Product updatedProduct) throws MethodArgumentNotValidException {
+  public Product updateProduct(Long id, @Valid Product updatedProduct) {
     Product existingProduct = productDao.selectProduct(id);
     if (existingProduct!=null){
       updatedProduct.setId(id);
