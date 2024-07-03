@@ -19,7 +19,7 @@ public class ProductValidator {
         }
         String validName = productRequest.name();
 
-        if(productRequest.price()>=0){
+        if(productRequest.price()<0){
             throw new IllegalArgumentException("가격은 음수일수 없습니다");
         }
         int validPrice = productRequest.price();
