@@ -22,7 +22,7 @@ public class ProductService {
     private final AtomicLong id = new AtomicLong(1);
 
     public Product createProduct(CreateProductDto productDto) {
-        Product product = new Product();
+        Product product = new Product(id.getAndIncrement(), productDto.getName(), productDto.getDescription(), productDto.getPrice(), productDto.getImageUrl());
 
         productValidation.validateProductDto(productDto);
         //validateProductDto(productDto);

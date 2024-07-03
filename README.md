@@ -142,15 +142,16 @@
   - 통합 테스트를 통한 전체 시스템 검증
 
 ## 나중에 시도해볼 것
-- [] 성능 및 효율성 고려
-  - [] 데이터베이스 연결 및 쿼리 실행 최적화
-  - [] 필요한 경우 인덱스 생성 등의 성능 향상 방안 고려
+- [ ] 성능 및 효율성 고려
+  - [ ] 데이터베이스 연결 및 쿼리 실행 최적화
+  - [ ] 필요한 경우 인덱스 생성 등의 성능 향상 방안 고려
 
 ---
 ## 피드백 반영
 
-- [] Product.java 에서 빈 생성자를 사용하지 않는데 만든 이유
-- [] UpdateProductDto 에서 objectType을 사용한 이유
-- [] Validation 주석 지우기
-- [] JdbcProductRepository.java에서 SimpleJdbcInsert 사용해보기
-- [] ProductService에서 불필요한 주석 지우기
+- [x] Product.java 에서 빈 생성자를 사용하지 않는데 만든 이유
+  - [x] ProductService의 CreateProduct에서 빈 class를 만든 다음, 거기에 넣는 식으로 했는데 말씀해주신대로 생각해보니 생성자를 만들면서 값을 바로 설정해줄 수 있어서 그렇게 수정하였습니다.
+- [ ] UpdateProductDto 에서 objectType을 사용한 이유
+- [ ] Validation 주석 지우기
+- [ ] JdbcProductRepository.java에서 SimpleJdbcInsert 사용해보기
+- [ ] ProductService에서 불필요한 주석 지우기
