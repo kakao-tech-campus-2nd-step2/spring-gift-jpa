@@ -145,3 +145,12 @@
 - [] 성능 및 효율성 고려
   - [] 데이터베이스 연결 및 쿼리 실행 최적화
   - [] 필요한 경우 인덱스 생성 등의 성능 향상 방안 고려
+
+---
+## 피드백 반영
+
+- [] Product.java 에서 빈 생성자를 사용하지 않는데 만든 이유
+- [] UpdateProductDto 에서 objectType을 사용한 이유
+- [] Validation 주석 지우기
+- [] JdbcProductRepository.java에서 SimpleJdbcInsert 사용해보기
+- [] ProductService에서 불필요한 주석 지우기
