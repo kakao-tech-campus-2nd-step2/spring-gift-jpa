@@ -1,7 +1,7 @@
-package gift.presentation;
+package gift.product.presentation;
 
-import gift.application.ProductService;
-import gift.domain.Product;
+import gift.product.application.ProductService;
+import gift.product.domain.Product;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

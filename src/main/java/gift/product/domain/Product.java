@@ -1,4 +1,4 @@
-package gift.domain;
+package gift.product.domain;
 
 public record Product(Long id, String name, Double price, String imageUrl) {
 

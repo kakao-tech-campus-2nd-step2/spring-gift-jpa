@@ -1,6 +1,6 @@
-package gift.infra;
+package gift.product.infra;
 
-import gift.domain.Product;
+import gift.product.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
