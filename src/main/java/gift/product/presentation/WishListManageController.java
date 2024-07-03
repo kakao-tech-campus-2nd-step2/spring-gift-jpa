@@ -3,6 +3,10 @@ package gift.product.presentation;
 import gift.product.application.ProductService;
 import gift.product.domain.Product;
 import gift.util.CommonResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +34,7 @@ public class WishListManageController {
 
     @PostMapping("")
     public ResponseEntity<CommonResponse<Long>> addProduct(
-        @RequestBody CreateProductRequestDTO createProductRequestDTO) {
+        @Valid @RequestBody CreateProductRequestDTO createProductRequestDTO) {
         Long productId = productService.addProduct(createProductRequestDTO);
         return ResponseEntity.ok(new CommonResponse<>(productId, "상품이 정상적으로 추가 되었습니다", true));
     }
@@ -41,7 +45,30 @@ public class WishListManageController {
         return ResponseEntity.ok(new CommonResponse<>(null, "상품이 정상적으로 삭제 되었습니다", true));
     }
 
-    public record CreateProductRequestDTO(String name, Double price, String imageUrl) {
 
+    public class CreateProductRequestDTO {
+
+        private static final int MAX_INPUT_LENGTH = 255;
+
+        @NotBlank(message = "이름은 필수 입력 값입니다")
+        private String name;
+
+        @NotNull(message = "가격은 필수 입력 값입니다.")
+        private Double price;
+
+        @Size(max = MAX_INPUT_LENGTH, message = "이미지 URL은 255자를 넘을 수 없습니다.")
+        private String imageUrl;
+
+        public String getName() {
+            return name;
+        }
+
+        public Double getPrice() {
+            return price;
+        }
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
     }
 }

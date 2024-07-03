@@ -15,11 +15,12 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
     private static final int MAX_PRODUCT_NAME_LENGTH = 15;
+    private static final String RESERVED_KEYWORD = "카카오";
 
 
     public Long addProduct(CreateProductRequestDTO createProductRequestDTO) {
-        Product product = new Product(createProductRequestDTO.name(), createProductRequestDTO.price(),
-            createProductRequestDTO.imageUrl());
+        Product product = new Product(createProductRequestDTO.getName(), createProductRequestDTO.getPrice(),
+            createProductRequestDTO.getImageUrl());
         System.out.println("product: " + product.name() + " " + product.price() + " " + product.imageUrl());
         validateProduct(product);
         return productRepository.addProduct(product);
@@ -45,6 +46,10 @@ public class ProductService {
         }
         if (name.length() > MAX_PRODUCT_NAME_LENGTH) {
             throw new ProductException(ErrorCode.NAME_TOO_LONG);
+        }
+
+        if (name.contains(RESERVED_KEYWORD)) {
+            throw new ProductException(ErrorCode.NAME_HAS_RESTRICTED_WORD);
         }
     }
 
