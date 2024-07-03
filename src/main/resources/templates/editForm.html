@@ -10,6 +10,10 @@
     .container {
       max-width: 560px;
     }
+    .field-error {
+      border-color: #dc3545;
+      color: #dc3545;
+    }
   </style>
 </head>
 <body>
@@ -18,20 +22,34 @@
   <div class="py-5 text-center">
     <h2>상품 수정</h2>
   </div>
-  <form action="products.html" th:action method="post">
+  <form action="products.html" th:action th:object="${product}" method="post">
     <div>
       <label for="id">상품 ID</label>
-      <input type="text" id="id" name="id" class="form-control" value="1"
-             th:value="${product.id}" readonly>
-    </div> <div>
-    <label for="name">상품명</label>
-    <input type="text" id="name" name="name" class="form-control" value="상품" th:value="${product.name}">
-  </div> <div>
+      <input type="text" id="id" th:field="*{id}" class="form-control" readonly>
+    </div>
+    <div>
+      <label for="name">상품명</label>
+      <input type="text" id="name" th:field="*{name}"
+             th:errorclass="field-error" class="form-control">
+    <div class="field-error" th:errors="*{name}">
+      상품명 오류
+    </div>
+  </div>
+    <div>
     <label for="price">가격</label>
-    <input type="text" id="price" name="price" class="form-control" th:value="${product.price}">
-  </div> <div>
+    <input type="text" id="price" th:field="*{price}"
+           th:errorclass="field-error" class="form-control">
+    <div class="field-error" th:errors="*{price}">
+      상품 가격 오류
+    </div>
+    </div>
+    <div>
     <label for="imageUrl">이미지 링크</label>
-    <input type="text" id="imageUrl" name="imageUrl" class="form-control" th:value="${product.imageUrl}">
+    <input type="text" id="imageUrl" th:field="*{imageUrl}"
+           th:errorclass="field-error" class="form-control">
+    <div class="field-error" th:errors="*{imageUrl}">
+      상품 url 오류
+    </div>
   </div>
     <hr class="my-4">
     <div class="row">
