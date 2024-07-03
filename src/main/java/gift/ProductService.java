@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+
 @Service
 public class ProductService {
   private final ProductDao productDao;
@@ -28,6 +29,7 @@ public class ProductService {
     productDao.insertProduct(product);
     return product;
   }
+  
   public Product updateProduct(Long id, @Valid Product updatedProduct) throws MethodArgumentNotValidException {
     Product existingProduct = productDao.selectProduct(id);
     if (existingProduct!=null){
