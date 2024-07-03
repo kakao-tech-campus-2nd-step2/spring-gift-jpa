@@ -1,15 +1,11 @@
-package gift;
+package gift.Controller;
 
+import gift.DTO.ProductDTO;
+import gift.Service.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("admin/products")
@@ -29,29 +25,29 @@ public class ProductAdminController {
 
   @GetMapping("/new")
   public String newProductForm(Model model) {
-    model.addAttribute("product", new Product());
+    model.addAttribute("product", new ProductDTO());
     return "product-form";
   }
 
   @PostMapping("/add")
-  public String addProduct(@Valid @ModelAttribute Product product){
-    productService.addProduct(product);
+  public String addProduct(@Valid @ModelAttribute ProductDTO productDTO){
+    productService.addProduct(productDTO);
     return "redirect:/admin/products";
   }
 
   @GetMapping("product/{id}")
   public String editProductForm(@PathVariable Long id, Model model) {
-    Product product = productService.getProductById(id);
-    if (product != null) {
-      model.addAttribute("product", product);
+    ProductDTO productDTO = productService.getProductById(id);
+    if (productDTO != null) {
+      model.addAttribute("product", productDTO);
       return "product-form";
     }
     return "redirect:/admin/products";
   }
 
   @PostMapping("product/{id}")
-  public String updateProduct(@PathVariable Long id,@Valid @ModelAttribute Product product)  {
-    productService.updateProduct(id,product);
+  public String updateProduct(@PathVariable Long id,@Valid @ModelAttribute ProductDTO productDTO)  {
+    productService.updateProduct(id, productDTO);
     return "redirect:/admin/products";
   }
 
