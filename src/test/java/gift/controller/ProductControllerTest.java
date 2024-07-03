@@ -18,6 +18,7 @@ import gift.exception.ProductNotFoundException;
 import gift.service.ProductService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -42,6 +43,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("모든 상품 조회")
     public void testGetAllProducts() throws Exception {
         when(productService.getAllProducts()).thenReturn(List.of(productDTO));
 
@@ -51,6 +53,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 ID로 조회")
     public void testGetProductById() throws Exception {
         when(productService.getProductById(1L)).thenReturn(productDTO);
 
@@ -60,6 +63,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 상품 ID로 조회")
     public void testGetProductByIdNotFound() throws Exception {
         when(productService.getProductById(1L)).thenThrow(new ProductNotFoundException("상품을 다음의 id로 찾을 수 없습니다. id: 1"));
 
@@ -69,6 +73,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 추가")
     public void testAddProduct() throws Exception {
         when(productService.addProduct(any(ProductDTO.class))).thenReturn(productDTO);
 
@@ -80,6 +85,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("유효하지 않은 가격으로 상품 추가")
     public void testAddProductInvalidPrice() throws Exception {
         when(productService.addProduct(any(ProductDTO.class))).thenThrow(new InvalidProductPriceException("가격은 0 이상으로 설정되어야 합니다."));
 
@@ -91,6 +97,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 업데이트")
     public void testUpdateProduct() throws Exception {
         when(productService.updateProduct(eq(1L), any(ProductDTO.class))).thenReturn(productDTO);
 
@@ -102,6 +109,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 상품 ID로 업데이트")
     public void testUpdateProductNotFound() throws Exception {
         when(productService.updateProduct(eq(1L), any(ProductDTO.class))).thenThrow(new ProductNotFoundException("상품을 다음의 id로 찾을 수 없습니다. id: 1"));
 
@@ -113,6 +121,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 삭제")
     public void testDeleteProduct() throws Exception {
         doNothing().when(productService).deleteProduct(1L);
 
@@ -121,6 +130,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 상품 ID로 삭제")
     public void testDeleteProductNotFound() throws Exception {
         doNothing().when(productService).deleteProduct(1L);
         doThrow(new ProductNotFoundException("상품을 다음의 id로 찾을 수 없습니다. id: 1")).when(productService).deleteProduct(1L);

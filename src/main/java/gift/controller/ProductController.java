@@ -4,6 +4,7 @@ import gift.dto.ProductDTO;
 import gift.exception.InvalidProductPriceException;
 import gift.exception.ProductNotFoundException;
 import gift.service.ProductService;
+import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,13 +42,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDTO> addProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody ProductDTO productDTO) {
         ProductDTO createdProduct = productService.addProduct(productDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO productDTO) {
         ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
         return ResponseEntity.ok(updatedProduct);
     }

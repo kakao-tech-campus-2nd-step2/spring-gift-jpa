@@ -13,6 +13,7 @@ import gift.exception.InvalidProductPriceException;
 import gift.exception.ProductNotFoundException;
 import gift.model.Product;
 import gift.repository.ProductRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -31,6 +32,7 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("모든 상품 조회")
     public void testGetAllProducts() {
         Product product = new Product(1L, "Test Product", 100, "test.jpg");
         when(productRepository.findAll()).thenReturn(List.of(product));
@@ -41,6 +43,7 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("상품 ID로 조회")
     public void testGetProductById() {
         Product product = new Product(1L, "Test Product", 100, "test.jpg");
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
@@ -50,6 +53,7 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 상품 ID로 조회")
     public void testGetProductByIdNotFound() {
         when(productRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -61,6 +65,7 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("상품 추가")
     public void testAddProduct() {
         Product product = new Product(1L, "Test Product", 100, "test.jpg");
         ProductDTO productDTO = new ProductDTO(null, "Test Product", 100, "test.jpg");
@@ -71,6 +76,7 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("유효하지 않은 가격으로 상품 추가")
     public void testAddProductInvalidPrice() {
         ProductDTO productDTO = new ProductDTO(null, "Test Product", -100, "test.jpg");
 
@@ -82,6 +88,7 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("상품 업데이트")
     public void testUpdateProduct() {
         Product existingProduct = new Product(1L, "Old Product", 100, "old.jpg");
         Product updatedProduct = new Product(1L, "Updated Product", 200, "updated.jpg");
@@ -96,6 +103,7 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 상품 ID로 업데이트")
     public void testUpdateProductNotFound() {
         ProductDTO productDTO = new ProductDTO(1L, "Updated Product", 200, "updated.jpg");
 
@@ -109,6 +117,7 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("상품 삭제")
     public void testDeleteProduct() {
         Product product = new Product(1L, "Test Product", 100, "test.jpg");
         when(productRepository.existsById(1L)).thenReturn(true);
@@ -119,6 +128,7 @@ public class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("존재하지 않는 상품 ID로 삭제")
     public void testDeleteProductNotFound() {
         when(productRepository.findById(1L)).thenReturn(Optional.empty());
 

@@ -32,8 +32,8 @@ public class ProductRepository {
     }
 
     public Product create(Product product) {
-        jdbcTemplate.update("UPDATE products SET name = ?, price = ?, imageUrl = ? WHERE id = ?",
-            product.getName(), product.getPrice(), product.getImageUrl(), product.getId());
+        jdbcTemplate.update("INSERT INTO products (name, price, imageUrl) VALUES (?, ?, ?)",
+            product.getName(), product.getPrice(), product.getImageUrl());
         return product;
     }
 

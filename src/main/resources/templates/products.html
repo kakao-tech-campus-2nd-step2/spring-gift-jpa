@@ -40,7 +40,10 @@
       </td>
       <td>
         <a th:href="@{'/admin/products/' + ${product.id} + '/edit'}" class="btn btn-warning btn-sm">수정</a>
-        <a th:id="|deleteBtn${product.id}|" th:data-id="|${product.id}|" class="btn btn-danger btn-sm deleteBtn">삭제</a>
+        <form th:action="@{'/admin/products/' + ${product.id}}" method="post" style="display:inline">
+          <input type="hidden" name="_method" value="delete">
+          <button type="submit" class="btn btn-danger btn-sm deleteBtn">삭제</button>
+        </form>
       </td>
     </tr>
     </tbody>

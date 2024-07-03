@@ -2,6 +2,7 @@ package gift.repository;
 
 import gift.model.Product;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -35,6 +36,7 @@ public class ProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("상품 저장 및 ID로 조회")
     public void testSaveAndFindById() {
         Product product = new Product(null, "Test Product", 100, "test.jpg");
         Product savedProduct = new Product(1L, "Test Product", 100, "test.jpg");
@@ -50,6 +52,7 @@ public class ProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("모든 상품 조회")
     public void testFindAll() {
         Product product1 = new Product(1L, "Product 1", 100, "prod1.jpg");
         Product product2 = new Product(2L, "Product 2", 200, "prod2.jpg");
@@ -61,6 +64,7 @@ public class ProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("상품 삭제")
     public void testDelete() {
         Product product = new Product(1L, "Test Product", 100, "test.jpg");
 
