@@ -10,5 +10,6 @@ create table product(
 DROP TABLE IF EXISTS user;
 create table user(
     username varchar(255) PRIMARY KEY,
-    pw varchar(255)
+    pw varchar(255),
+    accessToken varchar(255)
 )
