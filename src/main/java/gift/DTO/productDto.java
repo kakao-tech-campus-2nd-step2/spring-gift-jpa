@@ -4,7 +4,7 @@ package gift.DTO;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class ProductDTO {
+public class productDto {
   private Long id;
 
   @Size(min=1, max=15,message = "가능한 글자 수는 1~15입니다.")
@@ -17,9 +17,9 @@ public class ProductDTO {
   private int price;
   private String imageUrl;
 
-  public ProductDTO() {}
+  public productDto() {}
 
-  public ProductDTO(Long id, String name, int price, String imageUrl) {
+  public productDto(Long id, String name, int price, String imageUrl) {
     this.id = id;
     this.name = name;
     this.price = price;

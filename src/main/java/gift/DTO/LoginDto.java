@@ -1,11 +1,11 @@
 package gift.DTO;
 
-public class LoginDTO {
+public class LoginDto {
 
   private String username;
   private String pw;
 
-  public LoginDTO(String username, String pw) {
+  public LoginDto(String username, String pw) {
     this.username = username;
     this.pw = pw;
   }

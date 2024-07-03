@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gift.Controller.ProductController;
-import gift.DTO.ProductDTO;
+import gift.DTO.productDto;
 import gift.Service.ProductService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -30,7 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @ActiveProfiles("test") // 테스트 프로파일 활성화
-public class ProductDTOControllerTest {
+public class productDtoControllerTest {
 
   @Autowired
   private ProductService productService;
@@ -61,93 +61,93 @@ public class ProductDTOControllerTest {
   @Test
   public void testGetAllProducts() {
     // 제품 추가
-    ProductDTO productDTO1 = new ProductDTO(1L, "Product 1", 100,
+    productDto productDto1 = new productDto(1L, "Product 1", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
-    ProductDTO productDTO2 = new ProductDTO(2L, "Product 2", 200,
+    productDto productDto2 = new productDto(2L, "Product 2", 200,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc94364879792549ads8bdd8a3.jpg");
-    productController.addProduct(productDTO1);
-    productController.addProduct(productDTO2);
+    productController.addProduct(productDto1);
+    productController.addProduct(productDto2);
     // getAllProducts() 호출
-    List<ProductDTO> returnedProductDTOS = productController.getAllProducts();
+    List<productDto> returnedProductDtos = productController.getAllProducts();
     // 반환된 제품 리스트 검증
-    assertEquals(2, returnedProductDTOS.size());
-    assertEquals(productDTO1.getId(), returnedProductDTOS.get(0).getId());
-    assertEquals(productDTO1.getName(), returnedProductDTOS.get(0).getName());
-    assertEquals(productDTO1.getPrice(), returnedProductDTOS.get(0).getPrice());
-    assertEquals(productDTO1.getImageUrl(), returnedProductDTOS.get(0).getImageUrl());
-    assertEquals(productDTO2.getId(), returnedProductDTOS.get(1).getId());
-    assertEquals(productDTO2.getName(), returnedProductDTOS.get(1).getName());
-    assertEquals(productDTO2.getPrice(), returnedProductDTOS.get(1).getPrice());
-    assertEquals(productDTO2.getImageUrl(), returnedProductDTOS.get(1).getImageUrl());
+    assertEquals(2, returnedProductDtos.size());
+    assertEquals(productDto1.getId(), returnedProductDtos.get(0).getId());
+    assertEquals(productDto1.getName(), returnedProductDtos.get(0).getName());
+    assertEquals(productDto1.getPrice(), returnedProductDtos.get(0).getPrice());
+    assertEquals(productDto1.getImageUrl(), returnedProductDtos.get(0).getImageUrl());
+    assertEquals(productDto2.getId(), returnedProductDtos.get(1).getId());
+    assertEquals(productDto2.getName(), returnedProductDtos.get(1).getName());
+    assertEquals(productDto2.getPrice(), returnedProductDtos.get(1).getPrice());
+    assertEquals(productDto2.getImageUrl(), returnedProductDtos.get(1).getImageUrl());
   }
 
 
   @Test
   public void testGetProductById() {
     // 제품 추가
-    ProductDTO productDTO = new ProductDTO(1L, "Product 1", 100,
+    productDto productDTO = new productDto(1L, "Product 1", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
     productController.addProduct(productDTO);
 
     // getProductById() 호출 - 존재하는 제품 ID
-    ResponseEntity<ProductDTO> responseEntity = productController.getProductById(1L);
+    ResponseEntity<productDto> responseEntity = productController.getProductById(1L);
 
     // 반환된 ResponseEntity 검증
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode()); // 상태 코드가 200 OK인지 확인
 
     // 반환된 제품 검증
-    ProductDTO returnedProductDTO = responseEntity.getBody();
-    assertEquals(productDTO.getId(), returnedProductDTO.getId());
-    assertEquals(productDTO.getName(), returnedProductDTO.getName());
-    assertEquals(productDTO.getPrice(), returnedProductDTO.getPrice());
-    assertEquals(productDTO.getImageUrl(), returnedProductDTO.getImageUrl());
+    productDto returnedProductDto = responseEntity.getBody();
+    assertEquals(productDTO.getId(), returnedProductDto.getId());
+    assertEquals(productDTO.getName(), returnedProductDto.getName());
+    assertEquals(productDTO.getPrice(), returnedProductDto.getPrice());
+    assertEquals(productDTO.getImageUrl(), returnedProductDto.getImageUrl());
   }
 
   @Test
   public void testAddProduct() {
-    ProductDTO newProductDTO = new ProductDTO(1L, "아이스 카페 아메리카노", 4500,
+    productDto newProductDto = new productDto(1L, "아이스 카페 아메리카노", 4500,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
 
-    ProductDTO addedProductDTO = productController.addProduct(newProductDTO);
+    productDto addedProductDto = productController.addProduct(newProductDto);
 
-    assertNotNull(addedProductDTO);
-    assertNotNull(addedProductDTO.getId());
-    assertEquals("아이스 카페 아메리카노", addedProductDTO.getName());
-    assertEquals(4500, addedProductDTO.getPrice());
+    assertNotNull(addedProductDto);
+    assertNotNull(addedProductDto.getId());
+    assertEquals("아이스 카페 아메리카노", addedProductDto.getName());
+    assertEquals(4500, addedProductDto.getPrice());
     assertEquals(
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-      addedProductDTO.getImageUrl());
+      addedProductDto.getImageUrl());
   }
 
 
   @Test
   void testUpdateProduct() {
     // 기존 제품 추가
-    ProductDTO existingProductDTO = new ProductDTO(1L, "아이스 카페 아메리카노", 4500,
+    productDto existingProductDto = new productDto(1L, "아이스 카페 아메리카노", 4500,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
-    productController.addProduct(existingProductDTO);
+    productController.addProduct(existingProductDto);
 
     // 업데이트할 제품 정보
-    ProductDTO updatedProductDTO = new ProductDTO(1L, "핫 카페 아메리카노", 4000,
+    productDto updatedProductDto = new productDto(1L, "핫 카페 아메리카노", 4000,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
     // 제품 업데이트 요청
-    ResponseEntity<ProductDTO> response = productController.updateProduct(1L, updatedProductDTO);
+    ResponseEntity<productDto> response = productController.updateProduct(1L, updatedProductDto);
     // 업데이트된 제품 받아오기
-    ProductDTO returnedProductDTO = response.getBody();
+    productDto returnedProductDto = response.getBody();
 
-    assertNotNull(returnedProductDTO);
-    assertEquals(1L, returnedProductDTO.getId());
-    assertEquals("핫 카페 아메리카노", returnedProductDTO.getName());
-    assertEquals(4000, returnedProductDTO.getPrice());
+    assertNotNull(returnedProductDto);
+    assertEquals(1L, returnedProductDto.getId());
+    assertEquals("핫 카페 아메리카노", returnedProductDto.getName());
+    assertEquals(4000, returnedProductDto.getPrice());
     assertEquals(
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
-      returnedProductDTO.getImageUrl());
+      returnedProductDto.getImageUrl());
   }
 
   @Test
   public void testDeleteProduct() {
     // 제품 추가
-    ProductDTO productDTO = new ProductDTO(1L, "Product 1", 100,
+    productDto productDTO = new productDto(1L, "Product 1", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
     productController.addProduct(productDTO);
 
@@ -169,13 +169,13 @@ public class ProductDTOControllerTest {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
 
-    ProductDTO invalidProduct1DTO = new ProductDTO(1L, "pppppppppsdfsfdsppppppppProduct 1", 100,
+    productDto invalidProduct1DTO = new productDto(1L, "pppppppppsdfsfdsppppppppProduct 1", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
-    ProductDTO invalidProduct2DTO = new ProductDTO(2L, "카카오 product", 100,
+    productDto invalidProduct2DTO = new productDto(2L, "카카오 product", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
 
-    Set<ConstraintViolation<ProductDTO>> violations1 = validator.validate(invalidProduct1DTO);
-    Set<ConstraintViolation<ProductDTO>> violations2 = validator.validate(invalidProduct2DTO);
+    Set<ConstraintViolation<productDto>> violations1 = validator.validate(invalidProduct1DTO);
+    Set<ConstraintViolation<productDto>> violations2 = validator.validate(invalidProduct2DTO);
 
     assertThrows(ConstraintViolationException.class, () -> {
         throw new ConstraintViolationException(violations1);

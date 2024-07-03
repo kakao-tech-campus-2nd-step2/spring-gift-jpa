@@ -1,6 +1,6 @@
 package gift.Controller;
 
-import gift.DTO.ProductDTO;
+import gift.DTO.productDto;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -25,13 +25,13 @@ public class ProductController {
   }
 
   @GetMapping
-  public List<ProductDTO> getAllProducts() {
+  public List<productDto> getAllProducts() {
     return productService.getAllProducts();
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
-    ProductDTO productDTO = productService.getProductById(id);
+  public ResponseEntity<productDto> getProductById(@PathVariable Long id) {
+    productDto productDTO = productService.getProductById(id);
     if (productDTO == null) {
       return ResponseEntity.notFound().build();
     }
@@ -39,24 +39,24 @@ public class ProductController {
   }
 
   @PostMapping
-  public ProductDTO addProduct(@Valid @RequestBody ProductDTO productDTO) {
+  public productDto addProduct(@Valid @RequestBody productDto productDTO) {
     return productService.addProduct(productDTO);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO updatedProductDTO)
+  public ResponseEntity<productDto> updateProduct(@PathVariable Long id, @Valid @RequestBody productDto updatedProductDto)
   {
-    ProductDTO existingProductDTO = productService.updateProduct(id, updatedProductDTO);
-    if (existingProductDTO == null) {
+    productDto existingProductDto = productService.updateProduct(id, updatedProductDto);
+    if (existingProductDto == null) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok(updatedProductDTO);
+    return ResponseEntity.ok(updatedProductDto);
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-    ProductDTO existingProductDTO = productService.deleteProduct(id);
-    if (existingProductDTO == null) {
+    productDto existingProductDto = productService.deleteProduct(id);
+    if (existingProductDto == null) {
       return ResponseEntity.notFound().build();
     }
     return ResponseEntity.noContent().build();
