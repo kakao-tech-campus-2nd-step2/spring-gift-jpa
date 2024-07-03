@@ -61,10 +61,4 @@ public class ProductAdminController {
     productDao.deleteProduct(id);
     return "redirect:/admin/products";
   }
-
-  @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException ex){
-    String message="유효성 검사 실패: " + ex.getBindingResult().getFieldError().getDefaultMessage();
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
-  }
 }
