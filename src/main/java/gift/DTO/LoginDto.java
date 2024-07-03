@@ -4,10 +4,12 @@ public class LoginDto {
 
   private String username;
   private String pw;
+  private String accessToken;
 
-  public LoginDto(String username, String pw) {
+  public LoginDto(String username, String pw, String accessToken) {
     this.username = username;
     this.pw = pw;
+    this.accessToken=accessToken;
   }
 
   public void setUsername(String username) {
@@ -26,4 +28,7 @@ public class LoginDto {
     return this.pw;
   }
 
+  public void setAccessToken(String accessToken){this.accessToken=accessToken;}
+
+  public String getAccessToken(){return this.accessToken;}
 }
