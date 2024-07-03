@@ -1,15 +1,15 @@
 DROP TABLE IF EXISTS product;
-create table product(
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name varchar(255),
-    price bigint,
-    imageUrl varchar(255),
-    primary key (id)
-)
+DROP TABLE IF EXISTS users;
 
-DROP TABLE IF EXISTS user;
-create table user(
-    username varchar(255) PRIMARY KEY,
-    pw varchar(255),
-    accessToken varchar(255)
-)
+CREATE TABLE product (
+                         id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                         name VARCHAR(255),
+                         price BIGINT,
+                         imageUrl VARCHAR(255)
+);
+
+CREATE TABLE users (
+                      username VARCHAR(255) PRIMARY KEY,
+                      pw VARCHAR(255),
+                      accessToken VARCHAR(255)
+);
