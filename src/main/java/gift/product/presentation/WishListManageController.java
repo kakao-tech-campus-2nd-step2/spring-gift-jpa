@@ -5,11 +5,16 @@ import gift.product.domain.Product;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/wishlist")
 public class WishListManageController {
 
@@ -21,23 +26,20 @@ public class WishListManageController {
     }
 
     @GetMapping("")
-    public String getProducts(Model model) {
+    public ResponseEntity<List<Product>> getProducts(Model model) {
         List<Product> productList = productService.getProduct();
-        model.addAttribute("products", productList);
-        model.addAttribute("newProduct", new CreateProductRequestDTO("", 0.0, ""));
-        model.addAttribute("pageSize", productList.size());
-        model.addAttribute("totalEntries", productList.size());
-        return "wishlist.html";
+        return ResponseEntity
+            .ok(productList);
     }
 
     @PostMapping("")
-    public String addProduct(@ModelAttribute CreateProductRequestDTO createProductRequestDTO) {
-        productService.addProduct(createProductRequestDTO);
-        return "redirect:/wishlist";
+    public ResponseEntity<Long> addProduct(@RequestBody CreateProductRequestDTO createProductRequestDTO) {
+        Long productId = productService.addProduct(createProductRequestDTO);
+        return ResponseEntity
+            .ok(productId);
     }
 
     @DeleteMapping("/delete/{id}")
-    @ResponseBody
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok().build();

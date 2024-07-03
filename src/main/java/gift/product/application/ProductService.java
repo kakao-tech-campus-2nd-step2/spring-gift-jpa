@@ -17,11 +17,12 @@ public class ProductService {
     private static final int MAX_PRODUCT_NAME_LENGTH = 15;
 
 
-    public void addProduct(CreateProductRequestDTO createProductRequestDTO) {
+    public Long addProduct(CreateProductRequestDTO createProductRequestDTO) {
         Product product = new Product(createProductRequestDTO.name(), createProductRequestDTO.price(),
             createProductRequestDTO.imageUrl());
+        System.out.println("product: " + product.name() + " " + product.price() + " " + product.imageUrl());
         validateProduct(product);
-        productRepository.addProduct(product);
+        return productRepository.addProduct(product);
     }
 
     public void deleteProduct(Long id) {
