@@ -1,7 +1,6 @@
 package gift.Repository;
 
 import gift.DTO.LoginDto;
-import org.apache.catalina.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
