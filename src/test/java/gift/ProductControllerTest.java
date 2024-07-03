@@ -65,7 +65,7 @@ public class ProductControllerTest {
 
 
   @Test
-  public void testGetProductById() throws MethodArgumentNotValidException {
+  public void testGetProductById() {
     // 제품 추가
     Product product = new Product(1L, "Product 1", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
@@ -86,7 +86,7 @@ public class ProductControllerTest {
   }
 
   @Test
-  public void testAddProduct() throws MethodArgumentNotValidException {
+  public void testAddProduct() {
     Product newProduct = new Product(1L, "아이스 카페 아메리카노 T", 4500,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
 
@@ -102,7 +102,7 @@ public class ProductControllerTest {
   }
 
   @Test
-  void testUpdateProduct() throws MethodArgumentNotValidException {
+  void testUpdateProduct() {
     // 기존 제품 추가
     Product existingProduct = new Product(1L, "아이스 카페 아메리카노 T", 4500,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
@@ -126,7 +126,7 @@ public class ProductControllerTest {
   }
 
   @Test
-  public void testDeleteProduct() throws MethodArgumentNotValidException {
+  public void testDeleteProduct() {
     // 제품 추가
     Product product = new Product(1L, "Product 1", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
