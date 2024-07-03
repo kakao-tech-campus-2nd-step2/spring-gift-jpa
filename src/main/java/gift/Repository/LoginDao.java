@@ -1,7 +1,9 @@
 package gift.Repository;
 
 import gift.DTO.LoginDto;
+import org.apache.catalina.User;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -14,7 +16,20 @@ public class LoginDao {
   }
 
   public void UserSignUp(LoginDto userInfo) {
-    var sql = "INSERT INTO USER(username,pw) VALUES(?,?)";
+    var sql = "INSERT INTO USERS(username,pw) VALUES(?,?)";
     jdbcTemplate.update(sql, userInfo.getUsername(), userInfo.getPw());
+  }
+
+  public LoginDto UserLogin(LoginDto userInfo){
+    var sql = "SELECT * FROM USERS WHERE username = ?";
+    return jdbcTemplate.queryForObject(sql, new String[]{userInfo.getUsername()},userRowMapper());
+  }
+
+  private RowMapper<LoginDto> userRowMapper() {
+    return (rs,rowNum)-> new LoginDto(
+      rs.getString("username"),
+      rs.getString("pw"),
+      rs.getString("accessToken")
+    );
   }
 }

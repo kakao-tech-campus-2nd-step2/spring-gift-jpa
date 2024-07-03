@@ -3,7 +3,6 @@ package gift.Service;
 import gift.DTO.LoginDto;
 import gift.Repository.LoginDao;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class LoginService {
@@ -14,8 +13,12 @@ public class LoginService {
     this.loginDao = loginDao;
   }
 
-  public LoginDto UserSignUp(@RequestBody LoginDto userInfo) {
+  public LoginDto UserSignUp(LoginDto userInfo) {
     loginDao.UserSignUp(userInfo);
     return userInfo;
+  }
+
+  public LoginDto UserLogin(LoginDto userInfo) {
+    return loginDao.UserLogin(userInfo);
   }
 }
