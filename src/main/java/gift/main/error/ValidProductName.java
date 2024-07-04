@@ -1,4 +1,4 @@
-package gift.main.annotation;
+package gift.main.error;
 
 
 import jakarta.validation.Constraint;
