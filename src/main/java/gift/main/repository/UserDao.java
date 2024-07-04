@@ -1,5 +1,7 @@
 package gift.main.repository;
 
+import gift.main.dto.UserDto;
+import gift.main.dto.UserJoinRequest;
 import gift.main.entity.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -41,9 +43,9 @@ public class UserDao {
         }
     }
 
-    public void insertUser(User user) {
+    public void insertUser(UserDto user) {
         String sql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getPassword(), user.getRole());
+        jdbcTemplate.update(sql, user.getName(),user.getEmail(),user.getPassword(),user.getRole());
     }
 
     public void updateUser(long id, User user) {

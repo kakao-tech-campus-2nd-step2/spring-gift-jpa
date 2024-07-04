@@ -11,11 +11,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 @Component
-public class AuthLoginInterceptor implements HandlerInterceptor {
+public class AuthInterceptor implements HandlerInterceptor {
 
     private final AuthUtil authUtil;
 
-    public AuthLoginInterceptor(AuthUtil authUtil) {
+    public AuthInterceptor(AuthUtil authUtil) {
         this.authUtil = authUtil;
     }
 

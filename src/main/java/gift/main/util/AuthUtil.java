@@ -1,5 +1,6 @@
 package gift.main.util;
 
+import gift.main.dto.UserDto;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,12 +17,24 @@ public class AuthUtil {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String createToken(String name,String email, String password, String role) {
+    public String createToken(String name, String email, String password, String role) {
         return Jwts.builder()
                 .claim("name", name)
                 .claim("email", email)
-                .claim("password",password)
+                .claim("password", password)
                 .claim("role", role)
+                .issuedAt(new Date(System.currentTimeMillis())) // 토큰 발생시간
+                .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
+                .signWith(secretKey) // 시그니처~!
+                .compact();
+    }
+
+    public String createToken(UserDto userDto) {
+        return Jwts.builder()
+                .claim("name", userDto.getName())
+                .claim("email", userDto.getEmail())
+                .claim("password", userDto.getPassword())
+                .claim("role", userDto.getRole())
                 .issuedAt(new Date(System.currentTimeMillis())) // 토큰 발생시간
                 .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
                 .signWith(secretKey) // 시그니처~!

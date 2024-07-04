@@ -1,6 +1,6 @@
 package gift.main.config;
 
-import gift.main.interceptor.AuthLoginInterceptor;
+import gift.main.interceptor.AuthInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -9,10 +9,10 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 @EnableWebMvc
 public class WebConfig {
 
-    private final AuthLoginInterceptor authLoginInterceptor;
+    private final AuthInterceptor authLoginInterceptor;
 
 
-    public WebConfig(AuthLoginInterceptor authLoginInterceptor) {
+    public WebConfig(AuthInterceptor authLoginInterceptor) {
         this.authLoginInterceptor = authLoginInterceptor;
     }
 

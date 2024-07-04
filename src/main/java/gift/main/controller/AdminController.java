@@ -35,7 +35,7 @@ public class AdminController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<String> addProduct(@Valid  @RequestBody ProductRequest productRequest) {
+        public ResponseEntity<String> addProduct(@Valid  @RequestBody ProductRequest productRequest) {
         productService.addProduct(productRequest);
         return ResponseEntity.ok("Product added successfully");
     }
