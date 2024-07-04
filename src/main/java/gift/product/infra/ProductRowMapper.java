@@ -1,6 +1,6 @@
-package gift.infra;
+package gift.product.infra;
 
-import gift.domain.Product;
+import gift.product.domain.Product;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

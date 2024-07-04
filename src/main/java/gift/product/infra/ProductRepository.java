@@ -1,11 +1,14 @@
-package gift.infra;
+package gift.product.infra;
 
-import gift.domain.Product;
+import gift.product.domain.Product;
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class ProductRepository {
@@ -24,9 +27,20 @@ public class ProductRepository {
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, new ProductRowMapper());
     }
 
-    public void addProduct(Product product) {
+    public Long addProduct(Product product) {
         String sql = "INSERT INTO Product (name, price, imageUrl) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, product.name(), product.price(), product.imageUrl());
+//        jdbcTemplate.update(sql, product.name(), product.price(), product.imageUrl());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, product.name());
+            ps.setDouble(2, product.price());
+            ps.setString(3, product.imageUrl());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     public void deleteProduct(long id) {
