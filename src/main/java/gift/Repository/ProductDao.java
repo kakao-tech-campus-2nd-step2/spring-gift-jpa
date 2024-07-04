@@ -1,6 +1,6 @@
 package gift.Repository;
 
-import gift.DTO.ProductDto;
+import gift.DTO.ProductDTO;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,17 +15,17 @@ public class ProductDao {
     this.jdbcTemplate = jdbcTemplate;
   }
 
-  public void insertProduct(ProductDto productDTO) {
+  public void insertProduct(ProductDTO productDTO) {
     var sql = "insert into product(name, price, imageUrl) values (?, ?, ?)";
     jdbcTemplate.update(sql, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
   }
 
-  public ProductDto selectProduct(long id) {
+  public ProductDTO selectProduct(long id) {
     var sql = "select * from product where id=?";
     return jdbcTemplate.queryForObject(sql, productRowMapper(), id);
   }
 
-  public List<ProductDto> selectAllProducts() {
+  public List<ProductDTO> selectAllProducts() {
     var sql = "SELECT * FROM product";
     return jdbcTemplate.query(sql, productRowMapper());
   }
@@ -35,7 +35,7 @@ public class ProductDao {
     jdbcTemplate.update(sql, id);
   }
 
-  public void updateProduct(ProductDto productDTO) {
+  public void updateProduct(ProductDTO productDTO) {
     var sql = "UPDATE product SET name = ?, price = ?, imageUrl = ? WHERE id = ?";
     jdbcTemplate.update(sql, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), productDTO.getId());
   }

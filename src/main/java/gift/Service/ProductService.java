@@ -1,6 +1,6 @@
 package gift.Service;
 
-import gift.DTO.ProductDto;
+import gift.DTO.ProductDTO;
 import gift.Repository.ProductDao;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -21,7 +21,6 @@ public class ProductService {
 
   public ProductDto getProductById(Long id) {
     return productDao.selectProduct(id);
-
   }
 
   public ProductDto addProduct(@Valid ProductDto productDTO){
@@ -44,6 +43,7 @@ public class ProductService {
       productDao.deleteProduct(id);
     }
     return existingProductDto;
+
   }
 
 }
