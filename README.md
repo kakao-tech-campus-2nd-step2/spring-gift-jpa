@@ -153,6 +153,6 @@
 - [x] UpdateProductDto 에서 objectType을 사용한 이유
   - [x] Spring의 자동 완성 기능을 종종 사용하는데 아무 생각없이 사용하다가 그렇게 적용됐고, 코드가 실행되서 제대로 확인을 안한것같습니다. 각 타입에 맞게 수정하였습니다.
 - [x] Validation 주석 지우기
-- [ ] JdbcProductRepository.java에서 SimpleJdbcInsert 사용해보기
+- [x] JdbcProductRepository.java에서 SimpleJdbcInsert 사용해보기
 - [x] ProductService에서 불필요한 주석 지우기
 - [x] Try catch문 대신, ControllerAdvice 사용해보기

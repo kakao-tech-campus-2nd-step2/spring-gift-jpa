@@ -2,17 +2,24 @@ package gift.repository;
 
 import gift.domain.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class JdbcProductRepository implements ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public JdbcProductRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("product")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -46,10 +53,14 @@ public class JdbcProductRepository implements ProductRepository {
 
     @Override
     public void save(Product product) {
-        jdbcTemplate.update(
-                "INSERT INTO product (id, name, description, price, image_url) VALUES (?, ?, ?, ?, ?)",
-                product.getId(), product.getName(), product.getDescription(), product.getPrice(), product.getImageUrl()
-        );
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", product.getName());
+        parameters.put("description", product.getDescription());
+        parameters.put("price", product.getPrice());
+        parameters.put("image_url", product.getImageUrl());
+
+        Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
+        product.setId(newId.longValue());
     }
 
     @Override
@@ -68,4 +79,3 @@ public class JdbcProductRepository implements ProductRepository {
         );
     }
 }
-
