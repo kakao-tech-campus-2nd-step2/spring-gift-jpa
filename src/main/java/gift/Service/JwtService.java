@@ -1,7 +1,7 @@
 package gift.Service;
 
 import gift.DTO.JwtToken;
-import gift.DTO.LoginDto;
+import gift.DTO.UserDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -18,14 +18,14 @@ import org.springframework.stereotype.Service;
 public class JwtService {
   private String key = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
 
-  public JwtToken createAccessToken(LoginDto loginDto) {
+  public JwtToken createAccessToken(UserDto userDto) {
     Instant now = Instant.now();
     Instant expiresAt = now.plus(1, ChronoUnit.DAYS); // 현재 시각에서 1일 뒤로 만료 설정
 
     String accessToken = Jwts.builder()
-      .setSubject(loginDto.getEmail())
-      .claim("email", loginDto.getEmail())
-      .claim("pw", loginDto.getPw())
+      .setSubject(userDto.getEmail())
+      .claim("email", userDto.getEmail())
+      .claim("pw", userDto.getPw())
       .setExpiration(Date.from(expiresAt))
       .signWith(Keys.hmacShaKeyFor(key.getBytes()), SignatureAlgorithm.HS256)
       .compact();
