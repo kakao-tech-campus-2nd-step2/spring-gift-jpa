@@ -1,12 +1,16 @@
 package gift.main.repository;
 
+
 import gift.main.dto.ProductDto;
+
+
 import gift.main.entity.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
@@ -14,14 +18,21 @@ public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final AtomicLong idGenerator = new AtomicLong();
 
+@Repository
+public class ProductDao {
+    private final JdbcTemplate jdbcTemplate;
+
+
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
 
     private long createNewID(){
         long id = idGenerator.incrementAndGet();
         return id;
     }
+
 
 
     public void createProductTable() {
@@ -61,6 +72,7 @@ public class ProductDao {
         }
     }
 
+
     public void insertProduct(ProductDto productDto) {
         Long id = createNewID();
 
@@ -71,6 +83,16 @@ public class ProductDao {
     public void updateProduct(long id, ProductDto productDto) {
         String sql = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, productDto.getName(), productDto.getPrice(), productDto.getImageUrl(), id);
+
+    public void insertProduct(Product product) {
+        String sql = "INSERT INTO products (id, name, price, image_url) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    }
+
+    public void updateProduct(Long id, Product product) {
+        String sql = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?";
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
+
     }
 
     public void deleteProduct(Long id) {
@@ -78,11 +100,11 @@ public class ProductDao {
         jdbcTemplate.update(sql, id);
     }
 
+
     public boolean existsProduct(long id) {
         String sql = "SELECT COUNT(*) FROM products WHERE id = ?";
         int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
         return count > 0;
     }
-
 
 }

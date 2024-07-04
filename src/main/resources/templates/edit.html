@@ -23,7 +23,11 @@
             <input type="hidden" name="_method" value="put">
             <div>
                 <input type="text" id="name" placeholder="물건명" th:field="*{name}" required>
+
                 <input type="text"  id="price" placeholder="가격" th:field="*{price}" required>
+
+                <input type="number"  id="price" placeholder="가격" th:field="*{price}" required>
+
                 <input type="text" id="imageUrl" placeholder="이미지 주소" th:field="*{imageUrl}" required>
                 <a href="/admin" class="btn btn-light btn-sm">이전으로 돌아가기</a>
                 <button type="submit" class="btn btn-primary btn-sm">등록하기</button>
