@@ -24,8 +24,8 @@ public class GlobalExceptionHandler {
         model.addAttribute("refererUrl", refererUrl);
         return "error/error";
     }
-    @ExceptionHandler(ProductError.class)
-    public String HandleWrongNameException(Model model, ProductError e) {
+    @ExceptionHandler(ConstraintViolationException.class)
+    public String HandleWrongNameException(Model model, ConstraintViolationException e) {
         model.addAttribute("error",e.getMessage());
         String refererUrl = " http://localhost:8080/spring-gift/admin";
         model.addAttribute("refererUrl", refererUrl);
