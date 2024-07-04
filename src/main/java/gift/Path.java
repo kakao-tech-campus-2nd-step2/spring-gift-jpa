@@ -1,0 +1,11 @@
+package gift;
+
+public class Path {
+
+    public static final String MANAGE_PRODUCT_PAGE = "manage-products";
+    public static final String PRODUCT_UPDATE_FORM_PAGE = "product-update-form";
+    public static final String PRODUCT_ADDITION_FROM_PAGE = "product-addition-form";
+    public static final String MANAGE_PRODUCT = "/api/manage/products";
+
+
+}

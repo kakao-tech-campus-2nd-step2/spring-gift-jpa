@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+</head>
+<body>
+<h1>Edit Product</h1>
+<form th:action="@{/api/manage/products/update/{productId} (productId=${product.id})}" method="post" th:object="${product}">
+    <label>Id: <input type="text" th:field="*{id}"/></label><br/>
+    <label>Name: <input type="text" th:field="*{name}"/></label><br/>
+    <label>Price: <input type="text" th:field="*{price}"/></label><br/>
+    <label>Image URL: <input type="text" th:field="*{imageUrl}"/></label><br/>
+    <input type="submit" value="Save"/>
+</form>
+<a th:href="@{/api/manage/products}">Cancel</a>
+</body>
+</html>
