@@ -1,4 +1,4 @@
-package gift.main.validator;
+package gift.main.global.validator;
 
 
 import jakarta.validation.Constraint;
