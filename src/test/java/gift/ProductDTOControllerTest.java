@@ -168,25 +168,66 @@ public class ProductDTOControllerTest {
   }
 
   @Test
-  @DisplayName("Test : validate")
-  public void testValidate() {
+  @DisplayName("Test : nameSizeValidate")
+  public void testSizeValidate() {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
 
     ProductDTO invalidProduct1DTO = new ProductDTO(1L, "pppppppppsdfsfdsppppppppProduct 1", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
-    ProductDTO invalidProduct2DTO = new ProductDTO(2L, "카카오 product", 100,
-      "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
 
     Set<ConstraintViolation<ProductDTO>> violations1 = validator.validate(invalidProduct1DTO);
-    Set<ConstraintViolation<ProductDTO>> violations2 = validator.validate(invalidProduct2DTO);
 
     assertThrows(ConstraintViolationException.class, () -> {
       throw new ConstraintViolationException(violations1);
     });
+  }
+
+  @Test
+  @DisplayName("Test : nameBlankValidate")
+  public void testBlankValidate() {
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    Validator validator = factory.getValidator();
+
+    ProductDTO invalidProduct2DTO = new ProductDTO(2L, null, 100,
+      "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
+
+    Set<ConstraintViolation<ProductDTO>> violations = validator.validate(invalidProduct2DTO);
 
     assertThrows(ConstraintViolationException.class, () -> {
-      throw new ConstraintViolationException(violations2);
+      throw new ConstraintViolationException(violations);
+    });
+  }
+
+  @Test
+  @DisplayName("Test : nameExpressionValidate")
+  public void testExpressionValidate() {
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    Validator validator = factory.getValidator();
+
+    ProductDTO invalidProduct2DTO = new ProductDTO(1L, "!product", 100,
+      "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
+
+    Set<ConstraintViolation<ProductDTO>> violations = validator.validate(invalidProduct2DTO);
+
+    assertThrows(ConstraintViolationException.class, () -> {
+      throw new ConstraintViolationException(violations);
+    });
+  }
+
+  @Test
+  @DisplayName("Test : nameSpecialNameValidate - 카카오")
+  public void testSpecialNameValidate() {
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    Validator validator = factory.getValidator();
+
+    ProductDTO invalidProduct2DTO = new ProductDTO(1L, "카카오product", 100,
+      "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
+
+    Set<ConstraintViolation<ProductDTO>> violations = validator.validate(invalidProduct2DTO);
+
+    assertThrows(ConstraintViolationException.class, () -> {
+      throw new ConstraintViolationException(violations);
     });
   }
 }
