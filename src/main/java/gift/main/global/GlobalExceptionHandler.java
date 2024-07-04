@@ -1,5 +1,6 @@
 package gift.main.global;
 
+import gift.main.global.Exception.UserException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,7 +17,7 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public String handleException(Model model, Exception e) {
+    public String handleGeneralException(Model model, Exception e) {
         model.addAttribute("error",e.getMessage());
         String refererUrl = " http://localhost:8080/spring-gift/admin";
         model.addAttribute("refererUrl", refererUrl);
@@ -25,14 +26,20 @@ public class GlobalExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleWrongId(IllegalArgumentException e) {
+    public ResponseEntity<String> handleInvalidArgument(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<String> handleUserException(UserException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
 
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleWrongProduct(MethodArgumentNotValidException e) {
+    public ResponseEntity<String> handleValidationFailure(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
 
