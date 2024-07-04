@@ -12,23 +12,17 @@ import java.util.concurrent.atomic.AtomicLong;
 @Repository
 public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
-    private final AtomicLong idGenerator = new AtomicLong();
-
-
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        createProductTable();
     }
 
-    private long createNewID(){
-        long id = idGenerator.incrementAndGet();
-        return id;
-    }
 
 
     public void createProductTable() {
         String sql = "CREATE TABLE IF NOT EXISTS products (" +
-                "id BIGINT PRIMARY KEY," +
+                "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
                 "name VARCHAR(255) NOT NULL," +
                 "price INT NOT NULL," +
                 "image_url VARCHAR(255)" +
@@ -64,10 +58,8 @@ public class ProductDao {
     }
 
     public void insertProduct(ProductDto productDto) {
-        Long id = createNewID();
-
         String sql = "INSERT INTO products (id, name, price, image_url) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, id, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+        jdbcTemplate.update(sql, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
     }
 
     public void updateProduct(long id, ProductDto productDto) {
