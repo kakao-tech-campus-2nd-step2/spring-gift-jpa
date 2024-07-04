@@ -30,10 +30,6 @@ public class LoginController {
   public ResponseEntity<JwtToken> userLogin(
     @RequestHeader("email") String email,
     @RequestHeader("pw") String pw) {
-    JwtToken userToken = loginService.UserLogin(email, pw);
-    if (userToken==null){
-      return ResponseEntity.notFound().build();
-    }
-    return ResponseEntity.ok(userToken);
+    return loginService.UserLogin(email,pw);
   }
 }
