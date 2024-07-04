@@ -1,9 +1,8 @@
 package gift.Controller;
 
+import gift.DTO.JwtToken;
 import gift.DTO.LoginDto;
 import gift.Service.LoginService;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,21 +22,18 @@ public class LoginController {
 
   @PostMapping("/signup")
   public LoginDto UserSignUp(@RequestBody LoginDto userInfo) {
+    System.out.println(userInfo);
     return loginService.UserSignUp(userInfo);
   }
 
   @PostMapping("/login/token")
-  public ResponseEntity<Map<String, String>> userLogin(
-    @RequestHeader("username") String username,
+  public ResponseEntity<JwtToken> userLogin(
+    @RequestHeader("email") String email,
     @RequestHeader("pw") String pw) {
-    LoginDto user = loginService.UserLogin(username, pw);
-    if (user == null || !(username.equals(user.getUsername()) && pw.equals(user.getPw()))) {
+    JwtToken userToken = loginService.UserLogin(email, pw);
+    if (userToken==null){
       return ResponseEntity.notFound().build();
     }
-    String accessToken = user.getAccessToken();
-    Map<String, String> responseBody = new HashMap<>();
-    responseBody.put("accessToken", accessToken);
-
-    return ResponseEntity.ok(responseBody);
+    return ResponseEntity.ok(userToken);
   }
 }

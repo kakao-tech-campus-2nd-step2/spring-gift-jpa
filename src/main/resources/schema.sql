@@ -9,7 +9,6 @@ CREATE TABLE product (
 );
 
 CREATE TABLE users (
-                      username VARCHAR(255) PRIMARY KEY,
-                      pw VARCHAR(255),
-                      accessToken VARCHAR(255)
+                      email VARCHAR(255) PRIMARY KEY,
+                      pw VARCHAR(255)
 );

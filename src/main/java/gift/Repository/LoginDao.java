@@ -15,20 +15,19 @@ public class LoginDao {
   }
 
   public void UserSignUp(LoginDto userInfo) {
-    var sql = "INSERT INTO USERS(username,pw) VALUES(?,?)";
-    jdbcTemplate.update(sql, userInfo.getUsername(), userInfo.getPw());
+    var sql = "INSERT INTO USERS(email,pw) VALUES(?,?)";
+    jdbcTemplate.update(sql, userInfo.getEmail(), userInfo.getPw());
   }
 
-  public LoginDto UserLogin(String username, String pw){
-    var sql = "SELECT * FROM USERS WHERE username = ?";
-    return jdbcTemplate.queryForObject(sql, new String[]{username},userRowMapper());
+  public LoginDto UserLogin(String email, String pw){
+    var sql = "SELECT * FROM USERS WHERE email = ?";
+    return jdbcTemplate.queryForObject(sql, new String[]{email},userRowMapper());
   }
 
   private RowMapper<LoginDto> userRowMapper() {
     return (rs,rowNum)-> new LoginDto(
-      rs.getString("username"),
-      rs.getString("pw"),
-      rs.getString("accessToken")
+      rs.getString("email"),
+      rs.getString("pw")
     );
   }
 }

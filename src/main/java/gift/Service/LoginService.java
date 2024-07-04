@@ -1,5 +1,6 @@
 package gift.Service;
 
+import gift.DTO.JwtToken;
 import gift.DTO.LoginDto;
 import gift.Repository.LoginDao;
 import org.springframework.stereotype.Service;
@@ -8,9 +9,11 @@ import org.springframework.stereotype.Service;
 public class LoginService {
 
   private final LoginDao loginDao;
+  private final JwtService jwtService;
 
-  public LoginService(LoginDao loginDao) {
+  public LoginService(LoginDao loginDao, JwtService jwtService) {
     this.loginDao = loginDao;
+    this.jwtService = jwtService;
   }
 
   public LoginDto UserSignUp(LoginDto userInfo) {
@@ -18,7 +21,15 @@ public class LoginService {
     return userInfo;
   }
 
-  public LoginDto UserLogin(String username, String pw) {
-    return loginDao.UserLogin(username,pw);
+  public JwtToken UserLogin(String email, String pw) {
+    LoginDto loginDto = loginDao.UserLogin(email, pw);
+    JwtToken jwtToken = null;
+
+    if (loginDto!=null){
+      if (email.equals(loginDto.getEmail()) && pw.equals(loginDto.getPw())){
+        jwtToken = jwtService.createAccessToken(loginDto);
+      }
+    }
+    return jwtToken;
   }
 }

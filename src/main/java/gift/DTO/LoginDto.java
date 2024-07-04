@@ -2,22 +2,20 @@ package gift.DTO;
 
 public class LoginDto {
 
-  private String username;
+  private String email;
   private String pw;
-  private String accessToken;
 
-  public LoginDto(String username, String pw, String accessToken) {
-    this.username = username;
+  public LoginDto(String email, String pw) {
+    this.email = email;
     this.pw = pw;
-    this.accessToken=accessToken;
   }
 
-  public void setUsername(String username) {
-    this.username = username;
+  public void setEmail(String email) {
+    this.email = email;
   }
 
-  public String getUsername() {
-    return this.username;
+  public String getEmail() {
+    return this.email;
   }
 
   public void setPw(String pw) {
@@ -28,7 +26,4 @@ public class LoginDto {
     return this.pw;
   }
 
-  public void setAccessToken(String accessToken){this.accessToken=accessToken;}
-
-  public String getAccessToken(){return this.accessToken;}
 }
