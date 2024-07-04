@@ -1,6 +1,6 @@
 package gift.Service;
 
-import gift.DTO.productDto;
+import gift.DTO.ProductDto;
 import gift.Repository.ProductDao;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -14,23 +14,23 @@ public class ProductService {
     this.productDao=productDao;
   }
 
-  public List<productDto> getAllProducts() {
-    List<productDto> productDtos = productDao.selectAllProducts();
-    return productDtos;
+  public List<ProductDto> getAllProducts() {
+    List<ProductDto> ProductDtos = productDao.selectAllProducts();
+    return ProductDtos;
   }
 
-  public productDto getProductById(Long id) {
+  public ProductDto getProductById(Long id) {
     return productDao.selectProduct(id);
 
   }
 
-  public productDto addProduct(@Valid productDto productDTO){
+  public ProductDto addProduct(@Valid ProductDto productDTO){
     productDao.insertProduct(productDTO);
     return productDTO;
   }
   
-  public productDto updateProduct(Long id, @Valid productDto updatedProductDto) {
-    productDto existingProductDto = productDao.selectProduct(id);
+  public ProductDto updateProduct(Long id, @Valid ProductDto updatedProductDto) {
+    ProductDto existingProductDto = productDao.selectProduct(id);
     if (existingProductDto !=null){
       updatedProductDto.setId(id);
       productDao.updateProduct(updatedProductDto);
@@ -38,8 +38,8 @@ public class ProductService {
     return existingProductDto;
   }
 
-  public productDto deleteProduct(@PathVariable Long id) {
-    productDto existingProductDto = productDao.selectProduct(id);
+  public ProductDto deleteProduct(@PathVariable Long id) {
+    ProductDto existingProductDto = productDao.selectProduct(id);
     if (existingProductDto != null) {
       productDao.deleteProduct(id);
     }

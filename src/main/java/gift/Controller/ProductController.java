@@ -1,6 +1,6 @@
 package gift.Controller;
 
-import gift.DTO.productDto;
+import gift.DTO.ProductDto;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -25,13 +25,13 @@ public class ProductController {
   }
 
   @GetMapping
-  public List<productDto> getAllProducts() {
+  public List<ProductDto> getAllProducts() {
     return productService.getAllProducts();
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<productDto> getProductById(@PathVariable Long id) {
-    productDto productDTO = productService.getProductById(id);
+  public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+    ProductDto productDTO = productService.getProductById(id);
     if (productDTO == null) {
       return ResponseEntity.notFound().build();
     }
@@ -39,14 +39,14 @@ public class ProductController {
   }
 
   @PostMapping
-  public productDto addProduct(@Valid @RequestBody productDto productDTO) {
+  public ProductDto addProduct(@Valid @RequestBody ProductDto productDTO) {
     return productService.addProduct(productDTO);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<productDto> updateProduct(@PathVariable Long id, @Valid @RequestBody productDto updatedProductDto)
+  public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDto updatedProductDto)
   {
-    productDto existingProductDto = productService.updateProduct(id, updatedProductDto);
+    ProductDto existingProductDto = productService.updateProduct(id, updatedProductDto);
     if (existingProductDto == null) {
       return ResponseEntity.notFound().build();
     }
@@ -55,11 +55,10 @@ public class ProductController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-    productDto existingProductDto = productService.deleteProduct(id);
+    ProductDto existingProductDto = productService.deleteProduct(id);
     if (existingProductDto == null) {
       return ResponseEntity.notFound().build();
     }
     return ResponseEntity.noContent().build();
   }
-
 }

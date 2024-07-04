@@ -1,12 +1,14 @@
 package gift.DTO;
 
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class productDto {
+public class ProductDto {
   private Long id;
 
+  @NotBlank
   @Size(min=1, max=15,message = "가능한 글자 수는 1~15입니다.")
   @Pattern.List({
     @Pattern(regexp = "^[가-힣a-zA-Z0-9()\\[\\]+\\-&/_]*$", message = "유효한 이름이 아닙니다"),
@@ -17,9 +19,9 @@ public class productDto {
   private int price;
   private String imageUrl;
 
-  public productDto() {}
+  public ProductDto() {}
 
-  public productDto(Long id, String name, int price, String imageUrl) {
+  public ProductDto(Long id, String name, int price, String imageUrl) {
     this.id = id;
     this.name = name;
     this.price = price;
