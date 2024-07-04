@@ -14,6 +14,8 @@ public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final AtomicLong idGenerator = new AtomicLong();
 
+
+
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
