@@ -3,6 +3,7 @@ package gift.main.util;
 import gift.main.dto.UserDto;
 import gift.main.entity.User;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class AuthUtil {
     private final SecretKey secretKey;
 
     public AuthUtil(@Value("${spring.jwt.secret}") String secret) {
-        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
     public String createToken(String name, String email, String password, String role) {
@@ -43,6 +44,7 @@ public class AuthUtil {
     }
 
     public String createToken(UserDto userDto) {
+        System.out.println("호출1-5");
         return Jwts.builder()
                 .claim("name", userDto.getName())
                 .claim("email", userDto.getEmail())
@@ -52,6 +54,7 @@ public class AuthUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
                 .signWith(secretKey) // 시그니처~!
                 .compact();
+
     }
 
     public boolean validateToken(String token, String email, String role) {
@@ -59,11 +62,11 @@ public class AuthUtil {
             return false;
         }
 
-        if (email != getEmail(token)) {
+        if (email.equals(getEmail(token))) {
             return false;
         }
 
-        if (role != getRole(token)) {
+        if (role.equals(getRole(token))) {
             return false;
         }
         return true;
