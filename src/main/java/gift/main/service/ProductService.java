@@ -1,17 +1,15 @@
 package gift.main.service;
 
 import gift.main.dto.ProductDto;
+import gift.main.dto.ProductRequest;
 import gift.main.entity.Product;
 import gift.main.repository.ProductDao;
 import org.springframework.stereotype.Service;
-import jakarta.validation.Valid;
-import org.springframework.validation.annotation.Validated;
 
 
 import java.util.List;
 
 @Service
-@Validated
 public class ProductService {
     private final ProductDao productDao;
 
@@ -20,26 +18,26 @@ public class ProductService {
     }
 
     public List<Product> getProducts() {
-        List<Product> products= productDao.selectProductAll();
-        return products;
+        List<Product> productList= productDao.selectProductAll();
+        return productList;
     }
 
-    public void addProduct(@Valid ProductDto validProduct) {
-        productDao.insertProduct(validProduct);
+    public void addProduct(ProductRequest productRequest) {
+        ProductDto productDto = new ProductDto(productRequest);
+        productDao.insertProduct(productDto);
     }
 
     public void deleteProduct(long id) {
-        if (!productDao.existsProduct(id)) {
-            throw new IllegalArgumentException("해당 id는 없습니다.");
-        }
+
         productDao.deleteProduct(id);
     }
 
-    public void updateProduct(long id,@Valid ProductDto validProduct) {
+    public void updateProduct(long id,ProductRequest productRequest) {
         if (!productDao.existsProduct(id)) {
             throw new IllegalArgumentException("해당 id는 없습니다.");
         }
-        productDao.updateProduct(id, validProduct);
+        ProductDto productDto = new ProductDto(productRequest);
+        productDao.updateProduct(id, productDto);
     }
 
     public Product getProduct(long id) {
@@ -48,6 +46,8 @@ public class ProductService {
         }
         return productDao.selectProduct(id);
     }
+
+
 
 
 
