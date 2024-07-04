@@ -4,10 +4,11 @@ import gift.main.interceptor.AuthInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebMvc
-public class WebConfig {
+public class WebConfig  implements WebMvcConfigurer {
 
     private final AuthInterceptor authLoginInterceptor;
 
@@ -16,12 +17,11 @@ public class WebConfig {
         this.authLoginInterceptor = authLoginInterceptor;
     }
 
+    @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 인터셉터를 등록하는 메서드/members/register
         // CustomInterceptor를 등록하고, 모든 URL에 대해 인터셉터를 적용하도록 설정
         registry.addInterceptor(authLoginInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns("*/members/login")
-                .excludePathPatterns("*/members/register");
-    }
+                .excludePathPatterns("/members/login", "/members/register","","/")
+                .addPathPatterns("/**");    }
 }
