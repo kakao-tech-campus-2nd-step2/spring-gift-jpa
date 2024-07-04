@@ -26,8 +26,14 @@ public class AuthInterceptor implements HandlerInterceptor {
         String token = request.getHeader("Authorization");
         String email = request.getHeader("email");
         String password = request.getHeader("password");
+        if (token == null || email == null || password == null){
+            response.sendRedirect("/spring-gift/members/login");
+            return false;
+
+        }
+        System.out.println("호출은 되는겨");
         if (!authUtil.validateToken(token,email,password)) {
-            response.sendRedirect("/members/login");
+            response.sendRedirect("/spring-gift/members/login");
             return false;
         }
         UserVo sessionUser = new UserVo(
