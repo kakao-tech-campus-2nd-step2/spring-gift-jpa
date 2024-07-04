@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -42,7 +43,6 @@ public class ProductDTOControllerTest {
   @BeforeEach
   public void setUp() {
     productController = new ProductController(productService);
-    // 데이터베이스 초기화를 위해 schema.sql 실행
     jdbcTemplate.execute("DROP TABLE IF EXISTS product");
     jdbcTemplate.execute("CREATE TABLE product (" +
       "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
@@ -59,6 +59,7 @@ public class ProductDTOControllerTest {
   }
 
   @Test
+  @DisplayName("Test : getAllProducts")
   public void testGetAllProducts() {
     // 제품 추가
     ProductDTO productDTO1 = new ProductDTO(1L, "Product 1", 100,
@@ -67,9 +68,7 @@ public class ProductDTOControllerTest {
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc94364879792549ads8bdd8a3.jpg");
     productController.addProduct(productDTO1);
     productController.addProduct(productDTO2);
-    // getAllProducts() 호출
     List<ProductDTO> returnedProductDTOS = productController.getAllProducts();
-    // 반환된 제품 리스트 검증
     assertEquals(2, returnedProductDTOS.size());
     assertEquals(productDTO1.getId(), returnedProductDTOS.get(0).getId());
     assertEquals(productDTO1.getName(), returnedProductDTOS.get(0).getName());
@@ -83,6 +82,7 @@ public class ProductDTOControllerTest {
 
 
   @Test
+  @DisplayName("Test : getProductById")
   public void testGetProductById() {
     // 제품 추가
     ProductDTO productDTO = new ProductDTO(1L, "Product 1", 100,
@@ -104,6 +104,7 @@ public class ProductDTOControllerTest {
   }
 
   @Test
+  @DisplayName("Test : addProduct")
   public void testAddProduct() {
     ProductDTO newProductDTO = new ProductDTO(1L, "아이스 카페 아메리카노", 4500,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
@@ -121,6 +122,7 @@ public class ProductDTOControllerTest {
 
 
   @Test
+  @DisplayName("Test : updateProduct")
   void testUpdateProduct() {
     // 기존 제품 추가
     ProductDTO existingProductDTO = new ProductDTO(1L, "아이스 카페 아메리카노", 4500,
@@ -145,6 +147,7 @@ public class ProductDTOControllerTest {
   }
 
   @Test
+  @DisplayName("Test : deleteProduct")
   public void testDeleteProduct() {
     // 제품 추가
     ProductDTO productDTO = new ProductDTO(1L, "Product 1", 100,
@@ -165,7 +168,8 @@ public class ProductDTOControllerTest {
   }
 
   @Test
-  public void testValidate(){
+  @DisplayName("Test : validate")
+  public void testValidate() {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
 
@@ -178,11 +182,11 @@ public class ProductDTOControllerTest {
     Set<ConstraintViolation<ProductDTO>> violations2 = validator.validate(invalidProduct2DTO);
 
     assertThrows(ConstraintViolationException.class, () -> {
-        throw new ConstraintViolationException(violations1);
+      throw new ConstraintViolationException(violations1);
     });
 
     assertThrows(ConstraintViolationException.class, () -> {
-        throw new ConstraintViolationException(violations2);
+      throw new ConstraintViolationException(violations2);
     });
   }
 }
