@@ -156,3 +156,5 @@
 - [x] JdbcProductRepository.java에서 SimpleJdbcInsert 사용해보기
 - [x] ProductService에서 불필요한 주석 지우기
 - [x] Try catch문 대신, ControllerAdvice 사용해보기
+
+---
