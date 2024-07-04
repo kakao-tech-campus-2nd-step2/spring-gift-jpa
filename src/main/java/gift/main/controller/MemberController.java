@@ -23,11 +23,12 @@ public class MemberController {
 
     @PostMapping("/members/register")
     public ResponseEntity<?> joinMember(@RequestBody UserJoinRequest userJoinRequest, HttpServletResponse response) {
+
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("token", memberService.joinUser(userJoinRequest));
         responseBody.put("redirectUrl", "/spring-gift");
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("redirectUrl", "/"));
+                .body(responseBody);
 }
 
     @PostMapping("/members/login")
@@ -36,7 +37,7 @@ public class MemberController {
         responseBody.put("token", memberService.loginUser(userloginDto));
         responseBody.put("redirectUrl", "/spring-gift");
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("redirectUrl", "/"));
+                .body(responseBody);
 
     }
 }
