@@ -18,7 +18,7 @@ public class LoginService {
     return userInfo;
   }
 
-  public LoginDto UserLogin(LoginDto userInfo) {
-    return loginDao.UserLogin(userInfo);
+  public LoginDto UserLogin(String username, String pw) {
+    return loginDao.UserLogin(username,pw);
   }
 }

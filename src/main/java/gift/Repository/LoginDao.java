@@ -19,9 +19,9 @@ public class LoginDao {
     jdbcTemplate.update(sql, userInfo.getUsername(), userInfo.getPw());
   }
 
-  public LoginDto UserLogin(LoginDto userInfo){
+  public LoginDto UserLogin(String username, String pw){
     var sql = "SELECT * FROM USERS WHERE username = ?";
-    return jdbcTemplate.queryForObject(sql, new String[]{userInfo.getUsername()},userRowMapper());
+    return jdbcTemplate.queryForObject(sql, new String[]{username},userRowMapper());
   }
 
   private RowMapper<LoginDto> userRowMapper() {
