@@ -1,4 +1,4 @@
-package gift.main.global.validator;
+package gift.main.global.Exception;
 
 public class UserException extends RuntimeException{
     public UserException(String message) {
