@@ -1,5 +1,6 @@
 package gift.main.controller;
 
+import gift.main.dto.ProductDto;
 import gift.main.dto.ProductRequest;
 import gift.main.entity.Product;
 import gift.main.handler.ProductTransformer;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-//    private final ProductDao productDao;
     private final ProductService productService;
 
 
@@ -40,15 +40,15 @@ public class AdminController {
     }
 
     @PostMapping("/product")
-    public String addProduct(@ModelAttribute ProductRequest productRequest,Model model) {
-        productService.addProduct(productRequest);
+    public String addProduct(@ModelAttribute ProductRequest productRequest, Model model) {
+        productService.addProduct(new ProductDto(productRequest));
         model.addAttribute("products", productService.getProducts());
         return "product";
     }
 
     @PutMapping(value = "/product")
-    public String updateProduct(@RequestParam(value = "id") long id, @ModelAttribute ProductRequest productRequest, Model model){
-        productService.updateProduct(id,productRequest);
+    public String updateProduct(@RequestParam(value = "id") long id,@ModelAttribute ProductRequest productRequest, Model model){
+        productService.updateProduct(id,new ProductDto(productRequest));
         model.addAttribute("products", productService.getProducts());
         return "product";
     }
@@ -64,7 +64,7 @@ public class AdminController {
 
     @GetMapping("/product/edit")
     public String editPage(@RequestParam(value = "id") long id, @ModelAttribute ProductRequest productRequest,Model model) {
-        Product product = ProductTransformer.convertToProduct(id, productRequest);
+        Product product = ProductTransformer.convertToProduct(id,productRequest );
         model.addAttribute("product", product);
         return "edit";
     }

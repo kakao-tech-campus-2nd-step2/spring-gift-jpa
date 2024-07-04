@@ -1,15 +1,17 @@
 package gift.main.service;
 
 import gift.main.dto.ProductDto;
-import gift.main.dto.ProductRequest;
 import gift.main.entity.Product;
-import gift.main.handler.ProductValidator;
 import gift.main.repository.ProductDao;
 import org.springframework.stereotype.Service;
+import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
+
 
 import java.util.List;
 
 @Service
+@Validated
 public class ProductService {
     private final ProductDao productDao;
 
@@ -22,8 +24,7 @@ public class ProductService {
         return products;
     }
 
-    public void addProduct(ProductRequest productRequest) {
-        ProductDto validProduct = ProductValidator.isValidProductDto(productRequest);
+    public void addProduct(@Valid ProductDto validProduct) {
         productDao.insertProduct(validProduct);
     }
 
@@ -34,11 +35,10 @@ public class ProductService {
         productDao.deleteProduct(id);
     }
 
-    public void updateProduct(long id, ProductRequest productRequest) {
+    public void updateProduct(long id,@Valid ProductDto validProduct) {
         if (!productDao.existsProduct(id)) {
             throw new IllegalArgumentException("해당 id는 없습니다.");
         }
-        ProductDto validProduct = ProductValidator.isValidProductDto(productRequest);
         productDao.updateProduct(id, validProduct);
     }
 
