@@ -45,57 +45,58 @@
 </div>
 
 <script>
-        $(document).ready(function () {
-            // 회원가입
-            $('#joinButton').on('click', function (e) {
-                e.preventDefault();
-                var productData = {
-                    name: $('#joinName').val(),
-                    email: $('#joinEmail').val(),
-                    password: $('#joinPassword').val(),
-                    role: $('#role').is(':checked') ? 'admin' : 'user';
-
-                };
-                $.ajax({
-                    type: 'POST',
-                    url: '/spring-gift/members/register',
-                    contentType: 'application/json',
-                    data: JSON.stringify(productData),
-                    success: function (response) {
-                        // 서버로부터 리다이렉트 URL을 받아 리다이렉트
-                        if (response.redirectUrl) {
-                            window.location.href = response.redirectUrl;
-                        }
-                    },error: function (xhr, status, error) {
-                        console.error('회원가입 실패: ', error);
-                    }
-                });
-            });
-
-        $(document).ready(function () {
+    $(document).ready(function () {
         // 회원가입
-        $('#loginButton').on('click', function (e) {
+        $('#joinButton').on('click', function (e) {
             e.preventDefault();
             var productData = {
-                email: $('#email').val(),
-                password: $('#password').val(),
+                name: $('#joinName').val(),
+                email: $('#joinEmail').val(),
+                password: $('#joinPassword').val(),
+                role: $('#role').is(':checked') ? 'admin' : 'user'
+            };
+            $.ajax({
+                type: 'POST',
+                url: '/spring-gift/members/register',
+                contentType: 'application/json',
+                data: JSON.stringify(productData),
+                success: function (response) {
+                    if (response.redirectUrl) {
+                        window.location.href = response.redirectUrl;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    var errorMessage = xhr.responseText;
+                    alert(errorMessage);
+                }
+            });
+        });
 
+        // 로그인
+        $('#loginButton').on('click', function (e) {
+            e.preventDefault();
+            var loginData = {
+                email: $('#email').val(),
+                password: $('#password').val()
             };
             $.ajax({
                 type: 'POST',
                 url: '/spring-gift/members/login',
                 contentType: 'application/json',
-                data: JSON.stringify(productData),
+                data: JSON.stringify(loginData),
                 success: function (response) {
-
+                    if (response.redirectUrl) {
+                        window.location.href = response.redirectUrl;
+                    }
                 },
                 error: function (xhr, status, error) {
-
+                    var errorMessage = xhr.responseText;
+                    alert(errorMessage);
                 }
             });
         });
-
     });
+</script>
 </script>
 </body>
 </html>
