@@ -1,6 +1,7 @@
 package gift.main.controller;
 
 import gift.main.dto.UserJoinRequest;
+import gift.main.dto.UserLoginRequest;
 import gift.main.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -21,19 +22,21 @@ public class MemberController {
     }
 
     @PostMapping("/members/register")
-    public ResponseEntity<?> joinMember(@RequestBody UserJoinRequest userJoinDto, HttpServletResponse response) {
-        String token = memberService.joinUser(userJoinDto);
+    public ResponseEntity<?> joinMember(@RequestBody UserJoinRequest userJoinRequest, HttpServletResponse response) {
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("token", token);
-        responseBody.put("message", "User registered successfully");
+        responseBody.put("token", memberService.joinUser(userJoinRequest));
         responseBody.put("redirectUrl", "/spring-gift");
-        // 응답 본문에 사용자 정보 혹은 성공 메시지 포함
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("redirectUrl", "/"));
 }
 
     @PostMapping("/members/login")
-    public ResponseEntity<?>
+    public ResponseEntity<?> loinMember(@RequestBody UserLoginRequest userloginDto, HttpServletResponse response) {
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("token", memberService.loginUser(userloginDto));
+        responseBody.put("redirectUrl", "/spring-gift");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.of("redirectUrl", "/"));
 
-
+    }
 }

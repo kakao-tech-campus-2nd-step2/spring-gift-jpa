@@ -63,4 +63,19 @@ public class UserDao {
         int count = jdbcTemplate.queryForObject(sql, Integer.class, email);
         return count > 0;
     }
+
+    public User existsUser(String email, String password) {
+        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new Object[]{email, password}, (rs, rowNum) -> new User(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getString("role")
+            ));
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 }

@@ -27,7 +27,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         String email = request.getHeader("email");
         String password = request.getHeader("password");
         if (!authUtil.validateToken(token,email,password)) {
-            throw new AuthException();
+            response.sendRedirect("/members/login");
+            return false;
         }
         UserVo sessionUser = new UserVo(
                 authUtil.getName(token),
@@ -40,7 +41,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    //컨트롤러 실행후
+    //컨트롤러 실행후 (예외 발생안해여!)
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
@@ -48,6 +49,9 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     // 뷰 실행 후 (컨트롤러에서 발생 예외 여기로 전송된다링구 (링구먼지암?ㅋ 링커스 친구들임)
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
     }
 }
