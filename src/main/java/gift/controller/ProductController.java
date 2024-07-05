@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.model.ProductRecord;
 import gift.repository.ProductDAO;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<ProductRecord> addProduct(@RequestBody ProductRecord product) {
+    public ResponseEntity<ProductRecord> addProduct(@Valid @RequestBody ProductRecord product) {
         ProductRecord result = productDAO.addNewRecord(product);
 
         return makeCreatedResponse(result);
@@ -39,7 +40,7 @@ public class ProductController {
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity<ProductRecord> updateProduct(@PathVariable int id, @RequestBody ProductRecord product) {
+    public ResponseEntity<ProductRecord> updateProduct(@PathVariable int id, @Valid @RequestBody ProductRecord product) {
         ProductRecord result;
         try {
             result = productDAO.replaceRecord(id, product);
@@ -53,7 +54,7 @@ public class ProductController {
     }
 
     @PatchMapping("/products/{id}")
-    public ResponseEntity<ProductRecord> updateProductPartially(@PathVariable int id, @RequestBody ProductRecord patch) {
+    public ResponseEntity<ProductRecord> updateProductPartially(@PathVariable int id, @Valid @RequestBody ProductRecord patch) {
         return ResponseEntity.ok(productDAO.updateRecord(id, patch));
     }
 

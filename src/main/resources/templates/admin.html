@@ -56,7 +56,10 @@
                 alert("상품 삭제가 완료되었습니다.")
                 window.location.href = '/';
             } else {
-                alert('Error: ' + response.statusText);
+                response.text().then(errmsg => {
+                    alert(errmsg);
+                })
+
             }
         })
     }
