@@ -7,6 +7,7 @@ import gift.global.utils.ResponseHelper;
 import gift.product.dto.ProductRequestDto;
 import gift.product.domain.Product;
 import gift.product.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,13 +35,13 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public ResponseEntity<SimpleResultResponseDto> createProduct(@RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<SimpleResultResponseDto> createProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
         productService.createProduct(productRequestDto.toServiceDto());
         return ResponseHelper.createSimpleResponse(ResultCode.CREATE_PRODUCT_SUCCESS);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SimpleResultResponseDto> updateProduct(@PathVariable(name = "id") Long id, @RequestBody ProductRequestDto productRequestDto) {
+    public ResponseEntity<SimpleResultResponseDto> updateProduct(@PathVariable(name = "id") Long id, @Valid @RequestBody ProductRequestDto productRequestDto) {
         productService.updateProduct(productRequestDto.toServiceDto(id));
         return ResponseHelper.createSimpleResponse(ResultCode.UPDATE_PRODUCT_SUCCESS);
     }

@@ -5,41 +5,21 @@
 ## Step1
 
 **요구 사항**<br>
-아래와 같이 http 메세지를 받도록 구현한다
+상품을 추가하거나 수정하는 경우, 클라이언트로부터 잘못된 값이 전달될 수 있다. 잘못된 값이 전달되면 클라이언트가 어떤 부분이 왜 잘못되었는지 인지할 수 있도록 응답을 제공한다.
 
-```http request
-GET /api/products HTTP/1.1
-```
-
-```http request
-HTTP/1.1 200 
-Content-Type: application/json
-
-[
-  {
-    "id": 8146027,
-    "name": "아이스 카페 아메리카노 T",
-    "price": 4500,
-    "imageUrl": "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"
-  }
-]
-```
+1. 상품 이름은 공백을 포함하여 최대 15자까지 입력할 수 있다.
+2. 특수 문자 가능: ( ), [ ], +, -, &, /, _ 그 외 특수 문자 사용 불가
+3. "카카오"가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있다.
 
 
 **필요 조건**<br>
-상품 데이터 관리
-현재는 별도의 데이터베이스가 없으므로 적절한 컬렉션을 이용하여 메모리에 저장한다.
-```java
-public class ProductController {
-    private final Map<Long, Product> productMap = new HashMap<>();
-}
+Validation 을 사용해서 진행한다
+```
+implementation 'spring-boot-starter-validation'
 ```
 ----
-## 구현 기능
-- product 조회
-- product 추가
-- product 수정
-- product 삭제
+**구현 기능**<br>
+요구 사항에 맞추어 입력값 검증을 추가한다
 
 
 

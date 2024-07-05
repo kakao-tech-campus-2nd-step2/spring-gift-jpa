@@ -144,6 +144,11 @@
                 success: function () {
                     $('#productModal').modal('hide');
                     loadProducts();
+                },
+                error: function (xhr) {
+                    if (xhr.status >= 400 && xhr.status < 500) {
+                        alert(xhr.responseJSON.message);
+                    }
                 }
             };
 
