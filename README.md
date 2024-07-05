@@ -193,9 +193,9 @@
   - [x] 각 검증 단계에서 발생한 에러에 대한 정보를 클라이언트에게 제공
   - [x] 예를 들어, 상품 이름 길이가 초과된 경우 "상품 이름은 최대 15자까지 입력할 수 있습니다."와 같은 메시지 반환
 
-- [ ] Spring Validation 활용
-  - [ ] spring-boot-starter-validation 의존성을 추가하여 Spring Validation 활용
-  - [ ] 상품 이름 길이, 특수 문자, "카카오" 포함 문구 검증을 위한 Validator 구현
+- [x] Spring Validation 활용
+  - [x] spring-boot-starter-validation 의존성을 추가하여 Spring Validation 활용
+  - [] 상품 이름 길이, 특수 문자, "카카오" 포함 문구 검증을 위한 Validator 구현
 
 - [ ] 예외 처리 및 응답 포맷팅
   - [ ] 검증 과정에서 발생한 예외를 처리하여 적절한 HTTP 상태 코드와 에러 메시지를 반환
