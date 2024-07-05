@@ -14,7 +14,7 @@ public class LoginService {
   }
 
   public UserDto UserSignUp(UserDto userInfo) {
-    userDao.UserSignUp(userInfo);
+    userDao.createUser(userInfo);
     return userInfo;
   }
 

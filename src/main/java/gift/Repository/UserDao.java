@@ -14,7 +14,7 @@ public class UserDao {
     this.jdbcTemplate = jdbcTemplate;
   }
 
-  public void UserSignUp(UserDto userInfo) {
+  public void createUser(UserDto userInfo) {
     var sql = "INSERT INTO USERS(email,password) VALUES(?,?)";
     jdbcTemplate.update(sql, userInfo.getEmail(), userInfo.getPassword());
   }
