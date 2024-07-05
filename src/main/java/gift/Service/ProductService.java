@@ -32,7 +32,6 @@ public class ProductService {
   public ProductDto updateProduct(Long id, @Valid ProductDto updatedProductDto) {
     ProductDto existingProductDto = productDao.selectProduct(id);
     if (existingProductDto !=null){
-      updatedProductDto.setId(id);
       productDao.updateProduct(updatedProductDto);
     }
     return existingProductDto;
