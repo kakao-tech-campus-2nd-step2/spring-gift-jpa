@@ -179,11 +179,11 @@ public class ProductDtoControllerTest {
     Set<ConstraintViolation<ProductDto>> violations2 = validator.validate(invalidProduct2DTO);
 
     assertThrows(ConstraintViolationException.class, () -> {
-        throw new ConstraintViolationException(violations1);
+      throw new ConstraintViolationException(violations1);
     });
 
     assertThrows(ConstraintViolationException.class, () -> {
-        throw new ConstraintViolationException(violations2);
+      throw new ConstraintViolationException(violations2);
     });
   }
 }
