@@ -31,12 +31,18 @@ public class JdbcMemberRepository implements MemberRepository {
     }
 
     @Override
-    public void save(Member member) {
+    public Member save(Member member) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("email", member.getEmail());
         parameters.put("password", member.getPassword());
         Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
         member.setUser_id(newId.longValue());
+        return member;
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return false;
     }
 
     private static final RowMapper<Member> userRowMapper = (ResultSet rs, int rowNum) -> {
