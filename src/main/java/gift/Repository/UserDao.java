@@ -19,15 +19,17 @@ public class UserDao {
     jdbcTemplate.update(sql, userInfo.getEmail(), userInfo.getPw());
   }
 
-  public UserDto UserLogin(String email, String pw){
+  public UserDto UserLogin(String email, String pw) {
     var sql = "SELECT * FROM USERS WHERE email = ?";
-    return jdbcTemplate.queryForObject(sql, new String[]{email},userRowMapper());
+    return jdbcTemplate.queryForObject(sql, new String[]{email}, userRowMapper());
   }
 
+
   private RowMapper<UserDto> userRowMapper() {
-    return (rs,rowNum)-> new UserDto(
+    return (rs, rowNum) -> new UserDto(
       rs.getString("email"),
       rs.getString("pw")
     );
   }
+
 }
