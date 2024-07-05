@@ -30,7 +30,7 @@ public class LoginController {
   public ResponseEntity<JwtToken> userLogin(
     @Valid @RequestBody LoginDto userInfo) {
     String email = userInfo.getEmail();
-    String pw = userInfo.getPw();
-    return loginService.UserLogin(email,pw);
+    String password = userInfo.getPassword();
+    return loginService.UserLogin(email,password);
   }
 }

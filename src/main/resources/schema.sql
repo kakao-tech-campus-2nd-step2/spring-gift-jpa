@@ -10,5 +10,5 @@ CREATE TABLE product (
 
 CREATE TABLE users (
                       email VARCHAR(255) PRIMARY KEY,
-                      pw VARCHAR(255)
+                      password VARCHAR(255)
 );

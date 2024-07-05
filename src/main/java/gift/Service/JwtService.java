@@ -25,7 +25,7 @@ public class JwtService {
     String accessToken = Jwts.builder()
       .setSubject(loginDto.getEmail())
       .claim("email", loginDto.getEmail())
-      .claim("pw", loginDto.getPw())
+      .claim("pw", loginDto.getPassword())
       .setExpiration(Date.from(expiresAt))
       .signWith(Keys.hmacShaKeyFor(key.getBytes()), SignatureAlgorithm.HS256)
       .compact();

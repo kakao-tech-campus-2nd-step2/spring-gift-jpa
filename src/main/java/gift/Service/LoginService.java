@@ -22,14 +22,14 @@ public class LoginService {
     return userInfo;
   }
 
-  public ResponseEntity<JwtToken> UserLogin(String email, String pw) {
-    LoginDto loginDto = loginDao.UserLogin(email, pw);
+  public ResponseEntity<JwtToken> UserLogin(String email, String password) {
+    LoginDto loginDto = loginDao.UserLogin(email, password);
     JwtToken jwtToken = null;
 
     if (loginDto==null){
       return ResponseEntity.notFound().build();
     }
-    if (email.equals(loginDto.getEmail()) && pw.equals(loginDto.getPw())){
+    if (email.equals(loginDto.getEmail()) && password.equals(loginDto.getPassword())){
       jwtToken = jwtService.createAccessToken(loginDto);
       if (jwtService.isValidToken(jwtToken)){
         return ResponseEntity.ok(jwtToken);

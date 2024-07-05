@@ -14,11 +14,11 @@ public class LoginDto {
 
   @NotBlank
   @Size(min=5,max=15)
-  private String pw;
+  private String password;
 
-  public LoginDto(String email, String pw) {
+  public LoginDto(String email, String password) {
     this.email = email;
-    this.pw = pw;
+    this.password = password;
   }
 
 
@@ -27,8 +27,8 @@ public class LoginDto {
   }
 
 
-  public String getPw() {
-    return this.pw;
+  public String getPassword() {
+    return this.password;
   }
 
 }

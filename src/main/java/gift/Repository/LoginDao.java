@@ -15,11 +15,11 @@ public class LoginDao {
   }
 
   public void UserSignUp(LoginDto userInfo) {
-    var sql = "INSERT INTO USERS(email,pw) VALUES(?,?)";
-    jdbcTemplate.update(sql, userInfo.getEmail(), userInfo.getPw());
+    var sql = "INSERT INTO USERS(email,password) VALUES(?,?)";
+    jdbcTemplate.update(sql, userInfo.getEmail(), userInfo.getPassword());
   }
 
-  public LoginDto UserLogin(String email, String pw){
+  public LoginDto UserLogin(String email, String password){
     var sql = "SELECT * FROM USERS WHERE email = ?";
     return jdbcTemplate.queryForObject(sql, new String[]{email},userRowMapper());
   }
@@ -27,7 +27,7 @@ public class LoginDao {
   private RowMapper<LoginDto> userRowMapper() {
     return (rs,rowNum)-> new LoginDto(
       rs.getString("email"),
-      rs.getString("pw")
+      rs.getString("password")
     );
   }
 }
