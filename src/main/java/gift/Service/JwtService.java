@@ -12,12 +12,14 @@ import io.jsonwebtoken.security.Keys;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JwtService {
 
-  private String key = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
+  @Value("${jwt.secret}")
+  private String key;
 
   public JwtToken createAccessToken(UserDto userDto) {
     Instant now = Instant.now();
@@ -27,7 +29,6 @@ public class JwtService {
       .setHeaderParam("typ", "Bearer") // 토큰 타입을 지정
       .setSubject(userDto.getEmail())
       .claim("email", userDto.getEmail())
-      .claim("pw", userDto.getPw())
       .setExpiration(Date.from(expiresAt))
       .signWith(Keys.hmacShaKeyFor(key.getBytes()), SignatureAlgorithm.HS256)
       .compact();

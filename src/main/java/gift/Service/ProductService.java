@@ -21,19 +21,17 @@ public class ProductService {
 
   public ProductDto getProductById(Long id) {
     return productDao.selectProduct(id);
-
   }
 
   public ProductDto addProduct(@Valid ProductDto productDTO){
     productDao.insertProduct(productDTO);
     return productDTO;
   }
-  
+
   public ProductDto updateProduct(Long id, @Valid ProductDto updatedProductDto) {
     ProductDto existingProductDto = productDao.selectProduct(id);
     if (existingProductDto !=null){
-      updatedProductDto.setId(id);
-      productDao.updateProduct(updatedProductDto);
+      productDao.updateProduct(id,updatedProductDto);
     }
     return existingProductDto;
   }
@@ -44,6 +42,7 @@ public class ProductService {
       productDao.deleteProduct(id);
     }
     return existingProductDto;
+
   }
 
 }

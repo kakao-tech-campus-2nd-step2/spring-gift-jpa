@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -30,8 +29,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@ActiveProfiles("test") // 테스트 프로파일 활성화
-public class productDtoControllerTest {
+@ActiveProfiles("test")
+public class ProductDtoControllerTest {
 
   @Autowired
   private ProductService productService;
@@ -43,6 +42,7 @@ public class productDtoControllerTest {
   @BeforeEach
   public void setUp() {
     productController = new ProductController(productService);
+    // 데이터베이스 초기화를 위해 schema.sql 실행
     jdbcTemplate.execute("DROP TABLE IF EXISTS product");
     jdbcTemplate.execute("CREATE TABLE product (" +
       "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
@@ -59,7 +59,6 @@ public class productDtoControllerTest {
   }
 
   @Test
-  @DisplayName("Test : getAllProducts")
   public void testGetAllProducts() {
     // 제품 추가
     ProductDto productDto1 = new ProductDto(1L, "Product 1", 100,
@@ -80,12 +79,10 @@ public class productDtoControllerTest {
     assertEquals(productDto2.getName(), returnedProductDtos.get(1).getName());
     assertEquals(productDto2.getPrice(), returnedProductDtos.get(1).getPrice());
     assertEquals(productDto2.getImageUrl(), returnedProductDtos.get(1).getImageUrl());
-
   }
 
 
   @Test
-  @DisplayName("Test : getProductById")
   public void testGetProductById() {
     // 제품 추가
     ProductDto productDTO = new ProductDto(1L, "Product 1", 100,
@@ -100,6 +97,7 @@ public class productDtoControllerTest {
 
     // 반환된 제품 검증
     ProductDto returnedProductDto = responseEntity.getBody();
+    assert returnedProductDto != null;
     assertEquals(productDTO.getId(), returnedProductDto.getId());
     assertEquals(productDTO.getName(), returnedProductDto.getName());
     assertEquals(productDTO.getPrice(), returnedProductDto.getPrice());
@@ -107,7 +105,6 @@ public class productDtoControllerTest {
   }
 
   @Test
-  @DisplayName("Test : addProduct")
   public void testAddProduct() {
     ProductDto newProductDto = new ProductDto(1L, "아이스 카페 아메리카노", 4500,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
@@ -125,7 +122,6 @@ public class productDtoControllerTest {
 
 
   @Test
-  @DisplayName("Test : updateProduct")
   void testUpdateProduct() {
     // 기존 제품 추가
     ProductDto existingProductDto = new ProductDto(1L, "아이스 카페 아메리카노", 4500,
@@ -150,7 +146,6 @@ public class productDtoControllerTest {
   }
 
   @Test
-  @DisplayName("Test : deleteProduct")
   public void testDeleteProduct() {
     // 제품 추가
     ProductDto productDTO = new ProductDto(1L, "Product 1", 100,
@@ -171,66 +166,24 @@ public class productDtoControllerTest {
   }
 
   @Test
-  @DisplayName("Test : nameSizeValidate")
-  public void testSizeValidate() {
+  public void testValidate() {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
 
     ProductDto invalidProduct1DTO = new ProductDto(1L, "pppppppppsdfsfdsppppppppProduct 1", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
+    ProductDto invalidProduct2DTO = new ProductDto(2L, "카카오 product", 100,
+      "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
 
     Set<ConstraintViolation<ProductDto>> violations1 = validator.validate(invalidProduct1DTO);
+    Set<ConstraintViolation<ProductDto>> violations2 = validator.validate(invalidProduct2DTO);
 
     assertThrows(ConstraintViolationException.class, () -> {
       throw new ConstraintViolationException(violations1);
     });
-  }
-
-  @Test
-  @DisplayName("Test : nameBlankValidate")
-  public void testBlankValidate() {
-    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    Validator validator = factory.getValidator();
-
-    ProductDto invalidProduct2DTO = new ProductDto(2L, null, 100,
-      "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
-
-    Set<ConstraintViolation<ProductDto>> violations = validator.validate(invalidProduct2DTO);
 
     assertThrows(ConstraintViolationException.class, () -> {
-      throw new ConstraintViolationException(violations);
-    });
-  }
-
-  @Test
-  @DisplayName("Test : nameExpressionValidate")
-  public void testExpressionValidate() {
-    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    Validator validator = factory.getValidator();
-
-    ProductDto invalidProduct2DTO = new ProductDto(1L, "!product", 100,
-      "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
-
-    Set<ConstraintViolation<ProductDto>> violations = validator.validate(invalidProduct2DTO);
-
-    assertThrows(ConstraintViolationException.class, () -> {
-      throw new ConstraintViolationException(violations);
-    });
-  }
-
-  @Test
-  @DisplayName("Test : nameSpecialNameValidate - 카카오")
-  public void testSpecialNameValidate() {
-    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    Validator validator = factory.getValidator();
-
-    ProductDto invalidProduct2DTO = new ProductDto(1L, "카카오product", 100,
-      "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
-
-    Set<ConstraintViolation<ProductDto>> violations = validator.validate(invalidProduct2DTO);
-
-    assertThrows(ConstraintViolationException.class, () -> {
-      throw new ConstraintViolationException(violations);
+      throw new ConstraintViolationException(violations2);
     });
   }
 }

@@ -14,12 +14,12 @@ public class UserDao {
     this.jdbcTemplate = jdbcTemplate;
   }
 
-  public void UserSignUp(UserDto userInfo) {
-    var sql = "INSERT INTO USERS(email,pw) VALUES(?,?)";
-    jdbcTemplate.update(sql, userInfo.getEmail(), userInfo.getPw());
+  public void createUser(UserDto userInfo) {
+    var sql = "INSERT INTO USERS(email,password) VALUES(?,?)";
+    jdbcTemplate.update(sql, userInfo.getEmail(), userInfo.getPassword());
   }
 
-  public UserDto UserLogin(String email, String pw) {
+  public UserDto getUserByEmail(String email) {
     var sql = "SELECT * FROM USERS WHERE email = ?";
     return jdbcTemplate.queryForObject(sql, new String[]{email}, userRowMapper());
   }
@@ -28,7 +28,7 @@ public class UserDao {
   private RowMapper<UserDto> userRowMapper() {
     return (rs, rowNum) -> new UserDto(
       rs.getString("email"),
-      rs.getString("pw")
+      rs.getString("password")
     );
   }
 
