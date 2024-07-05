@@ -22,7 +22,6 @@ public class LoginController {
 
   @PostMapping("/signup")
   public LoginDto UserSignUp(@RequestBody LoginDto userInfo) {
-    System.out.println(userInfo);
     return loginService.UserSignUp(userInfo);
   }
 
