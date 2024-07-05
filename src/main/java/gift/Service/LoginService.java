@@ -3,6 +3,7 @@ package gift.Service;
 import gift.DTO.JwtToken;
 import gift.DTO.LoginDto;
 import gift.Repository.UserDao;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +35,8 @@ public class LoginService {
       if (jwtService.isValidToken(jwtToken)){
         return ResponseEntity.ok(jwtToken);
       }
-      return ResponseEntity.status(401).build();
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-    return ResponseEntity.status(403).build();
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
   }
 }
