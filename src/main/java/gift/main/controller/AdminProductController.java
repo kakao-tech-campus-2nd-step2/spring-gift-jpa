@@ -13,10 +13,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminProductController {
     private final ProductService productService;
 
-    public AdminController(ProductService productService) {
+    public AdminProductController(ProductService productService) {
         this.productService = productService;
     }
 
