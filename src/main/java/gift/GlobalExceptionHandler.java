@@ -19,6 +19,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(EmptyResultDataAccessException.class)
   public ResponseEntity<String> handleEmptyResultDataAccessException(
     EmptyResultDataAccessException ex) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+      .body("해당 데이터가 없습니다");
   }
 }
