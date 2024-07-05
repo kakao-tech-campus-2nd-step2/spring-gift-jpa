@@ -24,14 +24,10 @@ public class MemberService {
         //유효성 검사해야하는데용~!
         if (userDao.existsUserByEmail(userJoinRequest.email())) {
             throw new UserException("이미 존재하는 이메일 주소입니다.");
-
-
         }
-        System.out.println("userJoinRequest.toString() = " + userJoinRequest.toString());
-        UserDto validUser = new UserDto(userJoinRequest) ;
-        userDao.insertUser(validUser);
-
-        String token = authUtil.createToken(validUser);
+        UserDto userDto = new UserDto(userJoinRequest) ;
+        Long id = userDao.insertUser(userDto);
+        String token = authUtil.createToken(id,userDto);
         return token;
 
     }
