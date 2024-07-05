@@ -200,3 +200,117 @@
 - [x] 예외 처리 및 응답 포맷팅
   - [x] 검증 과정에서 발생한 예외를 처리하여 적절한 HTTP 상태 코드와 에러 메시지를 반환
   - [x] 에러 메시지를 일관된 포맷으로 제공하여 클라이언트가 이해하기 쉽도록 함
+
+---
+## 2단계 : 회원 로그인
+
+## 기능 요구 사항
+- 사용자가 회원 가입, 로그인, 추후 회원별 기능을 이용할 수 있도록 구현한다.
+
+  - 회원은 이메일과 비밀번호를 입력하여 가입한다.
+  - 토큰을 받으려면 이메일과 비밀번호를 보내야 하며, 가입한 이메일과 비밀번호가 일치하면 토큰이 발급된다.
+  - 토큰을 생성하는 방법에는 여러 가지가 있다. 방법 중 하나를 선택한다.
+  - (선택) 회원을 조회, 추가, 수정, 삭제할 수 있는 관리자 화면을 구현한다.
+  - 아래 예시와 같이 HTTP 메시지를 주고받도록 구현한다.
+
+    - 회원 가입
+      - Request
+      ```
+        POST /members/register HTTP/1.1
+        content-type: application/json
+        host: localhost:8080
+      
+        {
+          "email": "admin@email.com",
+          "password": "password"
+        }
+      ```
+      - Response
+      ```
+        HTTP/1.1 200
+        Content-Type: application/json
+      
+        {
+          "token": ""
+        }
+      ```
+    - 로그인
+      - Request
+      ```
+      POST /members/login HTTP/1.1
+      content-type: application/json
+      host: localhost:8080
+  
+      {
+      "email": "admin@email.com",
+      "password": "password"
+      }
+      ```
+      - Response
+      ```
+        HTTP/1.1 200
+        Content-Type: application/json
+            
+      {
+      "token": ""
+      }
+      ```
+
+## 프로그래밍 요구 사항
+- 힌트
+  - Basic 인증
+  - Base64로 인코딩된 사용자 ID, 비밀번호 쌍을 인증 정보(credentials) 값으로 사용한다.
+
+  - Authorization: Basic base64({EMAIL}:{PASSWORD})
+  - JSON Web Token
+  - JJWT 라이브러리를 사용하여 JWT을 쉽게 만들 수 있다.
+```
+  dependencies {
+    compileOnly 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+  }
+ ```
+```
+  String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
+  String accessToken = Jwts.builder()
+  .setSubject(member.getId().toString())
+  .claim("name", member.getName())
+  .claim("role", member.getRole())
+  .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
+  .compact();
+```
+
+### 응답 코드
+- Authorization 헤더가 유효하지 않거나 토큰이 유효하지 않은 경우 401 Unauthorized를 반환한다.
+- 401 Unauthorized 클라이언트 오류 상태 응답 코드는 해당 리소스에 유효한 인증 자격 증명이 없기 때문에 요청이 적용되지 않았음을 나타냅니다. 이 상태는 WWW-Authenticate (en-US) 헤더와 함께 전송되며, 이 헤더는 올바르게 인증하는 방법에 대한 정보를 포함하고 있습니다. 이 상태는 403과 비슷하지만, 401 Unauthorized의 경우에는 인증이 가능합니다.
+
+- 잘못된 로그인, 비밀번호 찾기, 비밀번호 변경 요청은 403 Forbidden을 반환한다.
+- HTTP 403 Forbidden 클라이언트 오류 상태 응답 코드는 서버에 요청이 전달되었지만, 권한 때문에 거절되었다는 것을 의미합니다. 이 상태는 401과 비슷하지만, 로그인 로직(틀린 비밀번호로 로그인 행위)처럼 반응하여 재인증(re-authenticating)을 하더라도 지속적으로 접속을 거절합니다.
+
+## 구현할 기능 목록
+- [ ] 회원가입 기능
+  - [ ] 이메일, 비밀번호를 입력하여 가입한다.
+  - [ ] 이메일은 중복되지 않아야한다.
+  - [ ] 이메일이 중복된 경우, 오류 메시지를 보낸다.
+  
+- [ ] 로그인 기능
+  - [ ] 토큰을 받기 위해 이메일과 비밀번호를 보낸다.
+  - [ ] 이메일과 비밀번호 중 하나도 일치하지 않으면 오류 메시지를 전달환다.
+  - [ ] 로그인 성공 시, 토큰을 전달한다.
+  
+- [ ] 토큰을 사용하기 위한 환경을 구성
+  - [ ] build.gradle에 의존성 추가
+  - [ ] properties에 관련 내용 추가
+  - [ ] 토큰을 다루기 위한 코드 작성
+
+## 추가할 기능
+- [ ] 회원 가입 기능
+  - [ ] 이메일, 비밀번호 말고도 이름, 성별, 생년월일, 전화번호와 같은 정보들을 추가한다.
+  - [ ] 전화번호는 중복되지 않아야 한다.
+- [ ] 회원 CRUD
+  - [ ] 전체 회원 조회
+  - [ ] 특정 회원 조회
+  - [ ] 특정 회원 수정
+  - [ ] 특정 회원 삭제
+
