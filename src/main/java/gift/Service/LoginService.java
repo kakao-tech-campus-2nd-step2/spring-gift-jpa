@@ -2,28 +2,28 @@ package gift.Service;
 
 import gift.DTO.JwtToken;
 import gift.DTO.LoginDto;
-import gift.Repository.LoginDao;
+import gift.Repository.UserDao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LoginService {
 
-  private final LoginDao loginDao;
+  private final UserDao userDao;
   private final JwtService jwtService;
 
-  public LoginService(LoginDao loginDao, JwtService jwtService) {
-    this.loginDao = loginDao;
+  public LoginService(UserDao userDao, JwtService jwtService) {
+    this.userDao = userDao;
     this.jwtService = jwtService;
   }
 
   public LoginDto UserSignUp(LoginDto userInfo) {
-    loginDao.UserSignUp(userInfo);
+    userDao.UserSignUp(userInfo);
     return userInfo;
   }
 
   public ResponseEntity<JwtToken> UserLogin(String email, String password) {
-    LoginDto loginDto = loginDao.getUserByEmail(email);
+    LoginDto loginDto = userDao.getUserByEmail(email);
     JwtToken jwtToken;
 
     if (loginDto==null){

@@ -6,11 +6,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class LoginDao {
+public class UserDao {
 
   private final JdbcTemplate jdbcTemplate;
 
-  public LoginDao(JdbcTemplate jdbcTemplate) {
+  public UserDao(JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
   }
 
