@@ -9,6 +9,7 @@ CREATE TABLE product (
 );
 
 CREATE TABLE users (
-                      email VARCHAR(255) PRIMARY KEY,
+                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                       email VARCHAR(255),
                       password VARCHAR(255)
 );
