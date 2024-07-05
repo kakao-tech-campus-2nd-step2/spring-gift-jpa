@@ -19,8 +19,9 @@ public class AuthUtil {
         this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
-    public String createToken(String name, String email, String password, String role) {
+    public String createToken(Long id, String name, String email, String password, String role) {
         String token =  Jwts.builder()
+                .claim("id", id)
                 .claim("name", name)
                 .claim("email", email)
                 .claim("password", password)
@@ -34,6 +35,7 @@ public class AuthUtil {
 
     public String createToken(User user) {
         String token =  Jwts.builder()
+                .claim("id", user.getId())
                 .claim("name", user.getName())
                 .claim("email", user.getEmail())
                 .claim("password", user.getPassword())
@@ -45,9 +47,9 @@ public class AuthUtil {
         return "Bearer " + token;
     }
 
-    public String createToken(UserDto userDto) {
-        System.out.println("호출1-5");
+    public String createToken(Long id, UserDto userDto) {
         String token =  Jwts.builder()
+                .claim("id", id)
                 .claim("name", userDto.getName())
                 .claim("email", userDto.getEmail())
                 .claim("password", userDto.getPassword())
@@ -61,19 +63,44 @@ public class AuthUtil {
 
     public boolean validateToken(String token, String email, String role) {
         if (isExpired(token)) {
-            System.out.println("1");
             return false;
 
         }
 
         if (!email.equals(getEmail(token))) {
-            System.out.println("2");
             return false;
         }
 
         return true;
 
     }
+
+    public Long getId(String token) {
+        return Jwts.parser()//파서 생성
+                .verifyWith(secretKey)
+                .build()//파서 키 설정과 빌드 완료
+                .parseSignedClaims(token)//토큰 서명 확인
+                .getPayload()
+                .get("id", Long.class);
+    }
+    public String getPassword(String token) {
+        return Jwts.parser()//파서 생성
+                .verifyWith(secretKey)
+                .build()//파서 키 설정과 빌드 완료
+                .parseSignedClaims(token)//토큰 서명 확인
+                .getPayload()
+                .get("password", String.class);
+    }
+
+    public String getStringId(String token) {
+        return Jwts.parser()//파서 생성
+                .verifyWith(secretKey)
+                .build()//파서 키 설정과 빌드 완료
+                .parseSignedClaims(token)//토큰 서명 확인
+                .getPayload()
+                .get("id", String.class);
+    }
+
 
     public String getEmail(String token) {
         return Jwts.parser()//파서 생성

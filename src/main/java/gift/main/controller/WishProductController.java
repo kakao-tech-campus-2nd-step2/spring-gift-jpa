@@ -1,7 +1,13 @@
 package gift.main.controller;
 
+import gift.main.dto.ProductRequest;
+import gift.main.dto.UserVo;
+import gift.main.dto.WishListProductDto;
 import gift.main.entity.Product;
+import gift.main.entity.WishlistProduct;
 import gift.main.repository.ProductDao;
+import gift.main.repository.WishlistProductDao;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +17,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
-public class UserProductController {
+public class WishProductController {
     private final ProductDao productDao;
+    private final WishlistProductDao wishlistProductDao;
 
-    public UserProductController(ProductDao productDao) {
+    public WishProductController(ProductDao productDao, WishlistProductDao wishlistProductDao) {
         this.productDao = productDao;
+        this.wishlistProductDao = wishlistProductDao;
     }
 
     @GetMapping()
@@ -26,11 +34,28 @@ public class UserProductController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteProducts(@PathVariable(name = "id") Long id) {
-        List<Product> products = productDao.selectProductAll();
-        Map<String, List<Product>> response = new HashMap<>();
-        response.put("products", products);
+    @DeleteMapping("/wishlist/{productId}")
+    public ResponseEntity<?> deleteProducts(@PathVariable(name = "productId") Long productId, HttpSession session) {
+        UserVo seesionUser = (UserVo) session.getAttribute("user");
+        wishlistProductDao.deleteWishlistProductByUserIdAndProductId(seesionUser.getId(), productId);
+        return ResponseEntity.ok("성공적으로 삭제 완료~!");
+    }
+
+    @GetMapping("/wishlist")
+    public ResponseEntity<?> deleteProducts(HttpSession session) {
+        UserVo seesionUser = (UserVo) session.getAttribute("user");
+        List<WishlistProduct> wishlistProducts = wishlistProductDao.selectWishlistProductsByUserId(seesionUser.getId());
+        Map<String, List<WishlistProduct>> response = new HashMap<>();
+        response.put("wishlistProducts", wishlistProducts);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/wishlist/{productId}")
+    public ResponseEntity<?> addWishlistProduct(@PathVariable(name = "productId") Long productId, HttpSession session){
+        UserVo seesionUser = (UserVo) session.getAttribute("user");
+        WishListProductDto wishListProductDto = new WishListProductDto(productId, seesionUser.getId());
+        wishlistProductDao.insertWishlistProduct(wishListProductDto);
+        return ResponseEntity.ok("성공적으로 등록~");
+    }
+
 }
