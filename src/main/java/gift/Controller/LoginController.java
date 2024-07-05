@@ -35,7 +35,7 @@ public class LoginController {
     String email = userInfo.getEmail();
     String password = userInfo.getPassword();
 
-    LoginDto loginDto = loginService.UserLogin(email, password);
+    LoginDto loginDto = loginService.UserLogin(userInfo);
     JwtToken jwtToken;
 
     if (loginDto == null) {
