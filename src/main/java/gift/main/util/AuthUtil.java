@@ -20,7 +20,7 @@ public class AuthUtil {
     }
 
     public String createToken(String name, String email, String password, String role) {
-        return Jwts.builder()
+        String token =  Jwts.builder()
                 .claim("name", name)
                 .claim("email", email)
                 .claim("password", password)
@@ -29,10 +29,11 @@ public class AuthUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
                 .signWith(secretKey) // 시그니처~!
                 .compact();
+        return "Bearer " + token;
     }
 
     public String createToken(User user) {
-        return Jwts.builder()
+        String token =  Jwts.builder()
                 .claim("name", user.getName())
                 .claim("email", user.getEmail())
                 .claim("password", user.getPassword())
@@ -41,11 +42,12 @@ public class AuthUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
                 .signWith(secretKey) // 시그니처~!
                 .compact();
+        return "Bearer " + token;
     }
 
     public String createToken(UserDto userDto) {
         System.out.println("호출1-5");
-        return Jwts.builder()
+        String token =  Jwts.builder()
                 .claim("name", userDto.getName())
                 .claim("email", userDto.getEmail())
                 .claim("password", userDto.getPassword())
@@ -54,7 +56,7 @@ public class AuthUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
                 .signWith(secretKey) // 시그니처~!
                 .compact();
-
+        return "Bearer " + token;
     }
 
     public boolean validateToken(String token, String email, String role) {

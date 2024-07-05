@@ -32,7 +32,6 @@ public class MemberService {
         userDao.insertUser(validUser);
 
         String token = authUtil.createToken(validUser);
-        System.out.println("token = " + token);
         return token;
 
     }

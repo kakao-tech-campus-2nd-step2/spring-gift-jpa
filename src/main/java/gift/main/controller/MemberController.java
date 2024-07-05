@@ -25,7 +25,7 @@ public class MemberController {
     public ResponseEntity<?> joinMember(@RequestBody UserJoinRequest userJoinRequest, HttpServletResponse response) {
 
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("token", memberService.joinUser(userJoinRequest));
+        responseBody.put("Authorization", memberService.joinUser(userJoinRequest));
         responseBody.put("redirectUrl", "/spring-gift");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(responseBody);
@@ -34,7 +34,7 @@ public class MemberController {
     @PostMapping("/members/login")
     public ResponseEntity<?> loinMember(@RequestBody UserLoginRequest userloginDto, HttpServletResponse response) {
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("token", memberService.loginUser(userloginDto));
+        responseBody.put("Authorization", memberService.loginUser(userloginDto));
         responseBody.put("redirectUrl", "/spring-gift");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(responseBody);
