@@ -23,7 +23,7 @@ public class LoginService {
   }
 
   public ResponseEntity<JwtToken> UserLogin(String email, String password) {
-    LoginDto loginDto = loginDao.UserLogin(email, password);
+    LoginDto loginDto = loginDao.getUserByEmail(email);
     JwtToken jwtToken;
 
     if (loginDto==null){
