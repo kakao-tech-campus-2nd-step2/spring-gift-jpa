@@ -166,7 +166,7 @@ public class ProductDtoControllerTest {
   }
 
   @Test
-  public void testValidate(){
+  public void testValidate() {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
 

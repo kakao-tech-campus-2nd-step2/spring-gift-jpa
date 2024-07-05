@@ -13,7 +13,7 @@ public class LoginDto {
   private final String email;
 
   @NotBlank
-  @Size(min=5,max=15)
+  @Size(min = 5, max = 15)
   private final String password;
 
   public LoginDto(String email, String password) {

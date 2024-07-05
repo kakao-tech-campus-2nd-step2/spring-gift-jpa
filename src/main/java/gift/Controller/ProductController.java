@@ -46,8 +46,8 @@ public class ProductController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDto updatedProductDto)
-  {
+  public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id,
+    @Valid @RequestBody ProductDto updatedProductDto) {
     ProductDto existingProductDto = productService.updateProduct(id, updatedProductDto);
     if (existingProductDto == null) {
       return ResponseEntity.notFound().build();

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class LoginController {
 
   private final LoginService loginService;
@@ -21,7 +21,7 @@ public class LoginController {
 
   public LoginController(LoginService loginService, JwtService jwtService) {
     this.loginService = loginService;
-    this.jwtService=jwtService;
+    this.jwtService = jwtService;
   }
 
   @PostMapping("/signup")

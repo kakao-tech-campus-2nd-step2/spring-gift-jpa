@@ -18,7 +18,7 @@ public class LoginService {
     return userInfo;
   }
 
-  public LoginDto UserLogin(String email,String password) {
+  public LoginDto UserLogin(String email, String password) {
     LoginDto loginDto = userDao.getUserByEmail(email);
     return loginDto;
   }
