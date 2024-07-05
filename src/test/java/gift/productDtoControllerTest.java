@@ -29,7 +29,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-@ActiveProfiles("test") // 테스트 프로파일 활성화
+@ActiveProfiles("test")
 public class ProductDtoControllerTest {
 
   @Autowired
