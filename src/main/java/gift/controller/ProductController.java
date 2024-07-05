@@ -4,6 +4,7 @@ import gift.domain.Product;
 import gift.dto.CreateProductDto;
 import gift.dto.UpdateProductDto;
 import gift.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class ProductController {
 
     // 상품 추가
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody CreateProductDto productDto) {
+    public ResponseEntity<Product> createProduct(@Valid @RequestBody CreateProductDto productDto) {
         Product product = productService.createProduct(productDto);
         return ResponseEntity.ok(product);
     }
@@ -46,7 +47,7 @@ public class ProductController {
 
     // 상품 정보 update
     @PutMapping("/{product_id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long product_id, @RequestBody UpdateProductDto productDto) {
+    public ResponseEntity<Product> updateProduct(@PathVariable Long product_id, @Valid @RequestBody UpdateProductDto productDto) {
         Product updatedProduct = productService.updateProduct(product_id, productDto);
         return ResponseEntity.ok(updatedProduct);
     }
