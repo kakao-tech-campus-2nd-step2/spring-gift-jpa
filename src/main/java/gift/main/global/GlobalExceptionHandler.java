@@ -22,8 +22,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public String handleGeneralException(Model model, Exception e) {
-        System.out.println("e.getClass() = " + e.getClass());
-        System.out.println("e.getMessage() = " + e.getMessage());
         model.addAttribute("error",e.getMessage());
         String refererUrl = " http://localhost:8080/spring-gift/";
         model.addAttribute("refererUrl", refererUrl);
