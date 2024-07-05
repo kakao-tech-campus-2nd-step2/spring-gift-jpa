@@ -36,13 +36,12 @@ public class LoginController {
     String password = userInfo.getPassword();
 
     UserDto userDto = loginService.UserLogin(userInfo);
-    JwtToken jwtToken;
 
     if (userDto == null) {
       return ResponseEntity.notFound().build();
     }
     if (email.equals(userDto.getEmail()) && password.equals(userDto.getPassword())) {
-      jwtToken = jwtService.createAccessToken(userDto);
+      JwtToken jwtToken = jwtService.createAccessToken(userDto);
       if (jwtService.isValidToken(jwtToken)) {
         return ResponseEntity.ok(jwtToken);
       }
