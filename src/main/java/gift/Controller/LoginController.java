@@ -28,8 +28,9 @@ public class LoginController {
 
   @PostMapping("/login")
   public ResponseEntity<JwtToken> userLogin(
-    @RequestHeader("email") String email,
-    @RequestHeader("pw") String pw) {
+    @RequestBody LoginDto userInfo) {
+    String email = userInfo.getEmail();
+    String pw = userInfo.getPw();
     return loginService.UserLogin(email,pw);
   }
 }
