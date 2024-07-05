@@ -1,16 +1,15 @@
-package gift.service;
+package gift.business.service;
 
-import gift.domain.Product;
-import gift.dto.CreateProductDto;
-import gift.dto.ProductDto;
-import gift.dto.UpdateProductDto;
-import gift.repository.ProductRepository;
+import gift.business.dto.*;
+import gift.persistence.entity.Product;
+import gift.persistence.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class ProductService {
+
     private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
@@ -23,14 +22,13 @@ public class ProductService {
         return ProductDto.from(product);
     }
 
-    public Long createProduct(CreateProductDto giftDto) {
-        Product product = giftDto.toProduct();
+    public Long createProduct(ProductRegisterDto productRegisterDto) {
+        Product product = productRegisterDto.toProduct();
         return productRepository.saveProduct(product);
     }
 
-    public Long updateProduct(UpdateProductDto giftDto) {
-        Long id = giftDto.id();
-        Product product = giftDto.toProduct();
+    public Long updateProduct(ProductRegisterDto productRegisterDto, Long id) {
+        Product product = productRegisterDto.toProduct();
         return productRepository.updateProduct(id, product);
 
     }

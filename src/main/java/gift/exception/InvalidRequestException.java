@@ -1,6 +1,7 @@
 package gift.exception;
 
-public class InvalidRequestException extends RuntimeException{
+public class InvalidRequestException extends RuntimeException {
+
     private final ErrorCode errorCode;
 
     public InvalidRequestException(ErrorCode errorCode) {

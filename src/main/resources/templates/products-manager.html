@@ -111,7 +111,7 @@
 
         var productIds = Array.from(checkboxes).map(cb => cb.value);
 
-        fetch('/products/manager', {
+        fetch('/products', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -136,7 +136,7 @@
 <div class="form-container">
     <div>
         <h2>Add New Product</h2>
-        <form th:action="@{/products/manager}" method="post">
+        <form id="addProductForm" method="post">
             <label for="productName">Product Name:</label>
             <input type="text" id="productName" name="name" required/>
 
@@ -151,29 +151,102 @@
 
             <button type="submit">Add Product</button>
         </form>
+
+        <script>
+            document.getElementById('addProductForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const name = document.getElementById('productName').value;
+                const description = document.getElementById('productDescription').value;
+                const price = document.getElementById('productPrice').value;
+                const imageUrl = document.getElementById('productImageUrl').value;
+
+                const data = {
+                    name: name,
+                    description: description,
+                    price: price,
+                    imageUrl: imageUrl
+                };
+
+                fetch('/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/products/manager';
+                        } else {
+                            alert('상품 추가에 실패했습니다');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('상품 추가 중 오류가 발생했습니다');
+                    });
+            });
+        </script>
     </div>
     <div>
         <h2>Edit Product</h2>
-        <form th:action="@{/products/manager}" method="post">
-            <input type="hidden" name="_method" value="PUT">
-
-            <label for="productId">Product ID:</label>
+        <form id="editProductForm" method="post">
+            <label for="productId">PRODUCT ID:</label>
             <input type="text" id="productId" name="id" required/>
 
-            <label for="editProductName">Product Name:</label>
+            <label for="editProductName">PRODUCT NAME:</label>
             <input type="text" id="editProductName" name="name" required/>
 
-            <label for="editProductDescription">Description:</label>
+            <label for="editProductDescription">DESCRIPTION:</label>
             <input type="text" id="editProductDescription" name="description" required/>
 
-            <label for="editProductPrice">Price:</label>
+            <label for="editProductPrice">PRICE:</label>
             <input type="number" id="editProductPrice" name="price" step="1" required/>
 
-            <label for="editProductImageUrl">ImageUrl:</label>
+            <label for="editProductImageUrl">IMAGE URL:</label>
             <input type="text" id="editProductImageUrl" name="imageUrl" required/>
 
-            <button type="submit">Edit Product</button>
+            <button type="submit">제품 수정</button>
         </form>
+
+        <script>
+            document.getElementById('editProductForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const id = document.getElementById('productId').value;
+                const name = document.getElementById('editProductName').value;
+                const description = document.getElementById('editProductDescription').value;
+                const price = document.getElementById('editProductPrice').value;
+                const imageUrl = document.getElementById('editProductImageUrl').value;
+
+                const data = {
+                    name: name,
+                    description: description,
+                    price: price,
+                    imageUrl: imageUrl
+                };
+
+                fetch(`/products/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/products/manager';
+                        } else {
+                            alert('상품 수정에 실패했습니다');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('상품 수정 중 오류가 발생했습니다');
+                    });
+            });
+        </script>
     </div>
 </div>
 

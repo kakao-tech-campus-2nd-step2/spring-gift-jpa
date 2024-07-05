@@ -1,9 +1,8 @@
-package gift.repository;
+package gift.persistence.repository;
 
-import gift.domain.Product;
+import gift.persistence.entity.Product;
 import gift.exception.ErrorCode;
 import gift.exception.NotFoundException;
-import jakarta.annotation.PostConstruct;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,7 +12,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class ProductJDBCRepository implements ProductRepository{
+public class ProductJDBCRepository implements ProductRepository {
+
     private final JdbcTemplate jdbcTemplate;
 
     public ProductJDBCRepository(JdbcTemplate jdbcTemplate) {
@@ -24,18 +24,19 @@ public class ProductJDBCRepository implements ProductRepository{
     public Product getProductById(Long id) {
         try {
             return jdbcTemplate.queryForObject(
-                    "SELECT * FROM product WHERE id = ?",
-                    (rs, rowNum) -> new Product(
-                            rs.getLong("id"),
-                            rs.getString("name"),
-                            rs.getString("description"),
-                            rs.getInt("price"),
-                            rs.getString("url")
-                    ),
-                    id
+                "SELECT * FROM product WHERE id = ?",
+                (rs, rowNum) -> new Product(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("description"),
+                    rs.getInt("price"),
+                    rs.getString("url")
+                ),
+                id
             );
         } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND);
+            throw new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND,
+                "Product with id " + id + " not found");
         }
     }
 
@@ -46,15 +47,15 @@ public class ProductJDBCRepository implements ProductRepository{
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(
-                con -> {
-                    var ps = con.prepareStatement(sql, new String[]{"id"});
-                    ps.setString(1, product.getName());
-                    ps.setString(2, product.getDescription());
-                    ps.setInt(3, product.getPrice());
-                    ps.setString(4, product.getUrl());
-                    return ps;
-                },
-                keyHolder
+            con -> {
+                var ps = con.prepareStatement(sql, new String[]{"id"});
+                ps.setString(1, product.getName());
+                ps.setString(2, product.getDescription());
+                ps.setInt(3, product.getPrice());
+                ps.setString(4, product.getUrl());
+                return ps;
+            },
+            keyHolder
         );
 
         return keyHolder.getKey().longValue();
@@ -66,14 +67,15 @@ public class ProductJDBCRepository implements ProductRepository{
         var sql = "UPDATE product SET name = ?, description = ?, price = ?, url = ? WHERE id = ?";
 
         int affectedRows = jdbcTemplate.update(sql,
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                product.getUrl(),
-                id);
+            product.getName(),
+            product.getDescription(),
+            product.getPrice(),
+            product.getUrl(),
+            id);
 
         if (affectedRows == 0) {
-            throw new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND);
+            throw new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND,
+                "Product with id " + id + " not found");
         }
 
         return id;
@@ -84,7 +86,8 @@ public class ProductJDBCRepository implements ProductRepository{
         var sql = "DELETE FROM product WHERE id = ?";
         int affectedRows = jdbcTemplate.update(sql, id);
         if (affectedRows == 0) {
-            throw new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND);
+            throw new NotFoundException(ErrorCode.PRODUCT_NOT_FOUND,
+                "Product with id " + id + " not found");
         }
         return id;
     }
@@ -92,14 +95,14 @@ public class ProductJDBCRepository implements ProductRepository{
     @Override
     public List<Product> getAllProducts() {
         return jdbcTemplate.query(
-                "SELECT * FROM product",
-                (rs, rowNum) -> new Product(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getString("description"),
-                        rs.getInt("price"),
-                        rs.getString("url")
-                )
+            "SELECT * FROM product",
+            (rs, rowNum) -> new Product(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("description"),
+                rs.getInt("price"),
+                rs.getString("url")
+            )
         );
     }
 

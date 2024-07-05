@@ -1,10 +1,11 @@
-package gift.repository;
+package gift.persistence.repository;
 
-import gift.domain.Product;
+import gift.persistence.entity.Product;
 
 import java.util.List;
 
 public interface ProductRepository {
+
     Product getProductById(Long id);
 
     Long saveProduct(Product product);

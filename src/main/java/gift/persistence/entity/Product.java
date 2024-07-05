@@ -1,6 +1,7 @@
-package gift.domain;
+package gift.persistence.entity;
 
 public class Product {
+
     private Long id;
     private String name;
     private String description;
