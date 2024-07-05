@@ -6,18 +6,18 @@ public class UpdateProductDto {
     Integer price;
     String imageUrl;
 
-    public Object getName() {
+    public String getName() {
         return this.name;
     }
 
-    public Object getPrice() {
+    public Integer getPrice() {
         return this.price;
     }
 
-    public Object getDescription() {
+    public String getDescription() {
         return this.description;
     }
-    public Object getImageUrl() {
+    public String getImageUrl() {
         return this.imageUrl;
     }
 }

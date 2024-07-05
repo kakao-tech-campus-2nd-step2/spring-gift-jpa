@@ -17,4 +17,10 @@ public class ProductValidation {
             throw new IllegalArgumentException("일치하는 상품이 없습니다.");
         }
     }
+
+    public void validateProductName(String name) {
+        if (name.length() > 15) {
+            throw new IllegalArgumentException("Product name must be 15 characters or less.");
+        }
+    }
 }
