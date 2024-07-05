@@ -26,7 +26,7 @@ public class LoginController {
     return loginService.UserSignUp(userInfo);
   }
 
-  @PostMapping("/login/token")
+  @PostMapping("/login")
   public ResponseEntity<JwtToken> userLogin(
     @RequestHeader("email") String email,
     @RequestHeader("pw") String pw) {
