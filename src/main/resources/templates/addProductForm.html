@@ -70,31 +70,31 @@
     let price = document.querySelector('.product-price').value;
     let imageUrl = document.querySelector('.product-imageUrl').value;
 
-    if (name && price && imageUrl) {
-        fetch(`/api/product`, {
-          method: 'POST',
-          headers :{
-            "Content-Type": "application/json",
-          },
-          body:JSON.stringify({
-            name:name,
-            price:price,
-            imageUrl: imageUrl
-          })
-        })
-        .then(response => {
-          console.log(response);
-          if (response.ok) {
-            alert("상품 추가가 완료되었습니다.");
-            window.location.href="/api/admin";
-          } else {
-            console.error('모든 입력을 채워주세요.');
-          }
-        })
-        .catch(error => console.error('Error:', error));
-    } else {
-      alert('모든 입력을 채워주세요.');
-    }
+    fetch(`/api/product`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+        price: price,
+        imageUrl: imageUrl
+      })
+    })
+    .then(response => response.json().then(data => ({status: response.status, body: data})))
+    .then(result => {
+      if (result.status === 200) {
+        alert("상품 추가가 완료되었습니다.");
+        window.location.href = "/api/admin";
+      } else {
+        console.error(result.body.message);
+        alert(`${result.body.message}`);
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      alert('예외처리하지 않은 에러');
+    });
   }
 </script>
 </body>

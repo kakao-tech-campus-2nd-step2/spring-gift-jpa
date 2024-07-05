@@ -5,11 +5,9 @@ import gift.dto.requestDTO.ProductRequestDTO;
 import gift.dto.responseDTO.ProductListResponseDTO;
 import gift.dto.responseDTO.ProductResponseDTO;
 import gift.repository.ProductRepository;
-import java.util.HashMap;
+import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +46,7 @@ public class ProductController {
     }
 
     @PostMapping("/product")
-    public ResponseEntity<Long> addProduct(@RequestBody ProductRequestDTO productPostRequestDTO){
+    public ResponseEntity<Long> addProduct(@Valid @RequestBody ProductRequestDTO productPostRequestDTO){
         Long productId = Product.getNextId();
         Product product = new Product(productId, productPostRequestDTO.name(),
             productPostRequestDTO.price(), productPostRequestDTO.imageUrl());
