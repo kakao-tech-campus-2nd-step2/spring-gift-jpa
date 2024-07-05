@@ -1,6 +1,6 @@
 package gift.Repository;
 
-import gift.DTO.LoginDto;
+import gift.DTO.UserDto;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -14,18 +14,18 @@ public class UserDao {
     this.jdbcTemplate = jdbcTemplate;
   }
 
-  public void UserSignUp(LoginDto userInfo) {
+  public void UserSignUp(UserDto userInfo) {
     var sql = "INSERT INTO USERS(email,password) VALUES(?,?)";
     jdbcTemplate.update(sql, userInfo.getEmail(), userInfo.getPassword());
   }
 
-  public LoginDto getUserByEmail(String email){
+  public UserDto getUserByEmail(String email){
     var sql = "SELECT * FROM USERS WHERE email = ?";
     return jdbcTemplate.queryForObject(sql, new String[]{email},userRowMapper());
   }
 
-  private RowMapper<LoginDto> userRowMapper() {
-    return (rs,rowNum)-> new LoginDto(
+  private RowMapper<UserDto> userRowMapper() {
+    return (rs,rowNum)-> new UserDto(
       rs.getString("email"),
       rs.getString("password")
     );

@@ -1,7 +1,7 @@
 package gift.Controller;
 
 import gift.DTO.JwtToken;
-import gift.DTO.LoginDto;
+import gift.DTO.UserDto;
 import gift.Service.JwtService;
 import gift.Service.LoginService;
 import jakarta.validation.Valid;
@@ -25,24 +25,24 @@ public class LoginController {
   }
 
   @PostMapping("/signup")
-  public LoginDto UserSignUp(@Valid @RequestBody LoginDto userInfo) {
+  public UserDto UserSignUp(@Valid @RequestBody UserDto userInfo) {
     return loginService.UserSignUp(userInfo);
   }
 
   @PostMapping("/login")
   public ResponseEntity<JwtToken> userLogin(
-    @Valid @RequestBody LoginDto userInfo) {
+    @Valid @RequestBody UserDto userInfo) {
     String email = userInfo.getEmail();
     String password = userInfo.getPassword();
 
-    LoginDto loginDto = loginService.UserLogin(userInfo);
+    UserDto userDto = loginService.UserLogin(userInfo);
     JwtToken jwtToken;
 
-    if (loginDto == null) {
+    if (userDto == null) {
       return ResponseEntity.notFound().build();
     }
-    if (email.equals(loginDto.getEmail()) && password.equals(loginDto.getPassword())) {
-      jwtToken = jwtService.createAccessToken(loginDto);
+    if (email.equals(userDto.getEmail()) && password.equals(userDto.getPassword())) {
+      jwtToken = jwtService.createAccessToken(userDto);
       if (jwtService.isValidToken(jwtToken)) {
         return ResponseEntity.ok(jwtToken);
       }

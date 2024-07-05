@@ -1,7 +1,7 @@
 package gift.Service;
 
 import gift.DTO.JwtToken;
-import gift.DTO.LoginDto;
+import gift.DTO.UserDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -21,13 +21,13 @@ public class JwtService {
   @Value("${jwt.secret}")
   private String key;
 
-  public JwtToken createAccessToken(LoginDto loginDto) {
+  public JwtToken createAccessToken(UserDto userDto) {
     Instant now = Instant.now();
     Instant expiresAt = now.plus(1, ChronoUnit.DAYS); // 현재 시각에서 1일 뒤로 만료 설정
 
     String accessToken = Jwts.builder()
-      .setSubject(loginDto.getEmail())
-      .claim("email", loginDto.getEmail())
+      .setSubject(userDto.getEmail())
+      .claim("email", userDto.getEmail())
       .setExpiration(Date.from(expiresAt))
       .signWith(Keys.hmacShaKeyFor(key.getBytes()), SignatureAlgorithm.HS256)
       .compact();

@@ -1,6 +1,6 @@
 package gift.Service;
 
-import gift.DTO.LoginDto;
+import gift.DTO.UserDto;
 import gift.Repository.UserDao;
 import org.springframework.stereotype.Service;
 
@@ -13,14 +13,14 @@ public class LoginService {
     this.userDao = userDao;
   }
 
-  public LoginDto UserSignUp(LoginDto userInfo) {
+  public UserDto UserSignUp(UserDto userInfo) {
     userDao.UserSignUp(userInfo);
     return userInfo;
   }
 
-  public LoginDto UserLogin(LoginDto userInfo) {
+  public UserDto UserLogin(UserDto userInfo) {
     String email = userInfo.getEmail();
-    LoginDto loginDto = userDao.getUserByEmail(email);
-    return loginDto;
+    UserDto userDto = userDao.getUserByEmail(email);
+    return userDto;
   }
 }
