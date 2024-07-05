@@ -3,6 +3,9 @@ package gift.global.response;
 import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
+    // Member
+    MEMBER_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EM001", "Member Not Found Error"),
+
     // Product
     PRODUCT_NOT_FOUND_ERROR(HttpStatus.BAD_REQUEST, "EP001", "Product Not Found Error"),
     PRODUCT_NAME_LENGTH_ERROR(HttpStatus.BAD_REQUEST, "EP002", "상품 이름은 공백이 아니고, 15자 이하여야 합니다"),

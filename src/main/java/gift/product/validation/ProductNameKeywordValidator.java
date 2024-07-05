@@ -13,7 +13,7 @@ public class ProductNameKeywordValidator implements ConstraintValidator<ValidPro
 
     @Override
     public boolean isValid(ProductName productName, ConstraintValidatorContext constraintValidatorContext) {
-        if (KEY_WORDS.stream().anyMatch(productName.getName().replaceAll("\\s", "")::contains)) {
+        if (KEY_WORDS.stream().anyMatch(productName.getValue().replaceAll("\\s", "")::contains)) {
             throw new ProductNameContainsException();
         }
 

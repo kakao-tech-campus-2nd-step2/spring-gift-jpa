@@ -11,39 +11,39 @@ public class ProductName {
     private static final int MAX_LENGTH = 15;
     private static final Pattern PATTERN = Pattern.compile("^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣 ()\\[\\]+\\-&/_]*$");
 
-    private String name;
+    private String value;
 
     public ProductName() {}
 
-    public ProductName(String name) {
-        if (Objects.isNull(name)) {
+    public ProductName(String value) {
+        if (Objects.isNull(value)) {
             throw new ProductNameLengthException();
         }
 
-        name = name.trim();
+        value = value.trim();
 
-        if (name.isEmpty() || name.length() > MAX_LENGTH) {
+        if (value.isEmpty() || value.length() > MAX_LENGTH) {
             throw new ProductNameLengthException();
         }
 
-        if (!PATTERN.matcher(name).matches()) {
+        if (!PATTERN.matcher(value).matches()) {
             throw new ProductNamePatternException();
         }
-        this.name = name;
+        this.value = value;
     }
 
-    public String getName() {
-        return name;
+    public String getValue() {
+        return value;
     }
 
     @Override
     public String toString() {
-        return name;
+        return value;
     }
 
     // JSON 직렬화를 위해 @JsonValue 사용
     @JsonValue
     public String toJson() {
-        return name;
+        return value;
     }
 }

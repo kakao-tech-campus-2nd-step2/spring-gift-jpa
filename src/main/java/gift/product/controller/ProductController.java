@@ -36,13 +36,13 @@ public class ProductController {
 
     @PostMapping("")
     public ResponseEntity<SimpleResultResponseDto> createProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
-        productService.createProduct(productRequestDto.toServiceDto());
+        productService.createProduct(productRequestDto.toProductServiceDto());
         return ResponseHelper.createSimpleResponse(ResultCode.CREATE_PRODUCT_SUCCESS);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<SimpleResultResponseDto> updateProduct(@PathVariable(name = "id") Long id, @Valid @RequestBody ProductRequestDto productRequestDto) {
-        productService.updateProduct(productRequestDto.toServiceDto(id));
+        productService.updateProduct(productRequestDto.toProductServiceDto(id));
         return ResponseHelper.createSimpleResponse(ResultCode.UPDATE_PRODUCT_SUCCESS);
     }
 

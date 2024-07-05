@@ -1,0 +1,17 @@
+### get members
+
+### get member
+
+### create member
+POST http://localhost:8080/api/members
+Content-Type: application/json
+
+{
+  "email": "email",
+  "password": "password",
+  "nickName": "nickname"
+}
+
+### update member
+
+### delete member

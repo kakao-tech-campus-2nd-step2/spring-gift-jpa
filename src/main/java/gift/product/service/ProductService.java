@@ -1,6 +1,6 @@
 package gift.product.service;
 
-import gift.product.dto.ServiceDto;
+import gift.product.dto.ProductServiceDto;
 import gift.product.domain.Product;
 import gift.product.exception.ProductNotFoundException;
 import gift.product.repository.ProductRepository;
@@ -25,13 +25,13 @@ public class ProductService {
                 .orElseThrow(ProductNotFoundException::new);
     }
 
-    public void createProduct(ServiceDto serviceDto) {
-        productRepository.save(serviceDto.toProduct());
+    public void createProduct(ProductServiceDto productServiceDto) {
+        productRepository.save(productServiceDto.toProduct());
     }
 
-    public void updateProduct(ServiceDto serviceDto) {
-        validateProductExists(serviceDto.id());
-        productRepository.save(serviceDto.toProduct());
+    public void updateProduct(ProductServiceDto productServiceDto) {
+        validateProductExists(productServiceDto.id());
+        productRepository.save(productServiceDto.toProduct());
     }
 
     public void deleteProduct(Long id) {

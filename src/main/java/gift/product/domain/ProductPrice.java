@@ -5,29 +5,29 @@ import gift.product.exception.ProductPriceOutOfRangeException;
 
 public class ProductPrice {
 
-    private Long price;
+    private Long value;
 
     public ProductPrice() {}
 
-    public ProductPrice(Long price) {
-        if (price < 0) {
+    public ProductPrice(Long value) {
+        if (value < 0) {
             throw new ProductPriceOutOfRangeException();
         }
-        this.price = price;
+        this.value = value;
     }
 
-    public Long getPrice() {
-        return price;
+    public Long getValue() {
+        return value;
     }
 
     @Override
     public String toString() {
-        return Long.toString(price);
+        return Long.toString(value);
     }
 
     // JSON 직렬화를 위해 @JsonValue 사용
     @JsonValue
     public Long toJson() {
-        return price;
+        return value;
     }
 }

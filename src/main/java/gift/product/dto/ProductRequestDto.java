@@ -11,11 +11,11 @@ public record ProductRequestDto(@ValidProductName ProductName name, ProductPrice
         Objects.requireNonNull(imageUrl);
     }
 
-    public ServiceDto toServiceDto() {
-        return new ServiceDto(null, this.name, this.price, this.imageUrl);
+    public ProductServiceDto toProductServiceDto() {
+        return new ProductServiceDto(null, this.name, this.price, this.imageUrl);
     }
 
-    public ServiceDto toServiceDto(Long id) {
-        return new ServiceDto(id, this.name, this.price, this.imageUrl);
+    public ProductServiceDto toProductServiceDto(Long id) {
+        return new ProductServiceDto(id, this.name, this.price, this.imageUrl);
     }
 }
