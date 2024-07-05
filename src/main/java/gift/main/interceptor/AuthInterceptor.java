@@ -31,16 +31,15 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
         String token = authorization.split(" ")[1];
         String email = request.getHeader("email");
-        String password = request.getHeader("password");
 
 
-        if (token == null || email == null || password == null){
+        if (token == null || email == null ){
 //            response.sendRedirect("/spring-gift/members/login");
             throw new TokenException("헤더에 이메일,비밀번호,토큰을 넣어주세요.");
 
         }
 
-        if (!authUtil.validateToken(token,email,password)) {
+        if (!authUtil.validateToken(token,email)) {
 //            response.sendRedirect("/spring-gift/members/login");
             throw new TokenException("jwt토큰이 올바르지 않습니다.");
         }

@@ -24,7 +24,6 @@ public class AuthUtil {
                 .claim("id", id)
                 .claim("name", name)
                 .claim("email", email)
-                .claim("password", password)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis())) // 토큰 발생시간
                 .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
@@ -38,7 +37,6 @@ public class AuthUtil {
                 .claim("id", user.getId())
                 .claim("name", user.getName())
                 .claim("email", user.getEmail())
-                .claim("password", user.getPassword())
                 .claim("role", user.getRole())
                 .issuedAt(new Date(System.currentTimeMillis())) // 토큰 발생시간
                 .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
@@ -52,7 +50,6 @@ public class AuthUtil {
                 .claim("id", id)
                 .claim("name", userDto.getName())
                 .claim("email", userDto.getEmail())
-                .claim("password", userDto.getPassword())
                 .claim("role", userDto.getRole())
                 .issuedAt(new Date(System.currentTimeMillis())) // 토큰 발생시간
                 .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
@@ -61,7 +58,7 @@ public class AuthUtil {
         return "Bearer " + token;
     }
 
-    public boolean validateToken(String token, String email, String role) {
+    public boolean validateToken(String token, String email) {
         if (isExpired(token)) {
             return false;
 
@@ -82,14 +79,6 @@ public class AuthUtil {
                 .parseSignedClaims(token)//토큰 서명 확인
                 .getPayload()
                 .get("id", Long.class);
-    }
-    public String getPassword(String token) {
-        return Jwts.parser()//파서 생성
-                .verifyWith(secretKey)
-                .build()//파서 키 설정과 빌드 완료
-                .parseSignedClaims(token)//토큰 서명 확인
-                .getPayload()
-                .get("password", String.class);
     }
 
     public String getStringId(String token) {
