@@ -24,7 +24,7 @@ public class LoginService {
 
   public ResponseEntity<JwtToken> UserLogin(String email, String password) {
     LoginDto loginDto = loginDao.UserLogin(email, password);
-    JwtToken jwtToken = null;
+    JwtToken jwtToken;
 
     if (loginDto==null){
       return ResponseEntity.notFound().build();
