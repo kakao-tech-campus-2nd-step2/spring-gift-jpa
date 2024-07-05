@@ -327,8 +327,8 @@
 ## 구현할 기능 목록
 - [ ] 위시 리스트 관련 엔티티 및 리포지토리 구현
 
-  - [ ] Wish 엔티티 생성 (userId, productId, createdAt 등의 필드 포함)
-  - [ ] WishRepository 인터페이스 생성 및 구현 
+  - [x] Wish 엔티티 생성 (userId, productId, createdAt 필드 포함)
+  - [ ] WishRepository 인터페이스 생성 및 구현
   - 위시 리스트 관련 서비스 계층 구현
 
 - [ ] WishService 인터페이스 생성 및 구현
