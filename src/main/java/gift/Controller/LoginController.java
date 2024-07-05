@@ -3,6 +3,7 @@ package gift.Controller;
 import gift.DTO.JwtToken;
 import gift.DTO.LoginDto;
 import gift.Service.LoginService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,13 +22,13 @@ public class LoginController {
   }
 
   @PostMapping("/signup")
-  public LoginDto UserSignUp(@RequestBody LoginDto userInfo) {
+  public LoginDto UserSignUp(@Valid @RequestBody LoginDto userInfo) {
     return loginService.UserSignUp(userInfo);
   }
 
   @PostMapping("/login")
   public ResponseEntity<JwtToken> userLogin(
-    @RequestBody LoginDto userInfo) {
+    @Valid @RequestBody LoginDto userInfo) {
     String email = userInfo.getEmail();
     String pw = userInfo.getPw();
     return loginService.UserLogin(email,pw);
