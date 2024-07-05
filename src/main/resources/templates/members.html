@@ -66,8 +66,8 @@
                     }
                 },
                 error: function (xhr, status, error) {
-                    var errorMessage = xhr.responseText;
-                    alert(errorMessage);
+                    var errorResponse = JSON.parse(xhr.responseText);
+                    alert(errorResponse.errorMessage);
                 }
             });
         });
@@ -90,8 +90,8 @@
                     }
                 },
                 error: function (xhr, status, error) {
-                    var errorMessage = xhr.responseText;
-                    alert(errorMessage);
+                    var errorResponse = JSON.parse(xhr.responseText);
+                    alert(errorResponse.errorMessage);
                 }
             });
         });
