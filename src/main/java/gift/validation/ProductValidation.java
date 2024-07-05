@@ -24,9 +24,13 @@ public class ProductValidation {
     }
 
     public void validateProductName(String name) {
-
         if (name.length() > 15) {
             throw new IllegalArgumentException("상품 이름은 15자 이하여야 합니다.");
+        }
+
+        if (name.contains("카카오")) {
+            // 여기에서 담당 MD와의 협의 로직 생각하기
+            throw new IllegalArgumentException("\"카카오\"가 포함된 상품 이름은 담당 MD와 협의한 경우에만 사용할 수 있습니다.");
         }
 
         Pattern pattern = Pattern.compile("[^" + ALLOWED_SPECIAL_CHARACTERS + "a-zA-Z0-9]");
