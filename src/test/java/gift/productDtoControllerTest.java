@@ -97,6 +97,7 @@ public class ProductDtoControllerTest {
 
     // 반환된 제품 검증
     ProductDto returnedProductDto = responseEntity.getBody();
+    assert returnedProductDto != null;
     assertEquals(productDTO.getId(), returnedProductDto.getId());
     assertEquals(productDTO.getName(), returnedProductDto.getName());
     assertEquals(productDTO.getPrice(), returnedProductDto.getPrice());
