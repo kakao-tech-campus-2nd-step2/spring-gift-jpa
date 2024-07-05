@@ -59,16 +59,16 @@ public class AuthUtil {
 
     public boolean validateToken(String token, String email, String role) {
         if (isExpired(token)) {
+            System.out.println("1");
+            return false;
+
+        }
+
+        if (!email.equals(getEmail(token))) {
+            System.out.println("2");
             return false;
         }
 
-        if (email.equals(getEmail(token))) {
-            return false;
-        }
-
-        if (role.equals(getRole(token))) {
-            return false;
-        }
         return true;
 
     }
