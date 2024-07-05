@@ -1,5 +1,8 @@
 package gift.controller;
 
+import gift.domain.Member;
+import gift.dto.LoginRequest;
+import gift.dto.LoginResponse;
 import gift.dto.MemberRequestDto;
 import gift.dto.MemberResponseDto;
 import gift.service.MemberService;
@@ -29,4 +32,19 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        // 사용자 인증 로직
+        Member member = memberService.findByEmail(loginRequest.getEmail());
+        if (member != null && passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
+            // 토큰 생성 및 반환
+            String token = jwtTokenProvider.generateToken(member);
+            return ResponseEntity.ok(new LoginResponse(token));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new LoginResponse("일치하는 이메일이 없거나 비밀번호가 틀렸습니다."));
+        }
+    }
+
 }

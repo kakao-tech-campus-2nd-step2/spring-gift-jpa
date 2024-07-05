@@ -29,4 +29,10 @@ public class MemberService {
 
         return new MemberResponseDto(savedMember.getId(), savedMember.getEmail());
     }
+
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 " + email + " 가진 회원이 없습니다."));
+    }
+
 }
