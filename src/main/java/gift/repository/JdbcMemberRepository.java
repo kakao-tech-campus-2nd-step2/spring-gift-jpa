@@ -3,18 +3,25 @@ package gift.repository;
 import gift.domain.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class SimpleJdbcMemberRepository implements MemberRepository {
+public class JdbcMemberRepository implements MemberRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public SimpleJdbcMemberRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcMemberRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("users")
+                .usingGeneratedKeyColumns("user_id");
     }
 
     @Override
@@ -25,8 +32,11 @@ public class SimpleJdbcMemberRepository implements MemberRepository {
 
     @Override
     public void save(Member member) {
-        String sql = "INSERT INTO users (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("email", member.getEmail());
+        parameters.put("password", member.getPassword());
+        Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
+        member.setUser_id(newId.longValue());
     }
 
     private static final RowMapper<Member> userRowMapper = (ResultSet rs, int rowNum) -> {
