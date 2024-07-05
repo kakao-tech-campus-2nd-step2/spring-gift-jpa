@@ -2,8 +2,10 @@ package gift.Controller;
 
 import gift.DTO.JwtToken;
 import gift.DTO.LoginDto;
+import gift.Service.JwtService;
 import gift.Service.LoginService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,9 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
   private final LoginService loginService;
+  private final JwtService jwtService;
 
-  public LoginController(LoginService loginService) {
+  public LoginController(LoginService loginService, JwtService jwtService) {
     this.loginService = loginService;
+    this.jwtService=jwtService;
   }
 
   @PostMapping("/signup")
@@ -30,6 +34,20 @@ public class LoginController {
     @Valid @RequestBody LoginDto userInfo) {
     String email = userInfo.getEmail();
     String password = userInfo.getPassword();
-    return loginService.UserLogin(email,password);
+
+    LoginDto loginDto = loginService.UserLogin(email, password);
+    JwtToken jwtToken;
+
+    if (loginDto == null) {
+      return ResponseEntity.notFound().build();
+    }
+    if (email.equals(loginDto.getEmail()) && password.equals(loginDto.getPassword())) {
+      jwtToken = jwtService.createAccessToken(loginDto);
+      if (jwtService.isValidToken(jwtToken)) {
+        return ResponseEntity.ok(jwtToken);
+      }
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
   }
 }
