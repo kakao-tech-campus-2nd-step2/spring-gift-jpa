@@ -25,6 +25,7 @@ public class ProductController {
   }
 
   @GetMapping
+
   public List<ProductDto> getAllProducts() {
     return productService.getAllProducts();
   }
@@ -32,6 +33,7 @@ public class ProductController {
   @GetMapping("/{id}")
   public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
     ProductDto productDTO = productService.getProductById(id);
+
     if (productDTO == null) {
       return ResponseEntity.notFound().build();
     }
@@ -51,13 +53,14 @@ public class ProductController {
       return ResponseEntity.notFound().build();
     }
     return ResponseEntity.ok(updatedProductDto);
+
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
     ProductDto existingProductDto = productService.deleteProduct(id);
     if (existingProductDto == null) {
-      return ResponseEntity.notFound().build();
+
     }
     return ResponseEntity.noContent().build();
   }

@@ -15,9 +15,9 @@ public class ProductDao {
     this.jdbcTemplate = jdbcTemplate;
   }
 
-  public void insertProduct(ProductDto productDTO) {
+  public void insertProduct(ProductDto productDto) {
     var sql = "insert into product(name, price, imageUrl) values (?, ?, ?)";
-    jdbcTemplate.update(sql, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
+    jdbcTemplate.update(sql, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
   }
 
   public ProductDto selectProduct(long id) {
@@ -36,6 +36,7 @@ public class ProductDao {
   }
 
   public void updateProduct(Long id, ProductDto productDTO) {
+
     var sql = "UPDATE product SET name = ?, price = ?, imageUrl = ? WHERE id = ?";
     jdbcTemplate.update(sql, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), id);
   }

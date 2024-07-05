@@ -10,11 +10,11 @@ public class LoginDto {
   @NotEmpty(message = "Email을 필수입니다.")
   @Email(message = "Email형식으로 제출해주십오.")
   @NotBlank
-  private String email;
+  private final String email;
 
   @NotBlank
   @Size(min=5,max=15)
-  private String password;
+  private final String password;
 
   public LoginDto(String email, String password) {
     this.email = email;
