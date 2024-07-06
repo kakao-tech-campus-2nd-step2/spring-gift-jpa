@@ -2,6 +2,7 @@ package gift.Service;
 
 import gift.DTO.JwtToken;
 import gift.DTO.UserDto;
+import gift.Repository.UserDao;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -17,6 +18,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JwtService {
+
+  private final UserDao userDao;
+
+  public JwtService(UserDao userDao){
+    this.userDao=userDao;
+  }
 
   @Value("${jwt.secret}")
   private String key;
@@ -55,7 +62,7 @@ public class JwtService {
 
     Jws<Claims> claims = jwtParser.parseClaimsJws(token);
     String email = claims.getBody().get("email", String.class);
-    String pw = claims.getBody().get("pw", String.class);
-    return new UserDto(email, pw);
+
+    return userDao.getUserByEmail(email);
   }
 }
