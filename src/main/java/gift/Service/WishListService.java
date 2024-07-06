@@ -4,6 +4,8 @@ import gift.DTO.ProductDto;
 import gift.DTO.UserDto;
 import gift.LoginUser;
 import gift.Repository.WishListDao;
+import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,5 +20,9 @@ public class WishListService {
   public ProductDto addProductToWishList(ProductDto wishProduct, UserDto user){
     wishListDao.insertWishList(wishProduct);
     return wishProduct;
+  }
+
+  public List<ProductDto> getWishList(UserDto user) {
+    return wishListDao.selectWishList(user);
   }
 }
