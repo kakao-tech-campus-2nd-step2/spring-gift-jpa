@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: spring-gift
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:test
+  mvc:
+    hidden method:
+      filter:
+        enabled: true
+  jwt:
+    secret: asdfasdf
