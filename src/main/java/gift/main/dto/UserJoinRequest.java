@@ -1,10 +1,12 @@
 package gift.main.dto;
 
 
+import gift.main.global.Exception.ErrorCode;
 import jakarta.validation.constraints.NotBlank;
 
 public record UserJoinRequest(
-        @NotBlank(message = "이름을 등록해주세요")
+        //여기서는 enum 타입의 에러를 어떻게 사용할지..?
+//        @NotBlank(message = ErrorCode.EMPTY_EMAIL.get
         String name,
         @NotBlank(message = "이메일을 적어주세요.")
         String email,
