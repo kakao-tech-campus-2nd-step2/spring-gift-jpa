@@ -9,16 +9,19 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class WishListDao {
+
   JdbcTemplate jdbcTemplate;
-  public WishListDao(JdbcTemplate jdbcTemplate){
-    this.jdbcTemplate=jdbcTemplate;
+
+  public WishListDao(JdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
   }
 
-  public void insertWishList(ProductDto wishProduct){
+  public void insertWishList(ProductDto wishProduct) {
     var sql = """
       INSERT INTO wishList(name,price,imageUrl) VALUES(?, ?, ?);
       """;
-    jdbcTemplate.update(sql,wishProduct.getName(),wishProduct.getPrice(),wishProduct.getImageUrl());
+    jdbcTemplate.update(sql, wishProduct.getName(), wishProduct.getPrice(),
+      wishProduct.getImageUrl());
   }
 
 
@@ -26,15 +29,29 @@ public class WishListDao {
     var sql = """
       SELECT * FROM wishList;
       """;
-    return jdbcTemplate.query(sql,wishListRowMapper());
+    return jdbcTemplate.query(sql, wishListRowMapper());
   }
 
-  private RowMapper<ProductDto> wishListRowMapper(){
-    return (rs,rowNum)->new ProductDto(
+  public ProductDto selectWishProduct(Long id) {
+    var sql = """
+      SELECT * FROM wishList where id =?;
+      """;
+    return jdbcTemplate.queryForObject(sql, wishListRowMapper(), id);
+  }
+
+  private RowMapper<ProductDto> wishListRowMapper() {
+    return (rs, rowNum) -> new ProductDto(
       rs.getLong("id"),
       rs.getString("name"),
       rs.getInt("price"),
       rs.getString("imageUrl")
     );
+  }
+
+  public void deleteWishProduct(Long id) {
+    var sql = """
+      DELETE FROM wishList WHERE id =?
+      """;
+    jdbcTemplate.update(sql, id);
   }
 }

@@ -25,4 +25,10 @@ public class WishListService {
   public List<ProductDto> getWishList(UserDto user) {
     return wishListDao.selectWishList(user);
   }
+
+  public ProductDto deleteProductToWishList(Long id) {
+    ProductDto deletedWishProduct = wishListDao.selectWishProduct(id);
+    wishListDao.deleteWishProduct(id);
+    return deletedWishProduct;
+  }
 }
