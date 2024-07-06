@@ -1,6 +1,6 @@
 package gift.Repository;
 
-import gift.DTO.ProductDTO;
+import gift.DTO.ProductDto;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,17 +15,17 @@ public class ProductDao {
     this.jdbcTemplate = jdbcTemplate;
   }
 
-  public void insertProduct(ProductDTO productDTO) {
+  public void insertProduct(ProductDto productDto) {
     var sql = "insert into product(name, price, imageUrl) values (?, ?, ?)";
-    jdbcTemplate.update(sql, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
+    jdbcTemplate.update(sql, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
   }
 
-  public ProductDTO selectProduct(long id) {
+  public ProductDto selectProduct(long id) {
     var sql = "select * from product where id=?";
     return jdbcTemplate.queryForObject(sql, productRowMapper(), id);
   }
 
-  public List<ProductDTO> selectAllProducts() {
+  public List<ProductDto> selectAllProducts() {
     var sql = "SELECT * FROM product";
     return jdbcTemplate.query(sql, productRowMapper());
   }
@@ -35,13 +35,14 @@ public class ProductDao {
     jdbcTemplate.update(sql, id);
   }
 
-  public void updateProduct(ProductDTO productDTO) {
+  public void updateProduct(Long id, ProductDto productDTO) {
+
     var sql = "UPDATE product SET name = ?, price = ?, imageUrl = ? WHERE id = ?";
-    jdbcTemplate.update(sql, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), productDTO.getId());
+    jdbcTemplate.update(sql, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), id);
   }
 
-  private RowMapper<ProductDTO> productRowMapper() {
-    return (resultSet, rowNum) -> new ProductDTO(
+  private RowMapper<ProductDto> productRowMapper() {
+    return (resultSet, rowNum) -> new ProductDto(
       resultSet.getLong("id"),
       resultSet.getString("name"),
       resultSet.getInt("price"),
