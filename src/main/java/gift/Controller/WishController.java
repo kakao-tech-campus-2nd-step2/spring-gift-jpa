@@ -17,11 +17,14 @@ public class WishController {
 
   private final WishListService wishListService;
 
-  public WishController(WishListService wishListService){
-    this.wishListService=wishListService;
+  public WishController(WishListService wishListService) {
+    this.wishListService = wishListService;
   }
+
+
   @PostMapping("/add")
-  public ResponseEntity<ProductDto> addProductToWishList(@RequestBody ProductDto wishProduct, @LoginUser LoginUser user) {
+  public ResponseEntity<ProductDto> addProductToWishList(@RequestBody ProductDto wishProduct,
+    @LoginUser UserDto user) {
     ProductDto addedWishProduct = wishListService.addProductToWishList(wishProduct, user);
     return ResponseEntity.ok(wishProduct);
   }

@@ -1,6 +1,7 @@
 package gift.Service;
 
 import gift.DTO.ProductDto;
+import gift.DTO.UserDto;
 import gift.LoginUser;
 import gift.Repository.WishListDao;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class WishListService {
     this.wishListDao = wishListDao;
   }
 
-  public ProductDto addProductToWishList(ProductDto wishProduct, LoginUser user){
+  public ProductDto addProductToWishList(ProductDto wishProduct, UserDto user){
     wishListDao.insertWishList(wishProduct);
     return wishProduct;
   }

@@ -13,7 +13,7 @@ public class WishListDao {
 
   public void insertWishList(ProductDto wishProduct){
     var sql = """
-      INSERT INTO wishList INTO VALUES(?, ?, ?);
+      INSERT INTO wishList(name,price,imageUrl) VALUES(?, ?, ?);
       """;
     jdbcTemplate.update(sql,wishProduct.getName(),wishProduct.getPrice(),wishProduct.getImageUrl());
   }
