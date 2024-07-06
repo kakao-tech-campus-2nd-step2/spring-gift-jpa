@@ -29,7 +29,7 @@ class ProductAddFormTest {
 
 
     @Test
-    void nameLength() {
+    void validNameLength() {
 
         form.setPrice(100);
         form.setImageUrl("https://www.naver.com");
@@ -39,6 +39,13 @@ class ProductAddFormTest {
         form.setName("123456789012345"); isValidInput(form);
         assertThat(failCount).isEqualTo(0);
 
+    }
+
+    @Test
+    void inValidNameLength() {
+        form.setPrice(100);
+        form.setImageUrl("https://www.naver.com");
+
         //실패 길이: 0자, 16자 이상
         form.setName(""); isValidInput(form);
         form.setName("12345678901234567"); isValidInput(form);
@@ -46,7 +53,7 @@ class ProductAddFormTest {
     }
 
     @Test
-    void nameNormalChar() {
+    void validNameNormalChar() {
         form.setPrice(100);
         form.setImageUrl("https://www.naver.com");
 
@@ -65,7 +72,7 @@ class ProductAddFormTest {
     }
 
     @Test
-    void nameSpecialChar() {
+    void validNameSpecialChar() {
         form.setPrice(100);
         form.setImageUrl("https://www.naver.com");
 
@@ -76,6 +83,12 @@ class ProductAddFormTest {
         form.setName("()[]+-&/_"); isValidInput(form);
 
         assertThat(failCount).isEqualTo(0);
+    }
+
+    @Test
+    void invalidNameSpecialChar() {
+        form.setPrice(100);
+        form.setImageUrl("https://www.naver.com");
 
         // 불가능한 특수문자 입력
         form.setName("#"); isValidInput(form); form.setName("~"); isValidInput(form); form.setName("@"); isValidInput(form);
@@ -91,7 +104,7 @@ class ProductAddFormTest {
     }
 
     @Test
-    void nameKakao() {
+    void validNameKakao() {
         form.setPrice(100);
         form.setImageUrl("https://www.naver.com");
 
@@ -99,6 +112,12 @@ class ProductAddFormTest {
         form.setName("카오"); isValidInput(form);
         form.setName("카오카"); isValidInput(form);
         assertThat(failCount).isEqualTo(0);
+    }
+
+    @Test
+    void invalidNameKakao() {
+        form.setPrice(100);
+        form.setImageUrl("https://www.naver.com");
 
         form.setName("카카오"); isValidInput(form);
         form.setName("카카오카카오"); isValidInput(form);
@@ -107,7 +126,7 @@ class ProductAddFormTest {
     }
 
     @Test
-    void price() {
+    void validPrice() {
         form.setName("이름");
         form.setImageUrl("https://www.naver.com");
 
@@ -116,6 +135,13 @@ class ProductAddFormTest {
         form.setPrice(1000000); isValidInput(form);
         assertThat(failCount).isEqualTo(0);
 
+    }
+
+    @Test
+    void invalidPrice() {
+        form.setName("이름");
+        form.setImageUrl("https://www.naver.com");
+
         form.setPrice(99); isValidInput(form);
         form.setPrice(1000001); isValidInput(form);
         assertThat(failCount).isEqualTo(2);
@@ -123,7 +149,7 @@ class ProductAddFormTest {
 
 
     @Test
-    void url() {
+    void validUrl() {
         form.setName("이름");
         form.setPrice(100);
 
@@ -137,6 +163,12 @@ class ProductAddFormTest {
         form.setImageUrl("https://www.naver.com/search?q=1"); isValidInput(form);
         assertThat(failCount).isEqualTo(0);
 
+    }
+
+    @Test
+    void invalidUrl() {
+        form.setName("이름");
+        form.setPrice(100);
 
         // 올바르지 않은 url 입력
         form.setImageUrl(""); isValidInput(form);

@@ -1,12 +1,14 @@
 package gift.controller;
 
-import gift.dto.ProductAddDto;
-import gift.dto.ProductResponseDto;
-import gift.dto.ProductUpdateDto;
-import gift.exception.ProductException;
+import gift.request.ProductAddRequest;
+import gift.response.ProductResponse;
+import gift.request.ProductUpdateRequest;
+import gift.exception.InputException;
 import gift.model.Product;
 import gift.repository.ProductDao;
+import gift.service.ProductService;
 import jakarta.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,66 +26,61 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProductApiController {
 
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    @Autowired
-    public ProductApiController(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductApiController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/api/products")
-    public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
 
-        List<Product> productsList = productDao.getAllProducts();
+        List<Product> productsList = productService.getAllProducts();
         if(productsList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
-        List<ProductResponseDto> dtoList = productsList.stream()
-            .map(ProductResponseDto::new)
+        List<ProductResponse> dtoList = productsList.stream()
+            .map(ProductResponse::new)
             .toList();
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 
     @GetMapping("/api/products/{id}")
-    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable Long id) {
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long id) {
 
-        Product product = productDao.getProductById(id);
+        Product product = productService.getProduct(id);
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        ProductResponseDto productResponseDto = new ProductResponseDto(product);
-        return new ResponseEntity<>(productResponseDto, HttpStatus.OK);
+        ProductResponse productResponse = new ProductResponse(product);
+        return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 
     @PostMapping("/api/products")
-    public ResponseEntity<Product> addProduct(@RequestBody @Valid ProductAddDto dto,
+    public ResponseEntity<Product> addProduct(@RequestBody @Valid ProductAddRequest dto,
         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new ProductException(bindingResult.getAllErrors());
+            throw new InputException(bindingResult.getAllErrors());
         }
 
-        Product product = new Product(dto.getName(),
-            dto.getPrice(), dto.getImageUrl());
-        productDao.insertProduct(product);
+        productService.insertProduct(dto.name(), dto.price(), dto.imageUrl());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/api/products")
-    public ResponseEntity<Product> updateProduct(@RequestBody @Valid ProductUpdateDto dto,
+    public ResponseEntity<Product> updateProduct(@RequestBody @Valid ProductUpdateRequest dto,
         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new ProductException(bindingResult.getAllErrors());
+            throw new InputException(bindingResult.getAllErrors());
         }
 
-        Product updatedProduct = new Product(dto.getId(), dto.getName(),
-            dto.getPrice(), dto.getImageUrl());
-        productDao.updateProduct(updatedProduct);
+        productService.updateProduct(dto.id(), dto.name(), dto.price(), dto.imageUrl());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/api/products")
     public ResponseEntity<Product> deleteProduct(@RequestParam("id") Long id) {
-        productDao.deleteProduct(id);
+        productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

@@ -19,27 +19,27 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insertProduct(Product product) {
+    public void insert(Product product) {
         var sql = "INSERT INTO products(name,price,image_url) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public void updateProduct(Product product) {
+    public void update(Product product) {
         var sql = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getId());
     }
 
-    public void deleteProduct(Long id) {
+    public void delete(Long id) {
         var sql = "DELETE FROM products WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
-    public List<Product> getAllProducts() {
+    public List<Product> findAll() {
         var sql = "SELECT * FROM products";
         return jdbcTemplate.query(sql, productRowMapper);
     }
     
-    public Product getProductById(Long id) {
+    public Product findProductById(Long id) {
         var sql = "SELECT * FROM products WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, productRowMapper, id);
     }
