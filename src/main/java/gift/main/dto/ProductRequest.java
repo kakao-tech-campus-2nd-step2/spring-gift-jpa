@@ -1,6 +1,6 @@
 package gift.main.dto;
+import gift.main.global.validator.IsValidName;
 
-import gift.main.validator.IsValidName;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PositiveOrZero;
 

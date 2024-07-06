@@ -35,13 +35,16 @@ public class AdminController {
     }
 
     @PostMapping("/product")
+
     public ResponseEntity<String> addProduct(@Valid  @RequestBody ProductRequest productRequest) {
         productService.addProduct(productRequest);
         return ResponseEntity.ok("Product added successfully");
     }
 
     @PutMapping("/product")
-    public ResponseEntity<String> updateProduct(@RequestParam(value = "id") long id,@Valid @RequestBody ProductRequest productRequest) {
+
+    public ResponseEntity<?>  updateProduct(@RequestParam(value = "id") long id,@Valid @RequestBody ProductRequest productRequest) {
+
         productService.updateProduct(id, productRequest);
         return ResponseEntity.ok("Product updated successfully");
     }
