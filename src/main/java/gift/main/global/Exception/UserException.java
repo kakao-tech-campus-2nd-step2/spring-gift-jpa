@@ -1,12 +1,21 @@
 package gift.main.global.Exception;
 
-public class UserException extends RuntimeException{
-    public UserException(String message) {
+import org.springframework.http.HttpStatus;
+
+public class UserException extends RuntimeException {
+    private final HttpStatus httpStatus;
+
+    public UserException(String message, HttpStatus httpStatus) {
         super(message);
+        this.httpStatus = httpStatus;
     }
 
     @Override
     public String getMessage() {
         return super.getMessage();
+    }
+
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
     }
 }
