@@ -1,0 +1,39 @@
+package gift.controller;
+
+import gift.dto.requestDTO.UserLoginRequestDTO;
+import gift.dto.requestDTO.UserSignupRequestDTO;
+import gift.dto.responseDTO.UserResponseDTO;
+import gift.service.AuthService;
+import gift.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/members")
+public class AuthController {
+    private final AuthService authService;
+    private final UserService userService;
+
+    public AuthController(AuthService authService, UserService userService) {
+        this.authService = authService;
+        this.userService = userService;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseDTO> signUp(@Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO){
+        userService.join(userSignupRequestDTO);
+        UserResponseDTO userResponseDTO = authService.register(userSignupRequestDTO);
+        return ResponseEntity.ok(userResponseDTO);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserResponseDTO> login(@Valid @RequestBody UserLoginRequestDTO userLoginRequestDTO){
+        userService.findByEmail(userLoginRequestDTO);
+        UserResponseDTO userResponseDTO = authService.login(userLoginRequestDTO);
+        return ResponseEntity.ok(userResponseDTO);
+    }
+}
