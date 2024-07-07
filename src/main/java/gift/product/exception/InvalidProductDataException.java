@@ -1,4 +1,4 @@
-package gift.exception;
+package gift.product.exception;
 
 public class InvalidProductDataException extends RuntimeException {
     public InvalidProductDataException(String value) {

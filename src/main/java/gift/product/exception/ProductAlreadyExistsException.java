@@ -1,4 +1,4 @@
-package gift.exception;
+package gift.product.exception;
 
 public class ProductAlreadyExistsException extends RuntimeException {
     public ProductAlreadyExistsException(String name) {

@@ -1,13 +1,13 @@
-package gift.controller;
+package gift.product.controller;
 
-import gift.exception.ProductNotFoundException;
-import gift.model.Product;
-import gift.service.ProductService;
+import gift.product.exception.ProductNotFoundException;
+import gift.product.model.Product;
+import gift.product.service.ProductService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.beans.PropertyEditorSupport;
 
 @Controller
 @RequestMapping("/products")
@@ -18,27 +18,14 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
-    public String showProductsForm(Model model) {
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
-        return "products";
-    }
-
-    @GetMapping("/new")
-    public String showCreateForm(Model model) {
-        model.addAttribute("product", new Product());
-        return "create_product";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") Long id, Model model) {
-        Product product = productService.getProductById(id);
-        if (product == null) {
-            throw new ProductNotFoundException(id);
-        }
-        model.addAttribute("product", product);
-        return "edit_product";
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(text == null || text.trim().isEmpty() ? null : text);
+            }
+        });
     }
 
     @PostMapping

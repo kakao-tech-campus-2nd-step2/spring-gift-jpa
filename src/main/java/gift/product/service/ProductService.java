@@ -1,15 +1,17 @@
-package gift.service;
+package gift.product.service;
 
-import gift.exception.InvalidProductDataException;
-import gift.exception.ProductAlreadyExistsException;
-import gift.model.Product;
-import gift.repository.ProductRepository;
+import gift.product.exception.ProductAlreadyExistsException;
+import gift.product.model.Product;
+import gift.product.repository.ProductRepository;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
 @Service
+@Validated
 public class ProductService {
     private final ProductRepository productRepository;
 
@@ -25,14 +27,12 @@ public class ProductService {
         return productRepository.findById(id).orElse(null);
     }
 
-    public Product createProduct(Product product) {
-        checkValidProduct(product);
+    public Product createProduct(@Valid Product product) {
         checkForDuplicateProduct(product);
         return productRepository.save(product);
     }
 
-    public Product updateProduct(Product product) {
-        checkValidProduct(product);
+    public Product updateProduct(@Valid Product product) {
         checkForDuplicateProduct(product);
         return productRepository.update(product);
     }
@@ -42,17 +42,6 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public void checkValidProduct(Product product) {
-        if (product.getName() == null || product.getName().isEmpty()) {
-            throw new InvalidProductDataException("커피 이름");
-        }
-        if (product.getPrice() == null || product.getPrice() < 0 || product.getPrice() == 0){
-            throw new InvalidProductDataException("커피 가격");
-        }
-        if (product.getImageurl() == null || product.getImageurl().isEmpty()) {
-            throw new InvalidProductDataException("이미지 URL");
-        }
-    }
     public void checkForDuplicateProduct(Product product) {
         List<Product> products = productRepository.findAll();
         for (Product p : products) {

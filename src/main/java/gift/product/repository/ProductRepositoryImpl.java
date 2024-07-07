@@ -1,6 +1,6 @@
-package gift.repository;
+package gift.product.repository;
 
-import gift.model.Product;
+import gift.product.model.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ProductRepository {
+public class ProductRepositoryImpl implements ProductRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductRepository(JdbcTemplate jdbcTemplate) {
+    public ProductRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -29,28 +29,33 @@ public class ProductRepository {
         return product;
     };
 
+    @Override
     public List<Product> findAll() {
         var sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    @Override
     public Optional<Product> findById(Long id) {
         var sql = "SELECT * FROM product WHERE id = ?";
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
     }
 
+    @Override
     public Product save(Product product) {
         var sql = "INSERT INTO product (name, price, temperatureOption, cupOption, sizeOption, imageurl) VALUES (?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getTemperatureOption(), product.getCupOption(), product.getSizeOption(), product.getImageurl());
         return product;
     }
 
+    @Override
     public Product update(Product product) {
         var sql = "UPDATE product SET name = ?, price = ?, temperatureOption = ?, cupOption = ?, sizeOption = ?, imageurl = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getTemperatureOption(), product.getCupOption(), product.getSizeOption(), product.getImageurl(), product.getId());
         return product;
     }
 
+    @Override
     @Transactional
     public void deleteById(Long id) {
         var sql = "DELETE FROM product WHERE id = ?";
