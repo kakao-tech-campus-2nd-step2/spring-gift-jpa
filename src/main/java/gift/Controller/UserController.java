@@ -25,7 +25,7 @@ public class UserController {
   }
 
   @PostMapping("/signup")
-  public UserDto UserSignUp(@Valid @RequestBody UserDto userInfo) {
+  public UserDto userSignUp(@Valid @RequestBody UserDto userInfo) {
     System.out.println(userInfo);
     return userService.userSignUp(userInfo);
   }
