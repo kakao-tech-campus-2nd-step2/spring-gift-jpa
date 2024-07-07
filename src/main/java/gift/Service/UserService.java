@@ -3,6 +3,7 @@ package gift.Service;
 import gift.DTO.JwtToken;
 import gift.DTO.UserDto;
 import gift.Exception.ForbiddenException;
+import gift.Exception.UnauthorizedException;
 import gift.Repository.UserDao;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +33,12 @@ public class UserService {
     }
     if (email.equals(userByEmail.getEmail()) && password.equals(
       userByEmail.getPassword())) {
-      return jwtService.createAccessToken(userByEmail);
+      JwtToken jwtToken = jwtService.createAccessToken(userByEmail);
+      if (jwtService.isValidToken(jwtToken)){
+        throw new UnauthorizedException("토큰이 유효하지 않습니다.");
+      }
+      return jwtToken;
     }
-    throw new ForbiddenException("아이디 비밀번호가 틀립니다");
+    throw new ForbiddenException("아이디 비밀번호가 틀립니다.");
   }
 }
