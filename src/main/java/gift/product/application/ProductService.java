@@ -3,7 +3,7 @@ package gift.product.application;
 import gift.product.domain.Product;
 import gift.product.exception.ProductException;
 import gift.product.infra.ProductRepository;
-import gift.product.presentation.WishListManageController.CreateProductRequestDTO;
+import gift.product.presentation.ProductManageController.CreateProductRequestDTO;
 import gift.util.ErrorCode;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ public class ProductService {
     public Long addProduct(CreateProductRequestDTO createProductRequestDTO) {
         Product product = new Product(createProductRequestDTO.getName(), createProductRequestDTO.getPrice(),
             createProductRequestDTO.getImageUrl());
-        System.out.println("product: " + product.name() + " " + product.price() + " " + product.imageUrl());
         validateProduct(product);
         return productRepository.addProduct(product);
     }
@@ -36,8 +35,8 @@ public class ProductService {
     }
 
     private void validateProduct(Product product) {
-        validateName(product.name());
-        validatePrice(product.price());
+        validateName(product.getName());
+        validatePrice(product.getPrice());
     }
 
     private void validateName(String name) {

@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/wishlist")
-public class WishListManageController {
+@RequestMapping("/api/product")
+public class ProductManageController {
 
     @Autowired
     private ProductService productService;

@@ -34,9 +34,9 @@ public class ProductRepository {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, product.name());
-            ps.setDouble(2, product.price());
-            ps.setString(3, product.imageUrl());
+            ps.setString(1, product.getName());
+            ps.setDouble(2, product.getPrice());
+            ps.setString(3, product.getImageUrl());
             return ps;
         }, keyHolder);
 
@@ -50,6 +50,6 @@ public class ProductRepository {
 
     public void updateProduct(long id, Product product) {
         String sql = "UPDATE Product SET name=? WHERE id = ?";
-        jdbcTemplate.update(sql, product.name(), id);
+        jdbcTemplate.update(sql, product.getName(), id);
     }
 }
