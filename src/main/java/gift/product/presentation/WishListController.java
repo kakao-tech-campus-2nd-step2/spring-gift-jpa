@@ -4,6 +4,7 @@ package gift.product.presentation;
 import gift.product.application.WishListService;
 import gift.product.domain.Product;
 import gift.util.CommonResponse;
+import gift.util.JwtAuthenticated;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class WishListController {
     @Autowired
     private WishListService wishListService;
 
+    @JwtAuthenticated
     @GetMapping("/{userId}")
     public ResponseEntity<?> getWishList(@PathVariable Long userId) {
         List<Product> products = wishListService.getProductsInWishList(userId);
@@ -32,12 +34,14 @@ public class WishListController {
         }
     }
 
+    @JwtAuthenticated
     @PostMapping("/{userId}/add")
     public ResponseEntity<?> addProductToWishList(@PathVariable Long userId, @RequestBody Product product) {
         wishListService.addProductToWishList(userId, product);
         return ResponseEntity.ok(new CommonResponse<>(null, "위시리스트에 제품이 추가되었습니다", true));
     }
 
+    @JwtAuthenticated
     @DeleteMapping("/{userId}/delete/{productId}")
     public ResponseEntity<?> deleteProductFromWishList(@PathVariable Long userId, @PathVariable Long productId) {
         wishListService.deleteProductFromWishList(userId, productId);
