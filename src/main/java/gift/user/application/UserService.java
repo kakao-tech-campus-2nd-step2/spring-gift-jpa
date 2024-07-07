@@ -3,6 +3,7 @@ package gift.user.application;
 // UserService.java
 
 import gift.user.domain.User;
+import gift.user.domain.UserRegisterRequest;
 import gift.user.infra.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,19 +19,24 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User registerUser(String email, String password) {
-        String encodedPassword = passwordEncoder.encode(password);
+    public User registerUser(UserRegisterRequest request) {
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
         User user = new User();
-        user.setEmail(email);
+        user.setEmail(request.getEmail());
         user.setPassword(encodedPassword);
         return userRepository.save(user);
     }
 
     public User authenticateUser(String email, String password) {
         User user = userRepository.findByEmail(email);
-        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+        System.out.println("user.getPassword() = " + user.getPassword());
+        if (passwordEncoder.matches(password, user.getPassword())) {
             return user;
         }
         return null;
     }
+
+
 }
+
+
