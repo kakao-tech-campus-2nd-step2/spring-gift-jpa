@@ -1,12 +1,10 @@
 package gift.user.application;
 
-// UserService.java
 
 import gift.user.domain.User;
 import gift.user.domain.UserRegisterRequest;
 import gift.user.infra.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
