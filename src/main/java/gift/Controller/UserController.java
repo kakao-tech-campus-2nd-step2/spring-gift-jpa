@@ -21,33 +21,26 @@ public class UserController {
 
   public UserController(UserService userService, JwtService jwtService) {
     this.userService = userService;
-    this.jwtService=jwtService;
+    this.jwtService = jwtService;
   }
 
   @PostMapping("/signup")
   public UserDto userSignUp(@Valid @RequestBody UserDto userInfo) {
-    System.out.println(userInfo);
     return userService.userSignUp(userInfo);
   }
 
   @PostMapping("/login")
   public ResponseEntity<JwtToken> userLogin(
     @Valid @RequestBody UserDto userInfo) {
-    String email = userInfo.getEmail();
-    String password = userInfo.getPassword();
 
-    UserDto userDto = userService.userLogin(userInfo);
+    JwtToken jwtToken = userService.userLogin(userInfo);
 
-    if (userDto == null) {
+    if (jwtToken == null) {
       return ResponseEntity.notFound().build();
     }
-    if (email.equals(userDto.getEmail()) && password.equals(userDto.getPassword())) {
-      JwtToken jwtToken = jwtService.createAccessToken(userDto);
-      if (jwtService.isValidToken(jwtToken)) {
-        return ResponseEntity.ok(jwtToken);
-      }
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    if (jwtService.isValidToken(jwtToken)) {
+      return ResponseEntity.ok(jwtToken);
     }
-    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
   }
 }

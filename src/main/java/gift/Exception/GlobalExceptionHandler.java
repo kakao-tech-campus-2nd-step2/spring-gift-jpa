@@ -1,4 +1,4 @@
-package gift;
+package gift.Exception;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -28,5 +28,11 @@ public class GlobalExceptionHandler {
   public ResponseEntity<String> handleUnauthorizedException(UnauthorizedException ex,
     WebRequest request) {
     return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+  }
+
+  @ExceptionHandler(ForbiddenException.class)
+  public ResponseEntity<String> handleForbiddenException(ForbiddenException ex,
+    WebRequest request) {
+    return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
   }
 }

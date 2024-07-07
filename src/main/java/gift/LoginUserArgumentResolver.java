@@ -1,6 +1,7 @@
 package gift;
 
 import gift.DTO.UserDto;
+import gift.Exception.UnauthorizedException;
 import gift.Service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
