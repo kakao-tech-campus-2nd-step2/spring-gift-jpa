@@ -1,4 +1,4 @@
-package gift;
+package gift.constant;
 
 public class Path {
 

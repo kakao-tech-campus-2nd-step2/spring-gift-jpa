@@ -1,11 +1,12 @@
-package gift;
+package gift.controller;
 
+import gift.domain.Product;
+import gift.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.pattern.PathPattern;
 
-import static gift.Path.*;
+import static gift.constant.Path.*;
 
 
 @Controller
@@ -19,26 +20,26 @@ public class ProductManageController {
 
     @GetMapping
     public String retrieveProduct(Model model) {
-        model.addAttribute("products", productService.getProduct());
+        model.addAttribute("products", productService.getAllProducts());
         return MANAGE_PRODUCT_PAGE;
     }
 
     @PostMapping("/delete/{productId}")
     public String deleteProduct(@PathVariable("productId") Long productId) {
-        productService.deleteTheProduct(productId);
+        productService.deleteProduct(productId);
         return redirect(MANAGE_PRODUCT);
     }
 
     @GetMapping("/update/{productId}")
     public String editProductForm(@PathVariable("productId") Long productId, Model model) {
-        Product product = productService.getOneProduct(productId);
+        Product product = productService.getProduct(productId);
         model.addAttribute("product", product);
         return PRODUCT_UPDATE_FORM_PAGE;
     }
 
     @PostMapping("/update/{productId}")
     public String updateProduct(@PathVariable("productId") Long productId, @ModelAttribute("product") Product updatedProduct) {
-        productService.updateProductInfo(productId, updatedProduct);
+        productService.updateProduct(productId, updatedProduct);
         return redirect(MANAGE_PRODUCT);
     }
 
@@ -50,7 +51,7 @@ public class ProductManageController {
 
     @PostMapping("/add")
     public String addProduct(@ModelAttribute("product") Product product) {
-        productService.addNewProduct(product);
+        productService.addProduct(product);
         return redirect(MANAGE_PRODUCT);
     }
 

@@ -1,8 +1,21 @@
-package gift;
+package gift.domain;
+
+import jakarta.validation.constraints.*;
+
+import static gift.constant.Message.*;
 
 public class Product {
+
+    @NotNull(message = REQUIRED_FIELD_MSG)
+    @Positive(message = POSITIVE_NUMBER_REQUIRED_MSG)
     private Long id;
+
+    @NotEmpty(message = REQUIRED_FIELD_MSG)
+    @Size(max = 15, message = LENGTH_ERROR_MSG)
     private String name;
+
+    @NotNull(message = REQUIRED_FIELD_MSG)
+    @Positive(message = POSITIVE_NUMBER_REQUIRED_MSG)
     private int price;
     private String imageUrl;
 

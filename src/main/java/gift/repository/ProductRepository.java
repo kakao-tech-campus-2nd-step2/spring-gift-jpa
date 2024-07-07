@@ -1,5 +1,6 @@
-package gift;
+package gift.repository;
 
+import gift.domain.Product;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -18,18 +19,9 @@ public class ProductRepository {
     }
 
     public Product selectOneProduct(Long id) {
-        var sql = "SELECT id, name, price, imageUrl FROM products WHERE id = :id";
-        var params = new MapSqlParameterSource("id", id);
-        return namedParameterJdbcTemplate.queryForObject(
-                sql,
-                params,
-                (resultSet, rowNum) -> new Product(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getInt("price"),
-                        resultSet.getString("imageUrl")
-                )
-        );
+        String sql = "SELECT id, name, price, imageUrl FROM products WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+        return namedParameterJdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper<>(Product.class));
     }
 
     public List<Product> selectAllProducts() {
