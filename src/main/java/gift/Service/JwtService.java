@@ -21,8 +21,8 @@ public class JwtService {
 
   private final UserDao userDao;
 
-  public JwtService(UserDao userDao){
-    this.userDao=userDao;
+  public JwtService(UserDao userDao) {
+    this.userDao = userDao;
   }
 
   @Value("${jwt.secret}")

@@ -38,7 +38,8 @@ public class ProductDao {
   public void updateProduct(Long id, ProductDto productDTO) {
 
     var sql = "UPDATE product SET name = ?, price = ?, imageUrl = ? WHERE id = ?";
-    jdbcTemplate.update(sql, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(), id);
+    jdbcTemplate.update(sql, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl(),
+      id);
   }
 
   private RowMapper<ProductDto> productRowMapper() {

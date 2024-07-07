@@ -28,13 +28,13 @@ public class UserService {
     String password = userInfo.getPassword();
     UserDto userByEmail = userDao.getUserByEmail(email);
 
-    if (userByEmail == null){
+    if (userByEmail == null) {
       return null;
     }
     if (email.equals(userByEmail.getEmail()) && password.equals(
       userByEmail.getPassword())) {
       JwtToken jwtToken = jwtService.createAccessToken(userByEmail);
-      if (jwtService.isValidToken(jwtToken)){
+      if (jwtService.isValidToken(jwtToken)) {
         throw new UnauthorizedException("토큰이 유효하지 않습니다.");
       }
       return jwtToken;

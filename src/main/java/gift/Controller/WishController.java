@@ -3,7 +3,6 @@ package gift.Controller;
 import gift.DTO.ProductDto;
 import gift.DTO.UserDto;
 import gift.LoginUser;
-import gift.Repository.ProductDao;
 import gift.Service.WishListService;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +25,8 @@ public class WishController {
   }
 
   @GetMapping
-  public ResponseEntity<List<ProductDto>> getWishList(@LoginUser UserDto user){
-    List<ProductDto> wishList=wishListService.getWishList(user);
+  public ResponseEntity<List<ProductDto>> getWishList(@LoginUser UserDto user) {
+    List<ProductDto> wishList = wishListService.getWishList(user);
     return ResponseEntity.ok(wishList);
   }
 
@@ -35,11 +34,11 @@ public class WishController {
   public ResponseEntity<ProductDto> addProductToWishList(@RequestBody ProductDto wishProduct,
     @LoginUser UserDto user) {
     ProductDto addedWishProduct = wishListService.addProductToWishList(wishProduct, user);
-    return ResponseEntity.ok(wishProduct);
+    return ResponseEntity.ok(addedWishProduct);
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ProductDto> deleteProductToWishList(@PathVariable Long id){
+  public ResponseEntity<ProductDto> deleteProductToWishList(@PathVariable Long id) {
     ProductDto deletedWishProduct = wishListService.deleteProductToWishList(id);
     return ResponseEntity.ok(deletedWishProduct);
   }
