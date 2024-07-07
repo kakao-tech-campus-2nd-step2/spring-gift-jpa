@@ -1,5 +1,6 @@
-package gift;
+package gift.repository;
 
+import gift.domain.Product;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
