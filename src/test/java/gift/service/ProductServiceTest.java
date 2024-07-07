@@ -8,17 +8,18 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import gift.dto.ProductDTO;
-import gift.exception.InvalidProductPriceException;
-import gift.exception.ProductNotFoundException;
+import gift.dto.product.ProductRequest;
+import gift.dto.product.ProductResponse;
+import gift.exception.product.InvalidProductPriceException;
+import gift.exception.product.ProductNotFoundException;
 import gift.model.Product;
 import gift.repository.ProductRepository;
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
-import java.util.Optional;
-import java.util.List;
 
 public class ProductServiceTest {
 
@@ -37,7 +38,7 @@ public class ProductServiceTest {
         Product product = new Product(1L, "Test Product", 100, "test.jpg");
         when(productRepository.findAll()).thenReturn(List.of(product));
 
-        List<ProductDTO> products = productService.getAllProducts();
+        List<ProductResponse> products = productService.getAllProducts();
         assertEquals(1, products.size());
         assertEquals("Test Product", products.get(0).name());
     }
@@ -48,7 +49,7 @@ public class ProductServiceTest {
         Product product = new Product(1L, "Test Product", 100, "test.jpg");
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
 
-        ProductDTO productDTO = productService.getProductById(1L);
+        ProductResponse productDTO = productService.getProductById(1L);
         assertEquals("Test Product", productDTO.name());
     }
 
@@ -68,17 +69,17 @@ public class ProductServiceTest {
     @DisplayName("상품 추가")
     public void testAddProduct() {
         Product product = new Product(1L, "Test Product", 100, "test.jpg");
-        ProductDTO productDTO = new ProductDTO(null, "Test Product", 100, "test.jpg");
+        ProductRequest productDTO = new ProductRequest(null, "Test Product", 100, "test.jpg");
         when(productRepository.create(any(Product.class))).thenReturn(product);
 
-        ProductDTO createdProduct = productService.addProduct(productDTO);
+        ProductResponse createdProduct = productService.addProduct(productDTO);
         assertEquals("Test Product", createdProduct.name());
     }
 
     @Test
     @DisplayName("유효하지 않은 가격으로 상품 추가")
     public void testAddProductInvalidPrice() {
-        ProductDTO productDTO = new ProductDTO(null, "Test Product", -100, "test.jpg");
+        ProductRequest productDTO = new ProductRequest(null, "Test Product", -100, "test.jpg");
 
         InvalidProductPriceException exception = assertThrows(InvalidProductPriceException.class, () -> {
             productService.addProduct(productDTO);
@@ -92,12 +93,12 @@ public class ProductServiceTest {
     public void testUpdateProduct() {
         Product existingProduct = new Product(1L, "Old Product", 100, "old.jpg");
         Product updatedProduct = new Product(1L, "Updated Product", 200, "updated.jpg");
-        ProductDTO productDTO = new ProductDTO(1L, "Updated Product", 200, "updated.jpg");
+        ProductRequest productDTO = new ProductRequest(1L, "Updated Product", 200, "updated.jpg");
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(existingProduct));
         when(productRepository.update(any(Product.class))).thenReturn(updatedProduct);
 
-        ProductDTO result = productService.updateProduct(1L, productDTO);
+        ProductResponse result = productService.updateProduct(1L, productDTO);
         assertEquals("Updated Product", result.name());
         assertEquals(200, result.price());
     }
@@ -105,7 +106,7 @@ public class ProductServiceTest {
     @Test
     @DisplayName("존재하지 않는 상품 ID로 업데이트")
     public void testUpdateProductNotFound() {
-        ProductDTO productDTO = new ProductDTO(1L, "Updated Product", 200, "updated.jpg");
+        ProductRequest productDTO = new ProductRequest(1L, "Updated Product", 200, "updated.jpg");
 
         when(productRepository.findById(1L)).thenReturn(Optional.empty());
 

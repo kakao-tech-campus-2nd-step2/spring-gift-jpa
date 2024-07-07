@@ -1,9 +1,9 @@
-package gift.dto;
+package gift.dto.product;
 
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record ProductDTO(
+public record ProductRequest(
     Long id,
 
     @Size(min = 1, max = 15, message = "상품 이름은 공백을 포함하여 최대 15자까지 입력할 수 있습니다.")

@@ -12,9 +12,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import gift.dto.ProductDTO;
-import gift.exception.InvalidProductPriceException;
-import gift.exception.ProductNotFoundException;
+import gift.dto.product.ProductRequest;
+import gift.dto.product.ProductResponse;
+import gift.exception.product.InvalidProductPriceException;
+import gift.exception.product.ProductNotFoundException;
 import gift.service.ProductService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,11 +36,11 @@ public class ProductControllerTest {
     @MockBean
     private ProductService productService;
 
-    private ProductDTO productDTO;
+    private ProductResponse productDTO;
 
     @BeforeEach
     public void setUp() {
-        productDTO = new ProductDTO(1L, "Test Product", 100, "test.jpg");
+        productDTO = new ProductResponse(1L, "Test Product", 100, "test.jpg");
     }
 
     @Test
@@ -75,7 +76,7 @@ public class ProductControllerTest {
     @Test
     @DisplayName("상품 추가")
     public void testAddProduct() throws Exception {
-        when(productService.addProduct(any(ProductDTO.class))).thenReturn(productDTO);
+        when(productService.addProduct(any(ProductRequest.class))).thenReturn(productDTO);
 
         mockMvc.perform(post("/api/products")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -87,7 +88,7 @@ public class ProductControllerTest {
     @Test
     @DisplayName("유효하지 않은 가격으로 상품 추가")
     public void testAddProductInvalidPrice() throws Exception {
-        when(productService.addProduct(any(ProductDTO.class))).thenThrow(new InvalidProductPriceException("가격은 0 이상으로 설정되어야 합니다."));
+        when(productService.addProduct(any(ProductRequest.class))).thenThrow(new InvalidProductPriceException("가격은 0 이상으로 설정되어야 합니다."));
 
         mockMvc.perform(post("/api/products")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -99,7 +100,7 @@ public class ProductControllerTest {
     @Test
     @DisplayName("상품 업데이트")
     public void testUpdateProduct() throws Exception {
-        when(productService.updateProduct(eq(1L), any(ProductDTO.class))).thenReturn(productDTO);
+        when(productService.updateProduct(eq(1L), any(ProductRequest.class))).thenReturn(productDTO);
 
         mockMvc.perform(put("/api/products/1")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +112,7 @@ public class ProductControllerTest {
     @Test
     @DisplayName("존재하지 않는 상품 ID로 업데이트")
     public void testUpdateProductNotFound() throws Exception {
-        when(productService.updateProduct(eq(1L), any(ProductDTO.class))).thenThrow(new ProductNotFoundException("상품을 다음의 id로 찾을 수 없습니다. id: 1"));
+        when(productService.updateProduct(eq(1L), any(ProductRequest.class))).thenThrow(new ProductNotFoundException("상품을 다음의 id로 찾을 수 없습니다. id: 1"));
 
         mockMvc.perform(put("/api/products/1")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -7,7 +7,7 @@
   <meta name="author" content="충남대 BE 이경빈">
   <meta name="keywords" content="카카오 테크 캠퍼스">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>상품 목록</title>
+  <title>회원 목록</title>
 
   <!-- CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -21,31 +21,25 @@
 
 <body>
   <div class="container mt-5">
-    <h1 class="mb-4">상품 목록</h1>
-    <a href="/admin/products/new" class="btn btn-primary mb-3">새 상품 추가</a>
+    <h1 class="mb-4">회원 목록</h1>
+    <a href="/admin/members/new" class="btn btn-primary mb-3">새 회원 추가</a>
     <table class="table table-bordered table-hover">
       <thead class="table-light">
       <tr>
         <th>ID</th>
-        <th>이름</th>
-        <th>가격</th>
-        <th>이미지</th>
+        <th>이메일</th>
         <th>수정/삭제</th>
       </tr>
       </thead>
       <tbody>
-      <tr th:each="product : ${products}">
-        <td th:text="${product.id}">ID</td>
-        <td th:text="${product.name}">Name</td>
-        <td th:text="${product.price}">Price</td>
+      <tr th:each="member : ${members}">
+        <td th:text="${member.id}">ID</td>
+        <td th:text="${member.email}">Email</td>
         <td>
-          <img th:src="${product.imageUrl}" th:alt="|${product.name} 이미지|" class="img-thumbnail">
-        </td>
-        <td>
-          <a th:href="@{'/admin/products/' + ${product.id} + '/edit'}" class="btn btn-warning btn-sm">수정</a>
-          <form th:action="@{'/admin/products/' + ${product.id}}" method="post" style="display:inline">
+          <a th:href="@{'/admin/members/' + ${member.id} + '/edit'}" class="btn btn-warning btn-sm">수정</a>
+          <form th:action="@{'/admin/members/' + ${member.id}}" method="post" style="display:inline">
             <input type="hidden" name="_method" value="delete">
-            <button type="submit" class="btn btn-danger btn-sm deleteBtn">삭제</button>
+            <button type="submit" class="btn btn-danger btn-sm">삭제</button>
           </form>
         </td>
       </tr>
