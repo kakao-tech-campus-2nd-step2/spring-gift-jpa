@@ -1,11 +1,10 @@
 package gift.auth.domain;
 
-import gift.member.domain.Email;
 import gift.member.domain.Member;
-import gift.member.domain.NickName;
+import gift.member.domain.MemberType;
 
-public record AuthInfo(Email email, NickName nickName) {
+public record AuthInfo(Long memberId, MemberType memberType) {
     public AuthInfo(Member member) {
-        this(member.getEmail(), member.getNickName());
+        this(member.getId(), member.getMemberType());
     }
 }

@@ -10,4 +10,25 @@ public class ViewController {
     public String index() {
         return "index";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/members")
+    public String members() {
+        return "members";
+    }
+
+    @GetMapping("/wishes")
+    public String wishes() {
+        return "wishes";
+    }
+
+    @GetMapping("/products")
+    public String products() {
+        return "products";
+    }
 }
+

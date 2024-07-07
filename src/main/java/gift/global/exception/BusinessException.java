@@ -2,6 +2,8 @@ package gift.global.exception;
 
 import gift.global.response.ErrorCode;
 
+import java.util.Arrays;
+
 public class BusinessException extends RuntimeException {
     private final ErrorCode errorCode;
 
@@ -16,6 +18,6 @@ public class BusinessException extends RuntimeException {
 
     @Override
     public String toString() {
-        return errorCode.toString() + " : " + super.toString();
+        return errorCode.toString() + " : " + Arrays.toString(getStackTrace());
     }
 }

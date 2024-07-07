@@ -25,9 +25,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<SimpleResultResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-        String accessToken = authService.login(loginRequestDto);
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", accessToken);
+        Map<String, String> headers = authService.login(loginRequestDto);
         return ResponseHelper.createSimpleResponse(ResultCode.LOGIN_SUCCESS, headers);
     }
 }

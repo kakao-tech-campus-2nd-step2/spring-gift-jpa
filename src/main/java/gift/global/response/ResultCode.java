@@ -14,7 +14,17 @@ public enum ResultCode {
     DELETE_PRODUCT_SUCCESS(HttpStatus.OK, "P005", "제품 삭제 성공"),
 
     // Member
-    CREATE_MEMBER_SUCCESS(HttpStatus.OK, "M001", "회원 가입 성공"),
+    GET_ALL_MEMBERS_SUCCESS(HttpStatus.OK, "M001", "모든 회원 조회 성공"),
+    GET_MEMBER_BY_ID_SUCCESS(HttpStatus.OK, "M002", "단일 회원 조회 성공"),
+    CREATE_MEMBER_SUCCESS(HttpStatus.OK, "M003", "회원 가입 성공"),
+    UPDATE_MEMBER_SUCCESS(HttpStatus.OK, "M004", "회원 수정 성공"),
+    DELETE_MEMBER_SUCCESS(HttpStatus.OK, "M005", "회원 삭제 성공"),
+
+    // Wishes
+    GET_ALL_WISHES_SUCCESS(HttpStatus.OK, "W001", "모든 위시 리스트 조회 성공"),
+    CREATE_WISH_SUCCESS(HttpStatus.OK, "W002", "위시 리스트 추가 성공"),
+    UPDATE_WISH_SUCCESS(HttpStatus.OK, "W003", "위시 리스트 수정 성공"),
+    DELETE_WISH_SUCCESS(HttpStatus.OK, "W004", "위시 리스트 삭제 성공"),
     ;
 
     // status 를 HttpStatus 로 관리하는 것이 좋을까, 아니면 int로 관리하는 것이 좋을까?
