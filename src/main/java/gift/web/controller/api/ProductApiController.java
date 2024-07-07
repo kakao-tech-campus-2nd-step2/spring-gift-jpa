@@ -1,15 +1,16 @@
 package gift.web.controller.api;
 
 import gift.service.ProductService;
-import gift.web.dto.request.CreateProductRequest;
-import gift.web.dto.request.UpdateProductRequest;
-import gift.web.dto.response.CreateProductResponse;
-import gift.web.dto.response.ReadAllProductsResponse;
-import gift.web.dto.response.UpdateProductResponse;
+import gift.web.dto.request.product.CreateProductRequest;
+import gift.web.dto.request.product.UpdateProductRequest;
+import gift.web.dto.response.product.CreateProductResponse;
+import gift.web.dto.response.product.ReadAllProductsResponse;
+import gift.web.dto.response.product.UpdateProductResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,10 +32,10 @@ public class ProductApiController {
 
     @PostMapping
     public ResponseEntity<CreateProductResponse> createProduct(
-        @RequestBody CreateProductRequest request) throws URISyntaxException {
+        @Validated @RequestBody CreateProductRequest request) throws URISyntaxException {
         CreateProductResponse response = productService.createProduct(request);
 
-        URI location = new URI("http://localhost:8080/api/products" + response.getId());
+        URI location = new URI("http://localhost:8080/api/products/" + response.getId());
         return ResponseEntity.created(location).body(response);
     }
 
@@ -45,7 +46,7 @@ public class ProductApiController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UpdateProductResponse> updateProduct(@PathVariable Long id, @RequestBody UpdateProductRequest request) {
+    public ResponseEntity<UpdateProductResponse> updateProduct(@PathVariable Long id, @Validated @RequestBody UpdateProductRequest request) {
         UpdateProductResponse response;
         try {
             response = productService.updateProduct(id, request);
