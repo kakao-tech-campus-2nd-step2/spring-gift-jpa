@@ -15,6 +15,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
   private final JwtService jwtService;
+  public static final String TOKEN_TYPE = "Bearer ";
 
   public LoginUserArgumentResolver(JwtService jwtService) {
     this.jwtService = jwtService;
@@ -31,7 +32,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
     String authorizationHeader = request.getHeader("Authorization");
 
-    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+    if (authorizationHeader == null || !authorizationHeader.startsWith(TOKEN_TYPE)) {
       throw new UnauthorizedException("No Bearer token found in request headers");
     }
     String token = authorizationHeader.substring(7);
