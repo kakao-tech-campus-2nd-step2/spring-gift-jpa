@@ -1,11 +1,21 @@
 package gift.web.dto.request;
 
 import gift.domain.Product;
+import gift.web.validation.constraints.RequiredKakaoApproval;
+import gift.web.validation.constraints.SpecialCharacter;
+import jakarta.validation.constraints.NotBlank;
 import java.net.URL;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
 
 public class CreateProductRequest {
 
+    @NotBlank
+    @Length(min = 1, max = 15)
+    @SpecialCharacter(allowed = "(, ), [, ], +, -, &, /, _")
+    @RequiredKakaoApproval
     private final String name;
+    @Range(min = 1000, max = 10000000)
     private final Integer price;
     private final URL imageUrl;
 
