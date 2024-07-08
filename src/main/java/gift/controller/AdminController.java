@@ -3,7 +3,7 @@ package gift.controller;
 import gift.exception.ProductException;
 import gift.model.dto.ProductRequestDto;
 import gift.model.dto.ProductResponseDto;
-import gift.repository.ProductDao;
+import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -20,18 +20,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin/products")
 public class AdminController {
 
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    public AdminController(ProductDao productDao) {
-        this.productDao = productDao;
+    public AdminController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
     public String getAllProducts(Model model) {
-        List<ProductResponseDto> productList = productDao.selectAllProduct()
-            .stream()
-            .map(ProductResponseDto::from)
-            .toList();
+        List<ProductResponseDto> productList = productService.getAllProducts();
         model.addAttribute("productList", productList);
         return "products";
     }
@@ -48,14 +45,14 @@ public class AdminController {
         if (bindingResult.hasErrors()) {
             return "add-product-form";
         }
-        productDao.insertProduct(productRequestDto.toEntity());
+        productService.insertProduct(productRequestDto);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/edit/{id}")
     public String updateProductForm(@PathVariable("id") Long id, Model model) {
         model.addAttribute("productRequestDto",
-            ProductRequestDto.from(productDao.selectProductById(id)));
+            ProductRequestDto.from(productService.getProductById(id)));
         return "modify-product-form";
     }
 
@@ -66,13 +63,13 @@ public class AdminController {
         if (bindingResult.hasErrors()) {
             return "modify-product-form";
         }
-        productDao.updateProductById(id, productRequestDto.toEntity());
+        productService.updateProductById(id, productRequestDto);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") Long id) {
-        productDao.deleteProductById(id);
+        productService.deleteProductById(id);
         return "redirect:/admin/products";
     }
 

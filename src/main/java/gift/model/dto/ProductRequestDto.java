@@ -73,12 +73,12 @@ public class ProductRequestDto {
         );
     }
 
-    public static ProductRequestDto from(Product product) {
+    public static ProductRequestDto from(ProductResponseDto productResponseDto) {
         return new ProductRequestDto(
-            product.getId(),
-            product.getName(),
-            product.getPrice(),
-            product.getImageUrl()
+            productResponseDto.getId(),
+            productResponseDto.getName(),
+            productResponseDto.getPrice(),
+            productResponseDto.getImageUrl()
         );
     }
 

@@ -22,7 +22,7 @@ public class ProductService {
             .toList();
     }
 
-    public ProductResponseDto getProduct(Long id) {
+    public ProductResponseDto getProductById(Long id) {
         return ProductResponseDto.from(productDao.selectProductById(id));
     }
 
