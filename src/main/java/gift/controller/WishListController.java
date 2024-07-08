@@ -1,10 +1,10 @@
 package gift.controller;
 
 import gift.annotation.LoginMember;
+import gift.domain.LoginUser;
 import gift.domain.WishList;
 import gift.dto.WishRequest;
 import gift.service.WishListService;
-import gift.utils.JwtUtil;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,21 +24,21 @@ public class WishListController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishList>> getWishList(@LoginMember gift.domain.LoginMember member) {
+    public ResponseEntity<List<WishList>> getWishList(@LoginMember LoginUser member) {
         List<WishList> wishLists = wishListService.getWishListByUserId(member.getId());
         return ResponseEntity.ok(wishLists);
     }
 
     @PostMapping
     public ResponseEntity<Void> addProductToWishList(@RequestBody WishRequest wishRequest, @LoginMember
-        gift.domain.LoginMember member) {
+    LoginUser member) {
         wishListService.addWishList(member.getId(), wishRequest.getProductId(), wishRequest.getQuantity());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeWishList(@PathVariable("id") Long id, @LoginMember
-        gift.domain.LoginMember member) {
+    LoginUser member) {
         wishListService.removeWishList(id);
         return ResponseEntity.noContent().build();
     }
