@@ -1,6 +1,7 @@
 package gift.product.service;
 
 import gift.product.dto.JwtResponse;
+import gift.product.dto.LoginMember;
 import gift.product.dto.MemberDto;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.Member;
@@ -30,17 +31,21 @@ public class AuthService {
         validateMemberNotExist(memberDto);
 
         Member member = new Member(memberDto.email(), memberDto.password());
-        authRepository.registerMember(member);
+        authRepository.save(member);
     }
 
     public JwtResponse login(MemberDto memberDto) {
         validateMemberInfo(memberDto);
 
-        Member member = authRepository.findMember(memberDto.email());
+        Member member = authRepository.findByEmail(memberDto.email());
 
         String accessToken = getAccessToken(member);
 
         return new JwtResponse(accessToken);
+    }
+
+    public boolean existsMember(LoginMember loginMember) {
+        return authRepository.existsById(loginMember.id());
     }
 
     private String getAccessToken(Member member) {
@@ -69,7 +74,7 @@ public class AuthService {
             throw new LoginFailedException("회원 정보가 존재하지 않습니다.");
         }
 
-        Member member = authRepository.findMember(memberDto.email());
+        Member member = authRepository.findByEmail(memberDto.email());
 
         if (!memberDto.password().equals(member.getPassword())) {
             throw new LoginFailedException("비밀번호가 일치하지 않습니다.");

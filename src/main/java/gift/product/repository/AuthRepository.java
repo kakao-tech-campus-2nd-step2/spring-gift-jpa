@@ -27,7 +27,13 @@ public class AuthRepository {
         return !jdbcTemplate.query(sql, (resultSet, rowNum) -> 0, email).isEmpty();
     }
 
-    public void registerMember(Member member) {
+    public boolean existsById(Long id) {
+        var sql = "SELECT * FROM Member WHERE id = ?";
+
+        return !jdbcTemplate.query(sql, (resultSet, rowNum) -> 0, id).isEmpty();
+    }
+
+    public void save(Member member) {
         Map<String, Object> params = new HashMap<>();
         params.put("email", member.getEmail());
         params.put("password", member.getPassword());
@@ -35,7 +41,7 @@ public class AuthRepository {
         simpleJdbcInsert.execute(params);
     }
 
-    public Member findMember(String email) {
+    public Member findByEmail(String email) {
         var sql = "SELECT id, password FROM Member WHERE email = ?";
 
         return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->

@@ -1,5 +1,7 @@
 package gift.product;
 
+import gift.product.dto.LoginMember;
+import gift.product.service.AuthService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -8,6 +10,7 @@ import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import javax.crypto.SecretKey;
@@ -25,6 +28,12 @@ public class TokenValidationInterceptor implements HandlerInterceptor {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
 
+    private final AuthService authService;
+
+    public TokenValidationInterceptor(AuthService authService) {
+        this.authService = authService;
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
         Object handler) throws Exception {
@@ -40,7 +49,7 @@ public class TokenValidationInterceptor implements HandlerInterceptor {
         }
 
         try {
-            decodeAccessToken(request, accessToken);
+            decodeAccessToken(request, response, accessToken);
             return true;
         } catch (Exception e) {
             response.sendError(401, "액세스 토큰이 유효하지 않습니다.");
@@ -48,7 +57,8 @@ public class TokenValidationInterceptor implements HandlerInterceptor {
         }
     }
 
-    private void decodeAccessToken(HttpServletRequest request, String accessToken) {
+    private void decodeAccessToken(HttpServletRequest request, HttpServletResponse response, String accessToken)
+        throws IOException {
         String EncodedSecretKey = Encoders.BASE64.encode(
             SECRET_KEY.getBytes(StandardCharsets.UTF_8));
         byte[] keyBytes = Decoders.BASE64.decode(EncodedSecretKey);
@@ -60,7 +70,14 @@ public class TokenValidationInterceptor implements HandlerInterceptor {
             .parseSignedClaims(accessToken);
 
         Long memberId = claims.getPayload().get("id", Long.class);
+        validateMemberExistence(response, memberId);
         request.setAttribute("id", memberId);
+    }
+
+    private void validateMemberExistence(HttpServletResponse response, Long memberId) throws IOException {
+        if (!authService.existsMember(new LoginMember(memberId))) {
+            response.sendError(401, "회원 정보가 존재하지 않습니다.");
+        }
     }
 
     private String getAccessTokenFromCustomHeader(HttpServletRequest request) {
