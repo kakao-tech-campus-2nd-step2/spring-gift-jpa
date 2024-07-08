@@ -1,5 +1,5 @@
 package gift.dto;
-import gift.domain.WishList;
+import gift.entity.WishList;
 
 public class WishListDto {
 
@@ -29,6 +29,6 @@ public class WishListDto {
     }
 
     public static WishListDto fromEntity(WishList wishlist) {
-        return new WishListDto(wishlist.getProductId(), wishlist.getUserId());
+        return new WishListDto(wishlist.getMemberId(), wishlist.getMemberId());
     }
 }

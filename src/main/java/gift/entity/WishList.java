@@ -1,6 +1,5 @@
 package gift.entity;
 
-import gift.dao.WishListDao;
 import gift.dto.WishListDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
