@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+        .container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .table-responsive {
+            flex-grow: 1;
+        }
+        .thead-dark th {
+            text-align: center;
+        }
+        .table td, .table th {
+            vertical-align: middle;
+            text-align: center;
+        }
+        .table td img {
+            max-width: 100%;
+            height: auto;
+        }
+        .break-word {
+            word-wrap: break-word;
+            word-break: break-all;
+            white-space: normal;
+        }
+        .font-weight-bold {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-4">상품 목록</h1>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="/user-wishes" class="btn btn-info ml-auto">위시리스트 보기</a>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th style="width: 20%;">Name</th>
+                <th style="width: 15%;">Price</th>
+                <th style="width: 30%;">Image URL</th>
+                <th style="width: 10%;">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${products}">
+                <td class="font-weight-bold" th:text="${product.name}"></td>
+                <td th:text="${product.price}"></td>
+                <td class="break-word">
+                    <img th:src="${product.imageUrl}" alt="Product Image" style="max-width: 100px; height: auto;">
+                </td>
+                <td>
+                    <button class="btn btn-primary btn-sm" th:attr="onclick='addToWishList(' + ${product.id} + ')'">Add to Wish List</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function addToWishList(productId) {
+        const token = localStorage.getItem('jwtToken');
+        fetch('/wishes', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productId: productId }) // Using WishRequest format
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Product added to wish list!');
+                } else {
+                    response.text().then(text => {
+                        alert('Error: ' + text);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+</script>
+</body>
+</html>
