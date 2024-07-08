@@ -15,7 +15,7 @@ create table `users`
     `role`     varchar(255) not null
 );
 
-create table `wishes`
+create table `members`
 (
     `id`         bigint auto_increment primary key,
     `user_id`    varchar(36) not null,

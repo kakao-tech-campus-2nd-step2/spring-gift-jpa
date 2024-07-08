@@ -199,27 +199,26 @@ values ('Anthony', 33928, 'http://dummyimage.com/170x100.png/cc0000/ffffff');
 insert into products (name, price, image_url)
 values ('Ada', 7528, 'http://dummyimage.com/164x100.png/5fa2dd/ffffff');
 
-insert into users (id, name, email, password, role)
-values ('e6c6ba86-328c-4fcf-980c-401a27da1732', 'Jarred', 'test@test.com', 'asd', 'ADMIN');
-insert into users (id, name, email, password, role)
-values ('e6c6ba86-328c-4fcf-980c-401a27da1731', 'Jarred1', 'test1@test.com', 'asd', 'USER');
-insert into users (id, name, email, password, role)
-values ('e6c6ba86-328c-4fcf-980c-401a27da1730', 'Jarred2', 'test2@test.com', 'asd', 'ADMIN');
-insert into users (id, name, email, password, role)
-values ('e6c6ba86-328c-4fcf-980c-401a27da174', 'Jarred3', 'test3@test.com', 'asd', 'USER');
-insert into users (id, name, email, password, role)
-values ('e6c6ba86-328c-4fcf-980c-401a27da1738', 'down', 'test123@test.com',
+insert into merbers (name, email, password, role)
+values ('Jarred', 'test@test.com', 'asd', 'ADMIN');
+insert into members (name, email, password, role)
+values ('Jarred1', 'test1@test.com', 'asd', 'USER');
+insert into members (name, email, password, role)
+values ('Jarred2', 'test2@test.com', 'asd', 'ADMIN');
+insert into members (name, email, password, role)
+values ('Jarred3', 'test3@test.com', 'asd', 'USER');
+insert into members (name, email, password, role)
+values ('down', 'test123@test.com',
         'f9aac0519f30824bb09b2dbae6eb62633255d765c2272e8392d737332554926c', 'ADMIN');
 
 insert into wishes (user_id, product_id, count)
-values ('e6c6ba86-328c-4fcf-980c-401a27da1738', '1', 5);
+values (1, 2, 5);
 insert into wishes (user_id, product_id, count)
-values ('e6c6ba86-328c-4fcf-980c-401a27da1738', '2', 13);
+values (1, 4, 13);
 insert into wishes (user_id, product_id, count)
-values ('e6c6ba86-328c-4fcf-980c-401a27da1738', '3', 12);
+values (2, 12, 13);
 insert into wishes (user_id, product_id, count)
-values ('e6c6ba86-328c-4fcf-980c-401a27da1738', '4', 3);
+values (3, 32, 13);
 insert into wishes (user_id, product_id, count)
-values ('e6c6ba86-328c-4fcf-980c-401a27da1738', '11', 4);
-insert into wishes (user_id, product_id, count)
-values ('e6c6ba86-328c-4fcf-980c-401a27da1738', '51', 5);
+values (4, 27, 13);
+
