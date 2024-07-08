@@ -9,9 +9,11 @@ import gift.wishlist.service.WishListService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.beans.Transient;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +45,7 @@ public class WishListController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<?> addWishListItem(HttpServletRequest request, @Valid @RequestBody Product product) {
         String token = extractToken(request);
         Claims claims = jwtUtil.extractAllClaims(token);
@@ -53,6 +56,7 @@ public class WishListController {
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<?> deleteWishListItem(@PathVariable("id") Long id) {
         wishListService.deleteWishListItem(id);
         return ResponseEntity.status(HttpStatus.OK).body("Product removed from wishlist");
