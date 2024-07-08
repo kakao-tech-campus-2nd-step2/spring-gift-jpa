@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,33 +19,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class WishController {
 
     private final WishService wishService;
-    private final MemberService memberService;
 
-    public WishController(WishService wishService, MemberService memberService) {
+    public WishController(WishService wishService) {
         this.wishService = wishService;
-        this.memberService = memberService;
     }
 
     @PostMapping
-    public ResponseEntity<WishResponse> addWish(@RequestHeader("Authorization") String authorizationHeader, @RequestBody WishRequest request) {
-        String token = authorizationHeader.substring(7); // "Bearer " 이후의 토큰만 추출
-        Member member = memberService.getMemberFromToken(token);
-        wishService.addWish(member.getId(), request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<WishResponse> addWish(Member member, @RequestBody WishRequest request) {
+        WishResponse wishResponse = wishService.addWish(member.getId(), request);
+        return ResponseEntity.ok(wishResponse);
     }
 
     @GetMapping
-    public ResponseEntity<List<WishResponse>> getWishes(@RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.substring(7); // "Bearer " 이후의 토큰만 추출
-        Member member = memberService.getMemberFromToken(token);
+    public ResponseEntity<List<WishResponse>> getWishes(Member member) {
         List<WishResponse> wishes = wishService.getWishes(member.getId());
         return ResponseEntity.ok(wishes);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteWishByProductName(@RequestHeader("Authorization") String authorizationHeader, @RequestBody WishRequest request) {
-        String token = authorizationHeader.substring(7);
-        Member member = memberService.getMemberFromToken(token);
+    public ResponseEntity<Void> deleteWishByProductName(Member member, @RequestBody WishRequest request) {
         wishService.deleteWishByProductName(member.getId(), request.getProductName());
         return ResponseEntity.noContent().build();
     }
