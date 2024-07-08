@@ -1,5 +1,7 @@
 package gift.global.commandLineRunner;
 
+import gift.domain.cart.CartItem;
+import gift.domain.cart.repository.JpaCartItemRepository;
 import gift.domain.product.repository.JpaProductRepository;
 import gift.domain.product.Product;
 import gift.domain.user.User;
@@ -13,10 +15,13 @@ public class DataLoader implements CommandLineRunner {
     private final JpaProductRepository jpaProductRepository;
     private final JpaUserRepository jpaUserRepository;
 
-    public DataLoader(JpaProductRepository jpaProductRepository, JpaUserRepository jpaUserRepository) {
+    private final JpaCartItemRepository jpaCartItemRepository;
+    public DataLoader(JpaProductRepository jpaProductRepository, JpaUserRepository jpaUserRepository, JpaCartItemRepository jpaCartItemRepository) {
         this.jpaProductRepository = jpaProductRepository;
         this.jpaUserRepository = jpaUserRepository;
+        this.jpaCartItemRepository = jpaCartItemRepository;
     }
+
     @Override
     public void run(String... args) throws Exception {
         // Product
@@ -28,6 +33,11 @@ public class DataLoader implements CommandLineRunner {
         jpaUserRepository.save(new User("minji@example.com", "password1"));
         jpaUserRepository.save(new User("junseo@example.com", "password2"));
         jpaUserRepository.save(new User("donghyun@example.com", "password3"));
+
+        // CartItem
+        jpaCartItemRepository.save(new CartItem(1L, 3L));
+        jpaCartItemRepository.save(new CartItem(2L, 3L));
+        jpaCartItemRepository.save(new CartItem(3L, 2L));
 
     }
 }

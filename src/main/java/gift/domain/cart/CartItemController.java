@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/users")
 public class CartItemController {
 
     private final CartItemService cartItemService;
@@ -52,6 +52,7 @@ public class CartItemController {
         HttpServletRequest request) {
 
         Long userId =   (Long) request.getAttribute("id");
+        System.out.println("userId = " + userId);
         List<Product> products = cartItemService.getProductsInCartByUserId(userId);
 
         return ResponseMaker.createResponse(HttpStatus.OK, "장바구니 조회에 성공했습니다.", products);

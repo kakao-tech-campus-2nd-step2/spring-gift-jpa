@@ -1,7 +1,11 @@
 package gift.domain.cart;
 
+import gift.domain.cart.repository.CartItemRepository;
+import gift.domain.cart.repository.JdbcTemplateCartItemRepository;
+import gift.domain.cart.repository.JpaCartItemRepository;
 import gift.domain.product.repository.JdbcTemplateProductRepository;
 import gift.domain.product.Product;
+import gift.domain.product.repository.JpaProductRepository;
 import gift.domain.product.repository.ProductRepository;
 import gift.global.exception.BusinessException;
 import java.util.List;
@@ -14,41 +18,42 @@ import org.springframework.stereotype.Service;
 public class CartItemService {
 
     private final JdbcTemplate jdbcTemplate;
-    private final CartItemRepository cartItemRepository;
-    private final ProductRepository productRepository;
+    private final JpaProductRepository productRepository;
+    private final JpaCartItemRepository cartItemRepository;
 
     public CartItemService(
         JdbcTemplate jdbcTemplate,
-        JdbcTemplateCartItemRepository jdbcTemplateCartRepository,
-        JdbcTemplateProductRepository jdbcTemplateProductRepository
+        JpaProductRepository jpaProductRepository,
+        JpaCartItemRepository jpaCartItemRepository
     ) {
         this.jdbcTemplate = jdbcTemplate;
-        this.cartItemRepository = jdbcTemplateCartRepository;
-        this.productRepository = jdbcTemplateProductRepository;
+        this.cartItemRepository = jpaCartItemRepository;
+        this.productRepository = jpaProductRepository;
     }
 
     /**
      * 장바구니에 상품 ID 추가
      */
     public void addCartItem(Long userId, Long productId) {
-        if (cartItemRepository.isExistsInCart(userId, productId)) {
+        if (cartItemRepository.existsByUserIdAndProductId(userId, productId)) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "해당 상품이 장바구니에 이미 존재합니다.");
         }
 
         CartItem cartItem = new CartItem(userId, productId);
-        cartItemRepository.addCartItem(cartItem);
+        cartItemRepository.save(cartItem);
     }
 
     /**
      * 장바구니 상품 조회
      */
     public List<Product> getProductsInCartByUserId(Long userId) {
-        List<Long> cartItemIds = cartItemRepository.getCartItemsByUserId(userId)
+        List<Long> productIds = cartItemRepository.findAllByUserId(userId)
             .stream()
             .map(CartItem::getProductId)
             .collect(Collectors.toList());
 
-        List<Product> products = productRepository.getProductsByIds(cartItemIds);
+        System.out.println("userId = " + userId);
+        List<Product> products = productRepository.findAllById(productIds);
 
         return products;
     }
@@ -57,6 +62,6 @@ public class CartItemService {
      * 장바구니 상품 삭제
      */
     public void deleteCartItem(Long userId, Long productId) {
-        cartItemRepository.deleteCartItem(userId, productId);
+        cartItemRepository.deleteByUserIdAndProductId(userId, productId);
     }
 }

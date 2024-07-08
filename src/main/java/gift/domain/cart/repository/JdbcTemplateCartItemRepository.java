@@ -1,6 +1,6 @@
-package gift.domain.cart;
+package gift.domain.cart.repository;
 
-import gift.domain.product.Product;
+import gift.domain.cart.CartItem;
 import gift.global.exception.BusinessException;
 import java.util.List;
 import org.springframework.http.HttpStatus;
