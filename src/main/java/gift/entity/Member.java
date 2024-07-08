@@ -54,7 +54,7 @@ public class Member {
         this.password = password;
     }
 
-    public MemberDto toDto(Member member){
+    public MemberDto toDto(){
         return new MemberDto(this.id, this.password, this.email, this.role);
     }
 }

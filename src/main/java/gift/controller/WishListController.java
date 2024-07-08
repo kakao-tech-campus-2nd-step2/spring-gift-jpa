@@ -32,7 +32,7 @@ public class WishListController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<WishListDto>> getWishList(@RequestHeader("Authorization") String authorizationHeader, MemberDto memberDtoD){
+    public ResponseEntity<List<WishListDto>> getWishList(@RequestHeader("Authorization") String authorizationHeader, MemberDto memberDto){
         if (!jwtUtil.validateToken(authorizationHeader, memberDto)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
