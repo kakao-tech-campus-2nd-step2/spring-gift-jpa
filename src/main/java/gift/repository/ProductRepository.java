@@ -5,6 +5,7 @@ import gift.entity.Option;
 import gift.entity.Product;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Repository
 @Validated
-public class ProductRepository {
+public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -87,4 +88,6 @@ public class ProductRepository {
         ));
         return !opt.isEmpty();
     }
+
+    void updateProduct(Product product);
 }

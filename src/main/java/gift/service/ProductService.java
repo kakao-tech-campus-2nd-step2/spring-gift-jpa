@@ -98,9 +98,8 @@ public class ProductService {
         return jsonProduct;
     }
 
-    public void modifyProduct(ProductDTO product) {
-        deleteProduct(product.getId());
-        saveProduct(product);
+    public void modifyProduct(Product product) {
+        productRepository.updateProduct(product);
     }
 
 }

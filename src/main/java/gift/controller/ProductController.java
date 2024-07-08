@@ -39,7 +39,7 @@ public class  ProductController {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/api/products")
-    public void modifyProduct(@RequestBody ProductDTO product) {
+    public void modifyProduct(@RequestBody Product product) {
         productService.modifyProduct(product);
     }
 
