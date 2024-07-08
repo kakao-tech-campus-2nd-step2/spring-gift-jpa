@@ -39,14 +39,13 @@ public class JwtService {
       .setExpiration(Date.from(expiresAt))
       .signWith(Keys.hmacShaKeyFor(key.getBytes()), SignatureAlgorithm.HS256)
       .compact();
-
     return new JwtToken(accessToken);
   }
 
   public boolean isValidToken(JwtToken jwtToken) {
     JwtParser jwtParser = Jwts.parser()
-      .setSigningKey(Keys.hmacShaKeyFor(key.getBytes()))
-      .build();
+        .setSigningKey(Keys.hmacShaKeyFor(key.getBytes()))
+        .build();
     try {
       Jws<Claims> claims = jwtParser.parseClaimsJws(jwtToken.getAccessToken());
       return claims.getBody().getExpiration().before(new Date());
@@ -57,8 +56,8 @@ public class JwtService {
 
   public UserDto getUserEmailFromToken(String token) {
     JwtParser jwtParser = Jwts.parser()
-      .setSigningKey(Keys.hmacShaKeyFor(key.getBytes()))
-      .build();
+        .setSigningKey(Keys.hmacShaKeyFor(key.getBytes()))
+        .build();
 
     Jws<Claims> claims = jwtParser.parseClaimsJws(token);
     String email = claims.getBody().get("email", String.class);
