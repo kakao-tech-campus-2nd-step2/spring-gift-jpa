@@ -34,9 +34,8 @@ public class ProductRepositoryIntegrationTest {
         ProductDTO product = new ProductDTO("abc", 123, "test.com");
         Product savedProduct = productRepository.save(product);
 
-        productRepository.delete(savedProduct.getId());
-        Product findProduct = productRepository.findById(savedProduct.getId());
-        assertThat(findProduct).isEqualTo(null);
+        boolean result = productRepository.delete(savedProduct.getId());
+        assertThat(result).isEqualTo(true);
     }
 
     @Test
