@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>관리자 페이지</title>
+  <link rel="stylesheet" href="/css/list.css">
+</head>
+<form th:action="@{/product/create}" th:method="get">
+  <button type="submit">
+    상품 추가
+  </button>
+</form>
+<body>
+<table>
+  <thead>
+  <tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>img</th>
+    <th>actions</th>
+  </tr>
+  </thead>
+  <tbody>
+
+  <tr th:each="item : ${list}">
+    <td th:text="${item.getId()}"></td>
+    <td th:text="${item.getName()}"></td>
+    <td th:text="${item.getPrice()}"></td>
+    <td><img th:src="${item.getImgUrl()}" width="200" height="200"/></td>
+    <td>
+      <div class="action-buttons">
+        <form th:action="@{/product/update/{id}(id = ${item.getId()})}" method="get">
+          <button type="submit">수정</button>
+        </form>
+
+        <form th:action="@{/product/delete/{id}(id = ${item.getId()})}" method="post">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit">삭제</button>
+        </form>
+      </div>
+    </td>
+  </tr>
+
+  </tbody>
+</table>
+</body>
+</html>
