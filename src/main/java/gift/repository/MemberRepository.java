@@ -2,7 +2,6 @@ package gift.repository;
 
 import gift.dto.Member;
 import gift.dto.request.LoginInfoRequest;
-import gift.dto.request.MemberRequest;
 import jakarta.annotation.PostConstruct;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,8 +25,8 @@ public class MemberRepository {
     @PostConstruct
     public void initialize() {
         createMemberTable();
-        registerMember(new MemberRequest("test@test.com", "1234"));
-        registerMember(new MemberRequest("test2@test.com", "1234"));
+        registerMember("test@test.com", "1234");
+        registerMember("test2@test.com", "1234");
     }
 
     private void createMemberTable() {
@@ -42,13 +41,13 @@ public class MemberRepository {
         jdbcTemplate.execute(sql);
     }
 
-    public Long registerMember(MemberRequest member) {
+    public Long registerMember(String email, String password) {
         String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int rowsAffected = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, member.getEmail());
-            ps.setString(2, member.getPassword());
+            ps.setString(1, email);
+            ps.setString(2, password);
             return ps;
         }, keyHolder);
         if (rowsAffected > 0) {

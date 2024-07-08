@@ -18,7 +18,7 @@ public class MemberService {
     }
 
     public Long registerMember(MemberRequest member) {
-        return memberRepository.registerMember(member);
+        return memberRepository.registerMember(member.getEmail(), member.getPassword());
     }
 
 
