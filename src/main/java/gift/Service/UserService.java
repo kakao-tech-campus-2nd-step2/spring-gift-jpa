@@ -35,7 +35,7 @@ public class UserService {
     if (email.equals(userByEmail.getEmail()) && password.equals(
       userByEmail.getPassword())) {
       JwtToken jwtToken = jwtService.createAccessToken(userByEmail);
-      if (jwtService.isValidToken(jwtToken)) {
+      if (jwtService.isValidToken(jwtToken)) { //토큰이 만료되었다면
         throw new UnauthorizedException("토큰이 유효하지 않습니다.");
       }
       return jwtToken;
