@@ -34,9 +34,9 @@ class WishRepositoryTest {
         memberRepository.save(member);
 
         Product product = new Product();
-        product.setName("신라면");
-        product.setPrice(1500);
-        product.setImageurl("https://image.nongshim.com/non/pro/1647822565539.jpg");
+        product.setName("열라면");
+        product.setPrice(1600);
+        product.setImageurl("https://i.namu.wiki/i/fuvd7qkb8P6PA_sD5ufjgpKUhRgxxTrIWnkPIg5H_UAPMUaArn1U1DweD7T_f_8RVxTDjqaiFwKr-quURwc_eQ.webp");
         productRepository.save(product);
 
         Wish wish = new Wish();
@@ -57,9 +57,9 @@ class WishRepositoryTest {
         Member savedMember = memberRepository.save(member);
 
         Product product = new Product();
-        product.setName("신라면");
-        product.setPrice(1500);
-        product.setImageurl("https://image.nongshim.com/non/pro/1647822565539.jpg");
+        product.setName("열라면");
+        product.setPrice(1600);
+        product.setImageurl("https://i.namu.wiki/i/fuvd7qkb8P6PA_sD5ufjgpKUhRgxxTrIWnkPIg5H_UAPMUaArn1U1DweD7T_f_8RVxTDjqaiFwKr-quURwc_eQ.webp");
         productRepository.save(product);
 
         Wish wish = new Wish();
