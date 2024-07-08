@@ -20,6 +20,12 @@ public class Wish {
         this.memberId = memberId;
     }
 
+    public Wish(Long id, Long productId, Long memberId) {
+        this.id = id;
+        this.productId = productId;
+        this.memberId = memberId;
+    }
+
     public Long getId() {
         return id;
     }
