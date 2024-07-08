@@ -17,6 +17,8 @@ public class UserService {
         this.jwtUtil = jwtUtil;
     }
 
+
+
     public void generateUser(User user) {
         if(!userDao.userEmailCheck(user.getEmail())){
             throw new DuplicateUserEmailException(

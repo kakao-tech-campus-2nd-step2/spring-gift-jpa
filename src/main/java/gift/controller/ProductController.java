@@ -1,7 +1,7 @@
 package gift.controller;
 
 
-import gift.domain.Product;
+import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -36,7 +36,7 @@ public class ProductController {
     @GetMapping("/{id}")
 
     public Product getProductById(@PathVariable("id") long id) {
-        return productService.getProductById(id);
+        return productService.getProductById(id).get();
     }
 
     //product 추가

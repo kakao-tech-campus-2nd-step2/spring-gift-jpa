@@ -1,43 +1,47 @@
 package gift.service;
 
-import gift.domain.Product;
+import gift.entity.Product;
 import gift.dao.ProductDao;
 import gift.exception.DuplicateProductNameException;
+import gift.repository.ProductRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    private final ProductRepository productRepository;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    public void saveProduct(Product product){
+        productRepository.save(product);
     }
 
     public List<Product> getAllProducts() {
-        return productDao.findAll();
+        return productRepository.findAll();
     }
 
-    public Product getProductById(Long id) {
-        return productDao.findById(id);
+    public Optional<Product> getProductById(Long id) {
+        return productRepository.findById(id);
     }
 
-    public void saveProduct(Product product) {
-        //DB 저장 시 이미 중복된 ID가 있는지 검사.
-        if (!productDao.productNameCheck(product.getName())) {
-            throw new DuplicateProductNameException(
-                "Product Name " + product.getName() + " already exists.");
-        }
-
-        productDao.save(product);
-    }
 
     public void updateProduct(Product product, Long id) {
-        productDao.update(product, id);
+        Product update = productRepository.findById(id).get();
+        update.setName(product.getName());
+        update.setPrice(product.getPrice());
+        update.setImageUrl(product.getImageUrl());
+
+        productRepository.save(update);
+
+
     }
 
     public void deleteProduct(Long id) {
-        productDao.deleteById(id);
+        productRepository.deleteById(id);
     }
 
 }
