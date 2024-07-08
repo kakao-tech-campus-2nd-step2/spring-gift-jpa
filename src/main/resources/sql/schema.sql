@@ -7,8 +7,8 @@ create table product
     imageUrl varchar(255)
 );
 
-drop table if exists account CASCADE;
-create table account
+drop table if exists users CASCADE;
+create table users
 (
     id       bigint AUTO_INCREMENT PRIMARY KEY,
     email    varchar(50),
@@ -18,6 +18,7 @@ create table account
 drop table if exists wishlist CASCADE;
 create table wishlist
 (
+    id       bigint AUTO_INCREMENT PRIMARY KEY,
     email     varchar(50),
     productId BIGINT,
     count     INT
