@@ -12,7 +12,7 @@ import java.util.Date;
 public class TokenService {
 
     private final static SecretKey key = Jwts.SIG.HS256.key().build();
-    private final int jwtExpirationInMs = 7200000; // 2hour
+    private final static int jwtExpirationInMs = 7200000; // 2hour
 
     public Token generateToken(Long registeredMemberId) {
         Date now = new Date();
