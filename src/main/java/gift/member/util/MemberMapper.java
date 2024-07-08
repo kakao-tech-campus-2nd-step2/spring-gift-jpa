@@ -1,6 +1,6 @@
 package gift.member.util;
 
-import gift.member.domain.Member;
+import gift.member.entity.Member;
 import gift.member.dto.MemberDto;
 
 public class MemberMapper {

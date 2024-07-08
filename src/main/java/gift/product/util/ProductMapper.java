@@ -1,6 +1,6 @@
 package gift.product.util;
 
-import gift.product.domain.Product;
+import gift.product.entity.Product;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
 
