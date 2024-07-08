@@ -29,10 +29,8 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<Product> findById(@PathVariable Long id) {
         Optional<Product> product = productService.getProductById(id);
-        if (product.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(product.get(), HttpStatus.OK);
+        return product.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("")
