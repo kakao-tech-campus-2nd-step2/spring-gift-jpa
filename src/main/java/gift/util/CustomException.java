@@ -1,6 +1,8 @@
 package gift.util;
 
 
+import org.springframework.http.HttpStatus;
+
 public class CustomException extends RuntimeException {
 
     private final ErrorCode errorCode;
@@ -14,7 +16,7 @@ public class CustomException extends RuntimeException {
         return errorCode;
     }
 
-    public int getStatus() {
+    public HttpStatus getStatus() {
         return errorCode.getStatus();
     }
 }
