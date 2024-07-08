@@ -1,7 +1,9 @@
 package gift.repository;
 
 import gift.domain.Product;
+
 import java.util.List;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -18,12 +20,12 @@ public class WishlistRepository {
         String sql = "SELECT p.id, p.name, p.price, p.image_url FROM wishlist AS w INNER JOIN product AS p ON w.product_id = p.id WHERE w.member_id = ?";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new Product(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getInt("price"),
-                rs.getString("image_url")
-            ),
-            memberId
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getInt("price"),
+                        rs.getString("image_url")
+                ),
+                memberId
         );
     }
 

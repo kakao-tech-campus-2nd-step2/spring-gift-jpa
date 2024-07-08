@@ -44,7 +44,7 @@ public class Product {
 
     public ProductResponse toDto() {
         return new ProductResponse(this.getId(), this.getName(), this.getPrice(),
-            this.getImageUrl());
+                this.getImageUrl());
     }
 
     public void changeName(String name) {

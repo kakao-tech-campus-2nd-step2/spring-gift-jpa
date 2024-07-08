@@ -24,14 +24,14 @@ public class MemberService {
 
     public String login(String email, String password) {
         Member member = memberRepository.findByEmailAndPassword(email, password)
-            .orElseThrow(LoginException::new);
+                .orElseThrow(LoginException::new);
 
         return jwtProvider.create(member);
     }
 
     public Member getMember(Long memberId) {
         return memberRepository.findById(memberId)
-            .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(MemberNotFoundException::new);
     }
 
 }

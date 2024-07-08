@@ -34,7 +34,7 @@ public class MemberController {
         String jwt = memberService.login(request.getEmail(), request.getPassword());
 
         return ResponseEntity.ok()
-            .body(new JwtResponse(jwt));
+                .body(new JwtResponse(jwt));
     }
 
 }

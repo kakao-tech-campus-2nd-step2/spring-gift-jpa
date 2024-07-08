@@ -2,7 +2,9 @@ package gift.repository;
 
 import gift.domain.member.Member;
 import gift.domain.member.MemberRole;
+
 import java.util.Optional;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -26,16 +28,16 @@ public class MemberRepository {
 
         try {
             Member member = jdbcTemplate.queryForObject(
-                sql,
-                (rs, rowNum) -> new Member.MemberBuilder()
-                    .id(rs.getLong("id"))
-                    .name(rs.getString("name"))
-                    .email(rs.getString("email"))
-                    .password(rs.getString("password"))
-                    .role(MemberRole.valueOf(rs.getString("role")))
-                    .build(),
-                email,
-                password
+                    sql,
+                    (rs, rowNum) -> new Member.MemberBuilder()
+                            .id(rs.getLong("id"))
+                            .name(rs.getString("name"))
+                            .email(rs.getString("email"))
+                            .password(rs.getString("password"))
+                            .role(MemberRole.valueOf(rs.getString("role")))
+                            .build(),
+                    email,
+                    password
             );
             return Optional.of(member);
         } catch (EmptyResultDataAccessException e) {
@@ -48,15 +50,15 @@ public class MemberRepository {
 
         try {
             Member member = jdbcTemplate.queryForObject(
-                sql,
-                (rs, rowNum) -> new Member.MemberBuilder()
-                    .id(rs.getLong("id"))
-                    .name(rs.getString("name"))
-                    .email(rs.getString("email"))
-                    .password(rs.getString("password"))
-                    .role(MemberRole.valueOf(rs.getString("role")))
-                    .build(),
-                memberId
+                    sql,
+                    (rs, rowNum) -> new Member.MemberBuilder()
+                            .id(rs.getLong("id"))
+                            .name(rs.getString("name"))
+                            .email(rs.getString("email"))
+                            .password(rs.getString("password"))
+                            .role(MemberRole.valueOf(rs.getString("role")))
+                            .build(),
+                    memberId
             );
             return Optional.of(member);
         } catch (EmptyResultDataAccessException e) {

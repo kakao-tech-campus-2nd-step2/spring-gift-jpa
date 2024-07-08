@@ -7,8 +7,10 @@ import gift.exception.ProductNotInWishlistException;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import gift.response.ProductResponse;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,20 +20,20 @@ public class WishlistService {
     private final ProductRepository productRepository;
 
     public WishlistService(WishlistRepository wishlistRepository,
-        ProductRepository productRepository) {
+                           ProductRepository productRepository) {
         this.wishlistRepository = wishlistRepository;
         this.productRepository = productRepository;
     }
 
     public List<ProductResponse> getProducts(Long memberId) {
         return wishlistRepository.findAllProducts(memberId).stream()
-            .map(Product::toDto)
-            .collect(Collectors.toList());
+                .map(Product::toDto)
+                .collect(Collectors.toList());
     }
 
     public void addProduct(Long memberId, Long productId) {
         productRepository.findById(productId)
-            .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(ProductNotFoundException::new);
 
         if (wishlistRepository.existsByMemberIdAndProductId(memberId, productId)) {
             throw new ProductAlreadyInWishlistException();

@@ -17,7 +17,9 @@ import gift.request.ProductRequest;
 import gift.response.ProductResponse;
 import gift.constant.ErrorMessage;
 import gift.service.ProductService;
+
 import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +52,7 @@ class ProductControllerTest {
 
         //then
         result
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
 
         then(productService).should().getProducts();
     }
@@ -69,7 +71,7 @@ class ProductControllerTest {
 
         //then
         result
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
 
         then(productService).should().getProduct(productId);
     }
@@ -84,12 +86,12 @@ class ProductControllerTest {
 
         //when
         ResultActions result = mvc.perform(post("/api/products")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(request)));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)));
 
         //then
         result
-            .andExpect(status().isCreated());
+                .andExpect(status().isCreated());
 
         then(productService).should().addProduct(any(ProductRequest.class));
     }
@@ -102,14 +104,14 @@ class ProductControllerTest {
 
         //when
         ResultActions result = mvc.perform(post("/api/products")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(request));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(request));
 
         //then
         result
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
-            .andExpect(jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_NOT_BLANK));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
+                .andExpect(jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_NOT_BLANK));
     }
 
     @DisplayName("[POST/Exception] 상품 하나를 추가하는데, 상품명이 15자가 넘으면 예외를 던진다.")
@@ -117,19 +119,19 @@ class ProductControllerTest {
     void productAddWithNameExceedingMaxLength() throws Exception {
         //given
         ProductRequest request = new ProductRequest("프리미엄 오가닉 그린티 블렌드", 2500,
-            "https://example.com");
+                "https://example.com");
 
         //when
         ResultActions result = mvc.perform(post("/api/products")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(request)));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)));
 
         //then
         result
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
-            .andExpect(
-                jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_EXCEEDS_MAX_LENGTH));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
+                .andExpect(
+                        jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_EXCEEDS_MAX_LENGTH));
     }
 
     @DisplayName("[POST/Exception] 상품 하나를 추가하는데, 상품명에 허용되지 않는 특수문자가 포함되어 있으면 예외를 던진다.")
@@ -140,14 +142,14 @@ class ProductControllerTest {
 
         //when
         ResultActions result = mvc.perform(post("/api/products")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(request)));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)));
 
         //then
         result
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
-            .andExpect(jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_INVALID_CHAR));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
+                .andExpect(jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_INVALID_CHAR));
     }
 
     @DisplayName("[POST/Exception] 상품 하나를 추가하는데, 상품명에 '카카오'가 포함되어 있으면 예외를 던진다.")
@@ -158,15 +160,15 @@ class ProductControllerTest {
 
         //when
         ResultActions result = mvc.perform(post("/api/products")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(request)));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)));
 
         //then
         result
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
-            .andExpect(
-                jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_CONTAINS_KAKAO));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
+                .andExpect(
+                        jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_CONTAINS_KAKAO));
     }
 
     @DisplayName("[POST/Exception] 상품 하나를 추가하는데, 가격 정보가 주어지지 않으면 예외를 던진다.")
@@ -177,14 +179,14 @@ class ProductControllerTest {
 
         //when
         ResultActions result = mvc.perform(post("/api/products")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(request));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(request));
 
         //then
         result
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
-            .andExpect(jsonPath("$.validation.price").value(ErrorMessage.PRODUCT_PRICE_NOT_NULL));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
+                .andExpect(jsonPath("$.validation.price").value(ErrorMessage.PRODUCT_PRICE_NOT_NULL));
     }
 
     @DisplayName("[PUT] 상품 정보를 수정한다.")
@@ -198,12 +200,12 @@ class ProductControllerTest {
 
         //when
         ResultActions result = mvc.perform(put("/api/products/{productId}", productId)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
 
         //then
         result
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
 
         then(productService).should().editProduct(anyLong(), any(ProductRequest.class));
     }
@@ -218,14 +220,14 @@ class ProductControllerTest {
 
         //when
         ResultActions result = mvc.perform(put("/api/products/{productId}", productId)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(request));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(request));
 
         //then
         result
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
-            .andExpect(jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_NOT_BLANK));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
+                .andExpect(jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_NOT_BLANK));
     }
 
     @DisplayName("[PUT/Exception] 상품 정보를 수정하는데, 상품명이 15자가 넘으면 예외를 던진다.")
@@ -233,20 +235,20 @@ class ProductControllerTest {
     void productEditWithNameExceedingMaxLength() throws Exception {
         //given
         ProductRequest request = new ProductRequest("프리미엄 오가닉 그린티 블렌드", 2500,
-            "https://example.com");
+                "https://example.com");
         Long productId = 1L;
 
         //when
         ResultActions result = mvc.perform(put("/api/products/{productId}", productId)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(request)));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)));
 
         //then
         result
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
-            .andExpect(
-                jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_EXCEEDS_MAX_LENGTH));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
+                .andExpect(
+                        jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_EXCEEDS_MAX_LENGTH));
     }
 
     @DisplayName("[PUT/Exception] 상품 정보를 수정하는데, 상품명에 허용되지 않는 특수문자가 포함되어 있으면 예외를 던진다.")
@@ -258,14 +260,14 @@ class ProductControllerTest {
 
         //when
         ResultActions result = mvc.perform(put("/api/products/{productId}", productId)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(request)));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)));
 
         //then
         result
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
-            .andExpect(jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_INVALID_CHAR));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
+                .andExpect(jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_INVALID_CHAR));
     }
 
     @DisplayName("[PUT/Exception] 상품 정보를 수정하는데, 상품명에 '카카오'가 포함되어 있으면 예외를 던진다.")
@@ -277,15 +279,15 @@ class ProductControllerTest {
 
         //when
         ResultActions result = mvc.perform(put("/api/products/{productId}", productId)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(objectMapper.writeValueAsString(request)));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(request)));
 
         //then
         result
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
-            .andExpect(
-                jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_CONTAINS_KAKAO));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
+                .andExpect(
+                        jsonPath("$.validation.name").value(ErrorMessage.PRODUCT_NAME_CONTAINS_KAKAO));
     }
 
     @DisplayName("[PUT/Exception] 상품 정보를 수정하는데, 가격 정보가 주어지지 않으면 예외를 던진다.")
@@ -297,14 +299,14 @@ class ProductControllerTest {
 
         //when
         ResultActions result = mvc.perform(put("/api/products/{productId}", productId)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(request));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(request));
 
         //then
         result
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
-            .andExpect(jsonPath("$.validation.price").value(ErrorMessage.PRODUCT_PRICE_NOT_NULL));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
+                .andExpect(jsonPath("$.validation.price").value(ErrorMessage.PRODUCT_PRICE_NOT_NULL));
     }
 
     @DisplayName("[DELETE] 상품 하나를 삭제한다.")
@@ -320,7 +322,7 @@ class ProductControllerTest {
 
         //then
         result
-            .andExpect(status().isOk());
+                .andExpect(status().isOk());
 
         then(productService).should().removeProduct(productId);
     }

@@ -15,16 +15,16 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> invalid(MethodArgumentNotValidException e) {
         ErrorResponse response = new ErrorResponse.ErrorResponseBuilder()
-            .code(400)
-            .message(ErrorMessage.VALIDATION_ERROR)
-            .build();
+                .code(400)
+                .message(ErrorMessage.VALIDATION_ERROR)
+                .build();
 
         for (FieldError fieldError : e.getFieldErrors()) {
             response.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
         }
 
         return ResponseEntity.badRequest()
-            .body(response);
+                .body(response);
     }
 
     @ExceptionHandler(GiftException.class)
@@ -32,24 +32,24 @@ public class ExceptionController {
         int statusCode = e.getStatusCode();
 
         ErrorResponse response = new ErrorResponse.ErrorResponseBuilder()
-            .code(e.getStatusCode())
-            .message(e.getMessage())
-            .validation(e.getValidation())
-            .build();
+                .code(e.getStatusCode())
+                .message(e.getMessage())
+                .validation(e.getValidation())
+                .build();
 
         return ResponseEntity.status(statusCode)
-            .body(response);
+                .body(response);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> exception(Exception e) {
         ErrorResponse response = new ErrorResponse.ErrorResponseBuilder()
-            .code(500)
-            .message(e.getMessage())
-            .build();
+                .code(500)
+                .message(e.getMessage())
+                .build();
 
         return ResponseEntity.status(500)
-            .body(response);
+                .body(response);
     }
 
 }

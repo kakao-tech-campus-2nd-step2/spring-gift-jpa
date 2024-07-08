@@ -4,7 +4,9 @@ import gift.request.ProductRequest;
 import gift.response.ProductResponse;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+
 import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,13 +31,13 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductResponse>> productList() {
         return ResponseEntity.ok()
-            .body(productService.getProducts());
+                .body(productService.getProducts());
     }
 
     @GetMapping("/{productId}")
     public ResponseEntity<ProductResponse> productOne(@PathVariable Long productId) {
         return ResponseEntity.ok()
-            .body(productService.getProduct(productId));
+                .body(productService.getProduct(productId));
     }
 
     @PostMapping
@@ -47,7 +49,7 @@ public class ProductController {
 
     @PutMapping("/{productId}")
     public ResponseEntity<Void> productEdit(@PathVariable Long productId,
-        @RequestBody @Valid ProductRequest request) {
+                                            @RequestBody @Valid ProductRequest request) {
         productService.editProduct(productId, request);
 
         return ResponseEntity.ok().build();

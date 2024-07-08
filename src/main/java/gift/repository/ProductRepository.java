@@ -1,8 +1,10 @@
 package gift.repository;
 
 import gift.domain.Product;
+
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -26,10 +28,10 @@ public class ProductRepository {
         String sql = "SELECT * FROM product";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new Product(
-            rs.getLong("id"),
-            rs.getString("name"),
-            rs.getInt("price"),
-            rs.getString("image_url")
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getInt("price"),
+                rs.getString("image_url")
         ));
     }
 
@@ -38,14 +40,14 @@ public class ProductRepository {
 
         try {
             Product product = jdbcTemplate.queryForObject(
-                sql,
-                (rs, rowNum) -> new Product(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getInt("price"),
-                    rs.getString("image_url")
-                ),
-                productId
+                    sql,
+                    (rs, rowNum) -> new Product(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getInt("price"),
+                            rs.getString("image_url")
+                    ),
+                    productId
             );
             return Optional.of(product);
         } catch (EmptyResultDataAccessException e) {
@@ -61,7 +63,7 @@ public class ProductRepository {
     public void edit(Long productId, Product request) {
         String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, request.getName(), request.getPrice(), request.getImageUrl(),
-            productId);
+                productId);
     }
 
     public void deleteById(Long productId) {

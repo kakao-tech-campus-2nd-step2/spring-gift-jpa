@@ -24,10 +24,10 @@ public class RegisterRequest {
 
     public Member toEntity() {
         return new Member.MemberBuilder()
-            .name(this.name)
-            .email(this.email)
-            .password(this.password)
-            .build();
+                .name(this.name)
+                .email(this.email)
+                .password(this.password)
+                .build();
     }
 
     public String getName() {
