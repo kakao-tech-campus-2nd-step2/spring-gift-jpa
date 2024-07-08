@@ -1,8 +1,7 @@
 package gift.service;
 
 import gift.entity.Product;
-import gift.dao.ProductDao;
-import gift.exception.DuplicateProductNameException;
+
 import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.Optional;
