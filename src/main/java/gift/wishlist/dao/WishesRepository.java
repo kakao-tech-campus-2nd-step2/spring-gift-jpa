@@ -10,10 +10,8 @@ import java.util.List;
 
 @Repository
 public interface WishesRepository extends JpaRepository<Wish, Long> {
-    @Query("SELECT 1" +
-            "FROM Wish w " +
-            "WHERE w.memberId =:memberId AND w.productId =:productId")
-    boolean exists(@Param("memberId") Long memberId, @Param("productId") Long productId);
+
+    boolean existsByMemberIdAndProductId(Long memberId, Long productId);
 
     @Query("SELECT w.productId " +
             "FROM Wish w " +

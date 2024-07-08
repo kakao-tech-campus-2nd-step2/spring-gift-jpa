@@ -24,7 +24,8 @@ public class WishesService {
     public void addProductToWishlist(Wish wish) {
         productRepository.findById(wish.getProductId())
                 .orElseThrow(() -> new NoSuchElementException("해당 상품은 존재하지 않습니다."));
-        if (wishesRepository.exists(wish.getMemberId(), wish.getProductId())) {
+        if (wishesRepository.existsByMemberIdAndProductId(
+                wish.getMemberId(), wish.getProductId())) {
             throw new WishAlreadyExistsException();
         }
 
@@ -32,7 +33,8 @@ public class WishesService {
     }
 
     public void removeProductFromWishlist(Wish wish) {
-        if (!wishesRepository.exists(wish.getMemberId(), wish.getProductId())) {
+        if (!wishesRepository.existsByMemberIdAndProductId(
+                wish.getMemberId(), wish.getProductId())) {
             throw new NoSuchElementException("해당 상품은 위시 리스트에 존재하지 않습니다.");
         }
 
