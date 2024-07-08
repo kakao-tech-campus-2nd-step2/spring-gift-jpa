@@ -1,5 +1,7 @@
 package gift.wishlist.service;
 
+import gift.product.repository.ProductRepository;
+import gift.product.service.ProductService;
 import gift.wishlist.dto.WishListReqDto;
 import gift.wishlist.dto.WishListResDto;
 import gift.wishlist.exception.WishListCreateException;
@@ -14,9 +16,11 @@ import org.springframework.stereotype.Service;
 public class WishListService {
 
     private final WishListRepository wishListRepository;
+    private final ProductService productService;
 
-    public WishListService(WishListRepository wishListRepository) {
+    public WishListService(WishListRepository wishListRepository, ProductService productService) {
         this.wishListRepository = wishListRepository;
+        this.productService = productService;
     }
 
     public List<WishListResDto> getWishListsByMemberId(Long id) {
@@ -33,6 +37,7 @@ public class WishListService {
             return;
         }
 
+        productService.validateProductExists(wishListReqDto.productId());
         try {
             wishListRepository.addWishList(memberId, wishListReqDto.productId(), wishListReqDto.quantity());
         } catch (Exception e) {

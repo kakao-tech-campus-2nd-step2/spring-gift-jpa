@@ -61,7 +61,7 @@ public class ProductService {
         }
     }
 
-    private void validateProductExists(Long productId) {
+    public void validateProductExists(Long productId) {
         boolean isExist = productRepository.isProductExistById(productId);
 
         if (!isExist) {
