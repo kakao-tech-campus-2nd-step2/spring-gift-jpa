@@ -14,6 +14,11 @@ spring:
       data-locations: classpath:/static/sql/data.sql
       mode: always
 
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    format-sql: true
 jwt:
   secret: secret!!secret!!secret!!secret!!
   expiration: 604800000  #1000 * 60 * 60 * 24 * 7; // 7일
