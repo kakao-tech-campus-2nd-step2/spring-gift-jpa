@@ -14,6 +14,7 @@ public class ProductController {
     long id = 0L;
 
     private final ProductDao ProductDao;
+    CatchError catchError = new CatchError();
 
     public ProductController(gift.model.ProductDao productDao) {
         ProductDao = productDao;
@@ -45,10 +46,10 @@ public class ProductController {
     //상품 추가
     @PostMapping("/postProduct")
     public String postProductController(@ModelAttribute Product product) {
-        if (!CatchError.isCorrectName(product.getName())) {
+        if (!catchError.isCorrectName(product.getName())) {
             throw new IllegalArgumentException("이름은 15자 이내, 특수문자는 (),[],+,-,&,/,_ 만 사용 가능합니다.");
         }
-        if (CatchError.isContainsKakao(product.getName())) {
+        if (catchError.isContainsKakao(product.getName())) {
             throw new IllegalArgumentException("\"카카오\"는 MD와 협의 후에 사용 가능합니다.");
         }
         id++;
@@ -69,10 +70,10 @@ public class ProductController {
     public String updateProductController(@PathVariable Long id, @ModelAttribute Product newProduct) {
         Product oldProduct = ProductDao.selectProduct(id);
 
-        if (!CatchError.isCorrectName(newProduct.getName())) {
+        if (!catchError.isCorrectName(newProduct.getName())) {
             throw new IllegalArgumentException("이름은 15자 이내, 특수문자는 (),[],+,-,&,/,_ 만 사용 가능합니다.");
         }
-        if (CatchError.isContainsKakao(newProduct.getName())) {
+        if (catchError.isContainsKakao(newProduct.getName())) {
             throw new IllegalArgumentException("\"카카오\"는 MD와 협의 후에 사용 가능합니다.");
         }
 
