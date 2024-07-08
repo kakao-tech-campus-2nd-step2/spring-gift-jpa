@@ -21,7 +21,7 @@ public record ProductRequest(
     @NotBlank
     String imageUrl) {
 
-    public Product toEntity(Long id) {
-        return new Product(id, name, price, imageUrl);
+    public Product toEntity() {
+        return new Product(null, name, price, imageUrl);
     }
 }
