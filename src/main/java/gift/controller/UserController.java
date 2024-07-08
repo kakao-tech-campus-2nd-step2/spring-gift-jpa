@@ -34,18 +34,18 @@ public class UserController {
     }
 
     @PostMapping
-    public SingleResult<Integer> createUser(@Valid @RequestBody User.CreateUser create) {
+    public SingleResult<Long> createUser(@Valid @RequestBody User.CreateUser create) {
         return new SingleResult<>(userService.createUser(create));
     }
 
     @PatchMapping("/{id}")
-    public SingleResult<Integer> updatePassword(@PathVariable long id,
+    public SingleResult<Long> updatePassword(@PathVariable long id,
         @Valid @RequestBody User.UpdateUser update) {
         return new SingleResult<>(userService.updatePassword(id, update));
     }
 
     @DeleteMapping("/{id}")
-    public SingleResult<Integer> deleteUser(@PathVariable long id) {
+    public SingleResult<Long> deleteUser(@PathVariable long id) {
         return new SingleResult<>(userService.deleteUser(id));
     }
 }
