@@ -13,8 +13,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtValidator {
 
-    @Value("${spring.jwt.secret}")
-    private String secret;
+    private final String secret;
+
+    public JwtValidator(@Value("${spring.jwt.secret}") String secret) {
+        this.secret = secret;
+    }
 
     public Long validate(String rawToken, TokenType type) {
         var token = validateForm(rawToken);
