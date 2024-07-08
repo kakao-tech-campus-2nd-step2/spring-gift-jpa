@@ -31,9 +31,13 @@ create table wish_list (
 alter table wish_list
     add constraint fk_wish_list_product
     foreign key (product_id)
-    references product;
+    references product
+    on delete cascade
+    on update cascade;
 
 alter table wish_list
     add constraint fk_wish_list_member
     foreign key (member_id)
-    references member;
+    references member
+    on delete cascade
+    on update cascade;
