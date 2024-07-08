@@ -19,7 +19,8 @@ public class Interceptor implements HandlerInterceptor {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+        Object handler) throws Exception {
         String token = request.getHeader(AUTHORIZATION_HEADER);
 
         if (token != null && token.startsWith(BEARER_PREFIX)) {
@@ -30,7 +31,7 @@ public class Interceptor implements HandlerInterceptor {
                 return true;
             } catch (SignatureException e) {
                 throw new BaseHandler(HttpStatus.UNAUTHORIZED, "잘못된 토큰 입니다.");
-            }catch (ExpiredJwtException e) {
+            } catch (ExpiredJwtException e) {
                 throw new BaseHandler(HttpStatus.UNAUTHORIZED, "만료된 토큰 입니다.");
             }
         } else {

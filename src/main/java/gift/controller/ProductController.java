@@ -1,15 +1,14 @@
 package gift.controller;
 
-import gift.entity.ProductEntity;
 import gift.domain.Product;
 import gift.domain.Product.ProductSimple;
+import gift.entity.ProductEntity;
 import gift.errorException.ListResult;
 import gift.errorException.SingleResult;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +43,7 @@ public class ProductController {
 
     @PostMapping
     public SingleResult<Long> createProduct(@Valid @RequestBody Product.CreateProduct create) {
-        SingleResult singleResult =  new SingleResult<>(productService.createProduct(create));
+        SingleResult singleResult = new SingleResult<>(productService.createProduct(create));
         singleResult.setErrorCode(HttpStatus.CREATED.value());
         return singleResult;
     }
@@ -53,7 +52,7 @@ public class ProductController {
     public SingleResult<Long> updateProduct(@Valid @RequestBody Product.UpdateProduct update,
         @PathVariable long id) {
 
-        SingleResult singleResult =  new SingleResult<>(productService.updateProduct(update, id));
+        SingleResult singleResult = new SingleResult<>(productService.updateProduct(update, id));
         singleResult.setErrorCode(HttpStatus.ACCEPTED.value());
         return singleResult;
     }
