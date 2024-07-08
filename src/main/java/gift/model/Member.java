@@ -19,7 +19,7 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
-    public Member() {
+    protected Member() {
     }
 
     public Member(Long id, String email, String password) {
