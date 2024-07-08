@@ -40,6 +40,6 @@ public class WishService {
 
     public void deleteProductInWishList(WishRequestDto wishRequestDto,
         LoginMemberDto loginMemberDto) {
-        wishDao.deleteWish(wishRequestDto.toEntity(loginMemberDto.getId()););
+        wishDao.deleteWish(wishRequestDto.toEntity(loginMemberDto.getId()));
     }
 }
