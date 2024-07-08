@@ -3,7 +3,9 @@ package gift.user.presentation;
 import gift.user.application.UserService;
 import gift.user.domain.User;
 import gift.user.domain.UserRegisterRequest;
+import gift.user.exception.UserException;
 import gift.util.CommonResponse;
+import gift.util.ErrorCode;
 import gift.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,8 +36,7 @@ public class UserController {
             return ResponseEntity.ok(
                 new CommonResponse<>(new AuthenticationResponse(token), "로그인이 정상적으로 완료되었습니다", true));
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new CommonResponse<>(null, "로그인에 실패하였습니다", false));
+            throw new UserException(ErrorCode.LOGIN_FAILED);
         }
     }
 
