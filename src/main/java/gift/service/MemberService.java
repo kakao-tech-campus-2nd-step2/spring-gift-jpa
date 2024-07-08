@@ -19,8 +19,8 @@ public class MemberService {
         memberRepository.save(memberRequestDto.toEntity());
     }
 
-    public boolean authenticate(String email, String password) {
-        memberRepository.findByPasswordAndEmail(email, password)
+    public boolean findByEmailAndPassword(String email, String password) {
+        memberRepository.findByEmailAndPassword(email, password)
                 .orElseThrow(() -> new MemberNotFoundException("해당 정보를 가진 유저가 존재하지 않습니다."));
         return true;
     }
