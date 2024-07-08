@@ -15,14 +15,6 @@ class GiftRepositoryTest {
 
     @Autowired
     private GiftRepository giftRepository;
-    @BeforeEach
-    void setUp() {
-        Gift gift1 = new Gift("test1",1000,"abc.jpg");
-        Gift gift2 = new Gift("test2",2000,"def.jpg");
-
-        giftRepository.save(gift1);
-        giftRepository.save(gift2);
-    }
     @Test
     void saveTest(){
         Gift gift = new Gift("test",1000,"abc.jpg");
