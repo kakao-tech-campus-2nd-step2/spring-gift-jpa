@@ -28,12 +28,7 @@ public class UserController {
   @PostMapping("/login")
   public ResponseEntity<JwtToken> userLogin(
     @Valid @RequestBody UserDto userInfo) {
-
     JwtToken jwtToken = userService.userLogin(userInfo);
-
-    if (jwtToken == null) {
-      return ResponseEntity.notFound().build();
-    }
     return ResponseEntity.ok(jwtToken);
   }
 }

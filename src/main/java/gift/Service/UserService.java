@@ -5,6 +5,7 @@ import gift.DTO.UserDto;
 import gift.Exception.ForbiddenException;
 import gift.Exception.UnauthorizedException;
 import gift.Repository.UserDao;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +30,7 @@ public class UserService {
     UserDto userByEmail = userDao.getUserByEmail(email);
 
     if (userByEmail == null) {
-      return null;
+      throw new EmptyResultDataAccessException("해당 유저가 없습니다.",1);
     }
     if (email.equals(userByEmail.getEmail()) && password.equals(
       userByEmail.getPassword())) {
