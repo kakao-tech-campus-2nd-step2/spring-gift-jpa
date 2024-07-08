@@ -17,11 +17,10 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public void addWish(Long memberId, WishRequest request) {
-        Wish wish = new Wish();
-        wish.setMemberId(memberId);
-        wish.setProductName(request.getProductName());
+    public WishResponse addWish(Long memberId, WishRequest request) {
+        Wish wish = new Wish(memberId, request.getProductName());
         wishRepository.save(wish);
+        return new WishResponse(wish.getId(), wish.getProductName());
     }
 
     public List<WishResponse> getWishes(Long memberId) {
