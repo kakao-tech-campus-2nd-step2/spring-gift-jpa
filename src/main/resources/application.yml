@@ -2,7 +2,7 @@ spring:
   application:
     name: spring-gift
   datasource:
-    url: jdbc:h2:mem:test
+    url: jdbc:h2:mem:test;MODE=MYSQL;DB_CLOSE_DELAY=-1
 
   h2:
     console:
@@ -10,15 +10,21 @@ spring:
 
   sql:
     init:
-      schema-locations: classpath:/static/sql/schema.sql
       data-locations: classpath:/static/sql/data.sql
       mode: always
 
   jpa:
     hibernate:
-      ddl-auto: create
-    show-sql: true
-    format-sql: true
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.H2Dialect
+        show_sql: true
+    defer-datasource-initialization: true
+
+
 jwt:
   secret: secret!!secret!!secret!!secret!!
   expiration: 604800000  #1000 * 60 * 60 * 24 * 7; // 7일
