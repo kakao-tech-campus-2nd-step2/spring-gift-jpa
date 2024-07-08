@@ -12,11 +12,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/wishes")
-public class WishController {
+public class WishRestController {
     private final WishService wishService;
     private final JwtUtil jwtUtil;
 
-    public WishController(WishService wishService, JwtUtil jwtUtil) {
+    public WishRestController(WishService wishService, JwtUtil jwtUtil) {
         this.wishService = wishService;
         this.jwtUtil = jwtUtil;
     }
