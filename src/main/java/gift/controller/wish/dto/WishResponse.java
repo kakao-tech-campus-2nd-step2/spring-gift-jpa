@@ -13,9 +13,13 @@ public class WishResponse {
         Long count
     ) {
 
-        public static WishListResponse from(Wish wish, Product product) {
-            return new WishListResponse(wish.getId(), wish.getProductId(), product.getName(),
-                wish.getCount());
+        public static WishListResponse from(Wish wish) {
+            return new WishListResponse(
+                wish.getId(),
+                wish.getProduct().getId(),
+                wish.getProduct().getName(),
+                wish.getCount()
+            );
         }
     }
 }
