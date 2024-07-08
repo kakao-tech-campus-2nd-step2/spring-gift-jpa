@@ -1,4 +1,4 @@
-package gift.model;
+package gift.dto.product;
 
 import gift.validation.annotation.RestrictedKeyword;
 import jakarta.validation.constraints.NotBlank;
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-public record Product(
+public record AddProductRequest(
     @NotNull Long id,
 
     @NotBlank(message = "상품 이름은 비워둘 수 없습니다.")

@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.model.Product;
+import gift.entity.Product;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,14 +29,16 @@ public class ProductRepository {
         }
     }
 
-    public void insert(Product product) {
+    public Product insert(Product product) {
         String sql = "INSERT INTO products (id, name, price, imageUrl) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, product.id(), product.name(), product.price(), product.imageUrl());
+        return product;
     }
 
-    public void update(Long id, Product product) {
+    public Product update(Product product) {
         String sql = "UPDATE products SET name = ?, price = ?, imageUrl = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.name(), product.price(), product.imageUrl(), id);
+        jdbcTemplate.update(sql, product.name(), product.price(), product.imageUrl(), product.id());
+        return product;
     }
 
     public void delete(Long id) {

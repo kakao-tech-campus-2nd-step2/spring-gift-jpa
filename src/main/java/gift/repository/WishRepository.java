@@ -2,7 +2,7 @@ package gift.repository;
 
 import gift.dto.wishlist.WishResponseDto;
 import gift.entity.Wish;
-import gift.model.Product;
+import gift.entity.Product;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

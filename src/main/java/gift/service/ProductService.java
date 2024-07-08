@@ -1,8 +1,12 @@
 package gift.service;
 
+import gift.dto.product.AddProductRequest;
+import gift.dto.product.ProductResponse;
+import gift.dto.product.UpdateProductRequest;
 import gift.exception.product.ProductNotFoundException;
-import gift.model.Product;
+import gift.entity.Product;
 import gift.repository.ProductRepository;
+import gift.util.mapper.ProductMapper;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +27,14 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public void addProduct(Product product) {
-        productRepository.insert(product);
+    public ProductResponse addProduct(AddProductRequest request) {
+        return ProductMapper.toResponse(productRepository.insert(ProductMapper.toProduct(request)));
     }
 
-    public void updateProduct(Long id, Product product) {
+    public ProductResponse updateProduct(Long id, UpdateProductRequest request) {
         checkProductExist(id);
-        productRepository.update(id, product);
+        Product product = ProductMapper.toProduct(id, request);
+        return ProductMapper.toResponse(productRepository.update(product));
     }
 
     public void deleteProduct(Long id) {

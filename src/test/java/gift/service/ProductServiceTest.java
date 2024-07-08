@@ -3,8 +3,11 @@ package gift.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+import gift.dto.product.AddProductRequest;
+import gift.dto.product.UpdateProductRequest;
 import gift.exception.product.ProductNotFoundException;
-import gift.model.Product;
+import gift.entity.Product;
+import gift.util.mapper.ProductMapper;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +24,7 @@ class ProductServiceTest {
     private ProductService productService;
 
     @BeforeEach
-    void setup() {
+    void setupTable() {
         jdbcTemplate.execute("DROP TABLE IF EXISTS products CASCADE");
         jdbcTemplate.execute("CREATE TABLE products ("
             + "id LONG,"
@@ -30,6 +33,14 @@ class ProductServiceTest {
             + " imageUrl VARCHAR(255),"
             + " PRIMARY KEY (id))"
         );
+    }
+
+    void setupInsertion() {
+        var product1 = new AddProductRequest(1L, "product1", 10000, null);
+        var product2 = new AddProductRequest(2L, "product2", 20000, null);
+
+        productService.addProduct(product1);
+        productService.addProduct(product2);
     }
 
     @Test
@@ -46,10 +57,9 @@ class ProductServiceTest {
     @DisplayName("getAllProducts test")
     void getAllProductsTest() {
         //given
+        setupInsertion();
         Product product1 = new Product(1L, "product1", 10000, null);
         Product product2 = new Product(2L, "product2", 20000, null);
-        productService.addProduct(product1);
-        productService.addProduct(product2);
         List<Product> expected = List.of(product1, product2);
 
         //when
@@ -65,10 +75,7 @@ class ProductServiceTest {
     @DisplayName("getProductById exception test")
     void getProductByIdExceptionTest() {
         //given
-        Product product1 = new Product(1L, "product1", 10000, null);
-        Product product2 = new Product(2L, "product2", 20000, null);
-        productService.addProduct(product1);
-        productService.addProduct(product2);
+        setupInsertion();
 
         //when & then
         assertThatThrownBy(() -> productService.getProductById(3L))
@@ -79,10 +86,8 @@ class ProductServiceTest {
     @DisplayName("getProductById test")
     void getProductByIdTest() {
         //given
-        Product product1 = new Product(1L, "product1", 10000, null);
+        setupInsertion();
         Product product2 = new Product(2L, "product2", 20000, null);
-        productService.addProduct(product1);
-        productService.addProduct(product2);
 
         //when
         Product product = productService.getProductById(2L);
@@ -95,31 +100,25 @@ class ProductServiceTest {
     @DisplayName("updateProduct test")
     void updateProductTest() {
         //given
-        Product product1 = new Product(1L, "product1", 10000, null);
-        Product product2 = new Product(2L, "product2", 20000, null);
-        Product newProduct = new Product(1L, "product3", 30000, null);
-
-        productService.addProduct(product1);
-        productService.addProduct(product2);
-
+        setupInsertion();
+        UpdateProductRequest request = new UpdateProductRequest("product3", 30000, null);
 
         //when
-        productService.updateProduct(1L, newProduct);
-        Product updatedProduct = productService.getProductById(1L);
+        productService.updateProduct(1L, request);
+        Product actual = productService.getProductById(1L);
+        Product expected = ProductMapper.toProduct(1L, request);
 
         //then
-        assertThat(updatedProduct).isEqualTo(newProduct);
+        assertThat(actual).isEqualTo(expected);
     }
     
     @Test
     @DisplayName("deleteProduct test")
     void deleteProductTest() {
         //given
+        setupInsertion();
         Product product1 = new Product(1L, "product1", 10000, null);
         Product product2 = new Product(2L, "product2", 20000, null);
-
-        productService.addProduct(product1);
-        productService.addProduct(product2);
 
         //when
         productService.deleteProduct(1L);
@@ -135,11 +134,7 @@ class ProductServiceTest {
     @DisplayName("deleteProduct exception test")
     void deleteProductExceptionTest() {
         //given
-        Product product1 = new Product(1L, "product1", 10000, null);
-        Product product2 = new Product(2L, "product2", 20000, null);
-
-        productService.addProduct(product1);
-        productService.addProduct(product2);
+        setupInsertion();
 
         //when & then
         assertThatThrownBy(() -> productService.getProductById(3L))
