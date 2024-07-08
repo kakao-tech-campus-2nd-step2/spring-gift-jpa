@@ -13,6 +13,7 @@ import gift.member.presentation.dto.ResponseWishListDto;
 import gift.product.persistence.entity.Product;
 import gift.product.persistence.repository.ProductRepository;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,11 @@ public class MemberApiTest {
         productRepository.saveProduct(product);
     }
 
+    @AfterEach
+    void tearDown() {
+        wishlistRepository.deleteAll();
+    }
+
     @Test
     void testRegisterMember() {
         //given
@@ -118,7 +124,7 @@ public class MemberApiTest {
         //given
         String url = "http://localhost:" + port + "/api/members/reissue";
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + refreshToken);
+        headers.setBearerAuth(refreshToken);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
@@ -137,7 +143,7 @@ public class MemberApiTest {
         // when
         String url = "http://localhost:" + port + "/api/members/wishlists/products/1";
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
+        headers.setBearerAuth(accessToken);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
@@ -149,7 +155,7 @@ public class MemberApiTest {
         //given
         url = "http://localhost:" + port + "/api/members/wishlists";
         headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
+        headers.setBearerAuth(accessToken);
 
         entity = new HttpEntity<>(headers);
 
@@ -173,7 +179,7 @@ public class MemberApiTest {
         // given
         String url = "http://localhost:" + port + "/api/members/wishlists/products/1";
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
+        headers.setBearerAuth(accessToken);
 
         HttpEntity<String> entity1 = new HttpEntity<>(headers);
 
@@ -181,7 +187,7 @@ public class MemberApiTest {
 
         // when
         headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
+        headers.setBearerAuth(accessToken);
 
         RequestWishlistDto requestWishlistDto = new RequestWishlistDto(2);
 
@@ -200,7 +206,7 @@ public class MemberApiTest {
         // given
         String url = "http://localhost:" + port + "/api/members/wishlists/products/1";
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
+        headers.setBearerAuth(accessToken);
 
         HttpEntity<String> entity1 = new HttpEntity<>(headers);
 
@@ -208,7 +214,7 @@ public class MemberApiTest {
 
         // when
         headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
+        headers.setBearerAuth(accessToken);
 
         HttpEntity<String> entity2 = new HttpEntity<>(headers);
 
