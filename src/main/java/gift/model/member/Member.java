@@ -1,15 +1,26 @@
 package gift.model.member;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
+@Entity
 public class Member {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
     private String password;
     private String name;
     private Role role;
+
+    protected Member() {
+    }
 
     public Member(Long id, String email, String password, String name, Role role) {
         this.id = id;
