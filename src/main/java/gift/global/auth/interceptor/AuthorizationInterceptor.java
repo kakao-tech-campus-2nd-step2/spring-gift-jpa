@@ -1,9 +1,8 @@
-package gift.auth.interceptor;
+package gift.global.auth.interceptor;
 
-import gift.auth.Authorization;
-import gift.auth.jwt.JwtProvider;
+import gift.global.auth.Authorization;
+import gift.global.auth.jwt.JwtProvider;
 import gift.model.user.Role;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package gift.controller.product;
 
-import gift.auth.Authorization;
+import gift.global.auth.Authorization;
 import gift.controller.product.dto.ProductRequest;
 import gift.controller.product.dto.ProductResponse;
 import gift.model.product.ProductDao;

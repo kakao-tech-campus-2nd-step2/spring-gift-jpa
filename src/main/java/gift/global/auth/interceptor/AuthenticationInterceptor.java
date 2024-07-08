@@ -1,6 +1,6 @@
-package gift.auth.interceptor;
+package gift.global.auth.interceptor;
 
-import gift.auth.jwt.JwtProvider;
+import gift.global.auth.jwt.JwtProvider;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

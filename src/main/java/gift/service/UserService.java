@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.auth.jwt.JwtProvider;
+import gift.global.auth.jwt.JwtProvider;
 import gift.controller.user.dto.UserRequest.Login;
 import gift.controller.user.dto.UserRequest.Register;
 import gift.model.user.User;

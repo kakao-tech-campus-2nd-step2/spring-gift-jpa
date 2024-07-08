@@ -1,7 +1,7 @@
-package gift.auth.resolver;
+package gift.global.auth.resolver;
 
-import gift.auth.Authenticate;
-import gift.auth.LoginInfo;
+import gift.global.auth.Authenticate;
+import gift.global.auth.LoginInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.context.request.NativeWebRequest;

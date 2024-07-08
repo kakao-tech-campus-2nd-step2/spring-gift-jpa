@@ -1,4 +1,4 @@
-package gift.auth;
+package gift.global.auth;
 
 
 public record LoginInfo(String userId, String name) {

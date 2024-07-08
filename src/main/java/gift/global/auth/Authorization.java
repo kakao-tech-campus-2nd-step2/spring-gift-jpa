@@ -1,4 +1,4 @@
-package gift.auth;
+package gift.global.auth;
 
 import gift.model.user.Role;
 import java.lang.annotation.ElementType;

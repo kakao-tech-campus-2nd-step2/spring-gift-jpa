@@ -1,4 +1,4 @@
-package gift.auth.jwt;
+package gift.global.auth.jwt;
 
 import gift.model.user.Role;
 import io.jsonwebtoken.Claims;

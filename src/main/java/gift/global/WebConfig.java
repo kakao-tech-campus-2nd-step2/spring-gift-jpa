@@ -1,8 +1,8 @@
 package gift.global;
 
-import gift.auth.interceptor.AuthenticationInterceptor;
-import gift.auth.interceptor.AuthorizationInterceptor;
-import gift.auth.resolver.LoginInfoArgumentResolver;
+import gift.global.auth.interceptor.AuthenticationInterceptor;
+import gift.global.auth.interceptor.AuthorizationInterceptor;
+import gift.global.auth.resolver.LoginInfoArgumentResolver;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

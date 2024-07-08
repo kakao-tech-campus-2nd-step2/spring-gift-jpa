@@ -1,8 +1,8 @@
 package gift.controller.wish;
 
-import gift.auth.Authorization;
-import gift.auth.Authenticate;
-import gift.auth.LoginInfo;
+import gift.global.auth.Authorization;
+import gift.global.auth.Authenticate;
+import gift.global.auth.LoginInfo;
 import gift.controller.wish.dto.WishRequest.DeleteWishRequest;
 import gift.controller.wish.dto.WishRequest.AddWishRequest;
 import gift.controller.wish.dto.WishRequest.UpdateWishRequest;
