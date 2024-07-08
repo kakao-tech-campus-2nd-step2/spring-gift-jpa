@@ -63,10 +63,10 @@ public class WishListController {
     }
 
     @DeleteMapping("/{memberId}/{productName}")
-    public ResponseEntity<?> deleteWishList(@PathVariable String memberId,
+    public ResponseEntity<?> deleteWishList(@PathVariable long memberId,
         @PathVariable String productName,
         AuthInfo authInfo) {
-        if (authInfo.id().equals(memberId)) {
+        if (authInfo.id().equals(Long.toString(memberId))) {
             wishListService.deleteWishList(memberId, productName);
             return ResponseEntity.noContent().build();
         }
