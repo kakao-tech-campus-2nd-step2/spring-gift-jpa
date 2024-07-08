@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Product</title>
+    <script src="/js/main.js" defer></script>
+    <link href="/css/main.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="header">
+        <span class="title">New Product</span>
+        <a th:href="@{/admin/products}">
+            <button class="btn primary-btn">Back</button>
+        </a>
+    </div>
+    <div class="container">
+        <form id="product-add-form">
+            <table class="product-info">
+                <tr>
+                    <th>Name</th>
+                    <td>
+                        <input id="name" type="text" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td>
+                        <input id="price" type="text" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Image URL</th>
+                    <td>
+                        <input id="imageUrl" type="text" required>
+                    </td>
+                </tr>
+            </table>
+            <div class="btn-container">
+                <button class="btn primary-btn" type="submit">Add</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products</title>
+    <script src="/js/main.js" defer></script>
+    <link href="/css/main.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="header">
+        <span class="title">Manage Product</span>
+        <a th:href="@{/admin/products/new}">
+            <button class="btn primary-btn">Add New Product</button>
+        </a>
+    </div>
+    <div class="container">
+        <table class="product-list">
+            <tr>
+                <th>Image</th>
+                <th>ID</th> 
+                <th>Name</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+            <tr th:each="product: ${products}">
+                <td>
+                    <a th:href="@{'/admin/products/' + ${product.id}}">
+                        <img th:src="@{${product.imageUrl}}" alt="no image" class="product-img"/>
+                    </a>
+                </td>
+                <td th:text="${product.id}"></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.price}"></td>
+                <td>
+                    <a th:href="@{'/admin/products/edit/' + ${product.id}}">
+                        <button class="btn primary-btn">Edit</button>
+                    </a>
+                    <button class="btn danger-btn" th:data-product-id="${product.id}" onclick="deleteProduct(this)">Delete</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
