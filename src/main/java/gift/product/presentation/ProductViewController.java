@@ -1,0 +1,66 @@
+package gift.product.presentation;
+
+import gift.product.application.ProductResponse;
+import gift.product.application.ProductService;
+import gift.product.presentation.request.ProductCreateRequest;
+import gift.product.presentation.request.ProductUpdateRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@Controller
+@RequestMapping("/products")
+public class ProductViewController {
+    private final ProductService productService;
+
+    public ProductViewController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @GetMapping("")
+    public String findAll(Model model) {
+        List<ProductResponse> products = productService.findAll();
+        model.addAttribute("products", products);
+        return "product/list";
+    }
+
+    @GetMapping("/{id}")
+    public String findById(@PathVariable("id") Long productId, Model model) {
+        ProductResponse product = productService.findById(productId);
+        model.addAttribute("product", product);
+        return "product/detail";
+    }
+
+    @GetMapping("/create")
+    public String createForm(Model model) {
+        model.addAttribute("productCreateRequest", new ProductCreateRequest("", 0, ""));
+        return "product/create";
+    }
+
+    @PostMapping("")
+    public String create(@ModelAttribute ProductCreateRequest request) {
+        productService.add(request.toCommand());
+        return "redirect:/products";
+    }
+
+    @GetMapping("/{id}/update")
+    public String updateForm(@PathVariable("id") Long productId, Model model) {
+        ProductResponse product = productService.findById(productId);
+        model.addAttribute("product", product);
+        return "product/update";
+    }
+
+    @PostMapping("/{id}")
+    public String update(@PathVariable("id") Long productId, @ModelAttribute ProductUpdateRequest request) {
+        productService.update(request.toCommand(productId));
+        return "redirect:/products";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable("id") Long productId) {
+        productService.delete(productId);
+        return "redirect:/products";
+    }
+}
