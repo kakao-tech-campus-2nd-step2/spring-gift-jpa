@@ -1,7 +1,7 @@
 package gift.controller;
 
+import gift.domain.WishlistDomain;
 import gift.model.Wishlist;
-import gift.dao.WishlistDao;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,38 +11,27 @@ import java.util.List;
 @RestController
 @RequestMapping("/wishlist")
 public class WishlistController {
-    private final WishlistDao WishlistDao;
-    private final MemberController MemberController;
+    private final WishlistDomain wishlistDomain;
 
-    public WishlistController(gift.dao.WishlistDao wishlistDao, gift.controller.MemberController memberController) {
-        WishlistDao = wishlistDao;
-        MemberController = memberController;
+    public WishlistController(WishlistDomain wishlistDomain) {
+        this.wishlistDomain = wishlistDomain;
     }
 
     //멤버 id로 해당 멤버의 위시리스트 가져옴
     @GetMapping("/getAllWishlist")
-    public List<Wishlist> getWishlist(HttpServletRequest request) throws AuthenticationException {
-        //auth로 유저 아이디 가져옴
-        Long userid = MemberController.getIdByToken(request);
-        //가져온 유저아이디 검색
-        List<Wishlist> wishlist = WishlistDao.selectAllWishlist(userid);
-        return wishlist;
+    public List<Wishlist> getWishlistController(HttpServletRequest request) throws AuthenticationException {
+        return wishlistDomain.getWishlistController(request);
     }
 
     //위시리스트 상품 추가
     @PostMapping("/addWishlist/{productid}")
     public void postWishlist(@PathVariable Long productid, HttpServletRequest request) throws AuthenticationException {
-        // auth로 유저 아이디 가져옴
-        Long userid = MemberController.getIdByToken(request);
-        // pathvariable로 상품 아이디 가져옴
-        Wishlist wishlist = new Wishlist(userid, productid);
-
-        WishlistDao.insertWishlist(wishlist);
+        wishlistDomain.postWishlist(productid, request);
     }
 
     //위시리스크 상품 wishlist id 받아와 삭제
     @DeleteMapping("/deleteWishlist/{id}")
     public void deleteProductController(@PathVariable Long id){
-        WishlistDao.deleteWishlist(id);
+        wishlistDomain.deleteProduct(id);
     }
 }
