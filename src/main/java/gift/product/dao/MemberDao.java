@@ -23,9 +23,8 @@ public class MemberDao {
         System.out.println("[MemberDao] createMemberTable()");
         var sql = """
             create table member_list (
-              email varchar(255) not null,
+              email varchar(255) not null unique,
               password varchar(255) not null,
-              rank int,
               primary key (email)
             )
             """;
