@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>상품 수정</title>
+</head>
+<body>
+  <form id="editProductForm">
+    <div>
+      <label>ID: </label>
+      <input type="text" id="productId" th:value="${product.id}" readonly />
+    </div>
+    <div>
+      <label>상품 이름: </label>
+      <input type="text" id="productName" th:value="${product.name}" />
+    </div>
+    <div>
+      <label>상품 가격: </label>
+      <input type="text" id="productPrice" th:value="${product.price}" />
+    </div>
+    <div>
+      <label>이미지 URL: </label>
+      <input type="text" id="productImageUrl" th:value="${product.imageUrl}" />
+    </div>
+    <div>
+      <button type="submit">저장</button>
+    </div>
+  </form>
+  <a th:href="@{/products}">돌아가기</a>
+
+  <script>
+    document.getElementById('editProductForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const product = {
+        id: parseInt(document.getElementById('productId').value, 10),
+        name: document.getElementById('productName').value,
+        price: parseInt(document.getElementById('productPrice').value, 10),
+        imageUrl: document.getElementById('productImageUrl').value
+      };
+
+      const response = await fetch(`/api/products/${product.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(product)
+      });
+
+      if(response.ok) {
+        alert("상품이 정상적으로 수정되었습니다.");
+        window.location.href = '/products';
+      } else {
+        response.json().then((errorData) => {
+          alert(errorData.detail);
+        });
+        window.location.reload();
+      }
+    })
+  </script>
+</body>
+</html>
