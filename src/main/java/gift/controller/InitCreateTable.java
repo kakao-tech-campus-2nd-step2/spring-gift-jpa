@@ -1,7 +1,6 @@
-package gift.Controller;
+package gift.controller;
 
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +10,6 @@ public class InitCreateTable {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public InitCreateTable(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

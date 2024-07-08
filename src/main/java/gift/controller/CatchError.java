@@ -1,4 +1,4 @@
-package gift.Controller;
+package gift.controller;
 
 public class CatchError {
     public static boolean isCorrectName(String name){

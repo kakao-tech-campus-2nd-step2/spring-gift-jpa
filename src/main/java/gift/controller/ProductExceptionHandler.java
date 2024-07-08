@@ -1,4 +1,4 @@
-package gift.Controller;
+package gift.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;

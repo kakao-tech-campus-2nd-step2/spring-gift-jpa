@@ -1,4 +1,4 @@
-package gift.Controller;
+package gift.controller;
 
 import gift.model.Wishlist;
 import gift.model.WishlistDao;
@@ -16,7 +16,7 @@ public class WishlistController {
     private final WishlistDao WishlistDao;
     private final MemberController MemberController;
 
-    public WishlistController(gift.model.WishlistDao wishlistDao, gift.Controller.MemberController memberController) {
+    public WishlistController(gift.model.WishlistDao wishlistDao, gift.controller.MemberController memberController) {
         WishlistDao = wishlistDao;
         MemberController = memberController;
     }

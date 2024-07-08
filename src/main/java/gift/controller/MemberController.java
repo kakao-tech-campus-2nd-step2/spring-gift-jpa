@@ -1,4 +1,4 @@
-package gift.Controller;
+package gift.controller;
 
 import gift.model.Member;
 import gift.model.MemberDao;

@@ -1,4 +1,4 @@
-package gift.Controller;
+package gift.controller;
 
 import gift.model.Product;
 import gift.model.ProductDao;

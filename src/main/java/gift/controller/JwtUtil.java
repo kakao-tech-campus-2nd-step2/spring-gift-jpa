@@ -1,4 +1,4 @@
-package gift.Controller;
+package gift.controller;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
