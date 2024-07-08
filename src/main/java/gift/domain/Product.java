@@ -20,19 +20,36 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    private Product(Builder builder) {
+        this.name = builder.name;
+        this.price = builder.price;
+        this.imageUrl = builder.imageUrl;
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
+    public static class Builder {
+        private String name;
+        private int price;
+        private String imageUrl;
 
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder price(int price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder imageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+            return this;
+        }
+
+        public Product build() {
+            return new Product(this);
+        }
+    }
     public Long getId() {
         return id;
     }
@@ -47,26 +64,6 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public static Product toEntity(ProductRequestDto productDto){
-        return new Product(productDto.name(), productDto.price(), productDto.imageUrl());
     }
 
     public void update(ProductRequestDto productDto){

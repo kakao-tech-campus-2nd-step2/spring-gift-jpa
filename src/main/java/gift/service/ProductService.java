@@ -26,7 +26,11 @@ public class ProductService {
     public ProductResponseDto addProduct(ProductRequestDto productDto){
         checkNameInKakao(productDto);
 
-        Product product = Product.toEntity(productDto);
+        Product product = new Product.Builder()
+                .name(productDto.name())
+                .price(productDto.price())
+                .imageUrl(productDto.imageUrl())
+                .build();
 
         Product savedProduct = productRepository.save(product);
 
