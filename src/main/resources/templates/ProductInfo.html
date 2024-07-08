@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 조회</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="p-5 mb-5 text-center</> bg-light">
+  <h1 class="mb-3" th:align="center"><b>상품 관리</b></h1>
+  <h4 class="mb-3" th:align="center">관리자 전용 상품 관리 페이지</h4>
+</div>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-lg-8">
+      <form th:action="@{/manager/products/delete/{id}(id=${product.id})}" method="post">
+        <div>
+          <label for="id">상품 ID</label>
+          <input type="text" id="id" name="id" class="form-control" value="1" th:value="${product.getId()}" readonly>
+        </div>
+        <div>
+          <label for="name">상품명</label>
+          <input type="text" id="name" name="name" class="form-control" value="상품A" th:value="${product.getName()}" readonly>
+        </div>
+        <div>
+          <label for="price">가격</label>
+          <input type="text" id="price" name="price" class="form-control" value="10000" th:value="${product.getPrice()}" readonly>
+        </div>
+        <div>
+          <label for="imageUrl">이미지 URL</label>
+          <input type="text" id="imageUrl" name="imageUrl" class="form-control" value="10" th:value="${product.getImageUrl()}" readonly>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <button class="w-100 btn btn-primary btn-lg"
+                    onclick="location.href='AddOrUpdateProduct.html'"
+                    th:onclick="|location.href='@{/manager/products/update/{id}(id=${product.id})}'|"
+
+                    type="button">상품 수정</button>
+          </div>
+          <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    onclick="location.href='items.html'"
+                    th:onclick="|location.href='@{/manager/products}'|"
+                    type="button">목록으로</button>
+          </div>
+          <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    type="submit">삭제</button>
+          </div>
+        </div>
+        <input type="hidden" name="_method" value="DELETE"/>
+
+      </form>
+    </div>
+  </div>
+</div>
+</body>
