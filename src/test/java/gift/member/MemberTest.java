@@ -45,10 +45,9 @@ public class MemberTest {
     @DisplayName("토큰 생성 확인")
     public void testGenerateToken() {
         //given
-        String email = "test@example.com";
-        String password = "1234";
+        Member member = new Member("test@example.com","1234");
         //when
-        String token = jwtUtil.generateToken(email);
+        String token = jwtUtil.generateToken(member);
         //then
         assertNotNull(token);
     }
@@ -57,14 +56,12 @@ public class MemberTest {
     @DisplayName("토큰 인증 확인")
     public void testAuthenticate() {
         //given
-        String email = "test@example.com";
-        String password = "1234";
-        Member member = new Member(email,password);
-        TokenDTO expectedToken = new TokenDTO(jwtUtil.generateToken(email));
+        Member member = new Member("test@example.com","1234");
+        TokenDTO expectedToken = new TokenDTO(jwtUtil.generateToken(member));
         //when
-        TokenDTO auctualToken = memberService.login(member);
+        TokenDTO actualToken = memberService.login(member);
         //then
-        assertEquals(expectedToken, auctualToken);
+        assertEquals(expectedToken, actualToken);
     }
 
 }
