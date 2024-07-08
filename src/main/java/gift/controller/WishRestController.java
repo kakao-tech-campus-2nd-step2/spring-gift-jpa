@@ -1,7 +1,6 @@
 package gift.controller;
 
 import gift.annotation.LoginUser;
-import gift.domain.User;
 import gift.dto.UserResponseDto;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
@@ -17,11 +16,9 @@ import java.util.List;
 @RequestMapping("/wishes")
 public class WishRestController {
     private final WishService wishService;
-    private final JwtUtil jwtUtil;
 
-    public WishRestController(WishService wishService, JwtUtil jwtUtil) {
+    public WishRestController(WishService wishService) {
         this.wishService = wishService;
-        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping
