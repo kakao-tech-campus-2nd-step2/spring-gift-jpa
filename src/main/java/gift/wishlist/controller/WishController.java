@@ -28,7 +28,7 @@ public class WishController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addWish(@RequestHeader("Authorization") String authorizationHeader, @RequestBody WishRequest request) {
+    public ResponseEntity<WishResponse> addWish(@RequestHeader("Authorization") String authorizationHeader, @RequestBody WishRequest request) {
         String token = authorizationHeader.substring(7); // "Bearer " 이후의 토큰만 추출
         Member member = memberService.getMemberFromToken(token);
         wishService.addWish(member.getId(), request);
