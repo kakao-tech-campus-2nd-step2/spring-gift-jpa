@@ -1,20 +1,16 @@
 package gift.repository;
 
-import gift.config.FilterConfig;
-import gift.config.SpringConfig;
 import gift.model.Product;
 import gift.model.ProductDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
+@SpringBootTest
 public class ProductRepositoryIntegrationTest {
 
     @Autowired

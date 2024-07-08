@@ -2,12 +2,10 @@ package gift.repository;
 
 import gift.model.Product;
 import gift.model.ProductDTO;
-
-import java.util.List;
-
-import gift.util.ProductUtility;
 import jakarta.persistence.EntityManager;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Transactional
 public class JpaProductRepository implements ProductRepository {
@@ -20,7 +18,7 @@ public class JpaProductRepository implements ProductRepository {
 
     @Override
     public Product save(ProductDTO form) {
-        Product product = ProductUtility.productDTOToDAO(new Product(), form);
+        Product product = new Product(form.getName(), form.getPrice(), form.getImageUrl());
         em.persist(product);
         return product;
     }
