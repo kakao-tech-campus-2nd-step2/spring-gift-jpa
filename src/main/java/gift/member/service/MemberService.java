@@ -5,6 +5,7 @@ import gift.member.domain.Member;
 import gift.member.error.ForbiddenException;
 import gift.member.repository.MemberRepository;
 import gift.member.util.JwtUtil;
+import gift.member.util.PasswordUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,15 +20,18 @@ public class MemberService {
     }
 
     public TokenDTO register(Member member) {
+        member.setPassword(PasswordUtil.encodePassword(member.getPassword()));
         memberRepository.save(member);
         return new TokenDTO(jwtUtil.generateToken(member.getEmail()));
     }
 
     public TokenDTO login(Member member) {
         Member existingMember = memberRepository.findByEmail(member.getEmail());
-        if (existingMember != null && existingMember.getPassword().equals(member.getPassword())) {
+        if (existingMember != null &&
+            PasswordUtil.decodePassword(existingMember.getPassword()).equals(member.getPassword())) {
             return new TokenDTO(jwtUtil.generateToken(member.getEmail()));
         }
         throw new ForbiddenException("Invalid email or password");
     }
+
 }
