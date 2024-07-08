@@ -7,17 +7,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Member {
+public class Wish {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    @Column
+    private Long memberId;
 
-    @Column(nullable = false)
-    private String password;
+    @Column
+    private Long productId;
 
-    protected Member(){};
+    protected Wish() {
+    }
+
+    ;
+
 }
