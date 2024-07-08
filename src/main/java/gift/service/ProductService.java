@@ -5,6 +5,7 @@ import gift.model.Product;
 import gift.exception.product.ProductAlreadyExistsException;
 import gift.exception.product.ProductNotFoundException;
 import gift.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class ProductService {
         return product;
     }
 
+    @Transactional
     public Product putProduct(ProductRequest request) {
         Optional<Product> optionalProduct = productRepository.findById(request.id());
 
