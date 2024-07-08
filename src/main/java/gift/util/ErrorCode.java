@@ -9,15 +9,14 @@ public enum ErrorCode {
     NAME_TOO_LONG("상품의 이름은 최대 15자입니다.", HttpStatus.BAD_REQUEST),
     INVALID_PRICE("상품의 가격은 필수입니다.", HttpStatus.BAD_REQUEST),
     NEGATIVE_PRICE("상품의 가격은 0보다 커야합니다.", HttpStatus.BAD_REQUEST),
+    PRODUCT_NOT_FOUND("해당 상품을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST),
 
     // User ErrorMessage
     LOGIN_FAILED("로그인에 실패하였습니다.", HttpStatus.UNAUTHORIZED),
 
 
     // Wishlist ErrorMessage
-    WISHLIST_NOT_FOUND("해당 위시리스트를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST),
-
-    ;
+    WISHLIST_NOT_FOUND("해당 위시리스트를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST);
 
     private final String message;
     private final HttpStatus status;
