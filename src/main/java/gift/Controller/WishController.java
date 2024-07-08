@@ -30,7 +30,7 @@ public class WishController {
     return ResponseEntity.ok(wishList);
   }
 
-  @PostMapping("/add")
+  @PostMapping
   public ResponseEntity<ProductDto> addProductToWishList(@RequestBody ProductDto wishProduct,
     @LoginUser UserDto user) {
     ProductDto addedWishProduct = wishListService.addProductToWishList(wishProduct, user);
