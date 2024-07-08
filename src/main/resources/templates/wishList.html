@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WishList</title>
+    <link rel="stylesheet" href="/style/index_style.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>위시리스트</h1>
+<table id="product-table">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Image</th>
+        <th scope="col">Option</th>
+    </tr>
+    </thead>
+    <tbody id="product-tbody">
+    <!-- AJAX를 통해 데이터를 로드 -->
+    </tbody>
+</table>
+</body>
+<script>
+    $(document).ready(function() {
+        // 페이지 로드 시 AJAX를 통해 데이터 가져오기
+        $.ajax({
+            url: '/api/wishes',
+            method: 'GET',
+            dataType: 'json',
+            contentType: "application/json",
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            success: function (data) {
+                var tbody = $('#product-tbody');
+                tbody.empty(); // 초기화
+
+                // 데이터에 따라 테이블 행을 생성
+                data.forEach(function (product) {
+                    // 한 행의 내용
+                    var row = `
+                        <tr>
+                            <td>${product.id}</td>
+                            <td>${product.name}</td>
+                            <td>${product.price}</td>
+                            <td><img src="${product.imageUrl}" alt="image"/></td>
+                            <td>
+                                <a href="#" onclick="deleteFunction(${product.id})">삭제</a>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.append(row);
+                });
+            },
+            error: function (err) {
+                alert("error occur! [error code : " + err.status + "]");
+            }
+        })
+    })
+
+    function deleteFunction(id){
+        var token = {
+            token : localStorage.getItem('token')
+        }
+        $.ajax({
+            type: "DELETE",
+            url: '/api/wishes/' + id,
+            contentType: "application/json",
+            datatype : "json",
+            data : JSON.stringify(token),
+            headers : {
+                Authorization: 'Bearer ' + localStorage.getItem("token"),
+            },
+            success : function(res){
+                $('#product-table').find('tr[data-id="' + id + '"]').remove();
+                alert("상품 ID : " + id + "가 삭제되었습니다.");
+                location.reload();
+            },
+            error : function(error){
+                alert("error occur! [error code : " + err.status + "]");
+            }
+        })
+    }
+</script>
+</html>
