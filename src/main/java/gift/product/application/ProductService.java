@@ -1,9 +1,9 @@
 package gift.product.application;
 
+import gift.product.domain.CreateProductRequestDTO;
 import gift.product.domain.Product;
 import gift.product.exception.ProductException;
 import gift.product.infra.ProductRepository;
-import gift.product.presentation.ProductManageController.CreateProductRequestDTO;
 import gift.util.ErrorCode;
 import java.util.List;
 import java.util.Optional;
