@@ -3,3 +3,10 @@
 ### step0
 
 - 위시리스트 작업물 세팅
+
+### step1
+
+- 각 entity JPA로 변환
+- Repository class 생성 및 구현
+- @DataJpaTest를 이용한 Test생성 및 구현
+- webEnvironment및 TestRestTemplate를 활용한 Controller 테스트 생성 및 구현
