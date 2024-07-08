@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+  <title>admin - insert wish</title>
+</head>
+<body>
+<div class="container"
+     style="display: flex; flex-direction: column; justify-content: center; margin-top: 50px;">
+  <h2 class="py-4 text-center border-bottom mb-5">위시 추가</h2>
+  <div>
+    <form id="form" th:action method="post">
+      <div class="mb-3">
+        <label for="productId" class="mb-2">상품 ID</label>
+        <input type="text" id="productId" name="productId" class="form-control" placeholder="상품 ID를 입력하세요.">
+      </div>
+      <div class="row mt-5">
+        <div class="col">
+          <button class="btn btn-primary w-100" type="submit">추가</button>
+        </div>
+        <div class="col">
+          <button class="btn btn-primary w-100" th:onclick="|location.href='@{/admin/wishes}'|"
+                  onclick="location.href='wishes.html'" type="button">취소
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>
