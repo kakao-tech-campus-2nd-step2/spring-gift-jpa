@@ -26,12 +26,6 @@ public class ProductController {
         return "index";
     }
 
-    @GetMapping("/getAllProductList")
-    @ResponseBody
-    public List<Product> getProductsListController() {
-        return productDao.selectAllProduct();
-    }
-
     // id 상품 하나 반환
     @GetMapping("/getProduct/{id}")
     @ResponseBody
