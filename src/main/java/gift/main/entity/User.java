@@ -5,7 +5,15 @@ public class User {
     private final String name;
     private final String email;
     private final String password;
-    private final String role;
+    private final Role role;
+
+    public User(long id, String name, String email, String password, Role role) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 
 
     public User(long id, String name, String email, String password, String role) {
@@ -13,8 +21,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.role = role;
-
+        this.role = Role.valueOf(role.toUpperCase());
     }
 
     public long getId() {
@@ -33,7 +40,7 @@ public class User {
         return password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 }
