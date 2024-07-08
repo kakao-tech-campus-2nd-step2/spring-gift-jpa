@@ -4,6 +4,7 @@ import gift.model.JwtUtil;
 import gift.model.Member;
 import gift.model.MemberDao;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ public class MemberController {
     long id = 0L;
 
     Interceptor interceptor = new Interceptor();
+    JwtUtil jwtUtil = new JwtUtil();
     private final MemberDao MemberDao;
 
     public MemberController(gift.model.MemberDao memberDao) {
@@ -31,14 +33,13 @@ public class MemberController {
             member.setId(id);
             MemberDao.insertMember(member);
             System.out.println("signin: " + member.getId() + " " + member.getEmail());
-            String token = JwtUtil.createJwt(member.getId(), member.getEmail());
+            String token = jwtUtil.createJwt(member.getId(), member.getEmail());
             return token;
         }
         else {
             throw new IllegalArgumentException("이미 가입한 이메일 입니다.");
         }
     }
-
 
     @PostMapping("/login")
     public String login(@RequestBody Member member){
@@ -49,15 +50,13 @@ public class MemberController {
 
         if(Objects.equals(member.getPassword(), loginMember.getPassword())){
             System.out.println("login: " + loginMember.getId() + " " + member.getEmail());
-            String token = JwtUtil.createJwt(loginMember.getId(), member.getEmail());
+            String token = jwtUtil.createJwt(loginMember.getId(), member.getEmail());
             return token;
         }
         else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
-
-    static String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
 
     // 토큰으로 멤버 id 가져옴
     @GetMapping("/getMemberId")
