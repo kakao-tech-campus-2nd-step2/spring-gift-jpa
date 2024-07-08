@@ -1,5 +1,6 @@
 package gift.common.exception;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 
@@ -11,6 +12,13 @@ public class ErrorResponse {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<ValidationError> invalidParams;
+
+    @JsonCreator
+    public ErrorResponse(String code, int status, String message) {
+        this.code = code;
+        this.status = status;
+        this.message = message;
+    }
 
     public ErrorResponse(ErrorCode errorCode) {
         this.code = errorCode.getCode();
