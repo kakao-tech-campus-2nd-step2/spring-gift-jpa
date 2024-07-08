@@ -22,14 +22,14 @@ public class MemberService {
     public TokenDTO register(Member member) {
         member.setPassword(PasswordUtil.encodePassword(member.getPassword()));
         memberRepository.save(member);
-        return new TokenDTO(jwtUtil.generateToken(member.getEmail()));
+        return new TokenDTO(jwtUtil.generateToken(member));
     }
 
     public TokenDTO login(Member member) {
         Member existingMember = memberRepository.findByEmail(member.getEmail());
         if (existingMember != null &&
             PasswordUtil.decodePassword(existingMember.getPassword()).equals(member.getPassword())) {
-            return new TokenDTO(jwtUtil.generateToken(member.getEmail()));
+            return new TokenDTO(jwtUtil.generateToken(member));
         }
         throw new ForbiddenException("Invalid email or password");
     }

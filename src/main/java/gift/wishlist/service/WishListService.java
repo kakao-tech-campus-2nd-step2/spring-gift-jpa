@@ -30,9 +30,4 @@ public class WishListService {
         wishListRepository.deleteWishListItem(id);
     }
 
-    public Long findMemberIdByEmail(String email) {
-        Member member = memberRepository.findByEmail(email);
-        return member.getId();
-    }
-
 }

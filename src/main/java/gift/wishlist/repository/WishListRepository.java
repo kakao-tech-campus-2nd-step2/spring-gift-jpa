@@ -2,6 +2,7 @@ package gift.wishlist.repository;
 
 import gift.wishlist.domain.WishList;
 import java.util.List;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -15,22 +16,22 @@ public class WishListRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private RowMapper<WishList> wishRowMapper = (rs, rowNum) -> {
-        WishList item = new WishList();
-        item.setId(rs.getLong("id"));
-        item.setMemberId(rs.getLong("member_id"));
-        item.setProductName(rs.getString("product_name"));
-        item.setProductPrice(rs.getLong("product_price"));
-        return item;
-    };
-
     public List<WishList> findByMemberId(Long memberId) {
-        return jdbcTemplate.query("SELECT * FROM wish_lists WHERE member_id = ?", wishRowMapper, memberId);
+        return jdbcTemplate.query("SELECT * FROM wish_lists WHERE member_id = ?",
+            BeanPropertyRowMapper.newInstance(WishList.class), memberId);
+    }
+
+    public WishList.JoinedWishList getWishListDetail(Long wishId) {
+        String sql =
+            "SELECT w.id as id, w.memberId as memberId, w.productId as productId, p.name as name, p.price as price, p.imageUrl as imageUrl "
+                + "FROM wish_lists as w, products as p "
+                + "WHERE w.id = ? and w.productId = p.id";
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(WishList.JoinedWishList.class), wishId);
     }
 
     public void addWishListItem(WishList item) {
-        jdbcTemplate.update("INSERT INTO wish_lists (member_id, product_name, product_price) VALUES (?, ?, ?)",
-            item.getMemberId(), item.getProductName(), item.getProductPrice());
+        jdbcTemplate.update("INSERT INTO wish_lists (member_id, product_id) VALUES (?, ?)",
+            item.getMemberId(), item.getProductId());
     }
 
     public void deleteWishListItem(Long id) {

@@ -36,7 +36,7 @@ public class WishListController {
     public ResponseEntity<List<WishList>> getWishListItems(HttpServletRequest request) {
         String token = extractToken(request);
         Claims claims = jwtUtil.extractAllClaims(token);
-        Long memberId = wishListService.findMemberIdByEmail(String.valueOf(claims.getSubject()));
+        Long memberId = (Long) claims.get("id");
 
         List<WishList> wishLists = wishListService.getWishListItems(memberId);
         return ResponseEntity.ok(wishLists);
@@ -46,12 +46,8 @@ public class WishListController {
     public ResponseEntity<?> addWishListItem(HttpServletRequest request, @Valid @RequestBody Product product) {
         String token = extractToken(request);
         Claims claims = jwtUtil.extractAllClaims(token);
-        Long memberId = wishListService.findMemberIdByEmail(String.valueOf(claims.getSubject()));
-
-        WishList wishList = new WishList();
-        wishList.setMemberId(memberId);
-        wishList.setProductName(product.getName());
-        wishList.setProductPrice(product.getPrice());
+        Long memberId = (Long) claims.get("id");
+        WishList wishList = new WishList(memberId, product.getId());
         wishListService.addWishListItem(wishList);
         return ResponseEntity.status(HttpStatus.CREATED).body("Product added to wishlist");
     }
