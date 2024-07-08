@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import gift.service.WishListService;
-import gift.dto.UserDto;
+import gift.dto.MemberDto;
 import gift.dto.WishListDto;
 import gift.dto.request.WishListRequest;
 import gift.util.JwtUtil;
@@ -32,8 +32,8 @@ public class WishListController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<WishListDto>> getWishList(@RequestHeader("Authorization") String authorizationHeader, UserDto userDto){
-        if (!jwtUtil.validateToken(authorizationHeader, userDto)) {
+    public ResponseEntity<List<WishListDto>> getWishList(@RequestHeader("Authorization") String authorizationHeader, MemberDto memberDtoD){
+        if (!jwtUtil.validateToken(authorizationHeader, memberDto)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -42,7 +42,7 @@ public class WishListController {
     }
 
     @PostMapping()
-    public ResponseEntity<Void> addWishList(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody WishListRequest wishListRequest, UserDto userDto){
+    public ResponseEntity<Void> addWishList(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody WishListRequest wishListRequest, MemberDto userDto){
         
         if (!jwtUtil.validateToken(authorizationHeader, userDto)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -53,7 +53,7 @@ public class WishListController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<Void> deleteWishList(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody WishListRequest wishListRequest, UserDto userDto){
+    public ResponseEntity<Void> deleteWishList(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody WishListRequest wishListRequest, MemberDto userDto){
         
         if (!jwtUtil.validateToken(authorizationHeader, userDto)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
