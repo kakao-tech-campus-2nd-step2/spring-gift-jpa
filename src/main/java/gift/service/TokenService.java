@@ -6,15 +6,20 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.util.Date;
 
 @Service
 public class TokenService {
 
     private final static SecretKey key = Jwts.SIG.HS256.key().build();
+    private final int jwtExpirationInMs = 7200000; // 2hour
 
     public Token generateToken(Long registeredMemberId) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
         String tokenValue = Jwts.builder()
                 .claim("memberId", registeredMemberId)
+                .expiration(expiryDate)
                 .signWith(key)
                 .compact();
         return new Token(tokenValue);
