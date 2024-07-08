@@ -3,6 +3,7 @@ package gift.controller;
 import gift.model.dto.ProductRequestDto;
 import gift.model.dto.ProductResponseDto;
 import gift.repository.ProductDao;
+import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,39 +19,36 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    public ProductController(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
     public List<ProductResponseDto> getAllProducts() {
-        return productDao.selectAllProduct()
-            .stream()
-            .map(ProductResponseDto::from)
-            .toList();
+        return productService.getAllProducts();
     }
 
     @GetMapping("/{id}")
     public ProductResponseDto getProduct(@PathVariable("id") Long id) {
-        return ProductResponseDto.from(productDao.selectProductById(id));
+        return productService.getProduct(id);
     }
 
     @PostMapping
     public void addProduct(@Valid @RequestBody ProductRequestDto productRequestDto) {
-        productDao.insertProduct(productRequestDto.toEntity());
+        productService.insertProduct(productRequestDto);
     }
 
     @PutMapping("/{id}")
     public void updateProduct(@Valid @RequestBody ProductRequestDto productRequestDto,
         @PathVariable("id") Long id) {
-        productDao.updateProductById(id, productRequestDto.toEntity());
+        productService.updateProductById(id, productRequestDto);
     }
 
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable("id") Long id) {
-        productDao.deleteProductById(id);
+        productService.deleteProductById(id);
     }
 
 }
