@@ -4,27 +4,25 @@ import gift.model.Product;
 import gift.model.ProductDTO;
 import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 
-@Service
+@Repository
 @Validated
-public class ProductOperation {
+public class ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public ProductOperation(JdbcTemplate jdbcTemplate) {
+    public ProductRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Product createProduct(@Valid ProductDTO dto) {
+    public void createProduct(@Valid ProductDTO productDTO) {
         String sql = "INSERT INTO product (id, name, price, imageUrl) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, dto.getId(), dto.getName(), dto.getPrice(), dto.getImageUrl());
-        return getProductById(dto.getId());
+        jdbcTemplate.update(sql, productDTO.id(), productDTO.name(), productDTO.price(),
+            productDTO.imageUrl());
     }
 
     public Product getProductById(long id) {
@@ -37,11 +35,11 @@ public class ProductOperation {
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Product.class));
     }
 
-    public Product updateProduct(Long id, @Valid ProductDTO updatedDTO) {
+    public boolean updateProduct(Long id, @Valid ProductDTO updatedDTO) {
         String sql = "UPDATE product SET name = ?, price = ?, imageUrl = ? WHERE id = ?";
-        jdbcTemplate.update(sql, updatedDTO.getName(), updatedDTO.getPrice(),
-            updatedDTO.getImageUrl(), id);
-        return getProductById(updatedDTO.getId());
+        return jdbcTemplate.update(sql, updatedDTO.name(), updatedDTO.price(),
+            updatedDTO.imageUrl(), id) > 0;
+
     }
 
     public boolean deleteProduct(Long id) {

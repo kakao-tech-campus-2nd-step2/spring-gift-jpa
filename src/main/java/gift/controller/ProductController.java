@@ -1,8 +1,7 @@
 package gift.controller;
 
-import gift.model.Product;
 import gift.model.ProductDTO;
-import gift.service.ProductOperation;
+import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -20,51 +19,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductOperation productOperation;
+    private final ProductService productService;
 
-    public ProductController(ProductOperation productOperation) {
-        this.productOperation = productOperation;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProduct() {
-        List<Product> products = productOperation.getAllProduct();
+    public ResponseEntity<List<ProductDTO>> getAllProduct() {
+        List<ProductDTO> products = productService.getAllProduct();
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Product product = productOperation.getProductById(id);
-        if (product != null) {
-            return ResponseEntity.ok(product);
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductDTO productDTO) {
-        Product createdProduct = productOperation.createProduct(productDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(productDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id,
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id,
         @Valid @RequestBody ProductDTO updatedDTO) {
-        Product product = productOperation.getProductById(id);
-        if (product != null) {
-            Product updated = productOperation.updateProduct(updatedDTO.getId(),
-                updatedDTO);
-            return ResponseEntity.ok(updated);
-        }
-        return ResponseEntity.notFound().build();
+        productService.updateProduct(id, updatedDTO);
+        return ResponseEntity.ok(updatedDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        boolean deleted = productOperation.deleteProduct(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
 }
