@@ -1,5 +1,7 @@
 package gift.service;
 
+import static gift.util.Constants.EMAIL_ALREADY_USED;
+import static gift.util.Constants.ID_NOT_FOUND;
 import static gift.util.Constants.INVALID_CREDENTIALS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -33,7 +35,7 @@ public class MemberServiceTest {
     @BeforeEach
     public void setUp() {
         memberRepository = Mockito.mock(MemberRepository.class);
-        jwtUtil = Mockito.mock(JWTUtil.class);  // JWTUtil을 목(mock) 객체로 초기화
+        jwtUtil = Mockito.mock(JWTUtil.class);
         memberService = new MemberService(memberRepository, jwtUtil);
     }
 
@@ -61,7 +63,7 @@ public class MemberServiceTest {
             memberService.registerMember(memberDTO);
         });
 
-        assertEquals("이미 사용 중인 이메일입니다.", exception.getMessage());
+        assertEquals(EMAIL_ALREADY_USED, exception.getMessage());
     }
 
     @Test
@@ -169,6 +171,6 @@ public class MemberServiceTest {
             memberService.deleteMember(1L);
         });
 
-        assertEquals("존재하지 않는 ID입니다.", exception.getMessage());
+        assertEquals(ID_NOT_FOUND, exception.getMessage());
     }
 }

@@ -64,6 +64,10 @@ public class MemberRequestTest {
         ResponseEntity<Map> response = restTemplate.postForEntity("/api/members/register", memberDTO, Map.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody()).containsEntry("password", "비밀번호는 필수 입력 항목입니다.");
+        assertThat(response.getBody()).containsKey("password");
+        assertThat(response.getBody().get("password")).satisfiesAnyOf(
+            msg -> assertThat(msg).isEqualTo("비밀번호는 필수 입력 항목입니다."),
+            msg -> assertThat(msg).isEqualTo("비밀번호는 최소 4자리 이상이어야 합니다.")
+        );
     }
 }

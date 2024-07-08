@@ -1,5 +1,7 @@
 package gift.service;
 
+import static gift.util.Constants.INVALID_PRICE;
+import static gift.util.Constants.PRODUCT_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,7 +42,7 @@ public class ProductServiceTest {
 
         List<ProductResponse> products = productService.getAllProducts();
         assertEquals(1, products.size());
-        assertEquals("Test Product", products.get(0).name());
+        assertEquals("Test Product", products.getFirst().name());
     }
 
     @Test
@@ -62,7 +64,7 @@ public class ProductServiceTest {
             productService.getProductById(1L);
         });
 
-        assertEquals("상품을 다음의 id로 찾을 수 없습니다. id: 1", exception.getMessage());
+        assertEquals(PRODUCT_NOT_FOUND + 1, exception.getMessage());
     }
 
     @Test
@@ -85,7 +87,7 @@ public class ProductServiceTest {
             productService.addProduct(productDTO);
         });
 
-        assertEquals("가격은 0 이상으로 설정되어야 합니다.", exception.getMessage());
+        assertEquals(INVALID_PRICE, exception.getMessage());
     }
 
     @Test
@@ -114,7 +116,7 @@ public class ProductServiceTest {
             productService.updateProduct(1L, productDTO);
         });
 
-        assertEquals("상품을 다음의 id로 찾을 수 없습니다. id: 1", exception.getMessage());
+        assertEquals(PRODUCT_NOT_FOUND + 1, exception.getMessage());
     }
 
     @Test
@@ -137,6 +139,6 @@ public class ProductServiceTest {
             productService.deleteProduct(1L);
         });
 
-        assertEquals("상품을 다음의 id로 찾을 수 없습니다. id: 1", exception.getMessage());
+        assertEquals(PRODUCT_NOT_FOUND + 1, exception.getMessage());
     }
 }
