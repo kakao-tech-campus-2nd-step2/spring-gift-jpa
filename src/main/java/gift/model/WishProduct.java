@@ -12,35 +12,25 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(
-    name = "wish_products",
-    uniqueConstraints = {
-        @UniqueConstraint(
-            name = "constraintName",
-            columnNames = {"member_id", "product_id"}
-        )
-    }
-)
+@Table(name = "wish_products")
 public class WishProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Long memberId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "product_id", nullable = false)
+    private Long productId;
 
     public WishProduct() {
     }
 
-    public WishProduct(Member member, Product product) {
-        this.member = member;
-        this.product = product;
+    public WishProduct(Long memberId, Long productId) {
+        this.memberId = memberId;
+        this.productId = productId;
     }
 
     public Long getId() {
@@ -51,19 +41,19 @@ public class WishProduct {
         this.id = id;
     }
 
-    public void setMember(Member member) {
-        this.member = member;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 
-    public Product getProduct() {
-        return product;
+    public Long getProductId() {
+        return productId;
     }
 
-    public Member getMember() {
-        return member;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 }

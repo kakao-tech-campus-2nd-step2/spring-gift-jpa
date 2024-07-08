@@ -51,7 +51,7 @@ public class WishListApiController {
             throw new InputException(bindingResult.getAllErrors());
         }
 
-        WishProduct wishProduct = new WishProduct(memberDto.id(), dto.productId());
+        WishProduct wishProduct = new WishProduct();
         wishProductDao.insert(wishProduct);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -65,7 +65,7 @@ public class WishListApiController {
             throw new InputException(bindingResult.getAllErrors());
         }
 
-        WishProduct wishProduct = new WishProduct(memberDto.id(), dto.productId());
+        WishProduct wishProduct = new WishProduct();
         wishProductDao.delete(wishProduct);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
