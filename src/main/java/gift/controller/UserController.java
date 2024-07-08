@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.model.User;
 import gift.service.UserService;
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +34,9 @@ public class UserController {
         if (!userService.isValidToken(token)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        User user = userService.findById(id);
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        Optional<User> user = userService.findById(id);
+        return user.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("")
@@ -55,8 +54,8 @@ public class UserController {
         if (!userService.isValidToken(token)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        User existingUser = userService.findById(id);
-        if (existingUser == null) {
+        Optional<User> existingUser = userService.findById(id);
+        if (existingUser.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         userService.updateUser(id, user);
@@ -68,8 +67,8 @@ public class UserController {
         if (!userService.isValidToken(token)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        User existingUser = userService.findById(id);
-        if (existingUser == null) {
+        Optional<User> existingUser = userService.findById(id);
+        if (existingUser.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         userService.deleteUser(id);
