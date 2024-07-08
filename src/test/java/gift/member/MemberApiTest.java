@@ -129,7 +129,7 @@ public class MemberApiTest {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         // when
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
