@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 수정</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            color: #333;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #2A2A2A;
+            font-size: 24px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #337ab7; /* Change the color for edit */
+        }
+
+        form {
+            background-color: #ffffff; /* White background for a cleaner look */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #aaaaaa; /* Lighter shadow for a softer look */
+            max-width: 500px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #337ab7; /* A different color for edit button */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #286090; /* Darker blue on hover */
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #337ab7; /* Matching link color */
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<h1>상품 수정</h1>
+<form th:action="@{/product/update}" th:object="${productReq}" method="post">
+    <div>
+        <label for="name">상품명:</label>
+        <input type="text" th:field="*{name}" id="name" required/>
+    </div>
+    <div>
+        <label for="price">가격:</label>
+        <input type="number" th:field="*{price}" id="price" required/>
+    </div>
+    <div>
+        <label for="imageUrl">이미지 URL:</label>
+        <input type="text" th:field="*{imageUrl}" id="imageUrl"/>
+    </div>
+    <input type="hidden" th:field="*{id}"/>
+    <button type="submit">수정</button>
+</form>
+<a th:href="@{/product}">목록으로 돌아가기</a>
+</body>
+</html>
