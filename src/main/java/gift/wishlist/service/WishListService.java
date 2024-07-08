@@ -11,11 +11,9 @@ import org.springframework.stereotype.Service;
 public class WishListService {
 
     private final WishListRepository wishListRepository;
-    private final MemberRepository memberRepository;
 
-    public WishListService(WishListRepository wishListRepository, MemberRepository memberRepository) {
+    public WishListService(WishListRepository wishListRepository) {
         this.wishListRepository = wishListRepository;
-        this.memberRepository = memberRepository;
     }
 
     public List<WishList> getWishListItems(Long memberId) {
