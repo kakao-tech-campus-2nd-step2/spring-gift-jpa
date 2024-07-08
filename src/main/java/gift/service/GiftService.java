@@ -34,13 +34,9 @@ public class GiftService {
     public ProductDTO postProducts(ProductDTO productDTO) {
         validateProductName(productDTO.getName());
 
-        // 먼저 동일한 ID의 제품이 이미 존재하는지 확인
-        if (productDTO.getId() != null && productRepository.existsById(productDTO.getId())) {
-            throw new ProductAlreadyExistException(
-                "Product with ID " + productDTO.getId() + " already exists");
-        }
 
-        Product product = new Product(productDTO.getId(), productDTO.getName(),
+
+        Product product = new Product(productDTO.getName(),
             productDTO.getPrice(), productDTO.getImageUrl());
 
         Product savedProduct = productRepository.save(product);
@@ -53,14 +49,14 @@ public class GiftService {
 
         Product productById = productRepository.findById(id).
             orElseThrow(() -> new ProductNotFoundException("Product NOT FOUND"));
-        productById.setId(productDTO.getId());
+
         productById.setName(productDTO.getName());
         productById.setPrice(productDTO.getPrice());
         productById.setImageUrl(productDTO.getImageUrl());
         Product save = productRepository.save(productById);
 
 
-        return new ProductDTO(save.getId(), save.getName(), save.getPrice(), save.getImageUrl());
+        return productDTO;
     }
 
     public Long deleteProducts(Long id) {

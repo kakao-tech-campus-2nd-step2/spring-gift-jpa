@@ -17,13 +17,11 @@ import org.springframework.stereotype.Service;
 public class WishService {
 
     private final WishsRepository wishsRepository;
-    private final ProductRepository productRepository;
     private final UserInfoRepository userInfoRepository;
 
-    public WishService(WishsRepository wishsRepository, ProductRepository productRepository,
+    public WishService(WishsRepository wishsRepository,
         UserInfoRepository userInfoRepository) {
         this.wishsRepository = wishsRepository;
-        this.productRepository = productRepository;
         this.userInfoRepository = userInfoRepository;
     }
 
@@ -72,7 +70,7 @@ public class WishService {
             if (!wishsRepository.existsByUserIdAndProductId(userInfo.getId(),wishRequestDTO.getProductId())){
                 throw new ProductNotFoundException("Product Not Found");
             }
-            Wish byUserIdAndProductId = wishsRepository.findByUserIdAndProductId(wish.userId(),
+            Wish byUserIdAndProductId = wishsRepository.findByUserIdAndProductId(wish.getUserId(),
                 wish.getProductId());
             byUserIdAndProductId.setQuantity(wish.getQuantity());
             return true;

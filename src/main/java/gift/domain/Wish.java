@@ -28,17 +28,12 @@ public class Wish {
     public Wish() {
     }
 
-    public Long getId() {
-        return id;
-    }
 
     public Long getProductId() {
         return productId;
     }
 
-    public Long userId() {
-        return userId;
-    }
+    public Long getUserId() { return userId; }
 
     public Long getQuantity() {
         return quantity;

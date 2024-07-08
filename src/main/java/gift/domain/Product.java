@@ -23,8 +23,7 @@ public class Product {
     private String imageUrl;
 
 
-    public Product(Long id, String name, double price, String imageUrl) {
-        this.id = id;
+    public Product(String name, double price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
