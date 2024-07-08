@@ -1,1 +1,2 @@
-# spring-gift-jpa
+# spring-gift-wishlist
+
