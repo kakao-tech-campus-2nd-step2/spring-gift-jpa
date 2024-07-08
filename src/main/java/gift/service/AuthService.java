@@ -26,7 +26,6 @@ public class AuthService {
         if (registeredMember.isEmpty()) {
             return null;
         }
-        System.out.println(jwtUtil.getEmailFromJWT(jwtUtil.createJWT(authRequest.getEmail())));
         return new AuthResponse(jwtUtil.createJWT(authRequest.getEmail()));
     }
 
