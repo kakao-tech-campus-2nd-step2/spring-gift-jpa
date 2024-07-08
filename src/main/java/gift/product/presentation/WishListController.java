@@ -41,9 +41,9 @@ public class WishListController {
     }
 
     @JwtAuthenticated
-    @PostMapping("/{userId}/add")
-    public ResponseEntity<?> addProductToWishList(@PathVariable Long userId, @RequestBody Product product) {
-        wishListService.addProductToWishList(userId, product);
+    @PostMapping("/{userId}/add/{productId}")
+    public ResponseEntity<?> addProductToWishList(@PathVariable Long userId, @PathVariable Long productId) {
+        wishListService.addProductToWishList(userId, productId);
         return ResponseEntity.ok(new CommonResponse<>(null, "위시리스트에 제품이 추가되었습니다", true));
     }
 

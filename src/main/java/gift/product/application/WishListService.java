@@ -2,6 +2,7 @@ package gift.product.application;
 
 import gift.product.domain.Product;
 import gift.product.domain.WishList;
+import gift.product.infra.ProductRepository;
 import gift.product.infra.WishListRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -10,9 +11,11 @@ import org.springframework.stereotype.Service;
 public class WishListService {
 
     private final WishListRepository wishListRepository;
+    private final ProductRepository productRepository;
 
-    public WishListService(WishListRepository wishListRepository) {
+    public WishListService(WishListRepository wishListRepository, ProductRepository productRepository) {
         this.wishListRepository = wishListRepository;
+        this.productRepository = productRepository;
     }
 
     public WishList getWishListByUserId(Long userId) {
@@ -27,8 +30,10 @@ public class WishListService {
 
 
     @Transactional
-    public void addProductToWishList(Long userId, Product product) {
+    public void addProductToWishList(Long userId, Long productId) {
         WishList wishList = wishListRepository.findByUserId(userId);
+        Product product = productRepository.findById(productId).orElseThrow();
+
         if (wishList == null) {
             wishList = new WishList();
             wishList.setUserId(userId);
