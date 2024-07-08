@@ -2,7 +2,7 @@ package gift.controller;
 
 import gift.dto.LoginRequest;
 import gift.dto.LoginResponse;
-import gift.dto.UserRequest;
+import gift.dto.MemberRequest;
 import gift.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +20,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public LoginResponse makeUser(@RequestBody @Valid UserRequest request) {
+    public LoginResponse makeMember(@RequestBody @Valid MemberRequest request) {
         return authService.register(request);
     }
 

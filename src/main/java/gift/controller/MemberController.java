@@ -14,15 +14,15 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/users/{email}")
-    public ResponseEntity<Member> getUserByEmail(@PathVariable("email") String email) {
-        Member member = memberService.getUserByEmail(email);
+    @GetMapping("/members/{email}")
+    public ResponseEntity<Member> getMemberByEmail(@PathVariable("email") String email) {
+        Member member = memberService.getMemberByEmail(email);
         return ResponseEntity.ok().body(member);
     }
 
-    @GetMapping("/users/{id}")
-    public ResponseEntity<Member> getUserById(@PathVariable("id") Long id) {
-        Member member = memberService.getUserById(id);
+    @GetMapping("/members/{id}")
+    public ResponseEntity<Member> getMemberById(@PathVariable("id") Long id) {
+        Member member = memberService.getMemberById(id);
         return ResponseEntity.ok().body(member);
     }
 }
