@@ -13,6 +13,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p " +
             "FROM Product p " +
             "WHERE p.id IN (:productIds)")
-    List<Product> findByIds(@Param("productIds") List<String> productIds);
+    List<Product> findByIds(@Param("productIds") List<Long> productIds);
 
 }

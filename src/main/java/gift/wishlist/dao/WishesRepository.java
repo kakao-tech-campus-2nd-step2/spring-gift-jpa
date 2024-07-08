@@ -16,6 +16,6 @@ public interface WishesRepository extends JpaRepository<Wish, Long> {
     @Query("SELECT w.productId " +
             "FROM Wish w " +
             "WHERE w.memberId =:memberId")
-    List<String> findByMemberId(@Param("memberId") Long memberId);
+    List<Long> findByMemberId(@Param("memberId") Long memberId);
 
 }
