@@ -14,13 +14,16 @@ public class WebConfig implements WebMvcConfigurer {
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
-    public WebConfig(MemberService memberService, JwtUtil jwtUtil,LoginMemberArgumentResolver loginMemberArgumentResolver) {
+    private final AuthorizationHeader authorizationHeader;
+
+    public WebConfig(MemberService memberService, JwtUtil jwtUtil,LoginMemberArgumentResolver loginMemberArgumentResolver,AuthorizationHeader authorizationHeader) {
         this.memberService = memberService;
         this.jwtUtil = jwtUtil;
         this.loginMemberArgumentResolver = loginMemberArgumentResolver;
+        this.authorizationHeader = authorizationHeader;
     }
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new LoginMemberArgumentResolver(memberService, jwtUtil));
+        resolvers.add(new LoginMemberArgumentResolver(memberService, jwtUtil,authorizationHeader));
     }
 }

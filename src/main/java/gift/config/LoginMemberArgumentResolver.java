@@ -21,13 +21,15 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
+    private final AuthorizationHeader authorizationHeader;
 
     private static final Logger logger = LoggerFactory.getLogger(LoginMemberArgumentResolver.class);
 
 
-    public LoginMemberArgumentResolver(MemberService memberService, JwtUtil jwtUtil) {
+    public LoginMemberArgumentResolver(MemberService memberService, JwtUtil jwtUtil, AuthorizationHeader authorizationHeader) {
         this.memberService = memberService;
         this.jwtUtil = jwtUtil;
+        this.authorizationHeader = authorizationHeader;
     }
 
     @Override
@@ -39,11 +41,10 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String authHeader = request.getHeader("Authorization");
-        logger.info("헤더 확인: " + authHeader);
+        AuthorizationHeader authHeader = new AuthorizationHeader(request.getHeader("Authorization"));
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
+        if (authHeader.isValid()) {
+            String token = authHeader.getToken();
 
             if (jwtUtil.validateToken(token)) {
                 String email = jwtUtil.getEmailFromToken(token);
