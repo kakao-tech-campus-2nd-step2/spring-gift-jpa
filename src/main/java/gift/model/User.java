@@ -2,6 +2,7 @@ package gift.model;
 
 import gift.util.EmailConstraint;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
@@ -12,8 +13,10 @@ public class User {
     private Long id;
     @EmailConstraint
     @Length(min = 1, max = 50)
+    @NotNull
     private String email;
     @Length(min = 1, max = 50)
+    @NotNull
     private String password;
 
     public User(String email, String password) {
