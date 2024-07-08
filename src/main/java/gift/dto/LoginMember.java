@@ -1,20 +1,21 @@
 package gift.dto;
 
 public class LoginMember {
-    private String email;
+
+    private Long id;
 
     public LoginMember() {
     }
 
-    public LoginMember(String email) {
-        this.email = email;
+    public LoginMember(Long id) {
+        this.id = id;
     }
 
-    public String getEmail() {
-        return email;
+    public Long getId() {
+        return id;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

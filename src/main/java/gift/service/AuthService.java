@@ -23,18 +23,12 @@ public class AuthService {
     public AuthResponse addMember(AuthRequest authRequest) {
         authRepository.insertMember(authRequest);
         Optional<Member> registeredMember = authRepository.selectMember(authRequest.getEmail());
-        if (registeredMember.isEmpty()) {
-            return null;
-        }
-        return new AuthResponse(jwtUtil.createJWT(authRequest.getEmail()));
+        return registeredMember.map(member -> new AuthResponse(jwtUtil.createJWT(member.getId()))).orElse(null);
     }
 
     public AuthResponse login(AuthRequest authRequest) {
         Optional<Member> storedMember = authRepository.selectMember(authRequest.getEmail());
-        if (storedMember.isEmpty()) {
-            return null;
-        }
-        return new AuthResponse(jwtUtil.createJWT(authRequest.getEmail()));
+        return storedMember.map(member -> new AuthResponse(jwtUtil.createJWT(member.getId()))).orElse(null);
     }
 
 }

@@ -23,16 +23,16 @@ public class WishListController {
 
     @GetMapping
     public List<Product> getWishList(@Login LoginMember member) {
-        return wishListService.getWishList(member.getEmail());
+        return wishListService.getWishList(member.getId());
     }
 
     @PostMapping("/{productId}")
     public ResponseEntity<String> addWishProduct(@Login LoginMember member, @PathVariable("productId") Long productId) {
-        return ResponseEntity.ok(wishListService.addWishProduct(new WishProduct(member.getEmail(), productId)));
+        return ResponseEntity.ok(wishListService.addWishProduct(new WishProduct(member.getId(), productId)));
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<String> deleteWishProduct(@Login LoginMember member, @PathVariable("productId") Long productId) {
-        return ResponseEntity.ok(wishListService.deleteWishProduct(new WishProduct(member.getEmail(), productId)));
+        return ResponseEntity.ok(wishListService.deleteWishProduct(new WishProduct(member.getId(), productId)));
     }
 }

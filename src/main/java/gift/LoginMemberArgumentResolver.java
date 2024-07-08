@@ -1,6 +1,5 @@
 package gift;
 
-import gift.domain.Member;
 import gift.dto.LoginMember;
 import gift.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,15 +21,14 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(Member.class) && parameter.hasParameterAnnotation(Login.class);
+        return parameter.hasParameterAnnotation(Login.class);
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
         String token = jwtUtil.getJWT(request.getHeader("Authorization"));
-        return new LoginMember(jwtUtil.getEmailFromJWT(token));
+        return new LoginMember(jwtUtil.getIdFromJWT(token));
     }
 }
