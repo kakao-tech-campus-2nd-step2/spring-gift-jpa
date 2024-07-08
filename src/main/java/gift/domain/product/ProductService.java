@@ -2,6 +2,7 @@ package gift.domain.product;
 
 import gift.global.exception.BusinessException;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,32 +12,34 @@ import org.springframework.stereotype.Service;
 public class ProductService {
 
     private final JdbcTemplate jdbcTemplate; // h2 DB 사용한 메모리 저장 방식
-    private final ProductRepository productRepository;
+    private final JpaProductRepository productRepository;
 
     @Autowired
-    public ProductService(JdbcTemplate jdbcTemplate, JdbcTemplateProductRepository jdbcTemplateProductRepository) {
+    public ProductService(JdbcTemplate jdbcTemplate, JpaProductRepository jpaProductRepository) {
         this.jdbcTemplate = jdbcTemplate;
-        this.productRepository = jdbcTemplateProductRepository;
+        this.productRepository = jpaProductRepository;
     }
 
     /**
      * 상품 추가
      */
     public void createProduct(ProductDTO productDTO) {
-        if (productRepository.existsByProductName(productDTO.getName())) {
+        if (productRepository.existsByName(productDTO.getName())) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "해당 이름의 상품이 이미 존재합니다.");
         }
 
-        Product product = productDTO.toProduct();
-        productRepository.createProduct(product);
+        Product product = new Product(productDTO.getName(), productDTO.getPrice(),
+            productDTO.getImageUrl());
+
+        productRepository.save(product);
     }
 
     /**
      * 전체 싱픔 목록 조회
      */
     public List<Product> getProducts() {
-        List<Product> products = productRepository.getProducts();
-
+        List<Product> products = productRepository.findAll();
+        System.out.println("products = " + products);
         return products;
     }
 
@@ -44,19 +47,25 @@ public class ProductService {
      * 상품 수정
      */
     public void updateProduct(Long id, ProductDTO productDTO) {
-        if (productRepository.existsByProductName(productDTO.getName())) {
+        if (productRepository.existsByName(productDTO.getName())) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "해당 이름의 상품이 이미 존재합니다.");
         }
 
-        Product product = productDTO.toProduct();
-        productRepository.updateProduct(id, product);
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "수정할 상품이 존재하지 않습니다."));
+
+        product.setName(productDTO.getName());
+        product.setPrice(productDTO.getPrice());
+        product.setImageUrl(productDTO.getImageUrl());
+
+        productRepository.save(product);
     }
 
     /**
      * 상품 삭제
      */
     public void deleteProduct(Long id) {
-        productRepository.deleteProduct(id);
+        productRepository.deleteById(id);
     }
 
     /**
@@ -67,7 +76,7 @@ public class ProductService {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "삭제할 상품을 선택하세요.");
         }
 
-        productRepository.deleteProductsByIds(productIds);
+        productRepository.deleteByIds(productIds);
     }
 
 }
