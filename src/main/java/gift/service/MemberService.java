@@ -1,5 +1,7 @@
 package gift.service;
 
+import gift.model.Member;
+import gift.model.dto.LoginMemberDto;
 import gift.model.dto.MemberRequestDto;
 import gift.repository.MemberDao;
 
@@ -9,6 +11,11 @@ public class MemberService {
 
     public MemberService(MemberDao memberDao) {
         this.memberDao = memberDao;
+    }
+
+    public LoginMemberDto selectLoginMemberById(Long id) {
+        Member member = memberDao.selectMemberById(id);
+        return new LoginMemberDto(member.getId(), member.getName(), member.getEmail(), member.getRole());
     }
 
     public void insertMember(MemberRequestDto memberRequestDto) {

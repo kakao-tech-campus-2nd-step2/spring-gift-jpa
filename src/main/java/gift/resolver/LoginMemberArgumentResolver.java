@@ -1,10 +1,8 @@
 package gift.resolver;
 
-import gift.model.Member;
-import gift.model.dto.LoginMemberDto;
-import gift.repository.MemberDao;
 import gift.resolver.annotation.LoginMember;
 import gift.service.AuthService;
+import gift.service.MemberService;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -15,11 +13,11 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final MemberDao memberDao;
+    private final MemberService memberService;
     private final AuthService authService;
 
-    public LoginMemberArgumentResolver(MemberDao memberDao, AuthService authService) {
-        this.memberDao = memberDao;
+    public LoginMemberArgumentResolver(MemberService memberService, AuthService authService) {
+        this.memberService = memberService;
         this.authService = authService;
     }
 
@@ -33,7 +31,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String token = authService.extractToken(webRequest.getHeader("Authorization"));
         Long id = Long.parseLong(authService.getClaims(token).getSubject());
-        Member member = memberDao.selectMemberById(id);
-        return new LoginMemberDto(member.getId(), member.getName(), member.getEmail(), member.getRole());
+        return memberService.selectLoginMemberById(id);
     }
 }
