@@ -1,6 +1,6 @@
 package gift.jwt;
 
-import gift.user.SiteUser;
+import gift.model.SiteUser;
 import gift.user.UserRepository;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;

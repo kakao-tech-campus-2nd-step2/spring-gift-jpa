@@ -1,5 +1,6 @@
 package gift.user;
 
+import gift.model.SiteUser;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
