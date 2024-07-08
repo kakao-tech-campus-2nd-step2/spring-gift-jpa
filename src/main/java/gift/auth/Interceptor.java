@@ -2,6 +2,8 @@ package gift.auth;
 
 import gift.errorException.BaseHandler;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +28,10 @@ public class Interceptor implements HandlerInterceptor {
                 Claims claims = jwtToken.validateToken(token);
                 request.setAttribute("claims", claims); // 토큰에서 추출한 클레임을 요청에 설정
                 return true;
-            } catch (Exception e) {
+            } catch (SignatureException e) {
                 throw new BaseHandler(HttpStatus.UNAUTHORIZED, "잘못된 토큰 입니다.");
+            }catch (ExpiredJwtException e) {
+                throw new BaseHandler(HttpStatus.UNAUTHORIZED, "만료된 토큰 입니다.");
             }
         } else {
             throw new BaseHandler(HttpStatus.UNAUTHORIZED, "토큰이 존재하지 않습니다.");
