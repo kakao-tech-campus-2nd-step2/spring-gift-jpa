@@ -1,10 +1,13 @@
 package gift.service;
 
 import gift.controller.dto.WishRequestDTO;
+import gift.domain.UserInfo;
 import gift.domain.Wish;
-import gift.repository.ProductJDBCRepository;
+import gift.repository.ProductRepository;
+import gift.repository.UserInfoRepository;
 import gift.repository.WishsRepository;
 import gift.utils.error.ProductNotFoundException;
+import gift.utils.error.UserNotFoundException;
 import gift.utils.error.WishListAddFailedException;
 import gift.utils.error.WishListNotFoundException;
 import java.util.List;
@@ -14,17 +17,23 @@ import org.springframework.stereotype.Service;
 public class WishService {
 
     private final WishsRepository wishsRepository;
-    private final ProductJDBCRepository productJDBCRepository;
+    private final ProductRepository productRepository;
+    private final UserInfoRepository userInfoRepository;
 
-    public WishService(WishsRepository wishsRepository, ProductJDBCRepository productJDBCRepository) {
+    public WishService(WishsRepository wishsRepository, ProductRepository productRepository,
+        UserInfoRepository userInfoRepository) {
         this.wishsRepository = wishsRepository;
-        this.productJDBCRepository = productJDBCRepository;
+        this.productRepository = productRepository;
+        this.userInfoRepository = userInfoRepository;
     }
 
     public boolean addToWishlist(String email, WishRequestDTO wishRequestDTO) {
-        Wish wish = new Wish(email, wishRequestDTO.getProductId(),wishRequestDTO.getQuantity());
+        UserInfo byEmail = userInfoRepository.findByEmail(email).orElseThrow(
+            ()-> new UserNotFoundException("User Not Found"));
+        Wish wish = new Wish( wishRequestDTO.getProductId(),byEmail.getId(),wishRequestDTO.getQuantity());
         try {
-            return wishsRepository.addToWishlist(wish);
+            wishsRepository.save(wish);
+            return true;
         } catch (Exception e) {
             throw new WishListAddFailedException("Add Failed");
         }
@@ -32,8 +41,12 @@ public class WishService {
     }
 
     public boolean removeFromWishlist(String email, Long productId) {
+        UserInfo userInfo = userInfoRepository.findByEmail(email).orElseThrow(
+            () -> new UserNotFoundException("User Not Found")
+        );
         try {
-            return wishsRepository.removeFromWishlist(email, productId);
+            wishsRepository.deleteByProductIdaAndUserId(productId,userInfo.getId());
+            return true;
         } catch (Exception e) {
             throw new WishListNotFoundException("Not Found");
         }
@@ -41,18 +54,28 @@ public class WishService {
     }
 
     public List<Wish> getWishlistProducts(String email) {
-        return wishsRepository.getWishlistProducts(email);
+        UserInfo userInfo = userInfoRepository.findByEmail(email).orElseThrow(
+            () -> new UserNotFoundException("User Not Found")
+        );
+        return wishsRepository.findByUserId(userInfo.getId());
     }
     public boolean changeToWishlist(String email, WishRequestDTO wishRequestDTO) {
-        Wish wish = new Wish(email, wishRequestDTO.getProductId(),wishRequestDTO.getQuantity());
+        UserInfo userInfo = userInfoRepository.findByEmail(email).orElseThrow(
+            () -> new UserNotFoundException("User Not Found")
+        );
+        Wish wish = new Wish(userInfo.getId(), wishRequestDTO.getProductId(),wishRequestDTO.getQuantity());
         try {
             if (wishRequestDTO.getQuantity()==0){
-                return wishsRepository.removeFromWishlist(email,wishRequestDTO.getProductId());
+                wishsRepository.deleteByProductIdaAndUserId(wishRequestDTO.getProductId(),userInfo.getId());
+                return true;
             }
-            if (productJDBCRepository.checkexist(wishRequestDTO.getProductId())){
+            if (!wishsRepository.existsByUserIdAndProductId(userInfo.getId(),wishRequestDTO.getProductId())){
                 throw new ProductNotFoundException("Product Not Found");
             }
-            return wishsRepository.changeToWishlist(wish);
+            Wish byUserIdAndProductId = wishsRepository.findByUserIdAndProductId(wish.userId(),
+                wish.getProductId());
+            byUserIdAndProductId.setQuantity(wish.getQuantity());
+            return true;
         } catch (Exception e) {
             throw new WishListAddFailedException("Change Failed");
         }

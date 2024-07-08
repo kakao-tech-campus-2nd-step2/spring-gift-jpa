@@ -2,13 +2,11 @@ package gift.service;
 
 import gift.controller.dto.ProductDTO;
 import gift.domain.Product;
-import gift.repository.ProductJDBCRepository;
 import gift.repository.ProductRepository;
 import gift.utils.error.NotpermitNameException;
 import gift.utils.error.ProductAlreadyExistException;
 import gift.utils.error.ProductNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
