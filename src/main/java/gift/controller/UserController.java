@@ -18,22 +18,22 @@ import jakarta.validation.Valid;
 @RequestMapping("/members")
 public class UserController {
 
-    private MemberService userService;
+    private MemberService memberService;
 
-    public UserController(MemberService userService, JwtUtil jwtUtil){
-        this.userService = userService;
+    public UserController(MemberService memberService, JwtUtil jwtUtil){
+        this.memberService = memberService;
     }
     
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody MemberDto userDto, BindingResult bindingResult){
-        userService.addUser(userDto);
-        String token = userService.generateToken(userDto.getEmail());
+        memberService.addMember(userDto);
+        String token = memberService.generateToken(userDto.getEmail());
         return new ResponseEntity<>(token, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest, BindingResult bindingResult){
-        String token = userService.authenticateUser(loginRequest);
+        String token = memberService.authenticateUser(loginRequest);
         return new ResponseEntity<>(token, HttpStatus.ACCEPTED);
     }
 }

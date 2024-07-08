@@ -12,9 +12,9 @@ import gift.entity.WishList;
 @Repository
 public interface WishListRepository  extends JpaRepository<WishList, Long>{
 
-    @Query("SELECT * FROM wishlist WHERE wishlist.memberId = :memberId")
+    @Query("SELECT w FROM WishList w WHERE w.memberId = :memberId")
     List<WishList> findProductIdsByMemberId(@Param("memberId") Long memberId);
 
-    @Query("SELECT wishlist.id FROM wishlist WHERE wishlist.memberId = :memberId AND wishlist.productId = :productId")
+    @Query("SELECT w.id FROM WishList w WHERE w.memberId = :memberId AND w.productId = :productId")
     Long findId(@Param("memberId") Long memberId, @Param("productId") Long productId);
 }

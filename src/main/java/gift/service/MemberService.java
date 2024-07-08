@@ -27,7 +27,7 @@ public class MemberService {
         return member.toDto();
     }
 
-    public void addUser(MemberDto memberDto){
+    public void addMember(MemberDto memberDto){
 
         if(memberRepository.findById(memberDto.getId()).isEmpty()){
             Member member = memberDto.toEntity(memberDto);
@@ -48,7 +48,7 @@ public class MemberService {
     }
 
     public MemberDto findByRequest(LoginRequest loginRequest){
-        Member member = memberRepository.findByRequest(loginRequest.getEmail(), loginRequest.getPassword())
+        Member member = memberRepository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword())
             .orElseThrow(() -> new CustomException("User with Request not found", HttpStatus.NOT_FOUND));
         return member.toDto();
     }
