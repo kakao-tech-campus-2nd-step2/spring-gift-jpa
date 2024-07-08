@@ -15,6 +15,7 @@ import java.util.Date;
 @Service
 public class AuthUtil {
     private final SecretKey secretKey;
+    private final String BEARER = "Bearer ";
 
     public AuthUtil(@Value("${spring.jwt.secret}") String secret) {
         this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
@@ -33,7 +34,7 @@ public class AuthUtil {
                 .signWith(secretKey) // 시그니처~!
                 .compact();
 
-        return "Bearer " + token;
+        return BEARER + token;
     }
 
     public String createToken(User user) {
@@ -48,7 +49,7 @@ public class AuthUtil {
                 .signWith(secretKey) // 시그니처~!
                 .compact();
 
-        return "Bearer " + token;
+        return BEARER + token;
     }
 
     public String createToken(Long id, UserDto userDto) {
@@ -68,12 +69,8 @@ public class AuthUtil {
 
     }
 
-    public boolean validateToken(String token, String email) {
+    public boolean validateToken(String token) {
         if (isExpired(token)) {
-            return false;
-        }
-
-        if (!email.equals(getEmail(token))) {
             return false;
         }
         return true;

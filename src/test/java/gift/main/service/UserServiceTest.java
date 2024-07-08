@@ -1,11 +1,10 @@
 package gift.main.service;
 
 import gift.main.dto.UserJoinRequest;
-import gift.main.global.Exception.UserException;
+import gift.main.global.Exception.CustomException;
 import gift.main.repository.UserDao;
 import gift.main.util.AuthUtil;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,7 +55,7 @@ class UserServiceTest {
         Assertions.assertThatThrownBy(() -> {
                     userService.joinUser(duplicateUser);
                 })
-                .isInstanceOf(UserException.class);
+                .isInstanceOf(CustomException.class);
     }
 
 

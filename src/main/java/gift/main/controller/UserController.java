@@ -5,6 +5,7 @@ import gift.main.dto.UserLoginRequest;
 import gift.main.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,18 +27,19 @@ public class UserController {
     public ResponseEntity<?> joinMember(@Valid @RequestBody UserJoinRequest userJoinRequest, HttpServletResponse response) {
 
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("Authorization", userService.joinUser(userJoinRequest));
+        String token =  userService.joinUser(userJoinRequest);
         responseBody.put("redirectUrl", "/spring-gift");
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(responseBody);
-}
+                .header(HttpHeaders.AUTHORIZATION,token)
+                .body(responseBody);}
 
     @PostMapping("/members/login")
     public ResponseEntity<?> loinMember(@Valid @RequestBody UserLoginRequest userloginDto, HttpServletResponse response) {
         Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("Authorization", userService.loginUser(userloginDto));
+        String token =  userService.loginUser(userloginDto);
         responseBody.put("redirectUrl", "/spring-gift");
         return ResponseEntity.status(HttpStatus.CREATED)
+                .header(HttpHeaders.AUTHORIZATION,token)
                 .body(responseBody);
 
     }

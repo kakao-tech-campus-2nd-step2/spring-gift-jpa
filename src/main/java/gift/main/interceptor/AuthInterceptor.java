@@ -1,9 +1,9 @@
 package gift.main.interceptor;
 
 import gift.main.dto.UserVo;
-import gift.main.global.Exception.TokenException;
+import gift.main.global.Exception.CustomException;
+import gift.main.global.Exception.ErrorCode;
 import gift.main.util.AuthUtil;
-import jakarta.security.auth.message.AuthException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
-
+    private final String BEARER = "Bearer ";
     private final AuthUtil authUtil;
 
     public AuthInterceptor(AuthUtil authUtil) {
@@ -22,26 +22,25 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         //컨트롤러 호출 전 호출되는 메서드드드드...
 
         String authorization= request.getHeader("Authorization");
-        if (authorization == null || !authorization.startsWith("Bearer ")) {
-            throw new TokenException("헤더에 토큰을 넣어주세요.");
+        if (authorization == null || !authorization.startsWith(BEARER)) {
+            throw new CustomException(ErrorCode.NO_TOKEN);
         }
         String token = authorization.split(" ")[1];
-        String email = request.getHeader("email");
 
 
-        if (token == null || email == null ){
+        if (token == null){
 //            response.sendRedirect("/spring-gift/members/login");
-            throw new TokenException("헤더에 이메일,비밀번호,토큰을 넣어주세요.");
+            throw new CustomException(ErrorCode.NO_TOKEN);
 
         }
 
-        if (!authUtil.validateToken(token,email)) {
+        if (!authUtil.validateToken(token)){
 //            response.sendRedirect("/spring-gift/members/login");
-            throw new TokenException("jwt토큰이 올바르지 않습니다.");
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
 
         UserVo sessionUser = new UserVo(
