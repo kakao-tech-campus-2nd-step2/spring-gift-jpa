@@ -1,9 +1,15 @@
 package gift.model;
 
 import gift.util.EmailConstraint;
+import jakarta.persistence.*;
 import org.hibernate.validator.constraints.Length;
 
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @EmailConstraint
     @Length(min = 1, max = 50)
     private String email;
@@ -41,5 +47,13 @@ public class User {
                 "email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

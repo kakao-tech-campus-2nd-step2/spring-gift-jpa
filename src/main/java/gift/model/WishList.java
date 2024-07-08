@@ -1,11 +1,25 @@
 package gift.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "wishlist")
 public class WishList {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String email;
+    @Column(name = "productid")
     private Long productId;
     private int count;
 
     public WishList() {
+    }
+
+    public WishList(String email, Long productId, int count) {
+        this.email = email;
+        this.productId = productId;
+        this.count = count;
     }
 
     public String getEmail() {
@@ -30,5 +44,13 @@ public class WishList {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
