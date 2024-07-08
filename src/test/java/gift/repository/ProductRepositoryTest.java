@@ -92,6 +92,13 @@ class ProductRepositoryTest {
         Product findProduct = productRepository.findById(savedProduct.getId()).get();
 
         assertThat(findProduct).isEqualTo(savedProduct);
+
+        //존재하지 않는 상품 조회
+        savedProduct.setId(999L);
+        assertThatThrownBy(
+            () -> productRepository.findById(999L).get())
+            .isInstanceOf(NoSuchElementException.class);
+
     }
 
 

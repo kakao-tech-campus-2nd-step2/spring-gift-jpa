@@ -24,10 +24,6 @@ class MemberServiceTest {
     MemberService memberService;
     Member member = new Member("aaa123@2a.com", "1234");
 
-    @Autowired
-    public MemberServiceTest(MemberService memberService) {
-        this.memberService = memberService;
-    }
 
     @Test
     @DisplayName("회원가입 성공 테스트")
