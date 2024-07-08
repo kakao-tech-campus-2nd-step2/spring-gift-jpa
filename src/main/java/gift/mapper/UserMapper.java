@@ -5,6 +5,6 @@ import gift.entity.User;
 
 public class UserMapper {
     public static UserResponseDto toUserResponseDTO(User user) {
-        return new UserResponseDto(user.id, user.email);
+        return new UserResponseDto(user.getId(), user.getEmail());
     }
 }

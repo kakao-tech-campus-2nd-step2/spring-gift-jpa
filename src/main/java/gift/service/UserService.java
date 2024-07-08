@@ -1,78 +1,75 @@
 package gift.service;
 
+import gift.dto.UserLoginDto;
+import gift.dto.UserRegisterDto;
 import gift.dto.UserResponseDto;
 import gift.entity.User;
-import gift.entity.UserDao;
 import gift.exception.BusinessException;
 import gift.exception.ErrorCode;
 import gift.mapper.UserMapper;
+import gift.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    private final UserDao userDao;
+    private final UserRepository userRepository;
     private final TokenService tokenService;
 
-    public UserService(UserDao userDao, TokenService tokenService) {
-        this.userDao = userDao;
+    public UserService(UserRepository userRepository, TokenService tokenService) {
+        this.userRepository = userRepository;
         this.tokenService = tokenService;
     }
 
-    public UserResponseDto registerUser(String email, String password) {
-        userDao.selectUserByEmail(email)
+    public UserResponseDto registerUser(UserRegisterDto userRegisterDto) {
+        userRepository.findByEmail(userRegisterDto.getEmail())
                 .ifPresent(user -> {
                     throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
                 });
 
-        User user = new User(email, password);
-        User createdUser = userDao.insertUser(user);
+        User user = new User(userRegisterDto.getEmail(), userRegisterDto.getPassword());
+        User createdUser = userRepository.save(user);
         return UserMapper.toUserResponseDTO(createdUser);
     }
 
-    public String loginUser(String email, String password) {
-        User user = userDao.selectUserByEmail(email)
+    public String loginUser(UserLoginDto userLoginDto) {
+        User user = userRepository.findByEmail(userLoginDto.getEmail())
                 .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_CREDENTIALS));
 
-        if (!user.isPasswordCorrect(password)) {
+        if (!user.isPasswordCorrect(userLoginDto.getPassword())) {
             throw new BusinessException(ErrorCode.INVALID_CREDENTIALS);
         }
 
-        return tokenService.generateToken(user.email);
+        return tokenService.generateToken(user.getEmail());
     }
 
     public List<UserResponseDto> getAllUsers() {
-        List<User> users = userDao.selectAllUsers();
+        List<User> users = userRepository.findAll();
         return users.stream()
                 .map(UserMapper::toUserResponseDTO)
                 .collect(Collectors.toList());
     }
 
     public UserResponseDto getUserById(Long id) {
-        User user = userDao.selectUserById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         return UserMapper.toUserResponseDTO(user);
     }
 
-    public UserResponseDto updateUser(Long id, String email, String password) {
-        User existingUser = userDao.selectUserById(id)
+    public UserResponseDto updateUser(Long id, UserRegisterDto userRegisterDto) {
+        User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        existingUser.update(email, password);
-        userDao.updateUser(existingUser);
+        existingUser.update(userRegisterDto.getEmail(), userRegisterDto.getPassword());
+        userRepository.save(existingUser);
         return UserMapper.toUserResponseDTO(existingUser);
     }
 
     public void deleteUser(Long id) {
-        userDao.selectUserById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        userDao.deleteUser(id);
-    }
-
-    public Optional<User> findUserByEmail(String email) {
-        return userDao.selectUserByEmail(email);
+        userRepository.delete(user);
     }
 }
