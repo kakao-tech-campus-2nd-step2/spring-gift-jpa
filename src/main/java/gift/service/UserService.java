@@ -4,8 +4,10 @@ import gift.controller.dto.ChangePasswordDTO;
 import gift.controller.dto.TokenResponseDTO;
 import gift.controller.dto.UserDTO;
 import gift.domain.UserInfo;
+import gift.repository.UserInfoJDBCRepository;
 import gift.repository.UserInfoRepository;
 import gift.utils.JwtTokenProvider;
+import gift.utils.error.ProductAlreadyExistException;
 import gift.utils.error.UserAlreadyExistsException;
 import gift.utils.error.UserNotFoundException;
 import gift.utils.error.UserPasswordNotFoundException;
@@ -25,40 +27,39 @@ public class UserService {
     }
 
     public TokenResponseDTO registerUser(UserDTO userDTO) {
-        UserInfo userInfo = new UserInfo(userDTO.getPassword(),userDTO.getEmail());
-        Boolean result = userInfoRepository.save(userInfo);
-        if (!result) {
+        UserInfo userInfo = new UserInfo(userDTO.getPassword(), userDTO.getEmail());
+        if (userInfo.getId() != null && userInfoRepository.existsById(userInfo.getId())) {
             throw new UserAlreadyExistsException("User Already Exist");
         }
+        userInfoRepository.save(userInfo);
         return new TokenResponseDTO(jwtTokenProvider.createToken(userDTO.getEmail()));
     }
 
-    public TokenResponseDTO login(UserDTO userDTO){
-        UserInfo userInfo = new UserInfo(userDTO.getPassword(),userDTO.getEmail());
+    public TokenResponseDTO login(UserDTO userDTO) {
+        UserInfo userInfo = new UserInfo(userDTO.getPassword(), userDTO.getEmail());
         Optional<UserInfo> byEmail = userInfoRepository.findByEmail(userInfo.getEmail());
-        if (byEmail.isEmpty()){
+        if (byEmail.isEmpty()) {
             throw new UserNotFoundException("User NOT FOUND");
         }
         return new TokenResponseDTO(jwtTokenProvider.createToken(userDTO.getEmail()));
     }
 
-    public boolean changePassword(ChangePasswordDTO changePasswordDTO){
+    public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
         UserInfo userInfo = userInfoRepository.findByEmail(changePasswordDTO.getEmail())
             .orElseThrow(() -> new UserNotFoundException("User not found"));
-        if (!userInfo.getPassword().equals(changePasswordDTO.getCurrentPassword())){
+        if (!userInfo.getPassword().equals(changePasswordDTO.getCurrentPassword())) {
             throw new UserPasswordNotFoundException("Password not found");
         }
         userInfo.setPassword(changePasswordDTO.getNewPassword());
-        Boolean result = userInfoRepository.changePassword(userInfo);
+        userInfoRepository.save(userInfo);
         return true;
     }
 
-    public UserDTO findPassword(String email){
-        Optional<UserInfo> byEmail = userInfoRepository.findByEmail(email);
-        if (byEmail.isEmpty()){
-            throw new UserNotFoundException("User NOT FOUND");
-        }
-        return new UserDTO(byEmail.get().getPassword(),email);
+    public UserDTO findPassword(String email) {
+        UserInfo byEmail = userInfoRepository.findByEmail(email).orElseThrow(
+            () -> new UserNotFoundException("User NOT FOUND"));
+
+        return new UserDTO(byEmail.getPassword(), byEmail.getEmail());
     }
 
 

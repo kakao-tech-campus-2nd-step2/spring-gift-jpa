@@ -53,8 +53,6 @@ public class GiftService {
 
     public ProductDTO putProducts(ProductDTO productDTO, Long id) {
         validateProductName(productDTO.getName());
-        Product product = new Product(productDTO.getId(), productDTO.getName(),
-            productDTO.getPrice(), productDTO.getImageUrl());
 
         Product productById = productRepository.findById(id).
             orElseThrow(() -> new ProductNotFoundException("Product NOT FOUND"));
