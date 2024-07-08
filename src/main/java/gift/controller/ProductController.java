@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.DTO.ProductDTO;
+import gift.entity.ProductEntity;
 import gift.domain.Product;
 import gift.domain.Product.ProductSimple;
 import gift.errorException.ListResult;
@@ -28,7 +28,7 @@ public class ProductController {
 
     @GetMapping
 
-    public ListResult<ProductDTO> getProductList() {
+    public ListResult<ProductEntity> getProductList() {
         return new ListResult<>(productService.getProductList());
     }
 
@@ -38,19 +38,19 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public SingleResult<ProductDTO> getProduct(@PathVariable long id) {
+    public SingleResult<ProductEntity> getProduct(@PathVariable long id) {
         return new SingleResult<>(productService.getProduct(id));
     }
 
     @PostMapping
-    public SingleResult<Integer> createProduct(@Valid @RequestBody Product.CreateProduct create) {
+    public SingleResult<Long> createProduct(@Valid @RequestBody Product.CreateProduct create) {
         SingleResult singleResult =  new SingleResult<>(productService.createProduct(create));
         singleResult.setErrorCode(HttpStatus.CREATED.value());
         return singleResult;
     }
 
     @PutMapping("/{id}")
-    public SingleResult<Integer> updateProduct(@Valid @RequestBody Product.UpdateProduct update,
+    public SingleResult<Long> updateProduct(@Valid @RequestBody Product.UpdateProduct update,
         @PathVariable long id) {
 
         SingleResult singleResult =  new SingleResult<>(productService.updateProduct(update, id));
@@ -59,7 +59,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public SingleResult<Integer> deleteProduct(@PathVariable long id) {
+    public SingleResult<Long> deleteProduct(@PathVariable long id) {
         return new SingleResult<>(productService.deleteProduct(id));
 
     }

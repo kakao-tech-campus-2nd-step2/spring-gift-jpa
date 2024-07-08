@@ -31,7 +31,6 @@ public class WishController {
     //    wish id 검증
     @GetMapping("/{id}")
     public SingleResult<wishDetail> getWish(@PathVariable long id) {
-        System.out.println(wishListService.getWish(id));
         return new SingleResult(wishListService.getWish(id));
     }
 
@@ -45,14 +44,14 @@ public class WishController {
     //  위시리스트 추가
     //  user id 검증, product id 검증,  위시 리스트내 중복여부 검증
     @PostMapping
-    public SingleResult<Integer> createWish(HttpServletRequest req, @Valid @RequestBody Wish.createWish create) {
+    public SingleResult<Long> createWish(HttpServletRequest req, @Valid @RequestBody Wish.createWish create) {
         return new SingleResult(wishListService.createWish(parsingPram.getId(req),create));
     }
 
     //    wish id로 위시리스트 삭제
     //    wish id 검증
     @DeleteMapping("/{id}")
-    public SingleResult<Integer> deleteWish(@PathVariable long id) {
+    public SingleResult<Long> deleteWish(@PathVariable long id) {
         return new SingleResult(wishListService.deleteWish(id));
     }
 
