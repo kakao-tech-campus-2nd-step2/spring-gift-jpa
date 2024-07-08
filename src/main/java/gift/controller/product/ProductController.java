@@ -48,7 +48,7 @@ public class ProductController {
         if (isDeleted) {
             return new ResponseEntity<>(new ProductIdResponse(id), HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 }
