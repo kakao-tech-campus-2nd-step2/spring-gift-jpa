@@ -40,7 +40,7 @@ public class ProductViewController {
     @GetMapping("/edit/{id}")
     public String showEditProductForm(@PathVariable Long id, Model model) {
         ProductResponseDto product = productService.getAllProducts().stream()
-                .filter(p -> p.id.equals(id))
+                .filter(p -> p.getId().equals(id))
                 .findFirst()
                 .orElse(null);
         if (product != null) {

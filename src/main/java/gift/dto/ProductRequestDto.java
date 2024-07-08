@@ -1,13 +1,25 @@
 package gift.dto;
 
 public class ProductRequestDto {
-    public final String name;
-    public final int price;
-    public final String imageUrl;
+    private final String name;
+    private final int price;
+    private final String imageUrl;
 
     public ProductRequestDto(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
