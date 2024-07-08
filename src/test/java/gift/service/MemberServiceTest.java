@@ -1,5 +1,6 @@
 package gift.service;
 
+import static gift.util.Constants.INVALID_CREDENTIALS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -86,7 +87,7 @@ public class MemberServiceTest {
             memberService.loginMember(memberDTO);
         });
 
-        assertEquals("존재하지 않는 이메일입니다.", exception.getMessage());
+        assertEquals(INVALID_CREDENTIALS, exception.getMessage());
     }
 
     @Test
@@ -100,7 +101,7 @@ public class MemberServiceTest {
             memberService.loginMember(memberDTO);
         });
 
-        assertEquals("비밀번호가 일치하지 않습니다.", exception.getMessage());
+        assertEquals(INVALID_CREDENTIALS, exception.getMessage());
     }
 
     @Test
@@ -133,7 +134,7 @@ public class MemberServiceTest {
             memberService.getMemberById(1L);
         });
 
-        assertEquals("존재하지 않는 이메일입니다.", exception.getMessage());
+        assertEquals(INVALID_CREDENTIALS, exception.getMessage());
     }
 
     @Test

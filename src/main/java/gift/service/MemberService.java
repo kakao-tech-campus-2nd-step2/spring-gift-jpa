@@ -1,10 +1,9 @@
 package gift.service;
 
 import static gift.util.Constants.EMAIL_ALREADY_USED;
-import static gift.util.Constants.EMAIL_NOT_FOUND;
 import static gift.util.Constants.ID_NOT_FOUND;
 import static gift.util.Constants.INVALID_AUTHORIZATION_HEADER;
-import static gift.util.Constants.PASSWORD_MISMATCH;
+import static gift.util.Constants.INVALID_CREDENTIALS;
 
 import gift.dto.member.MemberRequest;
 import gift.dto.member.MemberResponse;
@@ -46,10 +45,10 @@ public class MemberService {
     // 로그인 (회원 검증)
     public MemberResponse loginMember(MemberRequest memberDTO) {
         Member member = memberRepository.findByEmail(memberDTO.email())
-            .orElseThrow(() -> new ForbiddenException(EMAIL_NOT_FOUND));
+            .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
 
         if (!member.getPassword().equals(memberDTO.password())) {
-            throw new ForbiddenException(PASSWORD_MISMATCH);
+            throw new ForbiddenException(INVALID_CREDENTIALS);
         }
 
         String token = jwtUtil.generateToken(member.getId(), member.getEmail());
@@ -81,13 +80,13 @@ public class MemberService {
     public MemberResponse getMemberById(Long id) {
         return memberRepository.findById(id)
             .map(MemberService::convertToDTO)
-            .orElseThrow(() -> new ForbiddenException(EMAIL_NOT_FOUND));
+            .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
     }
 
     // 회원 수정
     public MemberResponse updateMember(Long id, MemberRequest memberDTO) {
         Member member = memberRepository.findById(id)
-            .orElseThrow(() -> new ForbiddenException(EMAIL_NOT_FOUND));
+            .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
 
         if (!member.getEmail().equals(memberDTO.email()) && memberRepository.existsByEmail(memberDTO.email())) {
             throw new EmailAlreadyUsedException(EMAIL_ALREADY_USED);
