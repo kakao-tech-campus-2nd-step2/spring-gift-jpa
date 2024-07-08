@@ -1,28 +1,28 @@
 package gift.service;
 
 import gift.exception.user.UserNotFoundException;
-import gift.model.User;
+import gift.model.Member;
 import gift.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class MemberService {
 
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public MemberService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email)
+    public Member getUserByEmail(String email) {
+        Member member = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("해당 email의 계정이 존재하지 않습니다."));
-        return user;
+        return member;
     }
 
-    public User getUserById(Long id) {
-        User user = userRepository.findById(id)
+    public Member getUserById(Long id) {
+        Member member = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("해당 email의 계정이 존재하지 않습니다."));
-        return user;
+        return member;
     }
 }

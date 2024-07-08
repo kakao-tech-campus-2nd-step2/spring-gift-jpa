@@ -1,19 +1,28 @@
 package gift.model;
 
-public class User {
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
     private String password;
 
-    public User() {
+    public Member() {
     }
 
-    public User(String email, String password) {
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public User(Long id, String email, String password) {
+    public Member(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
