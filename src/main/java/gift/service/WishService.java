@@ -44,7 +44,11 @@ public class WishService {
 
         Member findMember = memberRepository.findMemberByEmail(email).orElseThrow(() -> new EntityNotFoundException("존재 하지 않는 회원 입니다."));
 
-        Wish wish = new Wish(findProduct, findMember, count);
+        Wish wish = new Wish.Builder()
+                .product(findProduct)
+                .member(findMember)
+                .count(count)
+                .build();
 
         Wish savedWish = wishRepository.save(wish);
 
