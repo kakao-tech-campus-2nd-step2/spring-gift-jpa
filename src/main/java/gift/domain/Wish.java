@@ -84,6 +84,12 @@ public class Wish {
         private Long userId;
         private Long productId;
 
+        public wishSimple(Long id, Long userId, Long productId) {
+            this.id = id;
+            this.userId = userId;
+            this.productId = productId;
+        }
+
         public wishSimple() {
         }
 
@@ -120,6 +126,16 @@ public class Wish {
         private String name;
         private Integer price;
         private String imageUrl;
+
+        public wishDetail(Long id, Long userId, Long productId, String name, Integer price,
+            String imageUrl) {
+            this.id = id;
+            this.userId = userId;
+            this.productId = productId;
+            this.name = name;
+            this.price = price;
+            this.imageUrl = imageUrl;
+        }
 
         public wishDetail() {
         }
