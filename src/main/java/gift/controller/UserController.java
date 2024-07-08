@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import gift.dto.UserDto;
+import gift.dto.MemberDto;
 import gift.dto.request.LoginRequest;
-import gift.service.UserService;
+import gift.service.MemberService;
 import gift.util.JwtUtil;
 import jakarta.validation.Valid;
 
@@ -18,14 +18,14 @@ import jakarta.validation.Valid;
 @RequestMapping("/members")
 public class UserController {
 
-    private UserService userService;
+    private MemberService userService;
 
-    public UserController(UserService userService, JwtUtil jwtUtil){
+    public UserController(MemberService userService, JwtUtil jwtUtil){
         this.userService = userService;
     }
     
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody UserDto userDto, BindingResult bindingResult){
+    public ResponseEntity<String> register(@Valid @RequestBody MemberDto userDto, BindingResult bindingResult){
         userService.addUser(userDto);
         String token = userService.generateToken(userDto.getEmail());
         return new ResponseEntity<>(token, HttpStatus.CREATED);
