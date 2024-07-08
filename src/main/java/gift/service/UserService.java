@@ -3,6 +3,7 @@ package gift.service;
 import gift.model.User;
 import gift.repository.UserRepository;
 import gift.utility.JwtUtil;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findById(Long id) {
+    public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
 
@@ -30,7 +31,10 @@ public class UserService {
     }
 
     public void updateUser(Long id, User user) {
-        userRepository.update(id, user);
+        if(userRepository.existsById(id)){
+            user.setId(id);
+            userRepository.save(user);
+        }
     }
 
     public void deleteUser(Long id) {
