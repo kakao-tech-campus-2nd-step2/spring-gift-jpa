@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import gift.dao.ProductDao;
-import gift.domain.Product;
 import gift.dto.ProductDto;
+import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 
@@ -24,7 +23,7 @@ public class ProductController {
 
     private ProductService productService;
 
-    public ProductController(ProductService productService, ProductDao productDao){
+    public ProductController(ProductService productService){
         this.productService = productService;
     }
 
@@ -55,7 +54,7 @@ public class ProductController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
-        model.addAttribute(productService.findById(id));       
+        model.addAttribute("product", productService.findById(id));       
         return "edit_product_form";
     }
 
