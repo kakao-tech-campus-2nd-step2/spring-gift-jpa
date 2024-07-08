@@ -1,10 +1,6 @@
 package gift.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Wishlist {
@@ -20,6 +16,15 @@ public class Wishlist {
     private Long productId;
 
     public Wishlist() {
+    }
+
+    public Wishlist(Long memberId, Long productId) {
+        this.memberId = memberId;
+        this.productId = productId;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 
 }

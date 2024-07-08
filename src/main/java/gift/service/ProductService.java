@@ -1,15 +1,14 @@
 package gift.service;
 
+import gift.domain.Product;
+import gift.exception.ProductNotFoundException;
+import gift.repository.ProductRepository;
 import gift.request.ProductRequest;
 import gift.response.ProductResponse;
-import gift.domain.Product;
-import gift.repository.ProductRepository;
-import gift.exception.ProductNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
@@ -37,7 +36,12 @@ public class ProductService {
     }
 
     public void editProduct(Long productId, ProductRequest request) {
-        productRepository.edit(productId, request.toEntity());
+        Product product = productRepository.findById(productId)
+                .orElseThrow(ProductNotFoundException::new);
+
+        product.changeName(request.getName());
+        product.changePrice(request.getPrice());
+        product.changeImageUrl(request.getImageUrl());
     }
 
     public void removeProduct(Long productId) {

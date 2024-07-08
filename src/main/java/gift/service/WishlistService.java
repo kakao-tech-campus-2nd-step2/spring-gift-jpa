@@ -1,17 +1,17 @@
 package gift.service;
 
 import gift.domain.Product;
+import gift.domain.Wishlist;
 import gift.exception.ProductAlreadyInWishlistException;
 import gift.exception.ProductNotFoundException;
 import gift.exception.ProductNotInWishlistException;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import gift.response.ProductResponse;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
 
 @Service
 public class WishlistService {
@@ -26,7 +26,13 @@ public class WishlistService {
     }
 
     public List<ProductResponse> getProducts(Long memberId) {
-        return wishlistRepository.findAllProducts(memberId).stream()
+        List<Wishlist> wishlist = wishlistRepository.findByMemberId(memberId);
+
+        List<Long> productIds = wishlist.stream()
+                .map(Wishlist::getProductId)
+                .collect(Collectors.toList());
+
+        return productRepository.findByIdIn(productIds).stream()
                 .map(Product::toDto)
                 .collect(Collectors.toList());
     }
@@ -39,7 +45,9 @@ public class WishlistService {
             throw new ProductAlreadyInWishlistException();
         }
 
-        wishlistRepository.save(memberId, productId);
+        Wishlist wishlist = new Wishlist(memberId, productId);
+
+        wishlistRepository.save(wishlist);
     }
 
     public void removeProduct(Long memberId, Long productId) {
@@ -47,6 +55,8 @@ public class WishlistService {
             throw new ProductNotInWishlistException();
         }
 
-        wishlistRepository.delete(memberId, productId);
+        Wishlist wishlist = new Wishlist(memberId, productId);
+
+        wishlistRepository.delete(wishlist);
     }
 }
