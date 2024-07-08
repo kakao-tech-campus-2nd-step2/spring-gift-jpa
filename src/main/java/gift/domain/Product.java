@@ -1,11 +1,19 @@
 package gift.domain;
 
 import gift.dto.request.ProductRequestDto;
+import jakarta.persistence.*;
 
-
+@Entity
 public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private int price;
     private String imageUrl;
 
@@ -59,5 +67,11 @@ public class Product {
 
     public static Product toEntity(ProductRequestDto productDto){
         return new Product(productDto.name(), productDto.price(), productDto.imageUrl());
+    }
+
+    public void update(ProductRequestDto productDto){
+        this.name = productDto.name();
+        this.price = productDto.price();
+        this.imageUrl = productDto.imageUrl();
     }
 }
