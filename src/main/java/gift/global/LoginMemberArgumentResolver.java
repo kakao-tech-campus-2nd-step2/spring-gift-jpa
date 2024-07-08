@@ -23,7 +23,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String token;
         try {
-            token = JwtUtil.getTokenFromRequest(request);
+            token = JwtUtil.getTokenFromHeader(request.getHeader("Authorization"));
         } catch (NullPointerException e) {
             throw new UnauthorizedMemberException();
         }

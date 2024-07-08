@@ -3,7 +3,6 @@ package gift.global.utils;
 import gift.api.member.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
 import javax.crypto.SecretKey;
 
 public class JwtUtil {
@@ -16,8 +15,12 @@ public class JwtUtil {
         throw new UnsupportedOperationException();
     }
 
-    public static String getTokenFromRequest(HttpServletRequest request) throws NullPointerException {
-        return request.getHeader("Authorization").split(" ")[1];
+    public static String getTokenFromHeader(String header) throws NullPointerException {
+        var headerValue = header.split(" ");
+        if (!headerValue[0].equals(AUTHORIZATION_TYPE)) {
+            throw new UnsupportedOperationException();
+        }
+        return headerValue[1];
     }
 
     public static String generateHeaderValue(String token) {
