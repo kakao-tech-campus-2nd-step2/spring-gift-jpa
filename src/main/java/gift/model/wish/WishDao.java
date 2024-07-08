@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class WishDao {
 
-    private static final String SQL_INSERT = "INSERT INTO wishes (member_id, product_id, count) VALUES (?, ?, ?)";
-    private static final String SQL_DELETE_BY_ID = "DELETE FROM wishes WHERE id = ?";
-    private static final String SQL_UPDATE_COUNT = "UPDATE wishes SET count = ? WHERE member_id = ? AND product_id = ?";
-    private static final String SQL_SELECT_ALL = "SELECT * FROM wishes WHERE member_id = ?";
-    private static final String SQL_SELECT_BY_ID = "SELECT * FROM wishes WHERE id = ?";
-    private static final String SQL_SELECT_BY_PRODUCT_ID_AND_MEMBER_ID = "SELECT * FROM wishes WHERE product_id = ? AND member_id = ?";
+    private static final String SQL_INSERT = "INSERT INTO wish (member_id, product_id, count) VALUES (?, ?, ?)";
+    private static final String SQL_DELETE_BY_ID = "DELETE FROM wish WHERE id = ?";
+    private static final String SQL_UPDATE_COUNT = "UPDATE wish SET count = ? WHERE member_id = ? AND product_id = ?";
+    private static final String SQL_SELECT_ALL = "SELECT * FROM wish WHERE member_id = ?";
+    private static final String SQL_SELECT_BY_ID = "SELECT * FROM wish WHERE id = ?";
+    private static final String SQL_SELECT_BY_PRODUCT_ID_AND_MEMBER_ID = "SELECT * FROM wish WHERE product_id = ? AND member_id = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Wish> wishRowMapper = new WishRowMapper();
@@ -24,7 +24,8 @@ public class WishDao {
     }
 
     public void insert(Wish wish) {
-        jdbcTemplate.update(SQL_INSERT, wish.getMemberId(), wish.getProductId(), wish.getCount());
+        jdbcTemplate.update(SQL_INSERT, wish.getMember().getId(), wish.getProduct().getId(),
+            wish.getCount());
     }
 
     public void deleteById(Long id) {
