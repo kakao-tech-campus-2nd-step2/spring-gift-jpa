@@ -8,9 +8,7 @@ import static org.mockito.Mockito.when;
 import gift.dto.wish.WishCreateRequest;
 import gift.dto.wish.WishRequest;
 import gift.dto.wish.WishResponse;
-import gift.service.MemberService;
 import gift.service.WishService;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,12 +21,8 @@ import org.springframework.http.ResponseEntity;
 
 public class WishControllerTest {
 
-
     @Mock
     private WishService wishService;
-
-    @Mock
-    private HttpServletRequest request;
 
     @InjectMocks
     private WishController wishController;
@@ -36,8 +30,6 @@ public class WishControllerTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        when(request.getAttribute("memberId")).thenReturn(1L);
-        when(wishService.getMemberIdFromRequest(request)).thenReturn(1L);
     }
 
     @Test
@@ -46,7 +38,7 @@ public class WishControllerTest {
         WishResponse wishResponse = new WishResponse(1L, 1L, 1L);
         when(wishService.getWishlistByMemberId(1L)).thenReturn(List.of(wishResponse));
 
-        ResponseEntity<List<WishResponse>> response = wishController.getWishlist(request);
+        ResponseEntity<List<WishResponse>> response = wishController.getWishlist(1L);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(1, response.getBody().size());
@@ -60,7 +52,7 @@ public class WishControllerTest {
 
         when(wishService.addWish(any(WishRequest.class))).thenReturn(wishResponse);
 
-        ResponseEntity<WishResponse> response = wishController.addWish(wishCreateRequest, request);
+        ResponseEntity<WishResponse> response = wishController.addWish(wishCreateRequest, 1L);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(1L, response.getBody().id());
