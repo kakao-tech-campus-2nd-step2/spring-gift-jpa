@@ -4,7 +4,6 @@ import gift.exception.RepositoryException;
 import gift.model.Product;
 import gift.model.ProductDTO;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,7 @@ public class ProductService {
             productDTO.imageUrl());
         try {
             productRepository.save(product);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RepositoryException("해당 상품을 데이터 베이스에 추가할 수 없습니다.");
         }
     }
@@ -41,7 +40,8 @@ public class ProductService {
     }
 
     public void updateProduct(long id, ProductDTO productDTO) {
-        Product product = new Product(id, productDTO.name(), productDTO.price(), productDTO.imageUrl());
+        Product product = new Product(id, productDTO.name(), productDTO.price(),
+            productDTO.imageUrl());
         try {
             productRepository.save(product);
         } catch (Exception e) {
