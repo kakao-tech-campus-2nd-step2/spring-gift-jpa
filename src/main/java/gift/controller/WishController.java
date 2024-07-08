@@ -28,4 +28,10 @@ public class WishController {
         wishService.addToWishList(userId, productId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> removeFromWishList(@RequestParam Long userId, @RequestParam Long productId) {
+        wishService.removeFromWishList(userId, productId);
+        return ResponseEntity.noContent().build();
+    }
 }

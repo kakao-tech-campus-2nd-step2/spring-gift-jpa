@@ -43,6 +43,12 @@ public class JdbcWishRepository implements WishRepository {
         return jdbcTemplate.query(sql, new WishRowMapper(), memberId);
     }
 
+    @Override
+    public void deleteByUserIdAndProductId(Long userId, Long productId) {
+        String sql = "DELETE FROM wish_list WHERE user_id = ? AND product_id = ?";
+        jdbcTemplate.update(sql, userId, productId);
+    }
+
     private static class WishRowMapper implements RowMapper<Wish> {
         @Override
         public Wish mapRow(ResultSet rs, int rowNum) throws SQLException {

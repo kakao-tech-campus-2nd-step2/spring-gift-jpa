@@ -27,4 +27,7 @@ public class WishService{
     }
 
 
+    public void removeFromWishList(Long userId, Long productId) {
+        wishRepository.deleteByUserIdAndProductId(userId, productId);
+    }
 }
