@@ -14,7 +14,7 @@ CREATE TABLE members (
 CREATE TABLE wish_lists (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
-    product_name VARCHAR(255) NOT NULL,
-    product_price BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
     FOREIGN KEY (member_id) REFERENCES members(id)
+    FOREIGN KEY (product_id) REFERENCES products(id)
 );
