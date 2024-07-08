@@ -67,10 +67,11 @@ class WishProductRepositoryTest {
     @Test
     @DisplayName("WishProduct findAll 테스트")
     void findAll() {
-        List<Product> products = Stream.generate(
-                () -> new Product("product", 1000, "https://a.com"))
-            .limit(10)
-            .toList();
+        List<Product> products = new ArrayList<>();
+        IntStream.range(0, 10)
+            .forEach( i -> {
+                products.add(new Product("product"+i, 1000, "https://a.com"));
+            });
 
         products.forEach(
             product -> {

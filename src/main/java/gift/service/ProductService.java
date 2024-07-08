@@ -24,11 +24,8 @@ public class ProductService {
     }
 
     public Product getProduct(Long id) {
-        Optional<Product> product = productRepository.findById(id);
-        if (product.isEmpty()) {
-            throw new ProductException("상품이 존재하지 않습니다.");
-        }
-        return product.get();
+        return productRepository.findById(id)
+            .orElseThrow(() -> new ProductException("상품이 존재하지 않습니다."));
     }
 
     public void insertProduct(String name, Integer price, String imageUrl) {

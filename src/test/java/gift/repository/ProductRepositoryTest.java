@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 import gift.model.Product;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -64,14 +65,12 @@ class ProductRepositoryTest {
     @DisplayName("Product findAll 테스트")
     void findAll() {
 
-        List<Product> products = Stream.generate(
-                () -> new Product("product", 1000, "https://a.com"))
-            .limit(10)
-            .toList();
-
-        products.forEach(
-            product -> productRepository.save(product)
-        );
+        List<Product> products = new ArrayList<>();
+        IntStream.range(0, 10)
+            .forEach( i -> {
+                products.add(new Product("product"+i, 1000, "https://a.com"));
+            });
+        productRepository.saveAll(products);
 
         List<Product> findProducts = productRepository.findAll();
         assertThat(findProducts).hasSize(10);
