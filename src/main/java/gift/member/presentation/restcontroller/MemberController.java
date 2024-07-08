@@ -47,7 +47,7 @@ public class MemberController {
         return ResponseEntity.ok(jwtToken);
     }
 
-    @GetMapping("/reissue")
+    @PostMapping("/reissue")
     public ResponseEntity<String> reissueRefreshToken(
         @RequestHeader("Authorization") String refreshToken) {
         var accessToken = jwtGenerator.reissueAccessToken(refreshToken);
