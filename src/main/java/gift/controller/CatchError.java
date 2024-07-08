@@ -1,7 +1,7 @@
 package gift.controller;
 
 public class CatchError {
-    public static boolean isCorrectName(String name){
+    public boolean isCorrectName(String name){
         if(name.length()>15){
             return false;
         }
@@ -15,7 +15,7 @@ public class CatchError {
         return true;
     }
 
-    public static boolean isContainsKakao(String name){
+    public boolean isContainsKakao(String name){
         return name.contains("카카오");
     }
 }

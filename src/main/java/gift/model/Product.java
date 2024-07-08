@@ -1,5 +1,7 @@
 package gift.model;
 
+import java.util.Objects;
+
 public class Product {
     private long id;
     private String name;
@@ -46,5 +48,18 @@ public class Product {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(name, product.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 }
