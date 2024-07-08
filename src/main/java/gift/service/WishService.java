@@ -7,6 +7,7 @@ import gift.model.Product;
 import gift.model.Wish;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,10 +35,11 @@ public class WishService {
         return wishRepository.findAllByUserId(member.getId());
     }
 
+    @Transactional
     public void deleteWish(Long productId, Member member) {
         if (getAllWishProductsByMember(member).isEmpty()) {
             throw new ProductNotFoundException("해당 productId의 상품이 위시리스트에 존재하지 않습니다.");
         }
-        wishRepository.deleteById(productId);
+        wishRepository.deleteByProductId(productId);
     }
 }

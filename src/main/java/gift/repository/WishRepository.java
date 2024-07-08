@@ -14,4 +14,5 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
             "JOIN Wish w ON p.id = w.productId " +
             "WHERE w.memberId = :memberId")
     List<Product> findAllByUserId(@Param("memberId") Long memberId);
+    void deleteByProductId(Long productId);
 }
