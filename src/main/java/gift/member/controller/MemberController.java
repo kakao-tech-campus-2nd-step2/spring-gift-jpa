@@ -3,6 +3,7 @@ package gift.member.controller;
 import gift.member.domain.TokenDTO;
 import gift.member.domain.Member;
 import gift.member.service.MemberService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,13 +20,13 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Member member) {
+    public ResponseEntity<?> register(@Valid @RequestBody Member member) {
         TokenDTO token = memberService.register(member);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Member member) {
+    public ResponseEntity<?> login(@Valid @RequestBody Member member) {
         TokenDTO token = memberService.login(member);
         return ResponseEntity.ok(token);
     }

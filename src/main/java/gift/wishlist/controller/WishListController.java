@@ -8,6 +8,7 @@ import gift.wishlist.domain.WishList;
 import gift.wishlist.service.WishListService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class WishListController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addWishListItem(HttpServletRequest request, @RequestBody Product product) {
+    public ResponseEntity<?> addWishListItem(HttpServletRequest request, @Valid @RequestBody Product product) {
         String token = extractToken(request);
         Claims claims = jwtUtil.extractAllClaims(token);
         Long memberId = wishListService.findMemberIdByEmail(String.valueOf(claims.getSubject()));
