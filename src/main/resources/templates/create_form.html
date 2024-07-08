@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Form</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-control {
+            margin-bottom: 15px;
+        }
+        .btn-container {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-container .btn {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="form-container">
+        <h5 class="form-header">상품 등록</h5>
+        <form th:action="@{/admin/gift/create}" method="post">
+            <div class="form-group">
+                <label for="name" class="form-label">상품명</label>
+                <input type="text" name="name" id="name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="price" class="form-label">가격</label>
+                <input type="number" name="price" id="price" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="imageUrl" class="form-label">이미지 URL</label>
+                <input type="text" name="imageUrl" id="imageUrl" class="form-control">
+            </div>
+            <div class="btn-container">
+                <input type="submit" value="저장하기" class="btn btn-primary">
+                <a th:href="@{/admin}" class="btn btn-secondary">메인으로</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

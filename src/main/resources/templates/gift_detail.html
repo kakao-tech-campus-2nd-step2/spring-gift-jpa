@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gift Detail</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        .gift-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .gift-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .gift-details {
+            margin-top: 20px;
+        }
+        .gift-details h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container gift-container">
+    <h2 class="text-center">상품 상세 설명</h2>
+    <div class="gift-details">
+        <p><strong>이름:</strong> <span th:text="${gift.name}"></span></p>
+        <p><strong>가격:</strong> <span th:text="${gift.price}"></span> 원</p>
+        <p><strong>이미지 URL:</strong> <span th:text="${gift.imageUrl}" target="_blank"></span></p>
+    </div>
+    <div class="text-center mt-4">
+        <a th:href="@{|/admin/gift/modify/${gift.id}|}" class="btn btn-warning">상품 수정</a>
+        <form th:action="@{|/admin/gift/delete/${gift.id}|}" method="post" class="d-inline-block">
+            <input type="hidden" name="_method" value="delete">
+            <input type="submit" value="상품 삭제" class="btn btn-danger">
+        </form>
+        <a th:href="@{/admin}" class="btn btn-secondary">메인으로</a>
+    </div>
+</div>
+</body>
+</html>
