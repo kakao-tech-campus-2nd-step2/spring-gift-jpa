@@ -17,6 +17,7 @@ import java.util.Objects;
 public class MemberController {
     long id = 0L;
 
+    Interceptor interceptor = new Interceptor();
     private final MemberDao MemberDao;
 
     public MemberController(gift.model.MemberDao memberDao) {
@@ -62,25 +63,11 @@ public class MemberController {
     @GetMapping("/getMemberId")
     public Long getIdByToken(HttpServletRequest request) throws AuthenticationException {
         Long id = 0L;
-        // 요청 헤더에서 Authorization 헤더 값을 가져옴
-        String authHeader = request.getHeader("Authorization");
-        System.out.println(authHeader);
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            // Authorization 헤더에서 Bearer 토큰을 추출
-            String token = authHeader.substring(7);
-            System.out.println(token);
-            // 토큰을 파싱하여 클레임(Claims)을 추출
-            Claims claims = Jwts.parser()
-                    .setSigningKey(secretKey)
-                    .parseClaimsJws(token)
-                    .getBody();
+
+        Claims claims = interceptor.getClaims(request);
 
             id = claims.get("id", Long.class);
             System.out.println(id);
-        }
-        else{
-            throw new AuthenticationException("헤더 혹은 토큰이 유효하지 않습니다.");
-        }
         System.out.println(id);
         return id;
     }
@@ -88,12 +75,6 @@ public class MemberController {
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     @ExceptionHandler(IllegalArgumentException.class)
     public String handleIllegalArgumentException(IllegalArgumentException e) {
-        return e.getMessage();
-    }
-
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(AuthenticationException.class)
-    public String handleAuthenticationException(AuthenticationException e) {
         return e.getMessage();
     }
 }
