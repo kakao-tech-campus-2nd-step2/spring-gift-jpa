@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 목록</title>
+</head>
+<body>
+  <h1>상품 목록</h1>
+  <button class="btn btn-primary float-end"
+          th:onclick="|location.href='@{/api/products/add}'|"
+          type="button">상품 추가
+  </button>
+  <div>
+    <table class="table">
+
+      <thead>
+      <tr>
+        <th>이름</th>
+        <th>가격</th>
+        <th>이미지</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr th:each="product:${products}">
+        <td th:text="${product.name}">NAME</td>
+        <td th:text="${product.price}">PRICE</td>
+        <td th:text="${product.imageUrl}">IMAGE</td>
+        <td>
+          <a th:href="@{/api/products/update/{id}(id=${product.id})}">수정</a>
+          <a th:href="@{/api/products/delete/{id}(id=${product.id})}">삭제</a>
+        </td>
+      </tr>
+      </tbody>
+
+    </table>
+  </div>
+</body>
+</html>

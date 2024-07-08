@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>상품 추가</title>
+</head>
+<body>
+<h1>상품 추가</h1>
+<form action th:action="@{/api/products/add}" th:object="${productDTO}" method="post">
+  <label>이름: <input type="text" id="name" name="name" placeholder="이름을 입력하세요"/></label><br>
+  <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
+  <label>가격: <input type="number" id="price" name="price" placeholder="가격을 입력하세요"/></label><br>
+  <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Price Error</div>
+  <label>이미지: <input type="text" id="imageUrl" name="imageUrl" placeholder="이미지 링크를 입력하세요"/></label><br>
+  <div th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}">imageUrl Error</div>
+  <button type="submit">추가하기</button>
+</form>
+<a href="/api/products">돌아가기</a>
+</body>
+</html>
