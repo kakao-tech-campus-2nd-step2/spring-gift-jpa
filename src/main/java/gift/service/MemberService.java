@@ -5,7 +5,6 @@ import gift.dto.MemberRequest;
 import gift.dto.MemberResponse;
 import gift.repository.MemberRepository;
 import gift.security.SecurityService;
-import gift.validation.JwtTokenProvider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
