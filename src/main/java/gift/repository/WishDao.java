@@ -1,5 +1,6 @@
-package gift.model;
+package gift.repository;
 
+import gift.model.UserGift;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

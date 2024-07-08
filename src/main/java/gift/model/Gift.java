@@ -1,10 +1,19 @@
 package gift.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "gift")
 public class Gift {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "name",nullable = false)
     private String name;
+    @Column(name = "price",nullable = false)
     private int price;
+    @Column(name = "imageUrl",nullable = false)
     private String imageUrl;
 
     public Gift() {
@@ -28,27 +37,24 @@ public class Gift {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public int getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 
     private boolean isValidName(String name) {
         return name != null && !name.contains("카카오");
+    }
+
+    public void modifyGift(String name,int price,String imageUrl){
+        this.name = name;
+        this.price= price;
+        this.imageUrl =imageUrl;
     }
 }

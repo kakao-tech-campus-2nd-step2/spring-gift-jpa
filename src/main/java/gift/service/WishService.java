@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.model.UserGift;
-import gift.model.WishDao;
+import gift.repository.WishDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
