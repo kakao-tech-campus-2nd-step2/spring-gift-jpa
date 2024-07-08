@@ -28,8 +28,8 @@ public class WishlistController {
         Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
         Long memberId = Long.parseLong(claims.getSubject());
         product.setMemberId(memberId);
-        Wish addedItem = wishlistService.addProduct(product);
-        return ResponseEntity.ok(addedItem);
+        Wish addedProduct = wishlistService.addProduct(product);
+        return ResponseEntity.ok(addedProduct);
     }
 
     @GetMapping("/items")
