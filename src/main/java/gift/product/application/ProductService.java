@@ -6,7 +6,7 @@ import gift.product.infra.ProductRepository;
 import gift.product.presentation.ProductManageController.CreateProductRequestDTO;
 import gift.util.ErrorCode;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,16 +26,20 @@ public class ProductService {
         Product product = new Product(createProductRequestDTO.getName(), createProductRequestDTO.getPrice(),
             createProductRequestDTO.getImageUrl());
         validateProduct(product);
-        return productRepository.addProduct(product);
+        return productRepository.save(product).getId();
     }
 
     public void deleteProduct(Long id) {
-        productRepository.deleteProduct(id);
+        productRepository.deleteById(id);
     }
 
     public void updateProduct(Long id, String name, Double price, String imageUrl) {
-        Product product = new Product(name, price, imageUrl);
-        productRepository.updateProduct(id, product);
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new ProductException(ErrorCode.PRODUCT_NOT_FOUND));
+        product.setName(name);
+        product.setPrice(price);
+        product.setImageUrl(imageUrl);
+        productRepository.save(product);
     }
 
     private void validateProduct(Product product) {
@@ -65,12 +69,12 @@ public class ProductService {
         }
     }
 
-    public Product getProductByName(Long id) {
-        return productRepository.getProductById(id);
+    public Optional<Product> getProductByName(Long id) {
+        return productRepository.findById(id);
     }
 
     public List<Product> getProduct() {
-        return productRepository.getProducts();
+        return productRepository.findAll();
     }
 
 }
