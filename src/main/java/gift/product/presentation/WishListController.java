@@ -3,6 +3,7 @@ package gift.product.presentation;
 
 import gift.product.application.WishListService;
 import gift.product.domain.Product;
+import gift.product.domain.WishList;
 import gift.product.exception.ProductException;
 import gift.util.CommonResponse;
 import gift.util.ErrorCode;
@@ -31,7 +32,7 @@ public class WishListController {
     @JwtAuthenticated
     @GetMapping("/{userId}")
     public ResponseEntity<?> getWishList(@PathVariable Long userId) {
-        List<Product> products = wishListService.getProductsInWishList(userId);
+        WishList products = wishListService.getProductsInWishList(userId);
         if (products != null) {
             return ResponseEntity.ok(new CommonResponse<>(products, "위시리스트 조회 성공", true));
         } else {
