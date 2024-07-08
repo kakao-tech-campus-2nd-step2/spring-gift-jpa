@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>상품 정보 페이지</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>상품 정보 페이지</h1>
+<div class="top-right">
+    <a href="/products/new" class="button">상품 정보 추가하기</a>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>상품명</th>
+        <th>상품 가격</th>
+        <th>hot/ice</th>
+        <th>사이즈</th>
+        <th>컵</th>
+        <th>imageUrl</th>
+        <th>수정/삭제</th> <!-- 수정, 삭제를 위한 열 추가 -->
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price}"></td>
+        <td th:text="${product.temperatureOption}"></td>
+        <td th:text="${product.sizeOption}"></td>
+        <td th:text="${product.cupOption}"></td>
+        <td th:text="${product.imageurl}"></td>
+        <td>
+            <a th:href="@{/products/edit/{id}(id=${product.id})}" class="edit-button">수정</a>
+            <form th:action="@{'/products/' + ${product.id}}" method="post" style="display:inline;">
+                <input type="hidden" name="_method" value="delete"/>
+                <button type="submit" class="delete-button">삭제</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

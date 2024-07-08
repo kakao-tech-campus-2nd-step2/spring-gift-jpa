@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>상품 정보 수정하기</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/crud_style.css">
+</head>
+<body>
+<h1>상품 정보 수정하기</h1>
+<form action="#" th:action="@{/products/update/{id}(id=${product.id})}" th:object="${product}" method="post">
+    <label>name : <input type="text" th:field="*{name}" /></label>
+    <label>price : <input type="text" th:field="*{price}" /></label>
+
+    <label>temperature :
+        <select th:field="*{temperatureOption}">
+            <option value="hot">Hot</option>
+            <option value="ice">Ice</option>
+        </select>
+    </label>
+
+    <label>cup:
+        <select th:field="*{cupOption}">
+            <option value="store">매장컵</option>
+            <option value="personal">개인컵</option>
+            <option value="disposable">일횡용컵</option>
+        </select>
+    </label>
+
+    <label>size:
+        <select th:field="*{sizeOption}">
+            <option value="tall">tall</option>
+            <option value="grande">grande</option>
+            <option value="venti">venti</option>
+        </select>
+    </label>
+
+    <label>imageurl: <input type="text" th:field="*{imageurl}" /></label>
+    <button type="submit" class="button">상품 정보 수정하기</button>
+</form>
+<a href="/products"></a>
+
+</body>
