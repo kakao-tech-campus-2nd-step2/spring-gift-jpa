@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.dto.wishlist.WishResponseDto;
-import gift.dto.wishlist.WishRequestDto;
+import gift.dto.wishlist.WishResponse;
+import gift.dto.wishlist.WishRequest;
 import gift.entity.Wish;
 import gift.exception.wish.WishNotFoundException;
 import gift.util.mapper.WishMapper;
@@ -19,8 +19,8 @@ public class WishService {
         this.productService = productService;
     }
 
-    public List<WishResponseDto> getWishes(Long userId) {
-        List<WishResponseDto> wishes = wishRepository.findByUserId(userId);
+    public List<WishResponse> getWishes(Long userId) {
+        List<WishResponse> wishes = wishRepository.findByUserId(userId);
 
         if (wishes == null) {
             throw new WishNotFoundException("해당 사용자의 위시 리스트가 존재하지 않습니다.");
@@ -29,7 +29,7 @@ public class WishService {
         return wishRepository.findByUserId(userId);
     }
 
-    public List<WishResponseDto> addWish(Long userId, WishRequestDto wishRequest) {
+    public List<WishResponse> addWish(Long userId, WishRequest wishRequest) {
         Wish wish = WishMapper.toWish(userId, wishRequest);
 
         productService.checkProductExist(wish.productId());
@@ -37,8 +37,8 @@ public class WishService {
         return wishRepository.insert(wish);
     }
 
-    public List<WishResponseDto> updateWishes(Long userId, List<WishRequestDto> wishRequests) {
-        for (WishRequestDto wishRequest : wishRequests) {
+    public List<WishResponse> updateWishes(Long userId, List<WishRequest> wishRequests) {
+        for (WishRequest wishRequest : wishRequests) {
             Long wishId = getWishId(userId, wishRequest.productId());
             Wish wish = WishMapper.toWish(wishId, userId, wishRequest);
             updateWish(wish);
@@ -54,8 +54,8 @@ public class WishService {
         wishRepository.update(wish);
     }
 
-    public List<WishResponseDto> deleteWishes(Long userId, List<WishRequestDto> wishRequests) {
-        for (WishRequestDto wishRequest : wishRequests) {
+    public List<WishResponse> deleteWishes(Long userId, List<WishRequest> wishRequests) {
+        for (WishRequest wishRequest : wishRequests) {
             Long wishId = wishRepository.findWishId(userId, wishRequest.productId());
             Wish wish = WishMapper.toWish(wishId, userId, wishRequest);
             deleteWish(wish);

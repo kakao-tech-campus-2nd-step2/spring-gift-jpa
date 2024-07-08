@@ -2,7 +2,7 @@ package gift.dto.wishlist;
 
 import gift.entity.Product;
 
-public record WishResponseDto(
+public record WishResponse(
     Long id,
     Product product,
     int quantity
