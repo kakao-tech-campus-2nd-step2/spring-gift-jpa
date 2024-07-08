@@ -1,10 +1,8 @@
 package gift.repository.user;
 
-import gift.domain.Product;
 import gift.domain.User;
 import gift.utils.JwtUtil;
 import java.util.List;
-import org.springframework.boot.autoconfigure.batch.BatchProperties.Jdbc;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

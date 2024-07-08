@@ -1,10 +1,8 @@
 package gift.service;
 
 import gift.domain.WishList;
-import gift.repository.user.UserRepository;
 import gift.repository.wish.WishListRepository;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

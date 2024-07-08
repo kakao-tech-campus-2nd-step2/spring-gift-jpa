@@ -1,8 +1,6 @@
 package gift.repository.wish;
 
-import gift.domain.User;
 import gift.domain.WishList;
-import gift.service.WishListService;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
