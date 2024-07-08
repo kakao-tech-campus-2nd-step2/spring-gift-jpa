@@ -1,8 +1,8 @@
 package gift.service;
 
 import gift.domain.Member;
-import gift.dto.MemberRequestDto;
-import gift.dto.MemberResponseDto;
+import gift.dto.MemberRequest;
+import gift.dto.MemberResponse;
 import gift.repository.MemberRepository;
 import gift.validation.JwtTokenProvider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,7 +20,7 @@ public class MemberService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public MemberResponseDto registerMember(MemberRequestDto requestDto) {
+    public MemberResponse registerMember(MemberRequest requestDto) {
         if (memberRepository.existsByEmail(requestDto.getEmail())) {
             throw new IllegalArgumentException("이메일이 이미 존재합니다.");
         }
@@ -31,7 +31,7 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
 
         String token = jwtTokenProvider.generateToken(savedMember);
-        return new MemberResponseDto(token);
+        return new MemberResponse(token);
     }
 
 

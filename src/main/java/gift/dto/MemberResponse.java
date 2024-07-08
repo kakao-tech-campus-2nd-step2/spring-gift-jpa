@@ -1,9 +1,9 @@
 package gift.dto;
 
-public class MemberResponseDto {
+public class MemberResponse {
     private String token;
 
-    public MemberResponseDto(String token) {
+    public MemberResponse(String token) {
         this.token = token;
     }
 }

@@ -1,6 +1,6 @@
 package gift.dto;
 
-public class MemberRequestDto {
+public class MemberRequest {
     private String email;
     private String password;
 

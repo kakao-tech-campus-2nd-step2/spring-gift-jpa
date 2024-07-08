@@ -3,8 +3,8 @@ package gift.controller;
 import gift.domain.Member;
 import gift.dto.LoginRequest;
 import gift.dto.LoginResponse;
-import gift.dto.MemberRequestDto;
-import gift.dto.MemberResponseDto;
+import gift.dto.MemberRequest;
+import gift.dto.MemberResponse;
 import gift.service.MemberService;
 import gift.validation.JwtTokenProvider;
 import org.springframework.http.HttpStatus;
@@ -30,9 +30,9 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<MemberResponseDto> registerMember(@RequestBody MemberRequestDto requestDto) {
+    public ResponseEntity<MemberResponse> registerMember(@RequestBody MemberRequest requestDto) {
         try {
-            MemberResponseDto responseDto = memberService.registerMember(requestDto);
+            MemberResponse responseDto = memberService.registerMember(requestDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
