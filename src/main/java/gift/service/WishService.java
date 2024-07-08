@@ -1,9 +1,8 @@
 package gift.service;
 
 import gift.controller.dto.WishRequestDTO;
-import gift.domain.Product;
 import gift.domain.Wish;
-import gift.repository.ProductRepository;
+import gift.repository.ProductJDBCRepository;
 import gift.repository.WishsRepository;
 import gift.utils.error.ProductNotFoundException;
 import gift.utils.error.WishListAddFailedException;
@@ -15,11 +14,11 @@ import org.springframework.stereotype.Service;
 public class WishService {
 
     private final WishsRepository wishsRepository;
-    private final ProductRepository productRepository;
+    private final ProductJDBCRepository productJDBCRepository;
 
-    public WishService(WishsRepository wishsRepository, ProductRepository productRepository) {
+    public WishService(WishsRepository wishsRepository, ProductJDBCRepository productJDBCRepository) {
         this.wishsRepository = wishsRepository;
-        this.productRepository = productRepository;
+        this.productJDBCRepository = productJDBCRepository;
     }
 
     public boolean addToWishlist(String email, WishRequestDTO wishRequestDTO) {
@@ -50,7 +49,7 @@ public class WishService {
             if (wishRequestDTO.getQuantity()==0){
                 return wishsRepository.removeFromWishlist(email,wishRequestDTO.getProductId());
             }
-            if (productRepository.checkexist(wishRequestDTO.getProductId())){
+            if (productJDBCRepository.checkexist(wishRequestDTO.getProductId())){
                 throw new ProductNotFoundException("Product Not Found");
             }
             return wishsRepository.changeToWishlist(wish);
