@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import gift.entity.Wish;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -40,13 +41,13 @@ class WishRepositoryTest {
         wishRepository.save(expected);
 
         //when
-        Wish actual = wishRepository.findByMemberId(1L);
+        List<Wish> actual = wishRepository.findByMemberId(1L);
 
         //then
         assertAll(
-            ()->assertThat(actual.getId()).isNotNull(),
-            ()->assertThat(actual.getMemberId()).isEqualTo(1L),
-            ()->assertThat(actual.getProductId()).isEqualTo(2L)
+            ()->assertThat(actual.get(0).getId()).isNotNull(),
+            ()->assertThat(actual.get(0).getMemberId()).isEqualTo(1L),
+            ()->assertThat(actual.get(0).getProductId()).isEqualTo(2L)
 
             );
 
@@ -61,7 +62,7 @@ class WishRepositoryTest {
 
         //when
         wishRepository.deleteByMemberIdAndProductId(1L,2L);
-        Wish actual = wishRepository.findByMemberId(1L);
+        List<Wish> actual = wishRepository.findByMemberId(1L);
 
         //then
         assertThat(actual).isNull();
