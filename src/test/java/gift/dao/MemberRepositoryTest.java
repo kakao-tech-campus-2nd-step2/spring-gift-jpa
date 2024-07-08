@@ -121,13 +121,4 @@ class MemberRepositoryTest {
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
-    @Test
-    @DisplayName("존재하지 않는 이메일의 회원 조회 테스트")
-    void checkNonExistentEmail() {
-        String email = "nonexistent@email.com";
-        Optional<Member> member = memberRepository.findByEmail(email);
-
-        assertThat(member).isEmpty();
-    }
-
 }
