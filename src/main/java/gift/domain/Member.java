@@ -1,17 +1,17 @@
 package gift.domain;
 
-public class User {
+public class Member {
     private Long id;
     private String email;
     private String password;
 
-    public User(Long id, String email, String password) {
+    public Member(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public User(String email,String password) {
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
     }

@@ -1,16 +1,16 @@
 package gift.dto;
 
-import gift.domain.User;
+import gift.domain.Member;
 
-public class UserResponseDto {
+public class MemberResponseDto {
     private Long id;
     private String email;
 
-    public UserResponseDto(String email) {
+    public MemberResponseDto(String email) {
         this.email = email;
     }
 
-    public UserResponseDto(Long id, String email) {
+    public MemberResponseDto(Long id, String email) {
         this.id = id;
         this.email = email;
     }
@@ -31,7 +31,7 @@ public class UserResponseDto {
         this.email = email;
     }
 
-    public static UserResponseDto from(final User user){
-        return new UserResponseDto(user.getId(), user.getEmail());
+    public static MemberResponseDto from(final Member member){
+        return new MemberResponseDto(member.getId(), member.getEmail());
     }
 }

@@ -1,10 +1,9 @@
 package gift.controller;
 
-import gift.annotation.LoginUser;
-import gift.dto.UserResponseDto;
+import gift.annotation.LoginMember;
+import gift.dto.MemberResponseDto;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
-import gift.service.JwtUtil;
 import gift.service.WishService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,25 +21,25 @@ public class WishRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addWish(@LoginUser UserResponseDto userResponseDto, @RequestBody WishRequestDto wishRequest){
-        wishService.save(userResponseDto, wishRequest);
+    public ResponseEntity<Void> addWish(@LoginMember MemberResponseDto memberResponseDto, @RequestBody WishRequestDto wishRequest){
+        wishService.save(memberResponseDto, wishRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<WishResponseDto>> getWishList(@LoginUser UserResponseDto userResponseDto){
-        return ResponseEntity.status(HttpStatus.OK).body(wishService.findByUserEmail(userResponseDto));
+    public ResponseEntity<List<WishResponseDto>> getWishList(@LoginMember MemberResponseDto memberResponseDto){
+        return ResponseEntity.status(HttpStatus.OK).body(wishService.findByUserEmail(memberResponseDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeWish(@LoginUser UserResponseDto userResponseDto, @PathVariable Long id){
-        wishService.delete(userResponseDto, id);
+    public ResponseEntity<Void> removeWish(@LoginMember MemberResponseDto memberResponseDto, @PathVariable Long id){
+        wishService.delete(memberResponseDto, id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateWishQuantity(@LoginUser UserResponseDto userResponseDto, @PathVariable Long id, @RequestBody WishRequestDto wishRequest){
-        wishService.updateQuantity(userResponseDto, id, wishRequest);
+    public ResponseEntity<Void> updateWishQuantity(@LoginMember MemberResponseDto memberResponseDto, @PathVariable Long id, @RequestBody WishRequestDto wishRequest){
+        wishService.updateQuantity(memberResponseDto, id, wishRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

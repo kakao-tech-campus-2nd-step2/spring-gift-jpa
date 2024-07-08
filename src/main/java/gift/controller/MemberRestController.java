@@ -1,9 +1,9 @@
 package gift.controller;
 
 import gift.dto.TokenResponseDto;
-import gift.dto.UserRequestDto;
+import gift.dto.MemberRequestDto;
 import gift.service.JwtUtil;
-import gift.service.UserService;
+import gift.service.MemberService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,24 +14,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/members")
-public class UserRestController {
-    private final UserService userService;
+public class MemberRestController {
+    private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
-    public UserRestController(UserService userService, JwtUtil jwtUtil) {
-        this.userService = userService;
+    public MemberRestController(MemberService memberService, JwtUtil jwtUtil) {
+        this.memberService = memberService;
         this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> registerUser(@RequestBody UserRequestDto request){
-        userService.save(request);
+    public ResponseEntity<Void> registerUser(@RequestBody MemberRequestDto request){
+        memberService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponseDto> giveAccessToken(@RequestBody UserRequestDto request) {
-        userService.authenticate(request.getEmail(),request.getPassword());
+    public ResponseEntity<TokenResponseDto> giveAccessToken(@RequestBody MemberRequestDto request) {
+        memberService.authenticate(request.getEmail(),request.getPassword());
         String token = jwtUtil.generateToken(request.getEmail());
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);

@@ -3,7 +3,7 @@ package gift.service;
 import gift.constants.Messages;
 import gift.domain.Product;
 import gift.domain.Wish;
-import gift.dto.UserResponseDto;
+import gift.dto.MemberResponseDto;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
 import gift.exception.ProductNotFoundException;
@@ -25,28 +25,28 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
-    public void save(UserResponseDto userResponseDto, WishRequestDto request){
+    public void save(MemberResponseDto memberResponseDto, WishRequestDto request){
         Product product = productRepository.findByName(request.getProductName())
                 .orElseThrow(() -> new ProductNotFoundException(Messages.NOT_FOUND_PRODUCT_BY_NAME));
-        wishRepository.save(new Wish(userResponseDto.getId(),product.getId(),request.getQuantity()));
+        wishRepository.save(new Wish(memberResponseDto.getId(),product.getId(),request.getQuantity()));
     }
 
-    public List<WishResponseDto> findByUserEmail(UserResponseDto userResponseDto){
-        return wishRepository.findByUserId(userResponseDto.getId())
+    public List<WishResponseDto> findByUserEmail(MemberResponseDto memberResponseDto){
+        return wishRepository.findByUserId(memberResponseDto.getId())
                 .orElseThrow(() -> new WishNotFoundException(Messages.NOT_FOUND_WISH))
                 .stream()
                 .map(this::convertToWishDto)
                 .collect(Collectors.toList());
     }
 
-    public void delete(UserResponseDto userResponseDto, Long id){
-        wishRepository.findByIdAndUserId(id, userResponseDto.getId())
+    public void delete(MemberResponseDto memberResponseDto, Long id){
+        wishRepository.findByIdAndUserId(id, memberResponseDto.getId())
                 .orElseThrow(()-> new WishNotFoundException(Messages.NOT_FOUND_WISH));
         wishRepository.delete(id);
     }
 
-    public void updateQuantity(UserResponseDto userResponseDto, Long id, WishRequestDto request){
-        wishRepository.findByIdAndUserId(id, userResponseDto.getId())
+    public void updateQuantity(MemberResponseDto memberResponseDto, Long id, WishRequestDto request){
+        wishRepository.findByIdAndUserId(id, memberResponseDto.getId())
                 .orElseThrow(()-> new WishNotFoundException(Messages.NOT_FOUND_WISH));
         wishRepository.updateQuantity(id, request.getQuantity());
     }

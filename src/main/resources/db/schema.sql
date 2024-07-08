@@ -6,8 +6,8 @@ CREATE TABLE products (
                           imageUrl VARCHAR(255)
 );
 
-DROP TABLE IF EXISTS users;
-CREATE TABLE users (
+DROP TABLE IF EXISTS members;
+CREATE TABLE members (
                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
                        email VARCHAR(255),
                        password VARCHAR(255)
