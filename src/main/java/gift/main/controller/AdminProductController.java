@@ -20,7 +20,7 @@ public class AdminProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/product/list")
+    @GetMapping("/products")
     public ResponseEntity<Map<String, List<Product>>> getProducts() {
         List<Product> products = productService.getProducts();
         Map<String, List<Product>> response = new HashMap<>();

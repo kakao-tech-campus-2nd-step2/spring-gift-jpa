@@ -176,7 +176,7 @@
         function loadProducts() {
             $.ajax({
                 type: 'GET',
-                url: '/spring-gift/admin/product/list',
+                url: '/spring-gift/admin/product',
                 success: function (response) {
                     var products = response.products;
                     var html = '';

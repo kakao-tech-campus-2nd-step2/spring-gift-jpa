@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Service
@@ -46,6 +47,7 @@ public class AuthUtil {
     }
 
     public String createToken(Long id, UserDto userDto) {
+
         String token =  Jwts.builder()
                 .claim("id", id)
                 .claim("name", userDto.getName())
@@ -55,19 +57,19 @@ public class AuthUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
                 .signWith(secretKey) // 시그니처~!
                 .compact();
+
         return "Bearer " + token;
+
     }
 
     public boolean validateToken(String token, String email) {
         if (isExpired(token)) {
             return false;
-
         }
 
         if (!email.equals(getEmail(token))) {
             return false;
         }
-
         return true;
 
     }
