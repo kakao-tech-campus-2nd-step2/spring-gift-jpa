@@ -26,7 +26,7 @@ public class WishService {
             throw new WishNotFoundException("해당 사용자의 위시 리스트가 존재하지 않습니다.");
         }
 
-        return wishRepository.findByUserId(userId);
+        return wishes;
     }
 
     public List<WishResponse> addWish(Long userId, WishRequest wishRequest) {
