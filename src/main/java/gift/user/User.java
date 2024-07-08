@@ -1,17 +1,25 @@
 package gift.user;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "USERS")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @Column(name = "email", unique = true)
     String email;
+    @Column(name = "password")
     String password;
+    @Column(name = "nickname")
     String nickname;
 
     public User() {
     }
 
 
-    public User(Long id, String email, String password, String nickName) {
-        this.id = id;
+    public User(String email, String password, String nickName) {
         this.email = email;
         this.password = password;
         this.nickname = nickName;
