@@ -1,7 +1,7 @@
 package gift.controller.wishlist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.dto.request.WishListAddRequest;
+import gift.dto.request.WishListRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,7 +38,7 @@ class WishListControllerTest {
     @ValueSource(ints = {1,3,0})
     @DisplayName("위시리스트 update 테스트")
     void updateWishlist(int amount) throws Exception{
-        WishListAddRequest request = new WishListAddRequest(4L, amount);
+        WishListRequest request = new WishListRequest(4L, amount);
         String json = objectMapper.writeValueAsString(request);
         MvcResult mvcResult = mockMvc.perform(put("/api/wishlist")//테스트용 데이터 사용함. 이 토큰은 유저 1L 가리킴
                         .header("Authorization", "Bearer 1234")
