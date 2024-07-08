@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import gift.entity.Product;
+import jakarta.transaction.Transactional;
 
 @DataJpaTest
 public class ProductRepositoryTest {
@@ -16,6 +17,7 @@ public class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @Transactional
     @Test
     void save() {
         Product expected = new Product("testName", 1, "testUrl");
@@ -26,47 +28,50 @@ public class ProductRepositoryTest {
         );
     }
 
+    @Transactional
     @Test
     void findById() {
 
         Product expected = new Product("testName", 1, "testUrl");
+        expected.setId(1L);
         productRepository.save(expected);
 
-        long productId = 1L;
-        Optional<Product> product = productRepository.findById(productId);
+        Optional<Product> product = productRepository.findById(expected.getId());
 
         assertAll(
             () -> assertThat(product).isPresent(),
-            () -> assertThat(product.get().getId()).isEqualTo(productId)
+            () -> assertThat(product.get().getId()).isEqualTo(expected.getId())
         );
     }
 
+    @Transactional
     @Test
     void update() {
 
         Product expected = new Product("testName", 1, "testUrl");
+        expected.setId(1L);
         productRepository.save(expected);
 
         String updateName = "update name";
 
-        long productId = 1L;
-        Product product = productRepository.findById(productId).get();
+        Product product = productRepository.findById(expected.getId()).orElseThrow();
         product.setName(updateName);
         productRepository.save(product);
 
-        Optional<Product> updatedProduct = productRepository.findById(productId);
+        Optional<Product> updatedProduct = productRepository.findById(expected.getId());
 
         assertAll(
             () -> assertThat(updatedProduct).isPresent(),
-            () -> assertThat(updatedProduct.get().getId()).isEqualTo(productId)
+            () -> assertThat(updatedProduct.get().getName()).isEqualTo(updateName)
         );
-
     }
 
+    @Transactional
     @Test
     void delete(){
 
         Product expected = new Product("testName", 1, "testUrl");
+        expected.setId(1L);
         productRepository.save(expected);
         
         long productId = 1L;
