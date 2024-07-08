@@ -1,7 +1,6 @@
 package gift.product.repository;
 
 import gift.product.dto.LoginMember;
-import gift.product.model.Product;
 import gift.product.model.Wish;
 import java.util.HashMap;
 import java.util.List;

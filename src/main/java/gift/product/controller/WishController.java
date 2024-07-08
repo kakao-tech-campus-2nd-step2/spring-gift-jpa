@@ -1,11 +1,8 @@
 package gift.product.controller;
 
-import gift.product.dto.ClientProductDto;
 import gift.product.dto.LoginMember;
 import gift.product.dto.WishDto;
-import gift.product.model.Product;
 import gift.product.model.Wish;
-import gift.product.service.ProductService;
 import gift.product.service.WishService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -15,7 +12,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

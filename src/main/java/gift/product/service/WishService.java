@@ -1,11 +1,8 @@
 package gift.product.service;
 
 import gift.product.dto.LoginMember;
-import gift.product.dto.ProductDto;
 import gift.product.dto.WishDto;
-import gift.product.model.Product;
 import gift.product.model.Wish;
-import gift.product.repository.ProductRepository;
 import gift.product.repository.WishRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -16,9 +13,11 @@ import org.springframework.stereotype.Service;
 public class WishService {
 
     private final WishRepository wishRepository;
+    private final ProductService productService;
 
-    public WishService(WishRepository wishRepository) {
+    public WishService(WishRepository wishRepository, ProductService productService) {
         this.wishRepository = wishRepository;
+        this.productService = productService;
     }
 
     public List<Wish> getWishAll(LoginMember loginMember) {
@@ -30,6 +29,8 @@ public class WishService {
     }
 
     public Wish insertWish(WishDto wishDto, LoginMember loginMember) {
+        productService.getProduct(wishDto.productId());
+
         Wish wish = new Wish(loginMember.id(), wishDto.productId());
         wish = wishRepository.save(wish);
 
