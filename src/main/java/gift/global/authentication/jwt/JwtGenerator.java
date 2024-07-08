@@ -33,7 +33,7 @@ public class JwtGenerator {
     }
 
     public String reissueAccessToken(String refreshToken) {
-        Long id = jwtValidator.validate(refreshToken, TokenType.REFRESH);
+        Long id = jwtValidator.validateAndParseToken(refreshToken, TokenType.REFRESH);
         long current = System.currentTimeMillis();
         var accessExpireTime = new Date(current + ACCESS_TOKEN_EXPIRE_TIME);
         return generateToken(id, accessExpireTime, Map.of("type", TokenType.ACCESS));

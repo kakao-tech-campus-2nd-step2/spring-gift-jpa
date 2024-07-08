@@ -24,7 +24,7 @@ public class TokenCheckInterceptor implements HandlerInterceptor {
 
         String rawToken = request.getHeader("Authorization");
 
-        request.setAttribute("id", jwtValidator.validate(rawToken, TokenType.ACCESS));
+        request.setAttribute("id", jwtValidator.validateAndParseToken(rawToken, TokenType.ACCESS));
 
         return true;
     }

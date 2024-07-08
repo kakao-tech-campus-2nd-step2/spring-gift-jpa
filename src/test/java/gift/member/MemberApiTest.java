@@ -91,7 +91,7 @@ public class MemberApiTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         var jwtToken = response.getBody();
-        var id = jwtValidator.validate("Bearer " + jwtToken.accessToken(), TokenType.ACCESS);
+        var id = jwtValidator.validateAndParseToken("Bearer " + jwtToken.accessToken(), TokenType.ACCESS);
         var member = memberRepository.getMemberById(id);
 
         assertThat(member.getEmail()).isEqualTo(requestMemberDto.email());
@@ -113,7 +113,7 @@ public class MemberApiTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         var jwtToken = response.getBody();
-        var id = jwtValidator.validate("Bearer " + jwtToken.accessToken(), TokenType.ACCESS);
+        var id = jwtValidator.validateAndParseToken("Bearer " + jwtToken.accessToken(), TokenType.ACCESS);
         var member = memberRepository.getMemberById(id);
 
         assertThat(member.getEmail()).isEqualTo(requestMemberDto.email());
@@ -133,8 +133,8 @@ public class MemberApiTest {
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        var reissuedTokenId = jwtValidator.validate("Bearer " + response.getBody(), TokenType.ACCESS);
-        var originalTokenId = jwtValidator.validate("Bearer " + accessToken, TokenType.ACCESS);
+        var reissuedTokenId = jwtValidator.validateAndParseToken("Bearer " + response.getBody(), TokenType.ACCESS);
+        var originalTokenId = jwtValidator.validateAndParseToken("Bearer " + accessToken, TokenType.ACCESS);
         assertThat(reissuedTokenId).isEqualTo(originalTokenId);
     }
 

@@ -19,7 +19,7 @@ public class JwtValidator {
         this.secret = secret;
     }
 
-    public Long validate(String rawToken, TokenType type) {
+    public Long validateAndParseToken(String rawToken, TokenType type) {
         var token = validateForm(rawToken);
         return Long.valueOf(validateTokenType(token, type));
     }
