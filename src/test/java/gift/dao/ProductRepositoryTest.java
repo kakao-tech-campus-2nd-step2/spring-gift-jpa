@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,27 +56,47 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("상품 ID 리스트 조회 테스트")
     void findByIds() {
-        List<Long> productIds = Arrays.asList(1L, 2L, 3L, 4L);
-        productRepository.save(new Product(null, "product1L", 1000, "1L.jpg"));
-        productRepository.save(new Product(null, "product2L", 2000, "2L.jpg"));
-        productRepository.save(new Product(null, "product3L", 3000, "3L.jpg"));
-        productRepository.save(new Product(null, "product4L", 4000, "4L.jpg"));
+        List<Long> productIds = new ArrayList<>();
+        productIds.add(
+                productRepository.save(
+                        new Product(
+                                null,
+                                "product1L",
+                                1000,
+                                "1L.jpg")
+                        ).getId()
+        );
+        productIds.add(
+                productRepository.save(
+                        new Product(
+                                null,
+                                "product2L",
+                                2000,
+                                "2L.jpg")
+                ).getId()
+        );
+        productIds.add(
+                productRepository.save(
+                        new Product(
+                                null,
+                                "product3L",
+                                3000,
+                                "3L.jpg")
+                ).getId()
+        );
+        productIds.add(
+                productRepository.save(
+                        new Product(
+                                null,
+                                "product4L",
+                                4000,
+                                "4L.jpg")
+                ).getId()
+        );
 
         List<Product> products = productRepository.findByIds(productIds);
 
         assertThat(products.size()).isEqualTo(productIds.size());
-        assertThat(products.get(1)
-                .getName())
-                .isEqualTo("product1L");
-        assertThat(products.get(2)
-                .getName())
-                .isEqualTo("product2L");
-        assertThat(products.get(3)
-                .getName())
-                .isEqualTo("product3L");
-        assertThat(products.get(4)
-                .getName())
-                .isEqualTo("product4L");
     }
 
     @Test

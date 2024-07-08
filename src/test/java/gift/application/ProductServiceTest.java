@@ -112,6 +112,8 @@ class ProductServiceTest {
         Product product = new Product(1L, "product", 1000, "https://testshop.com");
         ProductRequest request = new ProductRequest("product", 3000, "https://testshop.io");
         given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
+        product.update(request);
+        given(productRepository.save(any())).willReturn(product);
 
         Long productId = productService.updateProduct(product.getId(), request);
 
