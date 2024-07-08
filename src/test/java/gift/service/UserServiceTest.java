@@ -3,8 +3,9 @@ package gift.service;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import gift.dto.user.UserRequestDto;
-import gift.dto.user.UserResponseDto;
+import gift.dto.user.UserLoginRequest;
+import gift.dto.user.UserRegisterRequest;
+import gift.dto.user.UserResponse;
 import gift.exception.user.UserAlreadyExistException;
 import gift.exception.user.UserNotFoundException;
 import java.util.Base64;
@@ -36,11 +37,11 @@ class UserServiceTest {
     @DisplayName("register user test")
     void registerUserTest() {
         //given
-        UserRequestDto user1Request = new UserRequestDto("user1@email.com", "1q2w3e4r!");
+        UserRegisterRequest user1Request = new UserRegisterRequest("user1@email.com", "1q2w3e4r!");
 
         //when
-        UserResponseDto user1Response = userService.registerUser(user1Request);
-        UserResponseDto expected = new UserResponseDto(1L, "user1@email.com", Base64.getEncoder()
+        UserResponse user1Response = userService.registerUser(user1Request);
+        UserResponse expected = new UserResponse(1L, "user1@email.com", Base64.getEncoder()
             .encodeToString(("user1@email.com:1q2w3e4r!")
                 .getBytes()));
 
@@ -52,8 +53,8 @@ class UserServiceTest {
     @DisplayName("Already Exist user registration test")
     void alreadyExistUserRegistrationTest() {
         //given
-        UserRequestDto user1Request = new UserRequestDto("user1@email.com", "1q2w3e4r!");
-        UserRequestDto user2Request = new UserRequestDto("user1@email.com", "1234");
+        UserRegisterRequest user1Request = new UserRegisterRequest("user1@email.com", "1q2w3e4r!");
+        UserRegisterRequest user2Request = new UserRegisterRequest("user1@email.com", "1234");
 
         //when
         userService.registerUser(user1Request);
@@ -67,21 +68,22 @@ class UserServiceTest {
     @DisplayName("user login test")
     void userLoginTest() {
         //given
-        UserRequestDto user1Request = new UserRequestDto("user1@email.com", "1q2w3e4r!");
-        String token = userService.registerUser(user1Request).token();
+        UserRegisterRequest registerRequest = new UserRegisterRequest("user1@email.com", "1q2w3e4r!");
+        UserLoginRequest loginRequest = new UserLoginRequest("user1@email.com", "1q2w3e4r!");
+        String token = userService.registerUser(registerRequest).token();
 
         //when
-        UserResponseDto user1Response = userService.loginUser(user1Request);
+        UserResponse response = userService.loginUser(loginRequest);
 
         //then
-        assertThat(user1Response.token()).isEqualTo(token);
+        assertThat(response.token()).isEqualTo(token);
     }
 
     @Test
     @DisplayName("unknown user login test")
     void unknownUserLoginTest() {
         //given
-        UserRequestDto user1Request = new UserRequestDto("user1@email.com", "1q2w3e4r!");
+        UserLoginRequest user1Request = new UserLoginRequest("user1@email.com", "1q2w3e4r!");
 
         //when & then
         assertThatThrownBy(() -> userService.loginUser(user1Request))
@@ -92,8 +94,8 @@ class UserServiceTest {
     @DisplayName("wrong password login test")
     void wrongPasswordLoginTest() {
         //given
-        UserRequestDto user1Request = new UserRequestDto("user1@email.com", "1q2w3e4r!");
-        UserRequestDto user2Request = new UserRequestDto("user1@email.com", "1234");
+        UserRegisterRequest user1Request = new UserRegisterRequest("user1@email.com", "1q2w3e4r!");
+        UserLoginRequest user2Request = new UserLoginRequest("user1@email.com", "1234");
         userService.registerUser(user1Request);
 
         //when & then
@@ -105,11 +107,13 @@ class UserServiceTest {
     @DisplayName("getUserIdByToken test")
     void getUserIdByTokenTest() {
         //given
-        UserRequestDto user1Request = new UserRequestDto("user1@example.com", "password1");
-        userService.registerUser(user1Request);
+        UserRegisterRequest registerRequest = new UserRegisterRequest("user1@example.com", "password1");
+        userService.registerUser(registerRequest);
+
+        UserLoginRequest loginRequest = new UserLoginRequest("user1@example.com", "password1");
 
         //when
-        UserResponseDto loginUserResponse = userService.loginUser(user1Request);
+        UserResponse loginUserResponse = userService.loginUser(loginRequest);
         String token = loginUserResponse.token();
         Long userId = loginUserResponse.id();
 

@@ -4,7 +4,7 @@ import gift.dto.wishlist.WishResponseDto;
 import gift.dto.wishlist.WishRequestDto;
 import gift.entity.Wish;
 import gift.exception.wish.WishNotFoundException;
-import gift.mapper.WishMapper;
+import gift.util.mapper.WishMapper;
 import gift.repository.WishRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;

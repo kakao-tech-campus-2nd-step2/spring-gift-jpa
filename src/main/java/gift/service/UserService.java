@@ -1,12 +1,13 @@
 package gift.service;
 
-import gift.dto.user.UserRequestDto;
-import gift.dto.user.UserResponseDto;
+import gift.dto.user.UserLoginRequest;
+import gift.dto.user.UserRegisterRequest;
+import gift.dto.user.UserResponse;
 import gift.entity.User;
 import gift.exception.user.UserAlreadyExistException;
 import gift.exception.user.UserNotFoundException;
 import gift.exception.user.UserUnauthorizedException;
-import gift.mapper.UserMapper;
+import gift.util.mapper.UserMapper;
 import gift.repository.UserRepository;
 import java.util.Base64;
 import java.util.HashMap;
@@ -21,8 +22,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserResponseDto registerUser(UserRequestDto userRequest) {
-        User user = UserMapper.toUser(userRequest);
+    public UserResponse registerUser(UserRegisterRequest request) {
+        User user = UserMapper.toUser(request);
 
         Optional<User> existingUser = userRepository.findByEmail(user.email());
 
@@ -31,18 +32,18 @@ public class UserService {
         }
 
         Long id = userRepository.insert(user);
-        return new UserResponseDto(
+        return new UserResponse(
             id,
-            userRequest.email(),
-            getToken(userRequest.email(), userRequest.password())
+            request.email(),
+            getToken(request.email(), request.password())
         );
     }
 
-    public UserResponseDto loginUser(UserRequestDto userRequest) {
+    public UserResponse loginUser(UserLoginRequest userRequest) {
         User user = userRepository.findByEmailAndPassword(userRequest.email(), userRequest.password())
             .orElseThrow(() -> new UserNotFoundException("로그인할 수 없습니다."));
 
-        return new UserResponseDto(
+        return new UserResponse(
             user.id(),
             user.email(),
             getToken(user.email(), user.password())

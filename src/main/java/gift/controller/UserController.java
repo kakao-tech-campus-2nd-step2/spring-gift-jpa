@@ -1,7 +1,8 @@
 package gift.controller;
 
-import gift.dto.user.UserRequestDto;
-import gift.dto.user.UserResponseDto;
+import gift.dto.user.UserLoginRequest;
+import gift.dto.user.UserRegisterRequest;
+import gift.dto.user.UserResponse;
 import gift.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,12 +22,12 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<UserResponseDto> register(@RequestBody @Valid UserRequestDto userRequest) {
-        return new ResponseEntity<>(userService.registerUser(userRequest), HttpStatus.OK);
+    public ResponseEntity<UserResponse> register(@RequestBody @Valid UserRegisterRequest request) {
+        return new ResponseEntity<>(userService.registerUser(request), HttpStatus.OK);
     }
 
     @PostMapping("login")
-    public ResponseEntity<UserResponseDto> login(@RequestBody @Valid UserRequestDto userRequest) {
+    public ResponseEntity<UserResponse> login(@RequestBody @Valid UserLoginRequest userRequest) {
         return new ResponseEntity<>(userService.loginUser(userRequest), HttpStatus.OK);
     }
 

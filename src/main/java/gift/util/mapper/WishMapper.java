@@ -1,4 +1,4 @@
-package gift.mapper;
+package gift.util.mapper;
 
 import gift.dto.wishlist.WishRequestDto;
 import gift.entity.Wish;
