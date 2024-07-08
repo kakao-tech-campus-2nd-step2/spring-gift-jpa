@@ -21,11 +21,9 @@ public class AdminProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<Map<String, List<Product>>> getProducts() {
+    public ResponseEntity<?> getProducts() {
         List<Product> products = productService.getProducts();
-        Map<String, List<Product>> response = new HashMap<>();
-        response.put("products", products);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/product/{id}")

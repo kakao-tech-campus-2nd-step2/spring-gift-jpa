@@ -180,7 +180,7 @@
                 type: 'GET',
                 url: '/spring-gift/admin/product',
                 success: function (response) {
-                    var products = response.products;
+                    var products = response;
                     var html = '';
                     products.forEach(function (product) {
                         html += '<tr>' +
