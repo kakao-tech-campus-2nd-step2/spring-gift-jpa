@@ -35,7 +35,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     if (authorizationHeader == null || !authorizationHeader.startsWith(TOKEN_TYPE)) {
       throw new UnauthorizedException("No Bearer token found in request headers");
     }
-    String token = authorizationHeader.substring(7);
+    String token = authorizationHeader.substring(TOKEN_TYPE.length());
     UserDto user = jwtService.getUserEmailFromToken(token);
     return user;
   }
