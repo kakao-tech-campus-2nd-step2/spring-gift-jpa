@@ -1,16 +1,28 @@
 package gift.wishList;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "WISHLISTS")
 public class WishList {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
+    @Column(name = "userID")
     long userID;
+    @Column(name = "productID")
     long productID;
+    @Column(name = "count")
     long count;
 
-    public WishList(long id, long userID, long productID, long count) {
-        this.id = id;
+    public WishList(long userID, long productID, long count) {
         this.userID = userID;
         this.productID = productID;
         this.count = count;
+    }
+
+    public WishList() {
+
     }
 
     public long getId() {
