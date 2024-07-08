@@ -1,11 +1,11 @@
 package gift.controller.user.dto;
 
-import gift.model.user.Role;
-import gift.model.user.User;
+import gift.model.member.Role;
+import gift.model.member.Member;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public class UserRequest {
+public class MemberRequest {
 
     public record Register(
         @Email
@@ -15,8 +15,8 @@ public class UserRequest {
         @NotBlank
         String name) {
 
-        public User toEntity() {
-            return User.create(null, email(), password(), name(), Role.USER);
+        public Member toEntity() {
+            return Member.create(null, email(), password(), name(), Role.USER);
         }
     }
 

@@ -1,6 +1,6 @@
 package gift.global.auth.jwt;
 
-import gift.model.user.Role;
+import gift.model.member.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -29,11 +29,11 @@ public class JwtProvider {
         this.key = new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS256.getJcaName());
     }
 
-    public String createToken(String userId, Role role) {
+    public String createToken(Long memberId, Role role) {
         Date date = new Date();
         // 이 코드를 통해서 jwt 토큰을 생성할 수 있다.
         String token = BEARER_PREFIX + Jwts.builder()
-            .setSubject(String.valueOf(userId))    // 사용자 식별값
+            .setSubject(String.valueOf(memberId))    // 사용자 식별값
             .claim("roles", role)        // 사용자 권한   앞에는 key, 뒤에는 value 권한값
             .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_EXPIRE_TIME))    // 만료시간
             .setIssuedAt(date)                    // 발급입

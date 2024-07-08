@@ -1,15 +1,15 @@
-package gift.model.user;
+package gift.model.member;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
-public class UserRowMapper implements RowMapper<User> {
+public class MemberRowMapper implements RowMapper<Member> {
 
     @Override
-    public User mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        return new User(
-            resultSet.getString("id"),
+    public Member mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+        return new Member(
+            resultSet.getLong("id"),
             resultSet.getString("email"),
             resultSet.getString("password"),
             resultSet.getString("name"),

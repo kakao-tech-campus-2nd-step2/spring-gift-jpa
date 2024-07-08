@@ -199,7 +199,7 @@ values ('Anthony', 33928, 'http://dummyimage.com/170x100.png/cc0000/ffffff');
 insert into products (name, price, image_url)
 values ('Ada', 7528, 'http://dummyimage.com/164x100.png/5fa2dd/ffffff');
 
-insert into merbers (name, email, password, role)
+insert into members (name, email, password, role)
 values ('Jarred', 'test@test.com', 'asd', 'ADMIN');
 insert into members (name, email, password, role)
 values ('Jarred1', 'test1@test.com', 'asd', 'USER');
@@ -211,14 +211,14 @@ insert into members (name, email, password, role)
 values ('down', 'test123@test.com',
         'f9aac0519f30824bb09b2dbae6eb62633255d765c2272e8392d737332554926c', 'ADMIN');
 
-insert into wishes (user_id, product_id, count)
+insert into wishes (member_id, product_id, count)
 values (1, 2, 5);
-insert into wishes (user_id, product_id, count)
+insert into wishes (member_id, product_id, count)
 values (1, 4, 13);
-insert into wishes (user_id, product_id, count)
+insert into wishes (member_id, product_id, count)
 values (2, 12, 13);
-insert into wishes (user_id, product_id, count)
+insert into wishes (member_id, product_id, count)
 values (3, 32, 13);
-insert into wishes (user_id, product_id, count)
+insert into wishes (member_id, product_id, count)
 values (4, 27, 13);
 

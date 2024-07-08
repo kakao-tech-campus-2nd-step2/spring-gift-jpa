@@ -1,17 +1,17 @@
-package gift.model.user;
+package gift.model.member;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class User {
+public class Member {
 
-    private String id;
+    private Long id;
     private String email;
     private String password;
     private String name;
     private Role role;
 
-    public User(String id, String email, String password, String name, Role role) {
+    public Member(Long id, String email, String password, String name, Role role) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -19,7 +19,7 @@ public class User {
         this.role = role;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -45,8 +45,8 @@ public class User {
         return hashedPassword.equals(this.password);
     }
 
-    public static User create(String id, String email, String password, String name, Role role) {
-        return new User(id, email, PasswordUtil.hashPasswordWithSalt(password), name, role);
+    public static Member create(Long id, String email, String password, String name, Role role) {
+        return new Member(id, email, PasswordUtil.hashPasswordWithSalt(password), name, role);
     }
 
 }

@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class WishDao {
 
-    private static final String SQL_INSERT = "INSERT INTO wishes (user_id, product_id, count) VALUES (?, ?, ?)";
+    private static final String SQL_INSERT = "INSERT INTO wishes (member_id, product_id, count) VALUES (?, ?, ?)";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM wishes WHERE id = ?";
-    private static final String SQL_UPDATE_COUNT = "UPDATE wishes SET count = ? WHERE user_id = ? AND product_id = ?";
-    private static final String SQL_SELECT_ALL = "SELECT * FROM wishes WHERE user_id = ?";
+    private static final String SQL_UPDATE_COUNT = "UPDATE wishes SET count = ? WHERE member_id = ? AND product_id = ?";
+    private static final String SQL_SELECT_ALL = "SELECT * FROM wishes WHERE member_id = ?";
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM wishes WHERE id = ?";
-    private static final String SQL_SELECT_BY_PRODUCT_ID_AND_USER_ID = "SELECT * FROM wishes WHERE product_id = ? AND user_id = ?";
+    private static final String SQL_SELECT_BY_PRODUCT_ID_AND_MEMBER_ID = "SELECT * FROM wishes WHERE product_id = ? AND member_id = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Wish> wishRowMapper = new WishRowMapper();
@@ -24,19 +24,19 @@ public class WishDao {
     }
 
     public void insert(Wish wish) {
-        jdbcTemplate.update(SQL_INSERT, wish.getUserId(), wish.getProductId(), wish.getCount());
+        jdbcTemplate.update(SQL_INSERT, wish.getMemberId(), wish.getProductId(), wish.getCount());
     }
 
     public void deleteById(Long id) {
         jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
 
-    public void updateCount(String userId, Long productId, Long count) {
-        jdbcTemplate.update(SQL_UPDATE_COUNT, count, userId, productId);
+    public void updateCount(Long memberId, Long productId, Long count) {
+        jdbcTemplate.update(SQL_UPDATE_COUNT, count, memberId, productId);
     }
 
-    public List<Wish> findAll(String userId) {
-        return jdbcTemplate.query(SQL_SELECT_ALL, wishRowMapper, userId);
+    public List<Wish> findAll(Long memberId) {
+        return jdbcTemplate.query(SQL_SELECT_ALL, wishRowMapper, memberId);
     }
 
     public Optional<Wish> findById(Long id) {
@@ -48,10 +48,10 @@ public class WishDao {
         }
     }
 
-    public Optional<Wish> findByProductIdAndUserId(Long productId, String userId) {
+    public Optional<Wish> findByProductIdAndUserId(Long productId, Long memberId) {
         try {
-            Wish wish = jdbcTemplate.queryForObject(SQL_SELECT_BY_PRODUCT_ID_AND_USER_ID,
-                wishRowMapper, productId, userId);
+            Wish wish = jdbcTemplate.queryForObject(SQL_SELECT_BY_PRODUCT_ID_AND_MEMBER_ID,
+                wishRowMapper, productId, memberId);
             return Optional.of(wish);
         } catch (Exception e) {
             return Optional.empty();

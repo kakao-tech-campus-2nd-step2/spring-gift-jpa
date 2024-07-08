@@ -20,8 +20,8 @@ public class LoginInfoArgumentResolver implements HandlerMethodArgumentResolver 
         NativeWebRequest webRequest,
         org.springframework.web.bind.support.WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String userId = (String) request.getAttribute("userId");
+        Long memberId = Long.parseLong((String) request.getAttribute("memberId"));
         String name = (String) request.getAttribute("name");
-        return new LoginInfo(userId, name);
+        return new LoginInfo(memberId, name);
     }
 }

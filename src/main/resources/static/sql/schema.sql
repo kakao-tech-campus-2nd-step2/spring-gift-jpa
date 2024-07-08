@@ -6,7 +6,7 @@ create table `products`
     `image_url` varchar(255) not null
 );
 
-create table `users`
+create table `members`
 (
     `id`       bigint auto_increment primary key,
     `name`     varchar(255) not null,
@@ -15,12 +15,12 @@ create table `users`
     `role`     varchar(255) not null
 );
 
-create table `members`
+create table `wishes`
 (
     `id`         bigint auto_increment primary key,
-    `user_id`    varchar(36) not null,
-    `product_id` int         not null,
-    `count`      int         not null,
-    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+    `member_id`  bigint not null,
+    `product_id` bigint not null,
+    `count`      int    not null,
+    FOREIGN KEY (`member_id`) REFERENCES `members` (`id`),
     FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
 );

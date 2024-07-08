@@ -1,34 +1,34 @@
 package gift.service;
 
 import gift.global.auth.jwt.JwtProvider;
-import gift.controller.user.dto.UserRequest.Login;
-import gift.controller.user.dto.UserRequest.Register;
-import gift.model.user.User;
-import gift.model.user.UserDao;
+import gift.controller.user.dto.MemberRequest.Login;
+import gift.controller.user.dto.MemberRequest.Register;
+import gift.model.member.Member;
+import gift.model.member.MemberDao;
 import gift.validate.InvalidAuthRequestException;
 import gift.validate.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class MemberService {
 
-    private final UserDao userDao;
+    private final MemberDao memberDao;
     private final JwtProvider jwtProvider;
 
-    public UserService(UserDao userDao, JwtProvider jwtProvider) {
-        this.userDao = userDao;
+    public MemberService(MemberDao memberDao, JwtProvider jwtProvider) {
+        this.memberDao = memberDao;
         this.jwtProvider = jwtProvider;
     }
 
     public void register(Register request) {
-        userDao.findByEmail(request.email()).ifPresent(user -> {
+        memberDao.findByEmail(request.email()).ifPresent(user -> {
             throw new InvalidAuthRequestException("User already exists.");
         });
-        userDao.insert(request.toEntity());
+        memberDao.insert(request.toEntity());
     }
 
     public String login(Login request) {
-        var user = userDao.findByEmail(request.email())
+        var user = memberDao.findByEmail(request.email())
             .orElseThrow(() -> new NotFoundException("User not found."));
 
         if (!user.verifyPassword(request.password())) {
@@ -38,7 +38,8 @@ public class UserService {
 
     }
 
-    public User getUser(String userId) {
-        return userDao.findById(userId).orElseThrow(() -> new NotFoundException("User not found."));
+    public Member getUser(Long memberId) {
+        return memberDao.findById(memberId)
+            .orElseThrow(() -> new NotFoundException("User not found."));
     }
 }

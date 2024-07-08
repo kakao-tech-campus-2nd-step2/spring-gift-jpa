@@ -1,6 +1,6 @@
 package gift.global.auth;
 
-import gift.model.user.Role;
+import gift.model.member.Role;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
