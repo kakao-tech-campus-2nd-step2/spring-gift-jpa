@@ -29,7 +29,7 @@ public class WishlistViewController {
 
     @GetMapping("{id}")
     public String showWishlist(@PathVariable("id") Long userId, Model model) {
-        List<WishlistItem> wishlists = wishlistController.makeWishlist(userId).getBody();
+        List<WishlistItem> wishlists = wishlistController.getWishlist(userId).getBody();
         model.addAttribute("wishlists", wishlists);
         model.addAttribute("id", userId);
         return "wishlist";
