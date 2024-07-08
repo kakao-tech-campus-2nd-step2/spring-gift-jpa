@@ -1,13 +1,11 @@
 package gift.mapper;
 
-import gift.domain.Product;
 import gift.domain.Product.CreateProduct;
+import gift.domain.Product.ProductSimple;
 import gift.domain.Product.UpdateProduct;
 import gift.entity.ProductEntity;
-import gift.domain.Product.ProductSimple;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,11 +20,11 @@ public class ProductMapper {
         return list;
     }
 
-    public ProductEntity toEntity(CreateProduct create){
-        return new ProductEntity(create.getName(),create.getPrice(),create.getImageUrl());
+    public ProductEntity toEntity(CreateProduct create) {
+        return new ProductEntity(create.getName(), create.getPrice(), create.getImageUrl());
     }
 
-    public ProductEntity toUpdate(UpdateProduct update, ProductEntity entity){
+    public ProductEntity toUpdate(UpdateProduct update, ProductEntity entity) {
         entity.setPrice(update.getPrice());
         entity.setName(update.getName());
         entity.setImageUrl(update.getImageUrl());

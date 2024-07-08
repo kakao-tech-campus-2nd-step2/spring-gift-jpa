@@ -44,8 +44,9 @@ public class WishController {
     //  위시리스트 추가
     //  user id 검증, product id 검증,  위시 리스트내 중복여부 검증
     @PostMapping
-    public SingleResult<Long> createWish(HttpServletRequest req, @Valid @RequestBody Wish.createWish create) {
-        return new SingleResult(wishListService.createWish(parsingPram.getId(req),create));
+    public SingleResult<Long> createWish(HttpServletRequest req,
+        @Valid @RequestBody Wish.createWish create) {
+        return new SingleResult(wishListService.createWish(parsingPram.getId(req), create));
     }
 
     //    wish id로 위시리스트 삭제
