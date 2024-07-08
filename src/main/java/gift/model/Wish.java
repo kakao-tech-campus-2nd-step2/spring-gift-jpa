@@ -6,11 +6,6 @@ public class Wish {
     private String productName;
     private Integer count;
 
-    public Wish(String productName, Integer count) {
-        this.productName = productName;
-        this.count = count;
-    }
-
     public Wish(Long memberId, String productName, Integer count) {
         this.memberId = memberId;
         this.productName = productName;

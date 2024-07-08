@@ -2,7 +2,6 @@ package gift.controller;
 
 import gift.model.dto.ProductRequestDto;
 import gift.model.dto.ProductResponseDto;
-import gift.repository.ProductDao;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;

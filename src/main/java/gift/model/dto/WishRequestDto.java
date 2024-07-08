@@ -18,8 +18,9 @@ public class WishRequestDto {
         this.count = count;
     }
 
-    public Wish toEntity() {
+    public Wish toEntity(Long memberId) {
         return new Wish(
+            memberId,
             productName,
             count
         );
