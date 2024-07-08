@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Wishlist</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table, th, td {
+      border: 1px solid black;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 5px;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      background-color: #4CAF50;
+      border-radius: 5px;
+    }
+    .btn-secondary {
+      background-color: #f44336;
+    }
+    .btn-home {
+      margin-left: 20px;
+      background-color: #007bff;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>My Wishlist
+    <a href="/web/products/list" class="btn btn-home">홈</a> <!-- 홈버튼 추가 -->
+  </h1>
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Product Name</th>
+      <th>Price</th>
+      <th>Quantity</th> <!-- 수량 열 추가 -->
+      <th>Image</th>
+      <th>Actions</th> <!-- 작업 열 추가 -->
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="wishlist : ${wishlist}">
+      <td th:text="${wishlist.id}"></td>
+      <td th:text="${wishlist.productName}"></td>
+      <td th:text="${wishlist.price}"></td>
+      <td>
+        <input type="number" min="1" th:value="${wishlist.quantity}" class="quantity" style="width: 60px;"> <!-- 수량 입력 -->
+      </td>
+      <td><img th:src="${wishlist.imageUrl}" alt="product image" width="100"/></td>
+      <td>
+        <button class="btn update-quantity" th:data-wishlist-id="${wishlist.id}">수량 변경</button> <!-- 수량 변경 버튼 -->
+        <button class="btn btn-secondary delete-wishlist" th:data-wishlist-id="${wishlist.id}">삭제</button> <!-- 삭제 버튼 -->
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      document.querySelectorAll('.update-quantity').forEach(function(button) {
+          button.addEventListener('click', function() {
+              const wishlistId = this.getAttribute('data-wishlist-id');
+              const quantityInput = this.closest('tr').querySelector('.quantity'); // 올바른 수량 입력 필드를 선택
+              const quantity = quantityInput.value;
+              fetch(`/web/wishlist/update/${wishlistId}`, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                  },
+                  body: new URLSearchParams({quantity: quantity})
+              })
+              .then(response => response.text())
+              .then(data => alert(data))
+              .catch(error => console.error('Error:', error));
+          });
+      });
+
+      document.querySelectorAll('.delete-wishlist').forEach(function(button) {
+          button.addEventListener('click', function() {
+              const wishlistId = this.getAttribute('data-wishlist-id');
+              fetch(`/web/wishlist/delete/${wishlistId}`, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                  }
+              })
+              .then(response => response.text())
+              .then(data => {
+                  alert(data);
+                  window.location.reload();
+              })
+              .catch(error => console.error('Error:', error));
+          });
+      });
+  });
+</script>
+</body>
+</html>

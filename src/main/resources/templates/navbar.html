@@ -1,0 +1,52 @@
+<nav th:fragment="navbarFragment"
+     class="navbar navbar-expand-lg navbar-light bg-light border-bottom"
+     xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+  <style>
+    .navbar {
+      padding: 0.2rem 1rem; /* 얇게 만들기 위해 패딩 조절 */
+      border-bottom: 1px solid #ccc; /* navbar과 홈페이지를 분리하는 선 */
+    }
+    .navbar-nav {
+      display: flex;
+      align-items: center; /* 수평 배열 및 정렬 */
+    }
+    .navbar-nav .nav-item {
+      margin-right: 10px; /* 버튼 간격 조절 */
+    }
+    .navbar-nav .nav-link {
+      padding: 0.3rem 0.8rem; /* 버튼 크기 조절 */
+      border-radius: 50px; /* 원형 버튼 */
+    }
+    .btn-outline-primary {
+      color: #007bff;
+      border-color: #007bff;
+    }
+    .btn-outline-primary:hover {
+      color: white;
+      background-color: #007bff;
+    }
+  </style>
+  <div class="container-fluid">
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+      <ul class="nav-item" sec:authorize="isAuthenticated()">
+        <a class="nav-link btn btn-outline-primary" th:href="@{/web/wishlist}">Wishlist</a>
+      </ul>
+      <ul class="nav-item" sec:authorize="isAnonymous()">
+        <a class="nav-link btn btn-outline-primary" th:href="@{/user/login}">로그인</a>
+      </ul>
+      <ul class="nav-item" sec:authorize="isAnonymous()">
+        <a class="nav-link btn btn-outline-primary" th:href="@{/user/signup}">회원가입</a>
+      </ul>
+      <ul class="nav-item" sec:authorize="isAuthenticated()">
+        <span class="nav-link">
+          <span th:if="${#authentication.name} != null">
+            [[${#authentication.name}]] 님 반갑습니다
+          </span>
+        </span>
+      </ul>
+      <ul class="nav-item" sec:authorize="isAuthenticated()">
+        <a class="nav-link btn btn-outline-primary" th:href="@{/user/logout}">로그아웃</a>
+      </ul>
+    </ul>
+  </div>
+</nav>
