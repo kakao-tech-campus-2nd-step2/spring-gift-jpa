@@ -4,7 +4,9 @@ import gift.main.dto.UserJoinRequest;
 import gift.main.dto.UserLoginRequest;
 import gift.main.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
+
 import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,19 +25,23 @@ public class MemberController {
     }
 
     @PostMapping("/members/register")
+
     public ResponseEntity<?> joinMember(@Valid @RequestBody UserJoinRequest userJoinRequest, HttpServletResponse response) {
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("Authorization", memberService.joinUser(userJoinRequest));
+
         responseBody.put("redirectUrl", "/spring-gift");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(responseBody);
 }
 
     @PostMapping("/members/login")
+
     public ResponseEntity<?> loinMember(@Valid @RequestBody UserLoginRequest userloginDto, HttpServletResponse response) {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("Authorization", memberService.loginUser(userloginDto));
+
         responseBody.put("redirectUrl", "/spring-gift");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(responseBody);

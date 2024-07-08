@@ -18,8 +18,6 @@ public class ProductDao {
         createProductTable();
     }
 
-
-
     public void createProductTable() {
         String sql = "CREATE TABLE IF NOT EXISTS products (" +
                 "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
@@ -62,7 +60,6 @@ public class ProductDao {
         String sql = "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
     }
-
 
     public void updateProduct(long id, ProductDto productDto) {
         String sql = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?";

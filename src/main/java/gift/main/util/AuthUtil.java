@@ -19,16 +19,19 @@ public class AuthUtil {
         this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
+
     public String createToken(Long id, String name, String email, String password, String role) {
         String token =  Jwts.builder()
                 .claim("id", id)
                 .claim("name", name)
                 .claim("email", email)
+
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis())) // 토큰 발생시간
                 .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
                 .signWith(secretKey) // 시그니처~!
                 .compact();
+
         return "Bearer " + token;
     }
 
@@ -37,11 +40,13 @@ public class AuthUtil {
                 .claim("id", user.getId())
                 .claim("name", user.getName())
                 .claim("email", user.getEmail())
+
                 .claim("role", user.getRole())
                 .issuedAt(new Date(System.currentTimeMillis())) // 토큰 발생시간
                 .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
                 .signWith(secretKey) // 시그니처~!
                 .compact();
+
         return "Bearer " + token;
     }
 
@@ -50,18 +55,19 @@ public class AuthUtil {
                 .claim("id", id)
                 .claim("name", userDto.getName())
                 .claim("email", userDto.getEmail())
+
                 .claim("role", userDto.getRole())
                 .issuedAt(new Date(System.currentTimeMillis())) // 토큰 발생시간
                 .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
                 .signWith(secretKey) // 시그니처~!
                 .compact();
+
         return "Bearer " + token;
     }
 
     public boolean validateToken(String token, String email) {
         if (isExpired(token)) {
             return false;
-
         }
 
         if (!email.equals(getEmail(token))) {
@@ -71,6 +77,7 @@ public class AuthUtil {
         return true;
 
     }
+
 
     public Long getId(String token) {
         return Jwts.parser()//파서 생성

@@ -132,6 +132,7 @@
                     loadProducts();
                 },
                 error: function (xhr, status, error) {
+
                     var errorResponse = JSON.parse(xhr.responseText);
                     alert(errorResponse.errorMessage);
                 }
@@ -160,6 +161,7 @@
                     }
                     $('#searchResult').html(html);
                 },
+
                 error: function (xhr, status, error) {
                     var errorResponse = JSON.parse(xhr.responseText);
                     alert(errorResponse.errorMessage);
@@ -238,8 +240,10 @@
                     loadProducts();
                 },
                 error: function (xhr, status, error) {
+
                     var errorResponse = JSON.parse(xhr.responseText);
                     alert(errorResponse.errorMessage);
+
                 }
             });
         });
@@ -254,6 +258,7 @@
                     alert('상품이 삭제되었습니다.');
                     loadProducts();
                 },
+
                 error: function (xhr, status, error) {
                     var errorResponse = JSON.parse(xhr.responseText);
                     alert(errorResponse.errorMessage);
