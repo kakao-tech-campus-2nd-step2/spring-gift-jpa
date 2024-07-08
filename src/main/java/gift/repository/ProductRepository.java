@@ -4,6 +4,8 @@ import gift.domain.Product;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 
@@ -15,11 +17,15 @@ public class ProductRepository {
         this.jdbcClient = jdbcClient;
     }
 
-    public void insertProduct(Product product){
-        String sql = "insert into product (id, name, price, imageUrl) values (?, ?, ?, ?)";
+    public Long insertProduct(Product product){
+        String sql = "insert into product (name, price, imageUrl) values (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
         jdbcClient.sql(sql)
-                .params(product.getId(), product.getName(), product.getPrice(), product.getImageUrl())
-                .update();
+            .params(product.getName(), product.getPrice(), product.getImageUrl())
+            .update(keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     public Optional<Product> selectProduct(Long id){

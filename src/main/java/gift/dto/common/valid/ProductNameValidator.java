@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 
 public class ProductNameValidator implements ConstraintValidator<ValidProductName, String> {
 
-    private static final Pattern KAKAO_PATTERN = Pattern.compile("^(?!.*카카오).*$");
     private static final Pattern SYMBOL_PATTERN = Pattern.compile("^[\\w가-힣ㄱ-ㅎㅏ-ㅣ()\\[\\]+\\-&/_]*$");
 
     @Override
@@ -18,11 +17,6 @@ public class ProductNameValidator implements ConstraintValidator<ValidProductNam
 
         if (name.length() > 15) {
             addConstraintViolation(context, "최대 15자까지 입력할 수 있습니다.");
-            return false;
-        }
-
-        if (!KAKAO_PATTERN.matcher(name).matches()) {
-            addConstraintViolation(context, "\"카카오\"가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다");
             return false;
         }
 

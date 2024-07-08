@@ -1,5 +1,6 @@
 package gift.auth;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;
 import java.time.Duration;
@@ -30,5 +31,17 @@ public class JwtUtil {
             .claims(claims)
             .signWith(key)
             .compact();
+    }
+
+    public Claims decodeToken(String token) {
+        try {
+            return Jwts.parser()
+                .verifyWith(key) // 서명 검증에 사용할 키 지정
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("jwt 오류", e);
+        }
     }
 }
