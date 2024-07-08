@@ -1,6 +1,7 @@
 package gift.dao;
 
 import gift.model.Member;
+import gift.model.Product;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,14 +15,12 @@ public class MemberDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public RowMapper<Member> MemberRowMapper(){
-        return ((resultSet, rowNum) -> {
-            Member member = new Member();
-            member.setId(resultSet.getLong("id"));
-            member.setEmail(resultSet.getString("email"));
-            member.setPassword(resultSet.getString("password"));
-            return member;
-        });
+    public RowMapper<Member> MemberRowMapper() {
+        return (resultSet, rowNum) -> new Member(
+                resultSet.getLong("id"),
+                resultSet.getString("email"),
+                resultSet.getString("password")
+        );
     }
 
     public Member selectMember(String email){
@@ -34,7 +33,7 @@ public class MemberDao {
     }
 
     public void insertMember(Member member){
-        var sql = "insert into member (id, email, password) values (?, ?, ?)";
-        jdbcTemplate.update(sql, member.getId(), member.getEmail(), member.getPassword());
+        var sql = "insert into member (email, password) values (?, ?)";
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
     }
 }

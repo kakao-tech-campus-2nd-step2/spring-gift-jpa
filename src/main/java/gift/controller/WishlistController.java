@@ -11,8 +11,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/wishlist")
 public class WishlistController {
-    Long id = 0L;
-
     private final WishlistDao WishlistDao;
     private final MemberController MemberController;
 
@@ -37,11 +35,8 @@ public class WishlistController {
         // auth로 유저 아이디 가져옴
         Long userid = MemberController.getIdByToken(request);
         // pathvariable로 상품 아이디 가져옴
-        Wishlist wishlist = new Wishlist();
-        id++;
-        wishlist.setId(id);
-        wishlist.setUserId(userid);
-        wishlist.setProductId(productid);
+        Wishlist wishlist = new Wishlist(userid, productid);
+
         WishlistDao.insertWishlist(wishlist);
     }
 

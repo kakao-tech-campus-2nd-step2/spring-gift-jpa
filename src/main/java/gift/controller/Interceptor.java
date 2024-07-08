@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.naming.AuthenticationException;
 
 public class Interceptor {
-    //static String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
+    static String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
 
-    @Value("${secret_key}")
-    private String secretKey;
+//    @Value("${secret_key}")
+//    private String secretKey;
 
     public String getToken(HttpServletRequest request) throws AuthenticationException {
         // 요청 헤더에서 Authorization 헤더 값을 가져옴

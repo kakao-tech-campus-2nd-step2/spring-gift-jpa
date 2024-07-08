@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.json.GsonBuilderUtils;
 
 public class JwtUtil {
-    //static String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
+    static String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
 
-    @Value("${secret_key}")
-    private String secretKey;
+//    @Value("${secret_key}")
+//    private String secretKey;
 
     public String createJwt(Long id, String email){
         System.out.println(secretKey);

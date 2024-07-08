@@ -1,5 +1,6 @@
 package gift.dao;
 
+import gift.model.Product;
 import gift.model.Wishlist;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,13 +18,11 @@ public class WishlistDao {
     }
 
     public RowMapper<Wishlist> WishlistRowMapper() {
-        return ( (resultSet, rowNum) -> {
-            Wishlist wishlist = new Wishlist();
-            wishlist.setId(resultSet.getLong("id"));
-            wishlist.setUserId(resultSet.getLong("userid"));
-            wishlist.setProductId(resultSet.getLong("productid"));
-            return wishlist;
-        });
+        return (resultSet, rowNum) -> new Wishlist(
+                resultSet.getLong("id"),
+                resultSet.getLong("userid"),
+                resultSet.getLong("productid")
+        );
     }
 
     public List<Wishlist> selectAllWishlist(Long id){
@@ -34,8 +33,8 @@ public class WishlistDao {
     }
 
     public void insertWishlist(Wishlist wishlist){
-        var sql = "insert into wishlist (id, userid, productid) values (?, ?, ?)";
-        jdbcTemplate.update(sql, wishlist.getId(), wishlist.getUserId(), wishlist.getProductId());
+        var sql = "insert into wishlist (userid, productid) values (?, ?)";
+        jdbcTemplate.update(sql, wishlist.getUserId(), wishlist.getProductId());
 
 
     }

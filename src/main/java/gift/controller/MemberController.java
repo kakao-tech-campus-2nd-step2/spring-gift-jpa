@@ -14,8 +14,6 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/member")
 public class MemberController {
-    long id = 0L;
-
     Interceptor interceptor = new Interceptor();
     JwtUtil jwtUtil = new JwtUtil();
     private final MemberDao MemberDao;
@@ -27,8 +25,6 @@ public class MemberController {
     @PostMapping("/signin")
     public String signin(@RequestBody Member member){
         if (MemberDao.selectMember(member.getEmail()) == null){
-            id++;
-            member.setId(id);
             MemberDao.insertMember(member);
             System.out.println("signin: " + member.getId() + " " + member.getEmail());
             String token = jwtUtil.createJwt(member.getId(), member.getEmail());
@@ -63,8 +59,8 @@ public class MemberController {
 
         Claims claims = interceptor.getClaims(request);
 
-            id = claims.get("id", Long.class);
-            System.out.println(id);
+        id = claims.get("id", Long.class);
+        System.out.println(id);
         System.out.println(id);
         return id;
     }
