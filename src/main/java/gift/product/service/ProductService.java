@@ -1,6 +1,5 @@
 package gift.product.service;
 
-import gift.product.dto.LoginMember;
 import gift.product.dto.ProductDto;
 import gift.product.model.Product;
 import gift.product.repository.ProductRepository;

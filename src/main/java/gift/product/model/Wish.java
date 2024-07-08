@@ -1,6 +1,7 @@
 package gift.product.model;
 
 public class Wish {
+
     private final Long id;
     private final Long memberId;
     private final Long productId;

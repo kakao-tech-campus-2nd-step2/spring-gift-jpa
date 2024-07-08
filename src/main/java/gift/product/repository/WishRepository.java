@@ -31,7 +31,8 @@ public class WishRepository {
         params.put("member_id", wish.getMemberId());
         params.put("product_id", wish.getProductId());
 
-        Long wishId = (Long) simpleJdbcInsert.executeAndReturnKey(new MapSqlParameterSource(params));
+        Long wishId = (Long) simpleJdbcInsert.executeAndReturnKey(
+            new MapSqlParameterSource(params));
         return new Wish(wishId, wish.getMemberId(), wish.getProductId());
     }
 

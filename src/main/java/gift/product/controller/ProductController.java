@@ -1,10 +1,8 @@
 package gift.product.controller;
 
 import gift.product.dto.ClientProductDto;
-import gift.product.dto.LoginMember;
 import gift.product.model.Product;
 import gift.product.service.ProductService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;

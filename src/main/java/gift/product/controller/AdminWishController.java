@@ -1,6 +1,5 @@
 package gift.product.controller;
 
-import gift.product.dto.AdminProductDto;
 import gift.product.dto.LoginMember;
 import gift.product.dto.WishDto;
 import gift.product.model.Wish;
@@ -46,7 +45,8 @@ public class AdminWishController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable(name = "id") Long wishId, HttpServletRequest request) {
+    public String deleteProduct(@PathVariable(name = "id") Long wishId,
+        HttpServletRequest request) {
         wishService.deleteWish(wishId, getLoginMember(request));
         return REDIRECT_ADMIN_WISHES;
     }

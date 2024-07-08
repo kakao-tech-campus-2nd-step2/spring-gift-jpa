@@ -1,6 +1,5 @@
 package gift.product.repository;
 
-import gift.product.dto.LoginMember;
 import gift.product.model.Product;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +31,8 @@ public class ProductRepository {
         params.put("price", product.getPrice());
         params.put("imageUrl", product.getImageUrl());
 
-        Long productId = (Long) simpleJdbcInsert.executeAndReturnKey(new MapSqlParameterSource(params));
+        Long productId = (Long) simpleJdbcInsert.executeAndReturnKey(
+            new MapSqlParameterSource(params));
         return new Product(productId, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
@@ -51,7 +51,8 @@ public class ProductRepository {
     public void update(Product product) {
         var sql = "UPDATE Product SET name = ?, price = ?, imageUrl = ? WHERE id = ?";
 
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getId());
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(),
+            product.getId());
     }
 
     public void delete(Long id) {

@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import gift.product.dto.ClientProductDto;
-import gift.product.dto.LoginMember;
 import gift.product.model.Product;
 import gift.product.service.ProductService;
 import java.util.List;

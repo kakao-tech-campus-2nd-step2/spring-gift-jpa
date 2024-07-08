@@ -61,7 +61,8 @@ class WishesIntegrityTest {
     void 상품_추가() {
         String url = BASE_URL + port + "/api/products/insert";
         ProductDto productDto = new ClientProductDto("테스트1", 1500, "테스트주소1");
-        RequestEntity<ProductDto> requestEntity = new RequestEntity<>(productDto, HttpMethod.POST, URI.create(url));
+        RequestEntity<ProductDto> requestEntity = new RequestEntity<>(productDto, HttpMethod.POST,
+            URI.create(url));
 
         testRestTemplate.exchange(requestEntity, String.class);
     }
@@ -73,7 +74,8 @@ class WishesIntegrityTest {
         WishDto wishDto = new WishDto(1L);
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        RequestEntity<WishDto> requestEntity = new RequestEntity<>(wishDto, headers, HttpMethod.POST, URI.create(url));
+        RequestEntity<WishDto> requestEntity = new RequestEntity<>(wishDto, headers,
+            HttpMethod.POST, URI.create(url));
 
         var actual = testRestTemplate.exchange(requestEntity, String.class);
 
@@ -86,7 +88,8 @@ class WishesIntegrityTest {
         String url = BASE_URL + port + "/api/wishes";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        RequestEntity<WishDto> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, URI.create(url));
+        RequestEntity<WishDto> requestEntity = new RequestEntity<>(headers, HttpMethod.GET,
+            URI.create(url));
 
         var actual = testRestTemplate.exchange(requestEntity, String.class);
 
@@ -99,7 +102,8 @@ class WishesIntegrityTest {
         String url = BASE_URL + port + "/api/wishes/1";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        RequestEntity<WishDto> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, URI.create(url));
+        RequestEntity<WishDto> requestEntity = new RequestEntity<>(headers, HttpMethod.GET,
+            URI.create(url));
 
         var actual = testRestTemplate.exchange(requestEntity, String.class);
 
@@ -112,7 +116,8 @@ class WishesIntegrityTest {
         String url = BASE_URL + port + "/api/wishes/delete/1";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
-        RequestEntity<WishDto> requestEntity = new RequestEntity<>(headers, HttpMethod.DELETE, URI.create(url));
+        RequestEntity<WishDto> requestEntity = new RequestEntity<>(headers, HttpMethod.DELETE,
+            URI.create(url));
 
         var actual = testRestTemplate.exchange(requestEntity, String.class);
 

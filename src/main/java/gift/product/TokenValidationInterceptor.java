@@ -57,7 +57,8 @@ public class TokenValidationInterceptor implements HandlerInterceptor {
         }
     }
 
-    private void decodeAccessToken(HttpServletRequest request, HttpServletResponse response, String accessToken)
+    private void decodeAccessToken(HttpServletRequest request, HttpServletResponse response,
+        String accessToken)
         throws IOException {
         String EncodedSecretKey = Encoders.BASE64.encode(
             SECRET_KEY.getBytes(StandardCharsets.UTF_8));
@@ -74,7 +75,8 @@ public class TokenValidationInterceptor implements HandlerInterceptor {
         request.setAttribute("id", memberId);
     }
 
-    private void validateMemberExistence(HttpServletResponse response, Long memberId) throws IOException {
+    private void validateMemberExistence(HttpServletResponse response, Long memberId)
+        throws IOException {
         if (!authService.existsMember(new LoginMember(memberId))) {
             response.sendError(401, "회원 정보가 존재하지 않습니다.");
         }
