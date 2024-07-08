@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.domain.User;
 import gift.domain.User.UserSimple;
+import gift.entity.UserEntity;
 import gift.errorException.ListResult;
 import gift.errorException.SingleResult;
 import gift.service.UserService;
@@ -29,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public SingleResult<UserSimple> getUser(@PathVariable long id) {
+    public SingleResult<UserEntity> getUser(@PathVariable long id) {
         return new SingleResult<>(userService.getUser(id));
     }
 
