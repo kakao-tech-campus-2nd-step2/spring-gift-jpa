@@ -22,7 +22,7 @@ public class MemberRepositoryImpl implements MemberRepository {
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
     }
     @Override
-    public Optional<Member> findByPasswordAndEmail(String email, String password) {
+    public Optional<Member> findByEmailAndPassword(String email, String password) {
         var sql = "SELECT * FROM members WHERE email = ? And password = ?";
         try {
             Member member = jdbcTemplate.queryForObject(
