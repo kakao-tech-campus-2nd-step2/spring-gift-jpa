@@ -25,6 +25,9 @@ public class Wish {
         this.quantity = quantity;
     }
 
+    public Wish() {
+    }
+
     public Long getId() {
         return id;
     }

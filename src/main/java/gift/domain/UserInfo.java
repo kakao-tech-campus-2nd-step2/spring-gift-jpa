@@ -17,10 +17,12 @@ public class UserInfo {
     @Column(nullable = false)
     private String password;
 
+    public UserInfo() {
+    }
 
-    public UserInfo(String password, String email) {
-        this.password = password;
+    public UserInfo(String email, String password) {
         this.email = email;
+        this.password = password;
     }
 
     public Long getId() { return id; }

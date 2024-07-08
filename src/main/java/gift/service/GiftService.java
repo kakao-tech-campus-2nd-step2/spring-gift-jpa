@@ -45,8 +45,7 @@ public class GiftService {
 
         Product savedProduct = productRepository.save(product);
 
-        return new ProductDTO(savedProduct.getId(), savedProduct.getName()
-            , savedProduct.getPrice(), savedProduct.getImageUrl());
+        return productDTO;
     }
 
     public ProductDTO putProducts(ProductDTO productDTO, Long id) {

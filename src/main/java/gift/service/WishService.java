@@ -45,7 +45,7 @@ public class WishService {
             () -> new UserNotFoundException("User Not Found")
         );
         try {
-            wishsRepository.deleteByProductIdaAndUserId(productId,userInfo.getId());
+            wishsRepository.deleteByProductIdAndUserId(productId,userInfo.getId());
             return true;
         } catch (Exception e) {
             throw new WishListNotFoundException("Not Found");
@@ -66,7 +66,7 @@ public class WishService {
         Wish wish = new Wish(userInfo.getId(), wishRequestDTO.getProductId(),wishRequestDTO.getQuantity());
         try {
             if (wishRequestDTO.getQuantity()==0){
-                wishsRepository.deleteByProductIdaAndUserId(wishRequestDTO.getProductId(),userInfo.getId());
+                wishsRepository.deleteByProductIdAndUserId(wishRequestDTO.getProductId(),userInfo.getId());
                 return true;
             }
             if (!wishsRepository.existsByUserIdAndProductId(userInfo.getId(),wishRequestDTO.getProductId())){

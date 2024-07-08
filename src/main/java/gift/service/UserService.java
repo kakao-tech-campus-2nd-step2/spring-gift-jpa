@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public TokenResponseDTO registerUser(UserDTO userDTO) {
-        UserInfo userInfo = new UserInfo(userDTO.getPassword(), userDTO.getEmail());
+        UserInfo userInfo = new UserInfo( userDTO.getEmail(),userDTO.getPassword());
         if (userInfo.getId() != null && userInfoRepository.existsById(userInfo.getId())) {
             throw new UserAlreadyExistsException("User Already Exist");
         }
@@ -34,7 +34,7 @@ public class UserService {
     }
 
     public TokenResponseDTO login(UserDTO userDTO) {
-        UserInfo userInfo = new UserInfo(userDTO.getPassword(), userDTO.getEmail());
+        UserInfo userInfo = new UserInfo(userDTO.getEmail(),userDTO.getPassword());
         Optional<UserInfo> byEmail = userInfoRepository.findByEmail(userInfo.getEmail());
         if (byEmail.isEmpty()) {
             throw new UserNotFoundException("User NOT FOUND");
