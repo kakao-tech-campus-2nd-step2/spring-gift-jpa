@@ -9,13 +9,17 @@ spring:
     console:
       enabled: true # H2 console 활성화 여부
       path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: update # 스키마 자동 업데이트
+    show-sql: true # 실행되는 SQL 쿼리 로깅
   sql:
     init:
       mode: always # SQL 초기화 모드
 
 logging:
-    level:
-        root: INFO
-        org.springframework.web: DEBUG
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
 jwt:
   secret: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
