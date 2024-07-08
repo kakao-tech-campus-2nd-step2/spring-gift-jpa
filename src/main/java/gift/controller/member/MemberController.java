@@ -33,10 +33,7 @@ public class MemberController {
     @PostMapping("/members/login")
     public ResponseEntity<TokenResponse> loginMember(@Valid @RequestBody LoginInfoRequest loginInfo) {
         Long registeredMemberId = memberService.loginMember(loginInfo);
-        Token token = tokenService.getToken(registeredMemberId);
-        if (token == null) {
-            return ResponseEntity.ok(new TokenResponse());
-        }
+        Token token = tokenService.generateToken(registeredMemberId);
         return ResponseEntity.ok(new TokenResponse(token.getValue()));
     }
 
