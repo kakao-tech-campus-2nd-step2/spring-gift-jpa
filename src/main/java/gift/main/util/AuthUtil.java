@@ -1,15 +1,18 @@
 package gift.main.util;
 
 import gift.main.dto.UserDto;
+import gift.main.dto.UserVo;
 import gift.main.entity.User;
+import gift.main.entity.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Service
@@ -21,13 +24,15 @@ public class AuthUtil {
         this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
+    public static UserVo getSessionUser(HttpSession session) {
+        return (UserVo) session.getAttribute("user");
+    }
 
     public String createToken(Long id, String name, String email, String password, String role) {
         String token =  Jwts.builder()
                 .claim("id", id)
                 .claim("name", name)
                 .claim("email", email)
-
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis())) // 토큰 발생시간
                 .setExpiration(new Date(System.currentTimeMillis() + 2400000L)) // 소멸시간 셋팅
@@ -86,16 +91,6 @@ public class AuthUtil {
                 .getPayload()
                 .get("id", Long.class);
     }
-
-    public String getStringId(String token) {
-        return Jwts.parser()//파서 생성
-                .verifyWith(secretKey)
-                .build()//파서 키 설정과 빌드 완료
-                .parseSignedClaims(token)//토큰 서명 확인
-                .getPayload()
-                .get("id", String.class);
-    }
-
 
     public String getEmail(String token) {
         return Jwts.parser()//파서 생성

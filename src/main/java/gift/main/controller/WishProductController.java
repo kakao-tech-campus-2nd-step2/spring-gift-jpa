@@ -1,12 +1,12 @@
 package gift.main.controller;
 
-import gift.main.dto.ProductRequest;
 import gift.main.dto.UserVo;
 import gift.main.dto.WishListProductDto;
 import gift.main.entity.Product;
 import gift.main.entity.WishlistProduct;
 import gift.main.repository.ProductDao;
 import gift.main.repository.WishlistProductDao;
+import gift.main.util.AuthUtil;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,14 +36,14 @@ public class WishProductController {
 
     @DeleteMapping("/wishlist/{productId}")
     public ResponseEntity<?> deleteProducts(@PathVariable(name = "productId") Long productId, HttpSession session) {
-        UserVo seesionUser = (UserVo) session.getAttribute("user");
+        UserVo seesionUser = AuthUtil.getSessionUser(session);
         wishlistProductDao.deleteWishlistProductByUserIdAndProductId(seesionUser.getId(), productId);
         return ResponseEntity.ok("성공적으로 삭제 완료~!");
     }
 
     @GetMapping("/wishlist")
     public ResponseEntity<?> deleteProducts(HttpSession session) {
-        UserVo seesionUser = (UserVo) session.getAttribute("user");
+        UserVo seesionUser = AuthUtil.getSessionUser(session);
         List<WishlistProduct> wishlistProducts = wishlistProductDao.selectWishlistProductsByUserId(seesionUser.getId());
         Map<String, List<WishlistProduct>> response = new HashMap<>();
         response.put("wishlistProducts", wishlistProducts);
@@ -52,7 +52,7 @@ public class WishProductController {
 
     @PostMapping("/wishlist/{productId}")
     public ResponseEntity<?> addWishlistProduct(@PathVariable(name = "productId") Long productId, HttpSession session){
-        UserVo seesionUser = (UserVo) session.getAttribute("user");
+        UserVo seesionUser = AuthUtil.getSessionUser(session);
         WishListProductDto wishListProductDto = new WishListProductDto(productId, seesionUser.getId());
         wishlistProductDao.insertWishlistProduct(wishListProductDto);
         return ResponseEntity.ok("성공적으로 등록~");
