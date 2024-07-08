@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/wishes")
@@ -34,7 +35,13 @@ public class WishController {
   public ResponseEntity<ProductDto> addProductToWishList(@RequestBody ProductDto wishProduct,
     @LoginUser UserDto user) {
     ProductDto addedWishProduct = wishListService.addProductToWishList(wishProduct, user);
-    return ResponseEntity.ok(addedWishProduct);
+    // 생성된 리소스의 URI를 빌드
+    var location = ServletUriComponentsBuilder.fromCurrentRequest()
+      .path("/{id}")
+      .buildAndExpand(addedWishProduct.getId())
+      .toUri();
+
+    return ResponseEntity.created(location).body(addedWishProduct);
   }
 
   @DeleteMapping("/{id}")
