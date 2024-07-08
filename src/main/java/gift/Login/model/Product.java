@@ -1,7 +1,16 @@
 package gift.Login.model;
 
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "product")
 public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private long price;
     private String temperatureOption;
@@ -21,6 +30,7 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }

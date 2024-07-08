@@ -17,22 +17,29 @@ public class WishlistServiceImpl implements WishlistService {
         this.wishlistRepository = wishlistRepository;
     }
 
-
     @Override
     public void addProductToWishlist(UUID memberId, Product product) {
-        wishlistRepository.addProductToWishlist(memberId, product);
+        Wishlist wishlist = wishlistRepository.findByMemberId(memberId);
+        if (wishlist == null) {
+            wishlist = new Wishlist(memberId, List.of(product));
+        } else {
+            wishlist.getProducts().add(product);
+        }
+        wishlistRepository.save(wishlist);
     }
 
     @Override
     public Wishlist getWishlistByMemberId(UUID memberId) {
-        Wishlist wishlist = wishlistRepository.findWishlistByMemberId(memberId);
-        List<Product> products = wishlist.getProducts();
-        return new Wishlist(memberId, products);
+        return wishlistRepository.findByMemberId(memberId);
     }
 
     @Override
     public void updateProductInWishlist(UUID memberId, Long productId, Product product) {
-        Wishlist wishlist = wishlistRepository.findWishlistByMemberId(memberId);
+        Wishlist wishlist = wishlistRepository.findByMemberId(memberId);
+        if (wishlist == null) {
+            throw new RuntimeException("Wishlist not found");
+        }
+
         Product existingProduct = wishlist.getProducts().stream()
                 .filter(p -> p.getId().equals(productId))
                 .findFirst()
@@ -41,17 +48,22 @@ public class WishlistServiceImpl implements WishlistService {
         if (existingProduct == null) {
             throw new RuntimeException("Product not found in wishlist");
         }
+
         existingProduct.setName(product.getName());
         existingProduct.setPrice(product.getPrice());
         existingProduct.setTemperatureOption(product.getTemperatureOption());
         existingProduct.setCupOption(product.getCupOption());
         existingProduct.setSizeOption(product.getSizeOption());
         existingProduct.setImageUrl(product.getImageUrl());
-        wishlistRepository.updateProductInWishlist(memberId, productId, existingProduct);
+        wishlistRepository.save(wishlist);
     }
 
     @Override
     public void removeProductFromWishlist(UUID memberId, Long productId) {
-        wishlistRepository.removeProductFromWishlist(memberId, productId);
+        Wishlist wishlist = wishlistRepository.findByMemberId(memberId);
+        if (wishlist != null) {
+            wishlist.getProducts().removeIf(product -> product.getId().equals(productId));
+            wishlistRepository.save(wishlist);
+        }
     }
 }
