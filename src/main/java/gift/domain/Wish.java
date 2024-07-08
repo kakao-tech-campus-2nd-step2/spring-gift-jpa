@@ -1,14 +1,25 @@
 package gift.domain;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Wish {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "PRODUCT_ID", nullable = false)
     private Product product;
 
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
 
+    @Column(nullable = false)
     private int count;
+
 
     public Wish() {
     }
