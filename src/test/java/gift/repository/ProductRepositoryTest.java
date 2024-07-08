@@ -8,6 +8,8 @@ import gift.model.Product;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
 import org.hibernate.exception.DataException;
 import org.junit.jupiter.api.DisplayName;
@@ -61,21 +63,26 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("Product findAll 테스트")
     void findAll() {
-        for (int i=0;i<10;i++) {
-            Product addProduct = new Product("product"+i, 1000, "https://a.com");
-            productRepository.save(addProduct);
-        }
+
+        List<Product> products = Stream.generate(
+                () -> new Product("product", 1000, "https://a.com"))
+            .limit(10)
+            .toList();
+
+        products.forEach(
+            product -> productRepository.save(product)
+        );
 
         List<Product> findProducts = productRepository.findAll();
         assertThat(findProducts).hasSize(10);
 
-        int i=0;
-        for (Product p : findProducts) {
-            assertThat(p.getId()).isNotNull();
-            assertThat(p.getName()).isEqualTo("product"+i++);
-            assertThat(p.getPrice()).isEqualTo(1000);
-            assertThat(p.getImageUrl()).isEqualTo("https://a.com");
-        }
+        IntStream.range(0, 10)
+            .forEach( i -> {
+                Product p = findProducts.get(i);
+                assertThat(p.getId()).isNotNull();
+                assertThat(p).isEqualTo(products.get(i));
+            });
+
     }
 
     @Test
