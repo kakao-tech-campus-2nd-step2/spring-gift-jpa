@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.model.Product;
-import gift.model.ProductDao;
+import gift.dao.ProductDao;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ public class ProductController {
     private final ProductDao ProductDao;
     CatchError catchError = new CatchError();
 
-    public ProductController(gift.model.ProductDao productDao) {
+    public ProductController(gift.dao.ProductDao productDao) {
         ProductDao = productDao;
     }
 

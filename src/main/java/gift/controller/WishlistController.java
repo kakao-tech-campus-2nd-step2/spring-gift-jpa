@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.model.Wishlist;
-import gift.model.WishlistDao;
+import gift.dao.WishlistDao;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +16,7 @@ public class WishlistController {
     private final WishlistDao WishlistDao;
     private final MemberController MemberController;
 
-    public WishlistController(gift.model.WishlistDao wishlistDao, gift.controller.MemberController memberController) {
+    public WishlistController(gift.dao.WishlistDao wishlistDao, gift.controller.MemberController memberController) {
         WishlistDao = wishlistDao;
         MemberController = memberController;
     }

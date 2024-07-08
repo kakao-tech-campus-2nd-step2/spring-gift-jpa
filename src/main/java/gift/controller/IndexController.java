@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.model.Product;
-import gift.model.ProductDao;
+import gift.dao.ProductDao;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 public class IndexController {
     private final ProductDao ProductDao;
 
-    public IndexController(gift.model.ProductDao productDao) {
+    public IndexController(gift.dao.ProductDao productDao) {
         ProductDao = productDao;
     }
 

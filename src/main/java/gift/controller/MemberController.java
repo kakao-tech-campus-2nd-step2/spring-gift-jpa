@@ -2,10 +2,8 @@ package gift.controller;
 
 import gift.model.JwtUtil;
 import gift.model.Member;
-import gift.model.MemberDao;
+import gift.dao.MemberDao;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +20,7 @@ public class MemberController {
     JwtUtil jwtUtil = new JwtUtil();
     private final MemberDao MemberDao;
 
-    public MemberController(gift.model.MemberDao memberDao) {
+    public MemberController(gift.dao.MemberDao memberDao) {
         MemberDao = memberDao;
     }
 

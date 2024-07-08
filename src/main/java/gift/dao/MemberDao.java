@@ -1,5 +1,6 @@
-package gift.model;
+package gift.dao;
 
+import gift.model.Member;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

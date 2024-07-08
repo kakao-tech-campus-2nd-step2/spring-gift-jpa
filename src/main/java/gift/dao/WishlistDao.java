@@ -1,5 +1,6 @@
-package gift.model;
+package gift.dao;
 
+import gift.model.Wishlist;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
