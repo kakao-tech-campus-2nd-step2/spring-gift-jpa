@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+</head>
+<body>
+<h1>오류 발생</h1>
+<p th:text="${errorMessage}">Error message</p>
+<a th:href="@{/admin/products}">돌아가기</a>
+</body>
+</html>
