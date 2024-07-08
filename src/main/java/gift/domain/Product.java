@@ -15,6 +15,8 @@ public class Product {
         @Size(max = 15, message = "value는 15자 이상 초과 할 수 없습니다.")
         @Pattern(regexp = "^[가-힣a-zA-Z0-9\\s\\(\\)\\[\\]\\+\\-\\&\\/_]*$",
             message = "특수 문자는 ( ), [ ], +, -, &, /, _ 만 사용할 수 있습니다.")
+        @Pattern(regexp = "^(?!.*카카오).*$",
+            message = "카카오가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.")
         private String name;
         @NotNull(message = "price은 필수 입니다.")
         private Integer price;
@@ -46,6 +48,8 @@ public class Product {
         @Size(max = 15, message = "value는 15자 이상 초과 할 수 없습니다.")
         @Pattern(regexp = "^[가-힣a-zA-Z0-9\\s\\(\\)\\[\\]\\+\\-\\&\\/_]*$",
             message = "특수 문자는 ( ), [ ], +, -, &, /, _ 만 사용할 수 있습니다.")
+        @Pattern(regexp = "^(?!.*카카오).*$",
+            message = "카카오가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.")
         private String name;
         @NotNull(message = "price은 필수 입니다.")
         private Integer price;
