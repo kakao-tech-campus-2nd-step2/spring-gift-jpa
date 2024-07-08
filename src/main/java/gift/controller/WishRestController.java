@@ -1,5 +1,8 @@
 package gift.controller;
 
+import gift.annotation.LoginUser;
+import gift.domain.User;
+import gift.dto.UserResponseDto;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
 import gift.service.JwtUtil;
@@ -22,29 +25,25 @@ public class WishRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addWish(@RequestHeader("Authorization") String token, @RequestBody WishRequestDto wishRequest){
-        String userEmail = jwtUtil.extractEmail(token.substring(7));
-        wishService.save(userEmail, wishRequest);
+    public ResponseEntity<Void> addWish(@LoginUser UserResponseDto userResponseDto, @RequestBody WishRequestDto wishRequest){
+        wishService.save(userResponseDto, wishRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
-    public ResponseEntity<List<WishResponseDto>> getWishList(@RequestHeader("Authorization") String token){
-        String userEmail = jwtUtil.extractEmail(token.substring(7));
-        return ResponseEntity.status(HttpStatus.OK).body(wishService.findByUserEmail(userEmail));
+    public ResponseEntity<List<WishResponseDto>> getWishList(@LoginUser UserResponseDto userResponseDto){
+        return ResponseEntity.status(HttpStatus.OK).body(wishService.findByUserEmail(userResponseDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeWish(@RequestHeader("Authorization") String token, @PathVariable Long id){
-        String userEmail = jwtUtil.extractEmail(token.substring(7));
-        wishService.delete(userEmail,id);
+    public ResponseEntity<Void> removeWish(@LoginUser UserResponseDto userResponseDto, @PathVariable Long id){
+        wishService.delete(userResponseDto, id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateWishQuantity(@RequestHeader("Authorization") String token, @PathVariable Long id, @RequestBody WishRequestDto wishRequest){
-        String userEmail = jwtUtil.extractEmail(token.substring(7));
-        wishService.updateQuantity(userEmail, id, wishRequest);
+    public ResponseEntity<Void> updateWishQuantity(@LoginUser UserResponseDto userResponseDto, @PathVariable Long id, @RequestBody WishRequestDto wishRequest){
+        wishService.updateQuantity(userResponseDto, id, wishRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
