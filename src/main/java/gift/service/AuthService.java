@@ -23,7 +23,10 @@ public class AuthService {
 
     @Transactional
     public MemberResponseDto memberJoin(MemberRequestDto memberRequestDto){
-        Member member = Member.toEntity(memberRequestDto);
+        Member member = new Member.Builder()
+                .email(memberRequestDto.email())
+                .password(memberRequestDto.password())
+                .build();
 
         Optional<Member> memberByEmail = memberRepository.findMemberByEmail(memberRequestDto.email());
 
