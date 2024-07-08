@@ -27,7 +27,7 @@ public class MemberRepository {
         try {
             Member member = jdbcTemplate.queryForObject(
                 sql,
-                (rs, rowNum) -> Member.builder()
+                (rs, rowNum) -> new Member.MemberBuilder()
                     .id(rs.getLong("id"))
                     .name(rs.getString("name"))
                     .email(rs.getString("email"))
@@ -49,7 +49,7 @@ public class MemberRepository {
         try {
             Member member = jdbcTemplate.queryForObject(
                 sql,
-                (rs, rowNum) -> Member.builder()
+                (rs, rowNum) -> new Member.MemberBuilder()
                     .id(rs.getLong("id"))
                     .name(rs.getString("name"))
                     .email(rs.getString("email"))

@@ -5,7 +5,6 @@ import gift.domain.member.Member;
 import gift.response.ProductResponse;
 import gift.service.WishlistService;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,12 +14,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequiredArgsConstructor
 @RequestMapping("/api/wishlists/products")
 @RestController
 public class WishlistController {
 
     private final WishlistService wishlistService;
+
+    public WishlistController(WishlistService wishlistService) {
+        this.wishlistService = wishlistService;
+    }
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> productList(@LoginMember Member member) {

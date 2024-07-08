@@ -3,18 +3,21 @@ package gift.config;
 import gift.exception.MissingTokenException;
 import gift.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-@RequiredArgsConstructor
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final MemberService memberService;
     private final JwtProvider jwtProvider;
+
+    public LoginMemberArgumentResolver(MemberService memberService, JwtProvider jwtProvider) {
+        this.memberService = memberService;
+        this.jwtProvider = jwtProvider;
+    }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {

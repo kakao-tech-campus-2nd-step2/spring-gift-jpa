@@ -9,15 +9,19 @@ import gift.repository.WishlistRepository;
 import gift.response.ProductResponse;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
 public class WishlistService {
 
     private final WishlistRepository wishlistRepository;
     private final ProductRepository productRepository;
+
+    public WishlistService(WishlistRepository wishlistRepository,
+        ProductRepository productRepository) {
+        this.wishlistRepository = wishlistRepository;
+        this.productRepository = productRepository;
+    }
 
     public List<ProductResponse> getProducts(Long memberId) {
         return wishlistRepository.findAllProducts(memberId).stream()

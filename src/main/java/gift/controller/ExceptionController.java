@@ -14,7 +14,7 @@ public class ExceptionController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> invalid(MethodArgumentNotValidException e) {
-        ErrorResponse response = ErrorResponse.builder()
+        ErrorResponse response = new ErrorResponse.ErrorResponseBuilder()
             .code(400)
             .message(ErrorMessage.VALIDATION_ERROR)
             .build();
@@ -31,8 +31,8 @@ public class ExceptionController {
     public ResponseEntity<ErrorResponse> giftException(GiftException e) {
         int statusCode = e.getStatusCode();
 
-        ErrorResponse response = ErrorResponse.builder()
-            .code(statusCode)
+        ErrorResponse response = new ErrorResponse.ErrorResponseBuilder()
+            .code(e.getStatusCode())
             .message(e.getMessage())
             .validation(e.getValidation())
             .build();
@@ -43,7 +43,7 @@ public class ExceptionController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> exception(Exception e) {
-        ErrorResponse response = ErrorResponse.builder()
+        ErrorResponse response = new ErrorResponse.ErrorResponseBuilder()
             .code(500)
             .message(e.getMessage())
             .build();

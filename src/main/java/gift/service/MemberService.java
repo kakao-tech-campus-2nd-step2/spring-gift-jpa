@@ -5,15 +5,18 @@ import gift.domain.member.Member;
 import gift.exception.LoginException;
 import gift.exception.MemberNotFoundException;
 import gift.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
+
+    public MemberService(MemberRepository memberRepository, JwtProvider jwtProvider) {
+        this.memberRepository = memberRepository;
+        this.jwtProvider = jwtProvider;
+    }
 
     public void addMember(Member member) {
         memberRepository.save(member);

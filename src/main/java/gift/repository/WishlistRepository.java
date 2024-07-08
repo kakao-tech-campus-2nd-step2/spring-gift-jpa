@@ -2,15 +2,17 @@ package gift.repository;
 
 import gift.domain.Product;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-@RequiredArgsConstructor
 @Repository
 public class WishlistRepository {
 
     private final JdbcTemplate jdbcTemplate;
+
+    public WishlistRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public List<Product> findAllProducts(Long memberId) {
         String sql = "SELECT p.id, p.name, p.price, p.image_url FROM wishlist AS w INNER JOIN product AS p ON w.product_id = p.id WHERE w.member_id = ?";
