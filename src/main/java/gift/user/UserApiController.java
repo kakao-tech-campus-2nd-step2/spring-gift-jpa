@@ -25,15 +25,15 @@ public class UserApiController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
-        String password = user.getPassword();
-        String email = user.getEmail();
+    public ResponseEntity<?> registerUser(@RequestBody Users users) {
+        String password = users.getPassword();
+        String email = users.getEmail();
         logger.info("회원가입 시도: " + email);
         try {
             if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이메일과 비밀번호는 비어있으면 안됩니다.");
             }
-            if(!userService.registerUser(user)){
+            if(!userService.registerUser(users)){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("존재하는 이메일입니다.");
             }
             logger.info("회원가입 완료: " + email);
@@ -45,15 +45,15 @@ public class UserApiController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
-        String email = user.getEmail();
-        String password = user.getPassword();
+    public ResponseEntity<String> login(@RequestBody Users users) {
+        String email = users.getEmail();
+        String password = users.getPassword();
         logger.info("로그인 시도 중: " + email);
         try {
             if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이메일과 비밀번호는 빈칸이면 안됩니다.");
             }
-            String token = jwtUtil.generateToken(user);
+            String token = jwtUtil.generateToken(users);
             if (token != null) {
                 String response = "access-token: " + token;
                 logger.info("로그인 완료: " + email);

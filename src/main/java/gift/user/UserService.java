@@ -7,21 +7,17 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     @Autowired
-    private UserDao userDao;
+    private UsersRepository usersRepository;
 
-    public boolean registerUser(User user) {
-        if (userDao.userExistsByEmail(user.getEmail())) {
+    public boolean registerUser(Users users) {
+        if (usersRepository.existsByEmail(users.getEmail())) {
             return false;
         }
-        userDao.insertUser(user.getEmail(),user.getPassword());
+        usersRepository.save(users);
         return true;
     }
 
-    public Boolean getUserByEmailAndPassword(User user){
-        return userDao.userExistsByEmailAndPassword(user.getEmail(),user.getPassword());
-    }
-
-    public Boolean getUserByEmail(User user){
-        return userDao.userExistsByEmail(user.getEmail());
+    public Boolean getUserByEmailAndPassword(Users users){
+        return usersRepository.existsByEmailAndPassword(users.getEmail(), users.getPassword());
     }
 }
