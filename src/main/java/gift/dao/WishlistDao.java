@@ -28,7 +28,6 @@ public class WishlistDao {
     public List<Wishlist> selectAllWishlist(Long id){
         var sql = "select * from wishlist where userid = ?";
         List<Wishlist> list = new ArrayList<>();
-        System.out.println(jdbcTemplate.query(sql, WishlistRowMapper(), id));
         return jdbcTemplate.query(sql, WishlistRowMapper(), id);
     }
 

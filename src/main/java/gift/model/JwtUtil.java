@@ -13,7 +13,6 @@ public class JwtUtil {
 //    private String secretKey;
 
     public String createJwt(Long id, String email){
-        System.out.println(secretKey);
         Claims claims = Jwts.claims();
         claims.put("id", id);
         claims.put("email", email);

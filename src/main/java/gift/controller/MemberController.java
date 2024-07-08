@@ -26,7 +26,6 @@ public class MemberController {
     public String signin(@RequestBody Member member){
         if (MemberDao.selectMember(member.getEmail()) == null){
             MemberDao.insertMember(member);
-            System.out.println("signin: " + member.getId() + " " + member.getEmail());
             String token = jwtUtil.createJwt(member.getId(), member.getEmail());
             return token;
         }
@@ -43,7 +42,6 @@ public class MemberController {
         Member loginMember = MemberDao.selectMember(member.getEmail());
 
         if(Objects.equals(member.getPassword(), loginMember.getPassword())){
-            System.out.println("login: " + loginMember.getId() + " " + member.getEmail());
             String token = jwtUtil.createJwt(loginMember.getId(), member.getEmail());
             return token;
         }
@@ -56,12 +54,8 @@ public class MemberController {
     @GetMapping("/getMemberId")
     public Long getIdByToken(HttpServletRequest request) throws AuthenticationException {
         Long id = 0L;
-
         Claims claims = interceptor.getClaims(request);
-
         id = claims.get("id", Long.class);
-        System.out.println(id);
-        System.out.println(id);
         return id;
     }
 

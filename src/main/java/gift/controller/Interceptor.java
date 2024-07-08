@@ -19,11 +19,9 @@ public class Interceptor {
     public String getToken(HttpServletRequest request) throws AuthenticationException {
         // 요청 헤더에서 Authorization 헤더 값을 가져옴
         String authHeader = request.getHeader("Authorization");
-        System.out.println(authHeader);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             // Authorization 헤더에서 Bearer 토큰을 추출
             String token = authHeader.substring(7);
-            System.out.println(token);
             return token;
         }
         else{

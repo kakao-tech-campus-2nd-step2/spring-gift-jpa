@@ -42,7 +42,6 @@ public class ProductController {
     // 상품 추가
     @PostMapping("/postProduct")
     public String postProductController(@ModelAttribute Product product) {
-        System.out.println(product);
         if (!catchError.isCorrectName(product.getName())) {
             throw new IllegalArgumentException("이름은 15자 이내, 특수문자는 (),[],+,-,&,/,_ 만 사용 가능합니다.");
         }
