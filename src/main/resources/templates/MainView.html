@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>선물하기</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="p-5 mb-5 text-center</> bg-light">
+    <h1 class="mb-3" th:align="center"><b>선물하기</b></h1>
+    <h2 class="mb-3" th:align="center">메인 화면</h2>
+</div>
+
+<div class="container">
+
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>이미지 URL</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${products}">
+                <td th:text="${product.getId()}">id</a></td>
+                <td th:text="${product.getName()}">상품명</a></td>
+                <td th:text="${product.getPrice()}">10000</td>
+                <td th:text="${product.getImageUrl()}">10</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
