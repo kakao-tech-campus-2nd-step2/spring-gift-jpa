@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>product management</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+</head>
+<body>
+<div class="container">
+    <div class="title">
+        <h1>Manage Products</h1>
+        <button><a th:href="@{/admin/product/new}">Add New Product</a></button>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th th:width="50">번호</th>
+            <th th:width="100">상품명</th>
+            <th th:width="100">가격</th>
+            <th th:width="400">이미지주소</th>
+            <th th:width="100">수정</th>
+            <th th:width="100">삭제</th>
+        </tr>
+        </thead>
+        <tbody id="table-body">
+        <tr th:if="${products.size() == 0}">
+            <td colspan="6">No Products Available</td>
+        </tr>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"/>
+            <td th:text="${product.name}"/>
+            <td th:text="${product.price}"/>
+            <td th:text="${product.imageUrl}"/>
+            <td><button><a th:href="@{/admin/product/{id}(id=${product.id})}">수정</a></button></td>
+            <td>
+                <form th:action="@{/admin/product/{id}(id=${product.id})}" method="post">
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <button type="submit">삭제</button>
+                </form>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
