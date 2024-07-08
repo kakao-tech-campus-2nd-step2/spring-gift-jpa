@@ -1,8 +1,10 @@
 package gift.controller;
 
+import gift.common.annotation.LoginUser;
 import gift.model.product.ProductListResponse;
 import gift.model.product.ProductRequest;
 import gift.model.product.ProductResponse;
+import gift.model.user.User;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -52,8 +54,8 @@ public class ProductController {
     }
 
     @DeleteMapping("/product/{id}")
-    public ResponseEntity deleteProduct(@PathVariable("id") Long id) {
-        productService.deleteProduct(id);
+    public ResponseEntity deleteProduct(@LoginUser User user, @PathVariable("id") Long id) {
+        productService.deleteProduct(user.getId(), id);
         return ResponseEntity.noContent().build();
     }
 }

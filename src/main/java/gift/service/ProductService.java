@@ -1,47 +1,61 @@
 package gift.service;
 
+import gift.common.exception.ProductNotFoundException;
+import gift.common.exception.UserNotFoundException;
 import gift.model.product.Product;
 import gift.model.product.ProductListResponse;
 import gift.model.product.ProductRequest;
 import gift.model.product.ProductResponse;
-import gift.repository.ProductDao;
+import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
+    private final WishService wishService;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository, WishService wishService) {
+        this.productRepository = productRepository;
+        this.wishService = wishService;
     }
 
     public ProductResponse register(ProductRequest productRequest) {
-        Product product = productDao.save(productRequest);
+        Product product = productRepository.save(productRequest.toEntity());
         return ProductResponse.from(product);
     }
 
     public ProductResponse findProduct(Long id) {
-        Product product = productDao.findById(id);
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
         return ProductResponse.from(product);
     }
 
     public ProductListResponse findAllProduct() {
-        List<Product> productList = productDao.findAll();
+        List<Product> productList = productRepository.findAll();
         List<ProductResponse> responseList = productList.stream().map(ProductResponse::from)
-            .collect(Collectors.toList());
+            .toList();
         ProductListResponse responses = new ProductListResponse(responseList);
         return responses;
     }
 
+    @Transactional
     public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
-        Product product = productDao.update(id, productRequest);
+        Product product = productRepository.findById(id)
+            .orElseThrow(ProductNotFoundException::new);
+        product.updateProduct(productRequest);
         return ProductResponse.from(product);
     }
 
-    public void deleteProduct(Long id) {
-        productDao.delete(id);
+    @Transactional
+    public void deleteProduct(Long userId, Long productId) {
+        if (productRepository.existsById(productId)) {
+            wishService.deleteWishList(userId, productId);
+            productRepository.deleteById(productId);
+        } else {
+            throw new ProductNotFoundException();
+        }
     }
 }
