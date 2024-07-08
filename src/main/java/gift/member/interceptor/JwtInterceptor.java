@@ -12,15 +12,13 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class JwtInterceptor implements HandlerInterceptor {
 
     private final JwtUtil jwtUtil;
+    private final String header;
+    private final String prefix;
 
-    @Value("${jwt.header}")
-    private String header;
-
-    @Value("${jwt.prefix}")
-    private String prefix;
-
-    public JwtInterceptor(JwtUtil jwtUtil) {
+    public JwtInterceptor(JwtUtil jwtUtil, @Value("${jwt.header}") String header, @Value("${jwt.prefix}") String prefix) {
         this.jwtUtil = jwtUtil;
+        this.header = header;
+        this.prefix = prefix;
     }
 
     @Override
