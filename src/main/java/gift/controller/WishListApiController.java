@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.auth.CheckRole;
 import gift.auth.LoginMember;
 import gift.request.LoginMemberDto;
 import gift.response.ProductResponse;
@@ -29,23 +30,22 @@ public class WishListApiController {
         this.wishProductDao = wishProductDao;
     }
 
-
+    @CheckRole("ROLE_USER")
     @GetMapping("/api/wishlist")
-    public ResponseEntity<List<ProductResponse>> getWishList(@LoginMember LoginMemberDto memberDto) {
-
+    public ResponseEntity<List<ProductResponse>> getWishList(
+        @LoginMember LoginMemberDto memberDto) {
+        List<ProductResponse> dtoList;
         List<Product> wishlist = wishProductDao.findAll(memberDto.id());
-        if (wishlist.isEmpty()) {
-            return new ResponseEntity<>( new ArrayList<>(), HttpStatus.OK);
-        }
 
-        List<ProductResponse> dtoList = wishlist.stream()
+        dtoList = wishlist.stream()
             .map(ProductResponse::new)
             .toList();
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
     }
 
+    @CheckRole("ROLE_USER")
     @PostMapping("/api/wishlist")
-    public ResponseEntity<Product> addWishList(@LoginMember LoginMemberDto memberDto,
+    public ResponseEntity<Void> addWishList(@LoginMember LoginMemberDto memberDto,
         @RequestBody @Valid WishListRequest dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InputException(bindingResult.getAllErrors());
@@ -56,8 +56,9 @@ public class WishListApiController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @CheckRole("ROLE_USER")
     @DeleteMapping("/api/wishlist")
-    public ResponseEntity<Product> deleteWishList(@LoginMember LoginMemberDto memberDto,
+    public ResponseEntity<Void> deleteWishList(@LoginMember LoginMemberDto memberDto,
         @RequestBody @Valid WishListRequest dto, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -68,7 +69,6 @@ public class WishListApiController {
         wishProductDao.delete(wishProduct);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 
 
 }

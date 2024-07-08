@@ -34,12 +34,10 @@ public class ProductApiController {
 
     @GetMapping("/api/products")
     public ResponseEntity<List<ProductResponse>> getAllProducts() {
-
+        List<ProductResponse> dtoList;
         List<Product> productsList = productService.getAllProducts();
-        if(productsList.isEmpty()) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
-        }
-        List<ProductResponse> dtoList = productsList.stream()
+
+        dtoList = productsList.stream()
             .map(ProductResponse::new)
             .toList();
         return new ResponseEntity<>(dtoList, HttpStatus.OK);
@@ -57,7 +55,7 @@ public class ProductApiController {
     }
 
     @PostMapping("/api/products")
-    public ResponseEntity<Product> addProduct(@RequestBody @Valid ProductAddRequest dto,
+    public ResponseEntity<Void> addProduct(@RequestBody @Valid ProductAddRequest dto,
         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InputException(bindingResult.getAllErrors());
@@ -68,7 +66,7 @@ public class ProductApiController {
     }
 
     @PutMapping("/api/products")
-    public ResponseEntity<Product> updateProduct(@RequestBody @Valid ProductUpdateRequest dto,
+    public ResponseEntity<Void> updateProduct(@RequestBody @Valid ProductUpdateRequest dto,
         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InputException(bindingResult.getAllErrors());
@@ -79,7 +77,7 @@ public class ProductApiController {
     }
 
     @DeleteMapping("/api/products")
-    public ResponseEntity<Product> deleteProduct(@RequestParam("id") Long id) {
+    public ResponseEntity<Void> deleteProduct(@RequestParam("id") Long id) {
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

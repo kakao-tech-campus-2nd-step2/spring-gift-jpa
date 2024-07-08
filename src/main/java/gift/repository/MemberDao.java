@@ -3,10 +3,14 @@ package gift.repository;
 import gift.exception.LoginErrorException;
 import gift.exception.MemberException;
 import gift.model.Member;
+import gift.model.Role;
+import java.sql.PreparedStatement;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,9 +24,22 @@ public class MemberDao {
 
     public Member insert(Member member) {
         try {
-            var sql = "INSERT INTO member (email, password) VALUES (?, ?)";
-            jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
-            return getMemberByEmail(member.getEmail());
+            var sql = "INSERT INTO member (email, password, role) VALUES (?, ?, ?)";
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+
+            jdbcTemplate.update(con -> {
+                PreparedStatement ps = con.prepareStatement(sql,
+    new String[]{"id"});
+                ps.setString(1, member.getEmail());
+                ps.setString(2, member.getPassword());
+                ps.setString(3, member.getRole().toString());
+                return ps;
+            }, keyHolder);
+
+            member.setId(keyHolder.getKey().longValue());
+            return member;
+            //jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
+            //return getMemberByEmail(member.getEmail());
         } catch (DuplicateKeyException e) {
             throw new MemberException("중복된 이메일의 회원이 존재합니다.");
         }
@@ -40,7 +57,8 @@ public class MemberDao {
     private final RowMapper<Member> memberRowMapper = (rs, rowNum) -> new Member(
         rs.getLong("id"),
         rs.getString("email"),
-        rs.getString("password")
+        rs.getString("password"),
+        Role.valueOf(rs.getString("role"))
     );
 
 }

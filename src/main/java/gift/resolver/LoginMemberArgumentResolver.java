@@ -1,5 +1,6 @@
 package gift.resolver;
 
+import gift.auth.LoginMember;
 import gift.request.LoginMemberDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
@@ -13,7 +14,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(LoginMemberDto.class);
+        return parameter.hasParameterAnnotation(LoginMember.class);
     }
 
     @Override
