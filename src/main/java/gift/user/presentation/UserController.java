@@ -35,14 +35,10 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) {
-        User authenticatedUser = userService.authenticateUser(user.getEmail(), user.getPassword());
-        if (authenticatedUser != null) {
-            String token = jwtUtil.generateToken(user.getEmail());
-            return ResponseEntity.ok(
-                new CommonResponse<>(new AuthenticationResponse(token), "로그인이 정상적으로 완료되었습니다", true));
-        } else {
-            throw new UserException(ErrorCode.LOGIN_FAILED);
-        }
+        String token = jwtUtil.generateToken(user.getEmail());
+        return ResponseEntity.ok(
+            new CommonResponse<>(new AuthenticationResponse(token), "로그인이 정상적으로 완료되었습니다", true));
+
     }
 
     public static class AuthenticationResponse {

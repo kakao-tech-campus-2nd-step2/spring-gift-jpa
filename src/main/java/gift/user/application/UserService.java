@@ -3,7 +3,9 @@ package gift.user.application;
 
 import gift.user.domain.User;
 import gift.user.domain.UserRegisterRequest;
+import gift.user.exception.UserException;
 import gift.user.infra.UserRepository;
+import gift.util.ErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,9 @@ public class UserService {
     }
 
     public User authenticateUser(String email, String password) {
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElseThrow(
+            () -> new UserException(ErrorCode.USER_NOT_FOUND)
+        );
         System.out.println("user.getPassword() = " + user.getPassword());
         if (passwordEncoder.matches(password, user.getPassword())) {
             return user;
