@@ -1,11 +1,18 @@
 package gift.model;
 
-public class User {
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="users")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "email",nullable = false,unique = true)
     private String email;
+    @Column(name = "password",nullable = false)
     private String password;
-    private String token;
 
     public User() {
     }
@@ -38,11 +45,4 @@ public class User {
         this.password = password;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 }

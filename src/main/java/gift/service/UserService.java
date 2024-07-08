@@ -15,7 +15,7 @@ public class UserService {
     private JwtUtil jwtUtil;
 
     @Autowired
-    public UserService(UserRepository userRepository,JwtUtil jwtUtil) {
+    public UserService(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
     }

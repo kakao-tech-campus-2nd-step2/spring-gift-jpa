@@ -1,5 +1,6 @@
 drop table gift if exists;
 drop table users if exists;
+drop table user_gifts if exists;
 create table gift(
     `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `name` varchar(255) not null,
@@ -9,7 +10,7 @@ create table gift(
 );
 CREATE TABLE users (
     `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
-    `email` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL
 );
 CREATE TABLE user_gifts (
