@@ -19,6 +19,7 @@ public class ProductRequest {
     @NotNull(message = ErrorMessage.PRODUCT_PRICE_NOT_NULL)
     private Integer price;
 
+    @NotBlank(message = ErrorMessage.PRODUCT_IMAGE_URL_NOT_NULL)
     private String imageUrl;
 
     public Product toEntity() {
