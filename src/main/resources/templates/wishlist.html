@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>wishlist List</title>
+</head>
+<body>
+<h1>wishlist List</h1>
+<a th:href="@{'/wishlist/' + ${id} + '/new'}">Add Product</a>
+<table>
+  <thead>
+  <tr>
+    <th>USER ID</th>
+    <th>PRODUCT ID</th>
+    <th>NAME</th>
+    <th>AMOUNT</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="wishlist : ${wishlists}">
+    <td th:text="${wishlist.userId}"></td>
+    <td th:text="${wishlist.productId}"></td>
+    <td th:text="${wishlist.productName}"></td>
+    <td th:text="${wishlist.amount}"></td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
