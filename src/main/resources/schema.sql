@@ -1,8 +1,12 @@
+DROP TABLE IF EXISTS wish;
+DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS member;
+
 CREATE TABLE product (
                          id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                         name VARCHAR(255) NOT NULL,
+                         name VARCHAR(15) NOT NULL,
                          price INT NOT NULL,
-                         imageUrl VARCHAR(1000)
+                         imageurl VARCHAR(1000)
 );
 
 CREATE TABLE member (

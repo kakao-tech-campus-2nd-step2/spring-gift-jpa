@@ -1,9 +1,6 @@
 package gift.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -20,22 +17,24 @@ public class Product {
     @Pattern(regexp = "^(?!.*카카오).*$", message = "상품 이름에 '카카오'를 포함할 수 없습니다. 관리자와의 협의가 필요합니다.")
     private String name;
 
+    @Column(nullable = false)
     private Integer price;
-    private String imageUrl;
+
+    @Column(nullable = false)
+    private String imageurl;
 
     // 기본 생성자
     public Product() {
     }
 
-    // 모든 필드를 포함하는 생성자
-    public Product(Long id, String name, Integer price, String imageUrl) {
+    public Product(Long id, String name, Integer price, String imageurl) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.imageUrl = imageUrl;
+        this.imageurl = imageurl;
     }
 
-    // Getter 및 Setter 메소드
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -60,11 +59,11 @@ public class Product {
         this.price = price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageurl() {
+        return imageurl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
     }
 }
