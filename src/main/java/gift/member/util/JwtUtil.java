@@ -1,5 +1,6 @@
 package gift.member.util;
 
+import gift.member.domain.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -26,9 +27,13 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(String email) {
+    public String generateToken(Member member) {
+        Claims claims = Jwts.claims();
+        claims.put("id", member.getId());
+        claims.put("email", member.getEmail());
+
         return Jwts.builder()
-            .setSubject(email)
+            .setClaims(claims)
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
             .signWith(SignatureAlgorithm.HS256, key)
@@ -37,7 +42,9 @@ public class JwtUtil {
 
     public boolean isTokenValid(String token) {
         try {
-            Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token);
+            Jwts.parser()
+                .setSigningKey(secret.getBytes())
+                .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
@@ -45,7 +52,10 @@ public class JwtUtil {
     }
 
     public Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+        return Jwts.parser()
+            .setSigningKey(key)
+            .parseClaimsJws(token)
+            .getBody();
     }
 
 }
