@@ -19,38 +19,38 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getProductAll(LoginMember loginMember) {
-        return productRepository.findAll(loginMember);
+    public List<Product> getProductAll() {
+        return productRepository.findAll();
     }
 
-    public Product getProduct(Long id, LoginMember loginMember) {
-        return getValidatedProduct(id, loginMember);
+    public Product getProduct(Long id) {
+        return getValidatedProduct(id);
     }
 
-    public Product insertProduct(ProductDto productDto, LoginMember loginMember) {
+    public Product insertProduct(ProductDto productDto) {
         Product product = new Product(productDto.name(), productDto.price(), productDto.imageUrl());
-        product = productRepository.save(product, loginMember);
+        product = productRepository.save(product);
 
         return product;
     }
 
-    public Product updateProduct(Long id, ProductDto productDTO, LoginMember loginMember) {
-        getValidatedProduct(id, loginMember);
+    public Product updateProduct(Long id, ProductDto productDTO) {
+        getValidatedProduct(id);
 
         Product product = new Product(id, productDTO.name(), productDTO.price(),
             productDTO.imageUrl());
-        productRepository.update(product, loginMember);
+        productRepository.update(product);
         return product;
     }
 
-    public void deleteProduct(Long id, LoginMember loginMember) {
-        getValidatedProduct(id, loginMember);
-        productRepository.delete(id, loginMember);
+    public void deleteProduct(Long id) {
+        getValidatedProduct(id);
+        productRepository.delete(id);
     }
 
-    private Product getValidatedProduct(Long id, LoginMember loginMember) {
+    private Product getValidatedProduct(Long id) {
         try {
-            return productRepository.findById(id, loginMember);
+            return productRepository.findById(id);
         } catch (DataAccessException e) {
             throw new NoSuchElementException("해당 ID의 상품이 존재하지 않습니다.");
         }

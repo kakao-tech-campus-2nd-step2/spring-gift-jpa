@@ -2,22 +2,15 @@ package gift.product.repository;
 
 import gift.product.dto.LoginMember;
 import gift.product.model.Product;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
-import org.apache.juli.logging.Log;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -33,9 +26,8 @@ public class ProductRepository {
             .usingGeneratedKeyColumns("id");
     }
 
-    public Product save(Product product, LoginMember loginMember) {
+    public Product save(Product product) {
         Map<String, Object> params = new HashMap<>();
-        params.put("member_id", loginMember.memberId());
         params.put("name", product.getName());
         params.put("price", product.getPrice());
         params.put("imageUrl", product.getImageUrl());
@@ -44,29 +36,28 @@ public class ProductRepository {
         return new Product(productId, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public List<Product> findAll(LoginMember loginMember) {
-        var sql = "SELECT id, name, price, imageUrl FROM Product WHERE member_id = ?";
+    public List<Product> findAll() {
+        var sql = "SELECT * FROM Product";
 
-        return jdbcTemplate.query(sql, getProductRowMapper(), loginMember.memberId());
+        return jdbcTemplate.query(sql, getProductRowMapper());
     }
 
-    public Product findById(Long id, LoginMember loginMember) throws DataAccessException {
-        var sql = "SELECT id, name, price, imageUrl FROM Product WHERE member_id = ? AND id = ?";
+    public Product findById(Long id) throws DataAccessException {
+        var sql = "SELECT id, name, price, imageUrl FROM Product WHERE id = ?";
 
-        return jdbcTemplate.queryForObject(sql, getProductRowMapper(), loginMember.memberId(), id);
+        return jdbcTemplate.queryForObject(sql, getProductRowMapper(), id);
     }
 
-    public void update(Product product, LoginMember loginMember) {
-        var sql = "UPDATE Product SET name = ?, price = ?, imageUrl = ? WHERE member_id = ? AND id = ?";
+    public void update(Product product) {
+        var sql = "UPDATE Product SET name = ?, price = ?, imageUrl = ? WHERE id = ?";
 
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(),
-            loginMember.memberId(), product.getId());
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getId());
     }
 
-    public void delete(Long id, LoginMember loginMember) {
-        var sql = "DELETE FROM Product WHERE member_id = ? AND id = ?";
+    public void delete(Long id) {
+        var sql = "DELETE FROM Product WHERE id = ?";
 
-        jdbcTemplate.update(sql, loginMember.memberId(), id);
+        jdbcTemplate.update(sql, id);
     }
 
     private RowMapper<Product> getProductRowMapper() {

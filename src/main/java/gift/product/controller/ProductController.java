@@ -28,47 +28,35 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getProductAll(HttpServletRequest request) {
-        LoginMember loginMember = getLoginMember(request);
-        List<Product> productAll = productService.getProductAll(loginMember);
+    public ResponseEntity<List<Product>> getProductAll() {
+        List<Product> productAll = productService.getProductAll();
         return ResponseEntity.ok(productAll);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable(name = "id") Long id,
-        HttpServletRequest request) {
-        LoginMember loginMember = getLoginMember(request);
-        Product product = productService.getProduct(id, loginMember);
+    public ResponseEntity<Product> getProduct(@PathVariable(name = "id") Long id) {
+        Product product = productService.getProduct(id);
         return ResponseEntity.ok(product);
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<Product> insertProduct(@Valid @RequestBody ClientProductDto productDto,
-        HttpServletRequest request) {
-        LoginMember loginMember = getLoginMember(request);
-        Product responseProduct = productService.insertProduct(productDto, loginMember);
+    public ResponseEntity<Product> insertProduct(@Valid @RequestBody ClientProductDto productDto) {
+        Product responseProduct = productService.insertProduct(productDto);
 
         return ResponseEntity.ok(responseProduct);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable(name = "id") Long id,
-        @Valid @RequestBody ClientProductDto productDto, HttpServletRequest request) {
-        LoginMember loginMember = getLoginMember(request);
-        Product product = productService.updateProduct(id, productDto, loginMember);
+        @Valid @RequestBody ClientProductDto productDto) {
+        Product product = productService.updateProduct(id, productDto);
         return ResponseEntity.ok(product);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") Long id,
-        HttpServletRequest request) {
-        LoginMember loginMember = getLoginMember(request);
-        productService.deleteProduct(id, loginMember);
+    public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") Long id) {
+        productService.deleteProduct(id);
 
         return ResponseEntity.ok().build();
-    }
-
-    private LoginMember getLoginMember(HttpServletRequest request) {
-        return new LoginMember((Long) request.getAttribute("memberId"));
     }
 }

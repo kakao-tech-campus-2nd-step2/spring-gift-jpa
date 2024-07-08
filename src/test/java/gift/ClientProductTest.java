@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 class ClientProductTest {
 
     final ProductService productService;
-    final LoginMember loginMember = new LoginMember(1L);
 
     @Autowired
     ClientProductTest(ProductService productService) {
@@ -28,16 +27,16 @@ class ClientProductTest {
 
     @AfterEach
     void 상품_초기화() {
-        List<Product> products = productService.getProductAll(loginMember);
+        List<Product> products = productService.getProductAll();
         for (Product product : products) {
-            productService.deleteProduct(product.getId(), loginMember);
+            productService.deleteProduct(product.getId());
         }
     }
 
     @Test
     void 상품_추가_테스트() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
-        Product product = productService.insertProduct(productDTO, loginMember);
+        Product product = productService.insertProduct(productDTO);
 
         assertSoftly(softly -> {
             assertThat(product.getName()).isEqualTo("사과");
@@ -49,9 +48,9 @@ class ClientProductTest {
     @Test
     void 상품_조회_테스트() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
-        Product insertedProduct = productService.insertProduct(productDTO, loginMember);
+        Product insertedProduct = productService.insertProduct(productDTO);
 
-        Product product = productService.getProduct(insertedProduct.getId(), loginMember);
+        Product product = productService.getProduct(insertedProduct.getId());
 
         assertSoftly(softly -> {
             assertThat(product.getName()).isEqualTo("사과");
@@ -64,9 +63,9 @@ class ClientProductTest {
     @Test
     void 상품_전체_조회_테스트() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
-        productService.insertProduct(productDTO, loginMember);
+        productService.insertProduct(productDTO);
 
-        List<Product> productAll = productService.getProductAll(loginMember);
+        List<Product> productAll = productService.getProductAll();
 
         assertSoftly(softly -> {
             assertThat(productAll.get(0).getName()).isEqualTo("사과");
@@ -78,12 +77,11 @@ class ClientProductTest {
     @Test
     void 상품_수정_테스트() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
-        Product product = productService.insertProduct(productDTO, loginMember);
+        Product product = productService.insertProduct(productDTO);
 
         ClientProductDto productUpdatedDTO = new ClientProductDto("사과", 5500, "사진링크2");
 
-        Product productUpdated = productService.updateProduct(product.getId(), productUpdatedDTO,
-            loginMember);
+        Product productUpdated = productService.updateProduct(product.getId(), productUpdatedDTO);
 
         assertSoftly(softly -> {
             assertThat(productUpdated.getName()).isEqualTo("사과");
@@ -95,14 +93,14 @@ class ClientProductTest {
     @Test
     void 상품_삭제_테스트() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
-        productService.insertProduct(productDTO, loginMember);
+        productService.insertProduct(productDTO);
 
         productDTO = new ClientProductDto("바나나", 1500, "사진링크2");
-        Product product = productService.insertProduct(productDTO, loginMember);
+        Product product = productService.insertProduct(productDTO);
 
-        productService.deleteProduct(product.getId(), loginMember);
+        productService.deleteProduct(product.getId());
 
-        List<Product> productAll = productService.getProductAll(loginMember);
+        List<Product> productAll = productService.getProductAll();
         assertThat(productAll).hasSize(1);
     }
 }

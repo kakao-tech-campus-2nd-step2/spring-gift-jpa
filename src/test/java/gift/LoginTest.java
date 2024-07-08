@@ -16,7 +16,7 @@ class LoginTest {
 
     final AuthService authService;
     final MemberDto memberDto = new MemberDto("test@test.com", "1234");
-    final String ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJfaWQiOjJ9.2dEFSG375_OkkZg6OfXIsfO5lRc42YBI-PF_SB0fo68";
+    final String ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Mn0.zlxa--b4eJ_CVJmnK-Ct2LRAodKbtBBr-_Q8hg1rXHU";
 
     @Autowired
     LoginTest(AuthService authService) {

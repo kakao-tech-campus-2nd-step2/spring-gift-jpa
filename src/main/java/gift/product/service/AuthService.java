@@ -49,7 +49,7 @@ public class AuthService {
         byte[] keyBytes = Decoders.BASE64.decode(EncodedSecretKey);
         SecretKey key = Keys.hmacShaKeyFor(keyBytes);
         return Jwts.builder()
-            .claim("member_id", member.getMemberId())
+            .claim("id", member.getId())
             .signWith(key)
             .compact();
     }
