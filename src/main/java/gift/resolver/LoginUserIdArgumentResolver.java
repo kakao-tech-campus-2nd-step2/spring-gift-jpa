@@ -1,6 +1,6 @@
 package gift.resolver;
 
-import gift.annotation.LoginUser;
+import gift.annotation.LoginUserId;
 import gift.service.UserService;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -8,17 +8,17 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
+public class LoginUserIdArgumentResolver implements HandlerMethodArgumentResolver {
     private final UserService userService;
 
-    public LoginUserArgumentResolver(UserService userService) {
+    public LoginUserIdArgumentResolver(UserService userService) {
         this.userService = userService;
     }
 
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterAnnotation(LoginUser.class) != null;
+        return parameter.getParameterAnnotation(LoginUserId.class) != null;
     }
 
     @Override

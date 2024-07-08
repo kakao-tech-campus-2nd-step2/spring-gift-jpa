@@ -1,6 +1,6 @@
 package gift.config;
 
-import gift.resolver.LoginUserArgumentResolver;
+import gift.resolver.LoginUserIdArgumentResolver;
 import gift.service.UserService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -19,6 +19,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new LoginUserArgumentResolver(userService));
+        resolvers.add(new LoginUserIdArgumentResolver(userService));
     }
 }
