@@ -1,11 +1,29 @@
 package gift.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.UniqueElements;
+
+@Entity
+@Table(name="users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
+    @UniqueElements
     private String email;
+    @NotNull
     private String password;
 
-    public User(Long id, String email, String password){
+    public User() {
+    }
+
+    public User(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
