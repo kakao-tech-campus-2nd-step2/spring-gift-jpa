@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>위시 리스트에 상품 추가</title>
+  <link rel="stylesheet" th:href="@{/Add_Edit_product.css}">
+</head>
+<body>
+<h1>위시 리스트에 상품 추가</h1>
+<form id="addProductForm">
+  <div>
+    <label for="id">상품 ID:</label>
+    <input type="number" id="id" name="id" required />
+    <div class="error-message"></div>
+  </div>
+  <div>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required />
+    <div class="error-message"></div>
+  </div>
+  <div>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" required />
+    <div class="error-message"></div>
+  </div>
+  <div>
+    <label for="imageUrl">Image URL:</label>
+    <input type="text" id="imageUrl" name="imageUrl" required />
+    <div class="error-message"></div>
+  </div>
+  <div>
+    <button type="button" onclick="submitForm()">추가하기</button>
+  </div>
+</form>
+
+<script>
+  function submitForm() {
+    const form = document.getElementById('addProductForm');
+    const formData = new FormData(form);
+    const jsonObject = {};
+
+    formData.forEach((value, key) => {
+      jsonObject[key] = value;
+    });
+
+    const token = localStorage.getItem('jwtToken');
+
+    fetch('/wishlist/add', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(jsonObject)
+    })
+    .then(response => {
+      if (response.ok) {
+        alert("상품이 추가되었습니다.");
+        window.location.href = "/wishlist";
+      } else {
+        return response.text().then(text => {
+          throw new Error(text);
+        });
+      }
+    })
+    .catch(error => alert('Error: ' + error.message));
+  }
+</script>
+</body>
+</html>
