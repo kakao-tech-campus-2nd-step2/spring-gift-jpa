@@ -1,6 +1,8 @@
 package gift.service;
 
+import gift.domain.User;
 import gift.dto.UserRequestDto;
+import gift.dto.UserResponseDto;
 import gift.exception.UserNotFoundException;
 import gift.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -21,5 +23,11 @@ public class UserService {
         userRepository.findByPasswordAndEmail(email, password)
                 .orElseThrow(() -> new UserNotFoundException("해당 정보를 가진 유저가 존재하지 않습니다."));
         return true;
+    }
+
+    public UserResponseDto findByEmail(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("해당 정보를 가진 유저가 존재하지 않습니다."));
+        return UserResponseDto.from(user);
     }
 }
