@@ -1,6 +1,6 @@
 package gift.dto;
 
-public class AuthRequest {
+public class UserRequest {
 
     private String email;
     private String password;

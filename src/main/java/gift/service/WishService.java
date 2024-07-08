@@ -1,38 +1,49 @@
 package gift.service;
 
-import gift.dao.WishDAO;
 import gift.dto.WishRequest;
+import gift.entity.Product;
 import gift.entity.Wish;
+import gift.exception.ProductNotFoundException;
+import gift.repository.ProductRepository;
+import gift.repository.WishRepository;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class WishService {
 
-    private final WishDAO wishDAO;
+    private final WishRepository wishRepository;
+    private final ProductRepository productRepository;
 
-    public WishService(WishDAO wishDAO) {
-        this.wishDAO = wishDAO;
+    @Autowired
+    public WishService(WishRepository wishRepository, ProductRepository productRepository) {
+        this.wishRepository = wishRepository;
+        this.productRepository = productRepository;
     }
 
     public void addWish(Long userId, WishRequest request) {
-        Wish wish = new Wish(userId, request.getProductId(), request.getNumber());
-        wishDAO.save(wish);
+        Product product = productRepository.findById(request.getProductId())
+            .orElseThrow(() -> new ProductNotFoundException("product가 없습니다."));
+
+        Wish wish = new Wish(userId, request.getProductId(), product.getName(),
+            request.getNumber());
+        wishRepository.save(wish);
     }
 
     public List<Wish> getWishes(Long userId) {
-        return wishDAO.findByUserId(userId);
+        return wishRepository.findByUserId(userId);
     }
 
     public Wish getOneWish(Long userId, Long wishId) {
-        return wishDAO.findByUserIdAndWishId(userId, wishId);
+        return wishRepository.findByUserIdAndId(userId, wishId);
     }
 
     public void removeWish(Long userId, Long wishId) {
-        wishDAO.deleteByUserIdAndWishId(userId, wishId);
+        wishRepository.deleteByUserIdAndId(userId, wishId);
     }
 
     public void updateNumber(Long userId, Long wishId, int number) {
-        wishDAO.updateWishNumber(userId, wishId, number);
+        wishRepository.updateWishNumber(userId, wishId, number);
     }
 }

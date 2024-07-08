@@ -1,22 +1,22 @@
 package gift.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
-@Table(name = "users") //user로 하니
+@Table(name = "users")
 public class User {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
     @NotNull
-    @UniqueElements
+    @Column(unique = true)
     private String email;
     @NotNull
     private String password;

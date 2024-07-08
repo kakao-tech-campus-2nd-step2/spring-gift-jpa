@@ -1,10 +1,10 @@
 package gift.dto;
 
-public class AuthResponse {
+public class UserResponse {
 
     private String Token;
 
-    public AuthResponse(String Token) {
+    public UserResponse(String Token) {
         this.Token = Token;
     }
 

@@ -26,9 +26,10 @@ public class Wish {
     public Wish() {
     }
 
-    public Wish(Long userId, Long productId, int number) {
+    public Wish(Long userId, Long productId, String productName, int number) {
         this.userId = userId;
         this.productId = productId;
+        this.productName = productName;
         this.number = number;
     }
 
