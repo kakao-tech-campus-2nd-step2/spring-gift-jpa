@@ -33,12 +33,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody AuthenticationRequest authenticationRequest) {
-        try {
-            User user = userService.valid(authenticationRequest.getEmail(), authenticationRequest.getPassword());
-            String token = jwtUtil.generateToken(user.getEmail());
-            return ResponseEntity.ok(new AuthenticationResponse(token));
-        } catch (ResponseStatusException ex) {
-            return ResponseEntity.status(ex.getStatusCode()).body(ex.getReason());
-        }
+        User user = userService.valid(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+        String token = jwtUtil.generateToken(user.getEmail());
+        return ResponseEntity.ok(new AuthenticationResponse(token));
     }
 }
