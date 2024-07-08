@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products</title>
+    <link rel="stylesheet" th:href="@{/css/manage.css}"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script defer th:src="@{/js/addWishProduct.js}"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Add <span>Wish Products</span></h1>
+        <div class="button-container">
+            <button class="add-btn" type="button">
+                Add New Wish Product
+            </button>
+        </div>
+    </div>
+    <table>
+        <thead class="table-header">
+        <tr>
+            <th><input type="checkbox" id="select-all"></th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image-Url</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products.productDTOList}" th:data-id="${product.id}">
+            <td><input type="checkbox"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.imageUrl}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
