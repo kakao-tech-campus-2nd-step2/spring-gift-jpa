@@ -44,7 +44,7 @@ public class WishesService {
     public List<Product> getWishlistOfMember(Long memberId) {
         List<String> productIdList = wishesRepository.findByMemberId(memberId);
 
-        return productRepository.findById(productIdList);
+        return productRepository.findByIds(productIdList);
     }
 
 }

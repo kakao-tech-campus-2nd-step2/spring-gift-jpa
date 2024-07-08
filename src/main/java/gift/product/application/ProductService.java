@@ -55,7 +55,7 @@ public class ProductService {
 
         product.update(request);
 
-        return productRepository.update(product)
+        return productRepository.save(product)
                                 .getId();
     }
 

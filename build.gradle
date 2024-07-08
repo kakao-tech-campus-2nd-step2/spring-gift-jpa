@@ -28,7 +28,6 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation 'io.hypersistence:hypersistence-utils-hibernate-60:3.8.1' // HibernateRepository
 }
 
 tasks.named('test') {
