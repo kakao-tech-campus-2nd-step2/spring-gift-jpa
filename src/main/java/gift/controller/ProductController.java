@@ -1,7 +1,7 @@
 package gift.controller;
 
 
-import gift.domain.Product;
+import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -36,12 +36,11 @@ public class ProductController {
     @GetMapping("/{id}")
 
     public Product getProductById(@PathVariable("id") long id) {
-        return productService.getProductById(id);
+        return productService.getProductById(id).get();
     }
 
     //product 추가
     @PostMapping
-
     public ResponseEntity<String> addProduct(@RequestBody @Valid Product product) {
         productService.saveProduct(product);
         return new ResponseEntity<>("OK", HttpStatus.CREATED);
@@ -53,7 +52,6 @@ public class ProductController {
     public ResponseEntity<String> editProduct(@PathVariable("id") Long id,
         @RequestBody @Valid Product product) {
         productService.updateProduct(product, id);
-
 
         return new ResponseEntity<>("product edit success", HttpStatus.OK);
 

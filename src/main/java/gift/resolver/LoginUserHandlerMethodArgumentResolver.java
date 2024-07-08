@@ -1,10 +1,8 @@
 package gift.resolver;
 
 import gift.annotation.LoginUser;
-import gift.service.UserService;
 import gift.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Constraint;
 import java.nio.file.AccessDeniedException;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

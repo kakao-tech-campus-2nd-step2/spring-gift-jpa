@@ -1,9 +1,7 @@
 package gift.service;
 
-import gift.dao.ProductWithQuantityDao;
-import gift.dao.WishlistDao;
-import gift.domain.ProductWithQuantity;
-import gift.domain.Wishlist;
+import gift.entity.Wish;
+import gift.repository.WishRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,30 +10,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class WishlistService {
 
-    private final ProductWithQuantityDao productWithQuantityDao;
-    private final WishlistDao wishlistDao;
+    private final WishRepository wishRepository;
 
-    public WishlistService(ProductWithQuantityDao productWithQuantityDao, WishlistDao wishlistDao) {
-        this.productWithQuantityDao = productWithQuantityDao;
-        this.wishlistDao = wishlistDao;
-    }
-    @Transactional
-    public void addWishlist(ProductWithQuantity productWithQuantity, String email) {
-        if (wishlistDao.getWishlistId(email) == 0L) {
-            wishlistDao.addWishlist(email);
-        }
-        long wishlistId = wishlistDao.getWishlistId(email);
-
-        productWithQuantityDao.saveProductWithQuantity(productWithQuantity.getProductId(),
-            productWithQuantity.getQuantity(), wishlistId);
+    public WishlistService(WishRepository wishRepository){
+        this.wishRepository=wishRepository;
     }
 
-    public List<Wishlist> getWishlist(String email) {
-        return wishlistDao.findAllWishlist(email);
+    public void addWishlist(Wish wish) {
+        wishRepository.save(wish);
+
     }
 
-    public void deleteProductInWishlist(Long id, String email){
-         wishlistDao.deleteByProductId(id,email);
+    public List<Wish> getWishlist(Long id) {
+        return wishRepository.findByMemberId(id);
+    }
+
+    public void deleteWishlist(Long id){
+         wishRepository.deleteById(id);
     }
 
 
