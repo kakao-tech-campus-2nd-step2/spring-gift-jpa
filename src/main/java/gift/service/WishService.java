@@ -1,8 +1,7 @@
 package gift.service;
 
-import gift.controller.wish.dto.WishRequest.AddWishRequest;
-import gift.controller.wish.dto.WishRequest.UpdateWishRequest;
-import gift.controller.wish.dto.WishResponse.WishListResponse;
+import gift.controller.wish.dto.WishRequest;
+import gift.controller.wish.dto.WishResponse;
 import gift.model.wish.Wish;
 import gift.repository.MemberJpaRepository;
 import gift.repository.ProductJpaRepository;
@@ -29,7 +28,7 @@ public class WishService {
     }
 
     @Transactional
-    public void addWish(Long userId, AddWishRequest request) {
+    public void addWish(Long userId, WishRequest.Register request) {
         System.out.println("userId = " + userId);
         var member = memberJpaRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
@@ -46,7 +45,7 @@ public class WishService {
     }
 
     @Transactional
-    public void updateWish(Long userId, UpdateWishRequest request) {
+    public void updateWish(Long userId, WishRequest.Update request) {
         var member = memberJpaRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
 
@@ -74,10 +73,10 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishListResponse> getWishes(Long memberId) {
+    public List<WishResponse.Info> getWishes(Long memberId) {
         var response = wishJpaRepository.findByMemberId(memberId)
             .stream()
-            .map(WishListResponse::from)
+            .map(WishResponse.Info::from)
             .collect(Collectors.toList());
         return response;
     }

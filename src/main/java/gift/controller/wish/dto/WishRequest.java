@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 public class WishRequest {
 
-    public record AddWishRequest(
+    public record Register(
         @NotNull
         Long productId,
         @Min(1)
@@ -20,7 +20,7 @@ public class WishRequest {
         }
     }
 
-    public record UpdateWishRequest(
+    public record Update(
         @NotNull
         Long productId,
         @Min(1)

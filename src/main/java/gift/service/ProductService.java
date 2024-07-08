@@ -1,8 +1,7 @@
 package gift.service;
 
-import gift.controller.product.dto.ProductRequest.ProductRegisterRequest;
-import gift.controller.product.dto.ProductRequest.ProductUpdateRequest;
-import gift.controller.product.dto.ProductResponse.ProductInfoResponse;
+import gift.controller.product.dto.ProductRequest;
+import gift.controller.product.dto.ProductResponse;
 import gift.global.dto.PageResponse;
 import gift.repository.ProductJpaRepository;
 import gift.validate.NotFoundException;
@@ -20,19 +19,19 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductInfoResponse getProduct(Long id) {
+    public ProductResponse.Info getProduct(Long id) {
         var product = productJpaRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
-        return ProductInfoResponse.from(product);
+        return ProductResponse.Info.from(product);
     }
 
     @Transactional
-    public void createProduct(ProductRegisterRequest request) {
+    public void createProduct(ProductRequest.Register request) {
         productJpaRepository.save(request.toEntity());
     }
 
     @Transactional
-    public void updateProduct(Long id, ProductUpdateRequest request) {
+    public void updateProduct(Long id, ProductRequest.Update request) {
         var product = productJpaRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
         product.update(request.name(), request.price(), request.imageUrl());
@@ -45,11 +44,11 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ProductInfoResponse> getProductsPaging(int page, int size) {
+    public PageResponse<ProductResponse.Info> getProductsPaging(int page, int size) {
         var productPage = productJpaRepository.findAllByOrderByIdDesc(
             PageRequest.of(page, size));
         var content = productPage.getContent().stream()
-            .map(ProductInfoResponse::from)
+            .map(ProductResponse.Info::from)
             .toList();
         return new PageResponse<>(content, productPage.getNumber(),
             productPage.getSize(), productPage.getTotalPages(),

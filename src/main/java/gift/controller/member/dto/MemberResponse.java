@@ -4,20 +4,20 @@ import gift.model.member.Member;
 
 public class MemberResponse {
 
-    public record LoginResponse(String token) {
+    public record Login(String token) {
 
-        public static LoginResponse from(String token) {
-            return new LoginResponse(token);
+        public static Login from(String token) {
+            return new Login(token);
         }
     }
 
-    public record InfoResponse(
+    public record Info(
         String email,
         String name
     ) {
 
-        public static InfoResponse from(Member member) {
-            return new InfoResponse(member.getEmail(), member.getName());
+        public static Info from(Member member) {
+            return new Info(member.getEmail(), member.getName());
         }
     }
 }

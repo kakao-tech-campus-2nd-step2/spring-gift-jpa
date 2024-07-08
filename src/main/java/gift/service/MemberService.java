@@ -1,10 +1,9 @@
 package gift.service;
 
-import gift.controller.member.dto.MemberResponse.InfoResponse;
+import gift.controller.member.dto.MemberResponse;
 import gift.global.auth.jwt.JwtProvider;
-import gift.controller.member.dto.MemberRequest.Login;
-import gift.controller.member.dto.MemberRequest.Register;
-import gift.model.member.Member;
+import gift.controller.member.dto.MemberRequest;
+import gift.controller.member.dto.MemberRequest;
 import gift.repository.MemberJpaRepository;
 import gift.validate.InvalidAuthRequestException;
 import gift.validate.NotFoundException;
@@ -23,7 +22,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void register(Register request) {
+    public void register(MemberRequest.Register request) {
         if (memberJpaRepository.existsByEmail(request.email())) {
             throw new InvalidAuthRequestException("User already exists.");
         }
@@ -31,7 +30,7 @@ public class MemberService {
     }
 
     @Transactional
-    public String login(Login request) {
+    public String login(MemberRequest.Login request) {
         var member = memberJpaRepository.findByEmail(request.email())
             .orElseThrow(() -> new NotFoundException("User not found."));
 
@@ -43,9 +42,9 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public InfoResponse getUser(Long memberId) {
+    public MemberResponse.Info getUser(Long memberId) {
         var member = memberJpaRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException("User not found."));
-        return InfoResponse.from(member);
+        return MemberResponse.Info.from(member);
     }
 }

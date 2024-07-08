@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public class ProductRequest {
 
-    public record ProductRegisterRequest(
+    public record Register(
         @NotBlank
         String name,
         @Min(0)
@@ -21,7 +21,7 @@ public class ProductRequest {
         }
     }
 
-    public record ProductUpdateRequest(
+    public record Update(
         @NotBlank
         String name,
         @Min(0)
