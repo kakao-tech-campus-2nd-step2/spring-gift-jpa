@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.dto.wishlist.WishResponse;
-import gift.dto.wishlist.WishRequest;
+import gift.dto.wish.WishResponse;
+import gift.dto.wish.WishRequest;
 import gift.entity.Wish;
 import gift.exception.wish.WishNotFoundException;
 import gift.util.mapper.WishMapper;

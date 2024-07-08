@@ -1,4 +1,4 @@
-package gift.dto.wishlist;
+package gift.dto.wish;
 
 import gift.entity.Product;
 

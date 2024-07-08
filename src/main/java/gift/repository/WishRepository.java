@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.dto.wishlist.WishResponse;
+import gift.dto.wish.WishResponse;
 import gift.entity.Wish;
 import gift.entity.Product;
 import java.util.List;

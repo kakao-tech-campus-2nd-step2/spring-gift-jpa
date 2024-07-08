@@ -1,6 +1,6 @@
 package gift.util.mapper;
 
-import gift.dto.wishlist.WishRequest;
+import gift.dto.wish.WishRequest;
 import gift.entity.Wish;
 
 public class WishMapper {
