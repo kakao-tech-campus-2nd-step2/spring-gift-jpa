@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product List</title>
+</head>
+<body>
+
+<!-- 네비게이션 바를 포함합니다 -->
+<nav th:replace="~{navbar :: navbarFragment}"></nav>
+
+
+<h1>Product List</h1>
+<a>Add</a>
+<a>Delete</a>
+<a>Update</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}">1</td>
+        <td th:text="${product.name}">Name</td>
+        <td th:text="${product.price}">Price</td>
+        <td th:text="${product.imageUrl}">image</td>
+
+
+    </tbody>
+</table>
+</body>
+</html>
+</html>
