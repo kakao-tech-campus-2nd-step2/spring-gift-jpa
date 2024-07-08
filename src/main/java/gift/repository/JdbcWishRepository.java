@@ -2,11 +2,17 @@ package gift.repository;
 
 import gift.domain.Wish;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+@Repository
 public class JdbcWishRepository implements WishRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -29,5 +35,23 @@ public class JdbcWishRepository implements WishRepository {
         wish.setId(newId.longValue());
 
         return wish;
+    }
+
+    @Override
+    public List<Wish> findByUserId(Long memberId) {
+        String sql = "SELECT * FROM wish_list WHERE user_id = ?";
+        return jdbcTemplate.query(sql, new WishRowMapper(), memberId);
+    }
+
+    private static class WishRowMapper implements RowMapper<Wish> {
+        @Override
+        public Wish mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Wish wish = new Wish();
+            wish.setId(rs.getLong("id"));
+            wish.setUserId(rs.getLong("user_id"));
+            wish.setProductId(rs.getLong("product_id"));
+            wish.setCreatedAt(rs.getTimestamp("created_at"));
+            return wish;
+        }
     }
 }

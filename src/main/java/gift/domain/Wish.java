@@ -1,5 +1,6 @@
 package gift.domain;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class Wish {
@@ -28,6 +29,13 @@ public class Wish {
 
     public void setId(long id) {
         this.id = id;
+    }
 
+    public void setProductId(long productId) {
+        this.productId = productId;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt == null ? null : createdAt.toLocalDateTime();
     }
 }
