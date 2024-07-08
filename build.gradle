@@ -20,8 +20,11 @@ repositories {
 dependencies {
     // Spring Boot 의존성 추가
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // test 의존성 추가
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.assertj:assertj-core'
 
     // Thymeleaf 의존성 추가
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
