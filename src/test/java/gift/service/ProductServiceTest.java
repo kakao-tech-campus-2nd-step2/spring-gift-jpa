@@ -1,24 +1,22 @@
 package gift.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
-
-import gift.request.ProductRequest;
 import gift.domain.Product;
-import gift.repository.ProductRepository;
 import gift.exception.ProductNotFoundException;
-import java.util.List;
-import java.util.Optional;
+import gift.repository.ProductRepository;
+import gift.request.ProductRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
@@ -77,7 +75,7 @@ class ProductServiceTest {
         //given
         ProductRequest request = new ProductRequest("아이스티", 2500, "https://example.com");
 
-        willDoNothing().given(productRepository).save(any(Product.class));
+        given(productRepository.save(any(Product.class))).willReturn(new Product());
 
         //when
         productService.addProduct(request);
@@ -93,13 +91,13 @@ class ProductServiceTest {
         Long productId = 1L;
         ProductRequest request = new ProductRequest("아이스티", 2500, "https://example.com");
 
-        willDoNothing().given(productRepository).edit(anyLong(), any(Product.class));
+        given(productRepository.findById(productId)).willReturn(Optional.of(new Product()));
 
         //when
         productService.editProduct(productId, request);
 
         //then
-        then(productRepository).should().edit(anyLong(), any(Product.class));
+        then(productRepository).should().findById(productId);
     }
 
     @DisplayName("상품 ID를 받아 해당하는 상품을 삭제한다.")

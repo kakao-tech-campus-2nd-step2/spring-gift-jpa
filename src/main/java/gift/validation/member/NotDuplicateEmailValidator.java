@@ -3,12 +3,14 @@ package gift.validation.member;
 import gift.repository.MemberRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class NotDuplicateEmailValidator implements ConstraintValidator<NotDuplicateEmail, String> {
 
     private final MemberRepository memberRepository;
+
+    public NotDuplicateEmailValidator(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {

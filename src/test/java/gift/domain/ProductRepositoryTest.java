@@ -1,26 +1,21 @@
 package gift.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import gift.repository.ProductRepository;
 import gift.request.ProductRequest;
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-@SpringBootTest
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@DataJpaTest
 class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @BeforeEach
-    public void before() {
-        productRepository.clear();
-    }
 
     @DisplayName("모든 상품 정보를 조회한다.")
     @Test
@@ -63,22 +58,22 @@ class ProductRepositoryTest {
     void edit() throws Exception {
         //given
         Product product = new Product("아이스 아메리카노", 3500, "https://examle.com");
-        productRepository.save(product);
-
-        List<Product> products = productRepository.findAll();
-        Long productId = products.get(0).getId();
+        Product savedProduct = productRepository.save(product);
+        Long productId =savedProduct.getId();
 
         ProductRequest request = new ProductRequest("망고 스무디", 5000, "https://test.com");
 
         //when
-        productRepository.edit(productId, request.toEntity());
+        savedProduct.changeName(request.getName());
+        savedProduct.changePrice(request.getPrice());
+        savedProduct.changeImageUrl(request.getImageUrl());
+
+        Product foundProduct = productRepository.findById(productId).get();
 
         //then
-        Product savedProduct = productRepository.findById(productId).get();
-
-        assertThat(savedProduct.getName()).isEqualTo(request.getName());
-        assertThat(savedProduct.getPrice()).isEqualTo(request.getPrice());
-        assertThat(savedProduct.getImageUrl()).isEqualTo(request.getImageUrl());
+        assertThat(foundProduct.getName()).isEqualTo(request.getName());
+        assertThat(foundProduct.getPrice()).isEqualTo(request.getPrice());
+        assertThat(foundProduct.getImageUrl()).isEqualTo(request.getImageUrl());
     }
 
     @DisplayName("상품 아이디를 받아, 해당하는 상품을 삭제한다.")

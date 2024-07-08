@@ -1,9 +1,7 @@
 package gift.exception;
 
 import java.util.Map;
-import lombok.Getter;
 
-@Getter
 public abstract class GiftException extends RuntimeException {
 
     public Map<String, String> validation;
@@ -18,5 +16,9 @@ public abstract class GiftException extends RuntimeException {
     }
 
     public abstract int getStatusCode();
+
+    public Map<String, String> getValidation() {
+        return validation;
+    }
 
 }

@@ -1,15 +1,13 @@
 package gift.request;
 
-import gift.domain.Product;
 import gift.constant.ErrorMessage;
+import gift.domain.Product;
 import gift.validation.product.KakaoNotAllowed;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
 
-@Getter
 public class ProductRequest {
 
     @NotBlank(message = ErrorMessage.PRODUCT_NAME_NOT_BLANK)
@@ -21,19 +19,29 @@ public class ProductRequest {
     @NotNull(message = ErrorMessage.PRODUCT_PRICE_NOT_NULL)
     private Integer price;
 
+    @NotBlank(message = ErrorMessage.PRODUCT_IMAGE_URL_NOT_NULL)
     private String imageUrl;
 
     public Product toEntity() {
         return new Product(this.name, this.price, this.imageUrl);
     }
 
-    public ProductRequest() {
-    }
-
     public ProductRequest(String name, Integer price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
 }

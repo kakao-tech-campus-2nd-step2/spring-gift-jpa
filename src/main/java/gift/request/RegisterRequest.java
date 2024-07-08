@@ -1,14 +1,12 @@
 package gift.request;
 
-import gift.domain.member.Member;
 import gift.constant.ErrorMessage;
+import gift.domain.member.Member;
 import gift.validation.member.NotDuplicateEmail;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
 
-@Getter
 public class RegisterRequest {
 
     @NotBlank(message = ErrorMessage.MEMBER_NAME_NOT_BLANK)
@@ -25,11 +23,23 @@ public class RegisterRequest {
     private String password;
 
     public Member toEntity() {
-        return Member.builder()
-            .name(this.name)
-            .email(this.email)
-            .password(this.password)
-            .build();
+        return new Member.MemberBuilder()
+                .name(this.name)
+                .email(this.email)
+                .password(this.password)
+                .build();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
 }

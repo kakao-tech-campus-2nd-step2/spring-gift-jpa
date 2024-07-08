@@ -1,12 +1,30 @@
 package gift.domain;
 
-import lombok.Getter;
+import jakarta.persistence.*;
 
-@Getter
+@Entity
 public class Wishlist {
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Long id;
+
+    @Column(nullable = false)
     private Long memberId;
+
+    @Column(nullable = false)
     private Long productId;
+
+    public Wishlist() {
+    }
+
+    public Wishlist(Long memberId, Long productId) {
+        this.memberId = memberId;
+        this.productId = productId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
 
 }

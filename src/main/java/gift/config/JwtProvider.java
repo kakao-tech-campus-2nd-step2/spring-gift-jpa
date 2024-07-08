@@ -7,8 +7,10 @@ import gift.exception.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+
 import java.util.Date;
 import javax.crypto.SecretKey;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,19 +22,19 @@ public class JwtProvider {
 
     public String create(Member member) {
         return Jwts.builder()
-            .subject(member.getId().toString())
-            .claim("role", member.getRole())
-            .expiration(new Date(currentTimeMillis() + EXPIRE))
-            .signWith(SECRET_KEY)
-            .compact();
+                .subject(member.getId().toString())
+                .claim("role", member.getRole())
+                .expiration(new Date(currentTimeMillis() + EXPIRE))
+                .signWith(SECRET_KEY)
+                .compact();
     }
 
     public Claims getClaims(String token) {
         return Jwts.parser()
-            .verifyWith(SECRET_KEY)
-            .build()
-            .parseSignedClaims(token)
-            .getPayload();
+                .verifyWith(SECRET_KEY)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     public void verify(String jwt) {
