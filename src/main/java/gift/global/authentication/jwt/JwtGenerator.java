@@ -4,17 +4,23 @@ import io.jsonwebtoken.Jwts;
 import java.util.Date;
 import java.util.Map;
 import javax.crypto.SecretKey;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtGenerator {
     private final JwtValidator jwtValidator;
 
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60;  // 1시간
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7;  // 1주
+    private final long ACCESS_TOKEN_EXPIRE_TIME;  // 1시간
+    private final long REFRESH_TOKEN_EXPIRE_TIME;  // 1주
 
-    public JwtGenerator(JwtValidator jwtValidator) {
+    public JwtGenerator(JwtValidator jwtValidator,
+        @Value("${spring.jwt.access_expiration}") long accessExpireTime,
+        @Value("${spring.jwt.refresh_expiration}") long refreshExpireTime) {
         this.jwtValidator = jwtValidator;
+        this.ACCESS_TOKEN_EXPIRE_TIME = accessExpireTime;
+        this.REFRESH_TOKEN_EXPIRE_TIME = refreshExpireTime;
+
     }
 
     public JwtToken createToken(Long id) {
