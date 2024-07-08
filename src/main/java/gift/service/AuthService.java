@@ -3,7 +3,7 @@ package gift.service;
 import gift.exception.MemberErrorCode;
 import gift.exception.MemberException;
 import gift.model.Member;
-import gift.model.dto.TokenRequestDto;
+import gift.model.dto.MemberRequestDto;
 import gift.repository.MemberDao;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -23,9 +23,9 @@ public class AuthService {
         this.memberDao = memberDao;
     }
 
-    public String getToken(TokenRequestDto tokenRequestDto) throws MemberException {
-        Member member = memberDao.selectMemberByEmail(tokenRequestDto.getEmail());
-        if (!member.matchPassword(tokenRequestDto.getPassword())) {
+    public String getToken(MemberRequestDto memberRequestDto) throws MemberException {
+        Member member = memberDao.selectMemberByEmail(memberRequestDto.getEmail());
+        if (!member.matchPassword(memberRequestDto.getPassword())) {
             throw new MemberException(MemberErrorCode.FAILURE_LOGIN);
         }
         return generateToken(member);
