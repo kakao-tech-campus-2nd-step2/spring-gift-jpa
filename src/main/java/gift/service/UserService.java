@@ -1,7 +1,6 @@
 package gift.service;
 
-import gift.DTO.UserDTO;
-import gift.domain.User;
+import gift.entity.UserEntity;
 import gift.domain.User.CreateUser;
 import gift.domain.User.UpdateUser;
 import gift.domain.User.UserSimple;
@@ -22,35 +21,37 @@ public class UserService {
     private UserMapper userMapper;
 
     public List<UserSimple> getUserList() {
-        return userMapper.UserSimpleList(userRepository.getUserList());
+        return userMapper.toSimpleList(userRepository.findAllByIsDelete(0));
     }
 
-    public UserSimple getUser(long id) {
-        if (!userRepository.validateId(id)) {
-            throw new BaseHandler(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다.");
-        }
-        return userMapper.UserSimple(userRepository.getUser(id));
+    public UserEntity getUser(long id) {
+        return userRepository.findByIdAndIsDelete(id,0)
+            .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
     }
 
-    public int createUser(CreateUser create) {
-        if (userRepository.existUser(create.getEmail())) {
+    public Long createUser(CreateUser create) {
+        if (userRepository.findByEmailAndIsDelete(create.getEmail(),0).isPresent()) {
             throw new BaseHandler(HttpStatus.FORBIDDEN, "중복된 유저가 존재합니다.");
         }
-        return userRepository.createUser(create);
+
+        UserEntity userEntity = userMapper.toEntity(create);
+        userRepository.save(userEntity);
+        return userEntity.getId();
     }
 
-    public int updatePassword(long id, UpdateUser update) {
-        if (!userRepository.validateId(id)) {
-            throw new BaseHandler(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다.");
-        }
-        System.out.println(update.getPassword());
-        return userRepository.updatePassword(id,update);
+    public Long updatePassword(long id, UpdateUser update) {
+        UserEntity userEntity = userRepository.findByIdAndIsDelete(id,0)
+            .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
+
+        userRepository.save(userMapper.toUpdate(update,userEntity));
+        return userEntity.getId();
     }
 
-    public int deleteUser(long id) {
-        if (!userRepository.validateId(id)) {
-            throw new BaseHandler(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다.");
-        }
-        return userRepository.deleteUser(id);
+    public Long deleteUser(long id) {
+        UserEntity userEntity = userRepository.findByIdAndIsDelete(id,0)
+            .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
+
+        userRepository.save(userMapper.toDelete(userEntity));
+        return userEntity.getId();
     }
 }
