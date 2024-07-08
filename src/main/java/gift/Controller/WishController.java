@@ -29,7 +29,7 @@ public class WishController {
   @GetMapping
   public ResponseEntity<List<ProductDto>> getWishList(@LoginUser UserDto user) {
     WishListDto wishList = wishListService.getWishList(user);
-    return ResponseEntity.ok(wishList.getWishList());
+    return ResponseEntity.ok(wishList.wishListDto());
   }
 
   @PostMapping
