@@ -1,11 +1,9 @@
 package gift.controller;
 
 import gift.domain.Wish;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import gift.service.WishService;
 
 import java.util.List;
@@ -25,4 +23,9 @@ public class WishController {
         return ResponseEntity.ok(wishList);
     }
 
+    @PostMapping
+    public ResponseEntity<Void> addToWishList(@RequestParam Long userId, @RequestParam Long productId) {
+        wishService.addToWishList(userId, productId);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }

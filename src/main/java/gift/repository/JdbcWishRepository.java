@@ -50,7 +50,7 @@ public class JdbcWishRepository implements WishRepository {
             wish.setId(rs.getLong("id"));
             wish.setUserId(rs.getLong("user_id"));
             wish.setProductId(rs.getLong("product_id"));
-            wish.setCreatedAt(rs.getTimestamp("created_at"));
+            wish.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
             return wish;
         }
     }

@@ -35,7 +35,7 @@ public class Wish {
         this.productId = productId;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt == null ? null : createdAt.toLocalDateTime();
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt == null ? null : createdAt;
     }
 }

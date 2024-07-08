@@ -329,15 +329,14 @@
   - [x] Wish 엔티티 생성 (userId, productId, createdAt 필드 포함)
   - [x] WishRepository 인터페이스 생성 및 구현
 
-- [ ] WishService 인터페이스 생성 및 구현
+- [ ] WishService 생성 및 구현
   - [x] 위시 리스트 조회 
-  - [ ] 위시 리스트에 상품 추가 
-  - [ ] 위시 리스트에서 상품 삭제 
-  - [ ] 위시 리스트 관련 컨트롤러 구현
+  - [x] 위시 리스트에 상품 추가 
+  - [ ] 위시 리스트에서 상품 삭제
 
 - [ ] WishController 생성
-  - [ ] GET /wishes: 위시 리스트 조회 
-  - [ ] POST /wishes: 위시 리스트에 상품 추가 
+  - [x] GET /wishes: 위시 리스트 조회 
+  - [x] POST /wishes: 위시 리스트에 상품 추가 
   - [ ] DELETE /wishes/{id}: 위시 리스트에서 상품 삭제 
   
 - [ ] 사용자 인증 및 인가 처리
