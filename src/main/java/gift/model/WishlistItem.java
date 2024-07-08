@@ -1,11 +1,29 @@
 package gift.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Table(name="wishlist")
 public class WishlistItem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @NotNull
     private long userId;
+    @NotNull
     private long productId;
+    @NotNull
     private String productName;
+    @NotNull
     private long amount;
+
+    public WishlistItem() {
+    }
 
     public WishlistItem(long id, long userId, long productId, String productName, long amount) {
         this.id = id;
