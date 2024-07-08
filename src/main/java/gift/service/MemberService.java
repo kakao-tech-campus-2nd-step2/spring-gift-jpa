@@ -4,7 +4,9 @@ import gift.model.Member;
 import gift.model.dto.LoginMemberDto;
 import gift.model.dto.MemberRequestDto;
 import gift.repository.MemberDao;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MemberService {
 
     private final MemberDao memberDao;
