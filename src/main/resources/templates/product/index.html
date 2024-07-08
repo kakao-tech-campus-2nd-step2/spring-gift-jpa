@@ -57,7 +57,7 @@
             <tr th:each="product : ${products}">
                 <td class="font-weight-bold" th:text="${product.name}"></td>
                 <td th:text="${product.price}"></td>
-                <td class="break-word" th:text="${product.imageUrl}"></td>
+                <td class="break-word" th:text="${product.imageurl}"></td>
                 <td>
                     <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-warning btn-sm">Edit</a>
                     <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn btn-danger btn-sm">Delete</a>

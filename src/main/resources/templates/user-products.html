@@ -58,7 +58,7 @@
                 <td class="font-weight-bold" th:text="${product.name}"></td>
                 <td th:text="${product.price}"></td>
                 <td class="break-word">
-                    <img th:src="${product.imageUrl}" alt="Product Image" style="max-width: 100px; height: auto;">
+                    <img th:src="${product.imageurl}" alt="Product Image" style="max-width: 100px; height: auto;">
                 </td>
                 <td>
                     <button class="btn btn-primary btn-sm" th:attr="onclick='addToWishList(' + ${product.id} + ')'">Add to Wish List</button>
