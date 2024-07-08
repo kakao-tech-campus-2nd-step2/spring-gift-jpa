@@ -4,8 +4,7 @@ public class Token {
     Long memberId;
     String value;
 
-    public Token(Long memberId, String value) {
-        this.memberId = memberId;
+    public Token(String value) {
         this.value = value;
     }
 
