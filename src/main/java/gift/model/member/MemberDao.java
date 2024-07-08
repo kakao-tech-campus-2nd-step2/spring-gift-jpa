@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class MemberDao {
 
-    private static final String USER_INSERT = "INSERT INTO members (email, password, name, role) VALUES (?, ?, ?,?)";
-    private static final String USER_SELECT_BY_ID = "SELECT id, email, password, name, role FROM members WHERE id = ?";
-    private static final String USER_SELECT_BY_EMAIL = "SELECT id, email, password, name, role FROM members WHERE email = ?";
+    private static final String USER_INSERT = "INSERT INTO member (email, password, name, role) VALUES (?, ?, ?,?)";
+    private static final String USER_SELECT_BY_ID = "SELECT id, email, password, name, role FROM member WHERE id = ?";
+    private static final String USER_SELECT_BY_EMAIL = "SELECT id, email, password, name, role FROM member WHERE email = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Member> userRowMapper = new MemberRowMapper();
