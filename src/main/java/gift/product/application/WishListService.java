@@ -11,8 +11,11 @@ import java.util.List;
 @Service
 public class WishListService {
 
-    @Autowired
-    private WishListRepository wishListRepository;
+    private final WishListRepository wishListRepository;
+
+    public WishListService(WishListRepository wishListRepository) {
+        this.wishListRepository = wishListRepository;
+    }
 
     public WishList getWishListByUserId(Long userId) {
         return wishListRepository.findByUserId(userId);

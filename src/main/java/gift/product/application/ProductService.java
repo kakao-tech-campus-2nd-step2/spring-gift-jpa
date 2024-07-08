@@ -12,8 +12,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
     private static final int MAX_PRODUCT_NAME_LENGTH = 15;
     private static final String RESERVED_KEYWORD = "카카오";
 

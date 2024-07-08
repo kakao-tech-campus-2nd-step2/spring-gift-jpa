@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/product")
 public class ProductManageController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
+    public ProductManageController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping("")
     public ResponseEntity<CommonResponse<List<Product>>> getProducts() {

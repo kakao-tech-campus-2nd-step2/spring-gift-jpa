@@ -13,9 +13,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProductRepository {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
+    public ProductRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public List<Product> getProducts() {
         String sql = "SELECT * FROM Product";

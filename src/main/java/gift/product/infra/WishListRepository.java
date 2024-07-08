@@ -14,8 +14,11 @@ import java.util.List;
 @Repository
 public class WishListRepository {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public WishListRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     private final RowMapper<WishList> wishListRowMapper = new RowMapper<WishList>() {
         @Override

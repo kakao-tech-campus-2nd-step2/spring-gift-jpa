@@ -22,8 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/wishlist")
 public class WishListController {
 
-    @Autowired
-    private WishListService wishListService;
+    private final WishListService wishListService;
+
+    public WishListController(WishListService wishListService) {
+        this.wishListService = wishListService;
+    }
 
     @JwtAuthenticated
     @GetMapping("/{userId}")
