@@ -1,6 +1,6 @@
 package gift.global.commandLineRunner;
 
-import gift.domain.product.JpaProductRepository;
+import gift.domain.product.repository.JpaProductRepository;
 import gift.domain.product.Product;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

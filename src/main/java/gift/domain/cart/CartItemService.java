@@ -1,8 +1,8 @@
 package gift.domain.cart;
 
-import gift.domain.product.JdbcTemplateProductRepository;
+import gift.domain.product.repository.JdbcTemplateProductRepository;
 import gift.domain.product.Product;
-import gift.domain.product.ProductRepository;
+import gift.domain.product.repository.ProductRepository;
 import gift.global.exception.BusinessException;
 import java.util.List;
 import java.util.stream.Collectors;

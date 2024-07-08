@@ -1,5 +1,6 @@
-package gift.domain.product;
+package gift.domain.product.repository;
 
+import gift.domain.product.Product;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
