@@ -22,7 +22,9 @@ public class WebConfig implements WebMvcConfigurer {
             .addPathPatterns("/api/**")
             .addPathPatterns("/admin/**")
             .excludePathPatterns("/admin/login/")
-            .excludePathPatterns("/admin/login/**");
+            .excludePathPatterns("/admin/login/**")
+            .excludePathPatterns("/api/products")
+            .excludePathPatterns("/api/products/**");
 
         registry.addInterceptor(new JwtCookieToHeaderInterceptor())
             .order(1)
