@@ -1,10 +1,8 @@
 package gift.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+@Entity
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
