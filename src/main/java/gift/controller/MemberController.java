@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.dto.MemberRequest;
+import gift.dto.MemberResponse;
 import gift.service.MemberService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,22 +21,24 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody MemberRequest memberRequest, BindingResult bindingResult) {
+    public ResponseEntity<?> register(@Valid @RequestBody MemberRequest memberRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body("Invalid data");
         }
         String token = memberService.register(memberRequest);
-        return ResponseEntity.ok("{\"token\":\"" + token + "\"}");
+        MemberResponse response = new MemberResponse(token);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody MemberRequest memberRequest, BindingResult bindingResult) {
+    public ResponseEntity<?> login(@Valid @RequestBody MemberRequest memberRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body("Invalid data");
         }
         try {
             String token = memberService.authenticate(memberRequest);
-            return ResponseEntity.ok("{\"token\":\"" + token + "\"}");
+            MemberResponse response = new MemberResponse(token);
+            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(403).body("Forbidden");
         }
