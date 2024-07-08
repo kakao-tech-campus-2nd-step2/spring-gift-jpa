@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>로그인</title>
+</head>
+<body>
+<h1>로그인</h1>
+<form th:action="@{/users/login}" method="post" th:object="${user}">
+  <div>
+    <label for="email">이메일:</label>
+    <input type="email" id="email" th:field="*{email}" required />
+  </div>
+  <div>
+    <label for="password">비밀번호:</label>
+    <input type="password" id="password" th:field="*{password}" required />
+  </div>
+  <div>
+    <button type="submit">로그인</button>
+  </div>
+  <div th:if="${error}">
+    <p th:text="${error}"></p>
+  </div>
+</form>
+<p>계정이 없으신가요? <a th:href="@{/users/register}">회원 가입</a></p>
+</body>
+</html>
