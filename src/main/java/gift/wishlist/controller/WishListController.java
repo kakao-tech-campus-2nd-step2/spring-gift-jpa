@@ -5,6 +5,7 @@ import gift.member.dto.MemberResDto;
 import gift.wishlist.dto.WishListReqDto;
 import gift.wishlist.dto.WishListResDto;
 import gift.wishlist.service.WishListService;
+import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,7 +36,7 @@ public class WishListController {
     @PostMapping
     public ResponseEntity<String> addWishList(@LoginMember MemberResDto member, @RequestBody WishListReqDto wishListReqDto) {
         wishListService.addWishList(member.id(), wishListReqDto);
-        return ResponseEntity.ok("상품을 장바구니에 담았습니다.");
+        return ResponseEntity.created(URI.create("/api/wish-list")).body("상품을 장바구니에 담았습니다.");
     }
 
     @PutMapping("/{wish-list-id}")
