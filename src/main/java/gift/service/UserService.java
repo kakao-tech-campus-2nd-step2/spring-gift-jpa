@@ -1,36 +1,40 @@
 package gift.service;
 
-import gift.dao.UserDao;
-import gift.domain.User;
+
+import gift.entity.Member;
 import gift.exception.DuplicateUserEmailException;
+import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
-    private final UserDao userDao;
+    private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
 
-    public UserService(UserDao userDao, JwtUtil jwtUtil) {
-        this.userDao = userDao;
+    public UserService(MemberRepository memberRepository, JwtUtil jwtUtil) {
+        this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
     }
 
 
 
-    public void generateUser(User user) {
-        if(!userDao.userEmailCheck(user.getEmail())){
+    public void generateUser(Member member) {
+        if(memberRepository.findByEmail(member.getEmail())!=null){
             throw new DuplicateUserEmailException(
-                "UserEmail " + user.getEmail()+"already exists."
+                "UserEmail " + member.getEmail()+"already exists."
             );
         }
-        userDao.signUp(user);
+        memberRepository.save(member);
 
     }
 
-    public String authenticateUser(User user) {
-        return jwtUtil.generateToken(userDao.signIn(user));
+    public String authenticateUser(Member member) {
+        Member loginMember = memberRepository.findByEmailAndPassword(member.getEmail(),
+            member.getPassword());
+        return jwtUtil.generateToken(loginMember.getEmail());
+
     }
 
 

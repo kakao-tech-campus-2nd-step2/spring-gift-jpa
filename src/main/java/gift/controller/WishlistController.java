@@ -1,8 +1,9 @@
 package gift.controller;
 
 import gift.annotation.LoginUser;
-import gift.domain.ProductWithQuantity;
-import gift.domain.Wishlist;
+import gift.entity.Member;
+import gift.entity.Wish;
+import gift.repository.MemberRepository;
 import gift.service.WishlistService;
 import java.util.List;
 import org.apache.juli.logging.Log;
@@ -22,25 +23,28 @@ import org.springframework.web.bind.annotation.RestController;
 public class WishlistController {
 
     WishlistService wishlistService;
+    MemberRepository memberRepository;
 
-    public WishlistController(WishlistService wishlistService){
+    public WishlistController(WishlistService wishlistService,MemberRepository memberRepository){
         this.wishlistService=wishlistService;
+        this.memberRepository= memberRepository;
     }
     @GetMapping()
-    public ResponseEntity<List<Wishlist>> getWishlist(@LoginUser String email){
-        List<Wishlist> wishlist = wishlistService.getWishlist(email);
+    public ResponseEntity<List<Wish>> getWishlist(@LoginUser String email){
+        Member member =memberRepository.findByEmail(email);
+        List<Wish> wishlist = wishlistService.getWishlist(member.getId());
         return new ResponseEntity<>(wishlist,HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<String> addWishlist(@RequestBody ProductWithQuantity productWithQuantity, @LoginUser String email){
-        wishlistService.addWishlist(productWithQuantity,email);
+    public ResponseEntity<String> addWishlist(@RequestBody Wish wish){
+        wishlistService.addWishlist(wish);
         return new ResponseEntity<>("위시리스트 상품 추가 완료", HttpStatus.OK);
     }
 
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<String> deleteWishlist(@PathVariable("productId") long productId, @LoginUser String email){
-        wishlistService.deleteProductInWishlist(productId,email);
+    @DeleteMapping("/{wishId}")
+    public ResponseEntity<String> deleteWishlist(@PathVariable("wishId") long wishId){
+        wishlistService.deleteWishlist(wishId);
         return new ResponseEntity<>("위시리스트 상품 삭제 완료", HttpStatus.NO_CONTENT);
     }
 }
