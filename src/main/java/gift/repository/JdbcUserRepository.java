@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository
 public class JdbcUserRepository implements UserRepository {
 
     private final JdbcTemplate jdbcTemplate;
@@ -34,7 +33,7 @@ public class JdbcUserRepository implements UserRepository {
         }
 
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("account").usingGeneratedKeyColumns("id");
+        jdbcInsert.withTableName("user").usingGeneratedKeyColumns("id");
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("email", user.getEmail());
@@ -47,7 +46,7 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        List<User> result = jdbcTemplate.query("select * from account where email = ?", userRowMapper(), email);
+        List<User> result = jdbcTemplate.query("select * from user where email = ?", userRowMapper(), email);
         return result.stream().findAny();
     }
 
