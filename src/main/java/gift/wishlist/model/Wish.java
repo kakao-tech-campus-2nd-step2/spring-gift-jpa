@@ -7,6 +7,11 @@ public class Wish {
 
     public Wish() {}
 
+    public Wish(Long memberId, String productName) {
+        this.memberId = memberId;
+        this.productName = productName;
+    }
+
     public Long getId() {
         return id;
     }
