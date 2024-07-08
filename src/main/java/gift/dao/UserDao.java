@@ -60,7 +60,7 @@ public class UserDao {
 
     public void insertUser(User user) {
 
-        var sql = "INSERT INTO users (id, name, password, email, role) VALUES (?, ?, ?, ?)";
+        var sql = "INSERT INTO users (id, name, password, email, role) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, user.getId(), user.getName(), user.getPassword(), user.getEmail(), user.getRole());
 
     }

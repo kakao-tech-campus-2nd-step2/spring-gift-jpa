@@ -10,10 +10,11 @@ import gift.domain.WishList;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
+@Service
 public class WishListService {
     
     private WishListDao wishListDao;

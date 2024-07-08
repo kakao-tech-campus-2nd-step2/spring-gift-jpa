@@ -8,11 +8,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 import gift.dto.UserDto;
 
+
+@Component
 public class JwtUtil {
 
     @Value("${jwt.secret}")

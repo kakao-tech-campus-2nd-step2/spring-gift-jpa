@@ -7,7 +7,7 @@ CREATE TABLE product (
 
 CREATE TABLE users (
     id BIGINT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255),
     password VARCHAR(1000),
     email VARCHAR(1000),
     role VARCHAR(255)
@@ -15,5 +15,5 @@ CREATE TABLE users (
 
 CREATE TABLE wishlist(
     product_id BIGINT,
-    user_id BIGINT,
-)
+    user_id BIGINT
+);
