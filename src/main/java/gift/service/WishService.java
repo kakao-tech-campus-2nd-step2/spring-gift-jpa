@@ -3,6 +3,7 @@ package gift.service;
 import gift.domain.Product;
 import gift.domain.User;
 import gift.domain.Wish;
+import gift.dto.UserResponseDto;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
 import gift.exception.ProductNotFoundException;
@@ -32,15 +33,15 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
-    public void save(String userEmail, WishRequestDto request){
-        User user = validateUser(userEmail);
+    public void save(UserResponseDto userResponseDto, WishRequestDto request){
+        User user = validateUser(userResponseDto.getEmail());
         Product product = productRepository.findByName(request.getProductName())
                 .orElseThrow(() -> new ProductNotFoundException(NOT_FOUND_PRODUCT_BY_NAME_MESSAGE));
         wishRepository.save(new Wish(user.getId(),product.getId(),request.getQuantity()));
     }
 
-    public List<WishResponseDto> findByUserEmail(String userEmail){
-        User user = validateUser(userEmail);
+    public List<WishResponseDto> findByUserEmail(UserResponseDto userResponseDto){
+        User user = validateUser(userResponseDto.getEmail());
         return wishRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new WishNotFoundException(NOT_FOUND_WISH_MESSAGE))
                 .stream()
@@ -48,13 +49,13 @@ public class WishService {
                 .collect(Collectors.toList());
     }
 
-    public void delete(String userEmail, Long id){
-        validateUserAndWish(userEmail, id);
+    public void delete(UserResponseDto userResponseDto, Long id){
+        validateUserAndWish(userResponseDto.getEmail(), id);
         wishRepository.delete(id);
     }
 
-    public void updateQuantity(String userEmail, Long id, WishRequestDto request){
-        validateUserAndWish(userEmail, id);
+    public void updateQuantity(UserResponseDto userResponseDto, Long id, WishRequestDto request){
+        validateUserAndWish(userResponseDto.getEmail(), id);
         wishRepository.updateQuantity(id, request.getQuantity());
     }
 
