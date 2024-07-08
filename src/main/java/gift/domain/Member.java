@@ -1,13 +1,20 @@
 package gift.domain;
 
 import gift.dto.request.MemberRequestDto;
+import jakarta.persistence.*;
 
+@Entity
 public class Member {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String email;
-    private String password;
 
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
     public Member() {
     }
 
