@@ -81,12 +81,16 @@ public class TokenValidationInterceptor implements HandlerInterceptor {
     }
 
     private String getAccessTokenFromCustomHeader(HttpServletRequest request) {
-        String accessToken;
-        accessToken = (String) (request.getAttribute("CUSTOM_HEADER_AUTHORIZATION"));
+        String accessToken = (String) (request.getAttribute("CUSTOM_HEADER_AUTHORIZATION"));
+
+        if (accessToken == null) {
+            return "";
+        }
 
         if (accessToken.toLowerCase().startsWith(TYPE.toLowerCase())) {
             accessToken = accessToken.substring(TYPE.length()).trim();
         }
+
         return accessToken;
     }
 
