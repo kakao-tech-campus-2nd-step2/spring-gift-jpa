@@ -5,7 +5,9 @@ import gift.exception.MemberException;
 import gift.model.Member;
 import gift.repository.MemberDao;
 import gift.repository.MemberRepository;
+import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,12 +31,10 @@ public class MemberService {
     }
 
     public Member login(String email, String password) {
-        Member loginedMember = memberRepository.findByEmail(email);
 
-        if(!loginedMember.login(email, password)) {
-            throw new LoginErrorException();
-        }
-        return loginedMember;
+        return memberRepository.findByEmail(email)
+            .filter(member -> member.login(email, password))
+            .orElseThrow(() -> new LoginErrorException("아이디 또는 비밀번호가 일치하지 않습니다."));
     }
 
 }
