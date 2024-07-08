@@ -1,6 +1,9 @@
 package gift.domain.user;
 
 import gift.domain.user.dto.UserDTO;
+import gift.domain.user.repository.JdbcTemplateUserRepository;
+import gift.domain.user.repository.JpaUserRepository;
+import gift.domain.user.repository.UserRepository;
 import gift.global.jwt.JwtProvider;
 import gift.global.exception.BusinessException;
 import org.springframework.http.HttpStatus;
@@ -9,9 +12,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
-    public UserService(JdbcTemplateUserRepository jdbcTemplateUserRepository) {
-        this.userRepository = jdbcTemplateUserRepository;
+    private final JpaUserRepository userRepository;
+    public UserService(JpaUserRepository jpaUserRepository) {
+        this.userRepository = jpaUserRepository;
     }
 
     /**
@@ -23,7 +26,7 @@ public class UserService {
         }
 
         User user = userDTO.toUser();
-        userRepository.join(user);
+        userRepository.save(user);
     }
 
 
@@ -31,7 +34,7 @@ public class UserService {
      * 로그인, 성공 시 JWT 반환
      */
     public String login(UserDTO userDTO) {
-        User user = userRepository.findByEmailAndPassword(userDTO);
+        User user = userRepository.findByEmailAndPassword(userDTO.getEmail(), userDTO.getPassword());
 
         // jwt 토큰 생성
         String jwt = JwtProvider.generateToken(user);
