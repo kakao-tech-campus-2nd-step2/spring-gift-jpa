@@ -33,7 +33,7 @@
         <td><img th:src="${product.imageUrl}" alt="img" width="100px"></td>
         <td>
           <form>
-            <button type="button" th:onclick="|addProductToWishlist([[${product.id}]])|">+</button>
+            <button type="button" th:onclick="|addProductToWishlist(${product.id})|">+</button>
           </form>
         </td>
       </tr>
@@ -57,7 +57,7 @@
         <td><img th:src="${wish.imageUrl}" alt="img" width="100px"></td>
         <td>
           <form>
-            <button type="button" th:onclick="|deleteProductFromWishlist([[${wish.id}]])|">-</button>
+            <button type="button" th:onclick="|deleteProductFromWishlist(${wish.id})|">-</button>
           </form>
         </td>
       </tr>
