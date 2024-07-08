@@ -31,8 +31,8 @@ public class WishService {
         wishRepository.save(new Wish(memberResponseDto.getId(),product.getId(),request.getQuantity()));
     }
 
-    public List<WishResponseDto> findByUserEmail(MemberResponseDto memberResponseDto){
-        return wishRepository.findByUserId(memberResponseDto.getId())
+    public List<WishResponseDto> findByMemberEmail(MemberResponseDto memberResponseDto){
+        return wishRepository.findByMemberId(memberResponseDto.getId())
                 .orElseThrow(() -> new WishNotFoundException(Messages.NOT_FOUND_WISH))
                 .stream()
                 .map(this::convertToWishDto)
@@ -40,13 +40,13 @@ public class WishService {
     }
 
     public void delete(MemberResponseDto memberResponseDto, Long id){
-        wishRepository.findByIdAndUserId(id, memberResponseDto.getId())
+        wishRepository.findByIdAndMemberId(id, memberResponseDto.getId())
                 .orElseThrow(()-> new WishNotFoundException(Messages.NOT_FOUND_WISH));
         wishRepository.delete(id);
     }
 
     public void updateQuantity(MemberResponseDto memberResponseDto, Long id, WishRequestDto request){
-        wishRepository.findByIdAndUserId(id, memberResponseDto.getId())
+        wishRepository.findByIdAndMemberId(id, memberResponseDto.getId())
                 .orElseThrow(()-> new WishNotFoundException(Messages.NOT_FOUND_WISH));
         wishRepository.updateQuantity(id, request.getQuantity());
     }

@@ -28,7 +28,7 @@ public class WishRestController {
 
     @GetMapping
     public ResponseEntity<List<WishResponseDto>> getWishList(@LoginMember MemberResponseDto memberResponseDto){
-        return ResponseEntity.status(HttpStatus.OK).body(wishService.findByUserEmail(memberResponseDto));
+        return ResponseEntity.status(HttpStatus.OK).body(wishService.findByMemberEmail(memberResponseDto));
     }
 
     @DeleteMapping("/{id}")

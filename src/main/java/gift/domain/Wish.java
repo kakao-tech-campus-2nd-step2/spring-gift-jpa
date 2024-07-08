@@ -2,19 +2,19 @@ package gift.domain;
 
 public class Wish {
     private Long id;
-    private Long userId;
+    private Long memberId;
     private Long productId;
     private int quantity;
 
-    public Wish(Long id, Long userId, Long productId, int quantity) {
+    public Wish(Long id, Long memberId, Long productId, int quantity) {
         this.id = id;
-        this.userId = userId;
+        this.memberId = memberId;
         this.productId = productId;
         this.quantity = quantity;
     }
 
-    public Wish(Long userId, Long productId, int quantity) {
-        this.userId = userId;
+    public Wish(Long memberId, Long productId, int quantity) {
+        this.memberId = memberId;
         this.productId = productId;
         this.quantity = quantity;
     }
@@ -23,8 +23,8 @@ public class Wish {
         return id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getMemberId() {
+        return memberId;
     }
 
     public Long getProductId() {

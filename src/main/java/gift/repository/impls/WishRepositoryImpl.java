@@ -18,22 +18,22 @@ public class WishRepositoryImpl implements WishRepository {
 
     @Override
     public void save(Wish wish) {
-        var sql = "INSERT INTO WISHES (USER_ID, PRODUCT_ID, QUANTITY) VALUES (?,?,?)";
-        jdbcTemplate.update(sql, wish.getUserId(), wish.getProductId(), wish.getQuantity());
+        var sql = "INSERT INTO WISHES (MEMBER_ID, PRODUCT_ID, QUANTITY) VALUES (?,?,?)";
+        jdbcTemplate.update(sql, wish.getMemberId(), wish.getProductId(), wish.getQuantity());
     }
 
     @Override
-    public Optional<List<Wish>> findByUserId(Long userId) {
-        var sql = "SELECT * FROM WISHES WHERE USER_ID = ?";
+    public Optional<List<Wish>> findByMemberId(Long memberId) {
+        var sql = "SELECT * FROM WISHES WHERE MEMBER_ID = ?";
         List<Wish> wishes = jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> new Wish(
                         resultSet.getLong("ID"),
-                        resultSet.getLong("USER_ID"),
+                        resultSet.getLong("MEMBER_ID"),
                         resultSet.getLong("PRODUCT_ID"),
                         resultSet.getInt("QUANTITY")
                 ),
-                userId
+                memberId
         );
         if (wishes.isEmpty()) {
             return Optional.empty();
@@ -42,18 +42,18 @@ public class WishRepositoryImpl implements WishRepository {
     }
 
     @Override
-    public Optional<Wish> findByIdAndUserId(Long id, Long userId) {
-        var sql = "SELECT * FROM WISHES WHERE ID = ? AND USER_ID = ?";
+    public Optional<Wish> findByIdAndMemberId(Long id, Long memberId) {
+        var sql = "SELECT * FROM WISHES WHERE ID = ? AND MEMBER_ID = ?";
         List<Wish> wishes = jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> new Wish(
                         resultSet.getLong("ID"),
-                        resultSet.getLong("USER_ID"),
+                        resultSet.getLong("MEMBER_ID"),
                         resultSet.getLong("PRODUCT_ID"),
                         resultSet.getInt("QUANTITY")
                 ),
                 id,
-                userId
+                memberId
         );
         if (wishes.isEmpty()) {
             return Optional.empty();

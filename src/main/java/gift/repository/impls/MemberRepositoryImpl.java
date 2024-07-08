@@ -18,12 +18,12 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public void save(Member member){
-        var sql = "INSERT INTO users(email, password) VALUES (?,?)";
+        var sql = "INSERT INTO members(email, password) VALUES (?,?)";
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
     }
     @Override
     public Optional<Member> findByPasswordAndEmail(String email, String password) {
-        var sql = "SELECT * FROM users WHERE email = ? And password = ?";
+        var sql = "SELECT * FROM members WHERE email = ? And password = ?";
         try {
             Member member = jdbcTemplate.queryForObject(
                     sql,
@@ -43,7 +43,7 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public Optional<Member> findByEmail(String email) {
-        var sql = "SELECT * FROM users WHERE email = ?";
+        var sql = "SELECT * FROM members WHERE email = ?";
         try {
             Member member = jdbcTemplate.queryForObject(
                     sql,
