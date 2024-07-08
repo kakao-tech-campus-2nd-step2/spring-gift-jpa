@@ -70,7 +70,7 @@ public class WishRepositoryTest {
         when(jdbcTemplate.query(any(String.class), any(RowMapper.class), anyLong())).thenReturn(List.of());
 
         wishRepository.create(wish);
-        wishRepository.deleteById(1L);
+        wishRepository.delete(1L);
 
         Optional<Wish> foundWish = wishRepository.findById(1L);
         assertFalse(foundWish.isPresent());

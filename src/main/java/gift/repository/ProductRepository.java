@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ProductRepository {
+public class ProductRepository implements BaseRepository<Product, Long> {
     private final JdbcTemplate jdbcTemplate;
 
     public ProductRepository(JdbcTemplate jdbcTemplate) {
@@ -22,31 +22,37 @@ public class ProductRepository {
         rs.getString("imageUrl")
     );
 
+    @Override
     public List<Product> findAll() {
         return jdbcTemplate.query("SELECT * FROM products", productRowMapper);
     }
 
+    @Override
     public Optional<Product> findById(Long id) {
         List<Product> results = jdbcTemplate.query("SELECT * FROM products WHERE id = ?", productRowMapper, id);
         return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
     }
 
+    @Override
     public Product create(Product product) {
         jdbcTemplate.update("INSERT INTO products (name, price, imageUrl) VALUES (?, ?, ?)",
             product.getName(), product.getPrice(), product.getImageUrl());
         return product;
     }
 
+    @Override
     public Product update(Product product) {
         jdbcTemplate.update("UPDATE products SET name = ?, price = ?, imageUrl = ? WHERE id = ?",
             product.getName(), product.getPrice(), product.getImageUrl(), product.getId());
         return product;
     }
 
+    @Override
     public void delete(Long id) {
         jdbcTemplate.update("DELETE FROM products WHERE id = ?", id);
     }
 
+    @Override
     public boolean existsById(Long id) {
         Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM products WHERE id = ?", Integer.class, id);
         return count != null && count > 0;

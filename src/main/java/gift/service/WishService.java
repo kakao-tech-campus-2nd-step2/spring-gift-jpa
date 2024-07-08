@@ -45,7 +45,7 @@ public class WishService {
         if (wishRepository.findById(id).isEmpty()) {
             throw new WishNotFoundException(WISH_NOT_FOUND + id);
         }
-        wishRepository.deleteById(id);
+        wishRepository.delete(id);
     }
 
     // Mapper methods
