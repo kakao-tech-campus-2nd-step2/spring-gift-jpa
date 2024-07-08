@@ -20,12 +20,36 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web' // 중복 제거
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // 인증 및 인가 관련 종속성 추가
+    //implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    implementation 'org.mindrot:jbcrypt:0.4'
+    // Spring Web Security Configuration
+    //implementation 'org.springframework.security:spring-security-config'
+
+    // Spring Security Web
+    //implementation 'org.springframework.security:spring-security-web'
+
+    // Spring Security Core
+    //implementation 'org.springframework.security:spring-security-core'
+
+    // Spring Security Taglibs
+    //implementation 'org.springframework.security:spring-security-taglibs'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+test {
+    // 동적 에이전트 로딩을 허용하는 JVM 옵션 설정
+    jvmArgs '-XX:+EnableDynamicAgentLoading'
 }

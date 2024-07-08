@@ -1,0 +1,124 @@
+<!-- http://localhost:8080/admin/products -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        img {
+            max-width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<h1>Product Management</h1>
+
+<h2>Add a New Product</h2>
+<form th:action="@{/admin/products/add}" method="post" enctype="multipart/form-data">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" required>
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" required></textarea>
+
+    <label for="imageFile">Image:</label>
+    <input type="file" id="imageFile" name="imageFile" required>
+
+    <button type="submit">Add Product</button>
+</form>
+
+<h2>Product List</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Image</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}">1</td>
+        <td th:text="${product.name}">Sample Product</td>
+        <td th:text="${product.price}">100</td>
+        <td th:text="${product.description}">Description</td>
+        <td>
+            <img th:src="@{'/api/products/' + ${product.imageUrl} + '/imageView'}" alt="Product Image">
+        </td>
+        <td>
+            <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post" style="display: inline;">
+                <button type="submit">Delete</button>
+            </form>
+            <form th:action="@{/admin/products/update/{id}(id=${product.id})}" method="post" enctype="multipart/form-data" style="display: inline;">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" th:value="${product.name}" required>
+
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" th:value="${product.price}" required>
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required th:text="${product.description}"></textarea>
+
+                <label for="imageFile">Image:</label>
+                <input type="file" id="imageFile" name="imageFile">
+
+                <button type="submit">Update</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
+
