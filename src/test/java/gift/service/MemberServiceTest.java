@@ -1,0 +1,72 @@
+package gift.service;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
+
+import gift.exception.LoginErrorException;
+import gift.exception.MemberException;
+import gift.model.Member;
+import gift.repository.MemberRepository;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+@SpringBootTest
+@Transactional
+class MemberServiceTest {
+
+    @Autowired
+    MemberService memberService;
+    Member member = new Member("aaa123@2a.com", "1234");
+
+    @Autowired
+    public MemberServiceTest(MemberService memberService) {
+        this.memberService = memberService;
+    }
+
+    @Test
+    @DisplayName("회원가입 성공 테스트")
+    void join() {
+        assertDoesNotThrow(() -> memberService.join(member.getEmail(), member.getPassword()));
+    }
+
+    @Test
+    @DisplayName("회원가입 실패 테스트:중복된 이메일")
+    void failJoin() {
+        memberService.join(member.getEmail(), member.getPassword());
+        Assertions.assertThatThrownBy(
+            () -> memberService.join(member.getEmail(), member.getPassword())
+        ).isInstanceOf(MemberException.class);
+    }
+
+    @Test
+    @DisplayName("로그인 성공 테스트")
+    void login() {
+        Member joinedMember = memberService.join(member.getEmail(), member.getPassword());
+        assertDoesNotThrow(() -> memberService.login(joinedMember.getEmail(), joinedMember.getPassword()));
+    }
+
+    @Test
+    @DisplayName("로그인 실패 테스트")
+    void failLogin() {
+        Member joinedMember = memberService.join(member.getEmail(), member.getPassword());
+
+        assertThatThrownBy(
+            () -> memberService.login("wrong email", joinedMember.getPassword())
+        ).isInstanceOf(LoginErrorException.class);
+
+        assertThatThrownBy(
+            () -> memberService.login(joinedMember.getEmail(), "wrong password")
+        ).isInstanceOf(LoginErrorException.class);
+        assertThatThrownBy(
+            () -> memberService.login("wrong email", "wrong password")
+        ).isInstanceOf(LoginErrorException.class);
+    }
+
+
+}

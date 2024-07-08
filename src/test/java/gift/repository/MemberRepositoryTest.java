@@ -35,7 +35,7 @@ class MemberRepositoryTest {
     @DisplayName("Member findByEmail 테스트")
     void getMemberByEmail() {
         Member savedMember = memberRepository.save(member);
-        Member findMember = memberRepository.findByEmail(savedMember.getEmail());
+        Member findMember = memberRepository.findByEmail(savedMember.getEmail()).get();
 
         assertThat(findMember).isEqualTo(savedMember);
     }
