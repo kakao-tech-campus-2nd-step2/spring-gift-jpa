@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .container {
+            max-width: 560px;
+        } </style>
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center"><h2>상품 등록 폼</h2>
+    </div>
+    <h4 class="mb-3">상품 입력</h4>
+    <form th:action>
+        <div>
+            <label for="name">상품명</label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="상품명을 입력하세요">
+        </div>
+        <div>
+            <label for="price">가격</label>
+            <input type="text" id="price" name="price" class="form-control" placeholder="가격을 입력하세요">
+        </div>
+        <div>
+            <label for="imageUrl">이미지</label>
+            <input type="text" id="imageUrl" name="imageUrl" class="form-control" placeholder="이미지 주소를 입력하세요">
+        </div>
+        <hr class="my-4">
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" type="button" th:onclick="addProduct()">상품 등록</button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg"
+                        th:onclick="|location.href='@{/admin/products}'|" type="button">취소
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    function addProduct() {
+        const productName = document.getElementById('name').value;
+        const productPrice = document.getElementById('price').value;
+        const productImageUrl = document.getElementById('imageUrl').value;
+
+        $.ajax({
+            url: '/api/products/add',
+            type: 'POST',
+            contentType: 'application/json',
+            async: true,
+            data: JSON.stringify({
+                name: productName,
+                price: productPrice,
+                imageUrl: productImageUrl
+            }),
+            statusCode:{
+                201: function (data, textStatus, jqXHR) {
+                    let locationHeader = jqXHR.getResponseHeader('Location');
+                    if (locationHeader) {
+                        let productHeader = locationHeader.replace('/api', '');
+                        alert('상품이 성공적으로 추가되었습니다.');
+                        window.location.href = `/admin${productHeader}`;
+                    }
+                }
+            },
+            error: function (xhr) {
+                let errorMessage = xhr.responseText;
+                alert(errorMessage);
+                console.error('에러:', errorMessage);
+            }
+        });
+    }
+</script>
+</body>
+</html>
