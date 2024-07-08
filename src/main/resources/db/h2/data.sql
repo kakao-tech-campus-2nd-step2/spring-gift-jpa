@@ -1,0 +1,3 @@
+INSERT INTO product (name, price, image_url) VALUES ('아이스 카페 아메리카노 T', 4500, 'https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg');
+INSERT INTO product (name, price, image_url) VALUES ('아이스 카페 라떼 T', 5000, 'https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110569]_20210415143036138.jpg');
+INSERT INTO product (name, price, image_url) VALUES ('아이스 스타벅스 돌체 라떼 T', 5900, 'https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[128695]_20210426092032110.jpg');
