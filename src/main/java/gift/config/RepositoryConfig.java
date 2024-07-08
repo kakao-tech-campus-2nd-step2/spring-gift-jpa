@@ -1,11 +1,11 @@
 package gift.config;
 
-import gift.model.dao.ProductDao;
-import gift.model.dao.UserDao;
-import gift.model.dao.WishDao;
-import gift.model.repository.ProductRepository;
-import gift.model.repository.UserRepository;
-import gift.model.repository.WishRepository;
+import gift.product.persistence.ProductDao;
+import gift.product.persistence.ProductRepository;
+import gift.user.persistence.UserDao;
+import gift.user.persistence.UserRepository;
+import gift.wish.persistence.WishDao;
+import gift.wish.persistence.WishRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;

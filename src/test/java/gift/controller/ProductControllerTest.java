@@ -5,8 +5,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import gift.model.Product;
-import gift.model.repository.ProductRepository;
+import gift.product.application.ProductController;
+import gift.product.domain.Product;
+import gift.product.persistence.ProductRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +26,10 @@ class ProductControllerTest {
 
     @MockBean
     private ProductRepository productRepository;
-    
+
     @Test
     @DisplayName("모든 Product 반환 테스트")
-    void getAllProducts () throws Exception {
+    void getAllProducts() throws Exception {
 
         //given
         Product product1 = new Product(8146027L, "아이스 카페 아메리카노 T", 4500,
@@ -36,7 +37,6 @@ class ProductControllerTest {
         Product product2 = new Product(8146028L, "아이스 라떼 T", 5000,
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_bbbff9eccc943648797925498bdd8a3.jpg");
         List<Product> allProducts = Arrays.asList(product1, product2);
-
 
         //when
         when(productRepository.findAll()).thenReturn(allProducts);
@@ -59,7 +59,7 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("특정 Product 반환 테스트")
-    void getProduct () throws Exception {
+    void getProduct() throws Exception {
         //given
         Product product = new Product(8146027L, "아이스 카페 아메리카노 T", 4500,
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");

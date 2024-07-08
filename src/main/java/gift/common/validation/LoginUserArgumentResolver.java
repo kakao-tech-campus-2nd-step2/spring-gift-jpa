@@ -1,8 +1,8 @@
 package gift.common.validation;
 
-import gift.common.exception.UserAuthorizedErrorException;
-import gift.model.User;
-import gift.model.repository.UserRepository;
+import gift.user.domain.User;
+import gift.user.exception.UserAuthorizedErrorException;
+import gift.user.persistence.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -29,7 +29,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         if (request == null) {
             throw new IllegalArgumentException("Request 정보가 존재하지 않습니다.");
         }
-        
+
         User user = userRepository.findByUsername((String) request.getAttribute("username"))
                 .orElseThrow(UserAuthorizedErrorException::new);
 

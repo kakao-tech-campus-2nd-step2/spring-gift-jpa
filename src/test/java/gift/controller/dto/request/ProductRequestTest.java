@@ -3,6 +3,7 @@ package gift.controller.dto.request;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.common.validation.ValidateErrorMessage;
+import gift.product.application.dto.request.ProductRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

@@ -2,8 +2,8 @@ package gift.config;
 
 import gift.common.validation.AuthInterceptor;
 import gift.common.validation.LoginUserArgumentResolver;
-import gift.model.JwtProvider;
-import gift.model.repository.UserRepository;
+import gift.user.persistence.UserRepository;
+import gift.user.service.JwtProvider;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

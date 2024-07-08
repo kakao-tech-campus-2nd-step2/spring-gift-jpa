@@ -5,9 +5,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import gift.model.JwtProvider;
-import gift.model.User;
-import gift.model.repository.UserRepository;
+import gift.user.application.UserController;
+import gift.user.domain.User;
+import gift.user.persistence.UserRepository;
+import gift.user.service.JwtProvider;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
