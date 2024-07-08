@@ -1,4 +1,4 @@
-package gift.controller.user.dto;
+package gift.controller.member.dto;
 
 import gift.model.member.Member;
 

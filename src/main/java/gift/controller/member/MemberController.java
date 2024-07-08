@@ -1,11 +1,11 @@
-package gift.controller.user;
+package gift.controller.member;
 
 import gift.global.auth.Authorization;
 import gift.global.auth.Authenticate;
 import gift.global.auth.LoginInfo;
-import gift.controller.user.dto.MemberRequest;
-import gift.controller.user.dto.MemberResponse.InfoResponse;
-import gift.controller.user.dto.MemberResponse.LoginResponse;
+import gift.controller.member.dto.MemberRequest;
+import gift.controller.member.dto.MemberResponse.InfoResponse;
+import gift.controller.member.dto.MemberResponse.LoginResponse;
 import gift.model.member.Role;
 import gift.service.MemberService;
 import jakarta.validation.Valid;
@@ -38,7 +38,7 @@ public class MemberController {
     public ResponseEntity<LoginResponse> login(
         @RequestBody @Valid MemberRequest.Login request
     ) {
-        return ResponseEntity.ok(LoginResponse.from(memberService.login(request)));
+        return ResponseEntity.ok().body(LoginResponse.from(memberService.login(request)));
     }
 
     @PostMapping("/logout")
@@ -49,7 +49,8 @@ public class MemberController {
     @Authorization(role = Role.USER)
     @GetMapping("")
     public ResponseEntity<InfoResponse> getUser(@Authenticate LoginInfo loginInfo) {
-        return ResponseEntity.ok(InfoResponse.from(memberService.getUser(loginInfo.memberId())));
+        var response = memberService.getUser(loginInfo.memberId());
+        return ResponseEntity.ok().body(response);
     }
 
 }
