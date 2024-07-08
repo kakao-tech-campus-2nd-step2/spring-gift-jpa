@@ -1,10 +1,11 @@
 package gift.service;
 
+import gift.controller.member.dto.MemberResponse.InfoResponse;
 import gift.global.auth.jwt.JwtProvider;
-import gift.controller.user.dto.MemberRequest.Login;
-import gift.controller.user.dto.MemberRequest.Register;
+import gift.controller.member.dto.MemberRequest.Login;
+import gift.controller.member.dto.MemberRequest.Register;
 import gift.model.member.Member;
-import gift.model.member.MemberDao;
+import gift.repository.MemberJpaRepository;
 import gift.validate.InvalidAuthRequestException;
 import gift.validate.NotFoundException;
 import org.springframework.stereotype.Service;
@@ -12,34 +13,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberService {
 
-    private final MemberDao memberDao;
+    private final MemberJpaRepository memberJpaRepository;
     private final JwtProvider jwtProvider;
 
-    public MemberService(MemberDao memberDao, JwtProvider jwtProvider) {
-        this.memberDao = memberDao;
+    public MemberService(MemberJpaRepository memberJpaRepository, JwtProvider jwtProvider) {
+        this.memberJpaRepository = memberJpaRepository;
         this.jwtProvider = jwtProvider;
     }
 
     public void register(Register request) {
-        memberDao.findByEmail(request.email()).ifPresent(user -> {
+        if (memberJpaRepository.existsByEmail(request.email())) {
             throw new InvalidAuthRequestException("User already exists.");
-        });
-        memberDao.insert(request.toEntity());
+        }
+        memberJpaRepository.save(request.toEntity());
     }
 
     public String login(Login request) {
-        var user = memberDao.findByEmail(request.email())
+        var member = memberJpaRepository.findByEmail(request.email())
             .orElseThrow(() -> new NotFoundException("User not found."));
 
-        if (!user.verifyPassword(request.password())) {
+        if (!member.verifyPassword(request.password())) {
             throw new InvalidAuthRequestException("Password is incorrect.");
         }
-        return jwtProvider.createToken(user.getId(), user.getRole());
+        return jwtProvider.createToken(member.getId(), member.getRole());
 
     }
 
-    public Member getUser(Long memberId) {
-        return memberDao.findById(memberId)
+    public InfoResponse getUser(Long memberId) {
+        var member = memberJpaRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException("User not found."));
+        return InfoResponse.from(member);
     }
 }
