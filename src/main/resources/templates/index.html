@@ -14,7 +14,7 @@
 <h1>Administrator Page</h1>
 <div class="form-inline">
     <label for="id">Id:</label>
-    <input type="text" id="id" name="id" required>
+    <input type="text" id="id" name="id" disabled>
 
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required>
@@ -108,9 +108,10 @@
         }
     });
 
+    var id = 0;
     $("#post").click(function () {
         var product = {
-            id: $("#id").val(),
+            id: ++id,
             name : $("#name").val(),
             price : $("#price").val(),
             imageUrl : $("#image").val()
@@ -139,6 +140,7 @@
                 </tr>
             `;
                 tbody.append(row);
+                location.reload();
             },
             error : function(err){
                 var text = err.responseText;
@@ -148,6 +150,7 @@
                 }
                 else {
                     alert("[Id error : " + err.status + ", 중복된 ID는 사용할 수 없습니다]");
+                    id++;
                 }
             }
         })
