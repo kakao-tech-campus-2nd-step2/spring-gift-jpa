@@ -1,5 +1,7 @@
 package gift.model.wish;
 
+import gift.model.member.Member;
+import gift.model.product.Product;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,8 +12,8 @@ public class WishRowMapper implements RowMapper<Wish> {
     public Wish mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return new Wish(
             resultSet.getLong("id"),
-            resultSet.getLong("member_id"),
-            resultSet.getLong("product_id"),
+            resultSet.getObject("member_id", Member.class),
+            resultSet.getObject("product_id", Product.class),
             resultSet.getLong("count")
         );
     }
