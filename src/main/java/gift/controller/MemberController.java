@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.model.JwtUtil;
 import gift.model.Member;
 import gift.model.MemberDao;
 import io.jsonwebtoken.Claims;
