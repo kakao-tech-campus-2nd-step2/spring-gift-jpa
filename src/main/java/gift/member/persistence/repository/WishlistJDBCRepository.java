@@ -111,4 +111,10 @@ public class WishlistJDBCRepository implements WishlistRepository{
                 "Wishlist with member id " + memberId + " and product id " + productId + " not found");
         }
     }
+
+    @Override
+    public void deleteAll() {
+        var sql = "DELETE FROM wishlist";
+        jdbcTemplate.update(sql);
+    }
 }
