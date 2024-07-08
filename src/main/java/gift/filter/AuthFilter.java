@@ -52,7 +52,7 @@ public class AuthFilter implements Filter {
         // bearer 인증방식을 이용하기 때문에 header 7번째 문자부터 유효한 key 값
         // key 값이 DB에 저장되어 있지 않다면 발급받아야 함
         // 없으면 누구나 접근할 수 있는 페이지로 리다이렉트
-        Optional<AuthToken> token = tokenRepository.findTokenByToken(authHeader.substring(7));
+        Optional<AuthToken> token = tokenRepository.findAuthTokenByToken(authHeader.substring(7));
 
         if (token.isEmpty()){
             httpResponse.sendRedirect("/home");
