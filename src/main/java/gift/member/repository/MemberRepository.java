@@ -2,10 +2,7 @@ package gift.member.repository;
 
 import gift.member.Member;
 import gift.member.dto.MemberReqDto;
-import gift.member.exception.MemberCreateException;
-import gift.member.exception.MemberDeleteException;
 import gift.member.exception.MemberNotFoundByIdException;
-import gift.member.exception.MemberUpdateException;
 import java.util.List;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -56,16 +53,12 @@ public class MemberRepository {
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
-        try {
-            jdbcClient.sql(sql)
-                    .param(member.name())
-                    .param(member.email())
-                    .param(member.password())
-                    .param(role)
-                    .update(keyHolder);
-        } catch (Exception e) {
-            throw MemberCreateException.EXCEPTION;
-        }
+        jdbcClient.sql(sql)
+                .param(member.name())
+                .param(member.email())
+                .param(member.password())
+                .param(role)
+                .update(keyHolder);
 
         return keyHolder.getKey().longValue();
     }
@@ -103,16 +96,12 @@ public class MemberRepository {
                 where id = ?
                 """;
 
-        try {
-            jdbcClient.sql(sql)
-                    .param(memberReqDto.name())
-                    .param(memberReqDto.email())
-                    .param(memberReqDto.password())
-                    .param(memberId)
-                    .update();
-        } catch (Exception e) {
-            throw MemberUpdateException.EXCEPTION;
-        }
+        jdbcClient.sql(sql)
+                .param(memberReqDto.name())
+                .param(memberReqDto.email())
+                .param(memberReqDto.password())
+                .param(memberId)
+                .update();
     }
 
     public void deleteMemberById(Long memberId) {
@@ -121,12 +110,8 @@ public class MemberRepository {
                 where id = ?
                 """;
 
-        try {
-            jdbcClient.sql(sql)
-                    .param(memberId)
-                    .update();
-        } catch (Exception e) {
-            throw MemberDeleteException.EXCEPTION;
-        }
+        jdbcClient.sql(sql)
+                .param(memberId)
+                .update();
     }
 }

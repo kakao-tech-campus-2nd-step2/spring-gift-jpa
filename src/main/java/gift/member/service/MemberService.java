@@ -8,7 +8,10 @@ import gift.member.Member;
 import gift.member.dto.MemberReqDto;
 import gift.member.dto.MemberResDto;
 import gift.member.exception.MemberAlreadyExistsByEmailException;
+import gift.member.exception.MemberCreateException;
+import gift.member.exception.MemberDeleteException;
 import gift.member.exception.MemberNotFoundByIdException;
+import gift.member.exception.MemberUpdateException;
 import gift.member.repository.MemberRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -45,7 +48,13 @@ public class MemberService {
 
         // 일반 사용자로 회원 가입
         // 관리자 계정은 데이터베이스에서 직접 추가
-        Long memberId = memberRepository.addMember(memberReqDto, USER.getValue());
+        Long memberId;
+        try {
+            memberId = memberRepository.addMember(memberReqDto, USER.getValue());
+        } catch (Exception e) {
+            throw MemberCreateException.EXCEPTION;
+        }
+
         Member newMember = memberRepository.findMemberByIdOrThrow(memberId);
 
         return authTokenGenerator.generateToken(new MemberResDto(newMember));
@@ -53,12 +62,20 @@ public class MemberService {
 
     public void updateMember(Long memberId, MemberReqDto memberReqDto) {
         validateMemberExistsById(memberId);
-        memberRepository.updateMemberById(memberId, memberReqDto);
+        try {
+            memberRepository.updateMemberById(memberId, memberReqDto);
+        } catch (Exception e) {
+            throw MemberUpdateException.EXCEPTION;
+        }
     }
 
     public void deleteMember(Long memberId) {
         validateMemberExistsById(memberId);
-        memberRepository.deleteMemberById(memberId);
+        try {
+            memberRepository.deleteMemberById(memberId);
+        } catch (Exception e) {
+            throw MemberDeleteException.EXCEPTION;
+        }
     }
 
     private void validateMemberExistsById(Long memberId) {

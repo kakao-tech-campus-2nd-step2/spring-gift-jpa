@@ -1,7 +1,6 @@
 package gift.wishlist.repository;
 
 import gift.wishlist.WishList;
-import gift.wishlist.exception.WishListCreateException;
 import java.util.List;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
@@ -34,15 +33,11 @@ public class WishListRepository {
                 values (?, ?, ?)
                 """;
 
-        try {
-            jdbcClient.sql(sql)
-                    .param(memberId)
-                    .param(productId)
-                    .param(quantity)
-                    .update();
-        } catch (Exception e) {
-            throw WishListCreateException.EXCEPTION;
-        }
+        jdbcClient.sql(sql)
+                .param(memberId)
+                .param(productId)
+                .param(quantity)
+                .update();
     }
 
     public void updateWishListById(Long wishListId, Integer quantity) {

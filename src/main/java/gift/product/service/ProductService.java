@@ -3,7 +3,10 @@ package gift.product.service;
 import gift.product.Product;
 import gift.product.dto.ProductReqDto;
 import gift.product.dto.ProductResDto;
+import gift.product.exception.ProductCreateException;
+import gift.product.exception.ProductDeleteException;
 import gift.product.exception.ProductNotFoundException;
+import gift.product.exception.ProductUpdateException;
 import gift.product.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -29,19 +32,33 @@ public class ProductService {
     }
 
     public ProductResDto addProduct(ProductReqDto productReqDto) {
-        Long productId = productRepository.addProduct(productReqDto);
+        Long productId;
+        try {
+            productId = productRepository.addProduct(productReqDto);
+        } catch (Exception e) {
+            throw ProductCreateException.EXCEPTION;
+        }
+
         Product newProduct = productRepository.findProductByIdOrThrow(productId);
         return new ProductResDto(newProduct);
     }
 
     public void updateProduct(Long productId, ProductReqDto productReqDto) {
         validateProductExists(productId);
-        productRepository.updateProductById(productId, productReqDto);
+        try {
+            productRepository.updateProductById(productId, productReqDto);
+        } catch (Exception e) {
+            throw ProductUpdateException.EXCEPTION;
+        }
     }
 
     public void deleteProduct(Long productId) {
         validateProductExists(productId);
-        productRepository.deleteProductById(productId);
+        try {
+            productRepository.deleteProductById(productId);
+        } catch (Exception e) {
+            throw ProductDeleteException.EXCEPTION;
+        }
     }
 
     private void validateProductExists(Long productId) {
