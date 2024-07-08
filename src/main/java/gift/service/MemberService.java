@@ -8,12 +8,12 @@ import gift.util.JwtUtil;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class MemberService {
 
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
 
-    public UserService(MemberRepository memberRepository, JwtUtil jwtUtil) {
+    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil) {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
     }

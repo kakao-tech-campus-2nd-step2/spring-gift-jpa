@@ -41,7 +41,6 @@ public class ProductController {
 
     //product 추가
     @PostMapping
-
     public ResponseEntity<String> addProduct(@RequestBody @Valid Product product) {
         productService.saveProduct(product);
         return new ResponseEntity<>("OK", HttpStatus.CREATED);
@@ -53,7 +52,6 @@ public class ProductController {
     public ResponseEntity<String> editProduct(@PathVariable("id") Long id,
         @RequestBody @Valid Product product) {
         productService.updateProduct(product, id);
-
 
         return new ResponseEntity<>("product edit success", HttpStatus.OK);
 
