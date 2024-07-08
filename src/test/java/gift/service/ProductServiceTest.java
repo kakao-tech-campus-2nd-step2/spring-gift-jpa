@@ -2,7 +2,7 @@ package gift.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import gift.DTO.ProductDTO;
+import gift.entity.ProductEntity;
 import gift.domain.Product;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ class ProductServiceTest {
     @Autowired
     private ProductService productService;
     private List<Product.CreateProduct> list = new ArrayList<>();
-    private ProductDTO productDTO;
+    private ProductEntity productEntity;
 
     @BeforeEach
     public void setUp() {
@@ -40,11 +40,11 @@ class ProductServiceTest {
         productService.createProduct(temp);
 
         //    가장 마지막 상품 가져오기
-        productDTO = productService.getProduct((long) productService.getProductList().size() - 1);
+        productEntity = productService.getProduct((long) productService.getProductList().size() - 1);
 
         //  then
         //    추가한 상품의 이름과 마지막에 위치한 상품의 이름 비교
-        assertEquals(temp.getName(), productDTO.getName());
+        assertEquals(temp.getName(), productEntity.getName());
     }
 
     @Test
@@ -56,11 +56,11 @@ class ProductServiceTest {
         productService.updateProduct(temp, (long) productService.getProductList().size() - 1);
 
         //    가장 마지막 상품 가져오기
-        productDTO = productService.getProduct((long) productService.getProductList().size() - 1);
+        productEntity = productService.getProduct((long) productService.getProductList().size() - 1);
 
         //  then
         //    수정한 상품의 이름과 마지막에 위치한 상품의 이름 비교
-        assertEquals(temp.getName(), productDTO.getName());
+        assertEquals(temp.getName(), productEntity.getName());
     }
 
     @Test
