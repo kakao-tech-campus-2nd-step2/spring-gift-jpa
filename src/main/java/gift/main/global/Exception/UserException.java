@@ -1,5 +1,6 @@
 package gift.main.global.Exception;
 
+
 import org.springframework.http.HttpStatus;
 
 public class UserException extends RuntimeException {
@@ -8,6 +9,7 @@ public class UserException extends RuntimeException {
     public UserException(String message, HttpStatus httpStatus) {
         super(message);
         this.httpStatus = httpStatus;
+
     }
 
     @Override
@@ -15,7 +17,9 @@ public class UserException extends RuntimeException {
         return super.getMessage();
     }
 
+
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
+
 }

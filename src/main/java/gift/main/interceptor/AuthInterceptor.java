@@ -51,7 +51,9 @@ public class AuthInterceptor implements HandlerInterceptor {
                 authUtil.getRole(token));
 
         HttpSession session = request.getSession(true);
+
         session.setAttribute("user",sessionUser);
+
         return true;
     }
 

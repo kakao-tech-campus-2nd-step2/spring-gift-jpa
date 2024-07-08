@@ -47,6 +47,7 @@ public class UserDao {
         }
     }
 
+
     public Long insertUser(UserDto userDto) {
         String sql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -61,6 +62,7 @@ public class UserDao {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+
     }
 
     public void updateUser(long id, User user) {

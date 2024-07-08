@@ -1,8 +1,10 @@
 package gift.main.global;
+
 import io.jsonwebtoken.security.SignatureException;
 import gift.main.global.Exception.TokenException;
 import gift.main.global.Exception.UserException;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +24,11 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
+
     public String handleGeneralException(Model model, Exception e) {
         model.addAttribute("error",e.getMessage());
         String refererUrl = " http://localhost:8080/spring-gift/";
+
         model.addAttribute("refererUrl", refererUrl);
         return "error/error";
     }
@@ -70,13 +75,16 @@ public class GlobalExceptionHandler {
         responseBody.put("errorMessage", e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(responseBody);
+      
     }
 
 
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
+
     public ResponseEntity<?> handleValidationFailure(MethodArgumentNotValidException e) {
         System.out.println("e.getMessage() = " + e.getMessage());
+
         BindingResult bindingResult = e.getBindingResult();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
 
