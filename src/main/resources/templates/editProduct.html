@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <title>상품 수정 화면</title>
+</head>
+<body>
+<form>
+  <div class="row mb-3">
+    <label for="name" class="col-sm-2 col-form-label">상품명</label>
+    <div class="col-sm-10">
+      <input type="text" id="name" name="name" placeholder="상품명을 입력하세요" class="form-control">
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label for="price" class="col-sm-2 col-form-label">상품 가격</label>
+    <div class="col-sm-10">
+      <input type="text" id="price" name="price" placeholder="상품 가격을 입력하세요" class="form-control">
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label for="imageUrl" class="col-sm-2 col-form-label">상품 이미지</label>
+    <div class="col-sm-10">
+      <input type="text" id="imageUrl" name="imageUrl" placeholder="상품 이미지를 입력하세요" class="form-control">
+    </div>
+  </div>
+  <button type="button" class="btn btn-primary" onclick="updateProduct()">상품 수정</button>
+</form>
+</body>
+</html>
+
+<script th:inline="javascript">
+  var productId = [[${param.id}]];
+  function updateProduct() {
+    var name = document.getElementById('name').value;
+    var price = document.getElementById('price').value;
+    var imageUrl = document.getElementById('imageUrl').value;
+
+    var productData = {
+      name: name,
+      price: parseInt(price),
+      imageUrl: imageUrl
+    };
+
+    fetch(`/admin/product/${productId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(productData)
+    })
+    .then(response => {
+      alert('상품이 수정되었습니다.');
+      window.location.href = `/admin/products`;
+    })
+    .catch(error => {
+      alert('요청 중 오류가 발생했습니다.');
+      console.error('Error:', error);
+    });
+  }
+</script>
