@@ -18,7 +18,7 @@ public class ProductRepositoryTest {
 
     @Test
     void save() {
-        Product expected = new Product(1, "testName", 1, "testUrl");
+        Product expected = new Product("testName", 1, "testUrl");
         Product actual = productRepository.save(expected);
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
@@ -29,7 +29,7 @@ public class ProductRepositoryTest {
     @Test
     void findById() {
 
-        Product expected = new Product(1, "testName", 1, "testUrl");
+        Product expected = new Product("testName", 1, "testUrl");
         productRepository.save(expected);
 
         long productId = 1L;
@@ -44,7 +44,7 @@ public class ProductRepositoryTest {
     @Test
     void update() {
 
-        Product expected = new Product(1, "testName", 1, "testUrl");
+        Product expected = new Product("testName", 1, "testUrl");
         productRepository.save(expected);
 
         String updateName = "update name";
@@ -66,7 +66,7 @@ public class ProductRepositoryTest {
     @Test
     void delete(){
 
-        Product expected = new Product(1, "testName", 1, "testUrl");
+        Product expected = new Product("testName", 1, "testUrl");
         productRepository.save(expected);
         
         long productId = 1L;
