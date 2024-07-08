@@ -1,14 +1,10 @@
 package gift.main.util;
 
 import gift.main.dto.UserDto;
-import gift.main.dto.UserVo;
 import gift.main.entity.User;
-import gift.main.entity.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,16 +12,12 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Service
-public class AuthUtil {
+public class JwtUtil {
     private final SecretKey secretKey;
     private final String BEARER = "Bearer ";
 
-    public AuthUtil(@Value("${spring.jwt.secret}") String secret) {
+    public JwtUtil(@Value("${spring.jwt.secret}") String secret) {
         this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    }
-
-    public static UserVo getSessionUser(HttpSession session) {
-        return (UserVo) session.getAttribute("user");
     }
 
     public String createToken(Long id, String name, String email, String password, String role) {
