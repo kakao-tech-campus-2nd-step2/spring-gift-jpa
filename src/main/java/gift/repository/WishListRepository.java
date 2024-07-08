@@ -46,20 +46,16 @@ public class WishListRepository {
         jdbcTemplate.execute(sql);
     }
 
-    public Long addWishProduct(Long memberId, Long productId, int amount) {
+    public void addWishProduct(Long memberId, Long productId, int amount) {
         String sql = "insert into wishlist (memberId, productId, amount) values(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        int rowsAffected = jdbcTemplate.update(connection -> {
+        jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setLong(1, memberId);
             ps.setLong(2, productId);
             ps.setInt(3, amount);
             return ps;
         }, keyHolder);
-        if (rowsAffected > 0) {
-            return keyHolder.getKey().longValue();
-        }
-        return -1L;
     }
 
     public ProductAmount getProductByMemberIdAndProductId(Long memberId, Long productId) {
@@ -82,15 +78,20 @@ public class WishListRepository {
         });
     }
 
-    public Long deleteProduct(Long memberId, Long productId) {
+    public void deleteProduct(Long memberId, Long productId) {
         String sql = "delete from wishList where memberId = ? and productId = ? ";
-        jdbcTemplate.update(sql, memberId, productId);
-        return productId;
+        int rowsAffected = jdbcTemplate.update(sql, memberId, productId);
     }
 
     public void updateProductInWishList(Long memberId, Long productId, int amount) {
         String sql = "update wishList set amount=? where memberId = ? and productId = ?";
         jdbcTemplate.update(sql, amount, memberId, productId);
+    }
+
+    public boolean isAlreadyExistProduct(Long memberId, Long productId) {
+        String checkSql = "select count(*) from wishlist where memberId = ? and productId = ?";
+        int count = jdbcTemplate.queryForObject(checkSql, new Object[]{memberId, productId}, Integer.class);
+        return count == 1;
     }
 
     public class ProductAmountRowMapper implements RowMapper<ProductAmount> {

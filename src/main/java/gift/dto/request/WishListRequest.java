@@ -2,28 +2,20 @@ package gift.dto.request;
 
 public class WishListRequest {
 
-    Long memberId;
     Long productId;
+    int amount;
 
-    public WishListRequest(Long memberId, Long productId) {
-        this.memberId = memberId;
+    public WishListRequest(Long productId, int amount) {
         this.productId = productId;
-    }
-
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public Long getMemberId() {
-        return memberId;
+        this.amount = amount;
     }
 
     public Long getProductId() {
         return productId;
+    }
+
+    public int getAmount() {
+        return amount;
     }
 
 }

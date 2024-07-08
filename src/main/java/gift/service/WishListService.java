@@ -19,34 +19,35 @@ public class WishListService {
         return wishListRepository.getWishListProductIdsByMemberId(memberId);
     }
 
-    public void updateProductInWishList(Long memberId, Long productId, int amount) {
-        ProductAmount product = findWishListProduct(memberId, productId);
-
-        if (product == null && amount > 0) {
-            addProductToWishList(memberId, productId, amount);
-            return;
+    public boolean addProductToWishList(Long memberId, Long productId, int amount) {
+        boolean isAlreadyExist = isAlreadyExistProduct(memberId, productId);
+        if (isAlreadyExist) {
+            return false;
         }
-        if (amount > 0) {
-            updateExistingItemAmount(memberId, productId, amount);
-            return;
-        }
-        deleteProductInWishList(memberId, productId);
-    }
-
-    public void addProductToWishList(Long memberId, Long productId, int amount) {
         wishListRepository.addWishProduct(memberId, productId, amount);
+        return true;
     }
 
-    public Long deleteProductInWishList(Long memberId, Long productId) {
-        return wishListRepository.deleteProduct(memberId, productId);
+    public boolean deleteProductInWishList(Long memberId, Long productId) {
+        boolean isAlreadyExist = isAlreadyExistProduct(memberId, productId);
+        if (!isAlreadyExist) {
+            return false;
+        }
+        wishListRepository.deleteProduct(memberId, productId);
+        return true;
     }
 
-    private ProductAmount findWishListProduct(Long memberId, Long productId) {
-        return wishListRepository.getProductByMemberIdAndProductId(memberId, productId);
+    public boolean isAlreadyExistProduct(Long memberId, Long productId) {
+        return wishListRepository.isAlreadyExistProduct(memberId, productId);
     }
 
-    private void updateExistingItemAmount(Long memberId, Long productId, int amount) {
+    public boolean updateWishList(Long memberId, Long productId, int amount) {
+        boolean isAlreadyExist = isAlreadyExistProduct(memberId, productId);
+        if (!isAlreadyExist) {
+            return false;
+        }
         wishListRepository.updateProductInWishList(memberId, productId, amount);
+        return true;
     }
 
 }
