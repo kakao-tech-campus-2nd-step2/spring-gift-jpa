@@ -8,6 +8,6 @@
 ### 구현할 기능 목록
 - Jdbc Template 기반 코드를 JPA로 리팩터링
   - [x] Product
-  - [ ] Member
-  - [ ] WishList
+  - [x] Member
+  - [x] WishList
 - [ ] @DataJpaTest 사용해서 테스트 코드 작성
