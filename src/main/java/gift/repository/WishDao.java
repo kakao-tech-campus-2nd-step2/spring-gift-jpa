@@ -32,7 +32,8 @@ public class WishDao {
     }
 
     public void updateWish(Wish wish) {
-        jdbcTemplate.update(WishQuery.UPDATE_WISH_BY_MEMBERID_PRODUCTNAME.getQuery(), wish.getCount(),
+        jdbcTemplate.update(WishQuery.UPDATE_WISH_BY_MEMBERID_PRODUCTNAME.getQuery(),
+            wish.getCount(),
             wish.getMemberId(), wish.getProductName());
     }
 

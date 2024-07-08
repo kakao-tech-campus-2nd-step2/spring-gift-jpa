@@ -63,7 +63,8 @@ public class MemberDao {
     }
 
     public void insertMember(Member member) {
-        jdbcTemplate.update(MemberQuery.INSERT_MEMBER.getQuery(), member.getEmail(), member.getPassword(),
+        jdbcTemplate.update(MemberQuery.INSERT_MEMBER.getQuery(), member.getEmail(),
+            member.getPassword(),
             member.getName(), member.getRole());
     }
 

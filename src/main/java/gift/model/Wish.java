@@ -23,8 +23,4 @@ public class Wish {
     public Integer getCount() {
         return count;
     }
-
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
 }

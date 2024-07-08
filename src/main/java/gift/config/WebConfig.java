@@ -14,7 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
     private final AuthInterceptor authInterceptor;
     private final LoginMemberArgumentResolver loginMemberArgumentResolver;
 
-    public WebConfig(AuthInterceptor authInterceptor, LoginMemberArgumentResolver loginMemberArgumentResolver) {
+    public WebConfig(AuthInterceptor authInterceptor,
+        LoginMemberArgumentResolver loginMemberArgumentResolver) {
         this.authInterceptor = authInterceptor;
         this.loginMemberArgumentResolver = loginMemberArgumentResolver;
     }
@@ -27,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers){
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(loginMemberArgumentResolver);
     }
 }

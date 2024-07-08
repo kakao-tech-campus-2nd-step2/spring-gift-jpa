@@ -17,7 +17,8 @@ public class MemberService {
 
     public LoginMemberDto selectLoginMemberById(Long id) {
         Member member = memberDao.selectMemberById(id);
-        return new LoginMemberDto(member.getId(), member.getName(), member.getEmail(), member.getRole());
+        return new LoginMemberDto(member.getId(), member.getName(), member.getEmail(),
+            member.getRole());
     }
 
     public void insertMember(MemberRequestDto memberRequestDto) {
