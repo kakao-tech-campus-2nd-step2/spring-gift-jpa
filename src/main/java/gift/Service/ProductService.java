@@ -4,6 +4,7 @@ import gift.DTO.ProductDto;
 import gift.Repository.ProductDao;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -40,11 +41,11 @@ public class ProductService {
 
   public ProductDto deleteProduct(@PathVariable Long id) {
     ProductDto existingProductDto = productDao.selectProduct(id);
-    if (existingProductDto != null) {
-      productDao.deleteProduct(id);
+    if (existingProductDto == null) {
+      throw new EmptyResultDataAccessException("해당 데이터가 없습니다",1);
     }
+    productDao.deleteProduct(id);
     return existingProductDto;
-
   }
 
 }

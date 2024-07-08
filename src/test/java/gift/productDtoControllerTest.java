@@ -153,7 +153,7 @@ public class ProductDtoControllerTest {
     productController.addProduct(productDTO);
 
     // deleteProduct() 호출 - 존재하는 제품 ID
-    ResponseEntity<Void> responseEntity = productController.deleteProduct(1L);
+    ResponseEntity<ProductDto> responseEntity = productController.deleteProduct(1L);
 
     // 반환된 ResponseEntity 검증
     assertEquals(HttpStatus.NO_CONTENT,
