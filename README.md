@@ -7,7 +7,7 @@
 - @DataJpaTest를 사용하여 학습 테스트를 해 본다.
 ### 구현할 기능 목록
 - Jdbc Template 기반 코드를 JPA로 리팩터링
-  - [ ] Product
+  - [x] Product
   - [ ] Member
   - [ ] WishList
 - [ ] @DataJpaTest 사용해서 테스트 코드 작성
