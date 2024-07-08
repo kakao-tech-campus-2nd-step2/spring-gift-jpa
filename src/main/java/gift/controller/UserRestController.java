@@ -24,9 +24,9 @@ public class UserRestController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponseDto> registerUser(@RequestBody UserRequestDto request){
+    public ResponseEntity<Void> registerUser(@RequestBody UserRequestDto request){
         userService.save(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new TokenResponseDto());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/login")
