@@ -5,6 +5,7 @@ import gift.wishlist.application.WishesService;
 import gift.product.dto.ProductResponse;
 import gift.wishlist.dto.WishRequest;
 import gift.product.util.ProductMapper;
+import gift.wishlist.entity.Wish;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,12 +30,12 @@ public class WishesController {
 
     @PostMapping
     public void addWish(@LoginMember Long memberId, @RequestBody WishRequest request) {
-        wishesService.addProductToWishlist(memberId, request.productId());
+        wishesService.addProductToWishlist(new Wish(memberId, request.productId()));
     }
 
     @DeleteMapping("/{productId}")
     public void removeWish(@LoginMember Long memberId, @PathVariable("productId") Long productId) {
-        wishesService.removeProductFromWishlist(memberId, productId);
+        wishesService.removeProductFromWishlist(new Wish(memberId, productId));
     }
 
 }

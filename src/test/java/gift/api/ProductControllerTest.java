@@ -3,7 +3,7 @@ package gift.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.product.api.ProductController;
 import gift.product.application.ProductService;
-import gift.product.domain.Product;
+import gift.product.entity.Product;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
 import gift.product.util.ProductMapper;
