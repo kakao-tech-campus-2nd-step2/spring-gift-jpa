@@ -10,7 +10,7 @@ public class WishRowMapper implements RowMapper<Wish> {
     public Wish mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return new Wish(
             resultSet.getLong("id"),
-            resultSet.getString("user_id"),
+            resultSet.getLong("member_id"),
             resultSet.getLong("product_id"),
             resultSet.getLong("count")
         );

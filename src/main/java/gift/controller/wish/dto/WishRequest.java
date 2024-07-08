@@ -13,7 +13,7 @@ public class WishRequest {
         Long count
     ) {
 
-        public Wish toEntity(String userId) {
+        public Wish toEntity(Long userId) {
             return new Wish(null, userId, this.productId, this.count);
         }
     }

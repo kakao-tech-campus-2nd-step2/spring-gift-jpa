@@ -2,7 +2,7 @@ package gift.global.auth.interceptor;
 
 import gift.global.auth.Authorization;
 import gift.global.auth.jwt.JwtProvider;
-import gift.model.user.Role;
+import gift.model.member.Role;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
@@ -48,23 +48,23 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         }
 
         Role requiredRole = authorization.role();
-        Role userRole;
+        Role memberRole;
 
         //권한이 있는지 확인
         try {
-            userRole = Role.valueOf(request.getAttribute("roles").toString());
+            memberRole = Role.valueOf(request.getAttribute("roles").toString());
         } catch (Exception e) {
             sendForbiddenError(response, "Forbidden");
             return false;
         }
 
         //admin 계정인 경우
-        if (userRole == Role.ADMIN) {
+        if (memberRole == Role.ADMIN) {
             return true;
         }
 
         //요청한 권한이 사용자의 권한과 일치하는 경우
-        if (requiredRole == userRole) {
+        if (requiredRole == memberRole) {
             return true;
         }
 

@@ -1,7 +1,7 @@
 package gift.controller.product;
 
 import gift.global.auth.Authorization;
-import gift.model.user.Role;
+import gift.model.member.Role;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 

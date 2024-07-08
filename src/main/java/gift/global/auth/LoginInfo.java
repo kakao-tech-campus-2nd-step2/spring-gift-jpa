@@ -1,6 +1,6 @@
 package gift.global.auth;
 
 
-public record LoginInfo(String userId, String name) {
+public record LoginInfo(Long memberId, String name) {
 
 }

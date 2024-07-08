@@ -8,7 +8,7 @@ import gift.controller.wish.dto.WishRequest.AddWishRequest;
 import gift.controller.wish.dto.WishRequest.UpdateWishRequest;
 import gift.controller.wish.dto.WishResponse.WishListResponse;
 import gift.model.product.ProductDao;
-import gift.model.user.Role;
+import gift.model.member.Role;
 import gift.model.wish.WishDao;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -41,12 +41,12 @@ public class WishController {
         @Authenticate LoginInfo loginInfo,
         @Valid @RequestBody AddWishRequest request
     ) {
-        wishDao.findByProductIdAndUserId(request.productId(), loginInfo.userId())
+        wishDao.findByProductIdAndUserId(request.productId(), loginInfo.memberId())
             .ifPresent(wish -> {
                 throw new IllegalArgumentException("Wish already exists.");
             });
 
-        wishDao.insert(request.toEntity(loginInfo.userId()));
+        wishDao.insert(request.toEntity(loginInfo.memberId()));
         return ResponseEntity.ok().body("Wish insert successfully.");
     }
 
@@ -56,7 +56,7 @@ public class WishController {
         @Authenticate LoginInfo loginInfo,
         @RequestBody @Valid DeleteWishRequest request
     ) {
-        var wish = wishDao.findByProductIdAndUserId(request.productId(), loginInfo.userId())
+        var wish = wishDao.findByProductIdAndUserId(request.productId(), loginInfo.memberId())
             .orElseThrow(() -> new IllegalArgumentException("Wish not found."));
         wishDao.deleteById(wish.getId());
         return ResponseEntity.ok().body("Wish removed successfully.");
@@ -65,7 +65,7 @@ public class WishController {
     @Authorization(role = Role.USER)
     @GetMapping("")
     public ResponseEntity<List<WishListResponse>> getWishes(@Authenticate LoginInfo loginInfo) {
-        var wishes = wishDao.findAll(loginInfo.userId());
+        var wishes = wishDao.findAll(loginInfo.memberId());
         var response = wishes.stream()
             .map(wish -> WishListResponse.from(wish, productDao.findById(wish.getProductId())
                 .orElseThrow(() -> new IllegalArgumentException("Product not found."))))
@@ -79,9 +79,9 @@ public class WishController {
         @Authenticate LoginInfo loginInfo,
         @Valid @RequestBody UpdateWishRequest request
     ) {
-        var wish = wishDao.findByProductIdAndUserId(request.productId(), loginInfo.userId())
+        var wish = wishDao.findByProductIdAndUserId(request.productId(), loginInfo.memberId())
             .orElseThrow(() -> new IllegalArgumentException("Wish not found."));
-        wishDao.updateCount(loginInfo.userId(), wish.getProductId(), request.count());
+        wishDao.updateCount(loginInfo.memberId(), wish.getProductId(), request.count());
         return ResponseEntity.ok().body("Wish updated successfully.");
     }
 }

@@ -5,7 +5,7 @@ import gift.controller.product.dto.ProductRequest;
 import gift.controller.product.dto.ProductResponse;
 import gift.model.product.ProductDao;
 
-import gift.model.user.Role;
+import gift.model.member.Role;
 import gift.validate.NotFoundException;
 import jakarta.validation.Valid;
 import java.util.List;
