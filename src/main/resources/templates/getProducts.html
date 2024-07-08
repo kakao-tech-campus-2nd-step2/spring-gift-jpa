@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Jua&display=swap"
+        rel="stylesheet">
+  <title>제품 리스트</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/getProducts.css}">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/getProducts.js"></script>
+
+</head>
+<body>
+
+<div class="productListBox">
+  <a href="/api/products">
+    <h1>제품 리스트</h1>
+  </a>
+  <img src="/image/add.png" alt="add" id="addButton" style="width:100px; height: auto"
+       onclick="addProductRow(this)">
+</div>
+
+<div id="userbox">
+  <div id="userInfo" style="display: none;">
+    <span id="username"></span>
+    <button id="wishList" style="display:none;" onclick="getRequestWithToken(this)"> 장바구니</button>
+    <button id="logoutButton" style="display: none;">로그아웃</button>
+  </div>
+  <a href="/members/login" id="loginLink" style="display:none;">
+    로그인 하기
+  </a>
+</div>
+
+
+<table id="productTable">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>ImageUrl</th>
+    <th>저장/수정</th>
+    <th>취소/삭제</th>
+    <th>장바구니 추가</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${productList}" th:attr="data-id=${product.id}">
+    <td th:text="${product.id}" class="productId">1</td>
+    <td th:text="${product.name}" class="productName">Product Name</td>
+    <td th:text="${product.price}" class="productPrice">1000</td>
+    <td class="productImage">
+      <img th:src="${product.imageUrl}" alt="Image" style="width:100px;height:auto;">
+    </td>
+    <td>
+      <img th:src="@{/image/edit.png}" alt="edit" style="width:100px;height: auto"
+           onclick="editProductRow(this)">
+    </td>
+    <td>
+      <img th:src="@{/image/remove.png}" alt="remove" style="width:100px;height: auto"
+           onclick="removeProductRow(this)">
+
+    </td>
+    <td>
+      <img th:src="@{/image/cart.png}" alt="remove" style="width:100px;height: auto"
+           onclick="addWishList(this)">
+    </td>
+
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

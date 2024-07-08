@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Jua&display=swap" rel="stylesheet">
+  <title>Wish List</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/getWishes.css}">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/js/getWishes.js"></script>
+</head>
+<body>
+<div class="productListBox">
+  <a href="/api/products">
+    <h1>제품 리스트</h1>
+  </a>
+</div>
+<div class="wishListBox">
+  <h1>위시리스트</h1>
+</div>
+
+<div id="userbox">
+  <div id="userInfo" style="display: none;">
+    <span id="username"></span>
+    <button id="logoutButton" style="display: none;">로그아웃</button>
+  </div>
+  <a href="/members/login" id="loginLink" style="display:none;">로그인 하기</a>
+</div>
+
+<table id="wishListTable">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>ImageUrl</th>
+    <th>수량</th>
+    <th>편집</th>
+    <th>삭제</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${wishList.products}">
+    <td th:text="${product.id}" id="productId" class = "productId">1</td>
+    <td th:text="${product.name}" id="productName" class="productName">Product Name</td>
+    <td th:text="${product.price}" id="productPrice" class="productPrice">1000</td>
+    <td id="productImage" class="productImage">
+      <img th:src="${product.imageUrl}" alt="Image" style="width:100px;height:auto;">
+    </td>
+    <td th:text="${product.quantity}" id="productQuantity" class="productQuantity"></td>
+    <td>
+      <img th:src="@{/image/edit.png}" id ="productEdit" class="productEdit" alt="edit" style="width:100px;height: auto"  onclick="editQuantity(this)">
+    </td>
+    <td>
+      <img th:src="@{/image/remove.png}" alt="remove" style="width:100px;height: auto"  onclick="deleteWish(this)">
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
