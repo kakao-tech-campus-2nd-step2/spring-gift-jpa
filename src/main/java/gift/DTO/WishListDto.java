@@ -5,13 +5,14 @@ import java.util.List;
 
 public class WishListDto {
 
-  private final List<ProductDto> wishList;
+  private final List<ProductDto> wishListDto;
 
-  public WishListDto() {
-    wishList = new ArrayList<ProductDto>();
+
+  public WishListDto(List<ProductDto> wishListDto) {
+    this.wishListDto=wishListDto;
   }
 
   public List<ProductDto> getWishList() {
-    return this.wishList;
+    return this.wishListDto;
   }
 }
