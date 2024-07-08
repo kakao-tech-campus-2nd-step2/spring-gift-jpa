@@ -41,11 +41,11 @@ public class GiftRequest {
         this.imageUrl = imageUrl;
     }
     public Gift toEntity(){
-        return new Gift(null,name,price,imageUrl);
+        return new Gift(name,price,imageUrl);
     }
 
     public Gift toEntity(Long id){
-        return new Gift(id,name,price,imageUrl);
+        return new Gift(name,price,imageUrl);
     }
 
 }

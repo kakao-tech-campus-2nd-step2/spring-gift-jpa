@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.model.UserGift;
-import gift.repository.WishDao;
+import gift.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,22 +10,23 @@ import java.util.List;
 @Service
 public class WishService {
 
-    private WishDao wishDao;
+    private WishRepository wishRepository;
 
     @Autowired
-    public WishService(WishDao wishDao) {
-        this.wishDao = wishDao;
+    public WishService(WishRepository wishRepository) {
+        this.wishRepository = wishRepository;
     }
 
     public void addGiftToUser(Long userId, Long giftId, int quantity) {
-        wishDao.addGiftToUser(userId, giftId, quantity);
+        UserGift userGift = new UserGift(userId,giftId,quantity);
+        wishRepository.save(userGift);
     }
 
     public void removeGiftFromUser(Long userId, Long giftId) {
-        wishDao.removeGiftFromUser(userId, giftId);
+        wishRepository.deleteByUserIdAndGiftId(userId,giftId);
     }
 
     public List<UserGift> getGiftsForUser(Long userId) {
-        return wishDao.getGiftsForUser(userId);
+        return wishRepository.findByUserId(userId);
     }
 }

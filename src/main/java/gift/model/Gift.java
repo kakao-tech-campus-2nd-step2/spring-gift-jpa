@@ -19,11 +19,10 @@ public class Gift {
     public Gift() {
     }
 
-    public Gift(Long id, String name, int price, String imageUrl) {
+    public Gift( String name, int price, String imageUrl) {
         if (!isValidName(name)) {
             throw new IllegalArgumentException("카카오 문구는 MD와 협의 후 사용가능합니다.");
         }
-        this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

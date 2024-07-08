@@ -1,9 +1,18 @@
 package gift.model;
 
-public class UserGift {
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "wish")
+public class UserGift {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "user_id", nullable = false)
     private Long userId;
+    @Column(name = "gift_id", nullable = false)
     private Long giftId;
+    @Column(name ="quantity", nullable = false)
     private int quantity;
 
     public UserGift() {
@@ -19,23 +28,11 @@ public class UserGift {
         return userId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public Long getGiftId() {
         return giftId;
     }
 
-    public void setGiftId(Long giftId) {
-        this.giftId = giftId;
-    }
-
     public int getQuantity() {
         return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 }
