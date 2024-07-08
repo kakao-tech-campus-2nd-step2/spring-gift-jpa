@@ -153,10 +153,10 @@ public class ProductDtoControllerTest {
     productController.addProduct(productDTO);
 
     // deleteProduct() 호출 - 존재하는 제품 ID
-    ResponseEntity<Void> responseEntity = productController.deleteProduct(1L);
+    ResponseEntity<ProductDto> responseEntity = productController.deleteProduct(1L);
 
     // 반환된 ResponseEntity 검증
-    assertEquals(HttpStatus.NO_CONTENT,
+    assertEquals(HttpStatus.OK,
       responseEntity.getStatusCode()); // 상태 코드가 204 NO CONTENT인지 확인
 
     // ProductService를 통해 제품이 삭제되었는지 확인

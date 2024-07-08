@@ -2,6 +2,7 @@ package gift.Repository;
 
 import gift.DTO.ProductDto;
 import gift.DTO.UserDto;
+import gift.DTO.WishListDto;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -25,11 +26,11 @@ public class WishListDao {
   }
 
 
-  public List<ProductDto> selectWishList(UserDto user) {
+  public WishListDto selectWishList(UserDto user) {
     var sql = """
       SELECT * FROM wishList;
       """;
-    return jdbcTemplate.query(sql, wishListRowMapper());
+    return new WishListDto(jdbcTemplate.query(sql, wishListRowMapper()));
   }
 
   public ProductDto selectWishProduct(Long id) {

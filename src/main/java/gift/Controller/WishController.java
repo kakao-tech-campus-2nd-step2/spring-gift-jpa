@@ -2,6 +2,7 @@ package gift.Controller;
 
 import gift.DTO.ProductDto;
 import gift.DTO.UserDto;
+import gift.DTO.WishListDto;
 import gift.LoginUser;
 import gift.Service.WishListService;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/wishes")
@@ -26,15 +28,21 @@ public class WishController {
 
   @GetMapping
   public ResponseEntity<List<ProductDto>> getWishList(@LoginUser UserDto user) {
-    List<ProductDto> wishList = wishListService.getWishList(user);
-    return ResponseEntity.ok(wishList);
+    WishListDto wishList = wishListService.getWishList(user);
+    return ResponseEntity.ok(wishList.wishListDto());
   }
 
-  @PostMapping("/add")
+  @PostMapping
   public ResponseEntity<ProductDto> addProductToWishList(@RequestBody ProductDto wishProduct,
     @LoginUser UserDto user) {
     ProductDto addedWishProduct = wishListService.addProductToWishList(wishProduct, user);
-    return ResponseEntity.ok(addedWishProduct);
+    // 생성된 리소스의 URI를 빌드
+    var location = ServletUriComponentsBuilder.fromCurrentRequest()
+      .path("/{id}")
+      .buildAndExpand(addedWishProduct.getId())
+      .toUri();
+
+    return ResponseEntity.created(location).body(addedWishProduct);
   }
 
   @DeleteMapping("/{id}")
