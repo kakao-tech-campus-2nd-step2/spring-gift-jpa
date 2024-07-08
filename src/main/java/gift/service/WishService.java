@@ -1,12 +1,13 @@
 package gift.service;
 
+import gift.dto.ProductResponseDto;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
 import gift.entity.Wish;
-import gift.entity.WishDao;
 import gift.exception.BusinessException;
 import gift.exception.ErrorCode;
-import gift.dto.ProductResponseDto;
+import gift.mapper.WishMapper;
+import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,47 +15,41 @@ import java.util.stream.Collectors;
 
 @Service
 public class WishService {
-    private final WishDao wishDao;
+    private final WishRepository wishRepository;
     private final ProductService productService;
 
-    public WishService(WishDao wishDao, ProductService productService) {
-        this.wishDao = wishDao;
+    public WishService(WishRepository wishRepository, ProductService productService) {
+        this.wishRepository = wishRepository;
         this.productService = productService;
     }
 
     public WishResponseDto addWish(Long userId, WishRequestDto wishRequestDto) {
-        validateProductId(wishRequestDto.productId);
-        Wish wish = new Wish(userId, wishRequestDto.productId);
-        Wish createdWish = wishDao.insertWish(wish);
+        validateProductId(wishRequestDto.getProductId());
+        Wish wish = new Wish(userId, wishRequestDto.getProductId());
+        Wish createdWish = wishRepository.save(wish);
 
-        ProductResponseDto product = productService.getProductById(wishRequestDto.productId);
+        ProductResponseDto product = productService.getProductById(wishRequestDto.getProductId());
 
-        return toWishResponseDto(createdWish, product);
+        return WishMapper.toWishResponseDto(createdWish, product);
     }
 
     public List<WishResponseDto> getWishesByUserId(Long userId) {
-        List<Wish> wishes = wishDao.selectWishesByUserId(userId);
+        List<Wish> wishes = wishRepository.findByUserId(userId);
         return wishes.stream()
-                .map(this::toWishResponseDto)
+                .map(wish -> {
+                    ProductResponseDto product = productService.getProductById(wish.getProductId());
+                    return WishMapper.toWishResponseDto(wish, product);
+                })
                 .collect(Collectors.toList());
     }
 
     public void deleteWish(Long wishId) {
-        wishDao.selectWish(wishId)
+        Wish wish = wishRepository.findById(wishId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "ID: " + wishId));
-        wishDao.deleteWish(wishId);
+        wishRepository.delete(wish);
     }
 
     private void validateProductId(Long productId) {
-        productService.getProductById(productId); // 유효하지 않으면 예외 발생
-    }
-
-    private WishResponseDto toWishResponseDto(Wish wish) {
-        ProductResponseDto product = productService.getProductById(wish.productId);
-        return new WishResponseDto(wish.id, product.id, product.name, product.price, product.imageUrl);
-    }
-
-    private WishResponseDto toWishResponseDto(Wish wish, ProductResponseDto product) {
-        return new WishResponseDto(wish.id, product.id, product.name, product.price, product.imageUrl);
+        productService.getProductById(productId);
     }
 }
