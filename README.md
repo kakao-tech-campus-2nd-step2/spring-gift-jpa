@@ -8,6 +8,8 @@
 
 * [Week 2](#week-2)
 
+* [Week 3](#week-3)
+
 ### [2. API 문서](#API-문서)
 
 # Week 1
@@ -99,6 +101,14 @@ API 호출은 axios 라이브러리 사용
     * 위시 리스트에 상품을 추가할 수 있다.
 
     * 위시 리스트에 담긴 상품을 삭제할 수 있다.
+
+# Week 3
+
+## Step 1
+
+* JdbcTemplate 기반 코드를 Spring Data JPA 기반 코드로 리팩토링
+
+* `@DataJpaTest` 을 사용하여 테스트
 
 # API 문서
 
