@@ -15,7 +15,7 @@ public class WishlistService {
     public WishlistService(WishRepository wishRepository){
         this.wishRepository=wishRepository;
     }
-    @Transactional
+
     public void addWishlist(Wish wish) {
         wishRepository.save(wish);
 

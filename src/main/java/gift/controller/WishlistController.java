@@ -37,7 +37,8 @@ public class WishlistController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addWishlist(@RequestBody Wish wish){
+    public ResponseEntity<String> addWishlist(@RequestBody Wish wish, @LoginUser String email){
+        Member member = memberRepository.findByEmail(email);
         wishlistService.addWishlist(wish);
         return new ResponseEntity<>("위시리스트 상품 추가 완료", HttpStatus.OK);
     }
