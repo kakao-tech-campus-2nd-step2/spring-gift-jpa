@@ -3,7 +3,9 @@ package gift.product.presentation;
 
 import gift.product.application.WishListService;
 import gift.product.domain.Product;
+import gift.product.exception.ProductException;
 import gift.util.CommonResponse;
+import gift.util.ErrorCode;
 import gift.util.JwtAuthenticated;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,7 @@ public class WishListController {
         if (products != null) {
             return ResponseEntity.ok(new CommonResponse<>(products, "위시리스트 조회 성공", true));
         } else {
-            return ResponseEntity.status(404).body(new CommonResponse<>(null, "위시리스트를 찾을 수 없습니다", false));
+            throw new ProductException(ErrorCode.WISHLIST_NOT_FOUND);
         }
     }
 
