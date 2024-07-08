@@ -1,5 +1,6 @@
 package gift.user;
 
+
 import jakarta.persistence.*;
 
 @Entity

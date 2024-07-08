@@ -25,10 +25,10 @@ public class ProductController {
             return "AddProduct";
         }
 
-        System.out.println("add");
         Product product = new Product(newProduct.getName(), newProduct.getPrice(), newProduct.getImageUrl());
         productRepository.save(product);
         redirectAttributes.addAttribute("id", product.getId());
+
         return "redirect:/manager/products/{id}";
     }
 
@@ -45,6 +45,7 @@ public class ProductController {
             product1.setPrice(product.getPrice());
             product1.setImageUrl(product.getImageUrl());
         });
+
         redirectAttributes.addAttribute("id", id);
         return "redirect:/manager/products/{id}";
     }
