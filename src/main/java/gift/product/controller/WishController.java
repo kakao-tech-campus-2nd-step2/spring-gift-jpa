@@ -42,7 +42,7 @@ public class WishController {
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<Wish> insertProduct(@Valid @RequestBody WishDto wishDto,
+    public ResponseEntity<Wish> insertWish(@Valid @RequestBody WishDto wishDto,
         HttpServletRequest request) {
         LoginMember loginMember = getLoginMember(request);
         Wish responseWish = wishService.insertWish(wishDto, loginMember);
