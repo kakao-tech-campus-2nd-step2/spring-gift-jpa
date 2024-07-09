@@ -1,7 +1,7 @@
 package gift.Controller;
 
 import gift.Model.Product;
-import gift.Model.ProductDAO;
+
 import java.util.List;
 
 import gift.Valid.NameValidator;
@@ -16,13 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/admin/products")
 public class AdminController {
-    private ProductDAO productDAO;
     private NameValidator nameValidator;
-
-    @Autowired
-    public void setProductDao(ProductDAO productDao){
-        this.productDAO = productDao;
-    }
 
     @Autowired
     public void setNameValidator(NameValidator nameValidator){this.nameValidator = nameValidator;}
@@ -34,14 +28,13 @@ public class AdminController {
 
     @GetMapping
     public String getAllProducts(Model model){
-        List<Product> products = productDAO.selectAllProduct();
-        model.addAttribute("products", products);
+        //model.addAttribute("products", products);
         return "products";
     }
 
     @GetMapping("/add")
     public String addProductForm(Model model){
-        model.addAttribute("product", new Product(1,"",0,""));
+
         return "add";
     }
 
@@ -50,13 +43,12 @@ public class AdminController {
         if(bindingResult.hasErrors()) {
             return "add";
         }
-        productDAO.insertProduct(product);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/edit/{id}")
     public String updateProductForm(@PathVariable("id") Long id, Model model){
-        model.addAttribute("product", productDAO.selectProduct(id));
+        //model.addAttribute("product", productDAO.selectProduct(id));
         return "edit";
     }
 
@@ -65,14 +57,11 @@ public class AdminController {
         if(bindingResult.hasErrors()) {
             return "edit";
         }
-
-        productDAO.updateProduct(id, product);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") Long id){
-        productDAO.deleteProduct(id);
         return "redirect:/admin/products";
     }
 }
