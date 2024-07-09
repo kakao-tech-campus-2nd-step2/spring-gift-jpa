@@ -39,7 +39,7 @@ public class JwtTokenProvider {
             .claim("member_id", member.getId())
             .claim("member_role", member.getRole())
             .issuedAt(new Date(System.currentTimeMillis()))
-            .expiration(new Date(System.currentTimeMillis() + expirationInSeconds))
+            .expiration(new Date(System.currentTimeMillis() + expirationInSeconds*1000L))
             .signWith(secretKey, SIG.HS512)
             .compact();
     }
