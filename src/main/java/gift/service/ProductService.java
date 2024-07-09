@@ -1,8 +1,7 @@
 package gift.service;
 
-import gift.exception.NameException;
 import gift.domain.Product;
-import gift.dto.ProductDto;
+import gift.dto.ProductRequest;
 import gift.repository.ProductRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,31 +15,31 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Product findById(Long id){
+    public Product find(Long id){
         return productRepository.findById(id);
-    }
-    public Product findByName(String name) {
-        return productRepository.findByName(name);
     }
 
     public List<Product> findAll(){
         return productRepository.findAll();
     }
-    public void create(ProductDto productDto) {
-        Product product = new Product(null, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
-        productRepository.save(product);
+
+    public Product createProduct(ProductRequest productRequest) {
+        return productRepository.save(productRequest);
     }
 
-    public void update(Long id, ProductDto productDto){
+    public Product updateProduct(Long id, ProductRequest productRequest){
         Product product = productRepository.findById(id);
+
         if(product != null) {
-            Product updateProduct = new Product(product.getId(), productDto.getName(),
-                productDto.getPrice(), productDto.getImageUrl());
-            productRepository.update(id, product);
+            Product updateProduct = new Product(product.getId(), productRequest.getName(),
+                productRequest.getPrice(), productRequest.getImageUrl());
+
+            return productRepository.update(product);
         }
 
+        return null;
     }
-    public void delete(Long id){
+    public void deleteProduct(Long id){
         productRepository.delete(id);
     }
 
