@@ -4,7 +4,7 @@ import gift.annotation.LoginMember;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
-import gift.model.WishRequest;
+import gift.dto.WishRequest;
 import gift.service.ProductService;
 import gift.service.WishService;
 import org.springframework.beans.factory.annotation.Autowired;

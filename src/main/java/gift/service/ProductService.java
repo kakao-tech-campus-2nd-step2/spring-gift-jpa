@@ -26,14 +26,16 @@ public class ProductService {
     }
 
     public void update(Product updatedProduct) {
-        productRepository.update(updatedProduct);
+
+        productRepository.save(updatedProduct);
     }
 
     public Product findById(Long id) {
-        return productRepository.findById(id);
+        return productRepository.findById(id).orElse(null);
     }
 
     public void delete(Long id) {
-        productRepository.delete(id);
+
+        productRepository.deleteById(id);
     }
 }
