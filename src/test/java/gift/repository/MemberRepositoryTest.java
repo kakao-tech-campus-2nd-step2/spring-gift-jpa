@@ -32,13 +32,12 @@ public class MemberRepositoryTest {
 
     @Transactional
     @Test
-    void findById() {
+    void findByEmail() {
     
         Member expected = new Member("testEmail", "testPassword", "testRole");
-        expected.setId(1L);
         memberRepository.save(expected);
 
-        Optional<Member> member = memberRepository.findById(expected.getId());
+        Optional<Member> member = memberRepository.findByEmail("testEmail");
 
         assertAll(
             () -> assertThat(member).isPresent(),
