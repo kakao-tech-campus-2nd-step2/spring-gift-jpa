@@ -26,16 +26,11 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenValidationInterceptor())
             .order(2)
-            .addPathPatterns("/admin/wishes")
             .addPathPatterns("/admin/wishes/**")
-            .addPathPatterns("/api/wishes")
             .addPathPatterns("/api/wishes/**");
 
         registry.addInterceptor(new JwtCookieToHeaderInterceptor())
             .order(1)
-            .addPathPatterns("/admin/login")
-            .addPathPatterns("/admin/login/**")
-            .addPathPatterns("/admin/wishes")
             .addPathPatterns("/admin/wishes/**");
     }
 }

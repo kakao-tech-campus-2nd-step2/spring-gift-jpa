@@ -1,4 +1,4 @@
-package gift.integrity;
+package gift;
 
 import static org.assertj.core.api.Assertions.*;
 
