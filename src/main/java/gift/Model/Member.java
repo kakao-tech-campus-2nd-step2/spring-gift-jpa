@@ -27,6 +27,15 @@ public class Member {
     public Member(){
     }
 
+    public Member(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -43,4 +52,7 @@ public class Member {
         this.password = password;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
