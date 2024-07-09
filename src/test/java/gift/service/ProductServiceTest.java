@@ -32,10 +32,8 @@ class ProductServiceTest {
     void addProductSuccess() {
         //given
         var productRequest = new ProductRequest("상품1", 10000, "이미지 주소");
-
         //when
         var savedProduct = productService.addProduct(productRequest, MemberRole.MEMBER);
-
         //then
         Assertions.assertThat(savedProduct.name()).isEqualTo("상품1");
     }
@@ -45,7 +43,6 @@ class ProductServiceTest {
     void addProductFailWithKAKAOName() {
         //given
         var productRequest = new ProductRequest("카카오상품", 10000, "이미지 주소");
-
         //then
         Assertions.assertThatThrownBy(() -> productService.addProduct(productRequest, MemberRole.MEMBER))
                 .isInstanceOf(InvalidProductNameWithKAKAOException.class);
@@ -56,10 +53,8 @@ class ProductServiceTest {
     void addProductSuccessWithKAKAOName() {
         //given
         var productRequest = new ProductRequest("카카오상품", 10000, "이미지 주소");
-
         //when
         var savedProduct = productService.addProduct(productRequest, MemberRole.ADMIN);
-
         //then
         Assertions.assertThat(savedProduct.name()).isEqualTo("카카오상품");
     }
@@ -72,10 +67,8 @@ class ProductServiceTest {
         var savedProduct = productService.addProduct(productRequest, MemberRole.MEMBER);
         var id = savedProduct.id();
         var updateDto = new ProductRequest("상품1", 7000, "이미지 주소2");
-
         //when
         productService.updateProduct(id, updateDto);
-
         //then
         var updatedProduct = productService.getProduct(id);
         Assertions.assertThat(updatedProduct.price()).isEqualTo(7000);
@@ -90,10 +83,8 @@ class ProductServiceTest {
         var savedProduct = productService.addProduct(productRequest, MemberRole.MEMBER);
         Assertions.assertThat(productService.getProducts().size()).isEqualTo(1);
         var id = savedProduct.id();
-
         //when
         productService.deleteProduct(id);
-
         //then
         Assertions.assertThat(productService.getProducts().size()).isEqualTo(0);
     }

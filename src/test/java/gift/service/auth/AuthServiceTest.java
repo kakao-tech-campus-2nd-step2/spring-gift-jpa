@@ -30,11 +30,9 @@ class AuthServiceTest {
     void registerSuccess() {
         //given
         var registerRequest = new RegisterRequest("테스트", "test@naver.com", "testPassword", "MEMBER");
-
         //when
         var auth = authService.register(registerRequest);
         var role = authTestReflectionComponent.getMemberRoleWithToken(auth.token());
-
         //then
         Assertions.assertThat(role).isEqualTo(MemberRole.MEMBER);
 
@@ -49,7 +47,6 @@ class AuthServiceTest {
         var registerRequest = new RegisterRequest("테스트", "test@naver.com", "testPassword", "MEMBER");
         var auth = authService.register(registerRequest);
         var id = authTestReflectionComponent.getMemberIdWithToken(auth.token());
-
         //then
         Assertions.assertThatThrownBy(() -> authService.register(registerRequest)).isInstanceOf(DuplicatedEmailException.class);
 
@@ -66,7 +63,6 @@ class AuthServiceTest {
         //when
         var auth = authService.login(loginRequest);
         var role = authTestReflectionComponent.getMemberRoleWithToken(auth.token());
-
         //then
         Assertions.assertThat(role).isEqualTo(MemberRole.MEMBER);
 
@@ -81,7 +77,6 @@ class AuthServiceTest {
         var registerRequest = new RegisterRequest("테스트", "test@naver.com", "testPasswords", "MEMBER");
         var auth = authService.register(registerRequest);
         var loginRequest = new LoginRequest("test@naver.com", "testPassword");
-
         //then
         Assertions.assertThatThrownBy(() -> authService.login(loginRequest)).isInstanceOf(InvalidLoginInfoException.class);
 

@@ -32,10 +32,8 @@ public class MemberServiceTest {
         authService.register(registerRequest);
         var loginAuth = authService.login(loginRequest);
         var id = authTestReflectionComponent.getMemberIdWithToken(loginAuth.token());
-
         //when
         memberService.deleteMember(id);
-
         //then
         Assertions.assertThatThrownBy(() -> authService.login(loginRequest))
                 .isInstanceOf(InvalidLoginInfoException.class);

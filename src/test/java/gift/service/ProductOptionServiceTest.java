@@ -41,10 +41,8 @@ class ProductOptionServiceTest {
     void successOptionAdd() {
         //given
         var productOptionRequest = new ProductOptionRequest(product.id(), "기본", 0);
-
         //when
         var savedOption = optionService.addOption(productOptionRequest);
-
         //then
         var findOption = optionService.getOption(savedOption.id());
         Assertions.assertThat(findOption.name()).isEqualTo("기본");
@@ -56,11 +54,9 @@ class ProductOptionServiceTest {
         //given
         var normalOptionDto = new ProductOptionRequest(product.id(), "기본", 0);
         var size255gbOptionDto = new ProductOptionRequest(product.id(), "255gb", 100000);
-
         //when
         optionService.addOption(normalOptionDto);
         optionService.addOption(size255gbOptionDto);
-
         //then
         Assertions.assertThat(optionService.getOptions(product.id()).size()).isEqualTo(2);
         var options = productService.findProductWithId(product.id()).getOptions();
@@ -74,10 +70,8 @@ class ProductOptionServiceTest {
         var productOptionRequest = new ProductOptionRequest(product.id(), "기본", 0);
         var savedOption = optionService.addOption(productOptionRequest);
         var optionUpdateDto = new ProductOptionRequest(product.id(), "노멀", 0);
-
         //when
         optionService.updateOption(savedOption.id(), optionUpdateDto);
-
         //then
         var findOption = optionService.getOption(savedOption.id());
         Assertions.assertThat(findOption.name()).isNotEqualTo("기본");
@@ -91,10 +85,8 @@ class ProductOptionServiceTest {
         var productOptionRequest = new ProductOptionRequest(product.id(), "기본", 0);
         var savedOption = optionService.addOption(productOptionRequest);
         Assertions.assertThat(optionService.getOptions(product.id()).size()).isEqualTo(1);
-
         //when
         optionService.deleteOption(savedOption.id());
-
         //then
         Assertions.assertThat(optionService.getOptions(product.id()).size()).isEqualTo(0);
     }

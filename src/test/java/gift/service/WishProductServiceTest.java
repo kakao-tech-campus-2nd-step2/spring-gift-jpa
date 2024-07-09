@@ -64,10 +64,8 @@ class WishProductServiceTest {
         //given
         var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
         Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(0);
-
         //when
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
-
         //then
         Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(1);
 
@@ -81,10 +79,8 @@ class WishProductServiceTest {
         var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
         Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(1);
-
         //when
         wishProductService.deleteWishProduct(wishProduct.id());
-
         //then
         Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(0);
     }
@@ -97,10 +93,8 @@ class WishProductServiceTest {
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
         Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(1);
         var wishProductUpdateRequest = new WishProductUpdateRequest(0);
-
         //when
         wishProductService.updateWishProduct(wishProduct.id(), wishProductUpdateRequest);
-
         //then
         Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(0);
     }
@@ -113,11 +107,9 @@ class WishProductServiceTest {
         var wishProduct2AddRequest = new WishProductAddRequest(product2Id, 5);
         var managerWishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
         var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
-
         //when
         var managerWishProducts = wishProductService.getWishProducts(managerId);
         var memberWishProducts = wishProductService.getWishProducts(memberId);
-
         //then
         Assertions.assertThat(managerWishProducts.size()).isEqualTo(2);
         Assertions.assertThat(memberWishProducts.size()).isEqualTo(2);
@@ -134,10 +126,8 @@ class WishProductServiceTest {
         var wishProduct2AddRequest = new WishProductAddRequest(product2Id, 5);
         var managerWishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
         var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
-
         //when
         var wishProducts = memberService.findMemberWithId(managerId).getWishes();
-
         //then
         Assertions.assertThat(wishProducts.size()).isEqualTo(2);
 
@@ -151,10 +141,8 @@ class WishProductServiceTest {
         //given
         var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
         var managerWishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
-
         //when
         var wishProducts = productService.findProductWithId(product1Id).getWishes();
-
         //then
         Assertions.assertThat(wishProducts.size()).isEqualTo(1);
 
@@ -166,7 +154,6 @@ class WishProductServiceTest {
     void addWishProductFailWithInvalidProductId() {
         //given
         var invalidWishProductAddRequest = new WishProductAddRequest(10L, 5);
-
         //then
         Assertions.assertThatThrownBy(() -> wishProductService.addWishProduct(invalidWishProductAddRequest, memberId))
                 .isInstanceOf(NotFoundElementException.class);
@@ -178,10 +165,8 @@ class WishProductServiceTest {
         //given
         var wishProduct1AddRequest = new WishProductAddRequest(product1Id, 5);
         wishProductService.addWishProduct(wishProduct1AddRequest, memberId);
-
         //when
         var wishProduct = wishProductService.addWishProduct(wishProduct1AddRequest, memberId);
-
         //then
         var wishProducts = wishProductService.getWishProducts(memberId);
         Assertions.assertThat(wishProducts.size()).isEqualTo(1);
