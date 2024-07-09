@@ -14,6 +14,9 @@ public class Member {
         @Column(nullable = false)
         private String password;
 
+        public Member() {
+        }
+
         public Member(String email, String password) {
                 this.email = email;
                 this.password = password;

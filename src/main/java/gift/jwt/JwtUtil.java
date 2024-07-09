@@ -8,8 +8,6 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-
-
 import javax.crypto.SecretKey;
 
 
@@ -17,20 +15,26 @@ import javax.crypto.SecretKey;
 @ConfigurationProperties(prefix = "jwt")
 public class JwtUtil {
     private String secretKey;
+    private SecretKey key;
 
-    public SecretKey getKey() {
-        return Keys.hmacShaKeyFor(secretKey.getBytes());
+    @PostConstruct
+    public void init() {
+        key = Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
     }
     public String generateToken(Member member) {
         return Jwts.builder()
                 .setSubject(member.getEmail())
                 .claim("password", member.getPassword())
-                .signWith(getKey())
+                .signWith(key)
                 .compact();
     }
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(getKey()).build().parseClaimsJws(token);
+            Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
@@ -38,12 +42,12 @@ public class JwtUtil {
     }
 
     public String getEmailFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody();
         return claims.getSubject();
     }
 
     public String getPasswordFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody();
         return claims.get("password", String.class);
     }
 }
