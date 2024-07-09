@@ -1,5 +1,8 @@
 package gift.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Member {
     private Long id;
     private String email;
@@ -9,6 +12,9 @@ public class Member {
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public Member() {
     }
 
     public Long getId() {

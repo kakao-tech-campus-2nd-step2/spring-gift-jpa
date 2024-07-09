@@ -1,13 +1,14 @@
-package gift.domain;
+package gift.service;
 
-import gift.controller.TokenInterceptor;
 import gift.dao.MemberDao;
 import gift.model.CreatJwtToken;
 import gift.model.Member;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -16,13 +17,14 @@ import javax.naming.AuthenticationException;
 import java.util.Objects;
 import java.util.Optional;
 
-@Component
-public class MemberDomain {
+@Service
+public class MemberService {
     TokenInterceptor interceptor = new TokenInterceptor();
     CreatJwtToken jwtUtil = new CreatJwtToken();
     private final MemberDao memberDao;
 
-    public MemberDomain(MemberDao memberDao) {
+    @Autowired
+    public MemberService(MemberDao memberDao) {
         this.memberDao = memberDao;
     }
 
@@ -38,7 +40,8 @@ public class MemberDomain {
     }
 
     public String login(Member member){
-        if (memberDao.selectMember(member.getEmail()) == null) {
+        Optional<Member> memberOptional = Optional.ofNullable(memberDao.selectMember(member.getEmail()));
+        if (!memberOptional.isPresent()) {
             throw new IllegalArgumentException("이메일을 확인해주세요.");
         }
         Member loginMember = memberDao.selectMember(member.getEmail());
@@ -52,7 +55,6 @@ public class MemberDomain {
     }
 
     // 토큰으로 멤버 id 가져옴
-    @GetMapping("/getMemberId")
     public Long getIdByToken(HttpServletRequest request) throws AuthenticationException {
         Long id = 0L;
         Claims claims = interceptor.getClaims(request);

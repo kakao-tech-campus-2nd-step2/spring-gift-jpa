@@ -4,6 +4,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component
 public class CreatJwtToken {
     static String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
 
@@ -11,6 +15,7 @@ public class CreatJwtToken {
 //    private String secretKey;
 
     public String createJwt(Long id, String email){
+        System.out.println(secretKey);
         Claims claims = Jwts.claims();
         claims.put("id", id);
         claims.put("email", email);

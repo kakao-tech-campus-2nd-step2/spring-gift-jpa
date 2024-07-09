@@ -1,4 +1,4 @@
-package gift.controller;
+package gift.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -30,6 +30,7 @@ public class TokenInterceptor {
 
     public Claims getClaims(HttpServletRequest request) throws AuthenticationException{
         String token = getToken(request);
+        System.out.println(token);
         Claims claims = Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)

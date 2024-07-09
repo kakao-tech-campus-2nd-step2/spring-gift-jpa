@@ -1,25 +1,25 @@
 package gift.controller;
 
-import gift.domain.MemberDomain;
 import gift.model.Member;
+import gift.service.MemberService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/member")
 public class MemberController {
-    private final MemberDomain memberDomain;
+    private final MemberService memberService;
 
-    public MemberController(MemberDomain memberDomain) {
-        this.memberDomain = memberDomain;
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @PostMapping("/signin")
-    public String signinController(@RequestBody Member member){
-        return memberDomain.signin(member);
+    public String signinController(@RequestBody Member member) {
+        return memberService.signin(member);
     }
 
     @PostMapping("/login")
-    public String loginContorller(@RequestBody Member member){
-        return memberDomain.login(member);
+    public String loginController(@RequestBody Member member) {
+        return memberService.login(member);
     }
 }

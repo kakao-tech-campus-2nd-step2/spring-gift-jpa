@@ -1,5 +1,8 @@
 package gift.model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Wishlist {
     private long id;
     private long userId;
@@ -15,6 +18,9 @@ public class Wishlist {
         this.id = 0;
         this.userId = userId;
         this.productId = productId;
+    }
+
+    public Wishlist() {
     }
 
     public long getId() {

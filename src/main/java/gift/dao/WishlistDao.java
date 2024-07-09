@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Component
 public class WishlistDao {
     private final JdbcTemplate jdbcTemplate;
 
@@ -36,13 +35,10 @@ public class WishlistDao {
     public void insertWishlist(Wishlist wishlist){
         var sql = "insert into wishlist (userid, productid) values (?, ?)";
         jdbcTemplate.update(sql, wishlist.getUserId(), wishlist.getProductId());
-
-
     }
 
     public void deleteWishlist(Long id){
         var sql = "delete from wishlist where id = ?";
         jdbcTemplate.update(sql, id);
-
     }
 }
