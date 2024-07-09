@@ -2,45 +2,47 @@ package gift.service;
 
 import gift.exception.ProductErrorCode;
 import gift.exception.ProductException;
+import gift.model.Product;
 import gift.model.dto.ProductRequestDto;
 import gift.model.dto.ProductResponseDto;
 import gift.repository.ProductDao;
+import gift.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public List<ProductResponseDto> getAllProducts() {
-        return productDao.selectAllProduct()
+        return productRepository.findAll()
             .stream()
             .map(ProductResponseDto::from)
             .toList();
     }
 
     public ProductResponseDto getProductById(Long id) {
-        return ProductResponseDto.from(productDao.selectProductById(id));
+        return ProductResponseDto.from(productRepository.findById(id).get());
     }
 
     public void insertProduct(ProductRequestDto productRequestDto) throws ProductException {
         validateKakaoWord(productRequestDto.getName());
-        productDao.insertProduct(productRequestDto.toEntity());
+        productRepository.save(productRequestDto.toEntity(null));
     }
 
     public void updateProductById(Long id, ProductRequestDto productRequestDto)
         throws ProductException {
         validateKakaoWord(productRequestDto.getName());
-        productDao.updateProductById(id, productRequestDto.toEntity());
+        productRepository.save(productRequestDto.toEntity(id));
     }
 
     public void deleteProductById(Long id) {
-        productDao.deleteProductById(id);
+        productRepository.deleteById(id);
     }
 
     private void validateKakaoWord(String name) throws ProductException {

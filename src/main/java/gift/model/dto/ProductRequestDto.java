@@ -63,7 +63,7 @@ public class ProductRequestDto {
         return imageUrl;
     }
 
-    public Product toEntity() {
+    public Product toEntity(Long id) {
         return new Product(
             id,
             name,
