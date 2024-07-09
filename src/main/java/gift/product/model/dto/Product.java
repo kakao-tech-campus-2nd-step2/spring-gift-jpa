@@ -53,24 +53,4 @@ public class Product {
     public boolean isActive() {
         return isActive;
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
 }
