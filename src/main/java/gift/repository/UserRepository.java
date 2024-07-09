@@ -1,4 +1,4 @@
-package gift.user;
+package gift.repository;
 
 import gift.model.SiteUser;
 import java.util.Optional;

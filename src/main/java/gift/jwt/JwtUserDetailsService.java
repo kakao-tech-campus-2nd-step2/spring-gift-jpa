@@ -1,7 +1,7 @@
 package gift.jwt;
 
 import gift.model.SiteUser;
-import gift.user.UserRepository;
+import gift.repository.UserRepository;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
