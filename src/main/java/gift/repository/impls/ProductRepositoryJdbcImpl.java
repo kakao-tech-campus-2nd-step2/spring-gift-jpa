@@ -74,7 +74,6 @@ public class ProductRepositoryJdbcImpl {
         return Optional.of(products);
     }
 
-    @Override
     public List<Product> findAll() {
         var sql = "SELECT * FROM products";
         return jdbcTemplate.query(
