@@ -63,8 +63,5 @@ public class WishlistRepositoryTest {
         wishlistRepository.deleteById(wishlist.getId());
         List<Wishlist> wishlists = wishlistRepository.findAll();
         assertThat(wishlists.isEmpty()).isEqualTo(true);
-        
     }
-
-
 }
