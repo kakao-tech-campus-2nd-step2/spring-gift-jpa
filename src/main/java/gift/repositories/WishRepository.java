@@ -44,7 +44,7 @@ public class WishRepository {
 //    memberId로 Wish 삭제
     public void deleteWish(Long memberId, Long productId){
         jdbcTemplate.execute("DELETE FROM wishes WHERE memberId='"
-            + memberId + "' , productId= '"
-            + productId +";");
+            + memberId + "' AND productId= '"
+            + productId +"';");
     }
 }
