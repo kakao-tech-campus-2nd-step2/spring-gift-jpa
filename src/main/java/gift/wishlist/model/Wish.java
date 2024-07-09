@@ -1,15 +1,28 @@
 package gift.wishlist.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="wishes")
 public class Wish {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private Long memberId;
-    private String productName;
+    @Column(nullable = false)
+    private Long productId;
 
     public Wish() {}
 
-    public Wish(Long memberId, String productName) {
+    public Wish(Long memberId, Long productId) {
         this.memberId = memberId;
-        this.productName = productName;
+        this.productId = productId;
     }
 
     public Long getId() {
@@ -28,12 +41,12 @@ public class Wish {
         this.memberId = memberId;
     }
 
-    public String getProductName() {
-        return productName;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
 }
