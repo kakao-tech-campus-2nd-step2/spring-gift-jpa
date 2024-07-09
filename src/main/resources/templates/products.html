@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면 - 제품 목록</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>제품 목록</h1>
+<form th:action="@{/admin/products/add}" th:object="${product}" method="get">
+    <button onclick="location.href='/admin/add'">제품 추가</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price}"></td>
+        <td><img th:src="${product.imageUrl}" alt="Product Image" style="width:100px; height:auto;"></td>
+        <td class="actions">
+            <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="get" style="display:inline;">
+                <input type="hidden" name="_method" value="delete" />
+                <button type="submit" onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</button>
+            </form>
+            <form th:action="@{/admin/products/edit/{id}(id = ${product.id})}" th:object="${product}" method="get">
+                <input type="hidden" name="_method" value="edit" />
+                <button type="submit">편집</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
