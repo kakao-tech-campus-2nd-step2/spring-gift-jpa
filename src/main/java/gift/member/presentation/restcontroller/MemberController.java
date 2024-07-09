@@ -64,21 +64,21 @@ public class MemberController {
     }
 
     @PostMapping("/wishlists/products/{productId}")
-    public ResponseEntity<Long> addWishList(@MemberId Long memberId, @PathVariable Long productId) {
+    public ResponseEntity<Long> addWishList(@MemberId Long memberId, @PathVariable("productId") Long productId) {
         var wishListId = wishlistService.addWishList(memberId, productId);
         return ResponseEntity.status(HttpStatus.CREATED).body(wishListId);
     }
 
     @PutMapping("/wishlists/products/{productId}")
     public ResponseEntity<Long> updateWishList(@MemberId Long memberId,
-        @PathVariable Long productId,
+        @PathVariable("productId") Long productId,
         @RequestBody @Valid RequestWishlistDto requestWishlistDto) {
         var wishListId = wishlistService.updateWishList(memberId, requestWishlistDto.toWishListUpdateDto(productId));
         return ResponseEntity.ok(wishListId);
     }
 
     @DeleteMapping("/wishlists/products/{productId}")
-    public ResponseEntity<Void> deleteWishList(@MemberId Long memberId, @PathVariable Long productId) {
+    public ResponseEntity<Void> deleteWishList(@MemberId Long memberId, @PathVariable("productId") Long productId) {
         wishlistService.deleteWishList(memberId, productId);
         return ResponseEntity.ok().build();
     }
