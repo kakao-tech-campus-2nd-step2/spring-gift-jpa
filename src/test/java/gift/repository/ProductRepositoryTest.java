@@ -49,8 +49,7 @@ class ProductRepositoryTest {
         //then
         assertAll(
             () -> assertThat(actual.size()).isEqualTo(2),
-            () -> assertThat(actual.contains(expected)),
-            () -> assertThat(actual.contains(expected1))
+            () -> assertThat(actual).containsExactlyInAnyOrder(expected, expected1)
 
         );
 
@@ -76,7 +75,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    void update(){
+    void update() {
         //given
         Product expected = new Product("product", 100, "image.jpg");
         Product updateProduct = productRepository.save(expected);
@@ -86,20 +85,20 @@ class ProductRepositoryTest {
         expected.setImageUrl("updatedImage.jpg");
 
         //when
-       Product actual= productRepository.save(productFromDB);
+        Product actual = productRepository.save(productFromDB);
 
-       //then
+        //then
         assertAll(
-            ()->assertThat(actual.getId()).isEqualTo(updateProduct.getId()),
-            ()->assertThat(actual.getName()).isEqualTo("updated"),
-            ()->assertThat(actual.getPrice()).isEqualTo(1000),
-            ()->assertThat(actual.getImageUrl()).isEqualTo("updatedImage.jpg")
+            () -> assertThat(actual.getId()).isEqualTo(updateProduct.getId()),
+            () -> assertThat(actual.getName()).isEqualTo("updated"),
+            () -> assertThat(actual.getPrice()).isEqualTo(1000),
+            () -> assertThat(actual.getImageUrl()).isEqualTo("updatedImage.jpg")
 
-            );
+        );
     }
 
     @Test
-    void deleteById(){
+    void deleteById() {
         //given
         Product product = new Product("product", 100, "image.jpg");
         productRepository.save(product);
