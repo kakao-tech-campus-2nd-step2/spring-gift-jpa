@@ -20,17 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserServiceTest {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private TokenService tokenService;
-
     private UserService userService;
 
-    @BeforeEach
-    public void setUp() {
-        userService = new UserService(userRepository, tokenService);
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     public void 사용자_등록() {

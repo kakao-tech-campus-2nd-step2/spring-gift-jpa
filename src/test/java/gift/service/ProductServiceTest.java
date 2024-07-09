@@ -24,12 +24,8 @@ public class ProductServiceTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
     private ProductService productService;
-
-    @BeforeEach
-    public void setUp() {
-        productService = new ProductService(productRepository);
-    }
 
     @Test
     @Rollback

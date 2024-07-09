@@ -32,12 +32,8 @@ public class WishServiceTest {
     @Autowired
     private ProductService productService;
 
+    @Autowired
     private WishService wishService;
-
-    @BeforeEach
-    public void setUp() {
-        wishService = new WishService(wishRepository, productService);
-    }
 
     @Test
     public void 위시리스트_추가() {
