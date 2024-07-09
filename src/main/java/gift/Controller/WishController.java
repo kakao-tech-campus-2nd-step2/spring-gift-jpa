@@ -46,9 +46,9 @@ public class WishController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Optional<WishListDto>> deleteProductToWishList(@PathVariable Long id) {
-    Optional<WishListDto> deletedWishProduct = wishListService.deleteProductToWishList(id);
-    return ResponseEntity.ok(deletedWishProduct);
+  public ResponseEntity<Void> deleteProductToWishList(@PathVariable Long id) {
+    wishListService.deleteProductToWishList(id);
+    return ResponseEntity.noContent().build();
   }
 
 }

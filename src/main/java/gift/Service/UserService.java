@@ -31,7 +31,7 @@ public class UserService {
     Optional<UserDto> userByEmail = userDao.findByEmail(email);
 
     if (userByEmail == null) {
-      throw new EmptyResultDataAccessException("해당 유저가 없습니다.",1);
+      throw new EmptyResultDataAccessException("해당 유저가 없습니다.", 1);
     }
     if (email.equals(userByEmail.get().getEmail()) && password.equals(
       userByEmail.get().getPassword())) {

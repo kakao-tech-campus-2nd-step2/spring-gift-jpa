@@ -4,7 +4,6 @@ import gift.DTO.UserDto;
 import gift.DTO.WishListDto;
 import gift.Repository.WishListDao;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,9 +24,7 @@ public class WishListService {
     return wishListDao.findAll();
   }
 
-  public Optional<WishListDto> deleteProductToWishList(Long id) {
-    Optional<WishListDto> deletedWishProduct = wishListDao.findById(id);
+  public void deleteProductToWishList(Long id) {
     wishListDao.deleteById(id);
-    return deletedWishProduct;
   }
 }
