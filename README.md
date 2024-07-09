@@ -16,5 +16,5 @@ JPA로 리팩토링하고 @DataJpaTest를 사용해 학습테스트를 해본다
 - Wish는 하나의 Member와 하나의 Product에 Mapping -> ManyToOne
 
 2. WishResponse.java 추가
-3. setters 대신 Builder patter 적용
+3. setters 대신 Builder pattern 적용
 
