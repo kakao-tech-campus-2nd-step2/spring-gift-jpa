@@ -1,6 +1,6 @@
 package gift.model.member;
 
-import gift.dto.Login;
+import gift.auth.Login;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

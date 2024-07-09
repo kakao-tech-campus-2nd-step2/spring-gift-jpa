@@ -2,7 +2,7 @@ package gift.controller;
 
 import gift.auth.LoginUser;
 import gift.service.WhishListService;
-import gift.dto.Login;
+import gift.auth.Login;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
