@@ -9,19 +9,19 @@ import gift.dto.ProductRequest;
 import gift.repository.ProductOptionRepository;
 import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductOptionRepository optionRepository;
 
-    public ProductService(ProductRepository productRepository, ProductOptionRepository optionRepository) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.optionRepository = optionRepository;
     }
 
     public ProductResponse addProduct(ProductRequest productRequest, MemberRole memberRole) {
@@ -49,12 +49,11 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
-        optionRepository.deleteByProductId(id);
         productRepository.deleteById(id);
     }
 
-    private Product findProductWithId(Long id) {
-        Optional<Product> product = productRepository.findById(id);
+    public Product findProductWithId(Long id) {
+        var product = productRepository.findById(id);
         if (product.isEmpty()) throw new NotFoundElementException("존재하지 않는 리소스에 대한 접근입니다.");
         return product.get();
     }

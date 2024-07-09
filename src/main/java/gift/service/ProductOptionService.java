@@ -2,23 +2,30 @@ package gift.service;
 
 import gift.dto.ProductOptionRequest;
 import gift.dto.ProductOptionResponse;
+import gift.dto.ProductRequest;
+import gift.exception.NotFoundElementException;
 import gift.model.ProductOption;
 import gift.repository.ProductOptionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class ProductOptionService {
 
     private final ProductOptionRepository optionRepository;
+    private final ProductService productService;
 
-    public ProductOptionService(ProductOptionRepository optionRepository) {
+    public ProductOptionService(ProductOptionRepository optionRepository, ProductService productService) {
         this.optionRepository = optionRepository;
+        this.productService = productService;
     }
 
     public ProductOptionResponse addOption(ProductOptionRequest productOptionRequest) {
-        var option = createOptionWithOptionRequest(productOptionRequest);
+        var option = createOptionWithProductRequest(productOptionRequest);
         var savedOption = optionRepository.save(option);
         return getProductOptionResponseFromProductOption(savedOption);
     }
@@ -34,30 +41,38 @@ public class ProductOptionService {
     }
 
     public List<ProductOptionResponse> getOptions(Long productId) {
-        return optionRepository.findAll(productId)
+        return optionRepository.findAllByProductId(productId)
                 .stream()
                 .map(this::getProductOptionResponseFromProductOption)
                 .toList();
     }
 
     public void deleteOption(Long id) {
+        var productOption = findOptionWithId(id);
+        productOption.removeOption();
         optionRepository.deleteById(id);
     }
 
     private ProductOption findOptionWithId(Long id) {
-        return optionRepository.findById(id);
+        var productOption = optionRepository.findById(id);
+        if (productOption.isEmpty()) throw new NotFoundElementException("존재하지 않는 리소스에 대한 접근입니다.");
+        return productOption.get();
     }
 
-    private ProductOption createOptionWithOptionRequest(ProductOptionRequest productOptionRequest) {
-        return new ProductOption(productOptionRequest.productId(), productOptionRequest.name(), productOptionRequest.additionalPrice());
+    private ProductOption createOptionWithProductRequest(ProductOptionRequest productOptionRequest) {
+        var product = productService.findProductWithId(productOptionRequest.productId());
+        var option = new ProductOption(productOptionRequest.name(), productOptionRequest.additionalPrice());
+        option.addProduct(product);
+        return option;
     }
 
     private void updateProductOptionWithId(ProductOption option, ProductOptionRequest productOptionRequest) {
         option.updateOptionInfo(productOptionRequest.name(), productOptionRequest.additionalPrice());
-        optionRepository.update(option);
+        optionRepository.save(option);
     }
 
     private ProductOptionResponse getProductOptionResponseFromProductOption(ProductOption productOption) {
-        return ProductOptionResponse.of(productOption.getId(), productOption.getProductId(), productOption.getName(), productOption.getAdditionalPrice());
+        var product = productService.getProduct(productOption.getProduct().getId());
+        return ProductOptionResponse.of(productOption.getId(), product, productOption.getName(), productOption.getAdditionalPrice());
     }
 }

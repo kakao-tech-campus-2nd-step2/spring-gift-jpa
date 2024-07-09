@@ -4,6 +4,7 @@ import gift.dto.ProductOptionRequest;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.model.MemberRole;
+import gift.model.Product;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,8 +12,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 class ProductOptionServiceTest {
 
     @Autowired
@@ -53,6 +56,12 @@ class ProductOptionServiceTest {
         optionService.addOption(size255gbOptionDto);
 
         Assertions.assertThat(optionService.getOptions(product.id()).size()).isEqualTo(2);
+
+        var options = productService.findProductWithId(product.id()).getOptions();
+
+        Assertions.assertThat(options.size()).isEqualTo(2);
+
+        System.out.println("id : "+options.get(0).getId());
     }
 
     @Test

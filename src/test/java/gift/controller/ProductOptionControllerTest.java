@@ -77,6 +77,6 @@ class ProductOptionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(new ProductOptionRequest(100L, "Large", 1500))));
 
-        result.andExpect(status().isConflict());
+        result.andExpect(status().isNotFound());
     }
 }
