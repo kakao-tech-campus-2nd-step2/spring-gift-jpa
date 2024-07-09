@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,9 +46,19 @@ class WishRepositoryTest {
     @Test
     void findByMemberIdAndProductId() {
         //Given
+        Product product1 = productRepository.save(new Product("아몬드", 500, "image.jpg"));
+        Product product2 = productRepository.save(new Product("초코", 500, "image.2jpg"));
+        Wish wish1 = new Wish(MEMBER_ID, 5, product1);
+        Wish wish2 = new Wish(MEMBER_ID, 10, product2);
+        wishRepository.save(wish1);
+        wishRepository.save(wish2);
 
         //When
+        Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(MEMBER_ID, product1.getId());
 
         //Then
+        assertThat(wish).isPresent();
+        assertThat(wish.get().getId()).isEqualTo(product1.getId());
     }
+
 }

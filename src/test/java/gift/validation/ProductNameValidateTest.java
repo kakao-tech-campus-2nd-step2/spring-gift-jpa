@@ -1,4 +1,4 @@
-package gift.controller;
+package gift.validation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.Product;
