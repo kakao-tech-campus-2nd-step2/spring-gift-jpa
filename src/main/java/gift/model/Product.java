@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "product")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,8 +27,7 @@ public class Product {
 
     public Product() {}
 
-    public Product(Long id, String name, Integer price, String imageUrl) {
-        this.id = id;
+    public Product(String name, Integer price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
