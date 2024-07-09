@@ -4,7 +4,7 @@ import gift.annotation.LoginMember;
 import gift.domain.Member;
 import gift.domain.Wish;
 import gift.dto.WishRequest;
-import gift.exception.MemberAuthenticationException;
+import gift.exception.MemberAuthorizationException;
 import gift.service.WishService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/wishes")
+@RequestMapping("/api/wishes")
 public class WishController {
     private final WishService wishService;
 
@@ -22,30 +22,34 @@ public class WishController {
     }
 
     @GetMapping
-    public List<Wish> getWishes(@LoginMember Member member) {
+    public ResponseEntity<List<Wish>> getWishes(@LoginMember Member member) {
         if(member == null){
-            throw new MemberAuthenticationException("Authentication failed");
+            throw new MemberAuthorizationException("Authorization failed");
         }
-        return wishService.getWishesByMember(member);
+        return new ResponseEntity<>(wishService.getWishesByMember(member), HttpStatus.OK);
     }
 
     @PostMapping
-    public void createWish(@RequestBody WishRequest request, @LoginMember Member member) {
+    public ResponseEntity<Wish> createWish(@RequestBody WishRequest wishRequest, @LoginMember Member member) {
         if (member == null) {
-            throw new MemberAuthenticationException("Authentication failed");
+            throw new MemberAuthorizationException("Authorization failed");
         }
-        wishService.addWish(request, member);
+        Wish wish =wishService.addWish(wishRequest, member);
+
+        return new ResponseEntity<>(wish, HttpStatus.CREATED);
     }
+
 
     @DeleteMapping("/{id}")
-    public void deleteWish(@PathVariable("id") Long id, @LoginMember Member member) {
+    public ResponseEntity<Wish> deleteWish(@PathVariable("id") Long id, @LoginMember Member member) {
         if (member == null) {
-            throw new MemberAuthenticationException("Authentication failed");
+            throw new MemberAuthorizationException("Authorization failed");
         }
         wishService.deleteWish(id, member);
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 
-    @ExceptionHandler(value= MemberAuthenticationException.class)
+    @ExceptionHandler(value= MemberAuthorizationException.class)
     public ResponseEntity<String> handleMemberException(Exception e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
