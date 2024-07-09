@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 
 @Service
 public class ProductService {
@@ -24,9 +22,8 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponseDto save(ProductRequestDto productDto){
-        Long id = productRepository.save(productDto.toEntity());
-        return new ProductResponseDto(id,productDto.getName(),productDto.getPrice(),productDto.getImageUrl());
+    public void save(ProductRequestDto productDto){
+        productRepository.save(productDto.toEntity());
     }
 
     @Transactional(readOnly = true)
@@ -43,15 +40,6 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> findByIds(List<Long> ids){
-        return productRepository.findByIds(ids)
-                .orElseThrow(()-> new ProductNotFoundException(Messages.NOT_FOUND_PRODUCT_BY_ID))
-                .stream()
-                .map(ProductResponseDto::from)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
     public List<ProductResponseDto> findAll(){
         return productRepository.findAll()
                 .stream()
@@ -60,18 +48,15 @@ public class ProductService {
     }
 
     @Transactional
-    public Long deleteById(Long id){
+    public void deleteById(Long id){
         findProductByIdOrThrow(id);
-        return productRepository.delete(id);
+        productRepository.deleteById(id);
     }
 
     @Transactional
-    public ProductResponseDto updateById(Long id, ProductRequestDto productDto){
+    public void updateById(Long id, ProductRequestDto productDto){
         findProductByIdOrThrow(id);
-        Product editProduct = productRepository.update(id, productDto.toEntity());
-        ProductResponseDto productResponseDto = ProductResponseDto.from(editProduct);
-        productResponseDto.setId(id);
-        return productResponseDto;
+        productRepository.save(new Product(id, productDto.getName(), productDto.getPrice(), productDto.getImageUrl()));
     }
 
     private Product findProductByIdOrThrow(Long id) {
