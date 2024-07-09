@@ -4,8 +4,6 @@ package gift.Controller;
 import gift.Model.Product;
 
 import gift.Model.Wishlist;
-import gift.Service.MemberService;
-import gift.Service.ProductService;
 import gift.Service.WishlistService;
 
 import jakarta.servlet.http.HttpServletRequest;

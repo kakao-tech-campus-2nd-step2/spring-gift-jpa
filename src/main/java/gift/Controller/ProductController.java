@@ -1,6 +1,5 @@
 package gift.Controller;
 
-import gift.Model.Member;
 import gift.Model.Product;
 import gift.Service.ProductService;
 

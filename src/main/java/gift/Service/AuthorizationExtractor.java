@@ -2,7 +2,6 @@ package gift.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 @Component

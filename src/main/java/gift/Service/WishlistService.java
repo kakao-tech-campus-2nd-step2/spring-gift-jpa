@@ -1,6 +1,5 @@
 package gift.Service;
 
-import gift.Model.Member;
 import gift.Model.Product;
 import gift.Model.Wishlist;
 import gift.Repository.MemberRepository;
