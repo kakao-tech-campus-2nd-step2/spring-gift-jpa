@@ -1,6 +1,7 @@
 package gift.entity;
 
 import gift.dto.MemberDTO;
+import gift.dto.WishListDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +11,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -107,7 +109,7 @@ public class Member {
 
     public Wish addWish(Product product) {
         for (Wish wish : wishList) {
-            if (wish.getItem().equals(product)) {
+            if (wish.getProduct().equals(product)) {
                 wish.incrementQuantity();
                 return wish;
             }
@@ -121,7 +123,7 @@ public class Member {
             return removeWish(product);
         }
         for (Wish wish : wishList) {
-            if (wish.getItem().equals(product)) {
+            if (wish.getProduct().equals(product)) {
                 wish.setQuantity(value);
                 return true;
             }
@@ -131,11 +133,19 @@ public class Member {
 
     public boolean removeWish(Product product) {
         for (Wish wish : wishList) {
-            if (wish.getItem().equals(product)) {
+            if (wish.getProduct().equals(product)) {
                 return wishList.remove(wish);
             }
         }
         return false;
+    }
+
+    public WishListDTO convertToWishListDTO() {
+        List<Wish> wishListForView = new ArrayList<>(this.getWishList());
+        for (Wish wish : wishListForView) {
+            wish.setMember(null); // 개인정보 보호
+        }
+        return new WishListDTO(wishListForView);
     }
 
     @Override
