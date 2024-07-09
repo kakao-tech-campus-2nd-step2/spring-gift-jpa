@@ -1,8 +1,6 @@
 package gift.service;
 
-import gift.dto.Member;
 import gift.dto.response.TokenResponse;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
