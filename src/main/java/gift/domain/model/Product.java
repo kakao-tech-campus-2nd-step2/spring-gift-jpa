@@ -1,11 +1,27 @@
 package gift.domain.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+
+@Entity
+@Table(name = "products")
 public class Product {
 
+    @Id
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private Long price;
+
+    @Column(name = "imageurl", nullable = false, length = 2083)
     private String imageUrl;
+
+    protected Product() {}
 
     public Product(Long id, String name, Long price, String imageUrl) {
         this.id = id;
@@ -28,5 +44,9 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

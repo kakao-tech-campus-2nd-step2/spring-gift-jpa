@@ -11,7 +11,7 @@
 - 기존 JdbcTemplate 기반 코드를 JPA로 리팩터링
 - 엔티티 클래스 작성
   - [x] User
-  - [ ] Product
+  - [x] Product
   - [ ] Wishlist
 - 레포지토리 클래스 리팩터링
   - [ ] UserRepository
