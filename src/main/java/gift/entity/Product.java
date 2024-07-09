@@ -4,8 +4,6 @@ import gift.exception.BusinessException;
 import gift.exception.ErrorCode;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "product")
@@ -18,11 +16,9 @@ public class Product {
     @Embedded
     private ProductName name;
 
-    @Min(0)
     @Column(nullable = false)
     private int price;
 
-    @NotBlank(message = "이미지 URL은 빈 칸일 수 없습니다.")
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
