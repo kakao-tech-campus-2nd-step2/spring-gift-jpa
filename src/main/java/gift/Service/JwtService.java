@@ -13,6 +13,7 @@ import io.jsonwebtoken.security.Keys;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -28,13 +29,13 @@ public class JwtService {
   @Value("${jwt.secret}")
   private String key;
 
-  public JwtToken createAccessToken(UserDto userDto) {
+  public JwtToken createAccessToken(Optional<UserDto> userDto) {
     Instant now = Instant.now();
     Instant expiresAt = now.plus(1, ChronoUnit.DAYS); // 현재 시각에서 1일 뒤로 만료 설정
     String accessToken = Jwts.builder()
       .setHeaderParam("typ", "Bearer") // 토큰 타입을 지정
-      .setSubject(userDto.getEmail())
-      .claim("email", userDto.getEmail())
+      .setSubject(userDto.get().getEmail())
+      .claim("email", userDto.get().getEmail())
       .setIssuedAt(Date.from(now)) // 토큰 발행 시간 설정
       .setExpiration(Date.from(expiresAt))
       .signWith(Keys.hmacShaKeyFor(key.getBytes()), SignatureAlgorithm.HS256)
@@ -54,7 +55,7 @@ public class JwtService {
     }
   }
 
-  public UserDto getUserEmailFromToken(String token) {
+  public Optional<UserDto> getUserEmailFromToken(String token) {
     JwtParser jwtParser = Jwts.parser()
         .setSigningKey(Keys.hmacShaKeyFor(key.getBytes()))
         .build();
@@ -62,6 +63,6 @@ public class JwtService {
     Jws<Claims> claims = jwtParser.parseClaimsJws(token);
     String email = claims.getBody().get("email", String.class);
 
-    return userDao.getUserByEmail(email);
+    return userDao.findByEmail(email);
   }
 }

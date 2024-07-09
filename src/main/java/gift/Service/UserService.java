@@ -5,6 +5,7 @@ import gift.DTO.UserDto;
 import gift.Exception.ForbiddenException;
 import gift.Exception.UnauthorizedException;
 import gift.Repository.UserDao;
+import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -20,20 +21,20 @@ public class UserService {
   }
 
   public UserDto userSignUp(UserDto userInfo) {
-    userDao.createUser(userInfo);
+    userDao.save(userInfo);
     return userInfo;
   }
 
   public JwtToken userLogin(UserDto userInfo) {
     String email = userInfo.getEmail();
     String password = userInfo.getPassword();
-    UserDto userByEmail = userDao.getUserByEmail(email);
+    Optional<UserDto> userByEmail = userDao.findByEmail(email);
 
     if (userByEmail == null) {
       throw new EmptyResultDataAccessException("해당 유저가 없습니다.",1);
     }
-    if (email.equals(userByEmail.getEmail()) && password.equals(
-      userByEmail.getPassword())) {
+    if (email.equals(userByEmail.get().getEmail()) && password.equals(
+      userByEmail.get().getPassword())) {
       JwtToken jwtToken = jwtService.createAccessToken(userByEmail);
       if (jwtService.isValidToken(jwtToken)) { //토큰이 만료되었다면
         throw new UnauthorizedException("토큰이 유효하지 않습니다.");
