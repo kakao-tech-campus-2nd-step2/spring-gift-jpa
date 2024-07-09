@@ -58,10 +58,6 @@ public class ProductRepositoryTest {
         Optional<Product> updateProduct = productDao.findById(saveProduct.get().getId());
 
         assertThat(updateProduct).isPresent();
-        assertAll(
-            () -> assertThat(updateProduct.get().getPrice()).isEqualTo(2000),
-            () -> assertThat(updateProduct.get().getPrice()).isNotEqualTo(1500)
-        );
+        assertThat(updateProduct.get().getPrice()).isEqualTo(2000);
     }
-
 }
