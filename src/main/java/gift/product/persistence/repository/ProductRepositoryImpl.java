@@ -66,4 +66,9 @@ public class ProductRepositoryImpl implements ProductRepository{
     public void deleteAll() {
         productJpaRepository.deleteAll();
     }
+
+    @Override
+    public Product getReferencedProduct(Long productId) {
+        return productJpaRepository.getReferenceById(productId);
+    }
 }

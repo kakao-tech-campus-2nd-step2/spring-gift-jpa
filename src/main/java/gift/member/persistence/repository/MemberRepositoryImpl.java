@@ -35,4 +35,9 @@ public class MemberRepositoryImpl implements MemberRepository{
                 "Member with id " + id + " not found")
             );
     }
+
+    @Override
+    public Member getReferencedMember(Long memberId) {
+        return memberJpaRepository.getReferenceById(memberId);
+    }
 }
