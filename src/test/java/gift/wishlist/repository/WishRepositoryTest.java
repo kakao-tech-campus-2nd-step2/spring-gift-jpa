@@ -5,76 +5,87 @@ import static org.assertj.core.api.Assertions.assertThat;
 import gift.wishlist.model.Wish;
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-@JdbcTest
-@Import(WishRepository.class)
+@DataJpaTest
 class WishRepositoryTest {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
     @Autowired
     private WishRepository wishRepository;
 
-    @BeforeEach
-    void setUp() {
-        jdbcTemplate.execute("DROP TABLE IF EXISTS wishes CASCADE");
-        jdbcTemplate.execute("DROP TABLE IF EXISTS members CASCADE");
+    @Test
+    void testFindByMemberIdAndProductId() {
+        Wish wish = new Wish(1L, 1L);
+        wishRepository.save(wish);
 
-        jdbcTemplate.execute("CREATE TABLE members (id BIGINT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255), password VARCHAR(255))");
-        jdbcTemplate.execute("CREATE TABLE wishes (id BIGINT AUTO_INCREMENT PRIMARY KEY, member_id BIGINT NOT NULL, product_name VARCHAR(255) NOT NULL, FOREIGN KEY (member_id) REFERENCES members(id))");
-
-        jdbcTemplate.execute("INSERT INTO members (email, password) VALUES ('user@example.com','password')");
-        jdbcTemplate.execute("INSERT INTO wishes (member_id, product_name) VALUES (1, 'Product1')");
-
-        wishRepository = new WishRepository(jdbcTemplate, jdbcTemplate.getDataSource());
+        List<Wish> wishList = wishRepository.findByMemberIdAndProductId(1L,1L);
+        assertThat(wishList).hasSize(1);
+        assertThat(wishList.get(0).getMemberId()).isEqualTo(1L);
+        assertThat(wishList.get(0).getProductId()).isEqualTo(1L);
     }
 
     @Test
     void testFindByMemberId() {
-        List<Wish> wishList = wishRepository.findByMemberId(1L);
-        assertThat(wishList).isNotEmpty();
-        assertThat(wishList.get(0).getProductName()).isEqualTo("Product1");
-    }
-
-    @Test
-    void testFindByName() {
-        Optional<Wish> wish = wishRepository.findByName(1L,"Product1");
-        assertThat(wish).isPresent();
-        assertThat(wish.get().getProductName()).isEqualTo("Product1");
-    }
-
-    @Test
-    void testFindByName_NotFound() {
-        Optional<Wish> wish = wishRepository.findByName(2L,"No_Product");
-        assertThat(wish).isNotPresent();
-    }
-
-    @Test
-    void testSave() {
-        Wish wish = new Wish();
-        wish.setMemberId(1L);
-        wish.setProductName("Product2");
-
-        wishRepository.save(wish);
-
-        assertThat(wish.getId()).isNotNull();
-        assertThat(wish.getProductName()).isEqualTo("Product2");
+        Wish wish1 = new Wish(1L, 1L);
+        Wish wish2 = new Wish(1L, 1L);
+        wishRepository.save(wish1);
+        wishRepository.save(wish2);
 
         List<Wish> wishList = wishRepository.findByMemberId(1L);
         assertThat(wishList).hasSize(2);
     }
 
     @Test
-    void testDeleteByProductName() {
-        wishRepository.deleteByProductName(1L, "Product1");
+    void testSaveWish() {
+        Wish wish = new Wish(1L, 1L);
+        Wish saveWish = wishRepository.save(wish);
 
-        List<Wish> wishList = wishRepository.findByMemberId(1L);
+        assertThat(saveWish).isNotNull();
+        assertThat(saveWish.getId()).isNotNull();
+        assertThat(saveWish.getMemberId()).isEqualTo(1L);
+        assertThat(saveWish.getProductId()).isEqualTo(1L);
+    }
+
+    @Test
+    void testDeleteByMemberIdAndProductId() {
+        Wish wish = new Wish(1L, 1L);
+        wishRepository.save(wish);
+
+        wishRepository.deleteByMemberIdAndProductId(1L, 1L);
+
+        List<Wish> wishList = wishRepository.findByMemberIdAndProductId(1L, 1L);
+        assertThat(wishList).isEmpty();
+    }
+
+    @Test
+    void testExistsById() {
+        Wish wish = new Wish(1L, 1L);
+        Wish saveWish = wishRepository.save(wish);
+
+        boolean exists = wishRepository.existsById(saveWish.getId());
+        assertThat(exists).isTrue();
+    }
+
+    @Test
+    void testDeleteById() {
+        Wish wish = new Wish(1L, 1L);
+        Wish saveWish = wishRepository.save(wish);
+
+        wishRepository.deleteById(saveWish.getId());
+
+        Optional<Wish> wishList = wishRepository.findById(saveWish.getId());
+        assertThat(wishList).isEmpty();
+    }
+
+    @Test
+    void testDeleteByProductId() {
+        Wish wish = new Wish(1L, 1L);
+        wishRepository.save(wish);
+
+        wishRepository.deleteByMemberIdAndProductId(1L, 1L);
+
+        List<Wish> wishList = wishRepository.findByMemberIdAndProductId(1L, 1L);
         assertThat(wishList).isEmpty();
     }
 }
