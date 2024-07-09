@@ -20,11 +20,11 @@ public class Wish {
     private Integer quantity;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     private Wish(Builder builder) {
