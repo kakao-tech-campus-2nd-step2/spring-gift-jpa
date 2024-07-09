@@ -1,18 +1,17 @@
 package gift.request;
 
-import gift.constant.ErrorMessage;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 
 public class LoginRequest {
 
-    @NotBlank(message = ErrorMessage.EMAIL_NOT_BLANK)
-    @Pattern(regexp = "[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = ErrorMessage.INVALID_EMAIL_FORMAT)
+    @NotBlank
+    @Pattern(regexp = "[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     private String email;
 
-    @NotBlank(message = ErrorMessage.PASSWORD_NOT_BLANK)
-    @Length(min = 4, max = 16, message = ErrorMessage.PASSWORD_LENGTH)
+    @NotBlank
+    @Length(min = 4, max = 16)
     private String password;
 
     public String getEmail() {

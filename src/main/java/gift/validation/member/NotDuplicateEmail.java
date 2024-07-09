@@ -1,6 +1,5 @@
 package gift.validation.member;
 
-import gift.constant.ErrorMessage;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -14,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NotDuplicateEmail {
 
-    String message() default ErrorMessage.DUPLICATE_EMAIL;
+    String message() default "중복된 이메일 아이디입니다.";
 
     Class<?>[] groups() default {};
 

@@ -1,6 +1,5 @@
 package gift.request;
 
-import gift.constant.ErrorMessage;
 import gift.domain.Product;
 import gift.validation.product.KakaoNotAllowed;
 import jakarta.validation.constraints.NotBlank;
@@ -10,16 +9,16 @@ import org.hibernate.validator.constraints.Length;
 
 public class ProductRequest {
 
-    @NotBlank(message = ErrorMessage.PRODUCT_NAME_NOT_BLANK)
-    @Length(max = 15, message = ErrorMessage.PRODUCT_NAME_EXCEEDS_MAX_LENGTH)
-    @Pattern(regexp = "[a-zA-Z0-9가-힣 ()\\[\\]+\\-&/_]*", message = ErrorMessage.PRODUCT_NAME_INVALID_CHAR)
+    @NotBlank
+    @Length(max = 15)
+    @Pattern(regexp = "[a-zA-Z0-9가-힣 ()\\[\\]+\\-&/_]*")
     @KakaoNotAllowed
     private String name;
 
-    @NotNull(message = ErrorMessage.PRODUCT_PRICE_NOT_NULL)
+    @NotNull
     private Integer price;
 
-    @NotBlank(message = ErrorMessage.PRODUCT_IMAGE_URL_NOT_NULL)
+    @NotBlank
     private String imageUrl;
 
     public Product toEntity() {

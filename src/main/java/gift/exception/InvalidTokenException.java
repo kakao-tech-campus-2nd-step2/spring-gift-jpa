@@ -5,7 +5,7 @@ import gift.constant.ErrorMessage;
 public class InvalidTokenException extends GiftException {
 
     public InvalidTokenException() {
-        super(ErrorMessage.INVALID_TOKEN);
+        super(ErrorMessage.INVALID_TOKEN.getMessage());
     }
 
     @Override

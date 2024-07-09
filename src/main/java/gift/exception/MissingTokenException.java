@@ -5,7 +5,7 @@ import gift.constant.ErrorMessage;
 public class MissingTokenException extends GiftException {
 
     public MissingTokenException() {
-        super(ErrorMessage.MISSING_TOKEN);
+        super(ErrorMessage.MISSING_TOKEN.getMessage());
     }
 
     @Override
