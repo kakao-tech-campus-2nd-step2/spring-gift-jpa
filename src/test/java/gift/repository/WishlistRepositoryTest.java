@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -65,6 +66,24 @@ class WishlistRepositoryTest {
 
         // then
         assertThat(expected.getId()).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Find All Wish")
+    void findAllWish() {
+        // given
+        Wish wish1 = wishlistRepository.save(new Wish(savedMember.getId(), savedProduct1.getId()));
+        Wish wish2 = wishlistRepository.save(new Wish(savedMember.getId(), savedProduct2.getId()));
+
+        // when
+        List<Wish> wishList = wishlistRepository.findAll();
+
+        // then
+        assertAll(
+                () ->  assertThat(wishList.size()).isEqualTo(2),
+                () -> assertThat(wishList.contains(wish1)).isTrue(),
+                () -> assertThat(wishList.contains(wish2)).isTrue()
+        );
     }
 
     @Test
