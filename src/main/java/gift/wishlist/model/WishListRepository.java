@@ -16,7 +16,5 @@ public interface WishListRepository extends JpaRepository<Wish, Long> {
             "WHERE w.userId = :userId AND w.isActive = true")
     List<WishListResponse> findWishesByUserId(@Param("userId") Long userId);
 
-    Optional<Wish> findByIdAndIsActiveTrue(Long id);
-
     Optional<Wish> findByIdAndUserIdAndIsActiveTrue(Long id, Long userId);
 }
