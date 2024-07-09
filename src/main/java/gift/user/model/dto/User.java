@@ -5,9 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-@jakarta.persistence.Table(name = "AppUser")
+@Table(name = "AppUser")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +28,9 @@ public class User {
 
     @Column(length = 255)
     private String salt;
+
+    public User() {
+    }
 
     public User(String email, String password, String role, String salt) {
         this.email = email;

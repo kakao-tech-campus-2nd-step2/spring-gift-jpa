@@ -32,7 +32,7 @@ public class WishListController {
 
     @GetMapping
     public ResponseEntity<List<WishListResponse>> getWishListForUser(@LoginUser User loginUser) {
-        final List<WishListResponse> responses = wishListService.getWishList(loginUser.id());
+        final List<WishListResponse> responses = wishListService.getWishList(loginUser.getId());
         return ResponseEntity.ok().body(responses);
     }
 
@@ -46,7 +46,7 @@ public class WishListController {
 
     @PostMapping
     public ResponseEntity<String> addWish(@LoginUser User loginUser, @RequestBody AddWishRequest addWishRequest) {
-        wishListService.addWish(loginUser.id(), addWishRequest);
+        wishListService.addWish(loginUser.getId(), addWishRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
@@ -61,7 +61,7 @@ public class WishListController {
     @PatchMapping
     public ResponseEntity<String> updateWishQuantity(@LoginUser User loginUser, @RequestParam Long wishId,
                                                      @RequestParam int quantity) {
-        wishListService.updateWishQuantity(loginUser.id(), wishId, quantity);
+        wishListService.updateWishQuantity(loginUser.getId(), wishId, quantity);
         return ResponseEntity.ok().body("ok");
     }
 
@@ -77,7 +77,7 @@ public class WishListController {
 
     @DeleteMapping
     public ResponseEntity<String> deleteWish(@LoginUser User loginUser, @RequestParam Long wishId) {
-        wishListService.deleteWish(loginUser.id(), wishId);
+        wishListService.deleteWish(loginUser.getId(), wishId);
         return ResponseEntity.ok().body("ok");
     }
 
