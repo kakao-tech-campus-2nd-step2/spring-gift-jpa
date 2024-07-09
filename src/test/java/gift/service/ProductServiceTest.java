@@ -72,7 +72,7 @@ public class ProductServiceTest {
     public void testAddProduct() {
         Product product = new Product(1L, "Test Product", 100, "test.jpg");
         ProductRequest productDTO = new ProductRequest(null, "Test Product", 100, "test.jpg");
-        when(productRepository.create(any(Product.class))).thenReturn(product);
+        when(productRepository.save(any(Product.class))).thenReturn(product);
 
         ProductResponse createdProduct = productService.addProduct(productDTO);
         assertEquals("Test Product", createdProduct.name());
@@ -98,7 +98,7 @@ public class ProductServiceTest {
         ProductRequest productDTO = new ProductRequest(1L, "Updated Product", 200, "updated.jpg");
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(existingProduct));
-        when(productRepository.update(any(Product.class))).thenReturn(updatedProduct);
+        when(productRepository.save(any(Product.class))).thenReturn(updatedProduct);
 
         ProductResponse result = productService.updateProduct(1L, productDTO);
         assertEquals("Updated Product", result.name());
@@ -124,16 +124,16 @@ public class ProductServiceTest {
     public void testDeleteProduct() {
         Product product = new Product(1L, "Test Product", 100, "test.jpg");
         when(productRepository.existsById(1L)).thenReturn(true);
-        doNothing().when(productRepository).delete(1L);
+        doNothing().when(productRepository).deleteById(1L);
 
         productService.deleteProduct(1L);
-        verify(productRepository, times(1)).delete(1L);
+        verify(productRepository, times(1)).deleteById(1L);
     }
 
     @Test
     @DisplayName("존재하지 않는 상품 ID로 삭제")
     public void testDeleteProductNotFound() {
-        when(productRepository.findById(1L)).thenReturn(Optional.empty());
+        when(productRepository.existsById(1L)).thenReturn(false);
 
         ProductNotFoundException exception = assertThrows(ProductNotFoundException.class, () -> {
             productService.deleteProduct(1L);
