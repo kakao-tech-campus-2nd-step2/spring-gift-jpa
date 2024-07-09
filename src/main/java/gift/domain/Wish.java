@@ -1,8 +1,11 @@
 package gift.domain;
 
+import gift.util.page.PageParam;
 import jakarta.validation.constraints.NotNull;
 
 public class Wish {
+
+    public static class getList extends PageParam{}
 
     public static class getWish {
 

@@ -1,5 +1,7 @@
 package gift.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import gift.util.page.PageParam;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -8,6 +10,8 @@ public class Product {
 
     private Product() {
     }
+
+    public static class getList extends PageParam{}
 
     public static class CreateProduct {
 
