@@ -3,6 +3,7 @@ package gift.member;
 import gift.login.JwtTokenUtil;
 import gift.login.TokenResponseDto;
 import gift.logout.LogoutTokenDao;
+import gift.logout.LogoutTokenService;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
-    private final LogoutTokenDao logoutTokenDao;
+    private final LogoutTokenService logoutTokenService;
 
-    public MemberController(MemberService memberService, LogoutTokenDao logoutTokenDao) {
+    public MemberController(MemberService memberService, LogoutTokenService logoutTokenService) {
         this.memberService = memberService;
-        this.logoutTokenDao = logoutTokenDao;
+        this.logoutTokenService = logoutTokenService;
     }
 
     @PostMapping("/register")
@@ -51,7 +52,7 @@ public class MemberController {
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
-        logoutTokenDao.insertToken(token);
+        logoutTokenService.postToken(token);
         return ResponseEntity.ok("로그아웃 되었습니다");
     }
 }
