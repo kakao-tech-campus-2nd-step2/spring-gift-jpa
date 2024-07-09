@@ -46,5 +46,12 @@ public class Product {
         ProductNameValidator.isValid(name);
         return new Product(id, name, price, imageUrl);
     }
+    
+    public void update(String name, Integer price, String imageUrl) {
+        ProductNameValidator.isValid(name);
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
 
 }
