@@ -30,8 +30,11 @@ public class ProductService {
                 .get();
     }
 
-    public boolean updateProduct(Product product) {
-        return productRepository.updateProduct(product);
+    public List<ProductResponse> getProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
+                .toList();
     }
 
     public void updateProduct(ProductRequest request) {
