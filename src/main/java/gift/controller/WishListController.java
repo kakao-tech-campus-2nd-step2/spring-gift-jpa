@@ -42,9 +42,9 @@ public class WishListController {
     }
 
     @PostMapping()
-    public ResponseEntity<Void> addWishList(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody WishListRequest wishListRequest, MemberDto userDto){
+    public ResponseEntity<Void> addWishList(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody WishListRequest wishListRequest, MemberDto memberDto){
         
-        if (!jwtUtil.validateToken(authorizationHeader, userDto)) {
+        if (!jwtUtil.validateToken(authorizationHeader, memberDto)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -53,9 +53,9 @@ public class WishListController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<Void> deleteWishList(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody WishListRequest wishListRequest, MemberDto userDto){
+    public ResponseEntity<Void> deleteWishList(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody WishListRequest wishListRequest, MemberDto memberDto){
         
-        if (!jwtUtil.validateToken(authorizationHeader, userDto)) {
+        if (!jwtUtil.validateToken(authorizationHeader, memberDto)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 

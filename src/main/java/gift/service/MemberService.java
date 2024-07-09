@@ -52,7 +52,7 @@ public class MemberService {
         return jwtUtil.generateToken(memberDto);
     }
 
-    public String authenticateUser(LoginRequest loginRequest){
+    public String authenticateMember(LoginRequest loginRequest){
         MemberDto memberDto = findByRequest(loginRequest);
         return generateToken(memberDto.getEmail());
     }

@@ -28,8 +28,8 @@ public class WishListService {
 
     public List<WishListDto> findWishListById(String token) {
 
-        long userId = (long)jwtUtil.extractAllClaims(token).get("id");
-        List<WishList> wishlist = wishListRepository.findProductIdsByMemberId(userId);
+        long memberId = (long)jwtUtil.extractAllClaims(token).get("id");
+        List<WishList> wishlist = wishListRepository.findProductIdsByMemberId(memberId);
         return wishlist.stream()
         .map(WishListDto::fromEntity)
         .collect(Collectors.toList());
@@ -37,14 +37,14 @@ public class WishListService {
 
     public void addWishList(String token, long productId) {
 
-        long userId = (long)jwtUtil.extractAllClaims(token).get("id");
+        long memberId = (long)jwtUtil.extractAllClaims(token).get("id");
         productRepository.findById(productId);
-        wishListRepository.save(new WishList(userId, productId));
+        wishListRepository.save(new WishList(memberId, productId));
 
     }
 
     public void deleteWishList(String token, long productId) {
-        long userId = (long)jwtUtil.extractAllClaims(token).get("id");
-        wishListRepository.deleteById(wishListRepository.findId(userId, productId));;
+        long memberId = (long)jwtUtil.extractAllClaims(token).get("id");
+        wishListRepository.deleteById(wishListRepository.findId(memberId, productId));;
     }
 }
