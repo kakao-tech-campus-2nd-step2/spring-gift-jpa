@@ -10,10 +10,6 @@
         document.querySelectorAll('.auth-required').forEach(element => {
           element.style.display = 'inline';
         });
-      } else {
-        document.querySelectorAll('.auth-required').forEach(element => {
-          element.style.display = 'none';
-        });
       }
     }
 
@@ -22,10 +18,6 @@
       if (token) {
         document.querySelectorAll('.login-required').forEach(element => {
           element.style.display = 'none';
-        });
-      } else {
-        document.querySelectorAll('.login-required').forEach(element => {
-          element.style.display = 'inline';
         });
       }
     }
@@ -99,7 +91,7 @@
 </head>
 <body>
 <h1>상품 목록</h1>
-<form th:action="@{/admin/products/add}" method="get" style="display:inline;" class="auth-required">
+<form th:action="@{/admin/products/add}" method="get" style="display:none;" class="auth-required">
   <button type="submit">상품 추가</button>
 </form>
 <form th:action="@{/members/login}" method="get" style="display:inline;" class="login-required">
@@ -125,11 +117,11 @@
     <td><a th:href="${product.imageUrl}" th:text="${product.imageUrl}">imageurl</a></td>
     <td>
       <form th:action="@{/admin/products/edit/{id}(id=${product.id})}" method="get"
-            style="display:inline;" class="auth-required">
+            style="display:none;" class="auth-required">
         <button type="submit">수정</button>
       </form>
       <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post"
-            style="display:inline;" class="auth-required">
+            style="display:none;" class="auth-required">
         <input type="hidden" name="_method" value="delete"/>
         <button type="submit">삭제</button>
       </form>
