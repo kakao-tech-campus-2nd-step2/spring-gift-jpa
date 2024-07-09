@@ -121,7 +121,7 @@ class WishProductServiceTest {
         var memberWishProducts = wishProductService.getWishProducts(memberId);
         //then
         Assertions.assertThat(managerWishProducts.size()).isEqualTo(2);
-        Assertions.assertThat(memberWishProducts.size()).isEqualTo(2);
+        Assertions.assertThat(memberWishProducts.size()).isEqualTo(0);
 
         wishProductService.deleteWishProduct(managerWishProduct1.id());
         wishProductService.deleteWishProduct(managerWishProduct2.id());
