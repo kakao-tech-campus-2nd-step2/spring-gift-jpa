@@ -8,6 +8,7 @@ import gift.Repository.WishlistRepository;
 
 import java.util.List;
 
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ public class WishlistService {
     }
     public Product getProductById(long id){
         return productRepository.findProductById(id);
+
     }
 
     public List<Product> getAllProducts() {
@@ -39,6 +41,7 @@ public class WishlistService {
 
     public void deleteWishlist(Long id){
         wishlistRepository.deleteById(id);
+
     }
 
     public void checkUserByMemberEmail(String email){
