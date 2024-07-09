@@ -3,6 +3,7 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.entity.Wish;
+import jakarta.persistence.EntityManager;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,8 @@ class WishRepositoryTest {
 
     @Autowired
     WishRepository wishRepository;
+    @Autowired
+    EntityManager entityManager;
 
     @Test
     @DisplayName("유저 아이디 기반 위시리스트 반환 테스트")
@@ -51,6 +54,9 @@ class WishRepositoryTest {
         Wish wish = new Wish(userId, 1L, "Product to update", 10);
         Wish savedWish = wishRepository.save(wish);
         wishRepository.updateWishNumber(userId, savedWish.getId(), 30);
+        entityManager.flush();
+        entityManager.clear();
+
         Wish updatedWish = wishRepository.findByUserIdAndId(userId, savedWish.getId());
 
         assertThat(updatedWish).isNotNull();
