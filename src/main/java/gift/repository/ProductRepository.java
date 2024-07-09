@@ -13,7 +13,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findById(Long id);
 
     @Override
-    Object save(Product product);
+    Product save(Product product);
 
     @Override
     void deleteById(Long id);
