@@ -1,8 +1,9 @@
 package gift.service;
 
-import gift.dto.request.LoginInfoRequest;
 import gift.dto.request.MemberRequest;
-import gift.repository.MemberRepository;
+import gift.entity.Member;
+import gift.exception.MemberNotFoundException;
+import gift.jpaRepo.MemberRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,8 +15,8 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public Long registerMember(MemberRequest member) {
-        return memberRepository.registerMember(member.getEmail(), member.getPassword());
+    public Long registerMember(MemberRequest memberInfo) {
+       return memberRepository.save(new Member(memberInfo.getEmail(), memberInfo.getPassword())).getId();
     }
 
 

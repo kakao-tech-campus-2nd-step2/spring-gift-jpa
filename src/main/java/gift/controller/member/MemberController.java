@@ -24,10 +24,10 @@ public class MemberController {
     }
 
     @PostMapping("/members/register")
-    public ResponseEntity<TokenResponse> registerMember(@Valid @RequestBody MemberRequest member) {
-        Long registeredMemberId = memberService.registerMember(member);
-        Token newToken = tokenService.generateToken(registeredMemberId);
-        return ResponseEntity.ok(new TokenResponse(newToken.getValue()));
+    public ResponseEntity<TokenResponse> registerMember(@Valid @RequestBody MemberRequest memberInfo) {
+        Long registeredMemberId = memberService.registerMember(memberInfo);
+        TokenResponse token = tokenService.generateToken(registeredMemberId);
+        return ResponseEntity.ok(token);
     }
 
     @PostMapping("/members/login")
