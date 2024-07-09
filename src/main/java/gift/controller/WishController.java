@@ -4,9 +4,9 @@ import gift.annotation.LoginMember;
 import gift.domain.Member;
 import gift.domain.Wish;
 import gift.dto.WishDto;
-import gift.repository.MemberDao;
-import gift.repository.ProductDao;
-import gift.repository.WishDao;
+import gift.repository.MemberRepository;
+import gift.repository.WishRepository;
+import gift.repository.ProductRepository;
 import gift.service.WishService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -23,21 +23,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/wishlist")
 public class WishController {
     private final WishService wishService;
-    private final WishDao wishDao;
-    private final ProductDao productDao;
-    private final MemberDao memberDao;
+    private final WishRepository wishRepository;
+    private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
 
-    public WishController(WishService wishService, WishDao wishDao, ProductDao productDao,
-        MemberDao memberDao) {
+    public WishController(WishService wishService, WishRepository wishRepository,
+        ProductRepository productRepository, MemberRepository memberRepository) {
         this.wishService = wishService;
-        this.wishDao = wishDao;
-        this.productDao = productDao;
-        this.memberDao = memberDao;
+        this.wishRepository = wishRepository;
+        this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
     }
+
 
     @GetMapping
     public ResponseEntity<List<Wish>> getWishlist(@LoginMember Member member) {
-        List<Wish> wishItems = wishDao.findByMemberId(member.getId());
+        List<Wish> wishItems = wishRepository.findByMemberId(member.getId());
 //        List<Product> products = new ArrayList<>();
 //        for (Wish wishItem : wishItems) {
 //            Product product = productDao.findById(wishItem.getProductId());
@@ -56,7 +57,7 @@ public class WishController {
 
     @PostMapping("/delete/{wishId}")
     public ResponseEntity<String> deleteWish(@PathVariable("wishId") Long wishId, @LoginMember Member member) {
-        wishService.deleteWishbyId(wishId);
+        wishService.deleteWish(wishId);
         return ResponseEntity.status(HttpStatus.OK).body("위시 삭제 성공");
     }
 
