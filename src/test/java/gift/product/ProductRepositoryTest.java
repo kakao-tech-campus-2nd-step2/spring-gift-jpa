@@ -2,11 +2,11 @@ package gift.product;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gift.product.model.ProductRepository;
 import gift.product.model.dto.Product;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -35,8 +35,8 @@ public class ProductRepositoryTest {
         productRepository.save(newProduct);
 
         // 제품 검색
-        Product foundProduct = productRepository.findActiveProductById(newProduct.getId());
-        assertNotNull(foundProduct);
+        Product foundProduct = productRepository.findActiveProductById(newProduct.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Product"));
         assertEquals("Test", foundProduct.getName());
     }
 
