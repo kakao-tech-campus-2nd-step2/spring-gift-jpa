@@ -4,6 +4,7 @@ import gift.annotation.LoginUser;
 import gift.entity.Member;
 import gift.entity.Wish;
 import gift.repository.MemberRepository;
+import gift.service.MemberService;
 import gift.service.WishlistService;
 import java.util.List;
 import org.apache.juli.logging.Log;
@@ -23,29 +24,27 @@ import org.springframework.web.bind.annotation.RestController;
 public class WishlistController {
 
     WishlistService wishlistService;
-    MemberRepository memberRepository;
+    MemberService memberService;
 
-    public WishlistController(WishlistService wishlistService,MemberRepository memberRepository){
+    public WishlistController(WishlistService wishlistService,MemberService memberService){
         this.wishlistService=wishlistService;
-        this.memberRepository= memberRepository;
+        this.memberService=memberService;
     }
     @GetMapping()
     public ResponseEntity<List<Wish>> getWishlist(@LoginUser String email){
-        Member member =memberRepository.findByEmail(email);
-        List<Wish> wishlist = wishlistService.getWishlist(member.getId());
+        List<Wish> wishlist = wishlistService.getWishlistByEmail(email);
         return new ResponseEntity<>(wishlist,HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<String> addWishlist(@RequestBody Wish wish, @LoginUser String email){
-        Member member = memberRepository.findByEmail(email);
-        wishlistService.addWishlist(wish);
+        wishlistService.addWishlist(wish,email);
         return new ResponseEntity<>("위시리스트 상품 추가 완료", HttpStatus.OK);
     }
 
     @DeleteMapping("/{wishId}")
-    public ResponseEntity<String> deleteWishlist(@PathVariable("wishId") long wishId){
-        wishlistService.deleteWishlist(wishId);
+    public ResponseEntity<String> deleteWishlist(@PathVariable("wishId") long wishId ,@LoginUser String email){
+        wishlistService.deleteWishlist(wishId,email);
         return new ResponseEntity<>("위시리스트 상품 삭제 완료", HttpStatus.NO_CONTENT);
     }
 }
