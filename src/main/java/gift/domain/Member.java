@@ -26,4 +26,6 @@ public class Member {
         this.password = password;
         this.token = token;
     }
+
+    public String getToken() { return this.token; }
 }

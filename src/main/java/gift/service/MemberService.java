@@ -1,6 +1,7 @@
 package gift.service;
 
 
+import gift.domain.Member;
 import gift.domain.MemberRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -22,7 +23,8 @@ public class MemberService {
     public String signUp(String email, String password) {
         try {
             String token = getToken(email, password);
-            memberRepository.save(email, password, token);
+            var member = new Member(email, password, token);
+            memberRepository.save(member);
             return token;
         }
         catch (Exception e) {

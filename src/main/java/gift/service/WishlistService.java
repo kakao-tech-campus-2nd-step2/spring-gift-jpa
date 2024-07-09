@@ -68,7 +68,7 @@ public class WishlistService {
 
         try {
             if (isItem(member_id, product_id)) {
-                var num = wishlistRepository.searchNumbyMember_idAndProduct_id(member_id, product_id);
+                var num = wishlistRepository.searchNumByMember_idAndProduct_id(member_id, product_id);
                 var wishlist = new Wishlist(member, product, num+1);
                 wishlistRepository.save(wishlist);
             } else {
@@ -82,6 +82,6 @@ public class WishlistService {
     }
 
     public boolean isItem(int member_id, int product_id) {
-        return wishlistRepository.searchNumbyMember_idAndProduct_id(member_id, product_id) > 0;
+        return wishlistRepository.searchNumByMember_idAndProduct_id(member_id, product_id) > 0;
     }
 }

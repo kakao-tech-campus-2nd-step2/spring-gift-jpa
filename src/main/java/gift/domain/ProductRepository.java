@@ -6,8 +6,7 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Product findById(int Id);
-    List<Product> findALl();
+    List<Product> findAll();
     Product save(Product product);
     void deleteById(int Id);
-    void updateAllById(Product product);
 }
