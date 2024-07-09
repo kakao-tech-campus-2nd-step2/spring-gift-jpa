@@ -4,20 +4,24 @@ import gift.domain.User.CreateUser;
 import gift.domain.User.UpdateUser;
 import gift.domain.User.UserSimple;
 import gift.entity.UserEntity;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
 
-    public List<UserSimple> toSimpleList(List<UserEntity> li) {
-        List<UserSimple> list = new ArrayList<>();
+    public Page<UserSimple> toSimpleList(Page<UserEntity> all) {
+        List<UserSimple> simpleList = all.stream()
+            .map(entity -> new UserSimple(
+                entity.getEmail(),
+                entity.getPassword()
+            ))
+            .collect(Collectors.toList());
 
-        for (UserEntity u : li) {
-            list.add(new UserSimple(u.getEmail(), u.getPassword()));
-        }
-        return list;
+        return new PageImpl<>(simpleList, all.getPageable(), all.getTotalElements());
     }
 
     public UserEntity toEntity(CreateUser create) {

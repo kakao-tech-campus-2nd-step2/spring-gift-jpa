@@ -5,8 +5,10 @@ import gift.domain.Wish.wishSimple;
 import gift.entity.ProductEntity;
 import gift.entity.UserEntity;
 import gift.entity.WishEntity;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,15 +27,15 @@ public class WishMapper {
         return detail;
     }
 
-    public List<wishSimple> toSimpleList(List<WishEntity> li) {
-        List<wishSimple> simple = new ArrayList<>();
-
-        for (WishEntity w : li) {
-            simple.add(
-                new wishSimple(w.getId(), w.getUserDTO().getId(), w.getProductDTO().getId()));
-        }
-
-        return simple;
+    public Page<wishSimple> toSimpleList(Page<WishEntity> all) {
+        List<wishSimple> simpleList = all.stream()
+            .map(entity -> new wishSimple(
+                entity.getId(),
+                entity.getUserDTO().getId(),
+                entity.getProductDTO().getId()
+            ))
+            .collect(Collectors.toList());
+        return new PageImpl<>(simpleList, all.getPageable(), all.getTotalElements());
     }
 
     public WishEntity toEntity(UserEntity userEntity, ProductEntity productEntity) {
