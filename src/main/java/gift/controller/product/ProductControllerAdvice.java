@@ -1,5 +1,6 @@
 package gift.controller.product;
 
+import gift.exception.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.validation.FieldError;
@@ -26,6 +27,13 @@ public class ProductControllerAdvice {
                 .collect(Collectors.toList());
         problemDetail.setProperty("invalidReasons", invalidReasonList);
 
+        return problemDetail;
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ProblemDetail handleProductNotFoundExceptions(ProductNotFoundException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setTitle(e.getMessage());
         return problemDetail;
     }
 
