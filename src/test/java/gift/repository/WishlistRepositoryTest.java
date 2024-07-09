@@ -18,7 +18,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class WishRepositoryTest {
+class WishlistRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
@@ -27,7 +27,7 @@ class WishRepositoryTest {
     private ProductRepository productRepository;
 
     @Autowired
-    private WishRepository wishRepository;
+    private WishlistRepository wishlistRepository;
 
     private Member savedMember;
     private Product savedProduct1;
@@ -61,7 +61,7 @@ class WishRepositoryTest {
         Wish expected = new Wish(savedMember.getId(), savedProduct1.getId());
 
         // when
-        wishRepository.save(expected);
+        wishlistRepository.save(expected);
 
         // then
         assertThat(expected.getId()).isNotNull();
@@ -71,11 +71,11 @@ class WishRepositoryTest {
     @DisplayName("Find Wish By member id (member-pk)")
     void findWishListByMemberId() {
         // given
-        wishRepository.save(new Wish(savedMember.getId(), savedProduct1.getId()));
-        wishRepository.save(new Wish(savedMember.getId(), savedProduct2.getId()));
+        wishlistRepository.save(new Wish(savedMember.getId(), savedProduct1.getId()));
+        wishlistRepository.save(new Wish(savedMember.getId(), savedProduct2.getId()));
 
         // when
-        List<Wish> all = wishRepository.findAll();
+        List<Wish> all = wishlistRepository.findAll();
 
         // then
         assertThat(all.size()).isEqualTo(2);
@@ -85,14 +85,14 @@ class WishRepositoryTest {
     @DisplayName("Delete Wish by id")
     void deleteWishById() {
         // given
-        Wish savedWish = wishRepository.save(new Wish(savedMember.getId(), savedProduct1.getId()));
+        Wish savedWish = wishlistRepository.save(new Wish(savedMember.getId(), savedProduct1.getId()));
         Long wishId = savedWish.getId();
 
         // when
-        wishRepository.deleteById(wishId);
+        wishlistRepository.deleteById(wishId);
 
         // then
-        Optional<Wish> deletedWish = wishRepository.findById(wishId);
+        Optional<Wish> deletedWish = wishlistRepository.findById(wishId);
         assertThat(deletedWish).isEmpty();
     }
 

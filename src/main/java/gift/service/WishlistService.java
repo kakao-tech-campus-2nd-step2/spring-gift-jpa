@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.repository.WishRepository;
+import gift.repository.WishlistRepository;
 import gift.vo.Wish;
 import org.springframework.stereotype.Service;
 
@@ -9,22 +9,22 @@ import java.util.List;
 @Service
 public class WishlistService {
 
-    private final WishRepository wishRepository;
+    private final WishlistRepository wishlistRepository;
 
-    public WishlistService(WishRepository wishRepository) {
-        this.wishRepository = wishRepository;
+    public WishlistService(WishlistRepository wishlistRepository) {
+        this.wishlistRepository = wishlistRepository;
     }
 
     public List<Wish> getWishProductList(Long memberId) {
-        return wishRepository.findByMemberId(memberId);
+        return wishlistRepository.findByMemberId(memberId);
     }
 
     public void addWishProduct(Wish wish) {
-        wishRepository.save(wish);
+        wishlistRepository.save(wish);
     }
 
     public void deleteWishProduct(Long id) {
-        wishRepository.deleteById(id);
+        wishlistRepository.deleteById(id);
     }
 
 }
