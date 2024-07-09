@@ -1,11 +1,18 @@
 package gift.product;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+@Entity
 public class Product {
+
     @NotNull(message = "id는 필수 값 입니다.")
+    @Id
     private Long id;
 
     @NotNull(message = "상품 명은 필수 값 입니다.")
