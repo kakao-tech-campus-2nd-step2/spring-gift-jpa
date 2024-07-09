@@ -1,4 +1,4 @@
-package gift.global.authentication.jwt;
+package gift.member.business.dto;
 
 public record JwtToken(
     String accessToken,
