@@ -2,6 +2,7 @@ package gift.jpa;
 
 import gift.product.Product;
 import gift.product.ProductRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -21,8 +22,9 @@ public class ProductRepositoryTest {
     ProductRepository productRepository;
 
     @Test
-    void save(){
-        Product expected = new Product("상품1",10000L, "상품1.jpg");
+    @DisplayName("상품 저장 테스트")
+    void save() {
+        Product expected = new Product("상품1", 10000L, "상품1.jpg");
         Product actual = productRepository.save(expected);
 
         assertAll(
@@ -32,25 +34,39 @@ public class ProductRepositoryTest {
                 () -> assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl())
         );
     }
+
     @Test
-    void findByID(){
-        Product expected = new Product("상품1",10000L, "상품1.jpg");
+    @DisplayName("ID로 상품 조회 테스트")
+    void findByID() {
+        Product expected = new Product("상품1", 10000L, "상품1.jpg");
         productRepository.save(expected);
 
         Product actual = productRepository.findById(expected.getId()).orElseThrow();
         assertThat(actual).isEqualTo(expected);
     }
+
     @Test
+    @DisplayName("ID로 상품 조회 실패 테스트")
+    void findByIDFail() {
+        Product expected = new Product("상품1", 10000L, "상품1.jpg");
+        productRepository.save(expected);
+
+        Optional<Product> actual = productRepository.findById(expected.getId() + 1);
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    @DisplayName("상품 수정 테스트")
     @Transactional
-    void update(){
-        Product expected = new Product("상품1",10000L, "상품1.jpg");
+    void update() {
+        Product expected = new Product("상품1", 10000L, "상품1.jpg");
         productRepository.save(expected);
         Optional<Product> product = productRepository.findById(expected.getId());
         product.ifPresent(product1 -> {
-                product1.setName("상품2");
-                product1.setPrice(20000L);
-                product1.setName("상품2.jpg");
-        }
+                    product1.setName("상품2");
+                    product1.setPrice(20000L);
+                    product1.setName("상품2.jpg");
+                }
         );
         Product actual = productRepository.findById(expected.getId()).orElseThrow();
 
@@ -61,8 +77,10 @@ public class ProductRepositoryTest {
                 () -> assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl())
         );
     }
+
     @Test
-    void deleteByID(){
+    @DisplayName("상품 삭제 테스트")
+    void deleteByID() {
         Product product = new Product("상품1", 10000L, "상품1.jpg");
         productRepository.save(product);
         productRepository.deleteById(product.getId());
