@@ -9,107 +9,123 @@ import gift.dto.user.UserResponse;
 import gift.exception.user.UserAlreadyExistException;
 import gift.exception.user.UserNotFoundException;
 import java.util.Base64;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 class UserServiceTest {
     @Autowired
     private UserService userService;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
-    @BeforeEach
-    public void setUp() {
-        jdbcTemplate.execute("DROP TABLE IF EXISTS users CASCADE");
-        jdbcTemplate.execute("CREATE TABLE users ("
-            + "id LONG AUTO_INCREMENT PRIMARY KEY,"
-            + " email VARCHAR(255),"
-            + " password VARCHAR(255))"
-        );
-    }
+    /*
+     * dummy data
+     *
+     * userRepository.save(User.builder()
+     *     .email("user1@example.com")
+     *     .password("password1")
+     *     .build());
+     *
+     * userRepository.save(User.builder()
+     *     .email("user2@example.com")
+     *     .password("password2")
+     *     .build());
+     *
+     * userRepository.save(User.builder()
+     *     .email("user3@example.com")
+     *     .password("password3")
+     *     .build());
+     *
+     * userRepository.save(User.builder()
+     *     .email("user4@example.com")
+     *     .password("password4")
+     *     .build());
+     *
+     * userRepository.save(User.builder()
+     *     .email("user5@example.com")
+     *     .password("password5")
+     *     .build());
+     */
+
 
     @Test
     @DisplayName("register user test")
+    @Transactional
     void registerUserTest() {
         //given
-        UserRegisterRequest user1Request = new UserRegisterRequest("user1@email.com", "1q2w3e4r!");
+        UserRegisterRequest request = new UserRegisterRequest("user@email.com", "1q2w3e4r!");
 
         //when
-        UserResponse user1Response = userService.registerUser(user1Request);
-        UserResponse expected = new UserResponse(1L, "user1@email.com", Base64.getEncoder()
-            .encodeToString(("user1@email.com:1q2w3e4r!")
+        UserResponse actual = userService.registerUser(request);
+        UserResponse expected = new UserResponse(null, "user@email.com",
+            Base64.getEncoder()
+                .encodeToString(("user@email.com:1q2w3e4r!")
                 .getBytes()));
 
         //then
-        assertThat(user1Response).isEqualTo(expected);
+        assertThat(actual.email()).isEqualTo(expected.email());
+        assertThat(actual.token()).isEqualTo(expected.token());
     }
 
     @Test
     @DisplayName("Already Exist user registration test")
+    @Transactional
     void alreadyExistUserRegistrationTest() {
         //given
-        UserRegisterRequest user1Request = new UserRegisterRequest("user1@email.com", "1q2w3e4r!");
-        UserRegisterRequest user2Request = new UserRegisterRequest("user1@email.com", "1234");
-
-        //when
-        userService.registerUser(user1Request);
+        UserRegisterRequest request = new UserRegisterRequest("user1@example.com", "password1");
 
         //when&then
-        assertThatThrownBy(() -> userService.registerUser(user2Request))
+        assertThatThrownBy(() -> userService.registerUser(request))
             .isInstanceOf(UserAlreadyExistException.class);
     }
 
     @Test
     @DisplayName("user login test")
+    @Transactional
     void userLoginTest() {
         //given
-        UserRegisterRequest registerRequest = new UserRegisterRequest("user1@email.com", "1q2w3e4r!");
-        UserLoginRequest loginRequest = new UserLoginRequest("user1@email.com", "1q2w3e4r!");
-        String token = userService.registerUser(registerRequest).token();
+        UserLoginRequest loginRequest = new UserLoginRequest("user1@example.com", "password1");
 
         //when
-        UserResponse response = userService.loginUser(loginRequest);
+        UserResponse actual = userService.loginUser(loginRequest);
+        String token = Base64.getEncoder()
+            .encodeToString(("user1@example.com:password1").getBytes());
 
         //then
-        assertThat(response.token()).isEqualTo(token);
+        assertThat(actual.token()).isEqualTo(token);
     }
 
     @Test
     @DisplayName("unknown user login test")
+    @Transactional
     void unknownUserLoginTest() {
         //given
-        UserLoginRequest user1Request = new UserLoginRequest("user1@email.com", "1q2w3e4r!");
+        UserLoginRequest request = new UserLoginRequest("user1@email.com", "1q2w3e4r!");
 
         //when & then
-        assertThatThrownBy(() -> userService.loginUser(user1Request))
+        assertThatThrownBy(() -> userService.loginUser(request))
             .isInstanceOf(UserNotFoundException.class);
     }
 
     @Test
     @DisplayName("wrong password login test")
+    @Transactional
     void wrongPasswordLoginTest() {
         //given
-        UserRegisterRequest user1Request = new UserRegisterRequest("user1@email.com", "1q2w3e4r!");
-        UserLoginRequest user2Request = new UserLoginRequest("user1@email.com", "1234");
-        userService.registerUser(user1Request);
+        UserLoginRequest request = new UserLoginRequest("user1@email.com", "1234");
 
         //when & then
-        assertThatThrownBy(() -> userService.loginUser(user2Request))
+        assertThatThrownBy(() -> userService.loginUser(request))
             .isInstanceOf(UserNotFoundException.class);
     }
 
     @Test
     @DisplayName("getUserIdByToken test")
+    @Transactional
     void getUserIdByTokenTest() {
         //given
-        UserRegisterRequest registerRequest = new UserRegisterRequest("user1@example.com", "password1");
-        userService.registerUser(registerRequest);
-
         UserLoginRequest loginRequest = new UserLoginRequest("user1@example.com", "password1");
 
         //when

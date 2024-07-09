@@ -1,7 +1,9 @@
 package gift;
 
 import gift.entity.Product;
+import gift.entity.User;
 import gift.repository.ProductRepository;
+import gift.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,8 +11,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Application implements CommandLineRunner{
     private final ProductRepository productRepository;
-    public Application(ProductRepository productRepository) {
+    private final UserRepository userRepository;
+
+    public Application(ProductRepository productRepository, UserRepository userRepository) {
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
     public static void main(String[] args) {
@@ -22,6 +27,7 @@ public class Application implements CommandLineRunner{
         /*
          * dummy data 삽입
          */
+        // Product dummy data
         productRepository.save(Product.builder()
                 .name("Product A")
                 .price(1000)
@@ -51,14 +57,32 @@ public class Application implements CommandLineRunner{
             .price(5000)
             .imageUrl("http://example.com/images/product_e.jpg")
             .build());
-//
-//        jdbcTemplate.execute(
-//            "INSERT INTO users (email, password) VALUES ('user1@example.com', 'password1');"
-//            + "INSERT INTO users (email, password) VALUES ('user2@example.com', 'password2');"
-//            + "INSERT INTO users (email, password) VALUES ('user3@example.com', 'password3');"
-//            + "INSERT INTO users (email, password) VALUES ('user4@example.com', 'password4');"
-//            + "INSERT INTO users (email, password) VALUES ('user5@example.com', 'password5')"
-//            );
+
+        // User dummy data
+        userRepository.save(User.builder()
+            .email("user1@example.com")
+            .password("password1")
+            .build());
+
+        userRepository.save(User.builder()
+            .email("user2@example.com")
+            .password("password2")
+            .build());
+
+        userRepository.save(User.builder()
+            .email("user3@example.com")
+            .password("password3")
+            .build());
+
+        userRepository.save(User.builder()
+            .email("user4@example.com")
+            .password("password4")
+            .build());
+
+        userRepository.save(User.builder()
+            .email("user5@example.com")
+            .password("password5")
+            .build());
 //
 //        jdbcTemplate.execute(
 //            "INSERT INTO wishes (user_id, product_id, quantity) VALUES (1, 1, 2);"

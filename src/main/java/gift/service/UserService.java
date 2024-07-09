@@ -23,31 +23,22 @@ public class UserService {
     }
 
     public UserResponse registerUser(UserRegisterRequest request) {
-        User user = UserMapper.toUser(request);
-
-        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
-
-        if (existingUser.isPresent()) {
+        Optional<User> user = userRepository.findByEmail(request.email());
+        if(user.isPresent()) {
             throw new UserAlreadyExistException("이미 존재하는 Email입니다.");
         }
 
-        Long id = userRepository.insert(user);
-        return new UserResponse(
-            id,
-            request.email(),
-            getToken(request.email(), request.password())
-        );
+        User registeredUser = userRepository.save(UserMapper.toUser(request));
+
+        return UserMapper.toResponse(registeredUser,
+            getToken(registeredUser.getEmail(), registeredUser.getPassword()));
     }
 
     public UserResponse loginUser(UserLoginRequest userRequest) {
         User user = userRepository.findByEmailAndPassword(userRequest.email(), userRequest.password())
             .orElseThrow(() -> new UserNotFoundException("로그인할 수 없습니다."));
 
-        return new UserResponse(
-            user.getId(),
-            user.getEmail(),
-            getToken(user.getEmail(), user.getPassword())
-        );
+        return UserMapper.toResponse(user, getToken(user.getEmail(), user.getPassword()));
     }
 
     public Long getUserIdByToken(String token) {

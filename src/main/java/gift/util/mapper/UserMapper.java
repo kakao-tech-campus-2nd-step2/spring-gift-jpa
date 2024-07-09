@@ -1,22 +1,20 @@
 package gift.util.mapper;
 
-import gift.dto.user.UserLoginRequest;
 import gift.dto.user.UserRegisterRequest;
+import gift.dto.user.UserResponse;
 import gift.entity.User;
 
 public class UserMapper {
-    public static User toUser(UserLoginRequest request) {
-        return User.builder()
-            .email(request.email())
-            .password(request.password())
-            .build();
-    }
 
     public static User toUser(UserRegisterRequest request) {
         return User.builder()
             .email(request.email())
             .password(request.password())
             .build();
+    }
+
+    public static UserResponse toResponse(User user, String token) {
+        return new UserResponse(user.getId(), user.getEmail(), token);
     }
 
 }
