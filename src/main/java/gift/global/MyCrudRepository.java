@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @NoRepositoryBean
-public interface CRUDRepository<T, ID> extends Repository<T, ID> {
+public interface MyCrudRepository<T, ID> extends Repository<T, ID> {
     List<T> findAll();
 
     T save(T entity);

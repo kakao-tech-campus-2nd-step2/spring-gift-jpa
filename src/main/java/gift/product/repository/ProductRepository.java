@@ -1,7 +1,7 @@
 package gift.product.repository;
 
-import gift.global.CRUDRepository;
+import gift.global.MyCrudRepository;
 import gift.product.domain.Product;
 
-public interface ProductRepository extends CRUDRepository<Product, Long> {
+public interface ProductRepository extends MyCrudRepository<Product, Long> {
 }
