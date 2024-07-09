@@ -1,5 +1,6 @@
 package gift.product;
 
+import gift.exception.InvalidProduct;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -42,7 +43,7 @@ public class ProductController {
     public ProductResponseDto getProduct(@PathVariable Long id) {
         Optional<Product> product = productDao.findProductById(id);
         if (product == null) {
-            throw new IllegalArgumentException("유효하지 않은 상품입니다");
+            throw new InvalidProduct("유효하지 않은 상품입니다");
         }
         return new ProductResponseDto(
             product.get().getId(),
@@ -76,7 +77,7 @@ public class ProductController {
         if (product.isPresent()) {
             productDao.updateProductById(id, productRequestDto);
         } else {
-            throw new NoSuchElementException("유효하지 않은 상품입니다");
+            throw new InvalidProduct("유효하지 않은 상품입니다");
         }
 
         return new ProductResponseDto(
@@ -90,7 +91,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public HttpEntity<String> deleteProduct(@PathVariable Long id) {
         if (productDao.findProductById(id).isEmpty()) {
-            throw new NoSuchElementException("유효하지 않은 상품입니다.");
+            throw new InvalidProduct("유효하지 않은 상품입니다.");
         }
         else {
             productDao.deleteProductById(id);

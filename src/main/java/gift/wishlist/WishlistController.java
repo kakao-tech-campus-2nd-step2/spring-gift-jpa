@@ -1,13 +1,12 @@
 package gift.wishlist;
 
+import gift.exception.InvalidProduct;
 import gift.exception.UnAuthorizationException;
 import gift.login.LoginMember;
 import gift.logout.TokenValidator;
 import gift.member.Member;
-import gift.product.Product;
 import gift.product.ProductDao;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,7 +53,7 @@ public class WishlistController {
         tokenValidator.validateToken(token);
 
         if (wishlistDao.findProductById(wishId).isEmpty()) {
-            throw new NoSuchElementException("잘못된 접근입니다");
+            throw new InvalidProduct("잘못된 접근입니다");
         }
         wishlistDao.deleteWish(wishId);
         return ResponseEntity.ok("장바구니에서 제거되었습니다");
