@@ -24,7 +24,6 @@ public record ProductReqDto(
     public Product toEntity() {
 
         return new Product(
-                null,
                 name,
                 price,
                 imageUrl

@@ -10,7 +10,6 @@ public record WishListReqDto(
     public WishList toEntity(Long memberId) {
 
         return new WishList(
-                null,
                 memberId,
                 productId,
                 quantity

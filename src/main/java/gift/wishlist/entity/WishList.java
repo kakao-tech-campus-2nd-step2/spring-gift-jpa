@@ -17,8 +17,7 @@ public class WishList {
     private Long productId;
     private Integer quantity;
 
-    public WishList(Long id, Long memberId, Long productId, Integer quantity) {
-        this.id = id;
+    public WishList(Long memberId, Long productId, Integer quantity) {
         this.memberId = memberId;
         this.productId = productId;
         this.quantity = quantity;

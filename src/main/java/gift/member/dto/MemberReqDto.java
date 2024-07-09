@@ -12,7 +12,6 @@ public record MemberReqDto(
     public Member toEntity(Role role) {
 
         return new Member(
-                null,
                 name,
                 email,
                 password,
