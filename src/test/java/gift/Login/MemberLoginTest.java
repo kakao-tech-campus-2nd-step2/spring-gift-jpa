@@ -77,14 +77,13 @@ public class MemberLoginTest {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<Map<String, String>> registerEntity = new HttpEntity<>(registerRequest, headers);
 
-        // Register the user
+        // 회원가입하기
         ResponseEntity<String> registerResponse = restTemplate.exchange(
                 baseUrl + "/register",
                 HttpMethod.POST,
                 registerEntity,
                 String.class
         );
-
         assertThat(registerResponse.getStatusCodeValue()).isEqualTo(200);
         String registerToken = registerResponse.getBody();
         assertThat(registerToken).isNotNull();
@@ -109,6 +108,6 @@ public class MemberLoginTest {
         String loginToken = loginResponse.getBody();
         assertThat(loginToken).isNotNull();
         assertThat(jwtUtil.isTokenValid(loginToken)).isTrue();
-        assertThat(loginToken).isEqualTo(registerToken); // Verify the tokens are the same
+        assertThat(loginToken).isEqualTo(registerToken); // 로그인 토큰과 회원가입 토큰이 같아야 함
     }
 }

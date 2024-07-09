@@ -9,9 +9,5 @@
 - [x] E2E Test
   - [x] 회원가입 테스트
   - [x] 로그인 테스트
-- [x] @DataJpaTest
-
-### 4. Login 디렉토리 전부 리팩토링
-- [ ] controller 리팩토링 (예외처리는 전부 서비스에서!!!)
-- [ ] service 리팩토링
-- [ ] errordto 만들기 
+- [ ] @DataJpaTest
+- [x] 전체적인 리팩토링 

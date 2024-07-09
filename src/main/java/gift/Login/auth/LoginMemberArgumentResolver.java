@@ -1,15 +1,14 @@
 package gift.Login.auth;
 
 import gift.Login.exception.UserNotFoundException;
+import gift.Login.model.Member;
 import gift.Login.repository.MemberRepository;
-import gift.Login.service.MemberService;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import gift.Login.model.Member;
 
 import java.util.Optional;
 
@@ -26,12 +25,16 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(LoginMember.class) && parameter.getParameterType().equals(Member.class);
+        boolean supports = parameter.hasParameterAnnotation(LoginMember.class) && parameter.getParameterType().equals(Member.class);
+        System.out.println("supportsParameter: " + supports);
+        return supports;
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        System.out.println("resolveArgument called");
+
         // header 검증
         String header = webRequest.getHeader("Authorization");
         if (header == null || !header.startsWith("Bearer ")) {
@@ -47,9 +50,13 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         // 토큰에서 이메일 추출
         String email = jwtUtil.extractEmail(token);
         Optional<Member> member = memberRepository.findByEmail(email);
+        System.out.println("member = " + member.orElse(null));
+        System.out.println("member.get().getId() = " + member.map(Member::getId).orElse(null));
+
         if (member.isEmpty()) {
             throw new UserNotFoundException("User not found with email: " + email);
         }
-        return member;
+
+        return member.get();
     }
 }

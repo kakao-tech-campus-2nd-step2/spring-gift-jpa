@@ -1,6 +1,6 @@
 package gift.Login.model;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -18,10 +18,16 @@ public class Product {
     private String sizeOption;
     private String imageUrl;
 
+    @ManyToOne
+    @JoinColumn(name = "wishlist_id")
+    @JsonIgnore
+    private Wishlist wishlist;
+
+    // Default constructor
     public Product() {}
 
-    public Product(Long id, String name, long price, String temperatureOption, String cupOption, String sizeOption, String imageUrl) {
-        this.id = id;
+    // Constructor with parameters
+    public Product(String name, long price, String temperatureOption, String cupOption, String sizeOption, String imageUrl) {
         this.name = name;
         this.price = price;
         this.temperatureOption = temperatureOption;
@@ -85,5 +91,13 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Wishlist getWishlist() {
+        return wishlist;
+    }
+
+    public void setWishlist(Wishlist wishlist) {
+        this.wishlist = wishlist;
     }
 }

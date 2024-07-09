@@ -6,8 +6,8 @@ import gift.Login.model.Wishlist;
 import java.util.UUID;
 
 public interface WishlistService {
-    Wishlist getWishlistByMemberId(UUID memberId);
-    void addProductToWishlist(UUID memberId, Product product);
-    void updateProductInWishlist(UUID memberId, Long productId, Product product);
-    void removeProductFromWishlist(UUID memberId, Long productId);
+    Wishlist getWishlistByMemberId(Long memberId);
+    void addProductToWishlist(Long memberId, Product product);
+    void updateProductInWishlist(Long memberId, Long productId, Product product);
+    void removeProductFromWishlist(Long memberId, Long productId);
 }

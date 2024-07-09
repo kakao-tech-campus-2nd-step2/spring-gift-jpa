@@ -1,45 +1,51 @@
 package gift.Login.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
-@Table(name = "wishlist")
+@Table(name = "wish")
 public class Wishlist {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
-    private UUID memberId;
+    private Long memberId;
 
-    @OneToMany
-    @JoinColumn(name = "wishlist_id")
-    private List<Product> products;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "wishlist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products = new ArrayList<>();
 
+    // Default constructor
     public Wishlist() {}
 
-    public Wishlist(UUID memberId, List<Product> products) {
+    // Constructor with memberId only
+    public Wishlist(Long memberId) {
+        this.memberId = memberId;
+    }
+
+    // Constructor with memberId and products
+    public Wishlist(Long memberId, List<Product> products) {
         this.memberId = memberId;
         this.products = products;
     }
 
     // Getters and Setters
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public UUID getMemberId() {
+    public Long getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(UUID memberId) {
+    public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
 

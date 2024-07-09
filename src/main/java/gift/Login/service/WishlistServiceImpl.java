@@ -2,68 +2,78 @@ package gift.Login.service;
 
 import gift.Login.model.Product;
 import gift.Login.model.Wishlist;
+import gift.Login.repository.ProductRepository;
 import gift.Login.repository.WishlistRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishlistServiceImpl implements WishlistService {
 
     private final WishlistRepository wishlistRepository;
+    private final ProductRepository productRepository;
 
-    public WishlistServiceImpl(WishlistRepository wishlistRepository) {
+    public WishlistServiceImpl(WishlistRepository wishlistRepository, ProductRepository productRepository) {
         this.wishlistRepository = wishlistRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
-    public void addProductToWishlist(UUID memberId, Product product) {
-        Wishlist wishlist = wishlistRepository.findByMemberId(memberId);
-        if (wishlist == null) {
-            wishlist = new Wishlist(memberId, List.of(product));
-        } else {
-            wishlist.getProducts().add(product);
-        }
+    @Transactional
+    public void addProductToWishlist(Long memberId, Product product) {
+        Wishlist wishlist = wishlistRepository.findByMemberId(memberId)
+                .orElseGet(() -> new Wishlist(memberId));
+
+        // 먼저 Product를 저장합니다.
+        productRepository.save(product);
+
+        // 저장된 Product를 Wishlist에 추가합니다.
+        wishlist.getProducts().add(product);
+        product.setWishlist(wishlist);
+
+        // Wishlist를 저장합니다.
         wishlistRepository.save(wishlist);
     }
 
     @Override
-    public Wishlist getWishlistByMemberId(UUID memberId) {
-        return wishlistRepository.findByMemberId(memberId);
+    @Transactional(readOnly = true)
+    public Wishlist getWishlistByMemberId(Long memberId) {
+        return wishlistRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Wishlist not found for memberId: " + memberId));
     }
 
     @Override
-    public void updateProductInWishlist(UUID memberId, Long productId, Product product) {
-        Wishlist wishlist = wishlistRepository.findByMemberId(memberId);
-        if (wishlist == null) {
-            throw new RuntimeException("Wishlist not found");
-        }
-
-        Product existingProduct = wishlist.getProducts().stream()
+    @Transactional
+    public void updateProductInWishlist(Long memberId, Long productId, Product updatedProduct) {
+        Wishlist wishlist = wishlistRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Wishlist not found for memberId: " + memberId));
+        Product product = wishlist.getProducts().stream()
                 .filter(p -> p.getId().equals(productId))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("Product not found in wishlist: " + productId));
 
-        if (existingProduct == null) {
-            throw new RuntimeException("Product not found in wishlist");
-        }
+        product.setName(updatedProduct.getName());
+        product.setPrice(updatedProduct.getPrice());
+        product.setTemperatureOption(updatedProduct.getTemperatureOption());
+        product.setCupOption(updatedProduct.getCupOption());
+        product.setSizeOption(updatedProduct.getSizeOption());
+        product.setImageUrl(updatedProduct.getImageUrl());
 
-        existingProduct.setName(product.getName());
-        existingProduct.setPrice(product.getPrice());
-        existingProduct.setTemperatureOption(product.getTemperatureOption());
-        existingProduct.setCupOption(product.getCupOption());
-        existingProduct.setSizeOption(product.getSizeOption());
-        existingProduct.setImageUrl(product.getImageUrl());
-        wishlistRepository.save(wishlist);
+        productRepository.save(product);
     }
 
     @Override
-    public void removeProductFromWishlist(UUID memberId, Long productId) {
-        Wishlist wishlist = wishlistRepository.findByMemberId(memberId);
-        if (wishlist != null) {
-            wishlist.getProducts().removeIf(product -> product.getId().equals(productId));
-            wishlistRepository.save(wishlist);
-        }
+    @Transactional
+    public void removeProductFromWishlist(Long memberId, Long productId) {
+        Wishlist wishlist = wishlistRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Wishlist not found for memberId: " + memberId));
+        Product product = wishlist.getProducts().stream()
+                .filter(p -> p.getId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Product not found in wishlist: " + productId));
+
+        wishlist.getProducts().remove(product);
+        product.setWishlist(null);
+        productRepository.delete(product);
     }
 }
