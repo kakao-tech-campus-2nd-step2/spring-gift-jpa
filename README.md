@@ -8,7 +8,7 @@
 ### 기능 요구사항 목록
 - [x] 상품 객체 매핑
   - entity, repository
-- [ ] 사용자 객체 매핑
+- [x] 사용자 객체 매핑
   - entity, repository
 - [ ] 위시리스트 객체 매핑
   - entity, repository
