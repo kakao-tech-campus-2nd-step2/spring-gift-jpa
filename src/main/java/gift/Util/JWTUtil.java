@@ -57,7 +57,7 @@ public class JWTUtil {
      * Claim 에서 username 가져오기
      */
     public static int getIdFromToken(String token) {
-        int userID = Integer.parseInt((String) getAllClaims(token).get("user_id"));
+        int userID = (int) getAllClaims(token).get("user_id");
         //log.info("getUsernameFormToken subject = {}", username);
         return userID;
     }

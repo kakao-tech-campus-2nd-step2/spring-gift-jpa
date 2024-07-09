@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
@@ -17,36 +19,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByEmail(String email);
-//    @Autowired
-//    JdbcTemplate jdbcTemplate;
-//
-//
-//    @Autowired
-//    PasswordEncoder passwordEncoder;
-//
-//    public boolean isExistAccount(String email) {
-//        String sql = "select count(*) from user_tb where email=?";
-//        int count = jdbcTemplate.queryForObject(sql, Integer.class, email);
-//
-//        return count > 0;
-//    }
-//
-//    public void saveUser(User user) {
-//
-//        String sql = "insert into user_tb(id, email, password) values(?,?,?)";
-//        String hashPw = passwordEncoder.encode(user.getPassword());
-//        jdbcTemplate.update(sql,user.getId(),user.getEmail(),hashPw);
-//    }
-//
-//    public User findUserbyID(String email){
-//        String sql= "select * from user_tb where email=?";
-//        List<User> user = jdbcTemplate.query(sql,new Object[]{email},(rs, rowNum) -> new User(
-//                rs.getInt("id"),
-//                rs.getString("email"),
-//                rs.getString("password")
-//        ));
-//        return user.getFirst();
-//
-//    }
+    @Query("select new gift.entity.User(u.id, u.email, u.password) from User u where u.email = :email")
+    Optional<User> findByEmail(@Param("email") String email);
+
 }

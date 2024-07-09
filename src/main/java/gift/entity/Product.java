@@ -2,18 +2,18 @@ package gift.entity;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Product {
+    static int id_cnt=1;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
@@ -27,6 +27,8 @@ public class Product {
     int price;
     @Column(nullable = false)
     String imageUrl;
+
+
 
     public int getId() {
         return id;
@@ -45,6 +47,7 @@ public class Product {
     }
 
     public Product(String name, int price, String imageUrl) {
+        this.id = id_cnt++;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

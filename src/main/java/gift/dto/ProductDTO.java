@@ -7,37 +7,69 @@ import jakarta.validation.constraints.Size;
 
 public class ProductDTO {
 
-    int id;
-    String name;
-    int price;
-    String imageUrl;
-    String option;
+    public static class SaveDTO{
+        String name;
+        int price;
+        String imageUrl;
+        String option;
 
-    public int getId() {
-        return id;
+        public String getName() {
+            return name;
+        }
+
+        public int getPrice() {
+            return price;
+        }
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
+
+        public String getOption() {
+            return option;
+        }
+
+        public SaveDTO(String name, int price, String imageUrl,String option) {
+            this.name = name;
+            this.price = price;
+            this.imageUrl = imageUrl;
+            this.option = option;
+        }
     }
 
-    public String getName() {
-        return name;
+    public static class WithOptionDTO{
+        Integer id;
+        String name;
+        Integer price;
+        String imageUrl;
+        String option;
+
+        public int getId() {
+            return id;
+        }
+        public String getName() {
+            return name;
+        }
+
+        public int getPrice() {
+            return price;
+        }
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
+
+        public String getOption() {
+            return option;
+        }
+
+        public WithOptionDTO(Integer id, String name, Integer price, String imageUrl,String option) {
+            this.id = id;
+            this.name = name;
+            this.price = price;
+            this.imageUrl = imageUrl;
+            this.option = option;
+        }
     }
 
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public String getOption() {
-        return option;
-    }
-
-    public ProductDTO(int id, String name, int price, String imageUrl,String option) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.option = option;
-    }
 }

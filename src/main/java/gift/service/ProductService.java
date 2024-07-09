@@ -10,7 +10,6 @@ import gift.exception.exception.BadRequestException;
 import gift.exception.exception.UnAuthException;
 import gift.exception.exception.NotFoundException;
 import gift.repository.OptionRepository;
-import gift.repository.ProductOptionRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishListRepository;
 import jakarta.validation.Valid;
@@ -21,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Validated
@@ -28,15 +28,17 @@ public class ProductService {
     @Autowired
     ProductRepository productRepository;
     @Autowired
-    WishListRepository wishListRepository;
-    @Autowired
     private OptionRepository optionRepository;
-    @Autowired
-    private ProductOptionRepository productOptionRepository;
 
-    public List<Product> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products;
+    public List<ProductDTO.WithOptionDTO> getAllProducts() {
+        return optionRepository.findAllWithOption().stream()
+                .map(array -> new ProductDTO.WithOptionDTO(
+                        (Integer) array[0],
+                        (String) array[1],
+                        (Integer) array[2],
+                        (String) array[3],
+                        (String) array[4]))
+                .collect(Collectors.toList());
     }
 
     public String getJsonAllProducts(){
@@ -51,20 +53,18 @@ public class ProductService {
         return jsonProduct;
     }
 
-    public void saveProduct(ProductDTO product) {
+    public void saveProduct(ProductDTO.SaveDTO product) {
         if(product.getOption() == null)
             throw new BadRequestException("하나의 옵션은 필요합니다.");
 
-        Product saveProduct = new Product(product.getId(),product.getName(), product.getPrice(), product.getImageUrl());
+        Product saveProduct = new Product(product.getName(), product.getPrice(), product.getImageUrl());
 
         if(isValidProduct(saveProduct)){
             productRepository.save(saveProduct);
         }
-
         List<String> optionList = Arrays.stream(product.getOption().split(",")).toList();
         for(String str : optionList){
-            OptionId optionId = new OptionId(product.getId(), str);
-
+            OptionId optionId = new OptionId(saveProduct.getId(), str);
             if(isValidOption(optionId))
                 optionRepository.save(new Option(optionId));
 
@@ -85,7 +85,7 @@ public class ProductService {
     }
 
     public void deleteProduct(int id) {
-        if(!productRepository.findById(id).isPresent())
+        if(productRepository.findById(id).isEmpty())
             throw new NotFoundException("존재하지 않는 id입니다.");
         productRepository.deleteById(id);
         optionRepository.deleteByProductID(id);
@@ -110,12 +110,9 @@ public class ProductService {
 
     public void modifyProduct(Product product) {
         if(productRepository.findById(product.getId()).isEmpty())
-            throw new NotFoundException("물건이없습니다.");
+            throw new NotFoundException("물건이 없습니다.");
         productRepository.deleteById(product.getId());
         productRepository.save(product);
     }
 
-    public List<ProductDTO> getProductWithOption() {
-        return productOptionRepository.findProductWithOptions();
-    }
 }

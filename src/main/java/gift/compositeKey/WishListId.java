@@ -8,8 +8,8 @@ import java.util.Objects;
 @Embeddable
 public class WishListId implements Serializable {
 
-    private int user_id;
-    private int product_id;
+    int user_id;
+    int product_id;
 
     // 기본 생성자
     public WishListId() {}

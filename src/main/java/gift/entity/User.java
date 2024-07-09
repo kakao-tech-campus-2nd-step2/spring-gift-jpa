@@ -2,9 +2,13 @@ package gift.entity;
 
 import jakarta.persistence.*;
 
-@Entity
-public class User {
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name="user_tb")
+public class User {
+    static int id_cnt = 1;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -12,6 +16,7 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
+
 
     public User() {
     }

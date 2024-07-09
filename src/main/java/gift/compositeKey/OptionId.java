@@ -1,12 +1,19 @@
 package gift.compositeKey;
 
-public class OptionId {
+import gift.entity.Product;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+import java.io.Serializable;
+
+@Embeddable
+public class OptionId implements Serializable {
     int id;
     String option;
 
-    public int getId() {
-        return id;
-    }
+
 
     public String getOption() {
         return option;
@@ -19,4 +26,6 @@ public class OptionId {
 
     public OptionId() {
     }
+
+
 }

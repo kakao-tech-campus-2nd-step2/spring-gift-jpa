@@ -18,7 +18,7 @@ public class ProductAdminController {
 
     @GetMapping("/admin/products")
     public String adminProducts(Model model){
-        List<ProductDTO> products = productService.getProductWithOption();
+        List<ProductDTO.WithOptionDTO> products = productService.getAllProducts();
         model.addAttribute("products", products);
         return  ("admin/products");
     }
