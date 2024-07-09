@@ -4,20 +4,18 @@ import gift.PasswordEncoder;
 import gift.model.User;
 import gift.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import io.jsonwebtoken.security.Keys;
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final String secretKey;
+    private final String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
 
     @Autowired
-    public UserService(UserRepository userRepository, @Value("${jwt.secret.key}") String secretKey) {
+    public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
-        this.secretKey = secretKey;
     }
 
     public User register(String email, String password) {
