@@ -4,9 +4,7 @@ import gift.doamin.user.entity.User;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class MemoryUserRepository implements UserRepository {
 
     private final Map<Long, User> users = new ConcurrentHashMap<>();

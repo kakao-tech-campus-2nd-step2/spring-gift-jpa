@@ -1,13 +1,11 @@
 package gift.doamin.product.controller;
 
 import gift.doamin.product.entity.Product;
-import gift.doamin.product.repository.ProductRepository;
 import gift.doamin.product.service.ProductService;
 import gift.doamin.user.entity.UserRole;
 import jakarta.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,16 +18,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductsController {
-    private final ProductRepository productRepository;
     private final ProductService productService;
 
-    public ProductsController(ProductRepository productRepository, ProductService productService) {
-        this.productRepository = productRepository;
+    public ProductsController(ProductService productService) {
         this.productService = productService;
     }
 
