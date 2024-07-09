@@ -1,0 +1,31 @@
+package gift;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
+import gift.model.user.User;
+import gift.repository.UserRepository;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+@DataJpaTest
+public class UserRepositoryTest {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Test
+    @DisplayName("회원가입")
+    void register() {
+        User user = new User(null, "yso8296", "yso8296@gmail.com");
+        User actual = userRepository.save(user);
+        assertAll(
+            () -> assertThat(actual.getId()).isNotNull(),
+            () -> assertThat(actual.getPassword()).isEqualTo("yso8296"),
+            () -> assertThat(actual.getEmail()).isEqualTo("yso8296@gmail.com")
+            );
+    }
+}
