@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 @Entity
 public class Product {
     @Id
@@ -23,6 +25,9 @@ public class Product {
     @Column(nullable = false)
     private String imageurl;
 
+    @OneToMany(mappedBy = "product")
+    private List<Wish> wishes;
+
     // 기본 생성자
     public Product() {
     }
@@ -34,7 +39,7 @@ public class Product {
         this.imageurl = imageurl;
     }
 
-    // Getters and setters
+    // Getters and settersa
     public Long getId() {
         return id;
     }
@@ -65,5 +70,13 @@ public class Product {
 
     public void setImageurl(String imageurl) {
         this.imageurl = imageurl;
+    }
+
+    public List<Wish> getWishes() {
+        return wishes;
+    }
+
+    public void setWishes(List<Wish> wishes) {
+        this.wishes = wishes;
     }
 }

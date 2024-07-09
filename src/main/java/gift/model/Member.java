@@ -2,6 +2,8 @@ package gift.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Member {
     @Id
@@ -13,6 +15,9 @@ public class Member {
 
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "member")
+    private List<Wish> wishes;
 
     // Getters and setters
     public Long getId() {
@@ -37,5 +42,13 @@ public class Member {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Wish> getWishes() {
+        return wishes;
+    }
+
+    public void setWishes(List<Wish> wishes) {
+        this.wishes = wishes;
     }
 }
