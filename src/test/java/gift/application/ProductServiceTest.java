@@ -2,7 +2,7 @@ package gift.application;
 
 import gift.product.application.ProductService;
 import gift.product.dao.ProductRepository;
-import gift.product.domain.Product;
+import gift.product.entity.Product;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
 import gift.product.util.ProductMapper;
@@ -56,8 +56,8 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품 상세 조회 서비스 테스트")
     void getProductById() {
-        Product product = new Product(1L, "product1", 1000, "https://testshop.com");
-        given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
+        Product product = new Product("product1", 1000, "https://testshop.com");
+        given(productRepository.findById(any())).willReturn(Optional.of(product));
 
         ProductResponse resultProduct = productService.getProductByIdOrThrow(product.getId());
 
@@ -79,7 +79,7 @@ class ProductServiceTest {
     @DisplayName("상품 추가 서비스 테스트")
     void createProduct() {
         ProductRequest request = new ProductRequest("product1", 1000, "https://testshop.com");
-        Product product = new Product(1L, "product1", 1000, "https://testshop.com");
+        Product product = new Product("product1", 1000, "https://testshop.com");
         given(productRepository.save(any())).willReturn(product);
 
         ProductResponse response = productService.createProduct(request);
@@ -90,7 +90,7 @@ class ProductServiceTest {
     @Test
     @DisplayName("단일 상품 삭제 서비스 테스트")
     void deleteProductById() {
-        Product product = new Product(1L, "product1", 1000, "https://testshop.com");
+        Product product = new Product("product1", 1000, "https://testshop.com");
 
         productService.deleteProductById(product.getId());
 
@@ -109,9 +109,11 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품 수정 서비스 테스트")
     void updateProduct() {
-        Product product = new Product(1L, "product", 1000, "https://testshop.com");
+        Product product = new Product("product", 1000, "https://testshop.com");
         ProductRequest request = new ProductRequest("product", 3000, "https://testshop.io");
-        given(productRepository.findById(anyLong())).willReturn(Optional.of(product));
+        given(productRepository.findById(any())).willReturn(Optional.of(product));
+        product.update(request);
+        given(productRepository.save(any())).willReturn(product);
 
         Long productId = productService.updateProduct(product.getId(), request);
 

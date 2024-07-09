@@ -1,6 +1,7 @@
 package gift.product.application;
 
 import gift.product.dao.ProductRepository;
+import gift.product.entity.Product;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
 import gift.product.util.ProductMapper;
@@ -49,9 +50,13 @@ public class ProductService {
     }
 
     public Long updateProduct(Long id, ProductRequest request) {
-        getProductByIdOrThrow(id); // 상품 존재 여부 확인
-        productRepository.update(id, ProductMapper.toEntity(request));
-        return id;
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당 상품은 존재하지 않습니다"));
+
+        product.update(request);
+
+        return productRepository.save(product)
+                                .getId();
     }
 
 }

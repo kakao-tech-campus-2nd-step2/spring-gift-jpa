@@ -1,3 +1,7 @@
 package gift.wishlist.dto;
 
-public record WishRequest(Long productId) { }
+import jakarta.validation.constraints.NotNull;
+
+public record WishRequest(
+        @NotNull
+        Long productId) { }
