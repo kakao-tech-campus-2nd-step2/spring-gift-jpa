@@ -1,6 +1,6 @@
 package gift.domain;
 
-import gift.controller.Interceptor;
+import gift.controller.TokenInterceptor;
 import gift.dao.MemberDao;
 import gift.model.JwtUtil;
 import gift.model.Member;
@@ -17,7 +17,7 @@ import java.util.Objects;
 
 @Component
 public class MemberDomain {
-    Interceptor interceptor = new Interceptor();
+    TokenInterceptor interceptor = new TokenInterceptor();
     JwtUtil jwtUtil = new JwtUtil();
     private final MemberDao memberDao;
 
