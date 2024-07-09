@@ -33,7 +33,7 @@ public class WishRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeWish(@LoginMember MemberResponseDto memberResponseDto, @PathVariable Long id){
-        wishService.delete(memberResponseDto, id);
+        wishService.deleteById(memberResponseDto, id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
