@@ -19,26 +19,26 @@ public class WishListController {
         this.wishListService = wishListService;
     }
 
-    @GetMapping("api/wishlist")
-    public List<WishProductResponse> getWishList(@MemberId Long memberId) {
-        return wishListService.getWishProductsByMemberId(memberId);
-    }
-
     @PostMapping("api/wishlist")
-    public ResponseEntity<Void> addWishList(@MemberId Long memberId, @RequestBody WishListRequest wishListRequest) {
-        wishListService.addProductToWishList(memberId, wishListRequest.getProductId(), wishListRequest.getAmount());
+    public ResponseEntity<Void> addProductToWishList(@MemberId Long memberId, @RequestBody WishListRequest request) {
+        wishListService.addProductToWishList(memberId, request.getProductId(), request.getAmount());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @GetMapping("api/wishlist")
+    public List<WishProductResponse> getWishProducts(@MemberId Long memberId) {
+        return wishListService.getWishProductsByMemberId(memberId);
+    }
+
     @PutMapping("api/wishlist")
-    public ResponseEntity<Void> updateWishList(@MemberId Long memberId, @RequestBody WishListRequest wishListRequest) {
-        wishListService.updateWishList(memberId, wishListRequest.getProductId(), wishListRequest.getAmount());
+    public ResponseEntity<Void> updateWishProductAmount(@MemberId Long memberId, @RequestBody WishListRequest request) {
+        wishListService.updateWishProductAmount(memberId, request.getProductId(), request.getAmount());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("api/wishlist")
-    public ResponseEntity<Void> deleteWishList(@MemberId Long memberId, @RequestBody WishListRequest wishListRequest) {
-        wishListService.deleteProductInWishList(memberId, wishListRequest.getProductId());
+    public ResponseEntity<Void> deleteWishProduct(@MemberId Long memberId, @RequestBody WishListRequest request) {
+        wishListService.deleteProductInWishList(memberId, request.getProductId());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

@@ -17,7 +17,7 @@ public class MemberService {
 
     public Long registerMember(String email, String password) {
         memberRepository.findByEmail(email)
-                .ifPresent((duplicateMember) -> {
+                .ifPresent((duplicatedMember) -> {
                     throw new EmailDuplicateException("Email already in use");
                 });
         return memberRepository.save(new Member(email, password)).getId();
