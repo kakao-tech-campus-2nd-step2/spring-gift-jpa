@@ -1,6 +1,7 @@
 package gift.product.repository;
 
 import gift.product.model.Product;
+import jakarta.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,62 +12,39 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class ProductRepository {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
+    private final EntityManager em;
 
-    public ProductRepository(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-            .withTableName("Product")
-            .usingGeneratedKeyColumns("id");
+    public ProductRepository(EntityManager em) {
+        this.em = em;
     }
 
+    @Transactional
     public Product save(Product product) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("name", product.getName());
-        params.put("price", product.getPrice());
-        params.put("imageUrl", product.getImageUrl());
-
-        Long productId = (Long) simpleJdbcInsert.executeAndReturnKey(
-            new MapSqlParameterSource(params));
-        return new Product(productId, product.getName(), product.getPrice(), product.getImageUrl());
+        em.persist(product);
+        return product;
     }
 
     public List<Product> findAll() {
-        var sql = "SELECT * FROM Product";
-
-        return jdbcTemplate.query(sql, getProductRowMapper());
+        return em.createQuery("SELECT p FROM Product p", Product.class).getResultList();
     }
 
-    public Product findById(Long id) throws DataAccessException {
-        var sql = "SELECT id, name, price, imageUrl FROM Product WHERE id = ?";
-
-        return jdbcTemplate.queryForObject(sql, getProductRowMapper(), id);
+    public Product findById(Long id) throws Exception {
+        return em.find(Product.class, id);
     }
 
+    @Transactional
     public void update(Product product) {
-        var sql = "UPDATE Product SET name = ?, price = ?, imageUrl = ? WHERE id = ?";
-
-        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(),
-            product.getId());
+        em.merge(product);
     }
 
+    @Transactional
     public void delete(Long id) {
-        var sql = "DELETE FROM Product WHERE id = ?";
-
-        jdbcTemplate.update(sql, id);
-    }
-
-    private RowMapper<Product> getProductRowMapper() {
-        return (resultSet, rowNum) -> new Product(
-            resultSet.getLong("id"),
-            resultSet.getString("name"),
-            resultSet.getInt("price"),
-            resultSet.getString("imageUrl")
-        );
+        Product product = em.find(Product.class, id);
+        em.remove(product);
     }
 }

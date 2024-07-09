@@ -50,7 +50,7 @@ public class ProductService {
     private Product getValidatedProduct(Long id) {
         try {
             return productRepository.findById(id);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             throw new NoSuchElementException("해당 ID의 상품이 존재하지 않습니다.");
         }
     }
