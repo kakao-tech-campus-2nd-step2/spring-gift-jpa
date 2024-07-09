@@ -1,6 +1,6 @@
 package gift.config;
 
-import gift.auth.Interceptor;
+import gift.auth.AuthInterceptor;
 import gift.auth.LoginMemberArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,7 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
-    private Interceptor interceptor;
+    private AuthInterceptor authInterceptor;
 
     @Autowired
     private LoginMemberArgumentResolver loginUserArgumentResolver;
@@ -30,7 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(interceptor).addPathPatterns("/**")
+        registry.addInterceptor(authInterceptor).addPathPatterns("/**")
             .excludePathPatterns("/api/login", "/api/login/signup");
     }
 

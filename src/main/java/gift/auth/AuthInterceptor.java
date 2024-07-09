@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
-public class Interceptor implements HandlerInterceptor {
+public class AuthInterceptor implements HandlerInterceptor {
 
     private JwtToken jwtToken = new JwtToken();
 
