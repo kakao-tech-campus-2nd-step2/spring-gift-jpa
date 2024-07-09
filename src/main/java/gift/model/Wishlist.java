@@ -1,12 +1,32 @@
 package gift.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 
+@Entity
+@Table(name = "wishlist")
 public class Wishlist {
-	
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String productName;
 	
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
+	
+	@ManyToOne
+	@JoinColumn(name = "product_id", nullable = false)
+	private Product product;
+	
+	@Column(nullable = false)
 	@Min(value = 0, message = "음수를 입력할 수 없습니다.")
 	private int quantity;
 	
@@ -18,12 +38,20 @@ public class Wishlist {
 		this.id = id;
 	}
 	
-	public String getProductName() {
-		return productName;
+	public User getUser() {
+		return user;
 	}
 	
-	public void setProductName(String productName) {
-		this.productName = productName;
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public Product getProduct() {
+		return product;
+	}
+	
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 	
 	public int getQuantity() {
