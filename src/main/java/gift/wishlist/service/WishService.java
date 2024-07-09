@@ -5,6 +5,7 @@ import gift.wishlist.dto.WishRequest;
 import gift.wishlist.dto.WishResponse;
 import gift.wishlist.model.Wish;
 import gift.wishlist.repository.WishRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -18,23 +19,33 @@ public class WishService {
     }
 
     public WishResponse addWish(Long memberId, WishRequest request) {
-        Wish wish = new Wish(memberId, request.getProductName());
+        Wish wish = new Wish(memberId, request.getProductId());
         wishRepository.save(wish);
-        return new WishResponse(wish.getId(), wish.getProductName());
+        return new WishResponse(wish.getId(), wish.getProductId());
     }
 
     public List<WishResponse> getWishes(Long memberId) {
         List<Wish> wishes = wishRepository.findByMemberId(memberId);
         return wishes.stream()
-            .map(wish -> new WishResponse(wish.getId(), wish.getProductName()))
+            .map(wish -> new WishResponse(wish.getId(), wish.getProductId()))
             .collect(Collectors.toList());
     }
 
-    public void deleteWishByProductName(Long memberId, String productName) {
-        if(!wishRepository.findByName(memberId, productName).isPresent()) {
-            throw new WishNotFoundException("Wishlist에 상품명: " + productName + "인 상품은 존재하지 않습니다.");
+    @Transactional
+    public void deleteWishByProductId(Long memberId, Long productId) {
+        List<Wish> wishes = wishRepository.findByMemberIdAndProductId(memberId, productId);
+        if(wishes.isEmpty()) {
+            throw new WishNotFoundException("Wishlist에 Product ID: " + productId + "인 상품은 존재하지 않습니다.");
         }
-        wishRepository.deleteByProductName(memberId,productName);
+        wishRepository.deleteByMemberIdAndProductId(memberId, productId);
+    }
+
+    @Transactional
+    public void deleteWishById(Long id) {
+        if(!wishRepository.existsById(id)) {
+            throw new WishNotFoundException("Wishlist에 ID: " + id + "인 상품은 존재하지 않습니다.");
+        }
+        wishRepository.deleteById(id);
     }
 
 }
