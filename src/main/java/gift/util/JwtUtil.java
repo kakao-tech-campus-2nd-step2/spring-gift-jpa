@@ -1,6 +1,6 @@
 package gift.util;
 
-import gift.dto.UserDTO;
+import gift.dto.MemberDTO;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -37,11 +37,11 @@ public class JwtUtil {
                 .get("name", String.class);
     }
 
-    public String generateToken(UserDTO userDTO) {
+    public String generateToken(MemberDTO memberDTO) {
         return Jwts.builder()
-                .setSubject(userDTO.getEmail())
-                .claim("name", userDTO.getName())
-                .claim("role", userDTO.getRole())
+                .setSubject(memberDTO.getEmail())
+                .claim("name", memberDTO.getName())
+                .claim("role", memberDTO.getRole())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 36000))
                 .signWith(SignatureAlgorithm.HS256, secret)
