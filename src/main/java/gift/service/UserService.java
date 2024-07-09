@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.domain.User;
 import gift.domain.User.CreateUser;
 import gift.domain.User.UpdateUser;
 import gift.domain.User.UserSimple;
@@ -7,8 +8,8 @@ import gift.entity.UserEntity;
 import gift.errorException.BaseHandler;
 import gift.mapper.UserMapper;
 import gift.repository.UserRepository;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,8 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    public List<UserSimple> getUserList() {
-        return userMapper.toSimpleList(userRepository.findAllByIsDelete(0));
+    public Page<UserSimple> getUserList(User.getList param) {
+        return userMapper.toSimpleList(userRepository.findAllByIsDelete(0, param.toPageable()));
     }
 
     public UserEntity getUser(long id) {
