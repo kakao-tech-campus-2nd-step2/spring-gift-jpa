@@ -9,4 +9,9 @@ public class WishId implements Serializable {
 
     protected WishId(){
     }
+
+    public WishId(Long memberId, Long productId) {
+        this.memberId = memberId;
+        this.productId = productId;
+    }
 }
