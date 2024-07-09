@@ -23,13 +23,18 @@ public class MemberService {
         return jwtUtil.generateToken(member);
     }
 
-    public String login(String email, String password) {
-        Member member = memberRepository.findByEmail(email);
-        if (member != null && member.getPassword().equals(password)) {
+    public String login(MemberRequest memberRequest) {
+        Member member = memberRepository.findByEmail(memberRequest.getEmail());
+        if (member != null && member.getPassword().equals(memberRequest.getPassword())) {
             return jwtUtil.generateToken(member);
         }
         return null;
     }
+
+    public void deleteMember(Long id){
+        memberRepository.delete(id);
+    }
+
     public Member getMemberFromToken(String token) {
         String email = jwtUtil.getEmailFromToken(token);
 
