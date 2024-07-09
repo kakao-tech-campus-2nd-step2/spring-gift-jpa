@@ -1,4 +1,4 @@
-package gift.authService;
+package gift.auth;
 
 import gift.dto.Login;
 import gift.dto.Token;

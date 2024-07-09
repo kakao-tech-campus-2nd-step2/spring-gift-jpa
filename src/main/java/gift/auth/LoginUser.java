@@ -1,4 +1,4 @@
-package gift.authService;
+package gift.auth;
 
 public @interface LoginUser {
 

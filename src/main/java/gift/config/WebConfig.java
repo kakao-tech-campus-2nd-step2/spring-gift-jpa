@@ -1,7 +1,7 @@
 package gift.config;
 
-import gift.authService.Interceptor;
-import gift.authService.LoginUserArgumentResolver;
+import gift.auth.Interceptor;
+import gift.auth.LoginUserArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

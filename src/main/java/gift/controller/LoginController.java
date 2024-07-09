@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.dto.Login;
-import gift.authService.LoginService;
+import gift.auth.LoginService;
 import gift.dto.Token;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

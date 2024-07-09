@@ -1,4 +1,4 @@
-package gift.authService;
+package gift.auth;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

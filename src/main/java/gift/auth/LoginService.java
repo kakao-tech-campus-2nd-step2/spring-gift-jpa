@@ -1,4 +1,4 @@
-package gift.authService;
+package gift.auth;
 
 import gift.exception.AuthException;
 import gift.dto.Login;
