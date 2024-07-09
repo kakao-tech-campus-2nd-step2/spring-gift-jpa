@@ -1,7 +1,7 @@
 package gift.product.controller;
 
 import gift.product.error.NotFoundException;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import gift.product.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.ArrayList;

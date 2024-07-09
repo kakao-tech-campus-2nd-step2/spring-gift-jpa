@@ -1,15 +1,13 @@
 package gift.wishlist.controller;
 
 import gift.member.error.UnauthorizedException;
-import gift.member.service.MemberService;
 import gift.member.util.JwtUtil;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import gift.wishlist.domain.WishList;
 import gift.wishlist.service.WishListService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import java.beans.Transient;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

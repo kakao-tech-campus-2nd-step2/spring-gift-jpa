@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gift.product.error.AlreadyExistsException;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import gift.product.repository.ProductRepository;
 import gift.product.service.ProductService;
 import java.util.List;
