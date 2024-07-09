@@ -3,6 +3,8 @@ package gift.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 @Entity
 @Table(name = "gift")
 public class Gift {
@@ -19,6 +21,9 @@ public class Gift {
     @Column(name = "imageUrl")
     @NotNull
     private String imageUrl;
+
+    @OneToMany(mappedBy = "gift", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wish> wishes;
 
     public Gift() {
     }
