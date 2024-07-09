@@ -32,16 +32,9 @@ public class ProductController {
     }
 
     @PutMapping("api/products")
-    public ResponseEntity<ProductIdResponse> updateProduct(@Valid @RequestBody Product product) {
-        boolean isUpdated = productService.updateProduct(product);
-        if (isUpdated) {
-            return new ResponseEntity<>(new ProductIdResponse(product.getId()), HttpStatus.OK);
-        }
-        Long createdProductId = productService.addProduct(product);
-        if (createdProductId != -1L) {
-            return new ResponseEntity<>(new ProductIdResponse(createdProductId), HttpStatus.CREATED);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<Void> updateProduct(@Valid @RequestBody ProductRequest updateRequest) {
+        productService.updateProduct(updateRequest);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("api/products/{id}")

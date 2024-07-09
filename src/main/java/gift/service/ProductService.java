@@ -34,8 +34,14 @@ public class ProductService {
         return productRepository.updateProduct(product);
     }
 
-    public boolean deleteProduct(Long id) {
-        return productRepository.deleteProduct(id);
+    public void updateProduct(ProductRequest request) {
+        Product product = productRepository.findById(request.getId())
+                .orElseThrow(() -> new ProductNotFoundException("해당 상품 id가 존재하지 않습니다."));
+        product.setName(request.getName());
+        product.setPrice(request.getPrice());
+        product.setImageUrl(request.getImageUrl());
+
+        productRepository.save(product);
     }
 
     public Product getProduct(Long productId) {
