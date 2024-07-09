@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
@@ -19,6 +20,7 @@ public class Product {
     private Long id;
 
     @Column(name = "name", nullable = false)
+
     @NotBlank(message = "입력은 공백일 수 없습니다.")
     @Size(max = 15, message = "길이가 15를 넘을 수 없습니다.")
     @Pattern(regexp = "^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ()\\[\\]+&/_ ]*$", message = "( ), [ ], +, -, &, /, _ 외의 특수 문자는 사용이 불가합니다.")
@@ -30,6 +32,7 @@ public class Product {
     private int price;
 
     @Column(name = "imageUrl", nullable = false)
+
     private String imageUrl;
 
     public Product() {
@@ -40,6 +43,7 @@ public class Product {
         this.price = price;
         this.imageUrl = imageUrl;
     }
+
 
     public Long getId() {
         return id;

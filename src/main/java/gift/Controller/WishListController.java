@@ -4,6 +4,7 @@ package gift.Controller;
 import gift.Model.Product;
 
 import gift.Model.Wishlist;
+
 import gift.Service.WishlistService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,6 +45,7 @@ public class WishListController {
         Product product = wishlistService.getProductById(id);
         Wishlist wishlist = new Wishlist(product.getName(), product.getPrice(), product.getImageUrl());
         wishlistService.addWishlist(wishlist);
+
         return "redirect:/api/wish";
     }
 
