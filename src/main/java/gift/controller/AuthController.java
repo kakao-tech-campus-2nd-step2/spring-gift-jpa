@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.exception.ErrorCode;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -30,11 +31,11 @@ public class AuthController {
         BindingResult result)
         throws MethodArgumentNotValidException {
         if (!userService.existsEmail(userForm.getEmail())) {
-            result.rejectValue("email", "", "해당 이메일은 존재하지 않습니다.");
+            result.rejectValue("email", "", ErrorCode.EMAIL_NOT_FOUND.getMessage());
             throw new EmailNotFoundException(null, result);
         }
         if (!userService.isPassWordMatch(userForm)) {
-            result.rejectValue("passWord", "", "비밀번호가 일치하지 않습니다.");
+            result.rejectValue("passWord", "", ErrorCode.PASSWORD_MISMATCH.getMessage());
             throw new PassWordMissMatchException(null, result);
         }
         return ResponseEntity.ok(jwtProvider.generateToken(userService.findByEmail(userForm.getEmail())));
@@ -44,7 +45,7 @@ public class AuthController {
     public ResponseEntity<?> handleSignUpRequest(@Valid @RequestBody UserForm userForm,
         BindingResult result) throws MethodArgumentNotValidException {
         if (userService.existsEmail(userForm.getEmail())) {
-            result.rejectValue("email", "", "이미 존재하는 이메일입니다.");
+            result.rejectValue("email", "", ErrorCode.DUPLICATE_EMAIL.getMessage());
             throw new DuplicateEmailException(null, result);
         }
         Long id = userService.insertUser(userForm);
