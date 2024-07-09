@@ -4,7 +4,7 @@ import gift.auth.DTO.MemberDTO;
 import gift.auth.DTO.TokenDTO;
 import gift.auth.utill.JwtToken;
 import gift.auth.exception.AuthException;
-import gift.model.member.MemberRepository;
+import gift.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class LoginService {
 
     @Autowired
-    private MemberRepository memberRepository;
+    private MemberService memberService;
     private final JwtToken jwtToken = new JwtToken();
 
     /**
@@ -27,10 +27,10 @@ public class LoginService {
      * @throws AuthException 사용자가 존재하지 않는 경우 예외를 발생시킴
      */
     public TokenDTO Login(MemberDTO memberDTO) {
-        if (!memberRepository.isExist(memberDTO)) {
+        if (!memberService.isExist(memberDTO)) {
             throw new AuthException("유저가 존재하지 않습니다.", HttpStatus.UNAUTHORIZED);
         }
-        memberDTO.setId(memberRepository.getUserId(memberDTO));
+        memberDTO.setId(memberService.getUserId(memberDTO));
         return jwtToken.createToken(memberDTO);
     }
 
@@ -42,10 +42,10 @@ public class LoginService {
      * @throws AuthException 사용자가 회원가입에 실패한 경우 예외를 발생시킴
      */
     public TokenDTO SignUp(MemberDTO memberDTO) {
-        if (!memberRepository.SignUp(memberDTO)) {
+        if (!memberService.signUp(memberDTO)) {
             throw new AuthException("회원가입에 실패하였습니다.", HttpStatus.FORBIDDEN);
         }
-        memberDTO.setId(memberRepository.getUserId(memberDTO));
+        memberDTO.setId(memberService.getUserId(memberDTO));
         return jwtToken.createToken(memberDTO);
     }
 }

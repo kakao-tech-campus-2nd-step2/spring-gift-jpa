@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class MemberEntity {
@@ -20,6 +19,9 @@ public class MemberEntity {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private boolean delete = false;
 
     public MemberEntity() {
     }
@@ -46,5 +48,13 @@ public class MemberEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
     }
 }
