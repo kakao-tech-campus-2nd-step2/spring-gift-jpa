@@ -1,12 +1,9 @@
 package gift.global.resolver;
 
 import gift.domain.user.dto.UserInfo;
-import gift.global.exception.BusinessException;
-import gift.global.jwt.JwtAuthorization;
 import gift.global.jwt.JwtProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -24,22 +21,17 @@ public class JwtAuthorizationArgumentResolver implements HandlerMethodArgumentRe
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(JwtAuthorization.class);
+        return parameter.hasParameterAnnotation(LoginInfo.class);
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+    public UserInfo resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String authorizationHeader = request.getHeader("Authorization");
+        Long id = (Long) request.getAttribute("id");
+        String email = (String) request.getAttribute("email");
 
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer")) {
-            throw new BusinessException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
-        }
-
-        UserInfo currentUser = jwtProvider.getUserInfo(authorizationHeader);
-
-        return currentUser;
+        return new UserInfo(id, email);
     }
 }

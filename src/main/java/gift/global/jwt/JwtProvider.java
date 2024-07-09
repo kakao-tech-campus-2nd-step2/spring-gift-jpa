@@ -45,9 +45,8 @@ public class JwtProvider {
         Claims claimsBody = getClaimsBody(token);
 
         UserInfo currentUser = new UserInfo(
-            claimsBody.get("email").toString(),
             (claimsBody.get("id") instanceof Integer) ? Long.valueOf((Integer) claimsBody.get("id"))
-                : (Long) claimsBody.get("id"));
+                : (Long) claimsBody.get("id"), claimsBody.get("email").toString());
 
         return currentUser;
     }
