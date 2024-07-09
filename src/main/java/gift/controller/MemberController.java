@@ -1,8 +1,6 @@
 package gift.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.MemberDto;
-import gift.classes.Exceptions.EmailAlreadyExistsException;
+import gift.dto.MemberDto;
 import gift.classes.RequestState.RequestStateDTO;
 import gift.classes.RequestState.RequestStatus;
 import gift.classes.RequestState.SecureRequestStateDTO;

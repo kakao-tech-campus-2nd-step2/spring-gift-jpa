@@ -1,6 +1,6 @@
 package gift.repositories;
 
-import gift.Member;
+import gift.domain.Member;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

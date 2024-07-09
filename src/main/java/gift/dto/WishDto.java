@@ -1,18 +1,19 @@
-package gift;
+package gift.dto;
 
-public class Wish {
+public class WishDto {
     private Long memberId;
     private Long productId;
     private String productName;
 
-    public Wish(Long memberId, Long productId, String productName) {
+    public WishDto(Long memberId, Long productId , String productName) {
         this.memberId = memberId;
         this.productId = productId;
         this.productName = productName;
     }
 
-    public Wish(Long memberId) {
-        this.memberId = memberId;
+    public WishDto(Long productId) {
+        this.memberId = null;
+        this.productId = productId;
     }
 
     public Long getMemberId() {

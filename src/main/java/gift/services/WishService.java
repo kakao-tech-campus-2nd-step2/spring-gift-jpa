@@ -1,8 +1,8 @@
 package gift.services;
 
 
-import gift.Wish;
-import gift.WishDto;
+import gift.domain.Wish;
+import gift.dto.WishDto;
 import gift.repositories.WishRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;

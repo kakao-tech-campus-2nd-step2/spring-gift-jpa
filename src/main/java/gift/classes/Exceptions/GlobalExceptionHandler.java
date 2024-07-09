@@ -1,6 +1,5 @@
-package gift;
+package gift.classes.Exceptions;
 
-import gift.classes.Exceptions.AuthException;
 import gift.classes.RequestState.RequestStateDTO;
 import gift.classes.RequestState.RequestStatus;
 import org.springframework.http.HttpStatus;
@@ -13,8 +12,6 @@ import jakarta.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
-
-import gift.classes.Exceptions.EmailAlreadyExistsException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

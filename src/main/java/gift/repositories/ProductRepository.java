@@ -1,6 +1,6 @@
 package gift.repositories;
 
-import gift.Product;
+import gift.domain.Product;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;

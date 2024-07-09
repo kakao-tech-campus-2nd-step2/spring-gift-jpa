@@ -2,8 +2,8 @@ package gift.services;
 
 
 import gift.JWTUtil;
-import gift.Member;
-import gift.MemberDto;
+import gift.domain.Member;
+import gift.dto.MemberDto;
 import gift.classes.Exceptions.EmailAlreadyExistsException;
 import gift.repositories.MemberRepository;
 import java.util.NoSuchElementException;

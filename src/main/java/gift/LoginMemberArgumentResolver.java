@@ -1,10 +1,10 @@
 package gift;
 
 import gift.classes.Exceptions.AuthException;
+import gift.dto.MemberDto;
 import gift.services.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
