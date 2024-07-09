@@ -13,8 +13,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User registerUser(String name, String email, String password) {
-        User user = new User(name, email, password, "ROLE_USER");
+    public User registerUser(Long id, String name, String email, String password) {
+        User user = new User(id, name, email, password, "ROLE_USER");
         save(user);
         return user;
     }

@@ -8,8 +8,9 @@ CREATE TABLE product (
     image_Url VARCHAR(255)
 );
 CREATE TABLE users (
+    id LONG AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
-    email VARCHAR(255) PRIMARY KEY ,
+    email VARCHAR(255) ,
     password VARCHAR(255),
     role VARCHAR(255)
 );
