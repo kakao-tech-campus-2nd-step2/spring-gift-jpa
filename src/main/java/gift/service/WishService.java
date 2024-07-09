@@ -5,7 +5,7 @@ import gift.common.exception.EntityNotFoundException;
 import gift.controller.dto.request.WishInsertRequest;
 import gift.controller.dto.request.WishPatchRequest;
 import gift.controller.dto.response.WishResponse;
-import gift.repository.ProductDao;
+import gift.repository.ProductRepository;
 import gift.repository.WishDao;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +14,11 @@ import java.util.List;
 @Service
 public class WishService {
     private final WishDao wishDao;
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public WishService(WishDao wishDao, ProductDao productDao) {
+    public WishService(WishDao wishDao, ProductRepository productRepository) {
         this.wishDao = wishDao;
-        this.productDao = productDao;
+        this.productRepository = productRepository;
     }
 
     public void update(WishPatchRequest request, Long memberId) {
@@ -53,7 +53,7 @@ public class WishService {
     }
 
     private void checkProductExist(Long productId) {
-        if (!productDao.existsById(productId)) {
+        if (!productRepository.existsById(productId)) {
             throw new EntityNotFoundException("Product with id " + productId + " does not exist");
         }
     }
