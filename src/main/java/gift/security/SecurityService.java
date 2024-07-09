@@ -1,7 +1,6 @@
 package gift.security;
 
 import gift.domain.Member;
-import gift.validation.JwtTokenProvider;
 import org.springframework.stereotype.Service;
 
 @Service

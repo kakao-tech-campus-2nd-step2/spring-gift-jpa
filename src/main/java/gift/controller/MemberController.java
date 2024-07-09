@@ -45,8 +45,9 @@ public class MemberController {
         if (loginResponse.getToken() != null) {
             return ResponseEntity.ok(loginResponse);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginResponse);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .header("WWW-Authenticate", "Bearer")
+                    .body(loginResponse);
         }
     }
-
 }
