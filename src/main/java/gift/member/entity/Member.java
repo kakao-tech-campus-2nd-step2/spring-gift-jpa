@@ -1,8 +1,19 @@
-package gift.member;
+package gift.member.entity;
 
+import static jakarta.persistence.GenerationType.*;
+
+import gift.member.Role;
+import gift.member.dto.MemberReqDto;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+@Entity
 public class Member {
 
-    private final Long id;
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private Long id;
     private String name;
     private String email;
     private String password;
@@ -14,6 +25,9 @@ public class Member {
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    protected Member() {
     }
 
     public Long getId() {
@@ -34,5 +48,11 @@ public class Member {
 
     public Role getRole() {
         return role;
+    }
+
+    public void update(MemberReqDto memberReqDto) {
+        this.name = memberReqDto.name();
+        this.email = memberReqDto.email();
+        this.password = memberReqDto.password();
     }
 }
