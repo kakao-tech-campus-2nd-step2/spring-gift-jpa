@@ -15,19 +15,28 @@ public class ProductService {
     }
 
     public void createProduct(ProductRequestDTO productRequestDTO) {
-        productRepository.insertToTable(productRequestDTO);
+        Product product = new Product(productRequestDTO.name(),
+                                      productRequestDTO.price(),
+                                      productRequestDTO.imageUrl());
+
+        productRepository.save(product);
     }
 
     public ProductsResponseDTO getAllProducts() {
-        return new ProductsResponseDTO(productRepository.selectAllProducts());
+        return new ProductsResponseDTO(productRepository.findAll());
     }
 
 
     public void updateProduct(Long id, ProductRequestDTO productRequestDTO) {
-        productRepository.updateToTable(id, productRequestDTO);
+        productRepository.findById(id).ifPresent(product -> {
+            product.setName(productRequestDTO.name());
+            product.setPrice(productRequestDTO.price());
+            product.setImageUrl(productRequestDTO.imageUrl());
+            productRepository.save(product);
+        });
     }
 
     public void deleteProduct(Long id) {
-        productRepository.deleteToTable(id);
+        productRepository.deleteById(id);
     }
 }
