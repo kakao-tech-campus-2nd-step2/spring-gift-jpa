@@ -94,7 +94,7 @@ class ProductRepositoryTest {
                 ).getId()
         );
 
-        List<Product> products = productRepository.findByIds(productIds);
+        List<Product> products = productRepository.findByIdIn(productIds);
 
         assertThat(products.size()).isEqualTo(productIds.size());
     }
