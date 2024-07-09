@@ -1,6 +1,6 @@
 package gift.auth;
 
-import gift.errorException.SingleResult;
+import gift.util.page.SingleResult;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
