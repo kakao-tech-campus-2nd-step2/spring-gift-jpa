@@ -8,25 +8,28 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@JdbcTest
-@Import(MemberRepository.class)
+@DataJpaTest
 class MemberRepositoryTest {
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private MemberRepository memberRepository;
 
-    @Test
-    void testFindByEmail() {
-        Member member = new Member();
+    private Member member;
+
+    @BeforeEach
+    void setUp() {
+        member = new Member();
         member.setEmail("user@example.com");
         member.setPassword("password");
         memberRepository.save(member);
+    }
 
+    @Test
+    void testFindByEmail() {
         Optional<Member> foundMember = memberRepository.findByEmail("user@example.com");
         assertThat(foundMember).isPresent();
         assertThat(foundMember.get().getEmail()).isEqualTo("user@example.com");
@@ -43,7 +46,9 @@ class MemberRepositoryTest {
         Member newMember = new Member();
         newMember.setEmail("newUser@example.com");
         newMember.setPassword("newPassword");
-        memberRepository.save(newMember);
-        assertThat(newMember.getEmail()).isEqualTo("newUser@example.com");
+        Member savedMember = memberRepository.save(newMember);
+        assertThat(savedMember).isNotNull();
+        assertThat(savedMember.getId()).isNotNull();
+        assertThat(savedMember.getEmail()).isEqualTo("newUser@example.com");
     }
 }
