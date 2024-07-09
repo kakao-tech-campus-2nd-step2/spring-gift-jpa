@@ -1,2 +1,3 @@
+<<<<<<< HEAD
 # spring-gift-jpa
 

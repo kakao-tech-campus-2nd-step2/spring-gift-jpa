@@ -5,25 +5,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-<br>
-<br>
+<div class="container p-3 my-3 bg-dark text-white">
+    <h1>상품 페이지</h1>
+    <p>환영합니다!🖐️🖐️</p>
+</div>
+<br><br>
 <div class="container">
     <div class="container">
         <h2>상품 등록하기</h2>
         <p>상품을 등록하세요.</p>
     </div>
     <div class="container">
-        <form class="form-inline" action="/spring-gift/admin/product" method="post">
-            <input type="text" class="form-control" id="name" placeholder="물건명" name="name" required >
-            <input type="number"  class="form-control" id="price" placeholder="가격" name="price" required >
-            <input type="text" class="form-control" id="imageUrl" placeholder="이미지 주소" name="imageUrl" required >
-            <button type="submit" class="btn btn-primary btn-sm">등록하기</button>
-        </form>
+        <div id="registerInPut" class="form-inline">
+            <input type="text" class="form-control" id="name" placeholder="물건명" required>
+            <input type="text" class="form-control" id="price" placeholder="가격" required>
+            <input type="text" class="form-control" id="imageUrl" placeholder="이미지 주소" required>
+            <button id="registerButton" class="btn btn-primary btn-sm">등록하기</button>
+        </div>
     </div>
 </div>
 
@@ -34,33 +37,24 @@
         <p>상품의 id를 입력해 상품을 조회할 수 있습니다.</p>
     </div>
     <div class="container">
-        <form action="/spring-gift/admin/product" style="display: flex; align-items: center; gap: 10px;">
+        <div id="searchForm" style="display: flex; align-items: center; gap: 10px;">
             <div class="form-group">
-                <input type="number" placeholder="id값" class="form-control" id="id" name="id" required>
+                <input type="number" placeholder="id값" class="form-control" id="id" required>
             </div>
-            <button type="submit" class="btn btn-primary btn-sm">조회하기</button>
-        </form>
+            <button id="searchButton" class="btn btn-primary btn-sm">조회하기</button>
+        </div>
     </div>
     <div class="container">
         <table class="table table-striped">
-            <tbody>
-            <tr th:if="${seletProduct != null}">
-                <td th:text="${seletProduct.id}">Product ID</td>
-                <td th:text="${seletProduct.name}">Product Name</td>
-                <td th:text="${seletProduct.price}">Product Price</td>
-                <td th:text="${seletProduct.imageUrl}">Product imageUrl</td>
-            </tr>
-            <tr th:if="${messages != null}">
-                <td th:text="${messages}">Messages</td>
-            </tr>
-            </tbody>
+            <tbody id="searchResult"></tbody>
         </table>
     </div>
 </div>
+
 <div class="container">
     <div class="container">
         <h2>물건 리스트 확인</h2>
-        <p>물건 리스트를 확인하고 수정과, 삭제를 할 수 있습니다. </p>
+        <p>물건 리스트를 확인하고 수정과, 삭제를 할 수 있습니다.</p>
     </div>
     <div class="container">
         <table class="table table-striped">
@@ -73,28 +67,208 @@
                 <th></th>
             </tr>
             </thead>
-            <tbody>
-            <tr th:each="product : ${products}">
-                <td th:text="${product.id}">Product Name</td>
-                <td th:text="${product.name}">Product Name</td>
-                <td th:text="${product.price}">Product Price</td>
-                <td th:text="${product.imageUrl}">Product imageUrl</td>
-                <td>
-                    <div style="display: flex; justify-content: center; gap: 10px;">
-                    <a th:href="@{/admin/product/edit(id=${product.id}, name=${product.name}, price=${product.price}, imageUrl=${product.imageUrl})}"
-                       th:data-method="get" class="btn btn-primary btn-sm" style="width: 100px;">수정하기</a>
-                    <form th:action="@{/admin/product(id=${product.id})}" th:method="delete" style="width: 100px;">
-                        <button type="submit" class="btn btn-danger btn-sm" style="width: 100px;">Delete</button>
-                    </form>
-                </div>
-
-
-                </td>
-            </tr>
-            </tbody>
+            <tbody id="productList"></tbody>
         </table>
     </div>
 </div>
 
+<!-- 모달 창 -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">상품 수정하기</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editId">
+                    <div class="form-group">
+                        <label for="editName">상품명</label>
+                        <input type="text" class="form-control" id="editName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPrice">가격</label>
+                        <input type="text" class="form-control" id="editPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editImageUrl">이미지 주소</label>
+                        <input type="text" class="form-control" id="editImageUrl" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" id="saveChanges">저장</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        loadProducts();
+
+        // 상품 등록하기
+        $('#registerButton').on('click', function (e) {
+            e.preventDefault();
+            var productData = {
+                name: $('#name').val(),
+                price: $('#price').val(),
+                imageUrl: $('#imageUrl').val()
+            };
+            $.ajax({
+                type: 'POST',
+                url: '/spring-gift/admin/product',
+                contentType: 'application/json',
+                data: JSON.stringify(productData),
+                success: function (response) {
+                    console.log("Product registered successfully:", response);
+                    alert('상품이 등록되었습니다.');
+                    fnReset();
+                    loadProducts();
+                },
+                error: function (xhr, status, error) {
+
+                    var errorResponse = JSON.parse(xhr.responseText);
+                    alert(errorResponse.errorMessage);
+                }
+            });
+        });
+
+        // 상품 조회하기
+        $('#searchButton').on('click', function (e) {
+            e.preventDefault();
+            var productId = $('#id').val();
+            $.ajax({
+                type: 'GET',
+                url: '/spring-gift/admin/product/' + productId,
+                success: function (product) {
+                    var product = product;
+                    var html = '';
+                    if (product) {
+                        html += '<tr>' +
+                            '<td>' + product.id + '</td>' +
+                            '<td>' + product.name + '</td>' +
+                            '<td>' + product.price + '</td>' +
+                            '<td>' + product.imageUrl + '</td>' +
+                            '</tr>';
+                    } else {
+                        html += '<tr><td colspan="4">상품을 찾을 수 없습니다.</td></tr>';
+                    }
+                    $('#searchResult').html(html);
+                },
+
+                error: function (xhr, status, error) {
+                    var errorResponse = JSON.parse(xhr.responseText);
+                    alert(errorResponse.errorMessage);
+                }
+            });
+        });
+
+        function fnReset() {
+            $("#name").val("");
+            $("#price").val("");
+            $("#imageUrl").val("");
+        }
+        // 상품 리스트 로드하기
+        function loadProducts() {
+            $.ajax({
+                type: 'GET',
+                url: '/spring-gift/admin/products',
+                success: function (response) {
+                    var products = response;
+                    var html = '';
+                    products.forEach(function (product) {
+                        html += '<tr>' +
+                            '<td>' + product.id + '</td>' +
+                            '<td>' + product.name + '</td>' +
+                            '<td>' + product.price + '</td>' +
+                            '<td>' + product.imageUrl + '</td>' +
+                            '<td>' +
+                            '<div style="display: flex; justify-content: center; gap: 10px;">' +
+                            '<button class="btn btn-warning btn-sm edit-button" data-id="' + product.id + '" data-name="' + product.name + '" data-price="' + product.price + '" data-imageurl="' + product.imageUrl + '" style="width: 100px;">수정하기</button>' +
+                            '<button class="btn btn-danger btn-sm delete-button" data-id="' + product.id + '" style="width: 100px;">삭제하기</button>' +
+                            '</div>' +
+                            '</td>' +
+                            '</tr>';
+                    });
+                    $('#productList').html(html);
+                },
+                error: function (error) {
+                    alert('리스트 로드 중 오류가 발생했습니다.');
+                }
+            });
+        }
+
+        // 수정 버튼 클릭 시 모달 창 띄우기
+        $(document).on('click', '.edit-button', function () {
+            var productId = $(this).data('id');
+            var productName = $(this).data('name');
+            var productPrice = $(this).data('price');
+            var productImageUrl = $(this).data('imageurl');
+
+            $('#editId').val(productId);
+            $('#editName').val(productName);
+            $('#editPrice').val(productPrice);
+            $('#editImageUrl').val(productImageUrl);
+
+            $('#editModal').modal('show');
+        });
+
+        // 모달 창에서 저장 버튼 클릭 시 상품 업데이트
+        $('#saveChanges').on('click', function () {
+            var productId = $('#editId').val();
+            var productData = {
+                name: $('#editName').val(),
+                price: $('#editPrice').val(),
+                imageUrl: $('#editImageUrl').val()
+            };
+
+            $.ajax({
+                type: 'PUT',
+                url: '/spring-gift/admin/product?id=' + productId,
+                contentType: 'application/json',
+                data: JSON.stringify(productData),
+                success: function (response) {
+                    console.log("Product updated successfully:", response);
+                    alert('상품이 수정되었습니다.');
+                    $('#editModal').modal('hide');
+                    loadProducts();
+                },
+                error: function (xhr, status, error) {
+
+                    var errorResponse = JSON.parse(xhr.responseText);
+                    alert(errorResponse.errorMessage);
+
+                }
+            });
+        });
+
+        // 삭제 버튼 클릭 시 상품 삭제
+        $(document).on('click', '.delete-button', function () {
+            var productId = $(this).data('id');
+            $.ajax({
+                type: 'DELETE',
+                url: '/spring-gift/admin/product/' + productId,
+                success: function (response) {
+                    alert('상품이 삭제되었습니다.');
+                    loadProducts();
+                },
+
+                error: function (xhr, status, error) {
+                    var errorResponse = JSON.parse(xhr.responseText);
+                    alert(errorResponse.errorMessage);
+                }
+            });
+        });
+
+        // 초기 로드
+        loadProducts();
+    });
+</script>
 </body>
 </html>
