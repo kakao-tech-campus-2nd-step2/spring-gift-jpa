@@ -18,13 +18,13 @@ public class WishRepository {
     }
 
     public void save(Wish wish) {
-        String sql = "INSERT INTO wishes (member_id, product_id) VALUES (?, ?)";
-        jdbcTemplate.update(sql, wish.getMemberId(), wish.getProductId());
+        String sql = "INSERT INTO wishes (member_id, product_name) VALUES (?, ?)";
+        jdbcTemplate.update(sql, wish.getMemberId(), wish.getProductName());
     }
 
-    public boolean existsByMemberIdAndProductId(Long memberId, Long productId) {
-        String sql = "SELECT COUNT(*) FROM wishes WHERE member_id = ? AND product_id = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{memberId, productId}, Integer.class);
+    public boolean existsByMemberIdAndProductName(Long memberId, String productName) {
+        String sql = "SELECT COUNT(*) FROM wishes WHERE member_id = ? AND product_name = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{memberId, productName}, Integer.class);
         return count != null && count > 0;
     }
 
@@ -33,9 +33,9 @@ public class WishRepository {
         return jdbcTemplate.query(sql, new Object[]{memberId}, new WishRowMapper());
     }
 
-    public void deleteByMemberIdAndProductId(Long memberId, Long productId) {
-        String sql = "DELETE FROM wishes WHERE member_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, memberId, productId);
+    public void deleteByMemberIdAndProductName(Long memberId, String productName) {
+        String sql = "DELETE FROM wishes WHERE member_id = ? AND product_name = ?";
+        jdbcTemplate.update(sql, memberId, productName);
     }
 
     private static class WishRowMapper implements RowMapper<Wish> {
@@ -44,7 +44,7 @@ public class WishRepository {
             Wish wish = new Wish();
             wish.setId(rs.getLong("id"));
             wish.setMemberId(rs.getLong("member_id"));
-            wish.setProductId(rs.getLong("product_id"));
+            wish.setProductName(rs.getString("product_name"));
             return wish;
         }
     }

@@ -14,9 +14,9 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public void addWish(Long memberId, Long productId) {
-        if (!wishRepository.existsByMemberIdAndProductId(memberId, productId)) {
-            Wish wish = new Wish(memberId, productId);
+    public void addWish(Long memberId, String productName) {
+        if (!wishRepository.existsByMemberIdAndProductName(memberId, productName)) {
+            Wish wish = new Wish(memberId, productName);
             wishRepository.save(wish);
         }
     }
@@ -25,7 +25,7 @@ public class WishService {
         return wishRepository.findByMemberId(memberId);
     }
 
-    public void removeWish(Long memberId, Long productId) {
-        wishRepository.deleteByMemberIdAndProductId(memberId, productId);
+    public void removeWish(Long memberId, String productName) {
+        wishRepository.deleteByMemberIdAndProductName(memberId, productName);
     }
 }

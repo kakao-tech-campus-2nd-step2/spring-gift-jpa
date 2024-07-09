@@ -3,14 +3,14 @@ package gift.domain;
 public class Wish {
     private Long id;
     private Long memberId;
-    private Long productId;
+    private String productName;
 
     // Constructors, getters, and setters
     public Wish() {}
 
-    public Wish(Long memberId, Long productId) {
+    public Wish(Long memberId, String productName) {
         this.memberId = memberId;
-        this.productId = productId;
+        this.productName = productName;
     }
 
     public Long getId() {
@@ -29,11 +29,11 @@ public class Wish {
         this.memberId = memberId;
     }
 
-    public Long getProductId() {
-        return productId;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 }

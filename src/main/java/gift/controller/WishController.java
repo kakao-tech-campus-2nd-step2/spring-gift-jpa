@@ -1,10 +1,9 @@
 package gift.controller;
 
 import gift.anotation.LoginMember;
-import gift.domain.Wish;
 import gift.domain.Member;
+import gift.domain.Wish;
 import gift.service.WishService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +23,7 @@ public class WishController {
     @PostMapping
     @ResponseBody
     public void addWish(@RequestBody Wish wish, @LoginMember Member member) {
-        wishService.addWish(member.getId(), wish.getProductId());
+        wishService.addWish(member.getId(), wish.getProductName());
     }
 
     @GetMapping
@@ -34,7 +33,7 @@ public class WishController {
 
     @DeleteMapping("/remove")
     @ResponseBody
-    public void removeWish(@RequestParam Long memberId, @RequestParam Long productId) {
-        wishService.removeWish(memberId, productId);
+    public void removeWish(@RequestBody Wish wish, @LoginMember Member member) {
+        wishService.removeWish(member.getId(), wish.getProductName());
     }
 }

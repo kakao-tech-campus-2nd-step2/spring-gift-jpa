@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS members (
 CREATE TABLE IF NOT EXISTS wishes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     member_id BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    CONSTRAINT fk_member FOREIGN KEY (member_id) REFERENCES members(id),
-    CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES kakaoProduct(id)
-);
+    product_name VARCHAR(255) NOT NULL,
+    CONSTRAINT fk_member FOREIGN KEY (member_id) REFERENCES members(id)
+    );
+
