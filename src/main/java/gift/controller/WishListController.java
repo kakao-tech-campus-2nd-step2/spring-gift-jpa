@@ -5,8 +5,10 @@ import gift.model.Product;
 import gift.model.ProductDTO;
 import gift.model.WishList;
 import gift.service.WishListService;
+import gift.service.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,17 +16,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/wishlist")
 public class WishListController {
 
     private final WishListService wishListService;
+    private final ProductService productService;
 
     @Autowired
-    public WishListController(WishListService wishListService) {
+    public WishListController(WishListService wishListService, ProductService productService) {
         this.wishListService = wishListService;
+        this.productService = productService;
     }
 
     @GetMapping
@@ -44,15 +50,18 @@ public class WishListController {
 
     @GetMapping("/add")
     public String showAddProductForm(Model model) {
-        model.addAttribute("product", new ProductDTO());
+        model.addAttribute("productId", new Long(0)); // productId만 입력받도록 변경
         return "add_product_to_wishlist";
     }
 
     @PostMapping("/add")
-    public String addProductToWishList(@ModelAttribute ProductDTO productDTO, HttpServletRequest request) {
+    public String addProductToWishList(@RequestBody Map<String, Long> payload, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
-        Product product = new Product(productDTO.getId(), new Name(productDTO.getName().getName()), productDTO.getPrice(), productDTO.getImageUrl());
-        wishListService.addProductToWishList(email, product);
+        Long productId = payload.get("productId");
+        Product product = productService.findProductById(productId); // 기존에 있는 제품을 추가하는 것이므로 productService 사용
+        if (product != null) {
+            wishListService.addProductToWishList(email, productId);
+        }
         return "redirect:/wishlist";
     }
 
