@@ -1,20 +1,25 @@
 package gift.vo;
 
-import gift.validation.ValidName;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+@Entity
 public class Product {
 
+    private Integer price;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max=15) @ValidName
+    @Column(nullable = false)
+    @Size(max = 15)
     private String name;
 
-    private int price;
-
+    @Column(nullable = false)
     private String imageUrl;
 
-    Product() {}
+    public Product() {}
 
     public Product(String name, int price, String imageUrl) {
         this(null, name, price, imageUrl);
@@ -26,7 +31,6 @@ public class Product {
         this.price = price;
         this.imageUrl = imageUrl;
     }
-
     // getter
     public Long getId() {
         return id;
