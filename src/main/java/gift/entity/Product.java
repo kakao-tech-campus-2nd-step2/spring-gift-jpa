@@ -1,23 +1,93 @@
 package gift.entity;
 
-import gift.validation.annotation.RestrictedKeyword;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.util.Objects;
+import java.util.Set;
 
-public record Product(
-    @NotNull Long id,
+@Entity
+@Table(name = "products")
+public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @NotBlank(message = "상품 이름은 비워둘 수 없습니다.")
-    @Size(max = 15, message = "상품 이름은 공백을 포함하여 최대 15자까지 입력할 수 있습니다.")
-    @Pattern(regexp = "^[a-zA-Z가-힣0-9 ()\\[\\]+\\-&/_]*$",
-        message = "상품 이름은 특수문자는 ( ), [ ], +, -, &, /, _만 사용 가능하며, 한글, 영어, 숫자만 입력할 수 있습니다.")
-    @RestrictedKeyword(keywords = {"카카오"}, message = "\"카카오\"가 포함된 문구는 담당 MD와 협의가 필요합니다.")
-    String name,
+    @Column(nullable = false)
+    private String name;
 
-    @Positive Integer price,
+    @Column(nullable = false)
+    private Integer price;
 
-    String imageUrl
-) {}
+    @Column
+    private String imageUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Set<Wish> wishes;
+
+    public Product() {}
+
+    public Product(Long id, String name, Integer price, String imageUrl, Set<Wish> wishes) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.wishes = wishes;
+    }
+
+    public Long id() {
+        return id;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public Integer price() {
+        return price;
+    }
+
+    public String imageUrl() {
+        return imageUrl;
+    }
+
+    public Set<Wish> wishes() {
+        return wishes;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        var that = (Product) obj;
+        return Objects.equals(this.id, that.id) &&
+            Objects.equals(this.name, that.name) &&
+            Objects.equals(this.price, that.price) &&
+            Objects.equals(this.imageUrl, that.imageUrl) &&
+            Objects.equals(this.wishes, that.wishes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, imageUrl, wishes);
+    }
+
+    @Override
+    public String toString() {
+        return "Product[" +
+            "id=" + id + ", " +
+            "name=" + name + ", " +
+            "price=" + price + ", " +
+            "imageUrl=" + imageUrl + ", " +
+            "wishes=" + wishes + ']';
+    }
+}
