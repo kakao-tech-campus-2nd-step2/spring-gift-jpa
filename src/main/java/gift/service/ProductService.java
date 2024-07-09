@@ -70,7 +70,8 @@ public class ProductService {
         if (productRepository.existsByName(productAddRequestDto.getName())) {
             throw new IllegalArgumentException("이미 존재하는 상품명입니다.");
         }
-        product.update(productAddRequestDto.getName(), productAddRequestDto.getPrice(), productAddRequestDto.getImageUrl());
+        product.update(productAddRequestDto.getName(), productAddRequestDto.getPrice(),
+            productAddRequestDto.getImageUrl());
         return convertToResponseDto(productRepository.save(product));
     }
 
@@ -101,6 +102,15 @@ public class ProductService {
             product.getName(),
             product.getPrice(),
             product.getImageUrl()
+        );
+    }
+
+    protected Product convertResponseDtoToEntity(ProductResponseDto productResponseDto) {
+        return new Product(
+            productResponseDto.getId(),
+            productResponseDto.getName(),
+            productResponseDto.getPrice(),
+            productResponseDto.getImageUrl()
         );
     }
 }

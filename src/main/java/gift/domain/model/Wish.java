@@ -27,6 +27,9 @@ public class Wish {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @Column(nullable = false)
+    private Integer count = 1;
+
     protected Wish() {}
 
     public Wish(User user, Product product) {
@@ -44,5 +47,13 @@ public class Wish {
 
     public Product getProduct() {
         return product;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }
