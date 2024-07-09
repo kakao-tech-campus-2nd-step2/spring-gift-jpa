@@ -17,10 +17,12 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Product getProduct(Long id) {
         return productRepository.findById(id)
             .orElseThrow(() -> new ProductException("상품이 존재하지 않습니다."));

@@ -27,10 +27,11 @@ public class MemberService {
 
     }
 
+    @Transactional(readOnly = true)
     public Member login(String email, String password) {
 
         return memberRepository.findByEmail(email)
-            .filter(member -> member.login(email, password))
+            .filter(member -> member.validating(email, password))
             .orElseThrow(() -> new LoginErrorException("아이디 또는 비밀번호가 일치하지 않습니다."));
     }
 

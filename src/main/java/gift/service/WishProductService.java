@@ -24,6 +24,7 @@ public class WishProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Product> getMyWishList(Long memberId) {
         return wishProductRepository.findAllByMemberId(memberId);
     }

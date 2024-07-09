@@ -62,7 +62,7 @@ public class Member {
         return role;
     }
 
-    public boolean login(String email, String password) {
+    public boolean validating(String email, String password) {
         return this.email.equals(email) && this.password.equals(password);
     }
 }
