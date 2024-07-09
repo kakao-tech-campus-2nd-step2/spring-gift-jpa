@@ -24,11 +24,11 @@
 </head>
 <body>
 <h1>Post</h1>
-<form th:action="@{/api/getAllProducts}" method="get" style="display: inline;">
+<form th:action="@{/products}" method="get" style="display: inline;">
     <button type="submit">Back To List</button>
 </form>
 <div>
-    <form action="/api/postProduct" method="post">
+    <form action="/products" method="post">
         name: <input type="text" id="name" name="name" required><br>
         price: <input type="number" id="price" name="price" required><br>
         imageUrl: <input type="text" id="imageUrl" name="imageUrl" required><br>

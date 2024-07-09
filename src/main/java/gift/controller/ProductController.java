@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/api")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -16,41 +16,40 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/getAllProducts")
+    @GetMapping
     public String getAllProducts(Model model) {
         model.addAttribute("productList", productService.getAllProducts());
         return "index";
     }
 
-    @GetMapping("/getProduct/{id}")
+    @GetMapping("/{id}")
     @ResponseBody
     public Product getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
-    @PostMapping("/postProduct")
+    @PostMapping
     public String postProduct(@ModelAttribute Product product, Model model) {
         try{
             productService.postProduct(product);
-            return "redirect:/api/getAllProducts";
+            return "redirect:/products";
         } catch (IllegalArgumentException e) {
         model.addAttribute("error", e.getMessage());
         return "error";
+        }
     }
 
-    }
-
-    @GetMapping("/deleteProduct/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return "redirect:/api/getAllProducts";
+        return "redirect:/products";
     }
 
-    @PostMapping("/updateProduct/{id}")
+    @PostMapping("/update/{id}")
     public String updateProduct(@PathVariable Long id, @ModelAttribute Product newProduct, Model model) {
         try{
             productService.updateProduct(id, newProduct);
-            return "redirect:/api/getAllProducts";
+            return "redirect:/products";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
             return "error";

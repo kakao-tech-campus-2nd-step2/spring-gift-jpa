@@ -24,12 +24,12 @@
 </head>
 <body>
 <h1>Edit</h1>
-<form th:action="@{/api/getAllProducts}" method="get" style="display: inline;">
+<form th:action="@{/products}" method="get" style="display: inline;">
     <button type="submit">Back To List</button>
 </form>
 <div>
     product ID: <span th:text="${product.id}"></span>
-    <form th:action="@{/api/updateProduct/{id}(id=${product.id})}" method="post">
+    <form th:action="@{/products/update/{id}(id=${product.id})}" method="post">
         name: <input type="text" id="name" name="name" value=""><br>
         price: <input type="number" id="price" name="price" value=""><br>
         imageUrl: <input type="text" id="imageUrl" name="imageUrl" value=""><br>

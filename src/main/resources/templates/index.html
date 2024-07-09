@@ -68,7 +68,7 @@
                 </form>
             </td>
             <td>
-                <form th:action="@{/api/deleteProduct/{id}(id=${product.id})}" method="Get" style="display: inline;">
+                <form th:action="@{/products/delete/{id}(id=${product.id})}" method="Get" style="display: inline;">
                     <button type="submit">Delete</button>
                 </form>
             </td>

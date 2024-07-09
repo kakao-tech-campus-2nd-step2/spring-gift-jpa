@@ -16,7 +16,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index() {
-        return "redirect:/api/getAllProducts";
+        return "redirect:/products";
     }
 
     @GetMapping("/postform")
