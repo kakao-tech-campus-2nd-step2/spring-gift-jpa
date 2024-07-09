@@ -2,24 +2,24 @@ package gift.service;
 
 import gift.domain.Wish;
 import gift.dto.WishDto;
-import gift.repository.WishDao;
+import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class WishService {
-    private final WishDao wishDao;
+    private final WishRepository wishRepository;
 
-    public WishService(WishDao wishDao) {
-        this.wishDao = wishDao;
+    public WishService(WishRepository wishRepository) {
+        this.wishRepository = wishRepository;
     }
 
     public void addWish(Long memberId, WishDto wishDto) {
         Wish newWish = new Wish(memberId, wishDto.getProductId());
-        wishDao.addWish(newWish);
+        wishRepository.save(newWish);
     }
 
-    public void deleteWishbyId(Long wishId){
-        wishDao.deleteWishById(wishId);
+    public void deleteWish(Long wishId){
+        wishRepository.deleteById(wishId);
     }
 
 }

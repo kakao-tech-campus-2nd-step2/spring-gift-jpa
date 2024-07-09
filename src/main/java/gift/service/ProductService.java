@@ -2,39 +2,48 @@ package gift.service;
 
 import gift.dto.ProductRegisterRequestDto;
 import gift.domain.Product;
-import gift.repository.ProductDao;
+import gift.repository.ProductRepository;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public List<Product> getAllProducts(){
-        return productDao.findAll();
+        return productRepository.findAll();
     }
 
     public ProductRegisterRequestDto getProductById(long id) {
-        Product product = productDao.findById(id);
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("해당 id의 상품 없음: " + id));;
         return new ProductRegisterRequestDto(product.getName(), product.getPrice(),
             product.getImageUrl());
     }
 
     public Long addProduct(ProductRegisterRequestDto productDto){
         Product newProduct = new Product(productDto.getName(),productDto.getPrice(),productDto.getImageUrl());
-        return productDao.insertProduct(newProduct);
+        Product savedProduct = productRepository.save(newProduct);
+        return savedProduct.getId();
     }
 
     public Long updateProduct(long id, ProductRegisterRequestDto productDto){
-        Product updatedProduct = new Product(productDto.getName(),productDto.getPrice(),productDto.getImageUrl());
-        return productDao.updateProduct(id, updatedProduct);
-    }
+        Product existingProduct = productRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("해당 id의 상품 없음: " + id));
 
-    public Long deleteProduct(long id){
-        return productDao.deleteById(id);
+        existingProduct.setName(productDto.getName());
+        existingProduct.setPrice(productDto.getPrice());
+        existingProduct.setImageUrl(productDto.getImageUrl());
+
+        Product savedProduct = productRepository.save(existingProduct);
+        return savedProduct.getId();
+    }
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
     }
 }
