@@ -101,7 +101,7 @@ class ProductServiceTest {
         Long id = 1L;
 
         // when
-        productService.delete(id);
+        productService.deleteProduct(id);
 
         // then
         verify(productRepository, times(1)).delete(id);
