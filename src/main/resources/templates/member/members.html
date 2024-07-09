@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>member management</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+</head>
+<body>
+<div class="container">
+    <div class="title">
+        <h1>Manage Members</h1>
+        <button><a th:href="@{/admin/member/new}">Add New Member</a></button>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th th:width="50">번호</th>
+            <th th:width="100">이메일</th>
+            <th th:width="100">권한</th>
+            <th th:width="100">수정</th>
+            <th th:width="100">삭제</th>
+        </tr>
+        </thead>
+        <tbody id="table-body">
+        <tr th:if="${members.size() == 0}">
+            <td colspan="5">No Products Available</td>
+        </tr>
+        <tr th:each="member : ${members}">
+            <td th:text="${member.id}"/>
+            <td th:text="${member.email}"/>
+            <td th:text="${member.role}"/>
+            <td><button><a th:href="@{/admin/member/{id}(id=${member.id})}">수정</a></button></td>
+            <td>
+                <form th:action="@{/admin/member/{id}(id=${member.id})}" method="post">
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <button type="submit">삭제</button>
+                </form>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
