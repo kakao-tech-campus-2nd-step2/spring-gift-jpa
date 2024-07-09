@@ -48,7 +48,6 @@ public class ProductService {
 
     public Product selectProduct(Long id) {
         return productRepository.findById(id).get();
-        ;
     }
 
     public List<Product> selectAllProducts(){

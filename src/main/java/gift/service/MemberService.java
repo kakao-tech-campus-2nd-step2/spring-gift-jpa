@@ -1,10 +1,10 @@
 package gift.service;
 
-import gift.dao.MemberDao;
 import gift.dto.LoginResultDto;
 import gift.dto.MemberDto;
 import gift.jwt.JwtUtil;
 import gift.model.member.Member;
+import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,19 +12,19 @@ import java.util.Optional;
 @Service
 public class MemberService {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
     private final JwtUtil jwtUtil;
 
-    public MemberService(MemberDao memberDao, JwtUtil jwtUtil){
+    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil){
         this.jwtUtil = jwtUtil;
-        this.memberDao = memberDao;
+        this.memberRepository = memberRepository;
     }
 
     public boolean registerNewMember(MemberDto memberDto) {
         Member member = new Member(memberDto.email(),memberDto.password());
-        if(memberDao.findByEmail(member.getEmail()).isEmpty()){
-            memberDao.registerNewMember(member);
+        if(memberRepository.findByEmail(member.getEmail()).isEmpty()){
+            memberRepository.save(member);
             return true;
         }
         return false;
@@ -37,7 +37,7 @@ public class MemberService {
 
     public LoginResultDto loginMember(MemberDto memberDto) {
         Member member = new Member(memberDto.email(),memberDto.password());
-        Optional<Member> registeredMember = memberDao.findByEmail(member.getEmail());
+        Optional<Member> registeredMember = memberRepository.findByEmail(member.getEmail());
         if (registeredMember.isPresent() && member.isPasswordEqual(registeredMember.get().getPassword())) {
             String token = jwtUtil.generateToken(member);
             return new LoginResultDto(token, true);
@@ -46,6 +46,6 @@ public class MemberService {
     }
 
     public Optional<Member> findByEmail(String email){
-        return memberDao.findByEmail(email);
+        return memberRepository.findByEmail(email);
     }
 }
