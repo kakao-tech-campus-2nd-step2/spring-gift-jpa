@@ -27,6 +27,10 @@ public class WishServiceImpl implements WishService {
 
     @Override
     public boolean removeWish(Long id, Long memberId) {
-        return wishRepository.deleteByIdAndMemberId(id, memberId);
+        if (wishRepository.existsById(id)) {
+            wishRepository.deleteByIdAndMemberId(id, memberId);
+            return true;
+        }
+        return false;
     }
 }
