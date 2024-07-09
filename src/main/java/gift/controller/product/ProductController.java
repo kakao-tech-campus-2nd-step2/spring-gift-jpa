@@ -23,7 +23,7 @@ public class ProductController {
     @PostMapping("api/products")
     public ResponseEntity<AddedProductIdResponse> addProduct(@Valid @RequestBody ProductRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productService.addProduct(request.getName(), request.getPrice(), request.getImageUrl()));
+                .body(productService.addProduct(request.name(), request.price(), request.imageUrl()));
     }
 
     @GetMapping("api/products")
@@ -33,7 +33,7 @@ public class ProductController {
 
     @PutMapping("api/products")
     public ResponseEntity<Void> updateProduct(@Valid @RequestBody ProductRequest request) {
-        productService.updateProduct(request.getId(), request.getName(), request.getPrice(), request.getImageUrl());
+        productService.updateProduct(request.id(), request.name(), request.price(), request.imageUrl());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

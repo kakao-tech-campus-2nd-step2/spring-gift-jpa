@@ -1,6 +1,7 @@
 package gift.controller.admin;
 
 import gift.dto.request.ProductRequest;
+import gift.dto.response.ProductResponse;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -29,14 +30,14 @@ public class ProductAdminController {
 
     @GetMapping("/add")
     public String getAddForm(Model model) {
-        model.addAttribute("product", new ProductRequest()); // Add an empty Product object for the form
+        model.addAttribute("product", new ProductResponse(0L, "", 0, "")); // Add an empty Product object for the form
         return "version-SSR/add-form";
     }
 
     @PostMapping("/add")
     public String addProduct(@Valid ProductRequest product) {
         try {
-            productService.addProduct(product.getName(), product.getPrice(), product.getImageUrl());
+            productService.addProduct(product.name(), product.price(), product.imageUrl());
             return "redirect:/";
         } catch (Exception e) {
             return "version-SSR/add-error";
@@ -57,14 +58,14 @@ public class ProductAdminController {
 
     @GetMapping("/edit/{id}")
     public String getEditForm(@PathVariable("id") long id, Model model) {
-        model.addAttribute("product", productService.getProduct(id)); // Add an empty Product object for the form
+        model.addAttribute("product", productService.getProduct(id));
         return "version-SSR/edit-form";
     }
 
     @PostMapping("/edit")
     public String editProduct(@Valid ProductRequest product) {
         try {
-            productService.updateProduct(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+            productService.updateProduct(product.id(), product.name(), product.price(), product.imageUrl());
             return "redirect:/";
         } catch (Exception e) {
             return "version-SSR/edit-error";
