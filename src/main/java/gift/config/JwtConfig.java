@@ -1,7 +1,7 @@
 package gift.config;
 
 
-import gift.validation.JwtTokenProvider;
+import gift.security.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

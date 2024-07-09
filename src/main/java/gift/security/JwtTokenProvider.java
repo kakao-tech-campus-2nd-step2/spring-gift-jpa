@@ -1,7 +1,6 @@
-package gift.validation;
+package gift.security;
 
 import gift.domain.Member;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;

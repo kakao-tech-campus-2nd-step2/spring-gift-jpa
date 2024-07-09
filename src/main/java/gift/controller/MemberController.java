@@ -6,7 +6,7 @@ import gift.dto.LoginResponse;
 import gift.dto.MemberRequest;
 import gift.dto.MemberResponse;
 import gift.service.MemberService;
-import gift.validation.JwtTokenProvider;
+import gift.security.JwtTokenProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,15 +41,11 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-        // 사용자 인증 로직
-        Member member = memberService.findByEmail(loginRequest.getEmail());
-        if (member != null && passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
-            // 토큰 생성 및 반환
-            String token = jwtTokenProvider.generateToken(member);
-            return ResponseEntity.ok(new LoginResponse(token));
+        LoginResponse loginResponse = memberService.login(loginRequest);
+        if (loginResponse.getToken() != null) {
+            return ResponseEntity.ok(loginResponse);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new LoginResponse("일치하는 이메일이 없거나 비밀번호가 틀렸습니다."));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginResponse);
         }
     }
 
