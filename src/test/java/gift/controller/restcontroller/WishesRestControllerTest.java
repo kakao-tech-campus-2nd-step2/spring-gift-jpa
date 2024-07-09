@@ -2,6 +2,7 @@ package gift.controller.restcontroller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.common.annotation.LoginMember;
+import gift.controller.dto.response.ProductResponse;
 import gift.controller.dto.response.WishResponse;
 import gift.service.WishService;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,10 +80,10 @@ class WishesRestControllerTest {
         for (int i = 1; i < dataCount; i++) {
             assertThat(responses[i - 1].id()).isEqualTo((i));
             assertThat(responses[i - 1].productCount()).isEqualTo((i + 1));
-            assertThat(responses[i - 1].productId()).isEqualTo((i));
-            assertThat(responses[i - 1].productName()).isEqualTo(("testProduct"));
-            assertThat(responses[i - 1].productPrice()).isEqualTo((i * 1000));
-            assertThat(responses[i - 1].productImageUrl()).isEqualTo(("URL"));
+            assertThat(responses[i - 1].productResponse().id()).isEqualTo((i));
+            assertThat(responses[i - 1].productResponse().name()).isEqualTo(("testProduct"));
+            assertThat(responses[i - 1].productResponse().price()).isEqualTo((i * 1000));
+            assertThat(responses[i - 1].productResponse().imageUrl()).isEqualTo(("URL"));
         }
     }
 
@@ -91,8 +92,9 @@ class WishesRestControllerTest {
     private List<WishResponse> wishList(int count) {
         List<WishResponse> wishList = new ArrayList<>();
         for (int i = 1; i <= count; i++) {
-            wishList.add(new WishResponse((long) i, i + 1, (long)i, "testProduct",
-                    i * 1000, "URL", null, null));
+            wishList.add(new WishResponse((long) i, i + 1,
+                    new ProductResponse((long)i, "testProduct", i * 1000, "URL", null, null),
+                    null, null));
         }
         return wishList;
     }

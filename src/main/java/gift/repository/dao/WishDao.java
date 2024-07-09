@@ -1,4 +1,4 @@
-package gift.repository;
+package gift.repository.dao;
 
 import gift.controller.dto.request.WishInsertRequest;
 import gift.controller.dto.request.WishPatchRequest;
@@ -42,7 +42,7 @@ public class WishDao {
                 .list();
     }
 
-    public void deleteByProductId(Long productId, Long memberId) {
+    public void deleteByProductIdAndMemberId(Long productId, Long memberId) {
         var sql = "delete from wish where product_id = ? and member_id = ?";
         jdbcClient.sql(sql)
                 .params(productId, memberId)

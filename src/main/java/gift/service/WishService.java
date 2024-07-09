@@ -5,20 +5,26 @@ import gift.common.exception.EntityNotFoundException;
 import gift.controller.dto.request.WishInsertRequest;
 import gift.controller.dto.request.WishPatchRequest;
 import gift.controller.dto.response.WishResponse;
+import gift.model.Member;
+import gift.model.Product;
+import gift.model.Wish;
+import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
-import gift.repository.WishDao;
+import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class WishService {
-    private final WishDao wishDao;
+    private final WishRepository wishRepository;
     private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
 
-    public WishService(WishDao wishDao, ProductRepository productRepository) {
-        this.wishDao = wishDao;
+    public WishService(WishRepository wishRepository, ProductRepository productRepository, MemberRepository memberRepository) {
+        this.wishRepository = wishRepository;
         this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
     }
 
     public void update(WishPatchRequest request, Long memberId) {
@@ -27,27 +33,46 @@ public class WishService {
             deleteByProductId(request.productId(), memberId);
             return;
         }
-        wishDao.update(request, memberId);
+        Wish wish = wishRepository.findByMemberIdAndProductId(memberId, request.productId())
+                .orElseThrow(() -> new EntityNotFoundException("Wish not found"));
+        Member member = findMemberById(memberId);
+        Product product = findProductById(request.productId());
+        wish.updateWish(member, request.productCount(), product);
+        wishRepository.save(wish);
     }
 
-    public void save(WishInsertRequest request, Long memberId) {
+    public void save(WishInsertRequest request, int productCount, Long memberId) {
         checkProductExist(request.productId());
         checkDuplicateWish(request.productId(), memberId);
-        wishDao.save(request, memberId);
+        Member member = findMemberById(memberId);
+        Product product = findProductById(request.productId());
+        wishRepository.save(new Wish(member, productCount, product));
     }
 
     public List<WishResponse> findAllByMemberId(Long memberId) {
-        return wishDao.findAllByMemberId(memberId).stream()
+        return wishRepository.findAllByMemberIdOrderByCreatedAtAsc(memberId).stream()
                 .map(WishResponse::from)
                 .toList();
     }
 
     public void deleteByProductId(Long productId, Long memberId) {
-        wishDao.deleteByProductId(productId, memberId);
+        wishRepository.deleteByProductIdAndMemberId(productId, memberId);
+    }
+
+    public Member findMemberById(Long memberId) {
+        return  memberRepository.findById(memberId)
+                .orElseThrow(()->
+                        new EntityNotFoundException("Member with id " + memberId + " not found"));
+    }
+
+    public Product findProductById(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(()->
+                        new EntityNotFoundException("Product with id " + productId + " not found"));
     }
 
     private void checkProductExist(Long productId, Long memberId) {
-        if (!wishDao.existsByProductIdAndMemberId(productId, memberId)) {
+        if (!wishRepository.existsByProductIdAndMemberId(productId, memberId)) {
             throw new EntityNotFoundException("Product with id " + productId + " does not exist in wish");
         }
     }
@@ -59,7 +84,7 @@ public class WishService {
     }
 
     private void checkDuplicateWish(Long productId, Long memberId) {
-        if (wishDao.existsByProductIdAndMemberId(productId, memberId)) {
+        if (wishRepository.existsByProductIdAndMemberId(productId, memberId)) {
             throw new DuplicateDataException("Product with id " + productId + " already exists in wish", "Duplicate Wish");
         }
     }
