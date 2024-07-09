@@ -36,7 +36,9 @@ public class Product {
         this.imageURL = imageURL;
     }
 
-    public String getId() {
+    public String getIdAsString() {
         return String.valueOf(id);
     }
+
+    public int getId() { return id; }
 }
