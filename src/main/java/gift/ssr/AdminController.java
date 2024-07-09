@@ -1,6 +1,7 @@
 package gift.ssr;
 
 import gift.controller.member.MemberDto;
+import gift.controller.member.MemberRequest;
 import gift.controller.product.ProductResponse;
 import gift.controller.product.ProductRequest;
 import gift.service.MemberService;
@@ -31,31 +32,33 @@ public class AdminController {
 
     @GetMapping("/members/add")
     public String memberAddForm(Model model) {
-        model.addAttribute("member", new MemberDto("", ""));
+        model.addAttribute("member", new MemberRequest("", ""));
         return "member-add-form";
     }
 
     @PostMapping("/members/add")
-    public String addMember(@ModelAttribute MemberDto member) {
+    public String addMember(@ModelAttribute MemberRequest member) {
         memberService.save(member);
         return "redirect:/admin/members";
     }
 
     @GetMapping("/members/edit/{email}")
     public String memberEditForm(@PathVariable String email, Model model) {
-        model.addAttribute("member", memberService.find(email));
+        model.addAttribute("member", memberService.findByEmail(email));
         return "member-edit-form";
     }
 
     @PostMapping("/members/edit/{email}")
-    public String editMember(@PathVariable String email, @ModelAttribute MemberDto member) {
-        memberService.update(email, member);
+    public String editMember(@PathVariable String email, @ModelAttribute MemberRequest member) {
+        Long id = memberService.findByEmail(email).id();
+        memberService.update(id, member.password());
         return "redirect:/admin/members";
     }
 
     @GetMapping("/members/delete/{email}")
     public String deleteMember(@PathVariable String email) {
-        memberService.delete(email);
+        Long id = memberService.findByEmail(email).id();
+        memberService.deleteById(id);
         return "redirect:/admin/members";
     }
 
