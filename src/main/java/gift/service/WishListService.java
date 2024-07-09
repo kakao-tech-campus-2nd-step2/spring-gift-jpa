@@ -3,6 +3,7 @@ package gift.service;
 import gift.domain.WishList;
 import gift.repository.wish.WishListRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,8 +13,8 @@ public class WishListService {
         this.wishListRepository = wishListRepository;
     }
 
-    public List<WishList> getWishListByUserId(Long userId) {
-        return wishListRepository.findByUserId(userId);
+    public Optional<WishList> getWishListByUserId(Long userId) {
+        return wishListRepository.findById(userId);
     }
 
     public void addWishList(Long userId, Long productId, int quantity) {
@@ -22,7 +23,11 @@ public class WishListService {
     }
 
     public void updateProductQuantity(Long id, int quantity) {
-        wishListRepository.updateQuantity(id, quantity);
+        Optional<WishList> existingWish = wishListRepository.findById(id);
+        WishList wish = existingWish.get();
+        wish.setQuantity(quantity);
+
+        wishListRepository.save(wish);
     }
 
 
