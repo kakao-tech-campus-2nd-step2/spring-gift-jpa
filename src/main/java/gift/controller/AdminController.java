@@ -21,13 +21,13 @@ public class AdminController {
 
     @GetMapping
     public String getProducts(Model model) {
-        model.addAttribute("products", productService.getProducts());
+        model.addAttribute("products", productService.findAll());
         return "index";
     }
 
     @GetMapping("/{id}")
     public String getProduct(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("product", productService.getProduct(id));
+        model.addAttribute("product", productService.findById(id));
         return "product";
     }
 
@@ -38,7 +38,7 @@ public class AdminController {
 
     @GetMapping("/edit/{id}")
     public String updateProduct(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("product", productService.getProduct(id));
+        model.addAttribute("product", productService.findById(id));
         return "edit-product";
     }
 }
