@@ -31,13 +31,13 @@ public class ProductRepository {
 
     public Product insert(Product product) {
         String sql = "INSERT INTO products (id, name, price, imageUrl) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, product.id(), product.name(), product.price(), product.imageUrl());
+        jdbcTemplate.update(sql, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
         return product;
     }
 
     public Product update(Product product) {
         String sql = "UPDATE products SET name = ?, price = ?, imageUrl = ? WHERE id = ?";
-        jdbcTemplate.update(sql, product.name(), product.price(), product.imageUrl(), product.id());
+        jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getId());
         return product;
     }
 
@@ -47,11 +47,11 @@ public class ProductRepository {
     }
 
     private RowMapper<Product> productRowMapper() {
-        return (rs, rowNum) -> new Product(
-            rs.getLong("id"),
-            rs.getString("name"),
-            rs.getInt("price"),
-            rs.getString("imageUrl")
-        );
+        return (rs, rowNum) -> Product.builder()
+            .id(rs.getLong("id"))
+            .name(rs.getString("name"))
+            .price(rs.getInt("price"))
+            .imageUrl(rs.getString("imageUrl"))
+            .build();
     }
 }

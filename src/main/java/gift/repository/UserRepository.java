@@ -25,8 +25,8 @@ public class UserRepository {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, user.email());
-            ps.setString(2, user.password());
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getPassword());
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -48,10 +48,10 @@ public class UserRepository {
 
 
     private RowMapper<User> userRowMapper() {
-        return (rs, rowNum) -> new User(
-            rs.getLong("id"),
-            rs.getString("email"),
-            rs.getString("password")
-        );
+        return (rs, rowNum) -> User.builder()
+            .id(rs.getLong("id"))
+            .email(rs.getString("email"))
+            .password(rs.getString("password"))
+            .build();
     }
 }

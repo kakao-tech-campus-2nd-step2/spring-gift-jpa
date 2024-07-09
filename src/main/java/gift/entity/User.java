@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -27,58 +26,63 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Wish> wishes;
 
-    public User() {}
-
-    public User(Long id, String email, String password, Set<Wish> wishes) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.wishes = wishes;
+    private User(Builder builder) {
+        this.id = builder.id;
+        this.email = builder.email;
+        this.password = builder.password;
+        this.wishes = builder.wishes;
     }
 
-    public Long id() {
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public String email() {
+    public String getEmail() {
         return email;
     }
 
-    public String password() {
+    public String getPassword() {
         return password;
     }
 
-    public Set<Wish> wishes() {
+    public Set<Wish> getWishes() {
         return wishes;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
+    public static class Builder {
+        private Long id;
+        private String email;
+        private String password;
+        private Set<Wish> wishes;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
         }
-        if (obj == null || obj.getClass() != this.getClass()) {
-            return false;
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
         }
-        var that = (User) obj;
-        return Objects.equals(this.id, that.id) &&
-            Objects.equals(this.email, that.email) &&
-            Objects.equals(this.password, that.password) &&
-            Objects.equals(this.wishes, that.wishes);
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder wishes(Set<Wish> wishes) {
+            this.wishes = wishes;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, password, wishes);
-    }
-
-    @Override
-    public String toString() {
-        return "User[" +
-            "id=" + id + ", " +
-            "email=" + email + ", " +
-            "password=" + password + ", " +
-            "wishes=" + wishes + ']';
-    }
-
+    protected User() {}
 }

@@ -1,8 +1,8 @@
 package gift.controller;
 
 import gift.annotation.LoginUserId;
-import gift.dto.wish.WishResponse;
 import gift.dto.wish.WishRequest;
+import gift.dto.wish.WishResponse;
 import gift.service.WishService;
 import jakarta.validation.Valid;
 import java.util.List;

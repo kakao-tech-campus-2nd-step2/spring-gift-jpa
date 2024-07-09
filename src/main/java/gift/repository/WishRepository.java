@@ -1,8 +1,8 @@
 package gift.repository;
 
 import gift.dto.wish.WishResponse;
-import gift.entity.Wish;
 import gift.entity.Product;
+import gift.entity.Wish;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -43,28 +43,28 @@ public class WishRepository {
         String sql = "INSERT INTO wishes (user_id, product_id, quantity) "
             + "VALUES (?, ?, ?)";
 
-        jdbcTemplate.update(sql, wish.userId(), wish.productId(), wish.quantity());
+        jdbcTemplate.update(sql, wish.getUser().getId(), wish.getProduct().getId(), wish.getQuantity());
 
-        return findByUserId(wish.userId());
+        return findByUserId(wish.getUser().getId());
     }
 
     public void update(Wish wish) {
         String sql = "UPDATE wishes SET quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql, wish.quantity(), wish.id());
+        jdbcTemplate.update(sql, wish.getQuantity(), wish.getId());
     }
 
     public void delete(Wish wish) {
         String sql = "DELETE FROM wishes WHERE id = ?";
-        jdbcTemplate.update(sql, wish.id());
+        jdbcTemplate.update(sql, wish.getId());
     }
 
     private final RowMapper<WishResponse> wishesRowMapper = (rs, rowNum) -> {
-        Product product = new Product(
-            rs.getLong("product_id"),
-            rs.getString("name"),
-            rs.getInt("price"),
-            rs.getString("imageUrl")
-        );
+        Product product = Product.builder()
+            .id(rs.getLong("product_id"))
+            .name(rs.getString("name"))
+            .price(rs.getInt("price"))
+            .imageUrl(rs.getString("imageUrl"))
+            .build();
         return new WishResponse(rs.getLong("id"), product, rs.getInt("quantity"));
     };
 }

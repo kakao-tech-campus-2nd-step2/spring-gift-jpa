@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.service.ProductService;
 import gift.entity.Product;
+import gift.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +28,7 @@ public class ProductViewController {
 
     @GetMapping("/new")
     public String newProduct(Model model) {
-        model.addAttribute("product", new Product(null, "", null, ""));
+        model.addAttribute("product", Product.builder().build());
         return "product_add_form";
     }
 

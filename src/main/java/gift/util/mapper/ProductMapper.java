@@ -8,17 +8,25 @@ import gift.entity.Product;
 public class ProductMapper {
 
     public static Product toProduct(AddProductRequest addProductRequest) {
-        return new Product(addProductRequest.id(), addProductRequest.name(),
-            addProductRequest.price(), addProductRequest.imageUrl());
+        return Product.builder()
+            .id(addProductRequest.id())
+            .name(addProductRequest.name())
+            .price(addProductRequest.price())
+            .imageUrl(addProductRequest.imageUrl())
+            .build();
     }
 
     public static Product toProduct(Long id, UpdateProductRequest updateProductRequest) {
-        return new Product(id, updateProductRequest.name(), updateProductRequest.price(),
-            updateProductRequest.imageUrl());
+        return Product.builder()
+            .id(id)
+            .name(updateProductRequest.name())
+            .price(updateProductRequest.price())
+            .imageUrl(updateProductRequest.imageUrl())
+            .build();
     }
 
     public static ProductResponse toResponse(Product product) {
-        return new ProductResponse(product.id());
+        return new ProductResponse(product.getId());
     }
 
 }

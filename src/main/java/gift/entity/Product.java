@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -30,64 +29,75 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<Wish> wishes;
 
-    public Product() {}
-
-    public Product(Long id, String name, Integer price, String imageUrl, Set<Wish> wishes) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.wishes = wishes;
+    private Product(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.price = builder.price;
+        this.imageUrl = builder.imageUrl;
+        this.wishes = builder.wishes;
     }
 
-    public Long id() {
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public String name() {
+    public String getName() {
         return name;
     }
 
-    public Integer price() {
+    public Integer getPrice() {
         return price;
     }
 
-    public String imageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public Set<Wish> wishes() {
+    public Set<Wish> getWishes() {
         return wishes;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
+    public static class Builder {
+        private Long id;
+        private String name;
+        private Integer price;
+        private String imageUrl;
+        private Set<Wish> wishes;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
         }
-        if (obj == null || obj.getClass() != this.getClass()) {
-            return false;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
         }
-        var that = (Product) obj;
-        return Objects.equals(this.id, that.id) &&
-            Objects.equals(this.name, that.name) &&
-            Objects.equals(this.price, that.price) &&
-            Objects.equals(this.imageUrl, that.imageUrl) &&
-            Objects.equals(this.wishes, that.wishes);
+
+        public Builder price(Integer price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder imageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+            return this;
+        }
+
+        public Builder wishes(Set<Wish> wishes) {
+            this.wishes = wishes;
+            return this;
+        }
+
+        public Product build() {
+            return new Product(this);
+        }
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, price, imageUrl, wishes);
-    }
+    protected Product() {}
 
-    @Override
-    public String toString() {
-        return "Product[" +
-            "id=" + id + ", " +
-            "name=" + name + ", " +
-            "price=" + price + ", " +
-            "imageUrl=" + imageUrl + ", " +
-            "wishes=" + wishes + ']';
-    }
 }

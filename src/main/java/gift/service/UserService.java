@@ -7,8 +7,8 @@ import gift.entity.User;
 import gift.exception.user.UserAlreadyExistException;
 import gift.exception.user.UserNotFoundException;
 import gift.exception.user.UserUnauthorizedException;
-import gift.util.mapper.UserMapper;
 import gift.repository.UserRepository;
+import gift.util.mapper.UserMapper;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Optional;
@@ -25,7 +25,7 @@ public class UserService {
     public UserResponse registerUser(UserRegisterRequest request) {
         User user = UserMapper.toUser(request);
 
-        Optional<User> existingUser = userRepository.findByEmail(user.email());
+        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
 
         if (existingUser.isPresent()) {
             throw new UserAlreadyExistException("이미 존재하는 Email입니다.");
@@ -44,9 +44,9 @@ public class UserService {
             .orElseThrow(() -> new UserNotFoundException("로그인할 수 없습니다."));
 
         return new UserResponse(
-            user.id(),
-            user.email(),
-            getToken(user.email(), user.password())
+            user.getId(),
+            user.getEmail(),
+            getToken(user.getEmail(), user.getPassword())
         );
     }
 
@@ -57,7 +57,7 @@ public class UserService {
             credentials.get("password"))
             .orElseThrow(() -> new UserUnauthorizedException("접근할 수 없습니다."));
 
-        return user.id();
+        return user.getId();
     }
 
     private HashMap<String, String> decodeToken(String token) {

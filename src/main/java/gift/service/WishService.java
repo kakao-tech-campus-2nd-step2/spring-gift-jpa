@@ -1,10 +1,9 @@
 package gift.service;
 
-import gift.dto.wish.WishResponse;
 import gift.dto.wish.WishRequest;
+import gift.dto.wish.WishResponse;
 import gift.entity.Wish;
 import gift.exception.wish.WishNotFoundException;
-import gift.util.mapper.WishMapper;
 import gift.repository.WishRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -30,34 +29,45 @@ public class WishService {
     }
 
     public List<WishResponse> addWish(Long userId, WishRequest wishRequest) {
-        Wish wish = WishMapper.toWish(userId, wishRequest);
-
-        productService.checkProductExist(wish.productId());
+        Wish wish = Wish.builder()
+            .userId(userId)
+            .productId(wishRequest.productId())
+            .quantity(wishRequest.quantity())
+            .build();
+        productService.checkProductExist(wish.getProductId());
 
         return wishRepository.insert(wish);
     }
 
-    public List<WishResponse> updateWishes(Long userId, List<WishRequest> wishRequests) {
-        for (WishRequest wishRequest : wishRequests) {
-            Long wishId = getWishId(userId, wishRequest.productId());
-            Wish wish = WishMapper.toWish(wishId, userId, wishRequest);
+    public List<WishResponse> updateWishes(Long userId, List<WishRequest> requests) {
+        for (WishRequest request : requests) {
+            Wish wish = Wish.builder()
+                    .id(getWishId(userId, request.productId()))
+                    .userId(userId)
+                    .productId(request.productId())
+                    .quantity(request.quantity())
+                    .build();
             updateWish(wish);
         }
         return wishRepository.findByUserId(userId);
     }
 
     public void updateWish(Wish wish) {
-        if (wish.quantity() <= 0) {
+        if (wish.getQuantity() <= 0) {
             deleteWish(wish);
             return;
         }
         wishRepository.update(wish);
     }
 
-    public List<WishResponse> deleteWishes(Long userId, List<WishRequest> wishRequests) {
-        for (WishRequest wishRequest : wishRequests) {
-            Long wishId = wishRepository.findWishId(userId, wishRequest.productId());
-            Wish wish = WishMapper.toWish(wishId, userId, wishRequest);
+    public List<WishResponse> deleteWishes(Long userId, List<WishRequest> requests) {
+        for (WishRequest request : requests) {
+            Wish wish = Wish.builder()
+                .id(getWishId(userId, request.productId()))
+                .userId(userId)
+                .productId(request.productId())
+                .quantity(request.quantity())
+                .build();
             deleteWish(wish);
         }
         return wishRepository.findByUserId(userId);

@@ -3,8 +3,8 @@ package gift.controller;
 import gift.dto.product.AddProductRequest;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.UpdateProductRequest;
-import gift.service.ProductService;
 import gift.entity.Product;
+import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -36,7 +36,7 @@ public class ProductController {
             List<Product> products = productService.getAllProducts();
             return ResponseEntity.ok(products);
         } catch (Exception e) {
-            return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -49,7 +49,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductResponse> addProduct(@RequestBody @Valid AddProductRequest request) {
         ProductResponse response = productService.addProduct(request);
-        return new ResponseEntity(response, getProductLocationHeader(response.id()),
+        return new ResponseEntity<>(response, getProductLocationHeader(response.id()),
             HttpStatus.CREATED);
     }
 

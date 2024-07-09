@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.util.Objects;
 
 @Entity
 @Table(name = "wishes")
@@ -17,70 +16,104 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_id", nullable = false, insertable = false, updatable = false)
+    private Long userId;
+
+    @Column(name = "product_id", nullable = false, insertable = false, updatable = false)
+    private Long productId;
+
     @Column(nullable = false)
     private Integer quantity;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
     private Product product;
 
-    public Wish() {}
-
-    public Wish(Long id, Integer quantity, User user, Product product) {
-        this.id = id;
-        this.quantity = quantity;
-        this.user = user;
-        this.product = product;
+    private Wish(Builder builder) {
+        this.id = builder.id;
+        this.quantity = builder.quantity;
+        this.userId = builder.userId;
+        this.productId = builder.productId;
+        this.user = builder.user;
+        this.product = builder.product;
     }
 
-    public Long id() {
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public Integer quantity() {
+    public Long getUserId() {
+        return userId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public User user() {
+    public User getUser() {
         return user;
     }
 
-    public Product product() {
+    public Product getProduct() {
         return product;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
+    public static class Builder {
+        private Long id;
+        private Long userId;
+        private Long productId;
+        private Integer quantity;
+        private User user;
+        private Product product;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
         }
-        if (obj == null || obj.getClass() != this.getClass()) {
-            return false;
+
+        public Builder userId(Long userId) {
+            this.userId = userId;
+            return this;
         }
-        var that = (Wish) obj;
-        return Objects.equals(this.id, that.id) &&
-            Objects.equals(this.quantity, that.quantity) &&
-            Objects.equals(this.user, that.user) &&
-            Objects.equals(this.product, that.product);
+
+        public Builder productId(Long productId) {
+            this.productId = productId;
+            return this;
+        }
+
+        public Builder quantity(Integer quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
+        public Builder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Builder product(Product product) {
+            this.product = product;
+            return this;
+        }
+
+        public Wish build() {
+            return new Wish(this);
+        }
+
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, quantity, user, product);
-    }
-
-    @Override
-    public String toString() {
-        return "Wish[" +
-            "id=" + id + ", " +
-            "quantity=" + quantity + ", " +
-            "user=" + user + ", " +
-            "product=" + product + ']';
-    }
-
+    protected Wish() {}
 
 }
