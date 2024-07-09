@@ -20,8 +20,8 @@ public class UserService {
         return true;
     }
 
-    public Boolean getUserByEmailAndPassword(UserDTO userDTO){
-        User user=userDTO.toUser();
+    public Boolean getUserByEmailAndPassword(UserDTO userDTO) {
+        User user = userDTO.toUser();
         return userRepository.existsByEmailAndPassword(user.getEmail(), user.getPassword());
     }
 }

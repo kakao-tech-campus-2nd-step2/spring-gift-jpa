@@ -3,9 +3,12 @@ package gift.product;
 import java.util.List;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 @Service
 public class ProductService {
+
     private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
@@ -23,24 +26,31 @@ public class ProductService {
         return ProductDTO.fromProduct(product);
     }
 
-    public boolean existsByName(String name){
+    public boolean existsByName(String name) {
         return productRepository.existsByName(name);
     }
 
     public void addProduct(ProductDTO product) {
-        if(productRepository.existsByName(product.getName())){
+        if (productRepository.existsByName(product.getName())) {
             throw new IllegalArgumentException("존재하는 이름입니다.");
         }
         productRepository.save(product.toProduct());
     }
 
     public void updateProduct(ProductDTO productDTO) throws NotFoundException {
-        Product product = productRepository.findById(productDTO.getId()).orElseThrow(NotFoundException::new);
-        if(productRepository.existsByName(product.getName())){
+        Product product = productRepository.findById(productDTO.getId())
+            .orElseThrow(NotFoundException::new);
+        if (productRepository.existsByName(productDTO.getName())) {
             throw new IllegalArgumentException("존재하는 이름입니다.");
         }
-        product.update(productDTO.getPrice(),productDTO.getName(),productDTO.getImageUrl());
+        product.update(productDTO.getPrice(), productDTO.getName(), productDTO.getImageUrl());
         productRepository.save(product);
+    }
+
+    public void existsByNamePutResult(String name, BindingResult result) {
+        if (existsByName(name)) {
+            result.addError(new FieldError("productDTO", "name", "존재하는 이름입니다."));
+        }
     }
 
     public void deleteProduct(long id) throws NotFoundException {

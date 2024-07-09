@@ -2,22 +2,24 @@ package gift.wishlist;
 
 import jakarta.persistence.*;
 
-@Table(name="wishlist")
+@Table(name = "wishlist")
 @Entity
 public class WishList {
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private long id;
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private String email;
     @Column(nullable = false, unique = true, length = 15)
     private long productId;
     @Column(nullable = false)
     private int num;
 
-    public WishList(){}
+    public WishList() {
+    }
 
-    public WishList(String email, long productId, int num){
+    public WishList(String email, long productId, int num) {
         this.email = email;
         this.productId = productId;
         this.num = num;
@@ -29,13 +31,19 @@ public class WishList {
         this.num = num;
     }
 
-    public long getId(){return id;}
+    public long getId() {
+        return id;
+    }
 
-    public String getEmail(){ return email;}
+    public String getEmail() {
+        return email;
+    }
 
-    public long getProductId(){
+    public long getProductId() {
         return productId;
     }
 
-    public int getNum(){return num;}
+    public int getNum() {
+        return num;
+    }
 }

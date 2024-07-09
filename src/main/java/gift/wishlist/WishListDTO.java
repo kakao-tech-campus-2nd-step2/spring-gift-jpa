@@ -6,10 +6,11 @@ public class WishListDTO {
     private long productId;
     private int num;
 
-    public WishListDTO() {}
+    public WishListDTO() {
+    }
 
     public WishListDTO(String email, long productId, int num) {
-        this.email=email;
+        this.email = email;
         this.productId = productId;
         this.num = num;
     }

@@ -19,7 +19,7 @@ public class UserApiController {
     private final JwtUtil jwtUtil;
 
     @Autowired
-    public UserApiController(UserService userService,JwtUtil jwtUtil){
+    public UserApiController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
@@ -33,7 +33,7 @@ public class UserApiController {
             if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이메일과 비밀번호는 비어있으면 안됩니다.");
             }
-            if(!userService.registerUser(user)){
+            if (!userService.registerUser(user)) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("존재하는 이메일입니다.");
             }
             logger.info("회원가입 완료: " + email);

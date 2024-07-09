@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 public class Product {
+
     @Column(nullable = false)
     private int price;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,9 +15,10 @@ public class Product {
     @Column(nullable = false)
     private String imageUrl;
 
-    public Product(){}
+    public Product() {
+    }
 
-    public Product(int price,String name,String imageUrl){
+    public Product(int price, String name, String imageUrl) {
         this.price = price;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -28,15 +30,19 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public long getId(){return id;}
+    public long getId() {
+        return id;
+    }
 
-    public int getPrice(){ return price;}
+    public int getPrice() {
+        return price;
+    }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
-    public String getImageUrl(){
+    public String getImageUrl() {
         return imageUrl;
     }
 }

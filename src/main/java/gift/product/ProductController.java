@@ -1,11 +1,11 @@
 package gift.product;
 
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -14,7 +14,8 @@ public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService){
+    @Autowired
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
@@ -25,7 +26,7 @@ public class ProductController {
     }
 
     @GetMapping("/add")
-    public String showPostProduct(Model model){
+    public String showPostProduct(Model model) {
         model.addAttribute("productDTO", new ProductDTO());
         return "add";
     }
@@ -45,29 +46,28 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public String postProduct(@ModelAttribute @Valid ProductDTO product, BindingResult result, Model model){
-        if(productService.existsByName(product.getName())){
-            result.addError(new FieldError("productDTO", "name", "존재하는 이름입니다."));
-        }
-        if(result.hasErrors()){
+    public String postProduct(@Valid @ModelAttribute("productDTO") ProductDTO product,
+        BindingResult result, Model model) {
+        productService.existsByNamePutResult(product.getName(), result);
+        if (result.hasErrors()) {
             return "add";
         }
         productService.addProduct(product);
-        model.addAttribute("productDTO",product);
+        model.addAttribute("productDTO", product);
         return "redirect:/api/products";
     }
 
     @PostMapping("/update/{id}")
-    public String putProduct(@PathVariable("id") Long id,  @ModelAttribute @Valid ProductDTO product, BindingResult result)
+    public String putProduct(@PathVariable("id") Long id,
+        @Valid @ModelAttribute("productDTO") ProductDTO product, BindingResult result)
         throws NotFoundException {
-        if(productService.existsByName(product.getName())){
-            result.addError(new FieldError("productDTO", "name", "존재하는 이름입니다."));
-        }
-        if(result.hasErrors()){
+        productService.existsByNamePutResult(product.getName(), result);
+        if (result.hasErrors()) {
             return "update";
         }
-        product = new ProductDTO(id,product.getName(),product.getPrice(),product.getImageUrl());
-        productService.updateProduct(product);
+        ProductDTO product1 = new ProductDTO(id, product.getName(), product.getPrice(),
+            product.getImageUrl());
+        productService.updateProduct(product1);
         return "redirect:/api/products";
     }
 }
