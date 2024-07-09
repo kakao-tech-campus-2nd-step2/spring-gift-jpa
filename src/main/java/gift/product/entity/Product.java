@@ -17,7 +17,7 @@ public class Product {
     private String name;
     @Column(nullable = false)
     private int price;
-    @Column(nullable = false)
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
     public Product(Long id, String name, int price, String imageUrl) {
