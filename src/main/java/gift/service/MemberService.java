@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.dto.request.MemberRequest;
 import gift.entity.Member;
+import gift.exception.EmailDuplicateException;
 import gift.exception.MemberNotFoundException;
 import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
@@ -15,8 +15,11 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public Long registerMember(MemberRequest memberInfo) {
-        return memberRepository.save(new Member(memberInfo.getEmail(), memberInfo.getPassword())).getId();
+    public Long registerMember(String email, String password) {
+        if (memberRepository.findByEmail(email).isPresent()) {
+            throw new EmailDuplicateException("Email already in use");
+        }
+        return memberRepository.save(new Member(email, password)).getId();
     }
 
 
