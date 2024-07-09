@@ -1,5 +1,6 @@
 package gift.main.validator;
 
+import gift.main.annotation.IsValidName;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

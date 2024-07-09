@@ -1,6 +1,5 @@
 package gift.main.Exception;
 import io.jsonwebtoken.security.SignatureException;
-import gift.main.global.Exception.TokenException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -27,16 +26,6 @@ public class GlobalExceptionHandler {
         return "error/error";
     }
 
-    @ResponseBody
-    @ExceptionHandler(TokenException.class)
-    public ResponseEntity<?> handleTokenException(Model model, TokenException e) {
-        System.out.println("e.getClass() = " + e.getClass());
-        System.out.println("e.getMessage() = " + e.getMessage());
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("errorMessage", e.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(responseBody);
-    }
 
     @ResponseBody
     @ExceptionHandler(SignatureException.class)

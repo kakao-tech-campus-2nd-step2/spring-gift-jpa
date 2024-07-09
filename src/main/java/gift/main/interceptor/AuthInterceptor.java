@@ -25,20 +25,20 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         //컨트롤러 호출 전 호출되는 메서드드드드...
 
-        String authorization= request.getHeader("Authorization");
+        String authorization = request.getHeader("Authorization");
         if (authorization == null || !authorization.startsWith(BEARER)) {
             throw new CustomException(ErrorCode.NO_TOKEN);
         }
         String token = authorization.split(" ")[1];
 
 
-        if (token == null){
+        if (token == null) {
 //            response.sendRedirect("/spring-gift/members/login");
             throw new CustomException(ErrorCode.NO_TOKEN);
 
         }
 
-        if (!jwtUtil.validateToken(token)){
+        if (!jwtUtil.validateToken(token)) {
 //            response.sendRedirect("/spring-gift/members/login");
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
@@ -51,7 +51,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         HttpSession session = request.getSession(true);
 
-        session.setAttribute("user",sessionUser);
+        session.setAttribute("user", sessionUser);
 
         return true;
     }
