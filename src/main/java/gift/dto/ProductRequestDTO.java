@@ -11,5 +11,5 @@ public record ProductRequestDTO(
                                  message = "이름에 허용되지 않은 특수 문자가 포함되었습니다."
                          )
                          String name,
-                         Integer price,
+                         Long price,
                          String imageUrl) { }
