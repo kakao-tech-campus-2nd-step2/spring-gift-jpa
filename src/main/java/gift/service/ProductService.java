@@ -33,7 +33,8 @@ public class ProductService {
         productDao.insertProduct(productRequestDto.toEntity());
     }
 
-    public void updateProductById(Long id, ProductRequestDto productRequestDto) throws ProductException {
+    public void updateProductById(Long id, ProductRequestDto productRequestDto)
+        throws ProductException {
         validateKakaoWord(productRequestDto.getName());
         productDao.updateProductById(id, productRequestDto.toEntity());
     }
