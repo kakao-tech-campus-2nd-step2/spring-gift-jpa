@@ -1,20 +1,32 @@
 package gift.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "gift")
 public class Gift {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "name")
+    @NotNull
     private String name;
+    @Column(name = "price")
+    @NotNull
     private int price;
+    @Column(name = "imageUrl")
+    @NotNull
     private String imageUrl;
 
     public Gift() {
     }
 
-    public Gift(Long id, String name, int price, String imageUrl) {
+    public Gift( String name, int price, String imageUrl) {
         if (!isValidName(name)) {
             throw new IllegalArgumentException("카카오 문구는 MD와 협의 후 사용가능합니다.");
         }
-        this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -28,27 +40,24 @@ public class Gift {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public int getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 
     private boolean isValidName(String name) {
         return name != null && !name.contains("카카오");
+    }
+
+    public void modifyGift(String name,int price,String imageUrl){
+        this.name = name;
+        this.price= price;
+        this.imageUrl =imageUrl;
     }
 }

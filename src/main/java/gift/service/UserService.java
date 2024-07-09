@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.model.User;
-import gift.model.UserRepository;
+import gift.repository.UserRepository;
 import gift.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class UserService {
     private JwtUtil jwtUtil;
 
     @Autowired
-    public UserService(UserRepository userRepository,JwtUtil jwtUtil) {
+    public UserService(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
     }
