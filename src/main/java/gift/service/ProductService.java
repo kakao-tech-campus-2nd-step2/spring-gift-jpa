@@ -3,56 +3,59 @@ package gift.service;
 
 import gift.dto.ProductDto;
 import gift.model.product.Product;
-import gift.dao.ProductDao;
 import gift.model.product.ProductName;
+import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class ProductService {
-    private final ProductDao productDao;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public boolean addNewProduct(ProductDto productDto){
-        Product product = new Product(productDto.id(),new ProductName(productDto.name()),productDto.price(),productDto.imageUrl(),productDto.amount());
-        if (productDao.isProductExist(product.getId())) {
+        Product product = new Product(new ProductName(productDto.name()),productDto.price(),productDto.imageUrl(),productDto.amount());
+        if (productRepository.existsByProductName(product.getName())) {
             return false;
         }
-        productDao.insertProduct(product);
+        productRepository.save(product);
         return true;
     }
 
     public boolean updateProduct(Long id, ProductDto productDto) {
-        Product product = new Product(productDto.id(),new ProductName(productDto.name()),productDto.price(),productDto.imageUrl(),productDto.amount());
-        if (productDao.isProductExist(id)) {
-            productDao.updateProduct(product);
+        Product product = new Product(new ProductName(productDto.name()),productDto.price(),productDto.imageUrl(),productDto.amount());
+        if (productRepository.existsById(id)) {
+            product.setId(id);
+            productRepository.save(product);
             return true;
         }
         return false;
     }
 
     public boolean purchaseProduct(Long id, int amount) {
-        Product product = productDao.selectProduct(id);
+        Product product = productRepository.findById(id).get();
         if (product.isProductEnough(amount)) {
-            productDao.purchaseProduct(id, amount);
+            productRepository.purchaseProductById(id, amount);
             return true;
         }
         return false;
     }
 
     public Product selectProduct(Long id) {
-        return productDao.selectProduct(id);
+        return productRepository.findById(id).get();
+        ;
     }
 
     public List<Product> selectAllProducts(){
-        return productDao.selectAllProducts();
+        return productRepository.findAll();
     }
 
     public void DeleteProduct(Long id){
-        productDao.deleteProduct(id);
+        productRepository.deleteById(id);
     }
 }
