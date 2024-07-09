@@ -27,8 +27,7 @@ public class Product {
     protected Product() {
     }
 
-    public Product(Long id, String name, Long price, String imageUrl) {
-        this.id = id;
+    public Product(String name, Long price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -50,7 +49,9 @@ public class Product {
         return imageUrl;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void update(String name, Long price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 }

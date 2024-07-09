@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.config.auth.LoginUser;
-import gift.domain.model.ProductDto;
+import gift.domain.model.ProductResponseDto;
 import gift.domain.model.User;
 import gift.domain.model.WishResponseDto;
 import gift.domain.model.WishUpdateRequestDto;
@@ -41,7 +41,7 @@ public class WishListController {
     @PostMapping("/{productId}")
     public ResponseEntity<Map<String, Object>> addWish(@PathVariable Long productId,
         @LoginUser User user) {
-        ProductDto wishedProduct = wishListService.addWish(user.getEmail(), productId);
+        ProductResponseDto wishedProduct = wishListService.addWish(user.getEmail(), productId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
