@@ -45,12 +45,11 @@ public class AuthController {
         Map<String, String> saveResult = new HashMap<>();
 
         if (token != null) {
-            System.out.println("회원가입 성공");
+
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(new TokenResponse(token));
         }
-        System.out.println("회원가입 실패");
         return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(new TokenResponse(""));
     }
 
@@ -59,15 +58,16 @@ public class AuthController {
         UserDto loginResult = authService.login(request);
 
         if (loginResult != null) {
-            System.out.println("로그인 성공");
+
             String token = authService.generateToken(request.getEmail(), request.getPassword());
             session.setAttribute("token", token);
+
             return ResponseEntity.ok()
                     .header("Authorization", "Basic" + token)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(new TokenResponse(token));
         }
-        System.out.println("잘못된 로그인 입니다.");
+
         return ResponseEntity.status(HttpStatusCode.valueOf(403)).body(new TokenResponse(""));
     }
 

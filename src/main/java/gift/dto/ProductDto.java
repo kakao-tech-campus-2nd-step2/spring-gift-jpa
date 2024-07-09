@@ -4,12 +4,12 @@ import gift.entity.Product;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 public class ProductDto {
-    private long id;
+    private Long id;
     private String name;
     private String url;
-    private long price;
+    private Long price;
 
-    public ProductDto(String name, long price, String url) {
+    public ProductDto(String name, Long price, String url) {
         if (checkValidProductName(name)) {
             this.name = name;
             this.price = price;
@@ -17,7 +17,7 @@ public class ProductDto {
         }
     }
 
-    public ProductDto(long id, String name, long price, String url) {
+    public ProductDto(Long id, String name, Long price, String url) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -47,7 +47,7 @@ public class ProductDto {
         return result;
     }
 
-    private boolean checkValidLength(String name, long start, long end) {
+    private boolean checkValidLength(String name, Long start, Long end) {
         return (name.length() >= 1 && name.length() <= end);
     }
 
@@ -65,7 +65,7 @@ public class ProductDto {
 
     private boolean checkAllowedSpecialCharacter(char word) {
         char[] allowedSpecialCharacters = {'(', ')', '[', ']', '+', '-', '&', '/', '_'};
-        for (long allowedSpecialCharacter : allowedSpecialCharacters) {
+        for (char allowedSpecialCharacter : allowedSpecialCharacters) {
             if (word == allowedSpecialCharacter) {
                 return true;
             }
@@ -94,11 +94,11 @@ public class ProductDto {
         return e.getMessage();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -110,11 +110,11 @@ public class ProductDto {
         this.name = name;
     }
 
-    public long getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice(long price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 

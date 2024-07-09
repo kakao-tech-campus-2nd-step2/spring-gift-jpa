@@ -2,29 +2,28 @@ package gift.service;
 
 import gift.dto.WishDto;
 import gift.entity.Wish;
+import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 
 @Service
 public class WishService {
     private WishRepository wishRepository;
+    private ProductRepository productRepository;
 
     public WishService(WishRepository wishRepository) {
         this.wishRepository = wishRepository;
     }
 
-    public void save(WishDto request) {
+    public Wish save(WishDto request) {
 
-        //1. 토큰 -> id 복호화
-        long id = translateIdFromtoken(request.getToken());
+        Long id = translateIdFrom(request.getToken());
+        Long productId = request.getProductId();
 
-        return wishRepository.save(request.getProductId(), id);
-
-    }
-
-    private long translateIdFromtoken(String token) {
+        return wishRepository.save(productId, id);
 
     }
 
@@ -37,7 +36,18 @@ public class WishService {
     }
 
     //delete 보통 크게응답안하면 void로 하기도함
-    public void delete(long id, String token) {
-        wishRepository.delete(id, token);
+    public void delete(Long id, String token) {
+        Long userId = translateIdFrom(token);
+        wishRepository.delete(id, userId);
+    }
+
+    private Long translateIdFrom(String token) {
+
+        byte[] decodedBytes = Base64.getDecoder().decode(token);
+        String decodedToken = new String(decodedBytes);
+        String[] userInfo = decodedToken.split(":");
+        String userId = userInfo[0];
+
+        return Long.parseLong(userId);
     }
 }

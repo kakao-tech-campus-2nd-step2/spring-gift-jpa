@@ -19,7 +19,7 @@ public class AuthService {
 
         User newUser= new User(request.getEmail(), request.getPassword());
 
-        if (userRepository.save(newUser)) {
+        if (userRepository.save(newUser) != null) {
             return generateToken(request.getEmail(), request.getPassword());
         }
         return "";

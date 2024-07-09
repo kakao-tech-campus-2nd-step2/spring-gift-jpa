@@ -1,31 +1,31 @@
 package gift.entity;
 
 public class Product {
-    private long id;
+    private Long id;
     private String name;
     private String url;
-    private long price;
+    private Long price;
 
-    public Product(long id, String name, long price, String url) {
+    public Product(Long id, String name, Long price, String url) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.url = url;
     }
 
-    public Product(String name, long price, String url) {
+    public Product(String name, Long price, String url) {
         this.name = name;
         this.price = price;
         this.url = url;
     }
 
-    public long getId() { return id; }
+    public Long getId() { return id; }
 
     public String getName() {
         return name;
     }
 
-    public long getPrice() {
+    public Long getPrice() {
         return price;
     }
 

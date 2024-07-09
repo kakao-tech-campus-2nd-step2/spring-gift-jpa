@@ -33,16 +33,16 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getOneById(long id) {
+    public Product getOneById(Long id) {
         return productRepository.findOneById(id);
     }
 
-    public void update(long id, ProductDto productDto) {
+    public void update(Long id, ProductDto productDto) {
         Product newProduct = new Product(productDto.getName(), productDto.getPrice(), productDto.getUrl());
         productRepository.update(id, newProduct);
     }
 
-    public void delete(long id) {
+    public void delete(Long id) {
         productRepository.delete(id);
     }
 

@@ -41,7 +41,7 @@ public class ProductRepository {
                 (resultSet, rowNum) -> new Product(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
-                        resultSet.getInt("price"),
+                        resultSet.getLong("price"),
                         resultSet.getString("url")
                 )
         );
@@ -54,7 +54,7 @@ public class ProductRepository {
                 (resultSet, rowNum) -> new Product(
                         id,
                         resultSet.getString("name"),
-                        resultSet.getInt("price"),
+                        resultSet.getLong("price"),
                         resultSet.getString("url")
                 ),
                 id
@@ -71,7 +71,7 @@ public class ProductRepository {
         }
     }
 
-    public Long delete(Long id) {
+    public Long delete(long id) {
         try {
             var sql = "delete from products where id= ?";
             jdbcTemplate.update(sql, id);

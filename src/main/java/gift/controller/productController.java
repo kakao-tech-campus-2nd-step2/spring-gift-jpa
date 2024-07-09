@@ -41,7 +41,7 @@ public class productController {
 
     //update
     @PutMapping("/{id}")
-    public void update(@PathVariable("id") int id, @RequestBody EditProduct.Request request) {
+    public void update(@PathVariable("id") Long id, @RequestBody EditProduct.Request request) {
 
         productService.update(id, new ProductDto(request.getName(), request.getPrice(), request.getUrl()));
 
@@ -49,7 +49,7 @@ public class productController {
 
     //delete
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") int id) {
+    public void delete(@PathVariable("id") Long id) {
         productService.delete(id);
     }
 

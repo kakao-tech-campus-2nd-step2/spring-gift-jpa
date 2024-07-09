@@ -7,7 +7,7 @@ public class UserDto {
     private String email;
     private String password;
 
-    public UserDto(long id, String email, String password) {
+    public UserDto(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;

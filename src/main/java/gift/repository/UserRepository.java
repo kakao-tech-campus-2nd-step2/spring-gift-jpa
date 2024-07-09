@@ -29,7 +29,7 @@ public class UserRepository {
                     "password", user.getPassword()
             );
             Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
-            long id = newId.longValue();
+            Long id = newId.longValue();
             return new User(id, user.getEmail(),user.getPassword());
         } catch (DataAccessException e) {
             return null;

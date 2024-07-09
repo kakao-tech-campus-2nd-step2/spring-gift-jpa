@@ -25,17 +25,15 @@ public class WishRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Wish save(long productId, long userId) {
+    public Wish save(Long productId, Long userId) {
 
         Map<String, Object> parameters = Map.of("product_id", productId, "user_id", userId);
 
         Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
-        long id = newId.longValue();
-
+        Long id = newId.longValue();
         return new Wish(id, productId, userId);
     }
 
-    //List<Wish>로 반환
     public List<Wish> getAll(String userId) {
         var sql = """
                 select * from wishes
@@ -52,11 +50,11 @@ public class WishRepository {
         ).stream().toList();
     }
 
-    public void delete(long id, String token) {
+    public void delete(Long id, Long userId) {
 
         Wish wish = findOneById(id);
 
-        if (!(token.equals(wish.getToken()))) {
+        if (wish.getId().equals(userId)) {
             Map<String, Object> parameters = Map.of("메세지", "삭제할 권한이 없습니다.");
         }
 
@@ -68,7 +66,7 @@ public class WishRepository {
 
     }
 
-    public Wish findOneById(long id) {
+    public Wish findOneById(Long id) {
         var sql = "select id,productId,token from wish where id= ?";
         return jdbcTemplate.queryForObject(
                 sql,

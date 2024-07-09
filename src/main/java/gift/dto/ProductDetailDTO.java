@@ -4,9 +4,9 @@ import gift.entity.Product;
 
 public class ProductDetailDTO {
     private String name, url;
-    private int price;
+    private Long price;
 
-    public ProductDetailDTO(String name, int price, String url) {
+    public ProductDetailDTO(String name, Long price, String url) {
         this.name = name;
         this.price = price;
         this.url = url;
@@ -24,11 +24,11 @@ public class ProductDetailDTO {
         this.name = name;
     }
 
-    public int getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 

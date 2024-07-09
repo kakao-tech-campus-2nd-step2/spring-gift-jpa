@@ -1,17 +1,17 @@
 package gift.entity;
 
 public class Wish {
-    private long id;
-    private long productId;
-    private long userId;
+    private Long id;
+    private Long productId;
+    private Long userId;
 
-    public Wish(long id, long productId, long userId) {
+    public Wish(Long id, Long productId, Long userId) {
         this.id = id;
         this.productId = productId;
         this.userId = userId;
     }
 
-    public long getId() { return id; }
-    public long getProductId() { return productId; }
-    public long getUserId() { return userId; }
+    public Long getId() { return id; }
+    public Long getProductId() { return productId; }
+    public Long getUserId() { return userId; }
 }
