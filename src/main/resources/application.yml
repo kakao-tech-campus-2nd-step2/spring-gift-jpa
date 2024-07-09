@@ -21,11 +21,6 @@ spring:
       path: /h2-console
 
 
-  sql:
-    init:
-      schema-locations: classpath:/model/schema.sql
-      data-locations: classpath:/model/data.sql
-
 logging:
   level:
     org:
