@@ -1,6 +1,6 @@
 package gift.annotation;
 
-import gift.exceptions.InvalidUserException;
+import gift.exceptions.CustomException;
 import gift.jwtutil.JwtUtil;
 import gift.model.User;
 import gift.service.UserService;
@@ -14,8 +14,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     public LoginUserArgumentResolver(JwtUtil jwtUtil, UserService userService) {
         this.jwtUtil = jwtUtil;
@@ -40,13 +40,13 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
                 if (user != null) {
                     return user;
                 } else {
-                    throw new InvalidUserException("User not found");
+                    throw CustomException.userNotFoundException();
                 }
             } else {
-                throw new InvalidUserException("Invalid JWT token");
+                throw CustomException.invalidTokenException();
             }
         } else {
-            throw new InvalidUserException("Missing or invalid Authorization header");
+            throw CustomException.invalidHeaderException();
         }
     }
 
