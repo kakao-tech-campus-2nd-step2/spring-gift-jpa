@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Product {
@@ -12,8 +13,14 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
     private String name;
+
+    @NotNull
     private Integer price;
+
+    @NotNull
     private String imageUrl;
 
     protected Product() {
@@ -46,7 +53,7 @@ public class Product {
         ProductNameValidator.isValid(name);
         return new Product(id, name, price, imageUrl);
     }
-    
+
     public void update(String name, Integer price, String imageUrl) {
         ProductNameValidator.isValid(name);
         this.name = name;
