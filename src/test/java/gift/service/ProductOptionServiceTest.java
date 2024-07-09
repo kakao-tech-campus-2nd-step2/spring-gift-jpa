@@ -4,7 +4,6 @@ import gift.dto.ProductOptionRequest;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.model.MemberRole;
-import gift.model.Product;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,40 +39,47 @@ class ProductOptionServiceTest {
     @Test
     @DisplayName("정상 옵션 추가하기")
     void successOptionAdd() {
+        //given
         var productOptionRequest = new ProductOptionRequest(product.id(), "기본", 0);
-        var savedOption = optionService.addOption(productOptionRequest);
-        var findOption = optionService.getOption(savedOption.id());
 
+        //when
+        var savedOption = optionService.addOption(productOptionRequest);
+
+        //then
+        var findOption = optionService.getOption(savedOption.id());
         Assertions.assertThat(findOption.name()).isEqualTo("기본");
     }
 
     @Test
     @DisplayName("둘 이상의 옵션 추가하기")
     void addOptions() {
+        //given
         var normalOptionDto = new ProductOptionRequest(product.id(), "기본", 0);
         var size255gbOptionDto = new ProductOptionRequest(product.id(), "255gb", 100000);
+
+        //when
         optionService.addOption(normalOptionDto);
         optionService.addOption(size255gbOptionDto);
 
+        //then
         Assertions.assertThat(optionService.getOptions(product.id()).size()).isEqualTo(2);
-
         var options = productService.findProductWithId(product.id()).getOptions();
-
         Assertions.assertThat(options.size()).isEqualTo(2);
-
-        System.out.println("id : "+options.get(0).getId());
     }
 
     @Test
     @DisplayName("옵션 수정하기")
     void updateOption() {
+        //given
         var productOptionRequest = new ProductOptionRequest(product.id(), "기본", 0);
         var savedOption = optionService.addOption(productOptionRequest);
         var optionUpdateDto = new ProductOptionRequest(product.id(), "노멀", 0);
 
+        //when
         optionService.updateOption(savedOption.id(), optionUpdateDto);
-        var findOption = optionService.getOption(savedOption.id());
 
+        //then
+        var findOption = optionService.getOption(savedOption.id());
         Assertions.assertThat(findOption.name()).isNotEqualTo("기본");
         Assertions.assertThat(findOption.name()).isEqualTo("노멀");
     }
@@ -81,13 +87,15 @@ class ProductOptionServiceTest {
     @Test
     @DisplayName("옵션 삭제하기")
     void deleteOption() {
+        //given
         var productOptionRequest = new ProductOptionRequest(product.id(), "기본", 0);
         var savedOption = optionService.addOption(productOptionRequest);
-
         Assertions.assertThat(optionService.getOptions(product.id()).size()).isEqualTo(1);
 
+        //when
         optionService.deleteOption(savedOption.id());
 
+        //then
         Assertions.assertThat(optionService.getOptions(product.id()).size()).isEqualTo(0);
     }
 }

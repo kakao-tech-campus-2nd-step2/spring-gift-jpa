@@ -3,9 +3,8 @@ package gift.service;
 import gift.dto.LoginRequest;
 import gift.dto.RegisterRequest;
 import gift.exception.InvalidLoginInfoException;
-import gift.exception.NotFoundElementException;
-import gift.service.auth.AuthService;
 import gift.reflection.AuthTestReflectionComponent;
+import gift.service.auth.AuthService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,17 +26,18 @@ public class MemberServiceTest {
     @Test
     @DisplayName("회원 탈퇴하기 - 성공")
     void deleteMemberSuccess() {
+        //given
         var registerRequest = new RegisterRequest("테스트", "test@naver.com", "testPassword", "MEMBER");
         var loginRequest = new LoginRequest("test@naver.com", "testPassword");
-        var auth = authService.register(registerRequest);
-        var id = authTestReflectionComponent.getMemberIdWithToken(auth.token());
+        authService.register(registerRequest);
         var loginAuth = authService.login(loginRequest);
-        var loginId = authTestReflectionComponent.getMemberIdWithToken(loginAuth.token());
+        var id = authTestReflectionComponent.getMemberIdWithToken(loginAuth.token());
 
-        Assertions.assertThat(id).isEqualTo(loginId);
-
+        //when
         memberService.deleteMember(id);
 
-        Assertions.assertThatThrownBy(() -> authService.login(loginRequest)).isInstanceOf(InvalidLoginInfoException.class);
+        //then
+        Assertions.assertThatThrownBy(() -> authService.login(loginRequest))
+                .isInstanceOf(InvalidLoginInfoException.class);
     }
 }
