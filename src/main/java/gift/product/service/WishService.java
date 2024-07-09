@@ -45,7 +45,7 @@ public class WishService {
     private Wish getValidatedWish(Long id, LoginMember loginMember) {
         try {
             return wishRepository.findById(id, loginMember);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             throw new NoSuchElementException("해당 ID의 위시 항목이 위시리스트에 존재하지 않습니다.");
         }
     }

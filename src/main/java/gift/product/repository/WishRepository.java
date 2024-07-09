@@ -2,6 +2,7 @@ package gift.product.repository;
 
 import gift.product.dto.LoginMember;
 import gift.product.model.Wish;
+import jakarta.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,53 +13,42 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class WishRepository {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
+    private final EntityManager em;
 
-    public WishRepository(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-            .withTableName("Wish")
-            .usingGeneratedKeyColumns("id");
+    public WishRepository(EntityManager em) {
+        this.em = em;
     }
 
+    @Transactional
     public Wish save(Wish wish) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("member_id", wish.getMemberId());
-        params.put("product_id", wish.getProductId());
-
-        Long wishId = (Long) simpleJdbcInsert.executeAndReturnKey(
-            new MapSqlParameterSource(params));
-        return new Wish(wishId, wish.getMemberId(), wish.getProductId());
+        em.persist(wish);
+        return wish;
     }
 
     public List<Wish> findAll(LoginMember loginMember) {
-        var sql = "SELECT id, member_id, product_id FROM Wish WHERE member_id = ?";
+        String jpql = "SELECT w FROM Wish w WHERE w.memberId = :memberId";
 
-        return jdbcTemplate.query(sql, getWishRowMapper(), loginMember.id());
+        return em.createQuery(jpql, Wish.class)
+            .setParameter("memberId", loginMember.id())
+            .getResultList();
     }
 
-    public Wish findById(Long id, LoginMember loginMember) throws DataAccessException {
-        var sql = "SELECT id, member_id, product_id FROM Wish WHERE member_id = ? AND id = ?";
-
-        return jdbcTemplate.queryForObject(sql, getWishRowMapper(), loginMember.id(), id);
+    public Wish findById(Long id, LoginMember loginMember) throws Exception {
+        String jpql = "SELECT w FROM Wish w WHERE w.id = :id AND w.memberId = :memberId";
+        return em.createQuery(jpql, Wish.class)
+            .setParameter("id", id)
+            .setParameter("memberId", loginMember.id())
+            .getSingleResult();
     }
 
+    @Transactional
     public void delete(Long id) {
-        var sql = "DELETE FROM Wish WHERE id = ?";
-
-        jdbcTemplate.update(sql, id);
-    }
-
-    private RowMapper<Wish> getWishRowMapper() {
-        return (resultSet, rowNum) -> new Wish(
-            resultSet.getLong("id"),
-            resultSet.getLong("member_id"),
-            resultSet.getLong("product_id")
-        );
+        Wish wish = em.find(Wish.class, id);
+        em.remove(wish);
     }
 }
