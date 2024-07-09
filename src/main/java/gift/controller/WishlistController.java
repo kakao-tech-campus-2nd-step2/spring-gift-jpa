@@ -2,8 +2,7 @@ package gift.controller;
 
 import gift.service.JwtUtil;
 import gift.service.WishlistService;
-import gift.vo.WishProduct;
-import org.springframework.http.HttpStatus;
+import gift.vo.Wish;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,36 +22,31 @@ public class WishlistController {
     }
 
     @GetMapping("/wishlist")
-    public List<WishProduct> getWishProductList(@RequestHeader("Authorization") String authorizationHeader) {
+    public List<Wish> getWishProductList(@RequestHeader("Authorization") String authorizationHeader) {
         String token = getBearerToken(authorizationHeader);
 
-        String memberEmail = jwtUtil.getMemberEmailFromToken(token);
-        return service.getWishProductLost(memberEmail);
+        Long memberId = jwtUtil.getMemberIdFromToken(token);
+        return service.getWishProductList(memberId);
     }
 
     @PostMapping("/wishlist/{productId}")
     public ResponseEntity<Void> addToWishlist(@PathVariable("productId") Long productId, @RequestHeader("Authorization") String authorizationHeader) {
         String token = getBearerToken(authorizationHeader);
-        String memberEmail = jwtUtil.getMemberEmailFromToken(token);
+        Long memberId = jwtUtil.getMemberIdFromToken(token);
 
-        WishProduct wishProduct = new WishProduct(memberEmail, productId);
-        Boolean result = service.addWishProduct(wishProduct);
-        if (result) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        Wish wish = new Wish(memberId, productId);
+        service.addWishProduct(wish);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/wishlist/{wishProductId}")
-    public ResponseEntity<Void> deleteToWishlist(@PathVariable("wishProductId") Long wishProductId, @RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<Void> deleteToWishlist(@PathVariable("wishProductId") Integer wishProductId, @RequestHeader("Authorization") String authorizationHeader) {
         String token = getBearerToken(authorizationHeader);
-        String memberEmail = jwtUtil.getMemberEmailFromToken(token);
+        Long memberId = jwtUtil.getMemberIdFromToken(token);
 
-        Boolean result = service.deleteWishProduct(memberEmail, wishProductId);
-        if (result) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        service.deleteWishProduct(memberId, wishProductId);
+
+        return ResponseEntity.ok().build();
     }
 
 }
