@@ -36,13 +36,10 @@ public class WishListController {
     }
 
     @PutMapping("api/wishlist")
-    public ResponseEntity<String> updateWishList(HttpServletRequest request,@RequestBody WishListRequest wishListRequest){
+    public ResponseEntity<Void> updateWishList(HttpServletRequest request, @RequestBody WishListRequest wishListRequest) {
         Long memberId = (Long) request.getAttribute("memberId");
-        boolean isUpdated = wishListService.updateWishList(memberId, wishListRequest.getProductId(), wishListRequest.getAmount());
-        if(!isUpdated){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("위시리스트에 없는 상품");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body("수정 성공");
+        wishListService.updateWishList(memberId, wishListRequest.getProductId(), wishListRequest.getAmount());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("api/wishlist")

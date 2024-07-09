@@ -35,8 +35,14 @@ public class WishListService {
         return true;
     }
 
-    public boolean isAlreadyExistProduct(Long memberId, Long productId) {
-        return wishListRepository.isAlreadyExistProduct(memberId, productId);
+    public void updateWishList(Long memberId, Long productId, int amount) {
+        Wish wish = wishListRepository.findByMemberIdAndProductId(memberId, productId)
+                .orElseThrow(() -> new WishNotFoundException("요청한 위시는 존재하지 않습니다."));
+        wish.setMemberId(memberId);
+        wish.setProductId(productId);
+        wish.setAmount(amount);
+
+        wishListRepository.save(wish);
     }
 
     public List<WishProductResponse> getWishProductsByMemberId(Long memberId) {
