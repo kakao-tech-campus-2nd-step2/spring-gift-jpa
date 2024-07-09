@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>페이지 홈</title>
+    <link href="../static/css/bootstrap.min.css"
+          th:href="@{/css/bootstrap.min.css}"
+          rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="/js/httpReq.js"></script>
+    <script src="/js/memberReq.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>페이지 홈</h2>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-primary"
+                    th:onclick="|location.href='@{/api/member/register}'|"
+                    type="button">
+                회원가입
+            </button>
+            <button id="login-button"
+                    class="btn btn-success"
+                    th:onclick="|location.href='@{/api/member/login}'|"
+                    type="button">
+                로그인
+            </button>
+            <button id="logout-button"
+                    class="btn btn-danger"
+                    type="button"
+                    th:onclick="logout()"
+                    style="display:none;">
+                로그아웃
+            </button>
+        </div>
+    </div>
+    <hr>
+    <button class="btn btn-success"
+            th:onclick="|location.href='@{/api/products}'|"
+            type="button">
+        상품 목록
+    </button>
+    <button class="btn btn-success"
+            id="wishlist-btn"
+            th:onclick="getWishlist()"
+            type="button">
+        나의 위시 리스트 보기
+    </button>
+
+    <hr class="mt-5 pt-3">
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Image</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody id="wish-list">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
