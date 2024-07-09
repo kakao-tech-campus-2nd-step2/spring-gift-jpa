@@ -1,0 +1,68 @@
+package gift.util;
+
+import gift.dto.UserDTO;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
+import java.util.Date;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
+
+@Component
+@PropertySource("classpath:application-secret.properties")
+public class JwtUtil {
+    @Value("${jwt-secret-key}")
+    private String secret;
+    private JwtParser jwtParser;
+
+    @PostConstruct
+    public void init() {
+        jwtParser = Jwts.parser().setSigningKey(secret);
+    }
+
+    public String extractEmail(String token){
+        return jwtParser
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    public String extractUsername(String token){
+        return jwtParser
+                .parseClaimsJws(token)
+                .getBody()
+                .get("name", String.class);
+    }
+
+    public String generateToken(UserDTO userDTO) {
+        return Jwts.builder()
+                .setSubject(userDTO.getEmail())
+                .claim("name", userDTO.getName())
+                .claim("role", userDTO.getRole())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 36000))
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+
+    public Boolean validateToken(String token) {
+        try {
+            jwtParser.parseClaimsJws(token); // 서명 검증
+        } catch (JwtException e) {
+            return false;
+        }
+        return true;
+    }
+
+
+    private Boolean isTokenExpired(String token) {
+        return jwtParser
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration()
+                .before(new Date());
+    }
+}
