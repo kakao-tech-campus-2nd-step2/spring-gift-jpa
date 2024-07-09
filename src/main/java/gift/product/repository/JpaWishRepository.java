@@ -4,6 +4,7 @@ import gift.product.dto.LoginMember;
 import gift.product.model.Wish;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
 
 public class JpaWishRepository implements WishRepository {
@@ -20,24 +21,24 @@ public class JpaWishRepository implements WishRepository {
         return wish;
     }
 
-    public List<Wish> findAll(LoginMember loginMember) {
+    public List<Wish> findAllByMemberId(Long memberId) {
         String jpql = "SELECT w FROM Wish w WHERE w.memberId = :memberId";
 
         return em.createQuery(jpql, Wish.class)
-            .setParameter("memberId", loginMember.id())
+            .setParameter("memberId", memberId)
             .getResultList();
     }
 
-    public Wish findById(Long id, LoginMember loginMember) throws Exception {
+    public Optional<Wish> findByIdAndMemberId(Long id, Long memberId) {
         String jpql = "SELECT w FROM Wish w WHERE w.id = :id AND w.memberId = :memberId";
         return em.createQuery(jpql, Wish.class)
             .setParameter("id", id)
-            .setParameter("memberId", loginMember.id())
-            .getSingleResult();
+            .setParameter("memberId",memberId)
+            .getResultList().stream().findAny();
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         Wish wish = em.find(Wish.class, id);
         em.remove(wish);
     }
