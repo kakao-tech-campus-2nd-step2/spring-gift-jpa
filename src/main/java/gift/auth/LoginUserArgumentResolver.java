@@ -1,6 +1,7 @@
 package gift.auth;
 
 import gift.domain.User;
+import gift.repository.JpaUserRepository;
 import gift.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,11 +16,11 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final UserRepository userRepository;
+    private final JpaUserRepository jpaUserRepository;
     private final JwtUtil jwtUtil;
 
-    public LoginUserArgumentResolver(UserRepository userRepository, JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
+    public LoginUserArgumentResolver(JpaUserRepository jpaUserRepository, JwtUtil jwtUtil) {
+        this.jpaUserRepository = jpaUserRepository;
         this.jwtUtil = jwtUtil;
     }
 
@@ -43,7 +44,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         }
         Claims claims = jwtUtil.decodeToken(token);
         String email = claims.get("email", String.class);
-        return userRepository.selectUserByEmail(email)
+        return jpaUserRepository.findByEmail(email)
             .orElseThrow(()-> new NoSuchElementException("회원의 정보가 일치하지 않습니다."));
     }
 }
