@@ -1,6 +1,7 @@
 package gift.controller;
 
 
+import gift.dto.ProductDTO;
 import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
@@ -34,14 +35,14 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-
     public Product getProductById(@PathVariable("id") long id) {
         return productService.getProductById(id);
     }
 
     //product 추가
     @PostMapping
-    public ResponseEntity<String> addProduct(@RequestBody @Valid Product product) {
+    public ResponseEntity<String> addProduct(@RequestBody @Valid ProductDTO productDTO) {
+        Product product = productDTO.toEntity();
         productService.saveProduct(product);
         return new ResponseEntity<>("OK", HttpStatus.CREATED);
 
