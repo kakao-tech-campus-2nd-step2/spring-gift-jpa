@@ -40,6 +40,6 @@ public class WishService {
         if (getAllWishProductsByMember(member).isEmpty()) {
             throw new ProductNotFoundException("해당 productId의 상품이 위시리스트에 존재하지 않습니다.");
         }
-        wishRepository.deleteByProductId(productId);
+        wishRepository.deleteByProductIdAndMemberId(productId, member.getId());
     }
 }
