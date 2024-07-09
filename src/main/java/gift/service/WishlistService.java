@@ -32,7 +32,7 @@ public class WishlistService {
             return null;
         }
     }
-
+  
     public void deleteItem(String token, int product_id) {
         var member_id = memberRepository.searchIdByToken(token);
         if(isItem(member_id, product_id)) {

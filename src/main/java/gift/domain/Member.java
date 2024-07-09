@@ -1,6 +1,5 @@
 package gift.domain;
 
-
 import jakarta.persistence.*;
 
 @Entity

@@ -18,6 +18,7 @@ public class MemberController {
     @PostMapping("/register")
     public ResponseEntity<String> signUp(@RequestHeader("Authorization") String str) {
         var token = memberService.signUp(decodeToEmail(str), decodeToPassword(str));
+
         return ResponseEntity.ok(token);
     }
 

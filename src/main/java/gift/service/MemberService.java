@@ -1,6 +1,5 @@
 package gift.service;
 
-
 import gift.domain.Member;
 import gift.domain.MemberRepository;
 import io.jsonwebtoken.Jwts;
