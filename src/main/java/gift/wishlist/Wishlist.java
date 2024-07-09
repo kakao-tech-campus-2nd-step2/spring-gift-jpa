@@ -1,5 +1,15 @@
 package gift.wishlist;
 
-public record Wishlist(long productId, String memberEmail) {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
+public record Wishlist(
+    @Id
+    long productId,
+
+    @Column(nullable = false)
+    String memberEmail) {
 
 }
