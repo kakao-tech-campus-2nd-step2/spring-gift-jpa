@@ -28,6 +28,10 @@ public class Wish {
         this.count = count;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public Long getMemberId() {
         return memberId;
     }
