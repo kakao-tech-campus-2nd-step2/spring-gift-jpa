@@ -25,14 +25,6 @@ public class Product {
         this.url = url;
     }
 
-    public Product(long id, String name, String description, int price, String url) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.url = url;
-    }
-
     public Product() {}
 
     public Long getId() {
