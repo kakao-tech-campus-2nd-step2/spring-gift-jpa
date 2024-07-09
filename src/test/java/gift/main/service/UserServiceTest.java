@@ -3,7 +3,7 @@ package gift.main.service;
 import gift.main.dto.UserJoinRequest;
 import gift.main.global.Exception.CustomException;
 import gift.main.repository.UserDao;
-import gift.main.util.AuthUtil;
+import gift.main.util.JwtUtil;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 class UserServiceTest {
 
     @Autowired
-    private AuthUtil authUtil;
+    private JwtUtil jwtUtil;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -29,7 +29,7 @@ class UserServiceTest {
     @BeforeEach // 메서드마다 하나
     public void createTabel() {
         this.userDao = new UserDao(jdbcTemplate);
-        this.userService = new UserService(userDao, authUtil);
+        this.userService = new UserService(userDao, jwtUtil);
     }
 
     @AfterEach // 메서드마다 하나

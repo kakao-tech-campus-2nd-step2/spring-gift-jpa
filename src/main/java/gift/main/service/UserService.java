@@ -7,18 +7,18 @@ import gift.main.entity.User;
 import gift.main.global.Exception.ErrorCode;
 import gift.main.global.Exception.CustomException;
 import gift.main.repository.UserDao;
-import gift.main.util.AuthUtil;
+import gift.main.util.JwtUtil;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
     private final UserDao userDao;
-    private final AuthUtil authUtil;
+    private final JwtUtil jwtUtil;
 
-    public UserService(UserDao userDao, AuthUtil authUtil) {
+    public UserService(UserDao userDao, JwtUtil jwtUtil) {
         this.userDao = userDao;
-        this.authUtil = authUtil;
+        this.jwtUtil = jwtUtil;
     }
 
     public String joinUser(UserJoinRequest userJoinRequest) {
@@ -28,7 +28,7 @@ public class UserService {
         }
         UserDto userDto = new UserDto(userJoinRequest) ;
         Long id = userDao.insertUser(userDto);
-        String token = authUtil.createToken(id,userDto);
+        String token = jwtUtil.createToken(id,userDto);
         return token;
 
     }
@@ -43,7 +43,7 @@ public class UserService {
         if (user==null) {
             throw new CustomException(ErrorCode.ERROR_LOGIN.getErrorMessage(), ErrorCode.ERROR_LOGIN.getHttpStatus());
         }
-        return authUtil.createToken(user);
+        return jwtUtil.createToken(user);
     }
 
 

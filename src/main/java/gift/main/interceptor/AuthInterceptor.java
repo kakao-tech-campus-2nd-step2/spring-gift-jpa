@@ -3,7 +3,7 @@ package gift.main.interceptor;
 import gift.main.dto.UserVo;
 import gift.main.global.Exception.CustomException;
 import gift.main.global.Exception.ErrorCode;
-import gift.main.util.AuthUtil;
+import gift.main.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,10 +14,10 @@ import org.springframework.web.servlet.ModelAndView;
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
     private final String BEARER = "Bearer ";
-    private final AuthUtil authUtil;
+    private final JwtUtil jwtUtil;
 
-    public AuthInterceptor(AuthUtil authUtil) {
-        this.authUtil = authUtil;
+    public AuthInterceptor(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
     }
 
 
@@ -38,16 +38,16 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         }
 
-        if (!authUtil.validateToken(token)){
+        if (!jwtUtil.validateToken(token)){
 //            response.sendRedirect("/spring-gift/members/login");
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
 
         UserVo sessionUser = new UserVo(
-                authUtil.getId(token),
-                authUtil.getName(token),
-                authUtil.getEmail(token),
-                authUtil.getRole(token));
+                jwtUtil.getId(token),
+                jwtUtil.getName(token),
+                jwtUtil.getEmail(token),
+                jwtUtil.getRole(token));
 
         HttpSession session = request.getSession(true);
 
