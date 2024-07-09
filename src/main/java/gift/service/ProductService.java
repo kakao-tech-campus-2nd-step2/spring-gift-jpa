@@ -35,18 +35,24 @@ public class ProductService {
     }
 
     public void updateProduct(Long id, String name, Integer price, String imageUrl) {
-        Product product = new Product(id, name, price, imageUrl);
         productRepository.findById(id)
-                .ifPresentOrElse(productRepository::save,
-                    () -> { throw new ProductException("상품이 존재하지 않습니다."); }
-                );
-        productRepository.save(product);
+            .ifPresentOrElse(p -> {
+                    p.setName(name);
+                    p.setPrice(price);
+                    p.setImageUrl(imageUrl);
+                },
+                () -> {
+                    throw new ProductException("상품이 존재하지 않습니다.");
+                }
+            );
     }
 
     public void deleteProduct(Long id) {
         productRepository.findById(id)
             .ifPresentOrElse(productRepository::delete
-                , () -> { throw new ProductException("상품이 존재하지 않습니다."); }
+                , () -> {
+                    throw new ProductException("상품이 존재하지 않습니다.");
+                }
             );
     }
 }
