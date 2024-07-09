@@ -37,11 +37,11 @@ public class Wish {
 
     public Long getId() { return id; }
 
-    public Product getItem() {
+    public Product getProduct() {
         return product;
     }
 
-    public void setItem(Product product) {
+    public void setProduct(Product product) {
         this.product = product;
     }
 
@@ -58,6 +58,8 @@ public class Wish {
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
 
     public void incrementQuantity() { this.quantity++; }
+
+
 
 
     @Override
