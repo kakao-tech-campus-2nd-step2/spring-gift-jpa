@@ -6,4 +6,8 @@ public class SecureRequestStateDTO extends RequestStateDTO {
         super(requestStatus, details);
         this.secure = secure;
     }
+
+    public String getSecure() {
+        return secure;
+    }
 }

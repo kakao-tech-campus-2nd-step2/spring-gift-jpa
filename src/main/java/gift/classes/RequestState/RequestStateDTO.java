@@ -7,4 +7,12 @@ public class RequestStateDTO {
         this.status = requestStatus;
         this.details = details;
     }
+
+    public RequestStatus getStatus() {
+        return status;
+    }
+
+    public String getDetails() {
+        return details;
+    }
 }
