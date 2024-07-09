@@ -5,7 +5,7 @@ import gift.domain.member.Member;
 public record MemberDto(String email,
                         String password) {
     public static MemberDto from(Member member) {
-        return new MemberDto(member.email(), member.password());
+        return new MemberDto(member.getEmail(), member.getPassword());
     }
 
     public static Member toEntity(MemberDto memberDto) {
