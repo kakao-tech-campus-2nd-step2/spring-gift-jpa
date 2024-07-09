@@ -11,6 +11,9 @@ public class Member {
   @Column(nullable = false, unique = true)
   private String email;
   @Column(nullable = false)
+  public class Member {
+  private Long id;
+  private String email;
   private String password;
   public Long getId() {
     return id;

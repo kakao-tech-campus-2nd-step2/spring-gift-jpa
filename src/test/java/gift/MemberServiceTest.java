@@ -3,6 +3,7 @@ package gift;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+
 import gift.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import gift.model.Member;
+
 import gift.service.MemberService;
 import gift.util.JwtUtil;
 
@@ -36,7 +38,6 @@ public class MemberServiceTest {
     member.setPassword("password");
     Long expectedMemberId = 1L;
     String expectedToken = "generated_token";
-
     Member savedMember = new Member();
     savedMember.setId(expectedMemberId);
     savedMember.setEmail(member.getEmail());
@@ -44,8 +45,6 @@ public class MemberServiceTest {
 
     when(memberRepositoryMock.save(member)).thenReturn(savedMember);
     when(jwtUtilMock.generateToken(expectedMemberId, member.getEmail())).thenReturn(expectedToken);
-
-
     String token = memberService.register(member);
 
     assertEquals(expectedToken, token, "Generated token should match expected token");
