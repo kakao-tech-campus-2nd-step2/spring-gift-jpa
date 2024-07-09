@@ -16,7 +16,7 @@ public class MemberService {
         return memberRepository.findByEmail(email);
     }
     public void signupMember(Member member){
-        memberRepository.addMember(member);
+        memberRepository.save(member);
     }
     public boolean checkUserByMemberEmail(String email){
         try {
