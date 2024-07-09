@@ -1,10 +1,10 @@
 package gift.wishlist.dto;
 
 public class WishRequest {
-    private String productName;
+    private Long productId;
 
-    public String getProductName() {
-        return productName;
+    public Long getProductId() {
+        return productId;
     }
 
 }
