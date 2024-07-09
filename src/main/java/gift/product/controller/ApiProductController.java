@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ApiProductController {
 
     private final AdminProductService adminProductService;
-    private final AtomicLong idCounter = new AtomicLong();
     private final ProductValidation productValidation;
 
     @Autowired
