@@ -6,10 +6,12 @@ import gift.product.application.command.ProductUpdateCommand;
 import gift.product.domain.Product;
 import gift.product.domain.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
     private final ProductRepository productRepository;
 
@@ -28,27 +30,28 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException("해당 상품이 존재하지 않습니다."));
     }
 
-    public void add(ProductCreateCommand command) {
+    @Transactional
+    public void save(ProductCreateCommand command) {
         Product product = command.toProduct();
         product.validateKakaoInName();
 
-        productRepository.addProduct(product);
+        productRepository.save(product);
     }
 
+    @Transactional
     public void update(ProductUpdateCommand command) {
-        Product product = command.toProduct();
-        product.validateKakaoInName();
-
-        productRepository.findById(product.getId())
+        Product product = productRepository.findById(command.id())
                 .orElseThrow(() -> new NotFoundException("해당 상품이 존재하지 않습니다."));
 
-        productRepository.updateProduct(product);
+        product.update(command);
+        product.validateKakaoInName();
     }
 
+    @Transactional
     public void delete(Long productId) {
-        productRepository.findById(productId)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("해당 상품이 존재하지 않습니다."));
 
-        productRepository.deleteProduct(productId);
+        productRepository.delete(product);
     }
 }
