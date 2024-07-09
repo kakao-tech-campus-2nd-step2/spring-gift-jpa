@@ -3,6 +3,7 @@ package gift.Controller;
 import gift.DTO.ProductDto;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +42,7 @@ public class ProductAdminController {
 
   @GetMapping("product/{id}")
   public String editProductForm(@PathVariable Long id, Model model) {
-    ProductDto productDTO = productService.getProductById(id);
+    Optional<ProductDto> productDTO = productService.getProductById(id);
     if (productDTO != null) {
       model.addAttribute("product", productDTO);
       return "product-form";
