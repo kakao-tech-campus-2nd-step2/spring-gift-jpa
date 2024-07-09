@@ -9,8 +9,10 @@ import gift.repository.WishRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class WishService {
     private final JpaWishRepository jpaWishRepository;
 
@@ -18,6 +20,7 @@ public class WishService {
         this.jpaWishRepository = jpaWishRepository;
     }
 
+    @Transactional(readOnly = true)
     public WishListResponseDTO getAllWishes(Long userId){
         List<WishResponseDTO> wishResponseDTOList = jpaWishRepository.findAllByUserId(userId)
             .stream()
@@ -26,6 +29,7 @@ public class WishService {
         return new WishListResponseDTO(wishResponseDTOList);
     }
 
+    @Transactional(readOnly = true)
     public WishResponseDTO getOneWish(Long wishId){
         Wish wish = jpaWishRepository.findById(wishId)
             .orElseThrow(() -> new NoSuchElementException("id가 잘못되었습니다."));

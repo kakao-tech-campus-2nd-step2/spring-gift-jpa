@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Service
+@Transactional
 public class ProductService {
     private final JpaProductRepository jpaProductRepository;
 
@@ -22,6 +24,7 @@ public class ProductService {
         this.jpaProductRepository = jpaProductRepository;
     }
 
+    @Transactional(readOnly = true)
     public ProductListResponseDTO getAllProducts(){
         List<ProductResponseDTO> productResponseDTOList = jpaProductRepository.findAll()
             .stream()
@@ -31,6 +34,7 @@ public class ProductService {
         return new ProductListResponseDTO(productResponseDTOList);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponseDTO getOneProduct(Long productId){
         Product product = jpaProductRepository.findById(productId)
             .orElseThrow(() -> new NoSuchElementException("id가 잘못되었습니다."));
