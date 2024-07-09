@@ -2,46 +2,46 @@ package gift.service;
 
 import gift.dto.LoginRequest;
 import gift.dto.LoginResponse;
-import gift.dto.UserRequest;
-import gift.exception.user.UserAlreadyExistsException;
-import gift.exception.user.UserNotFoundException;
+import gift.dto.MemberRequest;
+import gift.exception.user.MemberAlreadyExistsException;
+import gift.exception.user.MemberNotFoundException;
 import gift.jwt.JwtUtil;
-import gift.model.User;
-import gift.repository.UserDao;
+import gift.model.Member;
+import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class AuthService {
-    private final UserDao userDao;
+    private final MemberRepository memberRepository;
 
-    public AuthService(UserDao userDao) {
-        this.userDao = userDao;
+    public AuthService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
-    public LoginResponse register(UserRequest request) {
-        Optional<User> optionalUser = userDao.findByEmail(request.email());
+    public LoginResponse register(MemberRequest request) {
+        Optional<Member> optionalUser = memberRepository.findByEmail(request.email());
 
         if (!optionalUser.isPresent()) {
-            User user = new User(
+            Member member = new Member(
                     request.email(),
                     request.password()
             );
-            userDao.insert(user);
+            memberRepository.save(member);
             LoginResponse response = new LoginResponse("");
             return response;
         }
-        throw new UserAlreadyExistsException("해당 email의 계정이 이미 존재하는 계정입니다.");
+        throw new MemberAlreadyExistsException("해당 email의 계정이 이미 존재하는 계정입니다.");
     }
 
     public LoginResponse login(LoginRequest request) {
-        User user = userDao.findByEmail(request.email())
-                .orElseThrow(() -> new UserNotFoundException("해당 유저가 존재하지 않습니다."));
-        if (!user.matchPassword(request.password())) {
-            throw new UserNotFoundException("비밀번호가 일치하지 않습니다.");
+        Member member = memberRepository.findByEmail(request.email())
+                .orElseThrow(() -> new MemberNotFoundException("해당 유저가 존재하지 않습니다."));
+        if (!member.matchPassword(request.password())) {
+            throw new MemberNotFoundException("비밀번호가 일치하지 않습니다.");
         }
-        LoginResponse response = new LoginResponse(JwtUtil.createToken(user.getEmail()));
+        LoginResponse response = new LoginResponse(JwtUtil.createToken(member.getEmail()));
         return response;
     }
 }

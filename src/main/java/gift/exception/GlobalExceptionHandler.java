@@ -3,8 +3,8 @@ package gift.exception;
 import gift.exception.auth.UnauthorizedException;
 import gift.exception.product.ProductAlreadyExistsException;
 import gift.exception.product.ProductNotFoundException;
-import gift.exception.user.UserAlreadyExistsException;
-import gift.exception.user.UserNotFoundException;
+import gift.exception.user.MemberAlreadyExistsException;
+import gift.exception.user.MemberNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException e) {
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(MemberNotFoundException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<String> handleUserAlreadyExistsException(UserAlreadyExistsException e) {
+    @ExceptionHandler(MemberAlreadyExistsException.class)
+    public ResponseEntity<String> handleUserAlreadyExistsException(MemberAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 

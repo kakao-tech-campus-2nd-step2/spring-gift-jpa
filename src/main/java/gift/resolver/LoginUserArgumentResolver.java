@@ -2,8 +2,8 @@ package gift.resolver;
 
 import gift.exception.auth.UnauthorizedException;
 import gift.jwt.JwtUtil;
-import gift.model.LoginUser;
-import gift.service.UserService;
+import gift.model.LoginMember;
+import gift.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -14,15 +14,15 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
-    private final UserService userService;
+    private final MemberService memberService;
     private static final String BEARER = "Bearer ";
 
-    public LoginUserArgumentResolver(UserService userService) {
-        this.userService = userService;
+    public LoginUserArgumentResolver(MemberService memberService) {
+        this.memberService = memberService;
     }
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(LoginUser.class);
+        return parameter.hasParameterAnnotation(LoginMember.class);
     }
 
     @Override
@@ -40,6 +40,6 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
             throw new UnauthorizedException("만료된 토큰입니다.");
         }
 
-        return userService.getUserByEmail(JwtUtil.getEmail(token));
+        return memberService.getMemberByEmail(JwtUtil.getEmail(token));
     }
 }

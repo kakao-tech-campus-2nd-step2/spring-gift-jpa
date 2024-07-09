@@ -1,9 +1,9 @@
 package gift.controller;
 
 import gift.dto.WishRequest;
-import gift.model.LoginUser;
+import gift.model.LoginMember;
+import gift.model.Member;
 import gift.model.Product;
-import gift.model.User;
 import gift.service.WishService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,20 +22,20 @@ public class WishController {
     }
 
     @PostMapping("/wishes")
-    public ResponseEntity makeWish(@RequestBody @Valid WishRequest request, @LoginUser User user) {
-        wishService.makeWish(request, user);
+    public ResponseEntity makeWish(@RequestBody @Valid WishRequest request, @LoginMember Member member) {
+        wishService.makeWish(request, member);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/wishes")
-    public ResponseEntity<List<Product>> getAllWishProductsByUser(@LoginUser User user) {
-        List<Product> allProducts = wishService.getAllWishProductsByUser(user);
+    public ResponseEntity<List<Product>> getAllWishProductsByMember(@LoginMember Member member) {
+        List<Product> allProducts = wishService.getAllWishProductsByMember(member);
         return ResponseEntity.ok().body(allProducts);
     }
 
     @DeleteMapping("/wishes")
-    public ResponseEntity deleteWishProduct(@RequestBody @Valid WishRequest request, @LoginUser User user) {
-        wishService.deleteWish(request.productId(), user);
+    public ResponseEntity deleteWishProduct(@RequestBody @Valid WishRequest request, @LoginMember Member member) {
+        wishService.deleteWish(request.productId(), member);
         return ResponseEntity.noContent().build();
     }
 }
