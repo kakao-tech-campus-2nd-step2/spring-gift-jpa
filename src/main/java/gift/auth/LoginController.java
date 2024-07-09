@@ -21,22 +21,22 @@ public class LoginController {
     /**
      * 로그인 메서드
      *
-     * @param loginDTO 로그인 정보
+     * @param memberDTO 로그인 정보
      * @return 토큰 정보
      */
     @PostMapping
-    public ResponseEntity<TokenDTO> Login(@Valid @RequestBody LoginDTO loginDTO) {
-        return ResponseEntity.ok(loginService.Login(loginDTO));
+    public ResponseEntity<TokenDTO> Login(@Valid @RequestBody MemberDTO memberDTO) {
+        return ResponseEntity.ok(loginService.Login(memberDTO));
     }
 
     /**
      * 회원가입 메서드
      *
-     * @param loginDTO 회원가입 정보
+     * @param memberDTO 회원가입 정보
      * @return 토큰 정보
      */
     @PostMapping("/signup")
-    public ResponseEntity<TokenDTO> SignUp(@Valid @RequestBody LoginDTO loginDTO) {
-        return ResponseEntity.ok(loginService.SignUp(loginDTO));
+    public ResponseEntity<TokenDTO> SignUp(@Valid @RequestBody MemberDTO memberDTO) {
+        return ResponseEntity.ok(loginService.SignUp(memberDTO));
     }
 }

@@ -24,13 +24,13 @@ public class JwtToken {
     /**
      * JWT 토큰 생성
      *
-     * @param loginDTO 로그인 정보
+     * @param memberDTO 로그인 정보
      * @return 생성된 토큰
      */
-    public TokenDTO createToken(LoginDTO loginDTO) {
+    public TokenDTO createToken(MemberDTO memberDTO) {
         Claims claims = Jwts.claims();
-        claims.put("email", loginDTO.getEmail());
-        claims.put("id", loginDTO.getId());
+        claims.put("email", memberDTO.getEmail());
+        claims.put("id", memberDTO.getId());
 
         ZonedDateTime now = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("UTC"));
         ZonedDateTime expirationDateTime = now.plusSeconds(tokenExpTime);

@@ -10,7 +10,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import io.jsonwebtoken.Claims;
 
 @Component
-public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
+public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private JwtToken jwtToken = new JwtToken();
 
@@ -21,7 +21,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
      */
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(LoginDTO.class);
+        return parameter.getParameterType().equals(MemberDTO.class);
     }
 
     /**
@@ -46,7 +46,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
             if (claims != null) {
                 String email = claims.get("email", String.class);
                 Long id = claims.get("id", Long.class);
-                return new LoginDTO(id, email, null);
+                return new MemberDTO(id, email, null);
             }
         }
 

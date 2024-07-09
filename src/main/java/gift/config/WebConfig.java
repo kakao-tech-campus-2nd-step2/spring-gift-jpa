@@ -1,7 +1,7 @@
 package gift.config;
 
 import gift.auth.Interceptor;
-import gift.auth.LoginUserArgumentResolver;
+import gift.auth.LoginMemberArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
     private Interceptor interceptor;
 
     @Autowired
-    private LoginUserArgumentResolver loginUserArgumentResolver;
+    private LoginMemberArgumentResolver loginUserArgumentResolver;
 
     /**
      * 커스텀 인터셉터를 애플리케이션의 인터셉터 레지스트리에 추가합니다. 이 인터셉터는 "/api/login", "/api/login/signup"을 제외한 모든 요청에 대해
