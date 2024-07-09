@@ -2,6 +2,7 @@ package gift.util;
 
 
 import gift.model.User;
+import gift.model.UserDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.assertj.core.api.Assertions;
@@ -20,10 +21,10 @@ public class UserValidatorTest {
     @Test
     public void save_emailSuccess() {
         //given
-        User user = new User("test@naver.com", "abc");
+        UserDTO user = new UserDTO("test@naver.com", "abc");
 
         //when
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
 
         //then
         Assertions.assertThat(violations).isEmpty();
@@ -32,10 +33,10 @@ public class UserValidatorTest {
     @Test
     public void save_emailFailure() {
         //given
-        User user = new User("test@123@naver,com", "abc");
+        UserDTO user = new UserDTO("test@123@naver,com", "abc");
 
         //when
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        Set<ConstraintViolation<UserDTO>> violations = validator.validate(user);
 
         //then
         Assertions.assertThat(violations).isNotEmpty();
