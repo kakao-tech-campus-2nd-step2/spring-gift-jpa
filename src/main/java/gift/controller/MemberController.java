@@ -3,6 +3,8 @@ package gift.controller;
 import gift.dto.MemberRequest;
 import gift.dto.MemberResponse;
 import gift.service.MemberService;
+import gift.util.JwtUtil;
+import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, JwtUtil jwtUtil) {
         this.memberService = memberService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -41,6 +45,17 @@ public class MemberController {
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(403).body("Forbidden");
+        }
+    }
+
+    @GetMapping("/validate-token")
+    public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String token) {
+        try {
+            Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
+            Long memberId = Long.parseLong(claims.getSubject());
+            return ResponseEntity.ok("Token is valid for member ID: " + memberId);
+        } catch (Exception e) {
+            return ResponseEntity.status(403).body("Invalid token");
         }
     }
 }
