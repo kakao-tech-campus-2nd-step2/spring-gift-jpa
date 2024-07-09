@@ -11,12 +11,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @EmailConstraint
-    @Length(min = 1, max = 50)
-    @NotNull
     private String email;
-    @Length(min = 1, max = 50)
-    @NotNull
     private String password;
 
     public User(String email, String password) {

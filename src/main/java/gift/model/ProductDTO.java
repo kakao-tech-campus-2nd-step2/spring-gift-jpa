@@ -1,12 +1,16 @@
 package gift.model;
 
 import gift.util.NameConstraint;
+import jakarta.validation.constraints.NotNull;
 
 public class ProductDTO {
 
     @NameConstraint
+    @NotNull
     private String name;
+    @NotNull
     private Integer price;
+    @NotNull
     private String imageUrl;
 
     public ProductDTO(String name, Integer price, String imageUrl) {

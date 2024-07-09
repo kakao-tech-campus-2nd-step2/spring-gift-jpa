@@ -1,11 +1,14 @@
 package gift.model;
 
 import gift.util.ProductIdConstraint;
+import jakarta.validation.constraints.NotNull;
 
 public class WishListDTO {
 
     @ProductIdConstraint
+    @NotNull
     private Long productId;
+    @NotNull
     private int count;
 
     public WishListDTO() {

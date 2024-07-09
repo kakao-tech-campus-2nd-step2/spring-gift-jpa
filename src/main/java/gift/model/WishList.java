@@ -9,12 +9,9 @@ public class WishList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
     private String email;
     @Column(name = "productid")
-    @NotNull
     private Long productId;
-    @NotNull
     private int count;
 
     public WishList() {
