@@ -31,9 +31,6 @@ public class WishlistService {
 
     }
 
-    public List<Wish> getWishlist(Long id) {
-        return wishRepository.findByMemberId(id);
-    }
 
     public void deleteWishlist(Long id, String email) {
         Member authMember = memberRepository.findByEmail(email);

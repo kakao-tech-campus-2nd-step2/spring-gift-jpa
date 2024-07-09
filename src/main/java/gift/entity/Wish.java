@@ -17,7 +17,7 @@ public class Wish {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="MEMBER_ID")
+    @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
     @ManyToOne
@@ -27,6 +27,14 @@ public class Wish {
     public Wish() {
     }
 
+    public Wish(Member member, Product product) {
+        this.member = member;
+        this.product = product;
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public Member getMember() {
         return member;
