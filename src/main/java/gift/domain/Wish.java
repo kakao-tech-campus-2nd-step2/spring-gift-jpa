@@ -11,18 +11,18 @@ public class Wish {
         this.memberId = memberId;
     }
 
+    public Wish(Long id, Long productId, Long memberId) {
+        this.id = id;
+        this.productId = productId;
+        this.memberId = memberId;
+    }
+
     public Long getId(){return this.id;}
-    public void setId(Long id) { this.id = id; }
     public Long getMemberId() {
         return memberId;
-    }
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
     }
     public Long getProductId() {
         return productId;
     }
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
+
 }
