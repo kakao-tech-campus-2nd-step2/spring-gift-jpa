@@ -6,6 +6,7 @@ import gift.domain.WishList;
 import gift.dto.WishRequest;
 import gift.service.WishListService;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +25,8 @@ public class WishListController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishList>> getWishList(@LoginMember LoginUser member) {
-        List<WishList> wishLists = wishListService.getWishListByUserId(member.getId());
+    public ResponseEntity<Optional<WishList>> getWishList(@LoginMember LoginUser member) {
+        Optional<WishList> wishLists = wishListService.getWishListByUserId(member.getId());
         return ResponseEntity.ok(wishLists);
     }
 
