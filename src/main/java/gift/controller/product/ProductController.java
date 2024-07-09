@@ -21,9 +21,9 @@ public class ProductController {
     }
 
     @PostMapping("api/products")
-    public ResponseEntity<AddedProductIdResponse> addProduct(@Valid @RequestBody ProductRequest addRequest) {
+    public ResponseEntity<AddedProductIdResponse> addProduct(@Valid @RequestBody ProductRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productService.addProduct(addRequest));
+                .body(productService.addProduct(request.getName(), request.getPrice(), request.getImageUrl()));
     }
 
     @GetMapping("api/products")
@@ -32,8 +32,8 @@ public class ProductController {
     }
 
     @PutMapping("api/products")
-    public ResponseEntity<Void> updateProduct(@Valid @RequestBody ProductRequest updateRequest) {
-        productService.updateProduct(updateRequest);
+    public ResponseEntity<Void> updateProduct(@Valid @RequestBody ProductRequest request) {
+        productService.updateProduct(request.getId(), request.getName(), request.getPrice(), request.getImageUrl());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

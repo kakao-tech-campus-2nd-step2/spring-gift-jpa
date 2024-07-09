@@ -36,7 +36,7 @@ public class ProductAdminController {
     @PostMapping("/add")
     public String addProduct(@Valid ProductRequest product) {
         try {
-            productService.addProduct(product);
+            productService.addProduct(product.getName(), product.getPrice(), product.getImageUrl());
             return "redirect:/";
         } catch (Exception e) {
             return "version-SSR/add-error";
@@ -64,7 +64,7 @@ public class ProductAdminController {
     @PostMapping("/edit")
     public String editProduct(@Valid ProductRequest product) {
         try {
-            productService.updateProduct(product);
+            productService.updateProduct(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
             return "redirect:/";
         } catch (Exception e) {
             return "version-SSR/edit-error";
