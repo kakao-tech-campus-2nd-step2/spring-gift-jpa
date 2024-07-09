@@ -1,23 +1,20 @@
 package gift.Token;
 
-import gift.Model.Role;
-import gift.Model.UserInfo;
+import gift.Model.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 @Component
 public class JwtTokenProvider {
     String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
 
-    public String createToken(UserInfo userInfo) {
+    public String createToken(Member member) {
         return Jwts.builder()
-                .setSubject(userInfo.email())
-                .claim("role", userInfo.role())
+                .setSubject(member.getEmail())
+                .claim("role", member.getRole())
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
