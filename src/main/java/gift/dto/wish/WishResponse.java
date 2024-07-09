@@ -5,7 +5,7 @@ import gift.entity.Product;
 public record WishResponse(
     Long id,
     Product product,
-    int quantity
+    Integer quantity
 ) {
 
 }
