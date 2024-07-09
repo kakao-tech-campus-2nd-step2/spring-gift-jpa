@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 @DataJpaTest
 class ProductRepositoryTest {
@@ -22,8 +21,8 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        product1 = new Product(1, "Product1", 1000, "http://example.com/image1.jpg");
-        product2 = new Product(2, "Product2", 2000, "http://example.com/image2.jpg");
+        product1 = new Product("Product1", 1000, "http://example.com/image1.jpg");
+        product2 = new Product("Product2", 2000, "http://example.com/image2.jpg");
         productRepository.save(product1);
         productRepository.save(product2);
     }
@@ -43,7 +42,7 @@ class ProductRepositoryTest {
 
     @Test
     void testSaveNewProduct () {
-        Product newProduct = new Product(3, "Product3", 3000, "http://example.com/image3.jpg");
+        Product newProduct = new Product("Product3", 3000, "http://example.com/image3.jpg");
         Product savedProduct = productRepository.save(newProduct);
 
         assertThat(savedProduct.getId()).isNotNull();
