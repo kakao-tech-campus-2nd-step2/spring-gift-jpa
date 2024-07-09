@@ -1,10 +1,6 @@
 package gift.auth.service;
 
-import static gift.member.Role.ADMIN;
-import static gift.member.Role.USER;
-
 import gift.auth.dto.LoginReqDto;
-import gift.auth.exception.InvalidGrantTypeException;
 import gift.auth.exception.LoginFailedException;
 import gift.auth.token.AuthToken;
 import gift.auth.token.AuthTokenGenerator;
@@ -34,11 +30,6 @@ public class AuthService {
         // 이메일과 비밀번호가 일치하지 않으면 예외 발생
         if (!member.email().equals(loginReqDto.email()) || !password.equals(loginReqDto.password())) {
             throw LoginFailedException.EXCEPTION;
-        }
-
-        // 올바른 권한이 아니면 예외 발생: ADMIN, USER 둘 만 존재
-        if (!member.role().equals(ADMIN.getValue()) && !member.role().equals(USER.getValue())) {
-            throw InvalidGrantTypeException.EXCEPTION;
         }
 
         return authTokenGenerator.generateToken(member);

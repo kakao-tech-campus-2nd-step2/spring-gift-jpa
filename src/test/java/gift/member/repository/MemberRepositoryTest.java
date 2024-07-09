@@ -1,12 +1,14 @@
 package gift.member.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import gift.member.Role;
+import gift.member.dto.MemberReqDto;
 import gift.member.entity.Member;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,26 +23,23 @@ class MemberRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        memberRepository.deleteAll();
+
         // 임의의 회원 3명
         List<Member> members = List.of(
-                new Member("omg", "test1@test.com", "1234", Role.USER),
-                new Member("abc", "test2@test.com", "1234", Role.USER),
-                new Member("def", "test3@test.com", "1234", Role.USER)
+                new Member("test1@test.com", "1234"),
+                new Member("test2@test.com", "1234"),
+                new Member("test3@test.com", "1234")
         );
 
         memberRepository.saveAll(members);
-    }
-
-    @AfterEach
-    void tearDown() {
-        memberRepository.deleteAll();
     }
 
     @Test
     @DisplayName("회원 생성")
     void addMember() {
         //given
-        Member member = new Member("wow", "abc123@test.com", "1234", Role.USER);
+        Member member = new Member("abc123@test.com", "1234");
 
         //when
         Member savedMember = memberRepository.save(member);
@@ -48,10 +47,8 @@ class MemberRepositoryTest {
         //then
         assertAll(
                 () -> assertNotNull(savedMember.getId()),
-                () -> assertEquals(member.getName(), savedMember.getName()),
                 () -> assertEquals(member.getEmail(), savedMember.getEmail()),
-                () -> assertEquals(member.getPassword(), savedMember.getPassword()),
-                () -> assertEquals(member.getRole(), savedMember.getRole())
+                () -> assertEquals(member.getPassword(), savedMember.getPassword())
         );
     }
 
@@ -65,14 +62,29 @@ class MemberRepositoryTest {
         // then
         assertAll(
                 () -> assertEquals(3, members.size()),
-                () -> assertEquals("omg", members.get(0).getName()),
-                () -> assertEquals("abc", members.get(1).getName()),
-                () -> assertEquals("def", members.get(2).getName())
+                () -> assertEquals("test1@test.com", members.get(0).getEmail()),
+                () -> assertEquals("test2@test.com", members.get(1).getEmail()),
+                () -> assertEquals("test3@test.com", members.get(2).getEmail())
         );
 
         // 존재하지 않는 회원 조회
-        assertThrows(Exception.class,
-                () -> memberRepository.findById(4L).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."))
+        assertFalse(memberRepository.existsByEmail("noExists@test.com"));
+    }
+
+    @Test
+    @DisplayName("회원 수정")
+    void updateMember() {
+        // given
+        Member member = memberRepository.findByEmail("test1@test.com").orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        // when
+        member.update(new MemberReqDto("newEmail@test.com", "4321"));
+
+        // then
+        Member updatedMember = memberRepository.findById(member.getId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        assertAll(
+                () -> assertEquals("newEmail@test.com", updatedMember.getEmail()),
+                () -> assertEquals("4321", updatedMember.getPassword())
         );
     }
 

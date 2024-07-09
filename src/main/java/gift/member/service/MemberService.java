@@ -1,12 +1,10 @@
 package gift.member.service;
 
-import static gift.member.Role.USER;
-
 import gift.auth.token.AuthToken;
 import gift.auth.token.AuthTokenGenerator;
-import gift.member.entity.Member;
 import gift.member.dto.MemberReqDto;
 import gift.member.dto.MemberResDto;
+import gift.member.entity.Member;
 import gift.member.exception.MemberAlreadyExistsByEmailException;
 import gift.member.exception.MemberCreateException;
 import gift.member.exception.MemberDeleteException;
@@ -50,7 +48,7 @@ public class MemberService {
         // 관리자 계정은 데이터베이스에서 직접 추가
         Member newMember;
         try {
-            newMember = memberRepository.save(memberReqDto.toEntity(USER));
+            newMember = memberRepository.save(memberReqDto.toEntity());
         } catch (Exception e) {
             throw MemberCreateException.EXCEPTION;
         }

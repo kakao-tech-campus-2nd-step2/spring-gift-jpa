@@ -4,12 +4,10 @@ import gift.member.entity.Member;
 
 public record MemberResDto(
         Long id,
-        String name,
-        String email,
-        String role
+        String email
 ) {
 
     public MemberResDto(Member member) {
-        this(member.getId(), member.getName(), member.getEmail(), member.getRole().getValue());
+        this(member.getId(), member.getEmail());
     }
 }
