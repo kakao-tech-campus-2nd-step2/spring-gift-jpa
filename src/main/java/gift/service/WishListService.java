@@ -1,7 +1,10 @@
 package gift.service;
 
-import gift.dto.ProductAmount;
-import gift.repository.WishListRepository;
+import gift.dto.response.WishProductResponse;
+import gift.entity.Wish;
+import gift.exception.WishAlreadyExistsException;
+import gift.exception.WishNotFoundException;
+import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,10 +12,12 @@ import java.util.List;
 @Service
 public class WishListService {
 
-    private final WishListRepository wishListRepository;
+    private final WishRepository wishListRepository;
 
     public WishListService(WishListRepository wIshListRepository) {
         this.wishListRepository = wIshListRepository;
+    public WishListService(WishRepository wishListRepository) {
+        this.wishListRepository = wishListRepository;
     }
 
     public List<ProductAmount> getProductIdsAndAmount(Long memberId) {
@@ -41,13 +46,11 @@ public class WishListService {
         return wishListRepository.isAlreadyExistProduct(memberId, productId);
     }
 
-    public boolean updateWishList(Long memberId, Long productId, int amount) {
-        boolean isAlreadyExist = isAlreadyExistProduct(memberId, productId);
-        if (!isAlreadyExist) {
-            return false;
-        }
-        wishListRepository.updateProductInWishList(memberId, productId, amount);
-        return true;
+    public List<WishProductResponse> getWishProductsByMemberId(Long memberId) {
+        return wishListRepository.findWishesByMemberIdWithProduct(memberId)
+                .stream()
+                .map(wish -> new WishProductResponse(wish.getProductId(), wish.getProduct().getName(), wish.getProduct().getPrice(), wish.getProduct().getImageUrl(), wish.getAmount()))
+                .toList();
     }
 
 }

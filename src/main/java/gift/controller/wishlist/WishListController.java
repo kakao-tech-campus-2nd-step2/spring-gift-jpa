@@ -1,8 +1,7 @@
 package gift.controller.wishlist;
 
-import gift.dto.ProductAmount;
 import gift.dto.request.WishListRequest;
-import gift.dto.response.WishedProductResponse;
+import gift.dto.response.WishProductResponse;
 import gift.service.ProductService;
 import gift.service.WishListService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,14 +23,9 @@ public class WishListController {
     }
 
     @GetMapping("api/wishlist")
-    public List<WishedProductResponse> getWishList(HttpServletRequest request) {
+    public List<WishProductResponse> getWishList(HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");
-        List<ProductAmount> productIdList = wishListService.getProductIdsAndAmount(memberId);
-        List<WishedProductResponse> responses = new ArrayList<>();
-        for (ProductAmount productAmount : productIdList) {
-            responses.add(new WishedProductResponse(productService.getProduct(productAmount.getProductId()), productAmount.getAmount()));
-        }
-        return responses;
+        return wishListService.getWishProductsByMemberId(memberId);
     }
 
     @PostMapping("api/wishlist")
