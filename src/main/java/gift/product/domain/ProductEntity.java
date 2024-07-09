@@ -58,4 +58,5 @@ public class ProductEntity {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
 }
