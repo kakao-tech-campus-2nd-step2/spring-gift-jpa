@@ -16,11 +16,10 @@ public class MemberService {
     }
 
     public String login(Member member) {
-        String email = member.getEmail();
-        Member foundMember = repository.findByEmail(email)
+        Member foundMember = repository.findByEmail(member.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
-        foundMember.validateEmail(email); // 이메일 검증
-        return createJwtToken(email);
+        foundMember.validateEmail(foundMember.getEmail()); // 이메일 검증
+        return createJwtToken(foundMember.getId(), foundMember.getEmail());
     }
 
     public String join(Member member) {
@@ -28,8 +27,8 @@ public class MemberService {
         return login(joinedMember);
     }
 
-    public String createJwtToken(String email) {
-        return jwtUtil.generateToken(email);
+    public String createJwtToken(Long memberId, String email) {
+        return jwtUtil.generateToken(memberId, email);
     }
 
 }
