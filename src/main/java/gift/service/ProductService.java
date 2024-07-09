@@ -1,15 +1,15 @@
 package gift.service;
 
 import gift.domain.Product;
-import gift.repository.ProductRepository;
+import gift.repository.ProductJdbcRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
-    private final ProductRepository productRepository;
+    private final ProductJdbcRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductJdbcRepository productRepository) {
         this.productRepository=productRepository;
     }
 

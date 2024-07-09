@@ -7,10 +7,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WishlistRepository {
+public class WishlistJdbcRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public WishlistRepository(JdbcTemplate jdbcTemplate) {
+    public WishlistJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

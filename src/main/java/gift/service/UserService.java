@@ -1,16 +1,16 @@
 package gift.service;
 
 import gift.domain.User;
-import gift.repository.UserRepository;
+import gift.repository.UserJdbcRepository;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserJdbcRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserJdbcRepository userRepository) {
         this.userRepository=userRepository;
     }
 

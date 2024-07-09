@@ -1,16 +1,16 @@
 package gift.service;
 
 import gift.domain.Wishlist;
-import gift.repository.WishlistRepository;
+import gift.repository.WishlistJdbcRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public class WishlistService {
-    private final WishlistRepository wishlistRepository;
+    private final WishlistJdbcRepository wishlistRepository;
     private final ProductService productService;
 
-    public WishlistService(WishlistRepository wishlistRepository, ProductService productService) {
+    public WishlistService(WishlistJdbcRepository wishlistRepository, ProductService productService) {
         this.wishlistRepository = wishlistRepository;
         this.productService = productService;
     }
