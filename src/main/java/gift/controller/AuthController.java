@@ -30,6 +30,9 @@ public class AuthController {
     public ResponseEntity<?> handleLoginRequest(@Valid @RequestBody UserForm userForm,
         BindingResult result)
         throws MethodArgumentNotValidException {
+        if(result.hasErrors()){
+            throw new MethodArgumentNotValidException(null,result);
+        }
         if (!userService.existsEmail(userForm.getEmail())) {
             result.rejectValue("email", "", ErrorCode.EMAIL_NOT_FOUND.getMessage());
             throw new EmailNotFoundException(null, result);
@@ -44,6 +47,9 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> handleSignUpRequest(@Valid @RequestBody UserForm userForm,
         BindingResult result) throws MethodArgumentNotValidException {
+        if(result.hasErrors()){
+            throw new MethodArgumentNotValidException(null,result);
+        }
         if (userService.existsEmail(userForm.getEmail())) {
             result.rejectValue("email", "", ErrorCode.DUPLICATE_EMAIL.getMessage());
             throw new DuplicateEmailException(null, result);
