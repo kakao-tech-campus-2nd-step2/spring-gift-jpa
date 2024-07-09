@@ -9,37 +9,35 @@ import java.util.Collection;
 
 @Service
 public class AdminProductService {
-
     private final AdminProductDao adminProductDao;
 
     @Autowired
     public AdminProductService(AdminProductDao adminProductDao) {
         this.adminProductDao = adminProductDao;
-        adminProductDao.createProductTable();
     }
 
     public void registerProduct(Product product) {
-        adminProductDao.registerProduct(product);
+        adminProductDao.save(product);
     }
 
     public void updateProduct(Product product) {
-        adminProductDao.updateProduct(product);
+        adminProductDao.save(product);
     }
 
     public void deleteProduct(Long id) {
-        adminProductDao.deleteProduct(id);
+        adminProductDao.deleteById(id);
     }
 
     public Collection<Product> getAllProducts() {
-        return adminProductDao.getAllProducts();
+        return adminProductDao.findAll();
     }
 
     public Product getProductById(Long id) {
-        return adminProductDao.getProductById(id);
+        return adminProductDao.findById(id).orElse(null);
     }
 
     public Collection<Product> searchProducts(String keyword) {
-        return adminProductDao.searchProduct(keyword);
+        return adminProductDao.findByName(keyword);
     }
 
     public boolean existsById(Long id) {

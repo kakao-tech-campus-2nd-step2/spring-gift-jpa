@@ -1,6 +1,6 @@
 package gift.product.util;
 
-import gift.product.service.MemberService;
+import gift.product.dao.MemberDao;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -18,10 +18,10 @@ public class CertifyUtil {
 
     private final String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
     private final Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
-    private final MemberService memberService;
+    private final MemberDao memberDao;
 
-    public CertifyUtil(MemberService memberService) {
-        this.memberService = memberService;
+    public CertifyUtil(MemberDao memberDao) {
+        this.memberDao = memberDao;
     }
 
     public String encodingPassword(String password) {
@@ -39,7 +39,7 @@ public class CertifyUtil {
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
             String subject = claimsJws.getBody().getSubject();
-            if(!memberService.isExistsMember(Base64.getEncoder().encodeToString(subject.getBytes())))
+            if(!memberDao.isExistsMember(Base64.getEncoder().encodeToString(subject.getBytes())))
                 return false;
         } catch (SignatureException e) {
             System.out.println("Invalid JWT signature: " + e.getMessage());

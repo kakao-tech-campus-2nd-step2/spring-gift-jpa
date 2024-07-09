@@ -1,19 +1,19 @@
 package gift.product.validation;
 
+import gift.product.dao.WishListDao;
 import gift.product.service.AdminProductService;
-import gift.product.service.WishListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class WishListValidation {
     private final AdminProductService adminProductService;
-    private final WishListService wishListService;
+    private final WishListDao wishListDao;
 
     @Autowired
-    public WishListValidation(AdminProductService adminProductService, WishListService wishListService) {
+    public WishListValidation(AdminProductService adminProductService, WishListDao wishListDao) {
         this.adminProductService = adminProductService;
-        this.wishListService = wishListService;
+        this.wishListDao = wishListDao;
     }
 
     public boolean isExistsProduct(Long id) {
@@ -21,7 +21,7 @@ public class WishListValidation {
     }
 
     public boolean isRegisterProduct(Long pId, String email) {
-        return wishListService.existsByPId(pId, email);
+        return wishListDao.existsByPId(pId, email);
     }
 
 }
