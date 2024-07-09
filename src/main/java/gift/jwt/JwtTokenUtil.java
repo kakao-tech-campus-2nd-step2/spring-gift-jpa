@@ -18,10 +18,10 @@ public class JwtTokenUtil {
 
     public String getEmailFromToken(String token) {
         Claims claims = Jwts.parser()
-            .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+            .verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
             .build()
-            .parseClaimsJws(token)
-            .getBody();
+            .parseSignedClaims(token)
+            .getPayload();
         return claims.getSubject();
     }
 }
