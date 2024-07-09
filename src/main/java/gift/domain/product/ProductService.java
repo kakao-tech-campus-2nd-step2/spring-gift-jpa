@@ -2,7 +2,11 @@ package gift.domain.product;
 
 import gift.domain.product.repository.JpaProductRepository;
 import gift.global.exception.BusinessException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,11 +17,13 @@ public class ProductService {
 
     private final JdbcTemplate jdbcTemplate; // h2 DB 사용한 메모리 저장 방식
     private final JpaProductRepository productRepository;
+    private final Validator validator;
 
     @Autowired
-    public ProductService(JdbcTemplate jdbcTemplate, JpaProductRepository jpaProductRepository) {
+    public ProductService(JdbcTemplate jdbcTemplate, JpaProductRepository jpaProductRepository, Validator validator) {
         this.jdbcTemplate = jdbcTemplate;
         this.productRepository = jpaProductRepository;
+        this.validator = validator;
     }
 
     /**
@@ -30,6 +36,8 @@ public class ProductService {
 
         Product product = new Product(productDTO.getName(), productDTO.getPrice(),
             productDTO.getImageUrl());
+
+        validateProduct(product);
 
         productRepository.save(product);
     }
@@ -58,6 +66,8 @@ public class ProductService {
         product.setPrice(productDTO.getPrice());
         product.setImageUrl(productDTO.getImageUrl());
 
+        validateProduct(product);
+
         productRepository.save(product);
     }
 
@@ -77,6 +87,19 @@ public class ProductService {
         }
 
         productRepository.deleteByIds(productIds);
+    }
+
+    /**
+     * 비즈니스 제약 사항 검사
+     */
+    private void validateProduct(Product product) {
+        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+        if (!violations.isEmpty()) {
+            String message = violations.stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining(", "));
+            throw new BusinessException(HttpStatus.BAD_REQUEST, message);
+        }
     }
 
 }
