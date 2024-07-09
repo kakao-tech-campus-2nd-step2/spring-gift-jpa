@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.domain.model.UserRequestDto;
 import gift.domain.model.TokenResponseDto;
+import gift.domain.model.UserResponseDto;
 import gift.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,9 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<TokenResponseDto> joinUser(@Valid @RequestBody UserRequestDto userRequestDto) {
-        String token = userService.joinUser(userRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new TokenResponseDto(token));
+    public ResponseEntity<UserResponseDto> joinUser(@Valid @RequestBody UserRequestDto userRequestDto) {
+        UserResponseDto response = userService.joinUser(userRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")

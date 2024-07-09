@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.domain.model.User;
 import gift.domain.model.UserRequestDto;
+import gift.domain.model.UserResponseDto;
 import gift.domain.repository.UserRepository;
 import gift.exception.BadCredentialsException;
 import gift.exception.DuplicateEmailException;
@@ -22,16 +23,19 @@ public class UserService {
         this.jwtUtil = jwtUtil;
     }
 
-    public String joinUser(UserRequestDto userRequestDto) {
-        if (userRepository.isExistEmail(userRequestDto.getEmail())) {
+    public UserResponseDto joinUser(UserRequestDto userRequestDto) {
+        if (userRepository.existsByEmail(userRequestDto.getEmail())) {
             throw new DuplicateEmailException("이미 가입한 이메일입니다.");
         }
 
         String hashedPassword = BCrypt.hashpw(userRequestDto.getPassword(), BCrypt.gensalt());
-        userRequestDto.setPassword(hashedPassword);
-        userRepository.save(userRequestDto);
 
-        return jwtUtil.generateToken(userRequestDto.getEmail());
+        User user = new User(userRequestDto.getEmail(), hashedPassword);
+        User savedUser = userRepository.save(user);
+
+        String token = jwtUtil.generateToken(userRequestDto.getEmail());
+
+        return new UserResponseDto(savedUser, token);
     }
 
     public String loginUser(UserRequestDto userRequestDto) {
