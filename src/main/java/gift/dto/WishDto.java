@@ -2,12 +2,12 @@ package gift.dto;
 
 public class WishDto {
     private Long productId;
-    private String productName;
+    private Long memberId;
     private int amount;
 
-    public WishDto(Long productId,String productName, int amount){
+    public WishDto(Long productId,Long memberId, int amount){
         this.productId = productId;
-        this.productName = productName;
+        this.memberId = memberId;
         this.amount = amount;
     }
 
@@ -15,8 +15,8 @@ public class WishDto {
         return productId;
     }
 
-    public String getProductName(){
-        return productName;
+    public Long getMemberId(){
+        return memberId;
     }
 
     public int getAmount(){

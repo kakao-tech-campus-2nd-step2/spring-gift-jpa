@@ -41,9 +41,9 @@ public class WishListController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping
-    public ResponseEntity<Void> updateWish(@LoginMember Member Member, @RequestBody WishDto wishDto) {
-        wishListService.updateWish(wishDto);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateWish(@LoginMember Member Member, @PathVariable Long id, @RequestBody WishDto wishDto) {
+        wishListService.updateWish(id,wishDto);
         return ResponseEntity.ok().build();
     }
 }
