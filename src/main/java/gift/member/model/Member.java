@@ -9,9 +9,9 @@ import jakarta.persistence.Id;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-        public String email;
-        public String password;
+    private Long id;
+    public String email;
+    public String password;
 
     public Member() {}
 
@@ -26,10 +26,6 @@ public class Member {
 
     public String email() {
         return email;
-    }
-
-    public void email(String email) {
-        this.email = email;
     }
 
     public String password() {

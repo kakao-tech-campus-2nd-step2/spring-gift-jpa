@@ -16,25 +16,6 @@ public interface MemberRepository extends CrudRepository<Member, Long> {
     String SQL_INSERT_MEMBER = "INSERT INTO member (email, password) VALUES (?, ?)";
     String SQL_FIND_BY_EMAIL_AND_PASSWORD = "SELECT * FROM member WHERE email = ? AND password = ?";
 
-    // 새로운 회원 저장
-    default Member save(Member member) {
-        try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(SQL_INSERT_MEMBER)) {
-
-            stmt.setString(1, member.email());
-            stmt.setString(2, member.password());
-
-            int rowsInserted = stmt.executeUpdate();
-            if (rowsInserted > 0) {
-                System.out.println("새로운 회원 저장 성공");
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        return member;
-    }
-
     // 이메일과 비밀번호로 회원 찾기
     default Member findByEmailAndPassword(String email, String password) {
         Member member = null;

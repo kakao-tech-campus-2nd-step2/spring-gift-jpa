@@ -3,6 +3,7 @@ package gift.member.service;
 import gift.exception.UnauthorizedException;
 import gift.member.model.Member;
 import gift.member.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,12 @@ public class MemberService {
     public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = new BCryptPasswordEncoder(); // 비밀번호 암호화 클래스 사용
+    }
+
+    // 커넥션 -> 트랜잭션으로 변경
+    @Transactional
+    public Member save(Member member) {
+        return memberRepository.save(member);
     }
 
     // 회원가입 처리
