@@ -1,12 +1,16 @@
 package gift.repository.member;
 
 import gift.domain.Member;
+import gift.domain.Product;
+import gift.domain.Wish;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -16,6 +20,9 @@ class MemberRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Test
     @DisplayName("저장 테스트")
@@ -143,5 +150,73 @@ class MemberRepositoryTest {
                 () -> assertThat(findMember.getPassword()).isEqualTo(savedMember.getPassword())
         );
     }
+
+    @Test
+    @DisplayName("일대다 연관관계 지연로딩 테스트")
+    void 연관관계_지연로딩_테스트(){
+        //given
+        Member member = new Member.Builder()
+                .email("test@pusan.ac.kr")
+                .password("abc")
+                .build();
+
+        Product product1 = new Product.Builder()
+                .name("테스트1")
+                .price(123)
+                .imageUrl("abc.png")
+                .build();
+
+        Product product2 = new Product.Builder()
+                .name("테스트2")
+                .price(123)
+                .imageUrl("abc.png")
+                .build();
+
+        entityManager.persist(member);
+        entityManager.persist(product1);
+        entityManager.persist(product2);
+        entityManager.flush();
+
+        Wish wish1 = new Wish.Builder()
+                .member(member)
+                .product(product1)
+                .count(3)
+                .build();
+
+        Wish wish2 = new Wish.Builder()
+                .member(member)
+                .product(product2)
+                .count(3)
+                .build();
+
+        wish1.addMember(member);
+        wish1.addProduct(product1);
+
+        wish2.addMember(member);
+        wish2.addProduct(product2);
+
+        entityManager.persist(wish1);
+        entityManager.persist(wish2);
+        entityManager.flush();
+        entityManager.clear();
+
+        //when
+
+        //지연 로딩 이므로 연관관계 조회 안함
+        memberRepository.findMemberByEmail(member.getEmail());
+        entityManager.clear();
+
+        //fetch join 을 사용했기 때문에 연관관계 한번에 조회
+        Member findMember = memberRepository.findMemberWithRelation(member.getEmail()).get();
+
+        //then
+        assertAll(
+                () -> assertThat(findMember.getId()).isEqualTo(member.getId()),
+                () -> assertThat(findMember.getEmail()).isEqualTo(member.getEmail()),
+                () -> assertThat(findMember.getPassword()).isEqualTo(member.getPassword()),
+                () -> assertThat(findMember.getWishList().size()).isEqualTo(2)
+        );
+    }
+
 
 }
