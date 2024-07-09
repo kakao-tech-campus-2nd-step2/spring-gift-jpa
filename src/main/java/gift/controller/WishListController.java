@@ -42,7 +42,11 @@ public class WishListController {
     @PostMapping("/{productId}")
     public ResponseEntity<Map<String, Object>> addWish(@PathVariable Long productId,
         @LoginUser User user) {
+<<<<<<< HEAD
         WishResponseDto wishedProduct = wishListService.addWish(user.getEmail(), productId);
+=======
+        ProductResponseDto wishedProduct = wishListService.addWish(user.getEmail(), productId);
+>>>>>>> 4b5ff17 (refacotr: ProductRepository JPA 방식으로 리팩토링)
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
