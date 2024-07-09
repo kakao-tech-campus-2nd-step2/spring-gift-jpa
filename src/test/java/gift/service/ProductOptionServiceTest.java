@@ -3,7 +3,9 @@ package gift.service;
 import gift.dto.ProductOptionRequest;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
+import gift.helper.RepositoryReader;
 import gift.model.MemberRole;
+import gift.repository.ProductRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +23,10 @@ class ProductOptionServiceTest {
     private ProductService productService;
     @Autowired
     private ProductOptionService optionService;
+    @Autowired
+    private RepositoryReader repositoryReader;
+    @Autowired
+    private ProductRepository productRepository;
     private ProductResponse product;
 
     @BeforeEach
@@ -59,7 +65,7 @@ class ProductOptionServiceTest {
         optionService.addOption(size255gbOptionDto);
         //then
         Assertions.assertThat(optionService.getOptions(product.id()).size()).isEqualTo(2);
-        var options = productService.findProductWithId(product.id()).getOptions();
+        var options = repositoryReader.findEntityById(productRepository, product.id()).getOptions();
         Assertions.assertThat(options.size()).isEqualTo(2);
     }
 

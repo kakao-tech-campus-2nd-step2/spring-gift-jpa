@@ -3,7 +3,7 @@ package gift.service;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.exception.InvalidProductNameWithKAKAOException;
-import gift.exception.NotFoundElementException;
+import gift.helper.RepositoryReader;
 import gift.model.MemberRole;
 import gift.model.Product;
 import gift.repository.ProductRepository;
@@ -17,9 +17,11 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final RepositoryReader repositoryReader;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, RepositoryReader repositoryReader) {
         this.productRepository = productRepository;
+        this.repositoryReader = repositoryReader;
     }
 
     public ProductResponse addProduct(ProductRequest productRequest, MemberRole memberRole) {
@@ -29,12 +31,12 @@ public class ProductService {
     }
 
     public void updateProduct(Long id, ProductRequest productRequest) {
-        var product = findProductWithId(id);
+        var product = repositoryReader.findEntityById(productRepository, id);
         updateProductWithProductRequest(product, productRequest);
     }
 
     public ProductResponse getProduct(Long id) {
-        var product = findProductWithId(id);
+        var product = repositoryReader.findEntityById(productRepository, id);
         return getProductResponseFromProduct(product);
     }
 
@@ -43,12 +45,6 @@ public class ProductService {
                 .stream()
                 .map(this::getProductResponseFromProduct)
                 .toList();
-    }
-
-    public Product findProductWithId(Long id) {
-        var product = productRepository.findById(id);
-        if (product.isEmpty()) throw new NotFoundElementException("존재하지 않는 리소스에 대한 접근입니다.");
-        return product.get();
     }
 
     public void deleteProduct(Long id) {

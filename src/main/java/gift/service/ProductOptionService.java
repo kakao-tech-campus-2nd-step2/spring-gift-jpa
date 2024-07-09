@@ -2,9 +2,11 @@ package gift.service;
 
 import gift.dto.ProductOptionRequest;
 import gift.dto.ProductOptionResponse;
-import gift.exception.NotFoundElementException;
+import gift.dto.ProductResponse;
+import gift.helper.RepositoryReader;
 import gift.model.ProductOption;
 import gift.repository.ProductOptionRepository;
+import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +17,13 @@ import java.util.List;
 public class ProductOptionService {
 
     private final ProductOptionRepository optionRepository;
-    private final ProductService productService;
+    private final ProductRepository productRepository;
+    private final RepositoryReader repositoryReader;
 
-    public ProductOptionService(ProductOptionRepository optionRepository, ProductService productService) {
+    public ProductOptionService(ProductOptionRepository optionRepository, ProductRepository productRepository, RepositoryReader repositoryReader) {
         this.optionRepository = optionRepository;
-        this.productService = productService;
+        this.productRepository = productRepository;
+        this.repositoryReader = repositoryReader;
     }
 
     public ProductOptionResponse addOption(ProductOptionRequest productOptionRequest) {
@@ -28,12 +32,13 @@ public class ProductOptionService {
     }
 
     public void updateOption(Long id, ProductOptionRequest productOptionRequest) {
-        var option = findOptionWithId(id);
-        updateProductOptionWithId(option, productOptionRequest);
+        var option = repositoryReader.findEntityById(optionRepository, id);
+        option.updateOptionInfo(productOptionRequest.name(), productOptionRequest.additionalPrice());
+        optionRepository.save(option);
     }
 
     public ProductOptionResponse getOption(Long id) {
-        var option = findOptionWithId(id);
+        var option = repositoryReader.findEntityById(optionRepository, id);
         return getProductOptionResponseFromProductOption(option);
     }
 
@@ -45,32 +50,22 @@ public class ProductOptionService {
     }
 
     public void deleteOption(Long id) {
-        var productOption = findOptionWithId(id);
+        var productOption = repositoryReader.findEntityById(optionRepository, id);
         productOption.removeOption();
         optionRepository.deleteById(id);
     }
 
-    private ProductOption findOptionWithId(Long id) {
-        var productOption = optionRepository.findById(id);
-        if (productOption.isEmpty()) throw new NotFoundElementException("존재하지 않는 리소스에 대한 접근입니다.");
-        return productOption.get();
-    }
-
     private ProductOption saveProductOptionWithProductRequest(ProductOptionRequest productOptionRequest) {
-        var product = productService.findProductWithId(productOptionRequest.productId());
+        var product = repositoryReader.findEntityById(productRepository, productOptionRequest.productId());
         var option = new ProductOption(productOptionRequest.name(), productOptionRequest.additionalPrice());
         option.addProduct(product);
         var savedOption = optionRepository.save(option);
         return savedOption;
     }
 
-    private void updateProductOptionWithId(ProductOption option, ProductOptionRequest productOptionRequest) {
-        option.updateOptionInfo(productOptionRequest.name(), productOptionRequest.additionalPrice());
-        optionRepository.save(option);
-    }
-
     private ProductOptionResponse getProductOptionResponseFromProductOption(ProductOption productOption) {
-        var product = productService.getProduct(productOption.getProduct().getId());
-        return ProductOptionResponse.of(productOption.getId(), product, productOption.getName(), productOption.getAdditionalPrice());
+        var product = productOption.getProduct();
+        var productResponse = ProductResponse.of(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        return ProductOptionResponse.of(productOption.getId(), productResponse, productOption.getName(), productOption.getAdditionalPrice());
     }
 }

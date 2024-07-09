@@ -1,12 +1,15 @@
 package gift.service;
 
+import gift.dto.ProductResponse;
 import gift.dto.WishProductAddRequest;
 import gift.dto.WishProductResponse;
 import gift.dto.WishProductUpdateRequest;
-import gift.exception.NotFoundElementException;
+import gift.helper.RepositoryReader;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.WishProduct;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
 import gift.repository.WishProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,19 +21,20 @@ import java.util.List;
 public class WishProductService {
 
     private final WishProductRepository wishProductRepository;
-    private final ProductService productService;
-    private final MemberService memberService;
+    private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
+    private final RepositoryReader repositoryReader;
 
-    public WishProductService(WishProductRepository wishProductRepository, ProductService productService, MemberService memberService) {
+    public WishProductService(WishProductRepository wishProductRepository, ProductRepository productRepository, MemberRepository memberRepository, RepositoryReader repositoryReader) {
         this.wishProductRepository = wishProductRepository;
-        this.productService = productService;
-        this.memberService = memberService;
+        this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
+        this.repositoryReader = repositoryReader;
     }
 
     public WishProductResponse addWishProduct(WishProductAddRequest wishProductAddRequest, Long memberId) {
-        memberService.existsById(memberId);
-        var product = productService.findProductWithId(wishProductAddRequest.productId());
-        var member = memberService.findMemberWithId(memberId);
+        var product = repositoryReader.findEntityById(productRepository, wishProductAddRequest.productId());
+        var member = repositoryReader.findEntityById(memberRepository, memberId);
         if (wishProductRepository.existsByProductAndMember(product, member)) {
             return updateWishProductWithProductAndMember(product, member, wishProductAddRequest.count());
         }
@@ -39,7 +43,7 @@ public class WishProductService {
     }
 
     public void updateWishProduct(Long id, WishProductUpdateRequest wishProductUpdateRequest) {
-        var wishProduct = findWishProductWithId(id);
+        var wishProduct = repositoryReader.findEntityById(wishProductRepository, id);
         if (wishProductUpdateRequest.count() == 0) {
             deleteWishProduct(id);
             return;
@@ -55,15 +59,9 @@ public class WishProductService {
     }
 
     public void deleteWishProduct(Long id) {
-        var wishProduct = findWishProductWithId(id);
+        var wishProduct = repositoryReader.findEntityById(wishProductRepository, id);
         wishProduct.removeWishProduct();
         wishProductRepository.deleteById(id);
-    }
-
-    public WishProduct findWishProductWithId(Long id) {
-        var wishProduct = wishProductRepository.findById(id);
-        if (wishProduct.isEmpty()) throw new NotFoundElementException("존재하지 않는 리소스에 대한 접근입니다.");
-        return wishProduct.get();
     }
 
     private WishProduct saveWishProductWithWishProductRequest(Product product, Member member, Integer count) {
@@ -88,7 +86,8 @@ public class WishProductService {
     }
 
     private WishProductResponse getWishProductResponseFromWishProduct(WishProduct wishProduct) {
-        var product = productService.getProduct(wishProduct.getProduct().getId());
-        return WishProductResponse.of(wishProduct.getId(), product, wishProduct.getCount());
+        var product = wishProduct.getProduct();
+        var productResponse = ProductResponse.of(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        return WishProductResponse.of(wishProduct.getId(), productResponse, wishProduct.getCount());
     }
 }

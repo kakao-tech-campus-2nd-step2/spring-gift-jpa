@@ -5,8 +5,11 @@ import gift.dto.RegisterRequest;
 import gift.dto.WishProductAddRequest;
 import gift.dto.WishProductUpdateRequest;
 import gift.exception.NotFoundElementException;
+import gift.helper.RepositoryReader;
 import gift.model.MemberRole;
 import gift.reflection.AuthTestReflectionComponent;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
 import gift.service.auth.AuthService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -29,6 +32,12 @@ class WishProductServiceTest {
     private AuthService authService;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private RepositoryReader repositoryReader;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private ProductRepository productRepository;
     @Autowired
     private AuthTestReflectionComponent authTestReflectionComponent;
     private Long managerId;
@@ -127,7 +136,7 @@ class WishProductServiceTest {
         var managerWishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
         var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
         //when
-        var wishProducts = memberService.findMemberWithId(managerId).getWishes();
+        var wishProducts = repositoryReader.findEntityById(memberRepository, managerId).getWishes();
         //then
         Assertions.assertThat(wishProducts.size()).isEqualTo(2);
 
@@ -142,7 +151,7 @@ class WishProductServiceTest {
         var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
         var managerWishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
         //when
-        var wishProducts = productService.findProductWithId(product1Id).getWishes();
+        var wishProducts = repositoryReader.findEntityById(productRepository, product1Id).getWishes();
         //then
         Assertions.assertThat(wishProducts.size()).isEqualTo(1);
 
