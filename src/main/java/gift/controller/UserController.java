@@ -25,14 +25,14 @@ public class UserController {
     @PostMapping("/register")
     @Operation(summary = "회원 가입", description = "새로운 사용자를 등록합니다.")
     public ResponseEntity<UserResponseDto> registerUser(@RequestBody UserRegisterDto userRegisterDTO) {
-        UserResponseDto userResponseDTO = userService.registerUser(userRegisterDTO.email, userRegisterDTO.password);
+        UserResponseDto userResponseDTO = userService.registerUser(userRegisterDTO);
         return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "사용자가 로그인합니다.")
     public ResponseEntity<String> loginUser(@RequestBody UserLoginDto userLoginDTO) {
-        String token = userService.loginUser(userLoginDTO.email, userLoginDTO.password);
+        String token = userService.loginUser(userLoginDTO);
         return new ResponseEntity<>("{\"accessToken\": \"" + token + "\"}", HttpStatus.OK);
     }
 
@@ -53,7 +53,7 @@ public class UserController {
     @PutMapping("/{id}")
     @Operation(summary = "사용자 수정", description = "기존 사용자를 수정합니다.")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UserRegisterDto userRegisterDTO) {
-        UserResponseDto updatedUser = userService.updateUser(id, userRegisterDTO.email, userRegisterDTO.password);
+        UserResponseDto updatedUser = userService.updateUser(id, userRegisterDTO);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 

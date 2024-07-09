@@ -1,94 +1,99 @@
 package gift.service;
 
+import gift.dto.ProductResponseDto;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
+import gift.entity.Product;
+import gift.entity.ProductName;
 import gift.entity.Wish;
-import gift.entity.WishDao;
 import gift.exception.BusinessException;
-import gift.dto.ProductResponseDto;
+import gift.repository.ProductRepository;
+import gift.repository.WishRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
+@SpringBootTest
 public class WishServiceTest {
 
-    @Mock
-    private WishDao wishDao;
+    @Autowired
+    private WishRepository wishRepository;
 
-    @Mock
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
     private ProductService productService;
 
-    @InjectMocks
+    @Autowired
     private WishService wishService;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
+    @AfterEach
+    public void 데이터_정리() {
+        wishRepository.deleteAll();
+        productRepository.deleteAll();
     }
+
 
     @Test
     public void 위시리스트_추가() {
-        WishRequestDto requestDTO = new WishRequestDto(1L);
-        ProductResponseDto productResponseDto = new ProductResponseDto(1L, "상품 이름", 10000, "이미지 URL");
-        when(productService.getAllProducts()).thenReturn(List.of(productResponseDto));
-        Wish wish = new Wish(1L, 1L, 1L, productService);
-        when(wishDao.insertWish(any(Wish.class))).thenReturn(wish);
+        Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
+        productRepository.save(product);
+        ProductResponseDto productResponseDto = productService.getProductById(product.getId());
 
-        WishResponseDto addedWish = wishService.addWish(1L, requestDTO);
+        WishRequestDto requestDto = new WishRequestDto(productResponseDto.getId());
+        WishResponseDto createdWish = wishService.addWish(1L, requestDto);
 
-        assertNotNull(addedWish);
-        assertEquals(1L, addedWish.productId);
-        assertEquals("상품 이름", addedWish.productName);
-    }
-
-    @Test
-    public void 위시리스트_추가_없는_상품() {
-        WishRequestDto requestDTO = new WishRequestDto(100L);
-        when(productService.getAllProducts()).thenReturn(List.of());
-
-        assertThrows(BusinessException.class, () -> wishService.addWish(1L, requestDTO));
+        assertNotNull(createdWish);
+        assertNotNull(createdWish.getId());
+        assertEquals(productResponseDto.getId(), createdWish.getProductId());
+        assertEquals(productResponseDto.getName(), createdWish.getProductName());
+        assertEquals(productResponseDto.getPrice(), createdWish.getProductPrice());
+        assertEquals(productResponseDto.getImageUrl(), createdWish.getProductImageUrl());
     }
 
     @Test
     public void 위시리스트_조회() {
-        ProductResponseDto productResponseDto = new ProductResponseDto(1L, "상품 이름", 10000, "이미지 URL");
-        when(productService.getAllProducts()).thenReturn(List.of(productResponseDto));
-        Wish wish = new Wish(1L, 1L, 1L, productService);
-        when(wishDao.selectWishesByUserId(1L)).thenReturn(List.of(wish));
+        Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
+        productRepository.save(product);
+
+        Wish wish = new Wish(1L, product.getId());
+        wishRepository.save(wish);
 
         List<WishResponseDto> wishList = wishService.getWishesByUserId(1L);
 
         assertNotNull(wishList);
         assertEquals(1, wishList.size());
-        assertEquals("상품 이름", wishList.get(0).productName);
+        WishResponseDto retrievedWish = wishList.get(0);
+        assertEquals(product.getId(), retrievedWish.getProductId());
+        assertEquals(product.getName().getValue(), retrievedWish.getProductName());
+        assertEquals(product.getPrice(), retrievedWish.getProductPrice());
+        assertEquals(product.getImageUrl(), retrievedWish.getProductImageUrl());
     }
 
     @Test
     public void 위시리스트_삭제() {
-        ProductResponseDto productResponseDto = new ProductResponseDto(1L, "상품 이름", 10000, "이미지 URL");
-        when(productService.getAllProducts()).thenReturn(List.of(productResponseDto));
-        Wish wish = new Wish(1L, 1L, 1L, productService);
-        when(wishDao.selectWish(1L)).thenReturn(Optional.of(wish));
-        doNothing().when(wishDao).deleteWish(1L);
+        Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
+        productRepository.save(product);
 
-        wishService.deleteWish(1L);
+        Wish wish = new Wish(1L, product.getId());
+        wishRepository.save(wish);
 
-        verify(wishDao, times(1)).deleteWish(1L);
+        wishService.deleteWish(wish.getId());
+
+        List<WishResponseDto> wishList = wishService.getWishesByUserId(1L);
+        assertTrue(wishList.isEmpty());
     }
 
     @Test
-    public void 위시리스트_삭제_없는_위시() {
-        when(wishDao.selectWish(100L)).thenReturn(Optional.empty());
-
-        assertThrows(BusinessException.class, () -> wishService.deleteWish(100L));
+    public void 위시리스트_삭제_없는위시() {
+        assertThrows(BusinessException.class, () -> wishService.deleteWish(999L));
     }
 }

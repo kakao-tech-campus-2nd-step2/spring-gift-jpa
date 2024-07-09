@@ -3,10 +3,13 @@ package gift.entity;
 import gift.exception.BusinessException;
 import gift.exception.ErrorCode;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+@Embeddable
 public class ProductName {
 
     private static final int MAX_NAME_LENGTH = 15;
@@ -19,7 +22,11 @@ public class ProductName {
     @NotNull(message = NULL_NAME_ERROR_MESSAGE)
     @Size(max = MAX_NAME_LENGTH, message = MAX_LENGTH_ERROR_MESSAGE)
     @Pattern(regexp = NAME_PATTERN, message = PATTERN_ERROR_MESSAGE)
-    private final String value;
+    @Column(name = "name", nullable = false, length = 15)
+    private String value;
+
+    protected ProductName() {
+    }
 
     public ProductName(String value) {
         if (value == null || value.trim().isEmpty()) {

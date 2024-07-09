@@ -3,12 +3,28 @@ package gift.entity;
 import gift.exception.BusinessException;
 import gift.exception.ErrorCode;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "`user`", uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 public class User {
-    public final Long id;
-    public String email;
-    public String password;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    protected User() {
+    }
 
     public User(Long id, String email, String password) {
+        validateEmail(email);
+        validatePassword(password);
         this.id = id;
         this.email = email;
         this.password = password;
@@ -29,6 +45,9 @@ public class User {
         if (email == null || email.trim().isEmpty()) {
             throw new BusinessException(ErrorCode.INVALID_EMAIL);
         }
+        if (!email.contains("@")) {
+            throw new BusinessException(ErrorCode.INVALID_EMAIL);
+        }
     }
 
     private void validatePassword(String password) {
@@ -39,5 +58,17 @@ public class User {
 
     public boolean isPasswordCorrect(String password) {
         return this.password.equals(password);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

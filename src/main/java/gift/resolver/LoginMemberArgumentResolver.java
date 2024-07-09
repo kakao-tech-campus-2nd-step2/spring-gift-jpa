@@ -1,6 +1,7 @@
 package gift.resolver;
 
 import gift.entity.User;
+import gift.repository.UserRepository;
 import gift.service.TokenService;
 import gift.service.UserService;
 import gift.util.AuthorizationHeaderProcessor;
@@ -17,13 +18,13 @@ import java.util.Optional;
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final TokenService tokenService;
     private final AuthorizationHeaderProcessor authorizationHeaderProcessor;
 
     @Autowired
-    public LoginMemberArgumentResolver(UserService userService, TokenService tokenService, AuthorizationHeaderProcessor authorizationHeaderProcessor) {
-        this.userService = userService;
+    public LoginMemberArgumentResolver(UserRepository userRepository, TokenService tokenService, AuthorizationHeaderProcessor authorizationHeaderProcessor) {
+        this.userRepository = userRepository;
         this.tokenService = tokenService;
         this.authorizationHeaderProcessor = authorizationHeaderProcessor;
     }
@@ -38,7 +39,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         String token = authorizationHeaderProcessor.extractToken(request);
         String email = tokenService.extractEmail(token);
-        Optional<User> user = userService.findUserByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
 
         if (user.isEmpty()) {
             return null;
