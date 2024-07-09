@@ -21,20 +21,23 @@ public class WishlistService {
     }
 
     public List<Product> getAllWishlists(MemberDTO memberDTO) {
-        return wishlistRepository.getAllWishlists(memberDTO.email());
+        return wishlistRepository.findAllByMemberEmail(memberDTO.email())
+            .stream()
+            .map(e -> productRepository.findById(e.getProductId()).get())
+            .toList();
     }
 
     public void addWishlist(MemberDTO memberDTO, long productId) {
-        if (wishlistRepository.existWishlist(new Wishlist(productId, memberDTO.email()))) {
+        if (wishlistRepository.existsByMemberEmailAndProductId(memberDTO.email(), productId)) {
             throw new IllegalArgumentException("Wishlist already exists");
         }
         hasProductByProductID(productId);
-        wishlistRepository.addWishlist(new Wishlist(productId, memberDTO.email()));
+        wishlistRepository.save(new Wishlist(productId, memberDTO.email()));
     }
 
     public void deleteWishlist(MemberDTO memberDTO, long productId) {
         hasProductByProductID(productId);
-        wishlistRepository.deleteWishlist(new Wishlist(productId, memberDTO.email()));
+        wishlistRepository.delete(new Wishlist(productId, memberDTO.email()));
     }
 
     private void hasProductByProductID(long productId) {

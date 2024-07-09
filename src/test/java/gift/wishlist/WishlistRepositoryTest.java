@@ -1,7 +1,6 @@
 package gift.wishlist;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.member.Member;
@@ -9,56 +8,36 @@ import gift.member.MemberRepository;
 import gift.product.Product;
 import gift.product.ProductRepository;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@SpringBootTest
+@DataJpaTest
 class WishlistRepositoryTest {
 
     @Autowired
-    WishlistRepository wishlistRepository;
+    private WishlistRepository wishlistRepository;
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setupMemberAndProduct() {
-        jdbcTemplate.execute("DROP ALL OBJECTS");
-        jdbcTemplate.execute(
-            """
-                CREATE TABLE product
-                (
-                    id       INT AUTO_INCREMENT PRIMARY KEY,
-                    name     VARCHAR(255),
-                    price    INT,
-                    imageUrl VARCHAR(255)
-                );               
-                CREATE TABLE member
-                (
-                    email    VARCHAR(255) PRIMARY KEY,
-                    password VARCHAR(255)
-                );               
-                CREATE Table wishlist
-                (
-                    product_id   INT,
-                    member_email VARCHAR(255),
-                    PRIMARY KEY (product_id, member_email),
-                    FOREIGN KEY (product_id) REFERENCES product (id),
-                    FOREIGN KEY (member_email) REFERENCES member (email)
-                )
-                """
-        );
+        jdbcTemplate.execute("DELETE FROM product");
+        jdbcTemplate.execute("ALTER TABLE product ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("DELETE FROM member");
+        jdbcTemplate.execute("DELETE FROM wishlist ");
+        jdbcTemplate.execute("ALTER TABLE wishlist ALTER COLUMN id RESTART WITH 1");
 
         memberRepository.save(new Member("aaa@email.com", "password"));
         memberRepository.save(new Member("bbb@email.com", "password"));
@@ -73,23 +52,24 @@ class WishlistRepositoryTest {
     @DisplayName("[Unit] getAllWishlists test")
     void getAllWishlistsTest() {
         //given
-        List<Product> expect = List.of(
-            new Product(1L, "product-1", 100, "product-1-image"),
-            new Product(2L, "product-2", 200, "product-2-image"),
-            new Product(3L, "product-3", 300, "product-3-image")
+        List<Wishlist> expect = List.of(
+            new Wishlist(1L, "aaa@email.com"),
+            new Wishlist(2L, "aaa@email.com"),
+            new Wishlist(3L, "aaa@email.com")
         );
 
-        for (Product product : expect) {
-            wishlistRepository.addWishlist(new Wishlist(product.getId(), "aaa@email.com"));
+        for (Wishlist wish : expect) {
+            wishlistRepository.save(wish);
         }
         productRepository.save(new Product(4L, "product-4", 400, "product-4-image"));
-        wishlistRepository.addWishlist(new Wishlist(4L, "bbb@email.com"));
+        wishlistRepository.save(new Wishlist(4L, "bbb@email.com"));
 
         //when
-        List<Product> actual = wishlistRepository.getAllWishlists("aaa@email.com");
+        List<Wishlist> actual = wishlistRepository.findAllByMemberEmail("aaa@email.com");
 
         //then
         assertAll(
+            () -> assertThat(actual).hasSize(expect.size()),
             () -> assertThat(actual.get(0)).isEqualTo(expect.get(0)),
             () -> assertThat(actual.get(1)).isEqualTo(expect.get(1)),
             () -> assertThat(actual.get(2)).isEqualTo(expect.get(2))
@@ -103,18 +83,7 @@ class WishlistRepositoryTest {
         Wishlist expect = new Wishlist(1L, "aaa@email.com");
 
         //when
-        wishlistRepository.addWishlist(expect);
-        Wishlist actual = jdbcTemplate.queryForObject(
-            """
-                SELECT * FROM WISHLIST
-                WHERE PRODUCT_ID = ? AND MEMBER_EMAIL = ?
-                """,
-            (rs, rowNum) -> new Wishlist(
-                rs.getLong("PRODUCT_ID"),
-                rs.getString("MEMBER_EMAIL")
-            ),
-            expect.productId(), expect.memberEmail()
-        );
+        Wishlist actual = wishlistRepository.save(expect);
 
         //then
         assertThat(actual).isEqualTo(expect);
@@ -124,27 +93,14 @@ class WishlistRepositoryTest {
     @DisplayName("[Unit] deleteWishlist test")
     void deleteWishlistTest() {
         //given
-        Wishlist expect = new Wishlist(1L, "aaa@email.com");
-        wishlistRepository.addWishlist(expect);
+        Wishlist expect = wishlistRepository.save(new Wishlist(1L, "aaa@email.com"));
 
         //when
-        wishlistRepository.deleteWishlist(expect);
-        Throwable actual = catchThrowable(
-            () -> jdbcTemplate.queryForObject(
-                """
-                    SELECT * FROM WISHLIST
-                    WHERE PRODUCT_ID = ? AND MEMBER_EMAIL = ?
-                    """,
-                (rs, rowNum) -> new Wishlist(
-                    rs.getLong("PRODUCT_ID"),
-                    rs.getString("MEMBER_EMAIL")
-                ),
-                expect.productId(), expect.memberEmail()
-            )
-        );
+        wishlistRepository.delete(expect);
+        Optional<Wishlist> actual = wishlistRepository.findById(expect.getId());
 
         //then
-        assertThat(actual).isInstanceOf(EmptyResultDataAccessException.class);
+        assertThat(actual).isEmpty();
     }
 
     @Test
@@ -152,11 +108,12 @@ class WishlistRepositoryTest {
     void existWishlistTest() {
         //given
         Wishlist expect = new Wishlist(1L, "aaa@email.com");
-        wishlistRepository.addWishlist(expect);
+        wishlistRepository.save(expect);
 
         //when
-        Boolean trueCase = wishlistRepository.existWishlist(expect);
-        Boolean falseCase = wishlistRepository.existWishlist(new Wishlist(2L, "aaa@email.com"));
+        Boolean trueCase = wishlistRepository.existsByMemberEmailAndProductId(
+            expect.getMemberEmail(), expect.getProductId());
+        Boolean falseCase = wishlistRepository.existsByMemberEmailAndProductId("aaa@email.com", 2L);
 
         //then
         assertAll(
