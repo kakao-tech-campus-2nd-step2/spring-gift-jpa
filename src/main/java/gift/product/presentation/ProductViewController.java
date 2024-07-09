@@ -41,7 +41,7 @@ public class ProductViewController {
 
     @PostMapping("")
     public String create(@ModelAttribute ProductCreateRequest request) {
-        productService.add(request.toCommand());
+        productService.save(request.toCommand());
         return "redirect:/products";
     }
 

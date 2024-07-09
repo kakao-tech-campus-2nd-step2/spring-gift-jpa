@@ -21,7 +21,7 @@ public class ProductController {
 
     @PostMapping("")
     public void create(@Valid @RequestBody ProductCreateRequest request) {
-        productService.add(request.toCommand());
+        productService.save(request.toCommand());
     }
 
     @GetMapping("")
