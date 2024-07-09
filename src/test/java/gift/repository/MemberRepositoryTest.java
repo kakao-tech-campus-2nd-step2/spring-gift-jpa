@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -20,12 +21,12 @@ class MemberRepositoryTest {
 
     @Autowired
     private MemberRepository repository;
-    Member member;
+    Member savedMember;
 
     @BeforeEach
     void setUp() {
-        member = new Member("kookies@google.com", "@123");
-        repository.save(member); // Member pre-save
+        Member member = new Member("kookies@google.com", "@123");
+        savedMember = repository.save(member);// Member pre-save
     }
 
     @AfterEach
@@ -47,13 +48,44 @@ class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("Find All Member")
+    void findAll() {
+        // given
+        Member member2 = repository.save(new Member("kaka5@google.com", "@ads5f4a"));
+        repository.save(member2);
+
+        // when
+        List<Member> members = repository.findAll();
+
+        // then
+        assertAll(
+                () ->  assertThat(members.size()).isEqualTo(2),
+                () -> assertThat(members.contains(savedMember)).isTrue(),
+                () -> assertThat(members.contains(member2)).isTrue()
+        );
+    }
+
+    @Test
+    @DisplayName("Find Member by id")
+    void findById() {
+        // given
+        Long memberId = savedMember.getId();
+        // when
+        Optional<Member> actual = repository.findById(memberId);
+
+        // then
+        assertTrue(actual.isPresent());
+        assertThat(actual.get().getId()).isEqualTo(memberId);
+    }
+
+    @Test
     @DisplayName("Find Member by email")
     void findByEmail() {
         // given
         String expected = "kookies@google.com";
 
         // when
-        repository.save(member);
+        repository.save(savedMember);
         Optional<Member> foundMember = repository.findByEmail(expected);
 
         // then
@@ -66,24 +98,25 @@ class MemberRepositoryTest {
     void updateMember() {
         // given
         String newEmail = "updated@google.com";
-        member.setEmail(newEmail);
+        savedMember.setEmail(newEmail);
 
         // when
-        Member updatedMember = repository.save(member);
+        Member updatedMember = repository.save(savedMember);
 
         // then
         assertAll(
-                () -> assertThat(updatedMember.getEmail()).isEqualTo(member.getEmail()),
-                () -> assertThat(updatedMember.getPassword()).isEqualTo(member.getPassword())
+                () -> assertThat(updatedMember.getEmail()).isEqualTo(savedMember.getEmail()),
+                () -> assertThat(updatedMember.getPassword()).isEqualTo(savedMember.getPassword())
         );
     }
 
     @Test
     @DisplayName("Delete Member")
-    void deleteMember() {
+    void deleteById() {
         // when
-        repository.delete(member);
-        boolean exists = repository.existsById(member.getId());
+        Long memberId = savedMember.getId();
+        repository.deleteById(memberId);
+        boolean exists = repository.existsById(memberId);
 
         // then
         assertThat(exists).isFalse();
