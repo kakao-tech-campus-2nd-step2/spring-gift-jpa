@@ -1,36 +1,36 @@
 package gift.dto;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Member {
+public class Wishlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String email;
-    private String password;
 
-    public Member() {
+    private String email;
+
+    @Column(name = "productid")
+    private long productId;
+
+    public Wishlist() {
     }
 
-    public Member(String email, String password) {
+    public Wishlist(String email, long productId) {
         this.email = email;
-        this.password = password;
+        this.productId = productId;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public boolean isCorrectPassword(String password) {
-        return this.password.equals(password);
+    public long getProductId() {
+        return productId;
     }
 }

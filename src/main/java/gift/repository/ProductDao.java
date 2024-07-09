@@ -35,10 +35,10 @@ public class ProductDao {
                 VALUES (:id, :name, :price, :imageUrl);
             """;
         return jdbcClient.sql(sql)
-            .param("id", newProduct.id(), Types.BIGINT)
-            .param("name", newProduct.name(), Types.VARCHAR)
-            .param("price", newProduct.price(), Types.BIGINT)
-            .param("imageUrl", newProduct.imageUrl(), Types.VARCHAR)
+            .param("id", newProduct.getId(), Types.BIGINT)
+            .param("name", newProduct.getName(), Types.VARCHAR)
+            .param("price", newProduct.getPrice(), Types.BIGINT)
+            .param("imageUrl", newProduct.getImageUrl(), Types.VARCHAR)
             .update();
     }
 
@@ -79,10 +79,10 @@ public class ProductDao {
             WHERE id = :id;
             """;
         return jdbcClient.sql(sql)
-            .param("id", editedProduct.id(), Types.BIGINT)
-            .param("name", editedProduct.name(), Types.VARCHAR)
-            .param("price", editedProduct.price(), Types.BIGINT)
-            .param("imageUrl", editedProduct.imageUrl(), Types.VARCHAR)
+            .param("id", editedProduct.getId(), Types.BIGINT)
+            .param("name", editedProduct.getName(), Types.VARCHAR)
+            .param("price", editedProduct.getPrice(), Types.BIGINT)
+            .param("imageUrl", editedProduct.getImageUrl(), Types.VARCHAR)
             .update();
     }
 

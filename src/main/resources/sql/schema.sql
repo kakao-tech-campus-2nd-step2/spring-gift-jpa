@@ -17,6 +17,7 @@ CREATE TABLE Member (
 );
 
 CREATE TABLE Wishlist (
+    id BIGINT auto_increment,
     email VARCHAR(255),
     productId BIGINT NOT NULL,
     primary key (email, productId)

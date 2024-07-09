@@ -22,7 +22,7 @@ public class ProductService {
      * @param product
      */
     public void addProduct(Product product) {
-        productDao.selectOneProduct(product.id())
+        productDao.selectOneProduct(product.getId())
             .ifPresent(v -> {
                 throw new IllegalArgumentException(ErrorMessage.ID_ALREADY_EXISTS_MSG);
             });
@@ -35,7 +35,7 @@ public class ProductService {
      * @param product
      */
     public void editProduct(Product product) {
-        productDao.selectOneProduct(product.id())
+        productDao.selectOneProduct(product.getId())
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.PRODUCT_NOT_EXISTS_MSG));
         productDao.updateProduct(product);
     }
