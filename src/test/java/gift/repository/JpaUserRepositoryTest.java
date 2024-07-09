@@ -14,13 +14,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class JpaUserRepositoryTest {
     @Autowired
-    private final JpaUserRepository jpaUserRepository;
+    private JpaUserRepository jpaUserRepository;
 
-    public JpaUserRepositoryTest(JpaUserRepository jpaUserRepository) {
-        this.jpaUserRepository = jpaUserRepository;
-    }
     private Long insertUser(User user){
-        return  jpaUserRepository.save(user).getId();
+        return jpaUserRepository.save(user).getId();
     }
     @Test
     void 회원_가입() {
