@@ -103,6 +103,28 @@ class ProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("삭제 테스트")
+    void 삭제_테스트(){
+        //given
+        Product product = new Product.Builder()
+                .name("테스트")
+                .price(123)
+                .imageUrl("abc.png")
+                .build();
+
+        productRepository.save(product);
+        entityManager.flush();
+        entityManager.clear();
+
+        //when
+        productRepository.delete(product);
+
+        //then
+        List<Product> products = productRepository.findAll();
+        assertThat(products.size()).isEqualTo(0);
+    }
+
+    @Test
     @DisplayName("일대다 연관관계 지연로딩 테스트")
     void 연관관계_지연로딩_테스트(){
         //given
