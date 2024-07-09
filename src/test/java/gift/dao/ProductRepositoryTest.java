@@ -1,6 +1,6 @@
 package gift.dao;
 
-import gift.product.dao.AdminProductDao;
+import gift.product.dao.ProductDao;
 import gift.product.model.Product;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,14 +14,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DataJpaTest
 public class ProductRepositoryTest {
     @Autowired
-    private AdminProductDao productDao;
+    private ProductDao productDao;
 
     private Product product;
 
     @BeforeEach
     public void setUp() {
         product = new Product(
-            0L,
+            1L,
             "상품1",
             1500,
             "product1.images"
@@ -35,13 +35,16 @@ public class ProductRepositoryTest {
         assertThat(registerProduct.getName()).isEqualTo("상품1");
         assertThat(registerProduct.getPrice()).isEqualTo(1500);
         assertThat(registerProduct.getImageUrl()).isEqualTo("product1.images");
+
+        System.out.println("삽입된 객체의 ID = " + registerProduct.getId());
     }
 
     @Test
     void testSearchProductById() {
         Product savedProduct = productDao.save(product);
 
-        Optional<Product> retrievedProduct = productDao.findById(savedProduct.getId());
+        Optional<Product> retrievedProduct = productDao.findById(1L);
+        System.out.println("삽입된 객체의 ID = " + savedProduct.getId());
 
         assertThat(retrievedProduct).isPresent();
         assertAll(

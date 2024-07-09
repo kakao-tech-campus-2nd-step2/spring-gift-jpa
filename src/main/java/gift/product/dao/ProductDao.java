@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 @Repository
-public interface AdminProductDao extends JpaRepository<Product, Long> {
+public interface ProductDao extends JpaRepository<Product, Long> {
     List<Product> findByName(String name);
 }
