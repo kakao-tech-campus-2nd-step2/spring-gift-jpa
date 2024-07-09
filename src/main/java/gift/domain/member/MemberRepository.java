@@ -43,12 +43,12 @@ public class MemberRepository {
         }, email);
     }
 
-    public boolean isNotValidMember(String email) {
+    public boolean isNotExistMember(String email) {
         String sql = "SELECT * FROM member WHERE email=?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> 0, email).isEmpty();
     }
 
-    public boolean isNotValidMemberById(Long id) {
+    public boolean isNotExistMemberById(Long id) {
         String sql = "SELECT * FROM member WHERE id=?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> 0, id).isEmpty();
     }
