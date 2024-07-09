@@ -13,9 +13,11 @@ import gift.product.exception.ProductErrorCode;
 import gift.product.message.ProductInfo;
 import java.net.URI;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -26,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(Lifecycle.PER_CLASS)
 @DisplayName("상품 컨트롤러 테스트")
 class ProductControllerTest {
 
@@ -38,13 +41,12 @@ class ProductControllerTest {
     private String baseUrl;
     private String accessToken;
 
-    @BeforeEach
+    @BeforeAll
     void setUp() {
         baseUrl = "http://localhost:" + port;
 
         var url = baseUrl + "/api/members/register";
-        var uniqueEmail = "test" + System.currentTimeMillis() + "@test.com";    // 중복되지 않는 이메일 생성: 테스트 시 중복된 이메일로 인해 회원 가입 실패하는 경우 방지
-        var reqBody = new LoginReqDto(uniqueEmail, "1234");
+        var reqBody = new LoginReqDto("abc123@test.com", "1234");
         var requestEntity = new RequestEntity<>(reqBody, HttpMethod.POST, URI.create(url));
         var actual = restTemplate.exchange(requestEntity, AuthToken.class);
 
@@ -171,8 +173,8 @@ class ProductControllerTest {
     @DisplayName("상품 수정")
     void 상품_수정() {
         //given
-        Long productId = 1L;
-        var reqBody = new ProductReqDto("키보드 수정", 20000, "https://www.google.com/keyboard.png");
+        Long productId = 3L;
+        var reqBody = new ProductReqDto("이름 수정", 20000, "https://www.google.com/modify.png");
         var request = TestUtils.createRequestEntity(baseUrl + "/api/products/" + productId, reqBody, HttpMethod.PUT, accessToken);
 
         //when
@@ -192,9 +194,9 @@ class ProductControllerTest {
         assertThat(product).isInstanceOf(ProductResDto.class);
 
         assertThat(product.id()).isEqualTo(productId);
-        assertThat(product.name()).isEqualTo("키보드 수정");
+        assertThat(product.name()).isEqualTo("이름 수정");
         assertThat(product.price()).isEqualTo(20000);
-        assertThat(product.imageUrl()).isEqualTo("https://www.google.com/keyboard.png");
+        assertThat(product.imageUrl()).isEqualTo("https://www.google.com/modify.png");
     }
 
     @Test
