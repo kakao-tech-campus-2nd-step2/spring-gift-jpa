@@ -16,19 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/members")
 public class MemberController {
 
-    private final MemberDao memberDao;
+    private final MemberService memberService;
     private final LogoutTokenDao logoutTokenDao;
 
-    public MemberController(MemberDao memberDao, LogoutTokenDao logoutTokenDao) {
-        this.memberDao = memberDao;
+    public MemberController(MemberService memberService, LogoutTokenDao logoutTokenDao) {
+        this.memberService = memberService;
         this.logoutTokenDao = logoutTokenDao;
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerMember(@RequestBody Member member) {
-        Optional<Member> existMember = memberDao.findMember(member);
+        Optional<Member> existMember = memberService.getMember(member);
         if (!existMember.isPresent()) {
-            memberDao.insertMember(member);
+            memberService.postMember(member);
             String token = JwtTokenUtil.generateToken(member.getEmail());
             return ResponseEntity.ok(new TokenResponseDto(token));
         } else {
@@ -39,7 +39,7 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Member member) {
-        Optional<Member> existMember = memberDao.findMember(member);
+        Optional<Member> existMember = memberService.getMember(member);
         if (existMember.isPresent()) {
             String token = JwtTokenUtil.generateToken(member.getEmail());
             return ResponseEntity.ok(new TokenResponseDto(token));
