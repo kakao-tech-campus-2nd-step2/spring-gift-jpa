@@ -1,29 +1,38 @@
 package gift.wishlist.domain;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Wishlist {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String memberEmail;
+
+    @Column(nullable = false)
     private Long productId;
 
-    public Wishlist(String memberEmail, Long productId) {
-        this(null, memberEmail, productId);
+    @Column(nullable = false)
+    private Long memberId;
+
+    public Wishlist() {
     }
 
-    public Wishlist(Long id, String memberEmail, Long productId) {
+    public Wishlist(Long id, Long productId, Long memberId) {
         this.id = id;
-        this.memberEmail = memberEmail;
         this.productId = productId;
+        this.memberId = memberId;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getMemberEmail() {
-        return memberEmail;
-    }
-
     public Long getProductId() {
         return productId;
+    }
+
+    public Long getMemberId() {
+        return memberId;
     }
 }
