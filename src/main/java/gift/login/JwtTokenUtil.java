@@ -3,6 +3,7 @@ package gift.login;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Jwts.SIG;
+import java.time.Duration;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.stereotype.Component;
@@ -10,15 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenUtil {
     private static final SecretKey key = SIG.HS256.key().build();
-
-    public static final int EXPIRATION_TIME = 3600000;
+    private static final int EXPIRE_TIME = 1;
 
     public static String generateToken(String email) {
-        long nowMillis = System.currentTimeMillis();
-        Date now = new Date(nowMillis);
-
-        long expMillis = nowMillis + EXPIRATION_TIME;
-        Date exp = new Date(expMillis);
+        Date now = new Date();
+        Date exp = new Date(now.getTime() + Duration.ofHours(EXPIRE_TIME).toMillis());
 
         return Jwts.builder()
             .setSubject(email)
