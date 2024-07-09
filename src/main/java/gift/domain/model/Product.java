@@ -26,15 +26,12 @@ public class Product {
 
     protected Product() {
     }
-<<<<<<< HEAD
 
     public Product(String name, Long price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
-=======
->>>>>>> d849126 (style: 코드 컨벤션 적용)
 
     public Product(Long id, String name, Long price, String imageUrl) {
         this.id = id;
