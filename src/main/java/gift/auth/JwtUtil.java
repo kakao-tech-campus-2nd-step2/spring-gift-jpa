@@ -1,6 +1,7 @@
 package gift.auth;
 
-import gift.user.Users;
+import gift.user.User;
+import gift.user.UserDTO;
 import gift.user.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -26,12 +27,12 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    public String generateToken(Users users) {
-        if(!userService.getUserByEmailAndPassword(users)){
+    public String generateToken(UserDTO userDTO) {
+        if(!userService.getUserByEmailAndPassword(userDTO)){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
         }
         return Jwts.builder()
-            .setSubject(users.getEmail())
+            .setSubject(userDTO.getEmail())
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + expiration))
             .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))

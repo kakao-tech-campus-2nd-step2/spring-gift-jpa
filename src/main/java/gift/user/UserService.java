@@ -6,18 +6,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    @Autowired
-    private UsersRepository usersRepository;
+    private final UserRepository userRepository;
 
-    public boolean registerUser(Users users) {
-        if (usersRepository.existsByEmail(users.getEmail())) {
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public boolean registerUser(UserDTO userDTO) {
+        User user=userDTO.toUser();
+        if (userRepository.existsByEmail(user.getEmail())) {
             return false;
         }
-        usersRepository.save(users);
+        userRepository.save(user);
         return true;
     }
 
-    public Boolean getUserByEmailAndPassword(Users users){
-        return usersRepository.existsByEmailAndPassword(users.getEmail(), users.getPassword());
+    public Boolean getUserByEmailAndPassword(UserDTO userDTO){
+        User user=userDTO.toUser();
+        return userRepository.existsByEmailAndPassword(user.getEmail(), user.getPassword());
     }
 }
