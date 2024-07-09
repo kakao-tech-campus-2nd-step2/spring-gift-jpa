@@ -4,9 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.TestUtils;
 import gift.auth.dto.LoginReqDto;
+import gift.auth.service.AuthService;
 import gift.auth.token.AuthToken;
+import gift.auth.token.AuthTokenGenerator;
 import gift.common.exception.ErrorResponse;
 import gift.product.exception.ProductErrorCode;
+import gift.utils.JwtTokenProvider;
 import gift.wishlist.dto.WishListReqDto;
 import gift.wishlist.dto.WishListResDto;
 import gift.wishlist.exception.WishListErrorCode;
@@ -15,9 +18,14 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -40,21 +48,28 @@ class WishListControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    private String baseUrl;
-    private String accessToken;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
+    private static String baseUrl;
+    private static String accessToken;
+
+    private static Long memberId;
 
     @BeforeEach
     void setUp() {
         baseUrl = "http://localhost:" + port;
 
         var url = baseUrl + "/api/members/register";
-        var uniqueEmail = "test" + System.currentTimeMillis() + "@test.com";    // 중복되지 않는 이메일 생성: 테스트 시 중복된 이메일로 인해 회원 가입 실패하는 경우 방지
+        var uniqueEmail = "abc123@test.com";
         var reqBody = new LoginReqDto(uniqueEmail, "1234");
         var requestEntity = new RequestEntity<>(reqBody, HttpMethod.POST, URI.create(url));
         var actual = restTemplate.exchange(requestEntity, AuthToken.class);
 
         assert actual.getBody() != null;
         accessToken = actual.getBody().accessToken();
+
+        memberId = jwtTokenProvider.getMemberId(accessToken);
 
         // 위시 리스트 초기화
         // 상품은 data.sql로 10개 등록되어있음. 여기서 위시 리스트에 3개의 상품을 임의 수량으로 추가
@@ -69,6 +84,14 @@ class WishListControllerTest {
             var wishListRequest = TestUtils.createRequestEntity(wishListUrl, wishListReqDto, HttpMethod.POST, accessToken);
             restTemplate.exchange(wishListRequest, String.class);
         });
+    }
+
+    @AfterEach
+    void tearDown() {
+        // 회원 삭제
+        var url = baseUrl + "/api/members/" + memberId;
+        var request = TestUtils.createRequestEntity(url, null, HttpMethod.DELETE, accessToken);
+        restTemplate.exchange(request, String.class);
     }
 
     @Test
