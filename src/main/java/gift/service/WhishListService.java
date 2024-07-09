@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.model.WishList;
-import gift.model.WishListRepository;
+import gift.dto.WishList;
+import gift.model.wishlist.WishListRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

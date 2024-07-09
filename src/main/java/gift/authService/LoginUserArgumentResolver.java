@@ -7,7 +7,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import gift.model.Login;
+import gift.dto.Login;
 import io.jsonwebtoken.Claims;
 
 @Component

@@ -1,5 +1,6 @@
-package gift.model;
+package gift.model.product;
 
+import gift.dto.Product;
 import gift.exception.ProductNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

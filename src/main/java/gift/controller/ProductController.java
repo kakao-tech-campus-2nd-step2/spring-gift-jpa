@@ -2,7 +2,7 @@ package gift.controller;
 
 import gift.service.ProductService;
 import org.springframework.web.bind.annotation.*;
-import gift.model.Product;
+import gift.dto.Product;
 
 import jakarta.validation.Valid;
 import java.util.List;
