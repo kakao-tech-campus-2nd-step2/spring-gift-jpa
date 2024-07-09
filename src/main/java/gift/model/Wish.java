@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "wish")
 public class Wish {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,8 +20,7 @@ public class Wish {
 
     public Wish() {}
 
-    public Wish(Long id, Member member, Product product) {
-        this.id = id;
+    public Wish(Member member, Product product) {
         this.member = member;
         this.product = product;
     }
@@ -33,9 +33,7 @@ public class Wish {
         this.id = id;
     }
 
-    public Member getMember() {
-        return member;
-    }
+    public Member getMember() { return member; }
 
     public void setMember(Member member) {
         this.member = member;
