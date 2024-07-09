@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.domain.product.dao.ProductDao;
+import gift.domain.product.dao.ProductJpaRepository;
 import gift.domain.product.dto.ProductDto;
 import gift.domain.product.entity.Product;
 import java.util.List;
@@ -31,7 +31,7 @@ class ProductRestControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ProductDao productDao;
+    private ProductJpaRepository productJpaRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -51,7 +51,7 @@ class ProductRestControllerTest {
         Product product = productDto.toProduct();
         product.setId(1L);
 
-        given(productDao.insert(any(Product.class))).willReturn(product);
+        given(productJpaRepository.save(any(Product.class))).willReturn(product);
         String expectedResult = objectMapper.writeValueAsString(product);
 
         // when & then
@@ -101,7 +101,7 @@ class ProductRestControllerTest {
             new Product(2L, "아이스 카페 아메리카노 T", 4500, "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg")
         );
 
-        given(productDao.findAll()).willReturn(productList);
+        given(productJpaRepository.findAll()).willReturn(productList);
         String expectedResult = objectMapper.writeValueAsString(productList);
 
         // when & then
@@ -118,7 +118,7 @@ class ProductRestControllerTest {
         // given
         Product product = new Product(1L, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
 
-        given(productDao.findById(anyLong())).willReturn(Optional.of(product));
+        given(productJpaRepository.findById(anyLong())).willReturn(Optional.of(product));
         String expectedResult = objectMapper.writeValueAsString(product);
 
         // when & then
@@ -132,7 +132,7 @@ class ProductRestControllerTest {
     @DisplayName("상품 ID로 조회 실패하는 경우 - 존재하지 않는 ID")
     void readById_fail_id_error() throws Exception {
         // given
-        given(productDao.findById(anyLong())).willReturn(Optional.empty());
+        given(productJpaRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when & then
         mockMvc.perform(get(PATH_VAR_URL, 1L))
@@ -151,7 +151,8 @@ class ProductRestControllerTest {
         Product product = productDto.toProduct();
         product.setId(1L);
 
-        given(productDao.update(any(Product.class))).willReturn(Optional.of(product));
+        given(productJpaRepository.findById(anyLong())).willReturn(Optional.of(product));
+        given(productJpaRepository.save(any(Product.class))).willReturn(product);
         String expectedResult = objectMapper.writeValueAsString(product);
 
         // when & then
@@ -169,7 +170,7 @@ class ProductRestControllerTest {
         ProductDto productDto = new ProductDto(null, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
         String jsonContent = objectMapper.writeValueAsString(productDto);
 
-        given(productDao.update(any(Product.class))).willReturn(Optional.empty());
+        given(productJpaRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when & then
         mockMvc.perform(put(PATH_VAR_URL, 1L)
@@ -199,7 +200,10 @@ class ProductRestControllerTest {
     @DisplayName("상품 삭제에 성공하는 경우")
     void delete_success() throws Exception {
         // given
-        given(productDao.delete(anyLong())).willReturn(1);
+        Product product = new Product(1L, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+
+        given(productJpaRepository.findById(anyLong())).willReturn(Optional.of(product));
+        doNothing().when(productJpaRepository).deleteById(any());
 
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.delete(PATH_VAR_URL, 1L))
@@ -211,7 +215,7 @@ class ProductRestControllerTest {
     @DisplayName("상품 삭제에 실패하는 경우 - 존재하지 않는 ID")
     void delete_fail_id_error() throws Exception {
         // given
-        given(productDao.delete(anyLong())).willReturn(0);
+        given(productJpaRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.delete(PATH_VAR_URL, 1L))

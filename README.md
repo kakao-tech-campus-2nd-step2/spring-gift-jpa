@@ -6,7 +6,7 @@
 > Entity 클래스와 Repository 클래스를 작성한다.
 
 ### 기능 요구사항 목록
-- [ ] 상품 객체 매핑
+- [x] 상품 객체 매핑
   - entity, repository
 - [ ] 사용자 객체 매핑
   - entity, repository
