@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.entity.Product;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -68,9 +69,9 @@ class ProductRepositoryTest {
         productRepository.save(product1);
         productRepository.save(product2);
 
-        Product actual = productRepository.findItemById(product2.getId());
+        Optional<Product> actual = productRepository.findById(product2.getId());
 
-        assertThat(actual).isEqualTo(product2);
+        assertThat(actual.get()).isEqualTo(product2);
     }
 
     @Test
@@ -84,13 +85,13 @@ class ProductRepositoryTest {
         productRepository.save(product1);
         productRepository.save(product2);
 
-        Product expected = productRepository.findItemById(product2.getId());
+        Optional<Product> expected = productRepository.findById(product2.getId());
 
-        expected.setPrice(31240941);
+        expected.get().setPrice(31240941);
 
-        Product actual = productRepository.findItemById(product2.getId());
+        Optional<Product> actual = productRepository.findById(product2.getId());
 
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual.get()).isEqualTo(expected);
 
     }
 
