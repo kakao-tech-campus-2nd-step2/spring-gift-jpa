@@ -6,7 +6,7 @@
 - @DataJpaTest를 이용한 학습 테스트
 
 ### 기능 목록
-- [ ] Member 엔티티 매핑
+- [X] Member 엔티티 매핑
 - [ ] Product 엔티티 매핑
 - [ ] Wish 엔티티 매핑
 

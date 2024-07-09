@@ -36,7 +36,7 @@ public class MemberService {
         }
 
         Member member = new Member(null, memberDTO.email(), memberDTO.password());
-        Member savedMember = memberRepository.create(member);
+        Member savedMember = memberRepository.save(member);
 
         String token = jwtUtil.generateToken(savedMember.getId(), member.getEmail());
         return new MemberResponse(savedMember.getId(), savedMember.getEmail(), token);
@@ -79,7 +79,7 @@ public class MemberService {
         }
 
         member.update(memberDTO.email(), memberDTO.password());
-        Member updatedMember = memberRepository.update(member);
+        Member updatedMember = memberRepository.save(member);
         return convertToDTO(updatedMember);
     }
 
@@ -88,7 +88,7 @@ public class MemberService {
         if (!memberRepository.existsById(id)) {
             throw new ForbiddenException(ID_NOT_FOUND);
         }
-        memberRepository.delete(id);
+        memberRepository.deleteById(id);
     }
 
     // Mapper methods
