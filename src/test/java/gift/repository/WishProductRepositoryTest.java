@@ -35,11 +35,9 @@ class WishProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        wishProduct = new WishProduct();
         member = memberRepository.save(new Member("aaa123@a.com", "1234"));
         product = productRepository.save(new Product("productA", 1000, "https://a.com"));
-        wishProduct.setMemberId(member.getId());
-        wishProduct.setProductId(product.getId());
+        wishProduct = new WishProduct(member.getId(), product.getId());
     }
 
     @Test

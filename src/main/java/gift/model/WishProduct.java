@@ -33,7 +33,7 @@ public class WishProduct {
     @JoinColumn(name = "product_id", nullable = false)
     private Long productId;
 
-    public WishProduct() {
+    protected WishProduct() {
     }
 
     public WishProduct(Long memberId, Long productId) {
