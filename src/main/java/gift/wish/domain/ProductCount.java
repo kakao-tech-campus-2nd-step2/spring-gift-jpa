@@ -2,8 +2,12 @@ package gift.wish.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import gift.product.exception.ProductPriceOutOfRangeException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
+@Embeddable
 public class ProductCount {
+    @Column(name = "product_count")
     private Long value;
 
     public ProductCount() {}

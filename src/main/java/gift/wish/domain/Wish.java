@@ -1,16 +1,16 @@
 package gift.wish.domain;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Embedded;
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.*;
 
-@Table("wishes")
+@Entity
+@Table(name = "wishes")
 public class Wish {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long memberId;
     private Long productId;
-    @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
+    @Embedded
     private ProductCount productCount;
 
     public Wish() {}
