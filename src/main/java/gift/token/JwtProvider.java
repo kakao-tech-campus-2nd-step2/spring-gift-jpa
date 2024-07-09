@@ -21,7 +21,7 @@ public class JwtProvider {
 
     public String generateToken(Member member) {
         return PREFIX + Jwts.builder()
-            .claim("email", member.email())
+            .claim("email", member.getEmail())
             .signWith(key)
             .compact();
     }

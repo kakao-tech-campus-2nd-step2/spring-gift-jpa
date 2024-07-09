@@ -60,8 +60,8 @@ class WishlistRepositoryTest {
                 """
         );
 
-        memberRepository.addMember(new Member("aaa@email.com", "password"));
-        memberRepository.addMember(new Member("bbb@email.com", "password"));
+        memberRepository.save(new Member("aaa@email.com", "password"));
+        memberRepository.save(new Member("bbb@email.com", "password"));
 
         for (int i = 1; i < 4; i++) {
             productRepository.save(

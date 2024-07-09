@@ -1,38 +1,24 @@
 package gift.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-@SpringBootTest
+@DataJpaTest
 class MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
     @BeforeEach
     void setUp() {
-        jdbcTemplate.execute("DROP TABLE IF EXISTS member");
-        jdbcTemplate.execute(
-            """
-                CREATE TABLE member
-                (
-                    email    VARCHAR(255) PRIMARY KEY,
-                    password VARCHAR(255)
-                )
-                """
-        );
+        memberRepository.deleteAll();
     }
 
     @Test
@@ -42,17 +28,8 @@ class MemberRepositoryTest {
         Member expect = new Member("aaa@email.com", "password");
 
         //when
-        memberRepository.addMember(expect);
-        Member actual = jdbcTemplate.queryForObject(
-            """
-                SELECT * FROM MEMBER WHERE EMAIL=?
-                """,
-            (rs, rowNum) -> new Member(
-                rs.getString("EMAIL"),
-                rs.getString("PASSWORD")
-            ),
-            expect.email()
-        );
+        memberRepository.save(expect);
+        Member actual = memberRepository.findById(expect.getEmail()).get();
 
         //then
         assertThat(actual).isEqualTo(expect);
@@ -63,11 +40,11 @@ class MemberRepositoryTest {
     void existMemberByEmailTest() {
         //given
         Member expect = new Member("aaa@email.com", "password");
-        memberRepository.addMember(expect);
+        memberRepository.save(expect);
 
         //when
-        Boolean trueCase = memberRepository.existMemberByEmail("aaa@email.com");
-        Boolean falseCase = memberRepository.existMemberByEmail("bbb@email.com");
+        boolean trueCase = memberRepository.existsById("aaa@email.com");
+        boolean falseCase = memberRepository.existsById("bbb@email.com");
 
         //then
         assertAll(
@@ -81,18 +58,16 @@ class MemberRepositoryTest {
     void findMemberByEmailTest() {
         //given
         Member expect = new Member("aaa@email.com", "password");
-        memberRepository.addMember(expect);
+        memberRepository.save(expect);
 
         //when
-        Member actual = memberRepository.findMemberByEmail("aaa@email.com");
-        Throwable errorCase = catchThrowable(
-            () -> memberRepository.findMemberByEmail("bbb@email.com")
-        );
+        Member actual = memberRepository.findById("aaa@email.com").get();
+        Optional<Member> errorCase = memberRepository.findById("bbb@email.com");
 
         //then
         assertAll(
             () -> assertThat(actual).isEqualTo(expect),
-            () -> assertThat(errorCase).isInstanceOf(EmptyResultDataAccessException.class)
+            () -> assertThat(errorCase).isEmpty()
         );
     }
 }

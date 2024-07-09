@@ -19,10 +19,10 @@ public class MemberService {
     }
 
     public String register(Member member) {
-        if (memberRepository.existMemberByEmail(member.email())) {
+        if (memberRepository.existsById(member.getEmail())) {
             throw new IllegalArgumentException("Member already exist");
         }
-        memberRepository.addMember(member);
+        memberRepository.save(member);
         return jwtProvider.generateToken(member);
     }
 
@@ -32,10 +32,10 @@ public class MemberService {
     }
 
     public void authenticateMember(Member member) {
-        if (!memberRepository.existMemberByEmail(member.email())) {
+        if (!memberRepository.existsById(member.getEmail())) {
             throw new FailedLoginException("Member does not exist");
         }
-        if (!member.isSamePassword(memberRepository.findMemberByEmail(member.email()))) {
+        if (!member.isSamePassword(memberRepository.findById(member.getEmail()).get())) {
             throw new FailedLoginException("Wrong password");
         }
     }
