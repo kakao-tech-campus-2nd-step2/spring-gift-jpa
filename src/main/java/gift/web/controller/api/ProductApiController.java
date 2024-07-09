@@ -1,11 +1,16 @@
 package gift.web.controller.api;
 
+import gift.authentication.annotation.LoginMember;
+import gift.web.dto.MemberDetails;
 import gift.service.ProductService;
+import gift.service.WishProductService;
 import gift.web.dto.request.product.CreateProductRequest;
 import gift.web.dto.request.product.UpdateProductRequest;
+import gift.web.dto.request.wishproduct.CreateWishProductRequest;
 import gift.web.dto.response.product.CreateProductResponse;
 import gift.web.dto.response.product.ReadAllProductsResponse;
 import gift.web.dto.response.product.UpdateProductResponse;
+import gift.web.dto.response.wishproduct.CreateWishProductResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
@@ -25,9 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductApiController {
 
     private final ProductService productService;
+    private final WishProductService wishProductService;
 
-    public ProductApiController(ProductService productService) {
+    public ProductApiController(ProductService productService, WishProductService wishProductService) {
         this.productService = productService;
+        this.wishProductService = wishProductService;
     }
 
     @PostMapping
@@ -37,6 +44,12 @@ public class ProductApiController {
 
         URI location = new URI("http://localhost:8080/api/products/" + response.getId());
         return ResponseEntity.created(location).body(response);
+    }
+
+    @PostMapping("/wish")
+    public ResponseEntity<CreateWishProductResponse> createWishProduct(@Validated @RequestBody CreateWishProductRequest request, @LoginMember MemberDetails memberDetails) {
+        CreateWishProductResponse response = wishProductService.createWishProduct(memberDetails.getId(), request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping

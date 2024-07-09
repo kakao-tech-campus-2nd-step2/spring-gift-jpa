@@ -1,14 +1,10 @@
 spring:
+  config:
+    import: application-secret.yml
   application:
     name: spring-gift
     datasource:
-      url: jdbc:h2:mem:gift
-      username: sa
-      password:
       driver-class-name: org.h2.Driver
-
-  messages:
-    basename: errors
 
   h2:
     console:
@@ -22,3 +18,7 @@ spring:
 
 jwt:
   expiration: 3600000 #1시간
+
+logging:
+  level:
+    gift.authentication: debug

@@ -1,6 +1,6 @@
 package gift.web.dto.response;
 
-import gift.authentication.Token;
+import gift.authentication.token.Token;
 
 public class LoginResponse {
 

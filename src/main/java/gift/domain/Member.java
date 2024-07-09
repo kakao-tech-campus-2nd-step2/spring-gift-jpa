@@ -2,6 +2,7 @@ package gift.domain;
 
 import gift.domain.vo.Email;
 import gift.domain.vo.Password;
+import gift.web.validation.exception.IncorrectPasswordException;
 
 public class Member extends BaseEntity{
 
@@ -9,12 +10,18 @@ public class Member extends BaseEntity{
     private final Password password;
     private final String name;
 
+    public Member(Long id, Email email, Password password, String name) {
+        super(id);
+        this.email = email;
+        this.password = password;
+        this.name = name;
+    }
+
     public static class Builder extends BaseEntity.Builder<Member.Builder> {
 
         private Email email;
         private Password password;
         private String name;
-
 
         public Builder email(Email email) {
             this.email = email;
@@ -59,5 +66,11 @@ public class Member extends BaseEntity{
 
     public String getName() {
         return name;
+    }
+
+    public void matchPassword(String password) {
+        if (!this.password.matches(password)) {
+            throw new IncorrectPasswordException();
+        }
     }
 }

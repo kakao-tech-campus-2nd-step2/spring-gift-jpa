@@ -1,8 +1,8 @@
-package gift.authentication;
+package gift.authentication.token;
 
 public class Token {
 
-    private String value;
+    private final String value;
 
     private Token(String value) {
         this.value = value;

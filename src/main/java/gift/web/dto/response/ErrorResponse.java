@@ -1,36 +1,33 @@
 package gift.web.dto.response;
 
+import gift.web.validation.exception.code.ErrorCode;
 import java.time.LocalDateTime;
-import org.springframework.validation.BindingResult;
 
 public class ErrorResponse {
 
-    private String code;
-    private String field;
+    private int code;
+    private String category;
     private String description;
     private LocalDateTime timestamp;
 
-    public ErrorResponse(String code, String field, String description) {
+    public ErrorResponse(int code, String category, String description) {
         this.code = code;
+        this.category = category;
         this.description = description;
-        this.field = field;
         this.timestamp = LocalDateTime.now();
     }
 
-    public static ErrorResponse from(BindingResult bindingResult) {
-        return new ErrorResponse(
-            bindingResult.getFieldError().getCode(),
-            bindingResult.getFieldError().getField(),
-            bindingResult.getFieldError().getDefaultMessage()
-        );
+    public static ErrorResponse from(ErrorCode errorCode) {
+        return new ErrorResponse(errorCode.getCode(), errorCode.getCategory().getDescription(),
+            errorCode.getDescription());
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public String getField() {
-        return field;
+    public String getCategory() {
+        return category;
     }
 
     public String getDescription() {

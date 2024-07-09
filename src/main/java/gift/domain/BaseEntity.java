@@ -6,6 +6,10 @@ public abstract class BaseEntity {
 
     protected final Long id;
 
+    protected BaseEntity(Long id) {
+        this.id = id;
+    }
+
     abstract static class Builder<T extends Builder<T>> {
 
         Long id;

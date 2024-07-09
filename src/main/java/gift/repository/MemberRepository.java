@@ -1,9 +1,9 @@
 package gift.repository;
 
 import gift.domain.Member;
-import gift.domain.Member.Builder;
 import gift.domain.vo.Email;
 import gift.domain.vo.Password;
+import gift.repository.mapper.MemberRowMapper;
 import java.sql.PreparedStatement;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public class MemberRepository {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"member_id"});
             ps.setString(1, member.getEmail().getValue());
             ps.setString(2, member.getPassword().getValue());
             ps.setString(3, member.getName());
@@ -39,17 +39,16 @@ public class MemberRepository {
     }
 
     public Optional<Member> findById(Long id) {
-        String sql = "select id, email, password, name from member where id = ?";
+        String sql = "select member_id, email, password, name from member where member_id = ?";
         Member findMember = jdbcTemplate.queryForObject(sql, getMemberRowMapper(), id);
-
         return Optional.ofNullable(findMember);
     }
 
-    public Optional<Member> findByEmailAndPassword(Email email, Password password) {
-        String sql = "select id, email, password, name from member where email = ? and password = ?";
+    public Optional<Member> findByEmail(Email email) {
+        String sql = "select member_id, email, password, name from member where email = ?";
 
         try {
-            Member findMember = jdbcTemplate.queryForObject(sql, getMemberRowMapper(), email.getValue(), password.getValue());
+            Member findMember = jdbcTemplate.queryForObject(sql, getMemberRowMapper(), email.getValue());
             return Optional.ofNullable(findMember);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -57,11 +56,6 @@ public class MemberRepository {
     }
 
     private RowMapper<Member> getMemberRowMapper() {
-        return (rs, rowNum) -> new Builder()
-            .id(rs.getLong("id"))
-            .name(rs.getString("name"))
-            .password(Password.from(rs.getString("password")))
-            .email(Email.from(rs.getString("email")))
-            .build();
+        return new MemberRowMapper();
     }
 }

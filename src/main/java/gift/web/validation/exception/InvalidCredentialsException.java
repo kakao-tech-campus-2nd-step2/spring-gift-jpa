@@ -1,9 +1,11 @@
 package gift.web.validation.exception;
 
+import gift.web.validation.exception.code.ErrorCode;
+
 public class InvalidCredentialsException extends RuntimeException {
 
     public InvalidCredentialsException() {
-        super("인증에 실패하였습니다.");
+        super(ErrorCode.UNAUTHORIZED_INVALID_CREDENTIALS.getDescription());
     }
 
     public InvalidCredentialsException(String message) {

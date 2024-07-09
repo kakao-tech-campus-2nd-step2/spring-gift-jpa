@@ -1,5 +1,6 @@
 package gift.web.validation.constraints;
 
+import static gift.web.validation.exception.code.ErrorCode.DESCRIPTION.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import gift.web.validation.validator.KakaoApprovalValidator;
@@ -13,7 +14,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = KakaoApprovalValidator.class)
 public @interface RequiredKakaoApproval {
 
-    String message() default "{required.kakaoApproval}";
+    String message() default KAKAO_APPROVAL_NEEDED;
 
     Class<?>[] groups() default {};
 

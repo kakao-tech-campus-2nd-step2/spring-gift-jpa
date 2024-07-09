@@ -1,5 +1,6 @@
 package gift.web.validation.constraints;
 
+import static gift.web.validation.exception.code.ErrorCode.DESCRIPTION.INVALID_PASSWORD_FORMAT;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import gift.web.validation.validator.PasswordValidator;
@@ -13,7 +14,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = PasswordValidator.class)
 public @interface Password {
 
-    String message() default "{password.invalid}";
+    String message() default INVALID_PASSWORD_FORMAT;
 
     Class<?>[] groups() default {};
 
