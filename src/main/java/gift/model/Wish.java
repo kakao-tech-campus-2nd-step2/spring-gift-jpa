@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(indexes = @Index(name = "idx_member_id", columnList = "member_id"))
 public class Wish extends BasicEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
