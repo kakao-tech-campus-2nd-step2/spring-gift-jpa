@@ -25,7 +25,7 @@ public class WishlistService {
         return wishlistRepository.findAllWishlist();
     }
     public Product getProductById(long id){
-        return productRepository.findById(id);
+        return productRepository.findProductById(id);
     }
 
     public List<Product> getAllProducts() {
