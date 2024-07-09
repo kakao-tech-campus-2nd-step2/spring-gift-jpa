@@ -12,7 +12,8 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "product")
-public class Product{
+public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,7 +35,8 @@ public class Product{
     @Pattern(regexp = "^(http|https)://.*$", message = "유효한 이미지 URL을 입력해야 합니다.")
     private String imageUrl;
 
-    protected Product(){}
+    protected Product() {
+    }
 
     public Product(Long id, String name, String price, String imageUrl) {
         this.id = id;

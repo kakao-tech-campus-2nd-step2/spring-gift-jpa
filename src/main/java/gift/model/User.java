@@ -11,7 +11,8 @@ import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "member")
-public class User{
+public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,7 +33,8 @@ public class User{
     @Column(name = "role")
     private String role;
 
-    protected User(){}
+    protected User() {
+    }
 
     public User(Long id, String name, String email, String password, String role) {
         this.id = id;

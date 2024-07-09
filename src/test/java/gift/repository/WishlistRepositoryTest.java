@@ -29,9 +29,9 @@ class WishlistRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        User user = new User(4L, "kbm","kbm@kbm","mbk","user");
+        User user = new User(4L, "kbm", "kbm@kbm", "mbk", "user");
         User savedUser = userRepository.save(user);
-        Product product = new Product( 1L,"상품","100","https://kakao");
+        Product product = new Product(1L, "상품", "100", "https://kakao");
         Product savedProduct = productRepository.save(product);
     }
 

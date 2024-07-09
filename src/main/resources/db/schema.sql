@@ -1,8 +1,8 @@
 CREATE TABLE product
 (
-    id       BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name     VARCHAR(255),
-    price    BIGINT,
+    id        BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name      VARCHAR(255),
+    price     BIGINT,
     image_url VARCHAR(255)
 );
 
@@ -18,7 +18,7 @@ CREATE TABLE member
 CREATE TABLE wish
 (
     id         BIGINT AUTO_INCREMENT PRIMARY KEY,
-    member_id VARCHAR(255) NOT NULL,
+    member_id  VARCHAR(255) NOT NULL,
     product_id BIGINT       NOT NULL,
     FOREIGN KEY (member_id) REFERENCES member (email),
     FOREIGN KEY (product_id) REFERENCES product (id)

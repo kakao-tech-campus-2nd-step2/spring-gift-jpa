@@ -3,7 +3,6 @@ package gift.repository;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-
 import gift.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ class UserRepositoryTest {
 
     @Test
     void testSave() {
-        User user = new User(1L, "kbm","kbm@kbm","mbk","user");
+        User user = new User(1L, "kbm", "kbm@kbm", "mbk", "user");
         User savedUser = userRepository.save(user);
         assertAll(
             () -> assertThat(savedUser.getId()).isNotNull(),
@@ -30,7 +29,7 @@ class UserRepositoryTest {
 
     @Test
     void testFindByEmail() {
-        User user = new User(1L, "kbm","kbm@kbm","mbk","user");
+        User user = new User(1L, "kbm", "kbm@kbm", "mbk", "user");
         User savedUser = userRepository.save(user);
         assertAll(
             () -> assertThat(savedUser).isNotNull(),
