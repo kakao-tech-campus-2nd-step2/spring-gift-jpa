@@ -4,13 +4,11 @@ import gift.controller.product.dto.ProductResponse.ProductInfoResponse;
 import gift.global.auth.Authorization;
 import gift.controller.product.dto.ProductRequest.ProductRegisterRequest;
 import gift.controller.product.dto.ProductRequest.ProductUpdateRequest;
-import gift.controller.product.dto.ProductResponse;
 
 import gift.global.dto.PageResponse;
 import gift.model.member.Role;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
-import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
