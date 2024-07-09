@@ -32,10 +32,6 @@ public class UserController {
     //회원 가입 API
     @PostMapping("/signup")
     public ResponseEntity<?> signupUser(@RequestBody @Valid UserDTO userDTO){
-        if(userService.checkIfDuplicatedEmail(userDTO.email)){
-            throw new IllegalArgumentException("이미 등록된 이메일입니다.");
-        }
-
         User user = userService.registerUser(userDTO);
         String accessToken = jwtService.generateAccessToken(user);
         return ResponseEntity.ok(new Token(accessToken));

@@ -17,8 +17,8 @@ public class UserService {
 
     public User registerUser(UserDTO userDTO) {
 
-        return userRepository.insertUser(
-                new UserDTO(
+        return userRepository.save(
+                new User(
                         userDTO.getEmail(),
                         userDTO.getPassword(),
                         userDTO.getNickname()));
@@ -29,30 +29,13 @@ public class UserService {
         return Objects.equals(loginDTO.getPassword(), user.getPassword());
     }
 
-    public boolean checkIfDuplicatedEmail(String email){
-        try {
-            Optional<User> user = userRepository.findByEmail(email);
-        }
-        catch (EmptyResultDataAccessException e){
-            return false;
-        }
-        return true;
-
-    }
-
-    public UserDTO getUserDTOByLoginDTO(LoginDTO loginDTO){
-        User user = userRepository.findByEmail(loginDTO.email)
-                .orElseThrow();
-        return new UserDTO(user);
-    }
-
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with email: " + email));
     }
 
     public User getUserById(Long id){
-        return userRepository.selectUser(id)
+        return userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + id));
     }
 

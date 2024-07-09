@@ -21,7 +21,6 @@ public class JWTService {
         Date now = new Date();
         String encodeString = user.getEmail() + ":" + user.getPassword();
         secretKey = Base64.getEncoder().encodeToString(encodeString.getBytes(StandardCharsets.UTF_8));
-        System.out.println(secretKey);
         return Jwts.builder()
                 .subject(user.getId().toString())
                 .claim("email", user.getEmail())

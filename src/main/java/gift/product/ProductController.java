@@ -2,10 +2,13 @@ package gift.product;
 
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/manager")
@@ -22,37 +25,44 @@ public class ProductController {
             return "AddProduct";
         }
 
-        System.out.println("add");
-        Product product = productRepository.insertProduct(newProduct);
+        Product product = new Product(newProduct.getName(), newProduct.getPrice(), newProduct.getImageUrl());
+        productRepository.save(product);
         redirectAttributes.addAttribute("id", product.getId());
-        System.out.println(product.id);
+
         return "redirect:/manager/products/{id}";
     }
 
     @PutMapping("/products/update/{id}")
+    @Transactional
     public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute("product") ProductDTO product, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if (bindingResult.hasErrors()) {
             return "UpdateProduct";
         }
 
-        productRepository.updateProduct(id, product);
+        Optional<Product> productFound = productRepository.findById(id);
+        productFound.ifPresent(product1 -> {
+            product1.setName(product.getName());
+            product1.setPrice(product.getPrice());
+            product1.setImageUrl(product.getImageUrl());
+        });
+
         redirectAttributes.addAttribute("id", id);
         return "redirect:/manager/products/{id}";
     }
 
     @DeleteMapping("/products/delete/{id}")
     public String deleteProduct(@PathVariable Long id){
-        Product product = productRepository.selectProduct(id);
+        Optional<Product> product = productRepository.findById(id);
 
-        if(product != null){
-            productRepository.deleteProduct(id);
+        if(product.isPresent()){
+            productRepository.deleteById(id);
         }
         return "redirect:/manager/products";
     }
 
     @GetMapping("/products")
     public String getProductsView(Model model){
-        model.addAttribute("products", productRepository.selectProducts());
+        model.addAttribute("products", productRepository.findAll());
         return "ManageProduct";
     }
 
@@ -64,14 +74,18 @@ public class ProductController {
 
     @GetMapping("/products/update/{id}")
     public String updateProductView(@PathVariable Long id, Model model){
-        model.addAttribute("product", new ProductDTO(productRepository.selectProduct(id)));
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isPresent()){
+            ProductDTO productDTO = new ProductDTO(product.get());
+            model.addAttribute("product",productDTO);
+        }
         return "UpdateProduct";
     }
 
     @GetMapping("/products/{id}")
     public String getProduct(@PathVariable long id, Model model) {
-        Product product = productRepository.selectProduct(id);
-        model.addAttribute("product", product);
+        Optional<Product> product = productRepository.findById(id);
+        product.ifPresent(value -> model.addAttribute("product", value));
         return "ProductInfo";
     }
 }
