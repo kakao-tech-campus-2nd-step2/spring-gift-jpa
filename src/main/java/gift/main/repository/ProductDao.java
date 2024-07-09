@@ -15,18 +15,9 @@ public class ProductDao {
 
     public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        createProductTable();
+
     }
 
-    public void createProductTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS products (" +
-                "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
-                "name VARCHAR(255) NOT NULL," +
-                "price INT NOT NULL," +
-                "image_url VARCHAR(255)" +
-                ")";
-        jdbcTemplate.execute(sql);
-    }
 
     public List<Product> selectProductAll() {
         String sql = "SELECT * FROM products";

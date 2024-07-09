@@ -13,16 +13,6 @@ public class WishlistProductDao {
 
     public WishlistProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        createWishlistProductTable();
-    }
-
-    public void createWishlistProductTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS wishlist_products (" +
-                "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
-                "product_id BIGINT NOT NULL," +
-                "user_id BIGINT NOT NULL" +
-                ")";
-        jdbcTemplate.execute(sql);
     }
 
     public void insertWishlistProduct(WishListProductDto wishListProductDto) {

@@ -17,18 +17,6 @@ public class UserDao {
 
     public UserDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        createUserTable();
-    }
-
-    public void createUserTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS users (" +
-                "id BIGINT AUTO_INCREMENT PRIMARY KEY," +
-                "name VARCHAR(255) NOT NULL," +
-                "email VARCHAR(255) UNIQUE NOT NULL," +
-                "password VARCHAR(255) NOT NULL," +
-                "role VARCHAR(255) NOT NULL" +
-                ")";
-        jdbcTemplate.execute(sql);
     }
 
     public User selectUserById(Long id) {
