@@ -80,7 +80,7 @@ class MemberRepositoryTest {
 
         Member expected = new Member("22345@12345.com", "2", "홍길동", "default_user", new ArrayList<>());
 
-        Member actual = memberRepository.findByEmail("22345@12345.com");
+        Member actual = memberRepository.findByEmail("22345@12345.com").get();
 
         assertThat(actual).isEqualTo(expected);
     }
