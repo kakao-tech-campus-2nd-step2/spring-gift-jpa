@@ -3,6 +3,7 @@ package gift.product.domain;
 import com.fasterxml.jackson.annotation.JsonValue;
 import gift.product.exception.ProductNameLengthException;
 import gift.product.exception.ProductNamePatternException;
+import gift.wish.domain.ProductCount;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -49,5 +50,18 @@ public class ProductName {
     @JsonValue
     public String toJson() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductName that = (ProductName) o;
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

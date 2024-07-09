@@ -5,6 +5,8 @@ import gift.product.exception.ProductPriceOutOfRangeException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
+import java.util.Objects;
+
 @Embeddable
 public class ProductCount {
     @Column(name = "product_count")
@@ -32,5 +34,18 @@ public class ProductCount {
     @JsonValue
     public Long toJson() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductCount that = (ProductCount) o;
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }
