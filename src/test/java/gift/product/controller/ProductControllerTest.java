@@ -46,7 +46,7 @@ class ProductControllerTest {
         baseUrl = "http://localhost:" + port;
 
         var url = baseUrl + "/api/members/register";
-        var reqBody = new LoginReqDto("abc123@test.com", "1234");
+        var reqBody = new LoginReqDto("productController@test.com", "1234");
         var requestEntity = new RequestEntity<>(reqBody, HttpMethod.POST, URI.create(url));
         var actual = restTemplate.exchange(requestEntity, AuthToken.class);
 
