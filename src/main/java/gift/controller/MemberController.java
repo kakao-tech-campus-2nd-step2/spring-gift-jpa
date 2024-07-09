@@ -16,11 +16,11 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/members")
-public class UserController {
+public class MemberController {
 
     private MemberService memberService;
 
-    public UserController(MemberService memberService, JwtUtil jwtUtil){
+    public MemberController(MemberService memberService, JwtUtil jwtUtil){
         this.memberService = memberService;
     }
     
