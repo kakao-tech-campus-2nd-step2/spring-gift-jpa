@@ -1,14 +1,11 @@
 package gift.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
+@Table(name = "member", uniqueConstraints = @UniqueConstraint(name = "uk_member", columnNames = "email"))
 public class Member {
 
     @Id
@@ -17,10 +14,19 @@ public class Member {
 
     @Email
     @NotBlank
+    @Column(nullable = false, unique = true)
     private String email;
 
     @NotBlank
+    @Column(nullable = false)
     private String password;
+
+    public Member() {}
+
+    public Member(@Email @NotBlank String email, @NotBlank String password) {
+        this.email = email;
+        this.password = password;
+    }
 
     public Long getId() {
         return id;
