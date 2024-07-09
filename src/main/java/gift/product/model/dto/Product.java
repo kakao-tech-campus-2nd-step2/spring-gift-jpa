@@ -27,8 +27,7 @@ public class Product {
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true; // 선물의 활성화 상태
 
-    public Product(Long id, String name, int price, String imageUrl, Boolean isActive) {
-        this.id = id;
+    public Product(String name, int price, String imageUrl, Boolean isActive) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

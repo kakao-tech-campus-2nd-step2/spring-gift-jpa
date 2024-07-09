@@ -36,10 +36,8 @@ public class ProductService {
 
     @Transactional
     public void addProduct(CreateProductRequest createProductRequest) {
-        Product product = new Product();
-        product.setName(createProductRequest.name());
-        product.setPrice(createProductRequest.price());
-        product.setImageUrl(createProductRequest.imageUrl());
+        Product product = new Product(createProductRequest.name(), createProductRequest.price(),
+                createProductRequest.imageUrl(), true);
         productRepository.save(product);
     }
 
