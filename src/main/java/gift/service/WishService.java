@@ -37,7 +37,7 @@ public class WishService {
         }
 
         Wish wish = convertToEntity(wishRequest);
-        Wish savedWish = wishRepository.create(wish);
+        Wish savedWish = wishRepository.save(wish);
         return convertToDTO(savedWish);
     }
 
@@ -45,7 +45,7 @@ public class WishService {
         if (wishRepository.findById(id).isEmpty()) {
             throw new WishNotFoundException(WISH_NOT_FOUND + id);
         }
-        wishRepository.delete(id);
+        wishRepository.deleteById(id);
     }
 
     // Mapper methods
