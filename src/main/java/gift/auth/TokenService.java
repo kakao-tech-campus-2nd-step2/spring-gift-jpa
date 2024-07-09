@@ -12,7 +12,7 @@ import java.util.Date;
 @Component
 public class TokenService {
 
-    private static final String EMAIL_CLAIM = "email";
+    private static final String MEMBER_ID_CLAIM = "memberId";
 
     private final SecretKey secretKey;
     private final long accessTokenExpirationMillis;
@@ -22,23 +22,23 @@ public class TokenService {
         this.accessTokenExpirationMillis = tokenProperty.getAccessTokenExpirationMillis();
     }
 
-    public String createToken(String email) {
+    public String createToken(Long memberId) {
         return Jwts.builder()
-                .claim(EMAIL_CLAIM, email)
+                .claim(MEMBER_ID_CLAIM, memberId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpirationMillis))
                 .signWith(secretKey, SignatureAlgorithm.HS512)
                 .compact();
     }
 
-    public String extractEmail(String token) {
+    public Long extractMemberId(String token) {
         try {
             return Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload()
-                    .get(EMAIL_CLAIM, String.class);
+                    .get(MEMBER_ID_CLAIM, Long.class);
         } catch (Exception e) {
             throw new ForbiddenException("유효하지 않은 토큰입니다.");
         }
