@@ -77,11 +77,11 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> loginByEmailPassword(@RequestBody User user) {
-        Long id = userService.authenticateUser(user.getEmail(), user.getPassword());
-        if (id == null) {
+        Optional<User> userOptional = userService.authenticateUser(user.getEmail(), user.getPassword());
+        if (userOptional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        user.setId(id);
+        user.setId(userOptional.get().getId());
 
         String token = userService.generateToken(user.getEmail());
         Map<String, String> response = new HashMap<>();
