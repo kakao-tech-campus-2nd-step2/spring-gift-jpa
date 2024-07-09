@@ -20,7 +20,6 @@ public class Product {
   @Column(nullable = false)
   private int price;
   @Column(name = "image_url", nullable = false)
-  private int price;
   private String imageUrl;
 
   public Product() {
