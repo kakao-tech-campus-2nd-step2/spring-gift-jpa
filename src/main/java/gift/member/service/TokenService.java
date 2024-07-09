@@ -4,6 +4,7 @@ import gift.exception.UnauthorizedException;
 import gift.member.model.Member;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -12,17 +13,20 @@ import java.util.Base64;
 
 @Service
 public class TokenService {
+    private static String secretKey = "";
 
-    private static final String SECRET_KEY = "myToken-key"; // 비밀 키 설정
-    private static final byte[] SECRET_KEY_BYTES = SECRET_KEY.getBytes();
+    public TokenService(@Value("${jwt.secret}") String secretKey) {
+        this.secretKey = secretKey;
+    }
 
     // JWT 토큰 생성
     public static String generateToken(Member member) {
         return Jwts.builder()
                 .setSubject(member.email())
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY_BYTES)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
+
 
     // 인증되지 않은 토큰을 제공한 경우
     public void validateToken(String token) {
@@ -45,7 +49,7 @@ public class TokenService {
 
             // 헤더와 페이로드를 사용하여 서명 생성
             String signingInput = header + "." + payload;
-            Key signingKey = new SecretKeySpec(SECRET_KEY_BYTES, SignatureAlgorithm.HS256.getJcaName());
+            Key signingKey = new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS256.getJcaName());
 
             String expectedSignature = Base64.getUrlEncoder()
                     .withoutPadding()

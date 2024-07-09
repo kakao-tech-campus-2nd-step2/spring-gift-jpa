@@ -1,6 +1,7 @@
 package gift.member.repository;
 
 import gift.member.model.Member;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.sql.*;
@@ -16,25 +17,7 @@ public interface MemberRepository extends CrudRepository<Member, Long> {
     String SQL_INSERT_MEMBER = "INSERT INTO member (email, password) VALUES (?, ?)";
     String SQL_FIND_BY_EMAIL_AND_PASSWORD = "SELECT * FROM member WHERE email = ? AND password = ?";
 
-    // 이메일과 비밀번호로 회원 찾기
-    default Member findByEmailAndPassword(String email, String password) {
-        Member member = null;
-        try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(SQL_FIND_BY_EMAIL_AND_PASSWORD)) {
+    @Query("SELECT * FROM member WHERE email = :email AND password = :password")
+    Member findByEmailAndPassword(String email, String password);
 
-            stmt.setString(1, email);
-            stmt.setString(2, password);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                member = new Member();
-                member.email(rs.getString("email"));
-                member.password(rs.getString("password"));
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        return member;
-    }
 }

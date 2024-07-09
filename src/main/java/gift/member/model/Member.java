@@ -35,4 +35,8 @@ public class Member {
     public void password(String password) {
         this.password = password;
     }
+
+    public void email(String email) {
+
+    }
 }
