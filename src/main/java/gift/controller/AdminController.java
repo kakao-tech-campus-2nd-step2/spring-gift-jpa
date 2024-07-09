@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.domain.Product;
+import gift.domain.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -29,8 +29,8 @@ public class AdminController {
     }
 
     @PostMapping("/add")
-    public String addProduct(@Valid @ModelAttribute("product") Product product) {
-        productService.addProduct(product);
+    public String addProduct(@Valid @ModelAttribute("product") ProductDTO productDTO) {
+        productService.addProduct(productDTO);
         return "redirect:/admin/products";
     }
 
@@ -47,8 +47,8 @@ public class AdminController {
     }
 
     @PutMapping( "edit/{id}")
-    public String updateProduct(@PathVariable int id, @Valid @ModelAttribute("product") Product product) {
-        productService.updateProduct(id, product);
+    public String updateProduct(@PathVariable int id, @Valid @ModelAttribute("product") ProductDTO productDTO) {
+        productService.updateProduct(id, productDTO);
         return "redirect:/admin/products";
     }
 }

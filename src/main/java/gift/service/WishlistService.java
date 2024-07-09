@@ -1,7 +1,9 @@
 package gift.service;
 
-import gift.domain.WishlistItem;
-import gift.domain.WishlistDAO;
+import gift.domain.MemberRepository;
+import gift.domain.ProductRepository;
+import gift.domain.Wishlist;
+import gift.domain.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,36 +14,46 @@ import java.util.NoSuchElementException;
 @Service
 public class WishlistService {
     @Autowired
-    private final WishlistDAO wishlistDAO;
+    private final WishlistRepository wishlistRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
-    public WishlistService(WishlistDAO wishlistDAO) {
-        this.wishlistDAO = wishlistDAO;
-        wishlistDAO.create();
+    public WishlistService(WishlistRepository wishlistRepository) {
+        this.wishlistRepository = wishlistRepository;
     }
 
-    public List<WishlistItem> getAllWishlist(String token) {
+    public List<Wishlist> getAllWishlist(String token) {
+        var member_id = memberRepository.searchIdByToken(token);
         try {
-            return wishlistDAO.selectAll(token);
+            return wishlistRepository.findByMember_id(member_id);
         } catch(Exception e) {
             return null;
         }
     }
 
-    public void deleteItem(String token, long id) {
-        if(isItem(token, id)) {
-            wishlistDAO.delete(token, id);
+    public void deleteItem(String token, int product_id) {
+        var member_id = memberRepository.searchIdByToken(token);
+        if(isItem(member_id, product_id)) {
+            wishlistRepository.deleteByMember_idAndMember_id(member_id, product_id);
         }
         else {
             throw new NoSuchElementException();
         }
     }
 
-    public void changeNum(String token, long id, long num) {
+    public void changeNum(String token, int product_id, int num) {
+        var member_id = memberRepository.searchIdByToken(token);
+        var member = memberRepository.findById(member_id);
+        var product = productRepository.findById(product_id);
+
         try {
             if (num == 0) {
-                deleteItem(token, id);
+                wishlistRepository.deleteByMember_idAndMember_id(member_id, product_id);
             } else {
-                wishlistDAO.updateNum(token, id, num);
+                var wishlist = new Wishlist(member, product, num);
+                wishlistRepository.save(wishlist);
             }
         }
         catch(Exception e) {
@@ -49,12 +61,19 @@ public class WishlistService {
         }
     }
 
-    public void addItem(String token, long id) {
+    public void addItem(String token, int product_id) {
+        var member_id = memberRepository.searchIdByToken(token);
+        var member = memberRepository.findById(member_id);
+        var product = productRepository.findById(product_id);
+
         try {
-            if (isItem(token, id)) {
-                wishlistDAO.updateNum(token, id, wishlistDAO.selectNumByItem(token, id));
+            if (isItem(member_id, product_id)) {
+                var num = wishlistRepository.searchNumbyMember_idAndProduct_id(member_id, product_id);
+                var wishlist = new Wishlist(member, product, num+1);
+                wishlistRepository.save(wishlist);
             } else {
-                wishlistDAO.insert(token, id);
+                var wishlist = new Wishlist(member, product, 1);
+                wishlistRepository.save(wishlist);
             }
         }
         catch(Exception e) {
@@ -62,7 +81,7 @@ public class WishlistService {
         }
     }
 
-    public boolean isItem(String token, long id) {
-        return wishlistDAO.selectNumByItem(token, id) > 0;
+    public boolean isItem(int member_id, int product_id) {
+        return wishlistRepository.searchNumbyMember_idAndProduct_id(member_id, product_id) > 0;
     }
 }

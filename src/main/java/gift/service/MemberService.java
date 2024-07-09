@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.domain.Member;
-import gift.domain.MemberDAO;
+
+import gift.domain.MemberRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +13,16 @@ import java.util.Objects;
 @Service
 public class MemberService {
     @Autowired
-    private final MemberDAO memberDAO;
+    private final MemberRepository memberRepository;
 
-    public MemberService(MemberDAO memberDAO){
-        this.memberDAO = memberDAO;
-        memberDAO.create();
+    public MemberService(MemberRepository memberRepository){
+        this.memberRepository = memberRepository;
     }
 
-    public String signUp(Member member) {
+    public String signUp(String email, String password) {
         try {
-            String token = getToken(member);
-            memberDAO.insert(member, token);
+            String token = getToken(email, password);
+            memberRepository.save(email, password, token);
             return token;
         }
         catch (Exception e) {
@@ -31,9 +30,9 @@ public class MemberService {
         }
     }
 
-    public String login(Member member) {
+    public String login(String email, String password) {
         try {
-            return memberDAO.selectTokenbyMember(member);
+            return memberRepository.searchTokenByEmailAndPassword(email, password);
         }
         catch (Exception e) {
             throw new IllegalArgumentException("Invalid username or password");
@@ -42,20 +41,20 @@ public class MemberService {
 
     public boolean isValidToken(String token) {
         try {
-            var ftoken = memberDAO.selectTokenbyToken(token);
+            var ftoken = memberRepository.searchTokenByToken(token);
             return Objects.equals(ftoken, token);
         } catch (Exception e) {
             return false;
         }
     }
 
-    private String getToken(Member member){
+    private String getToken(String email, String password){
         String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
 
         String accessToken = Jwts.builder()
-                .setSubject(member.email())
-                .claim("email", member.email())
-                .claim("password", member.password())
+                .setSubject(email)
+                .claim("email", email)
+                .claim("password", password)
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
                 .compact();
         return accessToken;
