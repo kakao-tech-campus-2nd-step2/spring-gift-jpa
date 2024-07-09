@@ -26,14 +26,14 @@ class ProductOptionServiceTest {
 
     @BeforeEach
     @DisplayName("옵션에 대한 작업을 수행하기 위한 상품 추가 작업")
-    void setUp() {
+    void setBaseData() {
         var productRequest = new ProductRequest("아이폰16pro", 1800000, "https://image.zdnet.co.kr/2024/03/21/29acda4f841885d2122750fbff5cbd9d.jpg");
         product = productService.addProduct(productRequest, MemberRole.MEMBER);
     }
 
     @AfterEach
     @DisplayName("다른 테스트에서 생성된 상품 옵션을 삭제하기 위한 작업")
-    void tearDown() {
+    void deleteBaseData() {
         productService.deleteProduct(product.id());
     }
 

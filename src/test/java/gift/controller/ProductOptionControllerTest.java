@@ -6,6 +6,7 @@ import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.model.MemberRole;
 import gift.service.ProductService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,9 +34,15 @@ class ProductOptionControllerTest {
 
     @BeforeEach
     @DisplayName("옵션에 대한 작업을 수행하기 위한 상품 추가 작업")
-    void setUp() {
+    void setBaseData() {
         var productRequest = new ProductRequest("아이폰16pro", 1800000, "https://image.zdnet.co.kr/2024/03/21/29acda4f841885d2122750fbff5cbd9d.jpg");
         product = productService.addProduct(productRequest, MemberRole.MEMBER);
+    }
+
+    @AfterEach
+    @DisplayName("추가한 상품에 대한 삭제 작업 수행")
+    void deleteBaseData(){
+        productService.deleteProduct(product.id());
     }
 
     @Test

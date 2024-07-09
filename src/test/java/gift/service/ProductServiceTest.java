@@ -9,8 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 class ProductServiceTest {
 
     @Autowired
@@ -18,7 +20,7 @@ class ProductServiceTest {
 
     @AfterEach
     @DisplayName("상품 레포지토리 초기화하기")
-    void clearAll() {
+    void deleteBaseData() {
         var products = productService.getProducts();
         for (var product : products) {
             productService.deleteProduct(product.id());

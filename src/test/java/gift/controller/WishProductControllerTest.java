@@ -3,12 +3,19 @@ package gift.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.LoginRequest;
+import gift.dto.ProductRequest;
+import gift.dto.RegisterRequest;
 import gift.dto.WishProductAddRequest;
 import gift.dto.WishProductResponse;
 import gift.dto.WishProductUpdateRequest;
+import gift.model.MemberRole;
+import gift.reflection.AuthTestReflectionComponent;
+import gift.service.MemberService;
+import gift.service.ProductService;
 import gift.service.WishProductService;
 import gift.service.auth.AuthService;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,15 +45,41 @@ class WishProductControllerTest {
     private WishProductService wishProductService;
     @Autowired
     private AuthService authService;
+    @Autowired
+    private AuthTestReflectionComponent authTestReflectionComponent;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private ProductService productService;
     private String managerToken;
     private String memberToken;
-    private final Long memberId = 2L;
+    private Long managerId;
+    private Long memberId;
+    private Long product1Id;
+    private Long product2Id;
 
     @BeforeEach
     @DisplayName("관리자, 이용자의 토큰 값 세팅하기")
-    void setAccessToken() {
-        managerToken = authService.login(new LoginRequest("admin@naver.com", "password")).token();
-        memberToken = authService.login(new LoginRequest("member@naver.com", "password")).token();
+    void setBaseData() {
+        var registerManagerRequest = new RegisterRequest("관리자", "admin@naver.com", "password", "ADMIN");
+        var registerMemberRequest = new RegisterRequest("멤버", "'member@naver.com'", "password", "MEMBER");
+        managerToken = authService.register(registerManagerRequest).token();
+        memberToken = authService.register(registerMemberRequest).token();
+        managerId = authTestReflectionComponent.getMemberIdWithToken(managerToken);
+        memberId = authTestReflectionComponent.getMemberIdWithToken(memberToken);
+        var product1Request = new ProductRequest("Apple 정품 아이폰 15", 1700000, "https://lh5.googleusercontent.com/proxy/M33I-cZvIHdtsY_uyd5R-4KXJ8uZBBAgVw4bmZagF1T5krxkC6AHpxPUvU_02yDsRljgOHwa-cUTlhgYG_bSNJbbmnf6k9OOPRQyvPf5m4nD");
+        var product2Request = new ProductRequest("Apple 정품 2024 아이패드 에어 11 M2칩", 900000, "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcThcspVP4EUYTEiUD0udG3dzUZDZOQH9eopFO7_7zZmIafSouktNeyQn8jzKwYTMxcQwaWN_iglo8LAus6DJTG_ogEaU_tHSOtNL3wiYJhYqisdTuMRT2o97h503C6gWd9BxV8_ow&usqp=CAc");
+        product1Id = productService.addProduct(product1Request, MemberRole.MEMBER).id();
+        product2Id = productService.addProduct(product2Request, MemberRole.MEMBER).id();
+    }
+
+    @AfterEach
+    @DisplayName("이미 있는 데이터 지워 beforeEach 에서 예외가 발생하지 않도록 설정")
+    void deleteBaseData() {
+        memberService.deleteMember(managerId);
+        memberService.deleteMember(memberId);
+        productService.deleteProduct(product1Id);
+        productService.deleteProduct(product2Id);
     }
 
     @Test
@@ -67,7 +100,7 @@ class WishProductControllerTest {
         var result = mockMvc.perform(post("/api/wishes/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken)
-                .content(objectMapper.writeValueAsString(new WishProductAddRequest(1L, 10))));
+                .content(objectMapper.writeValueAsString(new WishProductAddRequest(product1Id, 10))));
 
         result.andExpect(status().isCreated());
     }
@@ -76,7 +109,7 @@ class WishProductControllerTest {
     @DisplayName("위시 리스트 상품 조회하기")
     void readWishProductSuccess() throws Exception {
         var wishProduct = wishProductService
-                .addWishProduct(new WishProductAddRequest(1L, 10), memberId);
+                .addWishProduct(new WishProductAddRequest(product1Id, 10), memberId);
         var readResult = mockMvc.perform(get("/api/wishes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken));
@@ -93,7 +126,7 @@ class WishProductControllerTest {
     @Test
     @DisplayName("이미 위시 리스트에 저장된 상품 추가로 저장시 수량이 늘어난다")
     void addWishProductAlreadyExistWishProductSuccess() throws Exception {
-        var wishProductAddRequest = new WishProductAddRequest(1L, 10);
+        var wishProductAddRequest = new WishProductAddRequest(product1Id, 10);
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, memberId);
         var addResult = mockMvc.perform(post("/api/wishes/add")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -113,8 +146,8 @@ class WishProductControllerTest {
     @Test
     @DisplayName("이용자끼리의 위시리스트가 다르다")
     void addWishProductAndReadMemberAndManagerSuccess() throws Exception {
-        var wishProduct1AddRequest = new WishProductAddRequest(1L, 10);
-        var wishProduct2AddRequest = new WishProductAddRequest(2L, 10);
+        var wishProduct1AddRequest = new WishProductAddRequest(product1Id, 10);
+        var wishProduct2AddRequest = new WishProductAddRequest(product2Id, 10);
 
         wishProductService.addWishProduct(wishProduct1AddRequest, memberId);
         wishProductService.addWishProduct(wishProduct2AddRequest, memberId);
@@ -140,7 +173,7 @@ class WishProductControllerTest {
     @DisplayName("위시 리스트 수량 변경하기")
     void addWishProductAndUpdateCountSuccess() throws Exception {
         var wishProduct = wishProductService
-                .addWishProduct(new WishProductAddRequest(1L, 10), memberId);
+                .addWishProduct(new WishProductAddRequest(product1Id, 10), memberId);
 
         mockMvc.perform(put("/api/wishes/update/" + wishProduct.id())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -159,7 +192,7 @@ class WishProductControllerTest {
     @DisplayName("위시 리스트 상품 추가후 수량 0으로 변경하기")
     void addWishProductAndUpdateCountZeroSuccess() throws Exception {
         var wishProduct = wishProductService
-                .addWishProduct(new WishProductAddRequest(1L, 10),
+                .addWishProduct(new WishProductAddRequest(product1Id, 10),
                         memberId);
 
         mockMvc.perform(put("/api/wishes/update/" + wishProduct.id())

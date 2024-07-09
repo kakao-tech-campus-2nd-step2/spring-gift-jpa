@@ -6,6 +6,7 @@ import gift.dto.WishProductAddRequest;
 import gift.dto.WishProductUpdateRequest;
 import gift.exception.ForeignKeyConstraintViolationException;
 import gift.exception.NotFoundElementException;
+import gift.model.Member;
 import gift.model.MemberRole;
 import gift.reflection.AuthTestReflectionComponent;
 import gift.service.auth.AuthService;
@@ -17,8 +18,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 class WishProductServiceTest {
 
     @Autowired
@@ -40,7 +43,7 @@ class WishProductServiceTest {
 
     @BeforeEach
     @DisplayName("멤버, 상품 기본 데이터 세팅하기")
-    void addBaseData(){
+    void addBaseData() {
         var registerManagerRequest = new RegisterRequest("관리자", "admin@naver.com", "password", "ADMIN");
         var registerMemberRequest = new RegisterRequest("멤버", "'member@naver.com'", "password", "MEMBER");
         managerId = authTestReflectionComponent.getMemberIdWithToken(authService.register(registerManagerRequest).token());
@@ -53,7 +56,7 @@ class WishProductServiceTest {
 
     @AfterEach
     @DisplayName("이미 있는 데이터 지워 beforeEach 에서 예외가 발생하지 않도록 설정")
-    void deleteBaseData(){
+    void deleteBaseData() {
         memberService.deleteMember(managerId);
         memberService.deleteMember(memberId);
         productService.deleteProduct(product1Id);
@@ -126,6 +129,23 @@ class WishProductServiceTest {
 
         wishProductService.deleteWishProduct(managerWishProduct1.id());
         wishProductService.deleteWishProduct(managerWishProduct2.id());
+    }
+
+    @Test
+    @DisplayName("추가된 위시리스트 상품을 이용자 객체에서 조회할 수 있다.")
+    void addWishProductAndFindFromMemberEntity() {
+        var wishProduct1AddRequest = new WishProductAddRequest(product1Id, 5);
+        var wishProduct2AddRequest = new WishProductAddRequest(product2Id, 5);
+
+        var managerWishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
+        var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
+
+        Assertions.assertThat(memberService.findMemberWithId(managerId).getWishes().size()).isEqualTo(2);
+
+        wishProductService.deleteWishProduct(managerWishProduct1.id());
+        wishProductService.deleteWishProduct(managerWishProduct2.id());
+
+        Assertions.assertThat(memberService.findMemberWithId(managerId).getWishes().size()).isEqualTo(0);
     }
 
     @Test

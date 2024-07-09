@@ -3,7 +3,11 @@ package gift.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.LoginRequest;
 import gift.dto.ProductRequest;
+import gift.dto.RegisterRequest;
+import gift.reflection.AuthTestReflectionComponent;
+import gift.service.MemberService;
 import gift.service.auth.AuthService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,14 +31,31 @@ class ProductControllerTest {
     private ObjectMapper objectMapper;
     @Autowired
     private AuthService authService;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private AuthTestReflectionComponent authTestReflectionComponent;
     private String managerToken;
     private String memberToken;
+    private Long managerId;
+    private Long memberId;
 
     @BeforeEach
     @DisplayName("관리자, 이용자의 토큰 값 세팅하기")
-    void setAccessToken() {
-        managerToken = authService.login(new LoginRequest("admin@naver.com", "password")).token();
-        memberToken = authService.login(new LoginRequest("member@naver.com", "password")).token();
+    void setBaseData() {
+        var registerManagerRequest = new RegisterRequest("관리자", "admin@naver.com", "password", "ADMIN");
+        var registerMemberRequest = new RegisterRequest("멤버", "'member@naver.com'", "password", "MEMBER");
+        managerToken = authService.register(registerManagerRequest).token();
+        memberToken = authService.register(registerMemberRequest).token();
+        managerId = authTestReflectionComponent.getMemberIdWithToken(managerToken);
+        memberId = authTestReflectionComponent.getMemberIdWithToken(memberToken);
+    }
+
+    @AfterEach
+    @DisplayName("관리자, 이용자의 탈퇴하기")
+    void deleteBaseData() {
+        memberService.deleteMember(managerId);
+        memberService.deleteMember(memberId);
     }
 
     @Test
