@@ -28,7 +28,7 @@ public class AuthService {
     }
 
     public void register(MemberDto memberDto) {
-        validateMemberNotExist(memberDto);
+        validateMemberExist(memberDto);
 
         Member member = new Member(memberDto.email(), memberDto.password());
         authRepository.save(member);
@@ -59,7 +59,7 @@ public class AuthService {
             .compact();
     }
 
-    private void validateMemberNotExist(MemberDto memberDto) {
+    private void validateMemberExist(MemberDto memberDto) {
         boolean isMemberExist = authRepository.existsByEmail(memberDto.email());
 
         if (isMemberExist) {

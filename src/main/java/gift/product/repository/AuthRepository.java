@@ -1,52 +1,48 @@
 package gift.product.repository;
 
 import gift.product.model.Member;
+import jakarta.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class AuthRepository {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
+    private final EntityManager em;
 
-    public AuthRepository(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-            .withTableName("Member")
-            .usingGeneratedKeyColumns("id");
+    public AuthRepository(EntityManager em) {
+        this.em = em;
     }
 
     public boolean existsByEmail(String email) {
-        var sql = "SELECT * FROM Member WHERE email = ?";
+        String jpql = "SELECT COUNT(m) FROM Member m WHERE m.email = :email";
 
-        return !jdbcTemplate.query(sql, (resultSet, rowNum) -> 0, email).isEmpty();
+        Long count = em.createQuery(jpql, Long.class)
+            .setParameter("email", email)
+            .getSingleResult();
+
+        return count > 0;
     }
 
     public boolean existsById(Long id) {
-        var sql = "SELECT * FROM Member WHERE id = ?";
-
-        return !jdbcTemplate.query(sql, (resultSet, rowNum) -> 0, id).isEmpty();
+        return em.find(Member.class, id) != null;
     }
 
+    @Transactional
     public void save(Member member) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("email", member.getEmail());
-        params.put("password", member.getPassword());
-
-        simpleJdbcInsert.execute(params);
+        em.persist(member);
     }
 
     public Member findByEmail(String email) {
-        var sql = "SELECT id, password FROM Member WHERE email = ?";
+        String jpql = "SELECT m FROM Member m WHERE m.email = :email";
 
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-            new Member(resultSet.getLong("id"),
-                email,
-                resultSet.getString("password")), email);
+        return em.createQuery(jpql, Member.class)
+            .setParameter("email", email)
+            .getSingleResult();
     }
 }
