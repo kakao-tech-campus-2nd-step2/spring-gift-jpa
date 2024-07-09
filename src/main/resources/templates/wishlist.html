@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>위시 리스트</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+<h1>위시 리스트</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>상품 이름</th>
+        <th>수량</th>
+        <th>가격</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${wishlist}">
+        <td th:text="${item.productId}"></td>
+        <td th:text="${item.productName}"></td>
+        <td th:text="${item.count}"></td>
+        <td th:text="${item.price}"></td>
+        <td>
+            <form onsubmit="removeFromWishlist(this); return false;" style="display:inline">
+                <input type="hidden" name="productId" th:value="${item.productId}"/>
+                <input type="hidden" name="productName" th:value="${item.productName}"/>
+                <input type="hidden" name="count" th:value="${item.count}"/>
+                <input type="number" name="quantity" min="1" value="1" style="width: 50px;"/>
+                <button type="submit">Remove</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    function removeFromWishlist(form) {
+        var productName = form.querySelector('input[name="productName"]').value;
+        var productId = form.querySelector('input[name="productId"]').value;
+        var count = form.querySelector('input[name="count"]').value;
+        var quantity = form.querySelector('input[name="quantity"]').value;
+
+        fetch(`/wishlist/remove/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: 0,
+                productId: productId,
+                productName: productName,
+                count: parseInt(count, 10),
+                quantity: parseInt(quantity, 10),
+                price: 0
+            }),
+            credentials: 'include'
+        })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload(); // 성공 시 페이지 새로고침
+                } else {
+                    alert('Error: ' + response.statusText);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+
+</body>
+</html>

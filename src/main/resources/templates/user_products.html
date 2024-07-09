@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 관리</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+<h1>Product Management</h1>
+
+<!-- 위시리스트 보기 버튼 -->
+<div style="margin-bottom: 20px;">
+    <a th:href="@{/wishlist}" onclick="preventDefault(); getWishlist();" class="button">위시리스트 보기</a>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}">1</td>
+        <td th:text="${product.name}">Name</td>
+        <td th:text="${product.price}">Price</td>
+        <td><img th:src="${product.imageUrl}" alt="Product Image" width="100"/></td>
+        <td>
+            <div style="display:inline">
+                <input type="hidden" name="productId" th:value="${product.id}"/>
+                <input type="hidden" name="productName" th:value="${product.name}"/>
+                <div>
+                    <button type="button" onclick="changeQuantity(this, -1)">-</button>
+                    <input type="number" name="count" value="1" min="1" style="width: 50px; text-align: center;"/>
+                    <button type="button" onclick="changeQuantity(this, 1)">+</button>
+                </div>
+                <button type="button" onclick="addToWishlistWithParams(this)">위시리스트에 담기</button>
+                <input type="hidden" name="price" th:value="${product.price}"/>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    function changeQuantity(button, delta) {
+        var input = button.parentNode.querySelector('input[name="count"]');
+        var newValue = parseInt(input.value) + delta;
+        if (newValue > 0) {
+            input.value = newValue;
+        }
+    }
+
+    function addToWishlistWithParams(button) {
+        var row = button.closest('tr');
+        var productId = row.querySelector('input[name="productId"]').value;
+        var productName = row.querySelector('input[name="productName"]').value;
+        var quantity = row.querySelector('input[name="count"]').value;
+        var price = row.querySelector('input[name="price"]').value;
+        addToWishlist(productId, quantity, price, productName);
+    }
+
+    function addToWishlist(productId, quantity, price, productName) {
+        fetch('/wishlist/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: 0,
+                productId: productId,
+                count: quantity,
+                quantity: 0,
+                productName: productName,
+                price: price
+            }),
+            credentials: 'include'
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => console.log(data))
+            .catch(error => console.error('There has been a problem with your fetch operation:', error));
+    }
+</script>
+</body>
+</html>

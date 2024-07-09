@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.id} != null ? 'Update Product' : 'Add Product'">Product Form</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+</head>
+<body>
+<h1 th:text="${product.id} != null ? 'Edit Product' : 'Add Product'"></h1>
+<form th:action="${product.id} != null ? '/api/products/update/' + ${product.id} : '/api/products/create'"
+      method="post">
+    <input type="hidden" th:if="${product.id}" th:value="${product.id}" name="id"/>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" th:value="${product.name}" required/>
+    <br>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" th:value="${product.price}" required/>
+    <br>
+    <label for="imageUrl">Image URL:</label>
+    <input type="url" id="imageUrl" name="imageUrl" th:value="${product.imageUrl}" required/>
+    <br>
+    <!-- 에러 메시지 표시 -->
+    <div th:if="${error}" style="color: red;">
+        <p th:text="${error}"></p>
+    </div>
+    <button type="submit" th:text="${product.id} != null ? 'Update' : 'Save'">Save</button>
+    <a href="#" th:href="@{/api/products}">Cancel</a>
+</form>
+</body>
+</html>
