@@ -23,7 +23,7 @@ public class WishlistService {
 
     public void addItemToWishlist(WishlistNameRequest wishlistNameRequest, String token) {
         String memberId = tokenService.getMemberIdFromToken(token);
-        WishlistItem item = new WishlistItem(Long.parseLong(memberId), wishlistNameRequest.getItemName());
+        WishlistItem item = new WishlistItem(Long.parseLong(memberId), wishlistNameRequest.getProductId());
         wishlistRepository.addItem(item);
     }
 

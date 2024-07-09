@@ -18,8 +18,8 @@ public class WishlistJDBCRepository implements WishlistRepository {
     }
     @Override
     public void addItem(WishlistItem item) {
-        String sql = "INSERT INTO wishlist (member_id, item_name) VALUES (?, ?)";
-        jdbcTemplate.update(sql, item.getMemberId(), item.getItemName());
+        String sql = "INSERT INTO wishlist (member_id, product_id) VALUES (?, ?)";
+        jdbcTemplate.update(sql, item.getMemberId(), item.getProductId());
         Long id = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
         item.setId(id); // WishlistItem 객체에 자동 생성된 id 할당
     }
@@ -38,7 +38,7 @@ public class WishlistJDBCRepository implements WishlistRepository {
         return (rs, rowNum) -> new WishlistItem(
                 rs.getLong("id"),
                 rs.getLong("member_id"),
-                rs.getString("item_name")
+                rs.getLong("product_id")
         );
     }
 }

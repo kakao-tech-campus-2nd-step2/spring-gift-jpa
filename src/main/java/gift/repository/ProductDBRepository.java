@@ -80,7 +80,7 @@ public class ProductDBRepository implements ProductRepository {
         return (rs, rowNum) -> new Product(
                rs.getLong("id"),
                rs.getString("name"),
-               rs.getLong("price"),
+               rs.getInt("price"),
                rs.getString("imageUrl")
        );
     }
