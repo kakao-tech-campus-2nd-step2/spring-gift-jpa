@@ -47,7 +47,6 @@ class MemberRepositoryTest {
         assertThat(actual).isTrue();
     }
 
-    @Test
     void save(String email, String password, Role role) {
         // given
         Member member = new Member(null, email, password, role);
