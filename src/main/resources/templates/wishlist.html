@@ -2,11 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>위시 리스트</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const token = localStorage.getItem('jwtToken');
+      if (!token) {
+        alert('로그인이 필요합니다.');
+        window.location.href = '/users/login';
+      }
+
+      // 제품 추가 버튼 클릭 이벤트
+      document.querySelector('.btn.btn-primary').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        console.log('버튼클릭');
+
+        fetch('/wishlist/add', {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => {
+          if (response.status === 200) {
+            return response.text();
+          } else {
+            throw new Error('제품 추가 페이지를 불러오는 데 실패했습니다.');
+          }
+        })
+        .then(html => {
+          document.body.innerHTML = html;
+        })
+        .catch(error => alert(error.message));
+      });
+    });
+  </script>
 </head>
 <body>
 <h1>위시 리스트</h1>
 <div>
-  <a th:href="@{/wishlist/add}" class="btn btn-primary">제품 추가</a>
+  <a href="#" class="btn btn-primary">제품 추가</a>
 </div>
 <table>
   <thead>
@@ -28,33 +63,13 @@
     <td th:text="${product.price}"></td>
     <td th:text="${product.imageUrl}"></td>
     <td>
-      <button onclick="removeProduct(${product.id})">삭제</button>
+      <form th:action="@{/wishlist/remove/{productId}(productId=${product.id})}" method="post" style="display:inline;">
+        <input type="hidden" name="_method" value="DELETE" />
+        <button type="submit">삭제</button>
+      </form>
     </td>
   </tr>
   </tbody>
 </table>
-
-<script>
-  function removeProduct(productId) {
-    const token = localStorage.getItem('jwtToken');
-    fetch(`/wishlist/remove/${productId}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
-      if (response.ok) {
-        alert("상품이 삭제되었습니다.");
-        window.location.reload();
-      } else {
-        return response.text().then(text => { throw new Error(text) });
-      }
-    })
-    .catch(error => alert('Error: ' + error.message));
-  }
-</script>
-
 </body>
 </html>
