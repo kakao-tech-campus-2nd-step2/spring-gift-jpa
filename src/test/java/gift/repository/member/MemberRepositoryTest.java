@@ -53,6 +53,8 @@ class MemberRepositoryTest {
                 .build();
 
         Member savedMember = memberRepository.save(member);
+        entityManager.flush();
+        entityManager.clear();
 
         //when
         Member findMember = memberRepository.findById(savedMember.getId()).get();
@@ -87,6 +89,8 @@ class MemberRepositoryTest {
         memberRepository.save(member1);
         memberRepository.save(member2);
         memberRepository.save(member3);
+        entityManager.flush();
+        entityManager.clear();
 
         //when
         List<Member> members = memberRepository.findAll();
@@ -111,6 +115,8 @@ class MemberRepositoryTest {
 
         Member savedMember = memberRepository.save(member1);
         memberRepository.save(member2);
+        entityManager.flush();
+        entityManager.clear();
 
         //when
         Member findMember = memberRepository.findMemberByEmail(member1.getEmail()).get();
@@ -139,6 +145,8 @@ class MemberRepositoryTest {
 
         Member savedMember = memberRepository.save(member1);
         memberRepository.save(member2);
+        entityManager.flush();
+        entityManager.clear();
 
         //when
         Member findMember = memberRepository.findMemberByEmailAndPassword(member1.getEmail(), member1.getPassword()).get();

@@ -56,6 +56,8 @@ class ProductRepositoryTest {
                 .build();
 
         Product savedProduct = productRepository.save(product);
+        entityManager.flush();
+        entityManager.clear();
 
         //when
         Product findProduct = productRepository.findById(savedProduct.getId()).get();
@@ -94,6 +96,8 @@ class ProductRepositoryTest {
         productRepository.save(product1);
         productRepository.save(product2);
         productRepository.save(product3);
+        entityManager.flush();
+        entityManager.clear();
 
         //when
         List<Product> products = productRepository.findAll();
