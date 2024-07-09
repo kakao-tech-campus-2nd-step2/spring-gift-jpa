@@ -27,7 +27,7 @@ public class MemberService {
     }
 
     public boolean hasDuplicatedEmail(String email) {
-        return memberRepository.hasDuplicatedEmail(email);
+        return memberRepository.findByEmail(email).isPresent();
     }
 
 }
