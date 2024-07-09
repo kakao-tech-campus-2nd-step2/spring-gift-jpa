@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.vo.MemberRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -8,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JwtUtil {
@@ -19,25 +20,24 @@ public class JwtUtil {
 
     /**
      *
-     * @param username: Username
+     * @param email: Email
      * @return JWT 토큰 생성 후 반환
      */
-    public String generateToken(String username) {
+    public String generateToken(Long userId, String email) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId); // 사용자 ID를 클레임에 추가한다.
+        claims.put("email", email); // 사용자 이메일을 클레임에 추가한다.
+
         return Jwts.builder()
-                .setSubject(username)
+                .setClaims(claims)
                 .setIssuedAt(new Date(new Date().getTime()))
                 .setExpiration(new Date(new Date().getTime() + TOKEN_TIME))
                 .signWith(KEY)
                 .compact();
     }
 
-    /**
-     * Token에서 Member: email 추출
-     * @param token JWT 토큰
-     * @return Member의 이메일 String
-     */
-    public String getMemberEmailFromToken(String token) {
-        return getClaims(token).getSubject();
+    public Long getMemberIdFromToken(String token) {
+        return getClaims(token).get("userId", Long.class);
     }
 
     /**
