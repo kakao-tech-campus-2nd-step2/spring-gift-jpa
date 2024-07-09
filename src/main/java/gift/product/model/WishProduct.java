@@ -1,40 +1,44 @@
 package gift.product.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 
+@Entity
 public class WishProduct {
 
-    @NotNull(message = "ID 속성이 누락되었습니다.")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@NotNull(message = "ID 속성이 누락되었습니다.")
     private Long id;
 
-    @NotNull(message = "상품 정보가 누락되었습니다.")
+    @Column(nullable = false)
+    @NotNull(message = "희망하는 사람의 정보가 누락되었습니다.")
+    private Long memberId;
+
+    @Column(nullable = false)
+    @NotNull(message = "희망하는 상품의 정보가 누락되었습니다.")
     private Long productId;
 
-    @Positive(message = "위시리스트의 상품 갯수는 1이상이어야 합니다.")
-    private int count;
+    public WishProduct() {
 
-    @NotNull(message = "희망하는 사람의 정보가 누락되었습니다.")
-    private String memberEmail;
+    }
 
-    public WishProduct(Long id, Long productId, int count, String memberEmail) {
-        this.id = id;
+    public WishProduct(Long memberId, Long productId) {
+        this.memberId = memberId;
         this.productId = productId;
-        this.count = count;
-        this.memberEmail = memberEmail;
     }
 
     public Long getId() {
         return id;
     }
+    public Long getMemberId() {
+        return memberId;
+    }
     public Long getProductId() {
         return productId;
-    }
-
-    public int getCount() {
-        return count;
-    }
-    public String getMemberEmail() {
-        return memberEmail;
     }
 }

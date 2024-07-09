@@ -21,7 +21,6 @@ public class ProductRepositoryTest {
     @BeforeEach
     public void setUp() {
         product = new Product(
-            1L,
             "상품1",
             1500,
             "product1.images"
@@ -43,7 +42,7 @@ public class ProductRepositoryTest {
     void testSearchProductById() {
         Product savedProduct = productDao.save(product);
 
-        Optional<Product> retrievedProduct = productDao.findById(1L);
+        Optional<Product> retrievedProduct = productDao.findById(savedProduct.getId());
         System.out.println("삽입된 객체의 ID = " + savedProduct.getId());
 
         assertThat(retrievedProduct).isPresent();
@@ -66,7 +65,7 @@ public class ProductRepositoryTest {
 
         productDao.save(
             new Product(
-                saveProduct.get().getId(),
+                //saveProduct.get().getId(),
                 saveProduct.get().getName(),
                 2000,
                 saveProduct.get().getImageUrl()

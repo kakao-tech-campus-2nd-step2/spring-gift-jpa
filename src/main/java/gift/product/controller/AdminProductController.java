@@ -36,7 +36,7 @@ public class AdminProductController {
     @GetMapping("/register")
     public String showProductForm(Model model) {
         System.out.println("[ProductController] showProductForm()");
-        model.addAttribute("product", new Product(idCounter.incrementAndGet(), "", 0, ""));
+        model.addAttribute("product", new Product("", 0, ""));
         return "product-form";
     }
 
@@ -60,13 +60,13 @@ public class AdminProductController {
     }
 
     @PutMapping("/{id}")
-    public String updateProduct(@ModelAttribute Product product, BindingResult bindingResult, Model model) {
+    public String updateProduct(@PathVariable Long id, @ModelAttribute Product product, BindingResult bindingResult, Model model) {
         System.out.println("[ProductController] updateProduct()");
         if (bindingResult.hasErrors()) {
             model.addAttribute("product", product);
             return "product-form";
         }
-        productService.updateProduct(product);
+        productService.updateProduct(id, product);
         return "redirect:/admin/product/list";
     }
 

@@ -43,15 +43,15 @@ public class ApiWishListController {
         return wishListService.registerWishProduct(request, requestBody);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateCountWishProduct(HttpServletRequest request, @RequestBody Map<String, Long> requestBody, @PathVariable Long id) {
-        System.out.println("[ApiWishListController] updateCountWishProduct()");
-
-        if(requestBody.get("count") == 0)
-            return deleteWishProduct(request, id);
-
-        return wishListService.updateCountWishProduct(request, requestBody, id);
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<String> updateCountWishProduct(HttpServletRequest request, @RequestBody Map<String, Long> requestBody, @PathVariable Long id) {
+//        System.out.println("[ApiWishListController] updateCountWishProduct()");
+//
+//        if(requestBody.get("count") == 0)
+//            return deleteWishProduct(request, id);
+//
+//        return wishListService.updateCountWishProduct(request, requestBody, id);
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteWishProduct(HttpServletRequest request, @PathVariable Long id) {

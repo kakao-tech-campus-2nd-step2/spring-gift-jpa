@@ -28,9 +28,9 @@ public class ProductService {
         return ResponseEntity.status(HttpStatus.CREATED).body("Product registered successfully");
     }
 
-    public ResponseEntity<String> updateProduct(Product product) {
-        productValidation.updateValidation(product);
-        productDao.save(product);
+    public ResponseEntity<String> updateProduct(Long id, Product product) {
+        productValidation.updateValidation(id, product);
+        productDao.save(product);// product에 id추가해야함
         return ResponseEntity.status(HttpStatus.CREATED).body("Product update successfully");
     }
 

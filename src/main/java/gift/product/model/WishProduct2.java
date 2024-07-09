@@ -4,13 +4,11 @@ public class WishProduct2 {
     private String name;
     private int price;
     private String imageUrl;
-    private int count;
 
-    public WishProduct2(String name, int price, String imageUrl, int count) {
+    public WishProduct2(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.count = count;
     }
 
     public String getName() {
@@ -23,9 +21,5 @@ public class WishProduct2 {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public int getCount() {
-        return count;
     }
 }

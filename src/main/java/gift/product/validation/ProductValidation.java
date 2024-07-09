@@ -29,8 +29,8 @@ public class ProductValidation {
             throw new InstanceValueException("상품의 가격은 1 이상의 양의 정수만 가능합니다.");
     }
 
-    public void updateValidation(Product product) {
-        if(productDao.existsById(product.getId()))
+    public void updateValidation(Long id, Product product) {
+        if(productDao.existsById(id))
             throw new InvalidProductIdException("변경을 시도하는 상품의 ID가 존재하지 않습니다.");
         if(isNullInstance(product))
             throw new InstanceValueException("변경하는 상품의 상품의 하나 이상의 속성이 누락되었습니다. (상품의 가격은 0이 될 수 없습니다.)");

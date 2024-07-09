@@ -41,7 +41,7 @@ public class ApiProductController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
         System.out.println("[ProductController] updateProduct()");
-        return productService.updateProduct(new Product(id, product.getName(),product.getPrice(), product.getImageUrl()));
+        return productService.updateProduct(id, new Product(product.getName(),product.getPrice(), product.getImageUrl()));
     }
 
     @DeleteMapping("/{id}")

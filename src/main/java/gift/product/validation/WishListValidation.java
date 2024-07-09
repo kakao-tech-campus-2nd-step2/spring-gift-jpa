@@ -20,8 +20,4 @@ public class WishListValidation {
         return productService.existsById(id);
     }
 
-    public boolean isRegisterProduct(Long pId, String email) {
-        return wishListDao.existsByPId(pId, email);
-    }
-
 }

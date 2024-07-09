@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MemberDao extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email);
+    Long findIdByEmail(String email);
 }
