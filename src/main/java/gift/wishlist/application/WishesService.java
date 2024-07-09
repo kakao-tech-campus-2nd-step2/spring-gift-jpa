@@ -42,7 +42,10 @@ public class WishesService {
     }
 
     public List<Product> getWishlistOfMember(Long memberId) {
-        List<Long> productIdList = wishesRepository.findByMemberId(memberId);
+        List<Long> productIdList = wishesRepository.findByMemberId(memberId)
+                                                   .stream()
+                                                   .map(Wish::getProductId)
+                                                   .toList();
 
         return productRepository.findByIdIn(productIdList);
     }
