@@ -48,14 +48,14 @@ public class ProductService {
                 .toList();
     }
 
-    public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
-    }
-
     public Product findProductWithId(Long id) {
         var product = productRepository.findById(id);
         if (product.isEmpty()) throw new NotFoundElementException("존재하지 않는 리소스에 대한 접근입니다.");
         return product.get();
+    }
+
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
     }
 
     private Product createProductWithProductRequest(ProductRequest productRequest) {

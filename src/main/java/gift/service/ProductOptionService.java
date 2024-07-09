@@ -2,7 +2,6 @@ package gift.service;
 
 import gift.dto.ProductOptionRequest;
 import gift.dto.ProductOptionResponse;
-import gift.dto.ProductRequest;
 import gift.exception.NotFoundElementException;
 import gift.model.ProductOption;
 import gift.repository.ProductOptionRepository;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -25,7 +23,7 @@ public class ProductOptionService {
     }
 
     public ProductOptionResponse addOption(ProductOptionRequest productOptionRequest) {
-        var option = createOptionWithProductRequest(productOptionRequest);
+        var option = createProductOptionWithProductRequest(productOptionRequest);
         var savedOption = optionRepository.save(option);
         return getProductOptionResponseFromProductOption(savedOption);
     }
@@ -59,7 +57,7 @@ public class ProductOptionService {
         return productOption.get();
     }
 
-    private ProductOption createOptionWithProductRequest(ProductOptionRequest productOptionRequest) {
+    private ProductOption createProductOptionWithProductRequest(ProductOptionRequest productOptionRequest) {
         var product = productService.findProductWithId(productOptionRequest.productId());
         var option = new ProductOption(productOptionRequest.name(), productOptionRequest.additionalPrice());
         option.addProduct(product);

@@ -5,8 +5,10 @@ import gift.dto.LoginRequest;
 import gift.dto.RegisterRequest;
 import gift.exception.DuplicatedEmailException;
 import gift.exception.InvalidLoginInfoException;
+import gift.exception.NotFoundElementException;
 import gift.model.Member;
 import gift.model.MemberRole;
+import gift.model.Product;
 import gift.repository.MemberRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -37,10 +39,16 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest loginRequest) {
-        var member = memberRepository.findByEmail(loginRequest.email());
+        var member = findMemberByEmail(loginRequest.email());
         loginInfoValidation(member, loginRequest.password());
         var token = createAccessTokenWithMember(member);
         return AuthResponse.of(token);
+    }
+
+    private Member findMemberByEmail(String email) {
+        var member = memberRepository.findByEmail(email);
+        if (member.isEmpty()) throw new InvalidLoginInfoException("로그인 정보가 유효하지 않습니다.");
+        return member.get();
     }
 
     private String createAccessTokenWithMember(Member member) {

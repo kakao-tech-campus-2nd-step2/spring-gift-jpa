@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.dto.LoginRequest;
 import gift.dto.RegisterRequest;
+import gift.exception.InvalidLoginInfoException;
 import gift.exception.NotFoundElementException;
 import gift.service.auth.AuthService;
 import gift.reflection.AuthTestReflectionComponent;
@@ -34,6 +35,6 @@ public class MemberServiceTest {
 
         memberService.deleteMember(id);
 
-        Assertions.assertThatThrownBy(() -> authService.login(loginRequest)).isInstanceOf(NotFoundElementException.class);
+        Assertions.assertThatThrownBy(() -> authService.login(loginRequest)).isInstanceOf(InvalidLoginInfoException.class);
     }
 }
