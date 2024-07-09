@@ -1,10 +1,10 @@
 package gift.domain.member;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import gift.domain.Wishlist;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Member {
@@ -24,6 +24,9 @@ public class Member {
 
     private MemberRole role;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<Wishlist> wishes = new ArrayList<>();
+
     public Member() {
     }
 
@@ -35,16 +38,12 @@ public class Member {
         return name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     public MemberRole getRole() {
         return role;
+    }
+
+    public List<Wishlist> getWishes() {
+        return wishes;
     }
 
     public Member(Long id, String name, String email, String password, MemberRole role) {

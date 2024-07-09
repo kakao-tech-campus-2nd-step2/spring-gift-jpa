@@ -22,7 +22,7 @@ public class WishlistController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> productList(@LoginMember Member member) {
-        List<ProductResponse> products = wishlistService.getProducts(member.getId());
+        List<ProductResponse> products = wishlistService.getProducts(member);
 
         return ResponseEntity.ok()
                 .body(products);
@@ -31,7 +31,7 @@ public class WishlistController {
     @PostMapping("/{productId}")
     public ResponseEntity<Void> productAdd(@LoginMember Member member,
                                            @PathVariable Long productId) {
-        wishlistService.addProduct(member.getId(), productId);
+        wishlistService.addProduct(member, productId);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .build();
@@ -40,7 +40,7 @@ public class WishlistController {
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> productRemove(@LoginMember Member member,
                                               @PathVariable Long productId) {
-        wishlistService.removeProduct(member.getId(), productId);
+        wishlistService.removeProduct(member, productId);
 
         return ResponseEntity.ok()
                 .build();
