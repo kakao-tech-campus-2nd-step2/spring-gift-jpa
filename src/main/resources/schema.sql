@@ -1,9 +1,9 @@
 DROP TABLE IF EXISTS products CASCADE;
 CREATE TABLE products (
-    id LONG PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     price INT,
-    imageUrl VARCHAR(255)
+    image_url VARCHAR(255)
 );
 
 DROP TABLE IF EXISTS users CASCADE;
