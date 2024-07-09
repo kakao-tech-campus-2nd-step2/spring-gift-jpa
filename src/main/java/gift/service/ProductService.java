@@ -2,7 +2,7 @@ package gift.service;
 
 import gift.constants.ErrorMessage;
 import gift.dto.Product;
-import gift.repository.ProductDao;
+import gift.repository.ProductJpaDao;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductJpaDao productJpaDao;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductJpaDao productJpaDao) {
+        this.productJpaDao = productJpaDao;
     }
 
     /**
@@ -22,11 +22,11 @@ public class ProductService {
      * @param product
      */
     public void addProduct(Product product) {
-        productDao.selectOneProduct(product.getId())
+        productJpaDao.findById(product.getId())
             .ifPresent(v -> {
                 throw new IllegalArgumentException(ErrorMessage.ID_ALREADY_EXISTS_MSG);
             });
-        productDao.insertNewProduct(product);
+        productJpaDao.save(product);
     }
 
     /**
@@ -35,9 +35,9 @@ public class ProductService {
      * @param product
      */
     public void editProduct(Product product) {
-        productDao.selectOneProduct(product.getId())
+        productJpaDao.findById(product.getId())
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.PRODUCT_NOT_EXISTS_MSG));
-        productDao.updateProduct(product);
+        productJpaDao.save(product);
     }
 
     /**
@@ -46,9 +46,9 @@ public class ProductService {
      * @param id
      */
     public void deleteProduct(Long id) {
-        productDao.selectOneProduct(id)
+        productJpaDao.findById(id)
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.PRODUCT_NOT_EXISTS_MSG));
-        productDao.deleteProduct(id);
+        productJpaDao.deleteById(id);
     }
 
     /**
@@ -57,7 +57,7 @@ public class ProductService {
      * @return 상품 List
      */
     public List<Product> getAllProducts() {
-        return productDao.selectProducts();
+        return productJpaDao.findAll();
     }
 
     /**
@@ -67,7 +67,7 @@ public class ProductService {
      * @return Product 객체
      */
     public Product getProduct(Long id) {
-        return productDao.selectOneProduct(id)
+        return productJpaDao.findById(id)
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.PRODUCT_NOT_EXISTS_MSG));
     }
 }

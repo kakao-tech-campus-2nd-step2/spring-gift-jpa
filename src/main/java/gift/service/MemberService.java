@@ -3,9 +3,10 @@ package gift.service;
 import gift.constants.ErrorMessage;
 import gift.dto.Member;
 import gift.dto.Product;
+import gift.dto.Wishlist;
 import gift.jwt.JwtUtil;
-import gift.repository.MemberDao;
-import gift.repository.WishlistDao;
+import gift.repository.MemberJpaDao;
+import gift.repository.WishlistJpaDao;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberService {
 
-    private final MemberDao memberDao;
-    private final WishlistDao wishlistDao;
+    private final MemberJpaDao memberJpaDao;
+    private final WishlistJpaDao wishlistJpaDao;
     private final JwtUtil jwtUtil;
 
-    public MemberService(MemberDao memberDao, WishlistDao wishlistDao, JwtUtil jwtUtil) {
-        this.memberDao = memberDao;
-        this.wishlistDao = wishlistDao;
+    public MemberService(MemberJpaDao memberJpaDao, WishlistJpaDao wishlistJpaDao,
+        JwtUtil jwtUtil) {
+        this.memberJpaDao = memberJpaDao;
+        this.wishlistJpaDao = wishlistJpaDao;
         this.jwtUtil = jwtUtil;
     }
 
@@ -29,11 +31,11 @@ public class MemberService {
      * @param member
      */
     public void registerMember(Member member) {
-        memberDao.findByEmail(member.getEmail())
+        memberJpaDao.findByEmail(member.getEmail())
             .ifPresent(user -> {
                 throw new IllegalArgumentException(ErrorMessage.EMAIL_ALREADY_EXISTS_MSG);
             });
-        memberDao.register(member);
+        memberJpaDao.save(member);
     }
 
     /**
@@ -44,7 +46,7 @@ public class MemberService {
      * @return
      */
     public String login(Member member) {
-        Member queriedMember = memberDao.findByEmail(member.getEmail())
+        Member queriedMember = memberJpaDao.findByEmail(member.getEmail())
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.MEMBER_NOT_EXISTS_MSG));
         if (!queriedMember.isCorrectPassword(member.getPassword())) {
             throw new IllegalArgumentException(ErrorMessage.INVALID_PASSWORD_MSG);
@@ -59,33 +61,30 @@ public class MemberService {
      * @return
      */
     public List<Product> getAllWishlist(String email) {
-        return wishlistDao.findByEmail(email);
+        return wishlistJpaDao.findAllWishlistByEmail(email);
     }
 
     /**
      * 위시 리스트에 상품 추가
      *
-     * @param email
-     * @param productId
+     * @param wish
      */
-    public void addWishlist(String email, Long productId) {
-        wishlistDao.findByEmailAndProductId(email, productId)
+    public void addWishlist(Wishlist wish) {
+        wishlistJpaDao.findByWishlist(wish)
             .ifPresent(v -> {
                 throw new IllegalArgumentException(ErrorMessage.WISHLIST_ALREADY_EXISTS_MSG);
             });
-
-        wishlistDao.insertProduct(email, productId);
+        wishlistJpaDao.save(wish);
     }
 
     /**
      * 위시 리스트에서 상품 삭제
      *
-     * @param email
-     * @param productId
+     * @param wish
      */
-    public void deleteWishlist(String email, Long productId) {
-        wishlistDao.findByEmailAndProductId(email, productId)
+    public void deleteWishlist(Wishlist wish) {
+        wishlistJpaDao.findByWishlist(wish)
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.WISHLIST_NOT_EXISTS_MSG));
-        wishlistDao.deleteProduct(email, productId);
+        wishlistJpaDao.deleteByWishlist(wish);
     }
 }
