@@ -1,7 +1,11 @@
 package gift.product.domain;
 
 import gift.product.dto.ProductRequestDto;
+import gift.wish.domain.Wish;
 import jakarta.persistence.*;
+import org.hibernate.Hibernate;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "products")
@@ -51,5 +55,19 @@ public class Product {
 
     public boolean checkNew() {
         return id == null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+            return false;
+        Product item = (Product) o;
+        return Objects.equals(id, item.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.intValue();
     }
 }

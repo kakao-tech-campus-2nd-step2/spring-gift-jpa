@@ -1,6 +1,10 @@
 package gift.member.domain;
 
+import gift.wish.domain.Wish;
 import jakarta.persistence.*;
+import org.hibernate.Hibernate;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "members")
@@ -51,5 +55,19 @@ public class Member {
 
     public boolean checkNew() {
         return id == null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+            return false;
+        Member item = (Member) o;
+        return Objects.equals(id, item.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.intValue();
     }
 }
