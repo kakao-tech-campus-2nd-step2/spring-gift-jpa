@@ -12,7 +12,15 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "wish_products")
+@Table(
+    name = "wish_products",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "constraintName",
+            columnNames = {"member_id", "product_id"}
+        )
+    }
+)
 public class WishProduct {
 
     @Id
