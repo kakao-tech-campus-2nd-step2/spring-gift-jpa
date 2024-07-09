@@ -27,5 +27,12 @@ public class Member {
         this.token = token;
     }
 
+    public Member(int id, String email, String password, String token) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.token = token;
+    }
+
     public String getToken() { return this.token; }
 }
