@@ -2,9 +2,11 @@ package gift.service;
 
 import gift.entity.Member;
 import gift.entity.Wish;
+import gift.exception.DataNotFoundException;
 import gift.repository.MemberRepository;
 import gift.repository.WishRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +37,11 @@ public class WishlistService {
 
     public void deleteWishlist(Long id, String email) {
         Member authMember = memberRepository.findByEmail(email);
-        Wish deletingWish = wishRepository.findById(id).get();
+        Optional<Wish> wish = wishRepository.findById(id);
+        if (wish.isEmpty()) {
+            throw new DataNotFoundException("존재하지 않는 Wishlist: wishList를 삭제할 수 없습니다.");
+        }
+        Wish deletingWish = wish.get();
 
         //삭제하려는 Wish의 MemberId와 accessToken에서 받은 memberId가 같아야 삭제
         if (authMember.getId().equals(deletingWish.getMember().getId())) {
