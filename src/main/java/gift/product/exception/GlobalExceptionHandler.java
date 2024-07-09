@@ -1,7 +1,6 @@
 package gift.product.exception;
 
 import java.sql.SQLException;
-import org.apache.logging.log4j.CloseableThreadContext.Instance;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
@@ -30,22 +29,28 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorMessage", "Database error: " + ex.getMessage());
     }
 
-    @ExceptionHandler(DuplicateIdException.class)
+    @ExceptionHandler(DuplicateException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public void handleDuplicateIdException(DuplicateIdException ex, Model model) {
-        model.addAttribute("errorMessage", "Product register error: " + ex.getMessage());
+    public void handleDuplicateIdException(DuplicateException ex, Model model) {
+        model.addAttribute("errorMessage", "Duplicate error: " + ex.getMessage());
     }
 
     @ExceptionHandler(InvalidProductNameException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public void handleInvalidProductNameException(DuplicateIdException ex, Model model) {
-        model.addAttribute("errorMessage", "Product register error: " + ex.getMessage());
+    public void handleInvalidProductNameException(DuplicateException ex, Model model) {
+        model.addAttribute("errorMessage", "Invalid error: " + ex.getMessage());
     }
 
     @ExceptionHandler(InstanceValueException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handleInstanceValueException(InstanceValueException ex, Model model) {
-        model.addAttribute("errorMessage", "Product instance value error: " + ex.getMessage());
+        model.addAttribute("errorMessage", "Value error: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(LoginFailedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleLoginFailedException(LoginFailedException ex, Model model) {
+        model.addAttribute("errorMessage", "Login error: " + ex.getMessage());
     }
 
 }

@@ -1,5 +1,6 @@
 package gift.product.controller;
 
+import gift.product.model.Member;
 import gift.product.service.MemberService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,13 @@ public class ApiMemberController {
     public ResponseEntity<Map<String, String>> signUp(@RequestBody Map<String, String> request) {
         System.out.println("[ApiMemberController] signUp()");
 
-        return memberService.signUp(request);
+        return memberService.signUp(new Member(request.get("email"), request.get("password")));
     }
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> request) {
         System.out.println("[ApiMemberController] login()");
 
-        return memberService.login(request);
+        return memberService.login(new Member(request.get("email"), request.get("password")));
     }
 }

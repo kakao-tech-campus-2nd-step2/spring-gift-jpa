@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.product.exception.DuplicateIdException;
+import gift.product.exception.DuplicateException;
 import gift.product.exception.InstanceValueException;
 import gift.product.exception.InvalidProductIdException;
 import gift.product.exception.InvalidProductNameException;
@@ -30,7 +30,7 @@ public class ProductServiceTest {
         Product product = new Product(2L, "normal", 1000, "image.url");
         productService.registerProduct(product);
         Product duplicateIdProduct = new Product(product.getId(), "duplicateID", 1000, "image.url");
-        Assertions.assertThrows(DuplicateIdException.class, () -> {
+        Assertions.assertThrows(DuplicateException.class, () -> {
             productService.registerProduct(duplicateIdProduct);
         });
     }
