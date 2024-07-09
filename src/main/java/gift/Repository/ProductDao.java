@@ -9,7 +9,7 @@ public interface ProductDao extends JpaRepository<ProductDto, Long> {
 
   ProductDto save(ProductDto entity);
 
-  List<ProductDto> findAllBy();
+  List<ProductDto> findAll();
 
   Optional<ProductDto> findById(Long Id);
 
