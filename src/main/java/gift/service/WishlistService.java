@@ -18,7 +18,6 @@ public class WishlistService {
 
     public void addWishlist(Wish wish) {
         wishRepository.save(wish);
-
     }
 
     public List<Wish> getWishlist(Long id) {

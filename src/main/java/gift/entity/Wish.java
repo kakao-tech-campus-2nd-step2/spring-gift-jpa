@@ -28,11 +28,11 @@ public class Wish {
     }
 
 
-    public Long getMemberId(){
-        return member.getId();
+    public Member getMember() {
+        return member;
     }
 
-    public Long getProductId( ) {
-        return  product.getId();
+    public Product getProduct() {
+        return product;
     }
 }
