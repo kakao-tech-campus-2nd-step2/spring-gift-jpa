@@ -18,7 +18,7 @@ public class UserRepositoryTests {
     @Test
     public void saveTest() {
         // Given
-        UserEntity user = new UserEntity(0L, "test");
+        UserEntity user = new UserEntity("test");
 
         // When
         user = jpaUserRepository.save(user);
@@ -30,7 +30,7 @@ public class UserRepositoryTests {
     @Test
     public void deleteTest() {
         // Given
-        UserEntity user = new UserEntity(0L, "test");
+        UserEntity user = new UserEntity("test");
         user = jpaUserRepository.save(user);
 
         // When
@@ -43,7 +43,7 @@ public class UserRepositoryTests {
     @Test
     public void findByIdTest() {
         // Given
-        UserEntity user = new UserEntity(0L, "test");
+        UserEntity user = new UserEntity("test");
         user = jpaUserRepository.save(user);
 
         // When

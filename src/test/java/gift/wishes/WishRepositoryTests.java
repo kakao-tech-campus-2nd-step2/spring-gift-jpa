@@ -22,7 +22,7 @@ public class WishRepositoryTests {
 
     @Test
     public void saveWish() {
-        WishEntity wish = new WishEntity(0L, 1L, 1L);
+        WishEntity wish = new WishEntity(1L, 1L);
 
         wish = jpaWishRepository.save(wish);
         assertThat(jpaWishRepository.existsByUserIdAndProductId(wish.getUserId(), wish.getProductId())).isTrue();
@@ -31,7 +31,7 @@ public class WishRepositoryTests {
 
     @Test
     public void removeWish() {
-        WishEntity wish = new WishEntity(0L, 1L, 1L);
+        WishEntity wish = new WishEntity( 1L, 1L);
 
         wish = jpaWishRepository.save(wish);
         jpaWishRepository.deleteByUserIdAndProductId(wish.getUserId(), wish.getProductId());
@@ -40,7 +40,7 @@ public class WishRepositoryTests {
 
     @Test
     public void existsByUserIdAndProductId() {
-        WishEntity wish = new WishEntity(0L, 1L, 1L);
+        WishEntity wish = new WishEntity(1L, 1L);
 
         wish = jpaWishRepository.save(wish);
         assertThat(jpaWishRepository.existsByUserIdAndProductId(wish.getUserId(), wish.getProductId())).isTrue();
@@ -48,9 +48,9 @@ public class WishRepositoryTests {
 
     @Test
     public void findAllByUserId() {
-        ProductEntity product = new ProductEntity(0L, "test", 100, "test");
+        ProductEntity product = new ProductEntity("test", 100, "test");
         product = jpaProductRepository.save(product);
-        WishEntity wish = new WishEntity(0L, 1L, product.getId());
+        WishEntity wish = new WishEntity(1L, product.getId());
 
         wish = jpaWishRepository.save(wish);
         assertThat(jpaWishRepository.findAllByUserId(wish.getUserId())).isNotEmpty();

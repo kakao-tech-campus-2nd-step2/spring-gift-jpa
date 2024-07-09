@@ -17,7 +17,7 @@ public class ProductRepositoryTests {
 
     @Test
     public void saveProduct() {
-        ProductEntity product = new ProductEntity(0L, "test", 100, "test");
+        ProductEntity product = new ProductEntity("test", 100, "test");
 
         product = jpaProductRepository.save(product);
 
