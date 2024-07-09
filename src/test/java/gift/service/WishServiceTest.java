@@ -51,7 +51,7 @@ public class WishServiceTest {
 
         when(productService.getProductById(1L)).thenReturn(productResponse);
         when(wishRepository.existsByMemberIdAndProductId(1L, 1L)).thenReturn(false);
-        when(wishRepository.create(any(Wish.class))).thenReturn(wish);
+        when(wishRepository.save(any(Wish.class))).thenReturn(wish);
 
         WishResponse response = wishService.addWish(wishRequest);
         assertEquals(1L, response.memberId());

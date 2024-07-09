@@ -1,87 +1,63 @@
 package gift.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.model.Wish;
-import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+@DataJpaTest
 public class WishRepositoryTest {
 
-    @Mock
-    private JdbcTemplate jdbcTemplate;
-
-    @InjectMocks
+    @Autowired
     private WishRepository wishRepository;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     @DisplayName("위시리스트 항목 추가 및 ID로 조회")
     public void testSaveAndFindById() {
         Wish wish = new Wish(null, 1L, 1L);
-        Wish savedWish = new Wish(1L, 1L, 1L);
+        Wish savedWish = wishRepository.save(wish);
+        Optional<Wish> foundWish = wishRepository.findById(savedWish.getId());
 
-        when(jdbcTemplate.update(any(String.class), anyLong(), anyLong())).thenReturn(1);
-        when(jdbcTemplate.query(any(String.class), any(RowMapper.class), anyLong())).thenReturn(List.of(savedWish));
-
-        wishRepository.create(wish);
-        Optional<Wish> foundWish = wishRepository.findById(1L);
-
-        assertTrue(foundWish.isPresent());
-        assertEquals(1L, foundWish.get().getMemberId());
-        assertEquals(1L, foundWish.get().getProductId());
+        assertThat(foundWish).isPresent();
+        assertThat(foundWish.get().getMemberId()).isEqualTo(1L);
+        assertThat(foundWish.get().getProductId()).isEqualTo(1L);
     }
 
     @Test
     @DisplayName("모든 위시리스트 항목 조회")
     public void testFindAllByMemberId() {
-        Wish wish1 = new Wish(1L, 1L, 1L);
-        Wish wish2 = new Wish(2L, 1L, 2L);
+        Wish wish1 = new Wish(null, 1L, 1L);
+        Wish wish2 = new Wish(null, 1L, 2L);
 
-        when(jdbcTemplate.query(any(String.class), any(RowMapper.class), anyLong())).thenReturn(List.of(wish1, wish2));
+        wishRepository.save(wish1);
+        wishRepository.save(wish2);
 
-        List<Wish> wishes = wishRepository.findAllByMemberId(1L);
-        assertEquals(2, wishes.size());
+        assertThat(wishRepository.findAllByMemberId(1L)).hasSize(2);
     }
 
     @Test
     @DisplayName("위시리스트 항목 삭제")
     public void testDeleteById() {
-        Wish wish = new Wish(1L, 1L, 1L);
+        Wish wish = new Wish(null, 1L, 1L);
+        Wish savedWish = wishRepository.save(wish);
 
-        when(jdbcTemplate.update(any(String.class), anyLong())).thenReturn(1);
-        when(jdbcTemplate.query(any(String.class), any(RowMapper.class), anyLong())).thenReturn(List.of());
+        wishRepository.deleteById(savedWish.getId());
+        Optional<Wish> foundWish = wishRepository.findById(savedWish.getId());
 
-        wishRepository.create(wish);
-        wishRepository.delete(1L);
-
-        Optional<Wish> foundWish = wishRepository.findById(1L);
-        assertFalse(foundWish.isPresent());
+        assertThat(foundWish).isNotPresent();
     }
 
     @Test
     @DisplayName("회원 ID와 상품 ID로 위시리스트 항목 존재 여부 확인")
     public void testExistsByMemberIdAndProductId() {
-        when(jdbcTemplate.queryForObject(any(String.class), any(Class.class), anyLong(), anyLong())).thenReturn(1);
+        Wish wish = new Wish(null, 1L, 1L);
+        wishRepository.save(wish);
 
         boolean exists = wishRepository.existsByMemberIdAndProductId(1L, 1L);
-        assertTrue(exists);
+        assertThat(exists).isTrue();
     }
 }

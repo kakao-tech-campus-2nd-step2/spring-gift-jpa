@@ -8,7 +8,7 @@
 ### 기능 목록
 - [X] Member 엔티티 매핑
 - [X] Product 엔티티 매핑
-- [ ] Wish 엔티티 매핑
+- [X] Wish 엔티티 매핑
 
 ### 기술 스택
 - Java 21
