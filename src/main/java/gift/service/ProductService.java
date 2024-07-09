@@ -24,8 +24,10 @@ public class ProductService {
         return new AddedProductIdResponse(addedId);
     }
 
-    public Long addProduct(Product product) {
-        return productRepository.addProduct(product);
+    public ProductResponse getProduct(Long productId) {
+        return productRepository.findById(productId)
+                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
+                .get();
     }
 
     public boolean updateProduct(Product product) {
