@@ -27,8 +27,7 @@ public class Wishlist {
     public Wishlist() {
     }
 
-    public Wishlist(Long id, String name, int price, String imageUrl) {
-        this.id = id;
+    public Wishlist(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

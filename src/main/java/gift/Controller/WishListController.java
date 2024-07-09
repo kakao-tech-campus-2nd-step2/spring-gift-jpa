@@ -42,7 +42,7 @@ public class WishListController {
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
         Product product = wishlistService.getProductById(id);
-        Wishlist wishlist = new Wishlist(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        Wishlist wishlist = new Wishlist(product.getName(), product.getPrice(), product.getImageUrl());
         wishlistService.addWishlist(wishlist);
         return "redirect:/api/wish";
     }
