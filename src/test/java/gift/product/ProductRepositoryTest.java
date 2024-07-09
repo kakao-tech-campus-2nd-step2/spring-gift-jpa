@@ -124,6 +124,20 @@ class ProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("[Unit] existProduct test")
     void existProduct() {
+        //given
+        Product expect = new Product(1L, "product-1", 100, "product-image-url-1");
+        productRepository.addProduct(expect);
+
+        //when
+        Boolean trueCase = productRepository.existProduct(expect.id());
+        Boolean falseCase = productRepository.existProduct(2L);
+
+        //then
+        assertAll(
+            () -> assertThat(trueCase).isTrue(),
+            () -> assertThat(falseCase).isFalse()
+        );
     }
 }
