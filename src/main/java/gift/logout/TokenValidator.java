@@ -1,7 +1,5 @@
 package gift.logout;
 
-import gift.login.JwtTokenUtil;
-import gift.member.LogoutTokenDao;
 import org.springframework.stereotype.Component;
 
 @Component
