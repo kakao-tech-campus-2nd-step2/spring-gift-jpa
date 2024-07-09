@@ -32,7 +32,8 @@ public class MemberService {
         MemberEntity member = new MemberEntity();
         member.setEmail(memberDTO.getEmail());
         member.setPassword(memberDTO.getPassword());
-        return memberRepository.save(member) != null;
+        memberRepository.save(member);
+        return true;
     }
 
     /**
