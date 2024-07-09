@@ -24,11 +24,17 @@ public class UserController {
     }
 
     @PostMapping("register")
+<<<<<<< HEAD
     public ResponseEntity<User> joinUser(@Valid @RequestBody UserRequestDto userRequestDto) {
         UserResponseDto response = userService.joinUser(userRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
             .header("Authorization", "Bearer " + response.getToken())
             .body(response.getUser());
+=======
+    public ResponseEntity<UserResponseDto> joinUser(@Valid @RequestBody UserRequestDto userRequestDto) {
+        UserResponseDto response = userService.joinUser(userRequestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+>>>>>>> c87bd7d (refactor: schema.sql 삭제)
     }
 
     @PostMapping("/login")

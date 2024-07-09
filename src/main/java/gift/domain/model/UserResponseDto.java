@@ -9,6 +9,7 @@ public class UserResponseDto {
         this.user = user;
         this.token = token;
     }
+<<<<<<< HEAD
 
     public User getUser() {
         return user;
@@ -17,4 +18,6 @@ public class UserResponseDto {
     public String getToken() {
         return token;
     }
+=======
+>>>>>>> c87bd7d (refactor: schema.sql 삭제)
 }
