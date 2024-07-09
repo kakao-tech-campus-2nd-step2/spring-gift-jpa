@@ -12,67 +12,55 @@ import java.util.List;
 
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
-    private final JdbcTemplate jdbcTemplate;
-
-    private final RowMapper<Product> rowMapper = (rs, rowNum) -> new Product(
-            rs.getLong("id"),
-            rs.getString("name"),
-            rs.getInt("price"),
-            rs.getString("image_url")
-    );
+    private final JpaProductRepository jpaProductRepository;
 
     @Autowired
-    public ProductRepositoryImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ProductRepositoryImpl(JpaProductRepository jpaProductRepository) {
+        this.jpaProductRepository = jpaProductRepository;
     }
 
     @Override
     public Product get(Long id) {
-        String sql = "SELECT * FROM `products` WHERE `id` = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        return jpaProductRepository.findById(id)
+                .map(this::mapToProduct)
+                .orElse(null);
     }
 
     @Override
     public boolean exists(Long id) {
-        String sql = "SELECT EXISTS(SELECT 1 FROM `products` WHERE `id` = ?)";
-        Boolean result = jdbcTemplate.queryForObject(sql, Boolean.class, id);
-        return result != null && result;
+        return jpaProductRepository.existsById(id);
     }
 
     @Override
     public void save(@Nonnull Product product) {
-        String sql = """
-                MERGE INTO products AS target
-                USING (VALUES (?, ?, ?, ?)) AS source (id, name, price, image_url)
-                ON target.id = source.id
-                WHEN MATCHED THEN
-                UPDATE SET target.name = source.name, target.price = source.price, target.image_url = source.image_url
-                WHEN NOT MATCHED THEN
-                INSERT (name, price, image_url) VALUES (source.name, source.price, source.image_url);
-        """;
-        jdbcTemplate.update(sql, product.id(), product.name(), product.price(), product.imageUrl());
+        jpaProductRepository.save(mapToProductEntity(product));
     }
 
     @Override
     public int size() {
-        String sql = "SELECT COUNT(*) FROM `products`";
-        Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
-        if (result == null) {
-            return 0;
-        }
-        return result;
+        return (int) jpaProductRepository.count();
     }
 
     @Override
     public List<Product> findAll() {
-        String sql = "SELECT * FROM `products`";
-        List<Product> products = jdbcTemplate.query(sql, rowMapper);
-        return List.copyOf(products);
+        return jpaProductRepository.findAll().stream().map(this::mapToProduct).toList();
     }
 
     @Override
     public void remove(Long id) {
-        String sql = "DELETE FROM `products` WHERE `id` = ?";
-        jdbcTemplate.update(sql, id);
+        jpaProductRepository.deleteById(id);
+    }
+
+    private Product mapToProduct(ProductEntity entity) {
+        return new Product(
+                entity.getId(),
+                entity.getName(),
+                entity.getPrice(),
+                entity.getImageUrl()
+        );
+    }
+
+    private ProductEntity mapToProductEntity(Product product) {
+        return new ProductEntity(product.id(), product.name(), product.price(), product.imageUrl());
     }
 }
