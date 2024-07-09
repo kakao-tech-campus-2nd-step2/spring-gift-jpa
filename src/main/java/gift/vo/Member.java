@@ -1,18 +1,32 @@
 package gift.vo;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(uniqueConstraints = {@UniqueConstraint(name = "uk_member", columnNames = {"email"})})
 public class Member {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String password;
-    private MemberRole role;
 
     public Member(String email, String password) {
-        this(email, password, String.valueOf(MemberRole.USER));
-    }
-
-    public Member(String email, String password, String role) {
         this.email = email;
         this.password = password;
-        this.role = MemberRole.valueOf(role);
+    }
+
+    public Member() {
+
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -23,8 +37,17 @@ public class Member {
         return password;
     }
 
-    public MemberRole getRole() {
-        return role;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void update(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     /**

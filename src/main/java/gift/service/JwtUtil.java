@@ -20,13 +20,11 @@ public class JwtUtil {
     /**
      *
      * @param username: Username
-     * @param role: 권한
      * @return JWT 토큰 생성 후 반환
      */
-    public String generateToken(String username, MemberRole role) {
+    public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
-                .claim("role", role)
                 .setIssuedAt(new Date(new Date().getTime()))
                 .setExpiration(new Date(new Date().getTime() + TOKEN_TIME))
                 .signWith(KEY)
