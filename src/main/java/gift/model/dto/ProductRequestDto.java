@@ -26,6 +26,12 @@ public class ProductRequestDto {
     public ProductRequestDto() {
     }
 
+    public ProductRequestDto(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
     private ProductRequestDto(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
