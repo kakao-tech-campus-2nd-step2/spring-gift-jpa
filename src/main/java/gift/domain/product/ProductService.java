@@ -62,9 +62,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "수정할 상품이 존재하지 않습니다."));
 
-        product.setName(productDTO.getName());
-        product.setPrice(productDTO.getPrice());
-        product.setImageUrl(productDTO.getImageUrl());
+        product.update(productDTO.getName(), productDTO.getPrice(),productDTO.getImageUrl());
 
         validateProduct(product);
 
