@@ -45,7 +45,7 @@ public class MemberServiceTest {
         MemberRequest memberDTO = new MemberRequest(null, "test@example.com", "password");
         Member savedMember = new Member(1L, "test@example.com", "password");
         when(memberRepository.existsByEmail("test@example.com")).thenReturn(false);
-        when(memberRepository.create(any(Member.class))).thenReturn(savedMember);
+        when(memberRepository.save(any(Member.class))).thenReturn(savedMember);
         when(jwtUtil.generateToken(1L, "test@example.com")).thenReturn("mockedToken");
 
         MemberResponse response = memberService.registerMember(memberDTO);
@@ -146,7 +146,7 @@ public class MemberServiceTest {
         MemberRequest memberDTO = new MemberRequest(1L, "new@example.com", "newpassword");
         when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
         when(memberRepository.existsByEmail("new@example.com")).thenReturn(false);
-        when(memberRepository.update(any(Member.class))).thenReturn(new Member(1L, "new@example.com", "newpassword"));
+        when(memberRepository.save(any(Member.class))).thenReturn(new Member(1L, "new@example.com", "newpassword"));
 
         MemberResponse response = memberService.updateMember(1L, memberDTO);
         assertEquals("new@example.com", response.email());
@@ -156,10 +156,10 @@ public class MemberServiceTest {
     @DisplayName("회원 삭제")
     public void testDeleteMember() {
         when(memberRepository.existsById(1L)).thenReturn(true);
-        doNothing().when(memberRepository).delete(1L);
+        doNothing().when(memberRepository).deleteById(1L);
 
         memberService.deleteMember(1L);
-        verify(memberRepository, times(1)).delete(1L);
+        verify(memberRepository, times(1)).deleteById(1L);
     }
 
     @Test
