@@ -26,6 +26,7 @@ public class WishRepositoryTests {
 
         wish = jpaWishRepository.save(wish);
         assertThat(jpaWishRepository.existsByUserIdAndProductId(wish.getUserId(), wish.getProductId())).isTrue();
+        assertThat(jpaWishRepository.findById(wish.getId()).get()).isEqualTo(wish);
     }
 
     @Test

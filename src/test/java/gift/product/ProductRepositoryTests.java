@@ -22,5 +22,6 @@ public class ProductRepositoryTests {
         product = jpaProductRepository.save(product);
 
         assertThat(jpaProductRepository.findById(product.getId())).isPresent();
+        assertThat(jpaProductRepository.findById(product.getId()).get()).isEqualTo(product);
     }
 }

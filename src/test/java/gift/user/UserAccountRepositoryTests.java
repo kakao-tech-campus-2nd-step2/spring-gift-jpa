@@ -22,6 +22,7 @@ public class UserAccountRepositoryTests {
         userAccount = jpaUserAccountRepository.save(userAccount);
 
         assertThat(jpaUserAccountRepository.findById(userAccount.getUserId())).isPresent();
+        assertThat(jpaUserAccountRepository.findById(userAccount.getUserId()).get()).isEqualTo(userAccount);
     }
 
     @Test

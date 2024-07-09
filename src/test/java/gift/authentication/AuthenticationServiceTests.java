@@ -10,6 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,9 +35,10 @@ public class AuthenticationServiceTests {
     public void testAuthenticate() {
         String principal = "test";
         String credentials = "test";
+        UserAccount account = new UserAccount(principal, credentials);
 
         when(userAccountRepository.existsByPrincipal(principal)).thenReturn(true);
-        when(userAccountRepository.findByPrincipal(principal)).thenReturn(new UserAccount(principal, credentials));
+        when(userAccountRepository.findByPrincipal(principal)).thenReturn(Optional.of(account));
         when(userAccountRepository.findUserIdByPrincipal(principal)).thenReturn(0L);
 
         authenticationService.authenticate(principal, credentials);
