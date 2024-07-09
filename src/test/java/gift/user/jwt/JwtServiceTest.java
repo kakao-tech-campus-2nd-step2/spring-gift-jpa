@@ -25,7 +25,7 @@ public class JwtServiceTest {
     @Test
     public void testGetEmailFromToken() {
         Long id = 1L;
-        User user = new User(id, "yoo@example.com", "1234", "ADMIN");
+        User user = new User(id, "yoo@example.com", "1234", "ADMIN", "1");
         String token = jwtService.createToken(id);
 
         User loginUser = jwtService.getLoginUser(token);
