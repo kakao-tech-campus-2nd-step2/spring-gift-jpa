@@ -29,7 +29,7 @@ public class ProductService {
 
     public void addProduct(ProductDTO product) {
         if(productRepository.existsByName(product.getName())){
-            throw new IllegalArgumentException("존재하는 이름입니다,");
+            throw new IllegalArgumentException("존재하는 이름입니다.");
         }
         productRepository.save(product.toProduct());
     }

@@ -13,7 +13,7 @@ public class UserService {
     }
 
     public boolean registerUser(UserDTO userDTO) {
-        User user=userDTO.toUser();
+        User user = userDTO.toUser();
         if (userRepository.existsByEmail(user.getEmail())) {
             return false;
         }

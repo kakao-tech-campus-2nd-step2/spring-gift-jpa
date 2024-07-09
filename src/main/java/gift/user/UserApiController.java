@@ -21,7 +21,7 @@ public class UserApiController {
     @Autowired
     public UserApiController(UserService userService,JwtUtil jwtUtil){
         this.userService = userService;
-        this.jwtUtil=jwtUtil;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")

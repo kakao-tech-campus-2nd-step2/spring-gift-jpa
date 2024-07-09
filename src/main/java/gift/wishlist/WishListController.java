@@ -4,6 +4,7 @@ import gift.auth.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.logging.Logger;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,6 @@ public class WishListController {
             logger.warning("Unauthorized access attempt without Bearer token");
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         }
-
         String token = authHeader.substring(7);
         String tokenEmail;
         try {
@@ -47,9 +47,7 @@ public class WishListController {
     public ResponseEntity<List<WishListDTO>> getWishList(@PathVariable("email") String email,
         HttpServletRequest request) {
         logger.info("getWishList called with email: " + email);
-
-        extractEmailFromTokenAndValidate(request,email);
-
+        extractEmailFromTokenAndValidate(request, email);
         List<WishListDTO> wishLists = wishListService.getWishListsByEmail(email);
         logger.info("Successfully retrieved wishlist for email: " + email);
         return ResponseEntity.ok(wishLists);
@@ -59,49 +57,32 @@ public class WishListController {
     public ResponseEntity<String> addWishList(@PathVariable("email") String email,
         HttpServletRequest request, @RequestBody WishListDTO wishListDTO) {
         logger.info("addWishList called with email: " + email);
-
-        extractEmailFromTokenAndValidate(request,email);
-
-        wishListDTO.setEmail(email);
-        wishListService.addWishList(wishListDTO);
+        extractEmailFromTokenAndValidate(request, email);
+        WishListDTO wishListDTO1= new WishListDTO(email, wishListDTO.getProductId(), wishListDTO.getNum());
+        wishListService.addWishList(wishListDTO1);
         logger.info("Successfully added wishlist for email: " + email);
         return ResponseEntity.status(HttpStatus.CREATED).body("위시리스트에 추가되었습니다.");
     }
 
-    @PutMapping("/{email}/{name}")
+    @PutMapping("/{email}/{productId}")
     public ResponseEntity<String> updateWishList(@PathVariable("email") String email,
-        @PathVariable("name") String name, HttpServletRequest request,
-        @RequestBody WishListDTO wishListDTO) {
-
-        logger.info("updateWishList called with email: " + email + " and name: " + name);
-
-        extractEmailFromTokenAndValidate(request,email);
-
-        WishList wishList = wishListService.getWishListByEmailAndName(email,name);
-        if (wishList != null) {
-            wishListService.updateWishList(email, name, wishListDTO.getNum());
-            logger.info("Successfully updated wishlist for email: " + email + " and name: " + name);
-            return ResponseEntity.ok().body("업데이트 성공!");
-        }
-
-        logger.warning("Wishlist not found for email: " + email + " and name: " + name);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이메일에 맞는 위시리스트가 없습니다.");
+        @PathVariable("productId") long productId, HttpServletRequest request,
+        @RequestBody WishListDTO wishListDTO) throws NotFoundException {
+        logger.info("updateWishList called with email: " + email + " and product_id: " + productId);
+        extractEmailFromTokenAndValidate(request, email);
+        wishListService.updateWishList(email, productId, wishListDTO.getNum());
+        logger.info("Successfully updated wishlist for email: " + email + " and product_id: " + productId);
+        return ResponseEntity.ok().body("업데이트 성공!");
     }
 
-    @DeleteMapping("/{email}/{name}")
+    @DeleteMapping("/{email}/{productId}")
     public ResponseEntity<String> deleteWishList(@PathVariable("email") String email,
-        @PathVariable("name") String name, HttpServletRequest request) {
-        logger.info("deleteWishList called with email: " + email + " and name: " + name);
-
-        extractEmailFromTokenAndValidate(request,email);
-
-        boolean deleted = wishListService.deleteWishList(email, name);
-        if (deleted) {
-            logger.info("Successfully deleted wishlist for email: " + email + " and name: " + name);
-            return ResponseEntity.ok().body("삭제되었습니다.");
-        }
-
-        logger.warning("Wishlist not found for email: " + email + " and name: " + name);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("이메일에 맞는 위시리스트가 없습니다.");
+        @PathVariable("productId") long productId, HttpServletRequest request)
+        throws NotFoundException {
+        logger.info("deleteWishList called with email: " + email + " and product_id: " + productId);
+        extractEmailFromTokenAndValidate(request, email);
+        wishListService.deleteWishList(email, productId);
+        logger.info("Successfully deleted wishlist for email: " + email + " and product_id: " + productId);
+        return ResponseEntity.ok().body("삭제되었습니다.");
     }
 }

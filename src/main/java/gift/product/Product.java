@@ -4,22 +4,22 @@ import jakarta.persistence.*;
 
 @Entity
 public class Product {
-    @Column(nullable=false)
+    @Column(nullable = false)
     private int price;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private long id;
-    @Column(nullable=false, unique = true, length = 15)
+    @Column(nullable = false, unique = true, length = 15)
     private String name;
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String imageUrl;
 
     public Product(){}
 
     public Product(int price,String name,String imageUrl){
-        this.price=price;
-        this.name=name;
-        this.imageUrl=imageUrl;
+        this.price = price;
+        this.name = name;
+        this.imageUrl = imageUrl;
     }
 
     public void update(int price, String name, String imageUrl) {

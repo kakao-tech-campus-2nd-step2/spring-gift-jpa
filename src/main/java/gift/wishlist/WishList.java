@@ -1,40 +1,41 @@
 package gift.wishlist;
 
-public class WishList {
+import jakarta.persistence.*;
 
+@Table(name="wishlist")
+@Entity
+public class WishList {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    private long id;
+    @Column(nullable = false,unique = true)
     private String email;
-    private String name;
+    @Column(nullable = false, unique = true, length = 15)
+    private long productId;
+    @Column(nullable = false)
     private int num;
 
     public WishList(){}
 
-    public WishList(String email, String name, int num) {
-        this.email=email;
-        this.name=name;
-        this.num=num;
+    public WishList(String email, long productId, int num){
+        this.email = email;
+        this.productId = productId;
+        this.num = num;
     }
 
-    public String getEmail(){
-        return email;
+    public void update(String email, long productId, int num) {
+        this.email = email;
+        this.productId = productId;
+        this.num = num;
     }
 
-    public void setEmail(String email){
-        this.email=email;
+    public long getId(){return id;}
+
+    public String getEmail(){ return email;}
+
+    public long getProductId(){
+        return productId;
     }
 
-    public String getName(){
-        return name;
-    }
-
-    public void setName(String name){
-        this.name=name;
-    }
-
-    public int getNum(){
-        return num;
-    }
-
-    public void setNum(int num){
-        this.num=num;
-    }
+    public int getNum(){return num;}
 }
