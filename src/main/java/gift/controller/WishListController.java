@@ -1,5 +1,7 @@
 package gift.controller;
 
+import gift.model.wishList.WishItemDto;
+import gift.service.WishListService;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,8 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RestController;
-import gift.model.item.ItemDTO;
-import gift.service.WishListService;
 
 @RestController
 public class WishListController {
@@ -18,7 +18,7 @@ public class WishListController {
     }
 
     @GetMapping("/wishes")
-    public List<ItemDTO> getWishList(@RequestAttribute("userId") Long userId) {
+    public List<WishItemDto> getWishList(@RequestAttribute("userId") Long userId) {
         return wishListService.getList(userId);
     }
 
