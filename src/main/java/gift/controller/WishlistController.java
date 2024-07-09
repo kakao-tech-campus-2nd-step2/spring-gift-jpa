@@ -1,10 +1,9 @@
 package gift.controller;
 
 import gift.annotation.LoginUser;
-import gift.domain.Wishlist;
 import gift.dto.WishlistRequestDto;
 import gift.dto.WishlistResponseDto;
-import gift.service.UserService;
+import gift.service.MemberService;
 import gift.service.WishlistService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -21,9 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/wishlist")
 public class WishlistController {
     private final WishlistService wishlistService;
-    private final UserService userService;
+    private final MemberService userService;
 
-    public WishlistController(WishlistService wishlistService, UserService userService) {
+    public WishlistController(WishlistService wishlistService, MemberService userService) {
         this.wishlistService = wishlistService;
         this.userService = userService;
     }

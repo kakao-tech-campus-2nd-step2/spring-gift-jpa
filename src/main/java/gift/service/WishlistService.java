@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.domain.Wishlist;
 import gift.repository.WishlistJdbcRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;

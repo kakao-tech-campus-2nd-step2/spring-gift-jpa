@@ -1,6 +1,5 @@
 package gift.repository;
 
-import gift.domain.User;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,34 +15,34 @@ public class UserJdbcRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void addUser(User user){
+    public void addUser(Member member){
         String sql = "insert into users (email,password) values (?,?)";
-        jdbcTemplate.update(sql, user.getEmail(), user.getPassword());
+        jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
     }
 
-    public Optional<User> findByEmail(String email){
+    public Optional<Member> findByEmail(String email){
         String sql = "select * from users where email = ?";
-        List<User> users = jdbcTemplate.query(sql, userRowMapper(), email);
-        if(users.isEmpty()){
+        List<Member> members = jdbcTemplate.query(sql, userRowMapper(), email);
+        if(members.isEmpty()){
             return Optional.empty();
         }
-        return Optional.of(users.get(0));
+        return Optional.of(members.get(0));
     }
 
-    private RowMapper<User> userRowMapper(){
+    private RowMapper<Member> userRowMapper(){
         return (rs, rowNum) -> {
-            User user = new User();
-            user.setId(rs.getLong("id"));
-            user.setEmail(rs.getString("email"));
-            user.setPassword(rs.getString("password"));
-            return user;
+            Member member = new Member();
+            member.setId(rs.getLong("id"));
+            member.setEmail(rs.getString("email"));
+            member.setPassword(rs.getString("password"));
+            return member;
         };
     }
 
     public boolean existUserByEmail(String email){
         String sql = "select * from users where email = ?";
-        List<User> users = jdbcTemplate.query(sql, userRowMapper(), email);
-        return users.size()>0;
+        List<Member> members = jdbcTemplate.query(sql, userRowMapper(), email);
+        return members.size()>0;
 
     }
 }

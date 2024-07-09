@@ -1,5 +1,6 @@
 package gift.domain;
 
+import gift.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -15,9 +16,9 @@ public class JwtToken {
 
     private final Long tokenExpTime = 36000000L;
 
-    public String createToken(User user) {
+    public String createToken(Member member) {
         return Jwts.builder()
-            .setSubject(user.getEmail())
+            .setSubject(member.getEmail())
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + tokenExpTime))
             .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
