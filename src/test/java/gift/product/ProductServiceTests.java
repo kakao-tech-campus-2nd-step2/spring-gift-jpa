@@ -54,10 +54,10 @@ public class ProductServiceTests {
         Product product = new Product(productId, "test", 100, "test.jpg");
 
         when(productRepository.exists(productId)).thenReturn(true);
-        when(productRepository.get(productId)).thenReturn(product);
+        when(productRepository.findById(productId)).thenReturn(product);
 
         productService.get(productId);
-        verify(productRepository).get(productId);
+        verify(productRepository).findById(productId);
     }
 
     @Test

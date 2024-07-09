@@ -1,5 +1,7 @@
 package gift.core.domain.user;
 
+import java.util.Optional;
+
 public interface UserAccountRepository {
 
     void save(Long userId, UserAccount userAccount);
@@ -8,9 +10,9 @@ public interface UserAccountRepository {
 
     boolean existsByPrincipal(String principal);
 
-    UserAccount findByUserId(Long userId);
+    Optional<UserAccount> findByUserId(Long userId);
 
-    UserAccount findByPrincipal(String principal);
+    Optional<UserAccount> findByPrincipal(String principal);
 
     Long findUserIdByPrincipal(String principal);
 

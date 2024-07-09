@@ -51,10 +51,13 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private User mapToUser(UserEntity entity) {
+        UserAccount userAccount = userAccountRepository
+                .findByUserId(entity.getId())
+                .orElseThrow(UserAccountNotFoundException::new);
         return new User(
                 entity.getId(),
                 entity.getName(),
-                userAccountRepository.findByUserId(entity.getId())
+                userAccount
         );
     }
 

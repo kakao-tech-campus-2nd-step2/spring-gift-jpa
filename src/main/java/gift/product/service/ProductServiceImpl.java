@@ -25,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
         if (!productRepository.exists(id)) {
             throw new ProductNotFoundException();
         }
-        return productRepository.get(id);
+        return productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
     }
 
     @Override

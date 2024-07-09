@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
@@ -20,10 +21,10 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Product get(Long id) {
-        return jpaProductRepository.findById(id)
-                .map(this::mapToProduct)
-                .orElse(null);
+    public Optional<Product> findById(Long id) {
+        return jpaProductRepository
+                .findById(id)
+                .map(this::mapToProduct);
     }
 
     @Override
@@ -37,8 +38,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public int size() {
-        return (int) jpaProductRepository.count();
+    public long size() {
+        return jpaProductRepository.count();
     }
 
     @Override

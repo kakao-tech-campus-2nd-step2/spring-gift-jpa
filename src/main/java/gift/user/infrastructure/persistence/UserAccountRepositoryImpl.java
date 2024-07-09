@@ -1,12 +1,10 @@
 package gift.user.infrastructure.persistence;
 
-import gift.core.domain.user.User;
 import gift.core.domain.user.UserAccount;
 import gift.core.domain.user.UserAccountRepository;
-import gift.core.domain.user.exception.UserAccountNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class UserAccountRepositoryImpl implements UserAccountRepository {
@@ -32,17 +30,15 @@ public class UserAccountRepositoryImpl implements UserAccountRepository {
     }
 
     @Override
-    public UserAccount findByUserId(Long userId) {
+    public Optional<UserAccount> findByUserId(Long userId) {
         return jpaUserAccountRepository.findById(userId)
-                .map(this::mapToUserAccount)
-                .orElseThrow();
+                .map(this::mapToUserAccount);
     }
 
     @Override
-    public UserAccount findByPrincipal(String principal) {
+    public Optional<UserAccount> findByPrincipal(String principal) {
         return jpaUserAccountRepository.findByEmail(principal)
-                .map(this::mapToUserAccount)
-                .orElse(null);
+                .map(this::mapToUserAccount);
     }
 
     @Override
