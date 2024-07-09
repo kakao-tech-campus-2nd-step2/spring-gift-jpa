@@ -1,6 +1,7 @@
 package gift.vo;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -12,11 +13,11 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotNull
     @Size(max = 15)
     private String name;
 
-    @Column(nullable = false)
+    @NotNull
     private String imageUrl;
 
     public Product() {}
