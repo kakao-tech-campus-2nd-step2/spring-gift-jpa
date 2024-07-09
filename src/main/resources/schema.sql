@@ -14,7 +14,7 @@ CREATE TABLE member
 
 CREATE Table wishlist
 (
-    id           BIGINT PRIMARY KEY,
+    id           BIGINT AUTO_INCREMENT PRIMARY KEY,
     product_id   BIGINT,
     member_email VARCHAR(255),
     FOREIGN KEY (product_id) REFERENCES product (id),
