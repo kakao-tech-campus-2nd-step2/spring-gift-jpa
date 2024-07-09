@@ -2,7 +2,7 @@ package gift.model;
 
 import jakarta.persistence.*;
 
-@Entity
+@Entity(name = "products")
 public class Product {
 
     @Id

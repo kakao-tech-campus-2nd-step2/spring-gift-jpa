@@ -2,7 +2,7 @@ package gift.model;
 
 import jakarta.persistence.*;
 
-@Entity
+@Entity(name = "members")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
