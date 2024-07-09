@@ -6,7 +6,7 @@ import static gift.util.ResponseEntityUtil.responseError;
 import gift.dto.JwtDTO;
 import gift.dto.UserDTO;
 import gift.exception.BadRequestExceptions.EmailAlreadyHereException;
-import gift.service.UserService;
+import gift.service.MemberService;
 import gift.util.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +24,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/members")
 public class UserController {
 
-    private final UserService userService;
+    private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
     @Autowired
-    public UserController(UserService userService, JwtUtil jwtUtil) {
-        this.userService = userService;
+    public UserController(MemberService memberService, JwtUtil jwtUtil) {
+        this.memberService = memberService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -42,7 +42,7 @@ public class UserController {
     public ResponseEntity<?> register(@RequestBody @Valid UserDTO userDTO) {
         String token;
         try {
-            userService.register(userDTO);
+            memberService.register(userDTO);
             token = jwtUtil.generateToken(userDTO);
         } catch (RuntimeException e) {
             if(e instanceof EmailAlreadyHereException)
@@ -61,7 +61,7 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody @Valid UserDTO userDTO) {
         String token;
         try {
-            userService.login(userDTO);
+            memberService.login(userDTO);
             token = jwtUtil.generateToken(userDTO);
         } catch (RuntimeException e) {
             return responseError(e, HttpStatus.FORBIDDEN);

@@ -2,7 +2,7 @@ package gift.config;
 
 import gift.controller.LoginMemberArgumentResolver;
 import gift.interceptor.JwtInterceptor;
-import gift.service.UserService;
+import gift.service.MemberService;
 import gift.util.JwtUtil;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +14,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    private final UserService userService;
+    private final MemberService memberService;
     private final JwtInterceptor jwtInterceptor;
     private final JwtUtil jwtUtil;
 
     @Autowired
-    WebMvcConfig(UserService userService, JwtInterceptor jwtInterceptor, JwtUtil jwtUtil) {
-        this.userService = userService;
+    WebMvcConfig(MemberService memberService, JwtInterceptor jwtInterceptor, JwtUtil jwtUtil) {
+        this.memberService = memberService;
         this.jwtInterceptor = jwtInterceptor;
         this.jwtUtil = jwtUtil;
     }
@@ -34,6 +34,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(new LoginMemberArgumentResolver(userService, jwtUtil));
+        argumentResolvers.add(new LoginMemberArgumentResolver(memberService, jwtUtil));
     }
 }
