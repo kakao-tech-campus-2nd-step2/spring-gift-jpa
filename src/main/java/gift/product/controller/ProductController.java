@@ -1,9 +1,9 @@
 package gift.product.controller;
 
-import gift.product.model.ProductRepository;
 import gift.product.model.dto.CreateProductRequest;
 import gift.product.model.dto.ProductResponse;
 import gift.product.model.dto.UpdateProductRequest;
+import gift.product.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -20,48 +20,42 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    public ProductController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> findProductById(@PathVariable Long id) {
-        final ProductResponse response = productRepository.findProduct(id);
+        final ProductResponse response = productService.findProduct(id);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> findAllProduct() {
-        final List<ProductResponse> response = productRepository.findAllProduct();
+        final List<ProductResponse> response = productService.findAllProduct();
         return ResponseEntity.ok().body(response);
     }
 
     @PostMapping
     public ResponseEntity<String> addProduct(@Valid @RequestBody CreateProductRequest createProductRequest) {
-        if (productRepository.addProduct(createProductRequest) > 0) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("ok");
-        }
-        throw new IllegalArgumentException("상품 추가 실패");
+        productService.addProduct(createProductRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable Long id,
                                                 @Valid @RequestBody UpdateProductRequest updateProductRequest) {
-        if (productRepository.updateProduct(updateProductRequest) > 0) {
-            return ResponseEntity.ok().body("ok");
-        }
-        throw new IllegalArgumentException("상품 수정 실패");
+        productService.updateProduct(id, updateProductRequest);
+        return ResponseEntity.ok().body("ok");
     }
 
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProductById(@PathVariable Long id) {
-        if (productRepository.deleteProduct(id) > 0) {
-            return ResponseEntity.ok().body("ok");
-        }
-        throw new IllegalArgumentException("상품 삭제 실패");
+        productService.deleteProduct(id);
+        return ResponseEntity.ok().body("ok");
     }
 }
