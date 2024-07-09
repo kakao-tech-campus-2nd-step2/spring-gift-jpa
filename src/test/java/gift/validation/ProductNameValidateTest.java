@@ -21,7 +21,7 @@ class ProductNameValidateTest {
 
     @Autowired
     private MockMvc mockMvc;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @ParameterizedTest
     @ValueSource(strings = {"a", "ab", "abc", "abcd", "15자aaaaaaaaaaaa", "    햇반      ", "[단독] 고급 지갑", "커피&우유", "1+1 제품", "/바로/구매___", "-_- 안사면 후회"})
