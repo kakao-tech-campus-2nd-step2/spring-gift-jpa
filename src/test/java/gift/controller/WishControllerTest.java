@@ -58,7 +58,7 @@ class WishControllerTest {
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         Member member = memberService.getMemberFromToken(token);
-        memberService.removeMember(member.getId());
+        memberService.deleteMember(member.getId());
     }
 
     @Test
@@ -79,7 +79,7 @@ class WishControllerTest {
 
         wishService.deleteWish(1L, memberService.getMemberFromToken(token));
         Member member = memberService.getMemberFromToken(token);
-        memberService.removeMember(member.getId());
+        memberService.deleteMember(member.getId());
     }
 
     @Test
