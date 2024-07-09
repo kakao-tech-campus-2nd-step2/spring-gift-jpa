@@ -1,22 +1,11 @@
 package gift.member.domain;
 
-import gift.member.application.command.MemberJoinCommand;
-import gift.member.application.command.MemberLoginCommand;
-import gift.member.application.command.MemberUpdateCommand;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository {
-    Optional<Member> findByEmail(String email);
-
-    List<Member> findAll();
-
-    String login(Member member);
-
-    String join(Member member);
-
-    void update(Member member);
-
-    void delete(String email);
+@Repository
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    Optional<Member> findByEmailAndPassword(String email, String password);
 }
