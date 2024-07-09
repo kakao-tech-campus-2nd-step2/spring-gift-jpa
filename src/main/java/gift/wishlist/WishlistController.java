@@ -1,5 +1,6 @@
 package gift.wishlist;
 
+import gift.exception.UnAuthorizationException;
 import gift.login.LoginMember;
 import gift.logout.TokenValidator;
 import gift.member.Member;
@@ -34,7 +35,7 @@ public class WishlistController {
 
     @PostMapping
     public void create(@RequestBody WishRequestDto request, @LoginMember Member member, @RequestHeader("Authorization") String authHeader)
-        throws IllegalAccessException {
+        throws UnAuthorizationException {
         String token = authHeader.replace("Bearer ", "");
         tokenValidator.validateToken(token);
         wishlistDao.insertWish(member,request.productId());
@@ -48,7 +49,7 @@ public class WishlistController {
 
     @DeleteMapping("/{id}")
     public HttpEntity<String> deleteWish(@PathVariable(name="id") Long wishId, @RequestHeader("Authorization") String authHeader)
-        throws IllegalAccessException {
+        throws UnAuthorizationException {
         String token = authHeader.replace("Bearer ", "");
         tokenValidator.validateToken(token);
 
