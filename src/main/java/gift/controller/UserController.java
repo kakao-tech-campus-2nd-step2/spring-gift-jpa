@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,7 +42,7 @@ public class UserController {
         return new SingleResult<>(userService.createUser(create));
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public SingleResult<Long> updatePassword(@PathVariable long id,
         @Valid @RequestBody User.UpdateUser update) {
         return new SingleResult<>(userService.updatePassword(id, update));
