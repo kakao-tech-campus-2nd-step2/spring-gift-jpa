@@ -27,8 +27,8 @@ public class MemberController {
     public ResponseEntity<?> join(
             @RequestBody MemberJoinRequest request
     ) {
-        String email = memberService.join(request.toCommand());
-        String token = tokenService.createToken(email);
+        Long memberId = memberService.join(request.toCommand());
+        String token = tokenService.createToken(memberId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
@@ -40,8 +40,8 @@ public class MemberController {
     public ResponseEntity<?> login(
             @RequestBody MemberLoginRequest request
     ) {
-        String email = memberService.login(request.toCommand());
-        String token = tokenService.createToken(email);
+        Long memberId = memberService.login(request.toCommand());
+        String token = tokenService.createToken(memberId);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + token);
@@ -49,11 +49,11 @@ public class MemberController {
         return ResponseEntity.ok().headers(headers).build();
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<MemberResponse> findByEmail(
-            @PathVariable("email") String email
+    @GetMapping("/{id}")
+    public ResponseEntity<MemberResponse> findById(
+            @PathVariable("id") Long memberId
     ) {
-        return ResponseEntity.ok(memberService.findByEmail(email));
+        return ResponseEntity.ok(memberService.findById(memberId));
     }
 
     @GetMapping()
@@ -61,19 +61,19 @@ public class MemberController {
         return ResponseEntity.ok(memberService.findAll());
     }
 
-    @PutMapping("/{email}")
+    @PutMapping("/{id}")
     public void update(
-            @PathVariable("email") String email,
+            @PathVariable("id") Long memberId,
             @RequestBody MemberUpdateRequest request
     ) {
-        memberService.update(request.toCommand(email));
+        memberService.update(request.toCommand(memberId));
     }
 
-    @DeleteMapping("/{email}")
+    @DeleteMapping("/{id}")
     public void delete(
-            @PathVariable("email") String email
+            @PathVariable("id") Long memberId
     ) {
-        memberService.delete(email);
+        memberService.delete(memberId);
     }
 }
 
