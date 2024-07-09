@@ -41,10 +41,7 @@ public class WishlistController {
 
     @DeleteMapping("/wishlist/{wishProductId}")
     public ResponseEntity<Void> deleteToWishlist(@PathVariable("wishProductId") Integer wishProductId, @RequestHeader("Authorization") String authorizationHeader) {
-        String token = getBearerToken(authorizationHeader);
-        Long memberId = jwtUtil.getMemberIdFromToken(token);
-
-        service.deleteWishProduct(memberId, wishProductId);
+        service.deleteWishProduct(wishProductId);
 
         return ResponseEntity.ok().build();
     }
