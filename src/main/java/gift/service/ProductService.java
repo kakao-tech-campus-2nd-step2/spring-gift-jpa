@@ -44,8 +44,16 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public Product getProduct(Long productId) {
-        return productRepository.getProduct(productId);
+    public void deleteProduct(Long id) {
+        if (productRepository.findById(id).isEmpty()) {
+            throw new ProductNotFoundException("해당 상품 id가 존재하지 않습니다.");
+        }
+        productRepository.deleteById(id);
     }
+
+    public void deleteProducts(List<Long> ids) {
+        productRepository.deleteAllById(ids);
+    }
+
 
 }
