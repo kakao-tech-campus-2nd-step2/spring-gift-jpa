@@ -1,72 +1,73 @@
 package gift.Service;
 
 import gift.Exception.AuthorizedException;
+import gift.Exception.LoginException;
 import gift.Model.*;
+import gift.Repository.ProductRepository;
+import gift.Repository.MemberRepository;
+import gift.Repository.WishlistRepository;
 import gift.Token.JwtTokenProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WishlistService {
-    private final WishlistDAO wishlistDAO;
-    private final ProductDAO productDAO;
-    private final UserInfoDAO userInfoDAO;
-    private final JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private WishlistRepository wishlistRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
-    public WishlistService(WishlistDAO wishlistDAO, ProductDAO productDAO, UserInfoDAO userInfoDAO, JwtTokenProvider jwtTokenProvider){
-        this.wishlistDAO = wishlistDAO;
-        this.productDAO = productDAO;
-        this.userInfoDAO = userInfoDAO;
-        this.jwtTokenProvider = jwtTokenProvider;
-        // 테스트용 코드
-        wishlistDAO.insertWishlist(new Wishlist("a",1, 1),"admin");
-        wishlistDAO.insertWishlist(new Wishlist("b",2, 1),"admin");
-        wishlistDAO.insertWishlist(new Wishlist("c",3, 1),"admin");
-    }
-
-    public void add(String token, Product product){
-        try{
-            Product product1 = productDAO.selectProductByName(product.name());
-            String email = jwtTokenProvider.getEmailFromToken(token);
-            String role = jwtTokenProvider.getRoleFromToken(token);
-            if(userInfoDAO.selectUser(email) != null && (role.equals(Role.CONSUMER.name()) || role.equals(Role.ADMIN.name()))) {
-                wishlistDAO.insertWishlist(new Wishlist(product1.name(),product1.price(), 1), email);
-            }
-        }
-        catch(Exception e) {
+    public void add(String token, String name){
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+        Optional<Product> productOptional = productRepository.findByName(name);
+        if(memberOptional.isEmpty()) throw new AuthorizedException();
+        Product product = productOptional.get();
+        Member member = memberOptional.get();
+        if(!member.getRole().equals(Role.ADMIN) && !member.getRole().equals(Role.CONSUMER))
             throw new AuthorizedException();
-        }
+
+        wishlistRepository.save(new Wishlist(member.getId(), product.getId()));
     }
 
     public void delete(String token, String name){
-        try{
-            String email = jwtTokenProvider.getEmailFromToken(token);
-            String role = jwtTokenProvider.getRoleFromToken(token);
-
-            if(userInfoDAO.selectUser(email) != null && (role.equals(Role.CONSUMER.name()) || role.equals(Role.ADMIN.name()))){
-                wishlistDAO.deleteWishlist(email, name);
-            }
-        }
-        catch(Exception e) {
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+        Optional<Product> productOptional = productRepository.findByName(name);
+        Product product = productOptional.get();
+        if(memberOptional.isEmpty())
             throw new AuthorizedException();
-        }
+        Member member = memberOptional.get();
+        if(!member.getRole().equals(Role.ADMIN) && !member.getRole().equals(Role.CONSUMER))
+            throw new AuthorizedException();
+
+        wishlistRepository.delete(wishlistRepository.findByMemberIdAndProductId(member.getId(), product.getId()));
     }
 
-    public List<Wishlist> viewAll(String token){
-        try{
-            String email = jwtTokenProvider.getEmailFromToken(token);
-            String role = jwtTokenProvider.getRoleFromToken(token);
-            System.out.println(role);
+    public List<String> viewAll(String token){
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        Optional<Member> memberOptional = memberRepository.findByEmail(email);
 
-            if(userInfoDAO.selectUser(email) != null && (role.equals(Role.CONSUMER.name()) || role.equals(Role.ADMIN.name()))){
-                return wishlistDAO.selectAllWishlist(email);
-            }
-        }
-        catch(Exception e) {
+        if(memberOptional.isEmpty())
             throw new AuthorizedException();
-        }
+        Member member = memberOptional.get();
 
-        return null;
+        if(!member.getRole().equals(Role.ADMIN) && !member.getRole().equals(Role.CONSUMER))
+            throw new AuthorizedException();
+
+        List<Wishlist> wishlists = wishlistRepository.findByMemberId(member.getId());
+        List<String> productNames = new ArrayList<>();
+        for(Wishlist w : wishlists){
+            productNames.add(productRepository.findById(w.getProductId()).get().getName());
+        }
+        return productNames;
     }
 }
