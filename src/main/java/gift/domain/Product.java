@@ -3,6 +3,9 @@ package gift.domain;
 import gift.dto.request.ProductRequestDto;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 public class Product {
 
@@ -16,6 +19,9 @@ public class Product {
     @Column(nullable = false)
     private int price;
     private String imageUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Wish> wishList = new ArrayList<>();
 
     public Product() {
     }
@@ -64,6 +70,10 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public List<Wish> getWishList() {
+        return wishList;
     }
 
     public void update(ProductRequestDto productDto){
