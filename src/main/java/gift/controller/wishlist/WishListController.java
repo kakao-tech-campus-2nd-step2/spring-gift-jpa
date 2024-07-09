@@ -2,7 +2,6 @@ package gift.controller.wishlist;
 
 import gift.dto.request.WishListRequest;
 import gift.dto.response.WishProductResponse;
-import gift.service.ProductService;
 import gift.service.WishListService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -15,11 +14,9 @@ import java.util.List;
 public class WishListController {
 
     private final WishListService wishListService;
-    private final ProductService productService;
 
-    public WishListController(WishListService wishListService, ProductService productService) {
+    public WishListController(WishListService wishListService) {
         this.wishListService = wishListService;
-        this.productService = productService;
     }
 
     @GetMapping("api/wishlist")

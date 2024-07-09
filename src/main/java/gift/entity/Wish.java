@@ -9,33 +9,28 @@ public class Wish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
     @NotNull
     Long memberId;
-    @NotNull
-    Long productId;
+
     @NotNull
     Integer amount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productId", insertable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "productId")
     Product product;
 
-    public Wish(Long memberId, Long productId, Integer amount) {
+    public Wish(Long memberId, Integer amount, Product product) {
         this.memberId = memberId;
-        this.productId = productId;
         this.amount = amount;
+        this.product = product;
+    }
+
+    public Wish() {
     }
 
     public Long getId() {
         return id;
-    }
-
-    public Long getMemberId() {
-        return memberId;
-    }
-
-    public Long getProductId() {
-        return productId;
     }
 
     public Integer getAmount() {
@@ -46,15 +41,8 @@ public class Wish {
         return product;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
     public void setAmount(Integer amount) {
         this.amount = amount;
     }
+
 }
