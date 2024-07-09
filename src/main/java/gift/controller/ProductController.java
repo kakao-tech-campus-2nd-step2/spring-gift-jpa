@@ -3,9 +3,10 @@ package gift.controller;
 import gift.domain.Product;
 import gift.domain.Product.ProductSimple;
 import gift.entity.ProductEntity;
-import gift.errorException.ListResult;
-import gift.errorException.SingleResult;
+import gift.mapper.PageMapper;
 import gift.service.ProductService;
+import gift.util.page.PageResult;
+import gift.util.page.SingleResult;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,14 +27,13 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-
-    public ListResult<ProductEntity> getProductList() {
-        return new ListResult<>(productService.getProductList());
+    public PageResult<ProductEntity> getProductList(@Valid Product.getList param) {
+        return PageMapper.toPageResult(productService.getProductList(param));
     }
 
     @GetMapping("/simple")
-    public ListResult<ProductSimple> getSimpleProductList() {
-        return new ListResult<>(productService.getSimpleProductList());
+    public PageResult<ProductSimple> getSimpleProductList(@Valid Product.getList param) {
+        return PageMapper.toPageResult(productService.getSimpleProductList(param));
     }
 
     @GetMapping("/{id}")
