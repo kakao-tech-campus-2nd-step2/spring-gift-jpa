@@ -6,16 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class ProductDTO {
-    @NotNull
-    private Long id;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
     @NotEmpty(message = "Product name cannot be empty")
     @Pattern(
         regexp = "^[a-zA-Z0-9 ()\\[\\]+\\-&/_]{1,15}$",
@@ -29,7 +20,7 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(Long id, String name, double price, String imageUrl) {
+    public ProductDTO(String name, double price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

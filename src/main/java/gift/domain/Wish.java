@@ -1,41 +1,45 @@
 package gift.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-
+@Entity
 public class Wish {
-    @NotNull
-    private String email;
-    @NotNull
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false)
     private Long productId;
-    @NotNull
-    @Min(1)
+    @Column(nullable = false)
+    private Long userId;
+    @Column(nullable = false)
     private Long quantity;
 
-    public Wish(String email, Long productId,Long quantity) {
-        this.email = email;
+    public Wish(Long productId, Long userId, Long quantity) {
         this.productId = productId;
+        this.userId = userId;
         this.quantity = quantity;
     }
 
-    public String getEmail() {
-        return email;
+    public Wish() {
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public Long getProductId() {
         return productId;
     }
 
+    public Long getUserId() { return userId; }
+
     public Long getQuantity() {
         return quantity;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
     }
-
 }

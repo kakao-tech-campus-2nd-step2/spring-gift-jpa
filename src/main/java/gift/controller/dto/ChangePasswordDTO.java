@@ -12,6 +12,12 @@ public class ChangePasswordDTO {
     @NotNull
     private String newPassword;
 
+    public ChangePasswordDTO(String email, String currentPassword, String newPassword) {
+        this.email = email;
+        this.currentPassword = currentPassword;
+        this.newPassword = newPassword;
+    }
+
     public String getEmail() {
         return email;
     }

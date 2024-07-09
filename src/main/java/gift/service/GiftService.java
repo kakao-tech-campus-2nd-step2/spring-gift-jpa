@@ -19,16 +19,13 @@ public class GiftService {
     }
 
     public Product getProduct(Long id) {
-        Product byId = productRepository.findById(id);
-        if (byId == null) {
-            throw new ProductNotFoundException("Product NOT FOUND");
-        }
-        return byId;
+        return productRepository.findById(id).
+            orElseThrow(() -> new ProductNotFoundException("Product NOT FOUND"));
     }
 
     public List<Product> getAllProduct() {
         List<Product> ALL = productRepository.findAll();
-        if (ALL == null) {
+        if (ALL.isEmpty()) {
             throw new ProductNotFoundException("Product NOT FOUND");
         }
         return ALL;
@@ -36,33 +33,36 @@ public class GiftService {
 
     public ProductDTO postProducts(ProductDTO productDTO) {
         validateProductName(productDTO.getName());
-        Product product = new Product(productDTO.getId(), productDTO.getName(),
+
+
+
+        Product product = new Product(productDTO.getName(),
             productDTO.getPrice(), productDTO.getImageUrl());
 
-        boolean b = productRepository.create(product);
-        if (!b) {
-            throw new ProductAlreadyExistException("Product EXIST");
-        }
+        Product savedProduct = productRepository.save(product);
+
         return productDTO;
     }
 
     public ProductDTO putProducts(ProductDTO productDTO, Long id) {
         validateProductName(productDTO.getName());
-        Product product = new Product(productDTO.getId(), productDTO.getName(),
-            productDTO.getPrice(), productDTO.getImageUrl());
 
-        boolean update = productRepository.update(product, id);
-        if (!update) {
-            throw new ProductNotFoundException("Product NOT FOUND");
-        }
+        Product productById = productRepository.findById(id).
+            orElseThrow(() -> new ProductNotFoundException("Product NOT FOUND"));
+
+        productById.setName(productDTO.getName());
+        productById.setPrice(productDTO.getPrice());
+        productById.setImageUrl(productDTO.getImageUrl());
+        Product save = productRepository.save(productById);
+
+
         return productDTO;
     }
 
     public Long deleteProducts(Long id) {
-        boolean delete = productRepository.delete(id);
-        if (!delete) {
-            throw new ProductNotFoundException("Product NOT FOUND");
-        }
+        productRepository.findById(id).orElseThrow(
+            ()-> new ProductNotFoundException("Product NOT FOUND"));
+        productRepository.deleteById(id);
         return id;
     }
 
