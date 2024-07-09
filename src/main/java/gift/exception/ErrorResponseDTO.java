@@ -4,12 +4,15 @@ import java.util.Map;
 
 public class ErrorResponseDTO {
 
-    private final String message;
-    private final Map<String, String> errors;
+    private String message;
+    private Map<String, String> errors;
 
     public ErrorResponseDTO(ErrorCode errorCode, Map<String, String> errors) {
         this.message = errorCode.getMessage();
         this.errors = errors;
+    }
+
+    public ErrorResponseDTO() {
     }
 
     public String getMessage() {
