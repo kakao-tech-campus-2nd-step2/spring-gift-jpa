@@ -18,4 +18,7 @@ public class Member {
         this.password = password;
     }
 
+    public String getPassword() {
+        return password;
+    }
 }
