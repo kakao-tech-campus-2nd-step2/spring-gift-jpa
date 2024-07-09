@@ -1,7 +1,5 @@
 package gift.model.dto;
 
-import gift.exception.ProductErrorCode;
-import gift.exception.ProductException;
 import gift.model.Product;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

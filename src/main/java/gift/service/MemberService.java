@@ -4,24 +4,25 @@ import gift.model.Member;
 import gift.model.dto.LoginMemberDto;
 import gift.model.dto.MemberRequestDto;
 import gift.repository.MemberDao;
+import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public MemberService(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     public LoginMemberDto selectLoginMemberById(Long id) {
-        Member member = memberDao.selectMemberById(id);
+        Member member = memberRepository.findById(id).get();
         return new LoginMemberDto(member.getId(), member.getName(), member.getEmail(),
             member.getRole());
     }
 
     public void insertMember(MemberRequestDto memberRequestDto) {
-        memberDao.insertMember(memberRequestDto.toEntity());
+        memberRepository.save(memberRequestDto.toEntity());
     }
 }

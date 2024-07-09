@@ -5,8 +5,8 @@
   - [x] ProductRepository 생성
   - [x] MemberRepository 생성
   - [x] WishRepository 생성
-  - [ ] ProductDao에서 ProductRepository로 변경
-    - [ ] validate를 Product로 옮김.
+  - [x] ProductDao에서 ProductRepository로 변경
+    - [x] validate를 Product로 옮김.
   - [ ] MemberDao에서 MemberRepository로 변경
   - [ ] WishDao에서 WishRepository로 변경
 @DataJpaTest를 사용하여 학습 테스트를 해 본다.

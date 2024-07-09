@@ -1,11 +1,8 @@
 package gift.service;
 
-import gift.exception.ProductErrorCode;
 import gift.exception.ProductException;
-import gift.model.Product;
 import gift.model.dto.ProductRequestDto;
 import gift.model.dto.ProductResponseDto;
-import gift.repository.ProductDao;
 import gift.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
