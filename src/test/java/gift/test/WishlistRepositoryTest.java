@@ -1,6 +1,7 @@
 package gift.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import gift.model.Product;
 import gift.model.SiteUser;
@@ -8,44 +9,70 @@ import gift.model.Wishlist;
 import gift.repository.ProductRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishlistRepository;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import org.springframework.security.test.context.support.WithMockUser;
+
 
 @DataJpaTest
+@TestMethodOrder(OrderAnnotation.class)
 public class WishlistRepositoryTest {
 
     @Autowired
     private WishlistRepository wishlistRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private WebApplicationContext context;
 
-    @Autowired
-    private ProductRepository productRepository;
+    private MockMvc mockMvc;
+
+    @BeforeEach
+    void setUp() {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+    }
 
     @Test
-    void save() {
-        SiteUser user = new SiteUser();
-        user.setUsername("testuser");
-        user.setPassword("password");
-        user.setEmail("test@example.com");
-        userRepository.save(user);
+    @Order(1)
+    @DisplayName("위시리스트에 상품 3개 담기")
+    @WithMockUser(username = "testuser")
+    void testAddToWishlist() throws Exception {
+        // Add first product
+        mockMvc.perform(post("/web/wishlist/add")
+                .param("productId", "1")
+                .param("quantity", "2"))
+            .andExpect(status().isOk());
 
-        Product product = new Product();
-        product.setName("product1");
-        product.setPrice(1000);
-        product.setImageUrl("http://example.com/image.jpg");
-        productRepository.save(product);
+        // Add second product
+        mockMvc.perform(post("/web/wishlist/add")
+                .param("productId", "2")
+                .param("quantity", "3"))
+            .andExpect(status().isOk());
 
-        Wishlist wishlist = new Wishlist();
-        wishlist.setUsername(user.getUsername());
-        wishlist.setProductId(product.getId());
-        wishlist.setQuantity(2);
-        Wishlist savedWishlist = wishlistRepository.save(wishlist);
+        // Add third product
+        mockMvc.perform(post("/web/wishlist/add")
+                .param("productId", "3")
+                .param("quantity", "1"))
+            .andExpect(status().isOk());
 
-        assertThat(savedWishlist.getId()).isNotNull();
-        assertThat(savedWishlist.getUsername()).isEqualTo(user.getUsername());
-        assertThat(savedWishlist.getProductId()).isEqualTo(product.getId());
+        // Verify items added to wishlist
+        List<Wishlist> wishlist = wishlistRepository.findByUsername("testuser");
+        assertThat(wishlist).hasSize(3);
     }
+
+
+
 }

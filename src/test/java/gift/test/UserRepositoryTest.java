@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -30,19 +29,18 @@ public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private WebApplicationContext context;
-
     private PasswordEncoder passwordEncoder;
-
     private MockMvc mockMvc;
+
 
     @BeforeEach
     void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
+
 
     @Test
     @Order(1)
@@ -62,6 +60,7 @@ public class UserRepositoryTest {
         assertThat(savedUser.getUsername()).isEqualTo("testuser");
         assertThat(savedUser.getEmail()).isEqualTo("test@example.com");
     }
+
 
     @Test
     @Order(2)
@@ -84,7 +83,7 @@ public class UserRepositoryTest {
     @Order(3)
     @DisplayName("로그인 성공 - 유효한 아이디와 비밀번호")
     void testLoginWithValidCredentials() throws Exception {
-        // Given: 로그인 성공을 위해 유효한 사용자 생성
+        // Given
         SiteUser user = new SiteUser();
         user.setUsername("validUser");
         user.setPassword(passwordEncoder.encode("validPassword"));
