@@ -43,6 +43,20 @@ public class UserRepositoryTest {
     }
 
     @Test
+    @DisplayName("회원 이메일과 비밀번호로 찾기")
+    void notExistsByEmailAndPassword() {
+        //Given
+        User user = new User("admin@email.com","1234");
+        userRepository.save(user);
+
+        //When
+        Boolean actual = userRepository.existsByEmailAndPassword("admin@email.com","2222");
+
+        //Then
+        assertThat(actual).isEqualTo(false);
+    }
+
+    @Test
     @DisplayName("회원 이메일로 찾기")
     void existsByEmail(){
         //Given
@@ -54,5 +68,19 @@ public class UserRepositoryTest {
 
         //Then
         assertThat(actual).isEqualTo(true);
+    }
+
+    @Test
+    @DisplayName("회원 이메일로 찾기")
+    void notExistsByEmail(){
+        //Given
+        User user = new User("admin@email.com","1234");
+        userRepository.save(user);
+
+        //When
+        Boolean actual = userRepository.existsByEmail("example@email.com");
+
+        //Then
+        assertThat(actual).isEqualTo(false);
     }
 }

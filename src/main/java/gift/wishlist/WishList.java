@@ -1,6 +1,8 @@
 package gift.wishlist;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 @Table(name = "wishlist")
 @Entity
@@ -14,6 +16,7 @@ public class WishList {
     @Column(nullable = false, unique = true, length = 15)
     private long productId;
     @Column(nullable = false)
+    @Min(value = 1)
     private int num;
 
     public WishList() {

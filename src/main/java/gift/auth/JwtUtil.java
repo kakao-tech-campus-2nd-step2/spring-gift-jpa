@@ -18,9 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 @Component
 public class JwtUtil {
 
-    @Autowired
-    private UserService userService;
-
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -28,9 +25,6 @@ public class JwtUtil {
     private Long expiration;
 
     public String generateToken(UserDTO userDTO) {
-        if(!userService.getUserByEmailAndPassword(userDTO)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
-        }
         return Jwts.builder()
             .setSubject(userDTO.getEmail())
             .setIssuedAt(new Date(System.currentTimeMillis()))
