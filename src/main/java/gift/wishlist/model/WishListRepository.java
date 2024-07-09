@@ -44,8 +44,8 @@ public class WishListRepository {
     public int addWish(Long userId, AddWishRequest addWishRequest) {
         String sql = "INSERT INTO Wish (userId, productId, quantity) VALUES (?, ?, ?)";
         try {
-            return jdbcTemplate.update(sql, userId, addWishRequest.getProductId(),
-                    addWishRequest.getQuantity());
+            return jdbcTemplate.update(sql, userId, addWishRequest.productId(),
+                    addWishRequest.quantity());
         } catch (DataIntegrityViolationException e) {
             throw new InvalidForeignKeyException();
         }

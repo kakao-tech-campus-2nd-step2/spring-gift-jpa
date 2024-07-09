@@ -31,9 +31,9 @@ public class UserService {
     }
 
     public String login(LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(loginRequest.getEmail());
+        User user = userRepository.findByEmail(loginRequest.email());
         if (user != null) {
-            if (isPasswordCorrect(loginRequest.getPassword(), user)) {
+            if (isPasswordCorrect(loginRequest.password(), user)) {
                 return jwtService.createToken(user.id());
             }
         }
@@ -46,8 +46,8 @@ public class UserService {
     }
 
     public void updatePassword(UpdatePasswordRequest updatePasswordRequest, User loginUser) {
-        if (isPasswordCorrect(updatePasswordRequest.getOldPassword(), loginUser)) {
-            String newHashedPassword = SHA256Util.encodePassword(updatePasswordRequest.getNewPassword(),
+        if (isPasswordCorrect(updatePasswordRequest.oldPassword(), loginUser)) {
+            String newHashedPassword = SHA256Util.encodePassword(updatePasswordRequest.newPassword(),
                     loginUser.salt());
             if (userRepository.updatePassword(loginUser.id(), newHashedPassword) <= 0) {
                 throw new IllegalArgumentException("비밀번호 변경 실패");

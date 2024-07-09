@@ -37,9 +37,9 @@ public class ProductService {
     @Transactional
     public void addProduct(CreateProductRequest createProductRequest) {
         Product product = new Product();
-        product.setName(createProductRequest.getName());
-        product.setPrice(createProductRequest.getPrice());
-        product.setImageUrl(createProductRequest.getImageUrl());
+        product.setName(createProductRequest.name());
+        product.setPrice(createProductRequest.price());
+        product.setImageUrl(createProductRequest.imageUrl());
         productRepository.save(product);
     }
 
@@ -47,9 +47,9 @@ public class ProductService {
     public void updateProduct(Long id, UpdateProductRequest updateProductRequest) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
-        product.setName(updateProductRequest.getName());
-        product.setPrice(updateProductRequest.getPrice());
-        product.setImageUrl(updateProductRequest.getImageUrl());
+        product.setName(updateProductRequest.name());
+        product.setPrice(updateProductRequest.price());
+        product.setImageUrl(updateProductRequest.imageUrl());
         productRepository.save(product);
     }
 

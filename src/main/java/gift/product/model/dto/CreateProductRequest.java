@@ -10,39 +10,18 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.lang.Nullable;
 
-public class CreateProductRequest {
-    @NotBlank
-    @Size(max = 15, message = "상품 이름은 15자 이하로 입력해주세요.")
-    @Pattern(regexp = NAME_PATTERN, message = "사용할 수 없는 특수문자가 포함되어 있습니다.")
-    @ExcludeKeyword(excludeKeyword = "카카오")
-    private String name;
-    @NotNull
-    @Min(value = 0, message = "상품 가격은 0 이상의 정수로 입력해주세요.")
-    private int price = 0;
-    @Nullable
-    private String imageUrl;
+public record CreateProductRequest(
+        @NotBlank
+        @Size(max = 15, message = "상품 이름은 15자 이하로 입력해주세요.")
+        @Pattern(regexp = NAME_PATTERN, message = "사용할 수 없는 특수문자가 포함되어 있습니다.")
+        @ExcludeKeyword(excludeKeyword = "카카오")
+        String name,
 
-    public String getName() {
-        return name;
-    }
+        @NotNull
+        @Min(value = 0, message = "상품 가격은 0 이상의 정수로 입력해주세요.")
+        int price,
 
-    public void setName(@NotNull String name) {
-        this.name = name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(@NotNull @Min(0) int price) {
-        this.price = price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(@Nullable String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+        @Nullable
+        String imageUrl
+) {
 }
