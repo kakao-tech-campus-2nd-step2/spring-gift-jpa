@@ -11,6 +11,7 @@ import gift.dto.ProductDto;
 import gift.entity.Product;
 import gift.exception.CustomException;
 import gift.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProductService{
@@ -22,6 +23,7 @@ public class ProductService{
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public List<ProductDto> findAll() {
         List<Product> productList = productRepository.findAll();
         return productList.stream()
@@ -29,13 +31,14 @@ public class ProductService{
         .collect(Collectors.toList());
     }
 
-
+    @Transactional
     public ProductDto findById(Long id){
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new CustomException("Product with id " + id + " not found", HttpStatus.NOT_FOUND));
         return product.toDto();
     }
 
+    @Transactional
     public void addProduct(ProductDto productDto) {
 
         if(productRepository.findById(productDto.getId()).isEmpty()){
@@ -46,6 +49,7 @@ public class ProductService{
         }
     }
 
+    @Transactional
     public void updateProduct(ProductDto productDto) {
 
         Optional<Product> optionalProduct = productRepository.findById(productDto.getId());
@@ -61,6 +65,7 @@ public class ProductService{
         }
     }
 
+    @Transactional
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }

@@ -6,6 +6,7 @@ import gift.entity.WishList;
 import gift.repository.ProductRepository;
 import gift.repository.WishListRepository;
 import gift.util.JwtUtil;
+import jakarta.transaction.Transactional;
 
 import java.util.stream.Collectors;
 
@@ -26,6 +27,7 @@ public class WishListService {
         this.jwtUtil = jwtUtil;
     }
 
+    @Transactional
     public List<WishListDto> findWishListById(String token) {
 
         long memberId = (long)jwtUtil.extractAllClaims(token).get("id");
@@ -35,6 +37,7 @@ public class WishListService {
         .collect(Collectors.toList());
     }
 
+    @Transactional
     public void addWishList(String token, long productId) {
 
         long memberId = (long)jwtUtil.extractAllClaims(token).get("id");
@@ -43,6 +46,7 @@ public class WishListService {
 
     }
 
+    @Transactional
     public void deleteWishList(String token, long productId) {
         long memberId = (long)jwtUtil.extractAllClaims(token).get("id");
         wishListRepository.deleteById(wishListRepository.findId(memberId, productId));;
