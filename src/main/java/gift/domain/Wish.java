@@ -1,17 +1,30 @@
 package gift.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.FetchType;
+
+
+@Entity
+@Table(name = "wishes")
 public class Wish {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long memberId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
     private String productName;
 
-    // Constructors, getters, and setters
-    public Wish() {}
-
-    public Wish(Long memberId, String productName) {
-        this.memberId = memberId;
-        this.productName = productName;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     public Long getId() {
         return id;
@@ -21,12 +34,12 @@ public class Wish {
         this.id = id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
     public String getProductName() {
@@ -35,5 +48,13 @@ public class Wish {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }
