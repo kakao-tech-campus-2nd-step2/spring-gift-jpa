@@ -63,8 +63,7 @@ public class ProductRequestDto {
         return imageUrl;
     }
 
-    public Product toEntity() throws ProductException {
-        validateKakaoWord(name);
+    public Product toEntity() {
         return new Product(
             id,
             name,
@@ -80,11 +79,5 @@ public class ProductRequestDto {
             productResponseDto.getPrice(),
             productResponseDto.getImageUrl()
         );
-    }
-
-    private void validateKakaoWord(String name) throws ProductException {
-        if (name.contains("카카오")) {
-            throw new ProductException(ProductErrorCode.HAS_KAKAO_WORD);
-        }
     }
 }
