@@ -25,27 +25,31 @@ public class ProductController {
 
     @PostMapping
     public Product addProduct(@RequestBody Product newProduct) {
-        return productRepository.saveProduct(newProduct);
+        return productRepository.save(newProduct);
     }
 
     @GetMapping("/{id}")
     public Product getProduct(@PathVariable(value = "id") long id) {
-        return productRepository.findProductsById(id);
+        return productRepository.findById(id).orElse(null);
     }
 
     @GetMapping
     public List<Product> getAllProduct() {
-        return productRepository.findProductsAll();
+        return productRepository.findAll();
     }
 
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable(value = "id") long id) {
-        productRepository.deleteProduct(id);
+        productRepository.deleteById(id);
     }
 
     @PutMapping("/{id}")
     public Product updateProduct(@PathVariable("id") long id, @RequestBody Product updatedProduct) {
-        productRepository.updateProduct(updatedProduct, id);
-        return productRepository.findProductsById(id);
+        productRepository.save(toEntity(updatedProduct, id));
+        return productRepository.findById(id).orElse(null);
+    }
+
+    private static Product toEntity(Product product, Long id) {
+        return new Product(id, product.getName(), product.getPrice(), product.getImageUrl());
     }
 }

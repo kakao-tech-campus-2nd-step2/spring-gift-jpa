@@ -16,23 +16,23 @@ public class ProductService {
     }
 
     public List<Product> findAllProducts() {
-        return productRepository.findProductsAll();
+        return productRepository.findAll();
     }
 
     public Product findProductsById(Long id) {
-        return productRepository.findProductsById(id);
+        return productRepository.findById(id).orElse(null);
     }
 
     public void saveProduct(ProductDTO productDTO) {
-        productRepository.saveProduct(toEntity(productDTO, null));
+        productRepository.save(toEntity(productDTO, null));
     }
 
     public void updateProduct(ProductDTO productDTO, Long id) {
-        productRepository.updateProduct(toEntity(productDTO, id), id);
+        productRepository.save(toEntity(productDTO, id));
     }
 
     public void deleteProduct(Long id) {
-        productRepository.deleteProduct(id);
+        productRepository.deleteById(id);
     }
 
     public static ProductDTO toDTO(Product product) {
