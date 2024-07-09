@@ -9,4 +9,12 @@ public class UserResponseDto {
         this.user = user;
         this.token = token;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public String getToken() {
+        return token;
+    }
 }

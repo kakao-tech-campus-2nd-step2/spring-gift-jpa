@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.domain.model.User;
 import gift.domain.model.UserRequestDto;
 import gift.domain.model.TokenResponseDto;
 import gift.domain.model.UserResponseDto;
@@ -23,9 +24,11 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<UserResponseDto> joinUser(@Valid @RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<User> joinUser(@Valid @RequestBody UserRequestDto userRequestDto) {
         UserResponseDto response = userService.joinUser(userRequestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .header("Authorization", "Bearer " + response.getToken())
+            .body(response.getUser());
     }
 
     @PostMapping("/login")
