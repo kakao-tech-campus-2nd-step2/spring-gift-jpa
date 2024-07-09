@@ -13,6 +13,7 @@ import gift.dto.member.MemberResponse;
 import gift.exception.member.EmailAlreadyUsedException;
 import gift.exception.member.ForbiddenException;
 import gift.service.MemberService;
+import gift.util.TokenValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ public class MemberControllerTest {
 
     @MockBean
     private MemberService memberService;
+
+    @MockBean
+    private TokenValidator tokenValidator;
 
     private MemberResponse memberResponse;
 

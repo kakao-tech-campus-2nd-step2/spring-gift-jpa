@@ -20,6 +20,7 @@ import gift.exception.product.InvalidProductPriceException;
 import gift.exception.product.ProductNotFoundException;
 import gift.service.MemberService;
 import gift.service.ProductService;
+import gift.util.TokenValidator;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +41,7 @@ public class ProductControllerTest {
     private ProductService productService;
 
     @MockBean
-    private MemberService memberService;
+    private TokenValidator tokenValidator;
 
     private ProductResponse productDTO;
 

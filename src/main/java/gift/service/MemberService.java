@@ -55,20 +55,6 @@ public class MemberService {
         return new MemberResponse(member.getId(), member.getEmail(), token);
     }
 
-    // 토큰 검증
-    public void validateToken(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader("Authorization");
-
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new InvalidTokenException(INVALID_AUTHORIZATION_HEADER);
-        }
-
-        String token = authorizationHeader.substring(7);
-        Claims claims = jwtUtil.validateToken(token);
-        Long memberId = claims.get("memberId", Long.class);
-        request.setAttribute("memberId", memberId);
-    }
-
     // 모든 회원 조회
     public List<MemberResponse> getAllMembers() {
         return memberRepository.findAll().stream()
