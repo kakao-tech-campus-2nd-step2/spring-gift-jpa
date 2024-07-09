@@ -34,7 +34,7 @@ public class ValidUserArgumentResolver implements HandlerMethodArgumentResolver 
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 
         String authorizationHeader = webRequest.getHeader("Authorization");
         log.info("Header/Authorization: \"{}\"", authorizationHeader);

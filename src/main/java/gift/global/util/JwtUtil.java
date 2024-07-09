@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
  * User를 기반으로 token을 생성 및 검증하는 유틸 클래스
  */
 @Component
+@SuppressWarnings("deprecation")
 public class JwtUtil {
 
     @Value("${jwt.secretKey}")
