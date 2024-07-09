@@ -1,5 +1,7 @@
 package gift.exception;
 
+import gift.exception.CustomException.EmailNotFoundException;
+import gift.exception.CustomException.PassWordMissMatchException;
 import io.jsonwebtoken.JwtException;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,11 +26,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDTO> handleMethodArgumentNotValidException(
         MethodArgumentNotValidException e) {
+        ErrorCode errorCode = ErrorCode.INVALID_INPUT;
         Map<String, String> errors = new HashMap<>();
         for (FieldError fieldError : e.getFieldErrors()) {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
-        return handleException(ErrorCode.INVALID_INPUT, errors);
+        if(e instanceof EmailNotFoundException)
+            errorCode = ErrorCode.EMAIL_NOT_FOUND;
+        if(e instanceof PassWordMissMatchException)
+            errorCode = ErrorCode.PASSWORD_MISMATCH;
+        return handleException(errorCode, errors);
     }
 
     @ExceptionHandler(JwtException.class)
