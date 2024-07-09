@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.exception.MemberException;
 import gift.exception.ProductException;
 import gift.exception.WishListException;
 import gift.model.Product;
@@ -8,7 +7,6 @@ import gift.model.WishProduct;
 import gift.repository.ProductRepository;
 import gift.repository.WishProductRepository;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

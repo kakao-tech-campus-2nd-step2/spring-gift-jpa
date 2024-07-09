@@ -1,13 +1,10 @@
 package gift.service;
 
-import gift.exception.LoginErrorException;
-import gift.exception.MemberException;
+import gift.exception.member.LoginErrorException;
+import gift.exception.member.DuplicateEmailException;
 import gift.model.Member;
-import gift.repository.MemberDao;
 import gift.repository.MemberRepository;
-import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +22,7 @@ public class MemberService {
         try {
             return memberRepository.save(new Member(email, password));
         } catch (DataIntegrityViolationException e) {
-            throw new MemberException("중복된 이메일의 회원이 이미 존재합니다.");
+            throw new DuplicateEmailException("중복된 이메일의 회원이 이미 존재합니다.");
         }
 
     }

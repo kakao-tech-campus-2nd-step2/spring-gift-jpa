@@ -4,15 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
-import gift.exception.LoginErrorException;
-import gift.exception.MemberException;
+import gift.exception.member.LoginErrorException;
+import gift.exception.member.DuplicateEmailException;
 import gift.model.Member;
-import gift.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +35,7 @@ class MemberServiceTest {
         memberService.join(member.getEmail(), member.getPassword());
         Assertions.assertThatThrownBy(
             () -> memberService.join(member.getEmail(), member.getPassword())
-        ).isInstanceOf(MemberException.class);
+        ).isInstanceOf(DuplicateEmailException.class);
     }
 
     @Test

@@ -1,7 +1,7 @@
 package gift.repository;
 
-import gift.exception.LoginErrorException;
-import gift.exception.MemberException;
+import gift.exception.member.LoginErrorException;
+import gift.exception.member.DuplicateEmailException;
 import gift.model.Member;
 import gift.model.Role;
 import java.sql.PreparedStatement;
@@ -40,7 +40,7 @@ public class MemberDao {
             //jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
             //return getMemberByEmail(member.getEmail());
         } catch (DuplicateKeyException e) {
-            throw new MemberException("중복된 이메일의 회원이 존재합니다.");
+            throw new DuplicateEmailException("중복된 이메일의 회원이 존재합니다.");
         }
     }
 
