@@ -33,7 +33,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
 
         Claims claims = jwtProvider.getClaims(authHeader);
-        request.setAttribute("userId", String.valueOf(claims.getSubject()));
+        request.setAttribute("memberId", claims.getSubject());
         request.setAttribute("name", claims.get("name", String.class));
         request.setAttribute("roles", claims.get("roles", String.class));
         return true;  // 인증 성공 시 다음 인터셉터나 컨트롤러로 전달

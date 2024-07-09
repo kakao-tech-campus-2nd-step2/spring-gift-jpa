@@ -1,17 +1,36 @@
-package gift.model.user;
+package gift.model.member;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import org.hibernate.validator.constraints.UniqueElements;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
-public class User {
+@Entity
+public class Member {
 
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @NotNull
+    @Column(unique = true)
     private String email;
+    @NotNull
     private String password;
+    @NotNull
     private String name;
+    @NotNull
     private Role role;
 
-    public User(String id, String email, String password, String name, Role role) {
+    protected Member() {
+    }
+
+    public Member(Long id, String email, String password, String name, Role role) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -19,7 +38,7 @@ public class User {
         this.role = role;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -45,8 +64,8 @@ public class User {
         return hashedPassword.equals(this.password);
     }
 
-    public static User create(String id, String email, String password, String name, Role role) {
-        return new User(id, email, PasswordUtil.hashPasswordWithSalt(password), name, role);
+    public static Member create(Long id, String email, String password, String name, Role role) {
+        return new Member(id, email, PasswordUtil.hashPasswordWithSalt(password), name, role);
     }
 
 }

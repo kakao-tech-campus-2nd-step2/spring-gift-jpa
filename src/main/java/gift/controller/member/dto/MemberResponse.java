@@ -1,8 +1,8 @@
-package gift.controller.user.dto;
+package gift.controller.member.dto;
 
-import gift.model.user.User;
+import gift.model.member.Member;
 
-public class UserResponse {
+public class MemberResponse {
 
     public record LoginResponse(String token) {
 
@@ -16,8 +16,8 @@ public class UserResponse {
         String name
     ) {
 
-        public static InfoResponse from(User user) {
-            return new InfoResponse(user.getEmail(), user.getName());
+        public static InfoResponse from(Member member) {
+            return new InfoResponse(member.getEmail(), member.getName());
         }
     }
 }

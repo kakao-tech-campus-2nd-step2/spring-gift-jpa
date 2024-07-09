@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 @Primary
 public class ProductJdbcTemplateDao implements ProductDao {
 
-    private static final String SQL_INSERT = "INSERT INTO products(name, price, image_url) VALUES (?, ?, ?)";
-    private static final String SQL_SELECT_BY_ID = "SELECT id, name, price, image_url FROM products WHERE id = ?";
-    private static final String SQL_SELECT_ALL = "SELECT id, name, price, image_url FROM products";
-    private static final String SQL_DELETE_BY_ID = "DELETE FROM products WHERE id = ?";
-    private static final String SQL_UPDATE = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?";
-    private static final String SQL_SELECT_PAGING = "SELECT id, name, price, image_url FROM products LIMIT ? OFFSET ?";
-    private static final String SQL_COUNT = "SELECT COUNT(*) FROM products";
+    private static final String SQL_INSERT = "INSERT INTO product(name, price, image_url) VALUES (?, ?, ?)";
+    private static final String SQL_SELECT_BY_ID = "SELECT id, name, price, image_url FROM product WHERE id = ?";
+    private static final String SQL_SELECT_ALL = "SELECT id, name, price, image_url FROM product";
+    private static final String SQL_DELETE_BY_ID = "DELETE FROM product WHERE id = ?";
+    private static final String SQL_UPDATE = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+    private static final String SQL_SELECT_PAGING = "SELECT id, name, price, image_url FROM product LIMIT ? OFFSET ?";
+    private static final String SQL_COUNT = "SELECT COUNT(*) FROM product";
 
 
     private final JdbcTemplate jdbcTemplate;
