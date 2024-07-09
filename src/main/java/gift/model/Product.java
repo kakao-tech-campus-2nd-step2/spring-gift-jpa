@@ -55,16 +55,9 @@ public class Product {
         return imageUrl;
     }
 
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void updateProduct(String newName, Integer newPrice, String newImageUrl) {
+        this.name = newName;
+        this.price = newPrice;
+        this.imageUrl = newImageUrl;
     }
 }

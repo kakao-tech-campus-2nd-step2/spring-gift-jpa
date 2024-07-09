@@ -5,12 +5,9 @@ import gift.response.ProductResponse;
 import gift.request.ProductUpdateRequest;
 import gift.exception.InputException;
 import gift.model.Product;
-import gift.repository.ProductDao;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -61,7 +58,7 @@ public class ProductApiController {
             throw new InputException(bindingResult.getAllErrors());
         }
 
-        productService.insertProduct(dto.name(), dto.price(), dto.imageUrl());
+        productService.addProduct(dto.name(), dto.price(), dto.imageUrl());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -72,13 +69,13 @@ public class ProductApiController {
             throw new InputException(bindingResult.getAllErrors());
         }
 
-        productService.updateProduct(dto.id(), dto.name(), dto.price(), dto.imageUrl());
+        productService.editProduct(dto.id(), dto.name(), dto.price(), dto.imageUrl());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/api/products")
     public ResponseEntity<Void> deleteProduct(@RequestParam("id") Long id) {
-        productService.deleteProduct(id);
+        productService.removeProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
