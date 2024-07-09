@@ -4,7 +4,7 @@ package gift.controller;
 import static gift.util.ResponseEntityUtil.responseError;
 
 import gift.dto.JwtDTO;
-import gift.dto.UserDTO;
+import gift.dto.MemberDTO;
 import gift.exception.BadRequestExceptions.EmailAlreadyHereException;
 import gift.service.MemberService;
 import gift.util.JwtUtil;
@@ -39,12 +39,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<?> register(@RequestBody @Valid MemberDTO memberDTO) {
         String token;
         try {
-            memberService.register(userDTO);
-            token = jwtUtil.generateToken(userDTO);
-        } catch (RuntimeException e) {
+            memberService.register(memberDTO);
+            token = jwtUtil.generateToken(memberDTO);
+        } catch (Exception e) {
             if(e instanceof EmailAlreadyHereException)
                 return responseError(e, HttpStatus.CONFLICT);
             return responseError(e);
@@ -58,12 +58,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<?> login(@RequestBody @Valid MemberDTO memberDTO) {
         String token;
         try {
-            memberService.login(userDTO);
-            token = jwtUtil.generateToken(userDTO);
-        } catch (RuntimeException e) {
+            memberService.login(memberDTO);
+            token = jwtUtil.generateToken(memberDTO);
+        } catch (Exception e) {
             return responseError(e, HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(new JwtDTO(token), HttpStatus.OK);
