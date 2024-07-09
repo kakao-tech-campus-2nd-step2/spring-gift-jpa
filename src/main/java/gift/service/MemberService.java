@@ -5,7 +5,7 @@ import gift.domain.Member;
 import gift.exception.DuplicateMemberException;
 import gift.exception.InvalidCredentialsException;
 import gift.exception.MemberNotFoundException;
-import gift.repository.MemberJDBCRepository;
+import gift.repository.member.MemberJDBCRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

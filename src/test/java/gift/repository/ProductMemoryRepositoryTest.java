@@ -2,6 +2,7 @@ package gift.repository;
 
 import gift.dto.request.ProductRequest;
 import gift.domain.Product;
+import gift.repository.product.ProductMemoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package gift.repository;
+package gift.repository.token;
 
 import gift.domain.TokenAuth;
 import org.springframework.beans.factory.annotation.Autowired;

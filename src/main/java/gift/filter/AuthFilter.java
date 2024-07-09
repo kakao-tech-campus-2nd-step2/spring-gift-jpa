@@ -1,7 +1,7 @@
 package gift.filter;
 
 import gift.domain.TokenAuth;
-import gift.repository.TokenRepository;
+import gift.repository.token.TokenRepository;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

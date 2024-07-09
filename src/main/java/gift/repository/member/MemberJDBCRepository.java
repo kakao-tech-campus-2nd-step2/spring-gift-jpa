@@ -1,7 +1,6 @@
-package gift.repository;
+package gift.repository.member;
 
 import gift.domain.Member;
-import gift.exception.MemberNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

@@ -3,7 +3,7 @@ package gift.service;
 import gift.domain.Member;
 import gift.domain.TokenAuth;
 import gift.exception.UnAuthorizationException;
-import gift.repository.TokenRepository;
+import gift.repository.token.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;

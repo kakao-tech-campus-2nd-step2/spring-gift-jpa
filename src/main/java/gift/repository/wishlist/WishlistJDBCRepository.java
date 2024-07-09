@@ -1,4 +1,4 @@
-package gift.repository;
+package gift.repository.wishlist;
 
 import gift.domain.WishlistItem;
 import org.springframework.jdbc.core.JdbcTemplate;

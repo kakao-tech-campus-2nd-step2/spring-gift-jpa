@@ -1,6 +1,6 @@
 package gift.config;
 
-import gift.repository.TokenRepository;
+import gift.repository.token.TokenRepository;
 import gift.filter.AuthFilter;
 import gift.filter.LoginFilter;
 import org.springframework.beans.factory.annotation.Autowired;
