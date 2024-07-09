@@ -1,12 +1,12 @@
-CREATE TABLE products
+CREATE TABLE product
 (
     id       BIGINT AUTO_INCREMENT PRIMARY KEY,
     name     VARCHAR(255),
     price    BIGINT,
-    imageUrl VARCHAR(255)
+    image_url VARCHAR(255)
 );
 
-CREATE TABLE users
+CREATE TABLE member
 (
     id       BIGINT AUTO_INCREMENT PRIMARY KEY,
     name     VARCHAR(255) NOT NULL,
@@ -15,11 +15,11 @@ CREATE TABLE users
     role     VARCHAR(50)  NOT NULL
 );
 
-CREATE TABLE wishlists
+CREATE TABLE wish
 (
     id         BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_email VARCHAR(255) NOT NULL,
+    member_id VARCHAR(255) NOT NULL,
     product_id BIGINT       NOT NULL,
-    FOREIGN KEY (user_email) REFERENCES users (email),
-    FOREIGN KEY (product_id) REFERENCES products (id)
+    FOREIGN KEY (member_id) REFERENCES member (email),
+    FOREIGN KEY (product_id) REFERENCES product (id)
 );
