@@ -39,6 +39,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         }
         String accessToken = authorization.substring(7);
         String email = jwtProvider.parseAccessToken(accessToken);
-        return memberService.findMember(email);
+        return memberService.findById(email);
     }
 }
