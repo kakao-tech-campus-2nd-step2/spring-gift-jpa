@@ -14,7 +14,6 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Email
     @Column(nullable = false, unique = true)
     private String email;
 

@@ -1,10 +1,12 @@
 package gift.dto;
 
 import gift.entity.Member;
+import jakarta.validation.constraints.Email;
 
 
 public class MemberDTO {
 
+    @Email
     private String email;
     private String password;
 
