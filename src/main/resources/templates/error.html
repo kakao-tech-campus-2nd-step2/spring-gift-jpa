@@ -71,7 +71,11 @@
 <body>
 <div class="container">
   <h2>Error 발생</h2>
-  <p class="error-message" th:text="${error}"></p>
+  <div th:if="${errorMessages}">
+    <ul>
+      <li th:each="errorMessage : ${errorMessages}" th:text="${errorMessage}"></li>
+    </ul>
+  </div>
   <a href="/" style="text-decoration: none;"><button class="btn btn-home">Home</button></a>
 </div>
 </body>
