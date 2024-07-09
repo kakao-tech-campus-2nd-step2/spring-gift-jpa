@@ -6,6 +6,7 @@ import gift.entity.Product;
 import gift.entity.ProductName;
 import gift.exception.BusinessException;
 import gift.repository.ProductRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
 public class ProductServiceTest {
 
     @Autowired
@@ -26,6 +26,11 @@ public class ProductServiceTest {
 
     @Autowired
     private ProductService productService;
+
+    @AfterEach
+    public void 데이터_정리() {
+        productRepository.deleteAll();
+    }
 
     @Test
     @Rollback

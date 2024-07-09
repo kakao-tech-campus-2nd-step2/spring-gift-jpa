@@ -9,6 +9,7 @@ import gift.entity.Wish;
 import gift.exception.BusinessException;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
 public class WishServiceTest {
 
     @Autowired
@@ -34,6 +34,13 @@ public class WishServiceTest {
 
     @Autowired
     private WishService wishService;
+
+    @AfterEach
+    public void 데이터_정리() {
+        wishRepository.deleteAll();
+        productRepository.deleteAll();
+    }
+
 
     @Test
     public void 위시리스트_추가() {
