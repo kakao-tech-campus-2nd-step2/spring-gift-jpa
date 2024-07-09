@@ -86,6 +86,7 @@ class WishRepositoryTest {
         entityManager.flush();
 
         Wish savedWish = wishRepository.save(wish);
+        entityManager.clear();
 
         //when
         Wish findWish = wishRepository.findById(savedWish.getId()).get();
