@@ -47,7 +47,7 @@ public class ProductDto {
         return result;
     }
 
-    private boolean checkValidLength(String name, Long start, Long end) {
+    private boolean checkValidLength(String name, int start, int end) {
         return (name.length() >= 1 && name.length() <= end);
     }
 
