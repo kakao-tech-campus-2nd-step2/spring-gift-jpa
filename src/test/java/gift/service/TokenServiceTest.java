@@ -27,10 +27,10 @@ class TokenServiceTest {
     @Test
     void getMemberIdByToken() {
         //Given
-        TokenResponse token = tokenService.generateToken(MEMBER_ID);
+        TokenResponse tokenResponse = tokenService.generateToken(MEMBER_ID);
 
         //When
-        Long memberIdByToken = tokenService.getMemberIdByToken(token.getToken());
+        Long memberIdByToken = tokenService.getMemberIdByToken(tokenResponse.token());
 
         //Then
         assertThat(memberIdByToken).isEqualTo(MEMBER_ID);
@@ -39,10 +39,10 @@ class TokenServiceTest {
     @Test
     void isValidateToken() {
         //Given
-        TokenResponse token = tokenService.generateToken(MEMBER_ID);
+        TokenResponse tokenResponse = tokenService.generateToken(MEMBER_ID);
 
         //When
-        boolean isValidate = tokenService.isValidateToken(token.getToken());
+        boolean isValidate = tokenService.isValidateToken(tokenResponse.token());
 
         //Then
         assertThat(isValidate).isTrue();
