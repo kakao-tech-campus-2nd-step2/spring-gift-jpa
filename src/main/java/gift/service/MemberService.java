@@ -29,11 +29,11 @@ public class MemberService {
 
     public void addMember(MemberDto memberDto){
 
-        if(memberRepository.findById(memberDto.getId()).isEmpty()){
+        if(memberRepository.findByEmail(memberDto.getEmail()).isEmpty()){
             Member member = memberDto.toEntity(memberDto);
             memberRepository.save(member);
         }else{
-            throw new CustomException("Member with id " + memberDto.getId() + "exists", HttpStatus.CONFLICT);
+            throw new CustomException("Member with email " + memberDto.getEmail() + "exists", HttpStatus.CONFLICT);
         }
     }
 

@@ -25,9 +25,9 @@ public class UserController {
     }
     
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody MemberDto userDto, BindingResult bindingResult){
-        memberService.addMember(userDto);
-        String token = memberService.generateToken(userDto.getEmail());
+    public ResponseEntity<String> register(@Valid @RequestBody MemberDto memberDto, BindingResult bindingResult){
+        memberService.addMember(memberDto);
+        String token = memberService.generateToken(memberDto.getEmail());
         return new ResponseEntity<>(token, HttpStatus.CREATED);
     }
 
