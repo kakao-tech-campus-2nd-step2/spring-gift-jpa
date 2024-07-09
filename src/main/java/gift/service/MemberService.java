@@ -54,4 +54,11 @@ public class MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 " + email + " 가진 회원이 없습니다."));
     }
 
+    public Member getMemberByToken(String memberToken) {
+        Long memberId = jwtTokenProvider.getUserIdFromToken(memberToken);
+
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("No member found with the given token"));
+    }
+
 }

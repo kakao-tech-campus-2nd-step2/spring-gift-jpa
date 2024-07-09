@@ -52,4 +52,10 @@ public class JdbcMemberRepository implements MemberRepository {
         member.setPassword(rs.getString("password"));
         return member;
     };
+
+    @Override
+    public Optional<Member> findById(long id) {
+        String sql = "SELECT user_id, email, password FROM users WHERE id = ?";
+        return jdbcTemplate.query(sql, userRowMapper, id).stream().findFirst();
+    }
 }

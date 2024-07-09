@@ -1,6 +1,8 @@
 package gift.security;
 
 import gift.domain.Member;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -19,5 +21,16 @@ public class JwtTokenProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                 .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+
+    public Long getUserIdFromToken(String memberToken) {
+        Jws<Claims> claimsJws = Jwts.parserBuilder()
+                .setSigningKey(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
+                .build()
+                .parseClaimsJws(memberToken);
+
+        Claims claims = claimsJws.getBody();
+        return Long.parseLong(claims.getSubject());
     }
 }
