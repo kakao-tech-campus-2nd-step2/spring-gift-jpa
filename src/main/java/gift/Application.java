@@ -15,6 +15,8 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
+
+    //초기 더미데이터 추가
     @Bean
     public CommandLineRunner loadData(GiftRepository giftRepository, UserRepository userRepository) {
         return (args) -> {
