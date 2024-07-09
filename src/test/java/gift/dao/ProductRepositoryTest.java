@@ -3,7 +3,6 @@ package gift.dao;
 import gift.product.dao.ProductRepository;
 import gift.product.dto.ProductRequest;
 import gift.product.entity.Product;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +20,6 @@ class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @BeforeEach
-    void setUp() {
-        productRepository.deleteAll();
-    }
 
     @Test
     @DisplayName("상품 추가 및 ID 조회 테스트")

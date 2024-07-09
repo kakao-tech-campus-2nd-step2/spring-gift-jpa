@@ -2,7 +2,6 @@ package gift.dao;
 
 import gift.wishlist.dao.WishesRepository;
 import gift.wishlist.entity.Wish;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +18,6 @@ class WishesRepositoryTest {
 
     @Autowired
     private WishesRepository wishesRepository;
-
-    @BeforeEach
-    void setUp() {
-        wishesRepository.deleteAll();
-    }
 
     @Test
     @DisplayName("위시 추가 및 ID 조회 테스트")
