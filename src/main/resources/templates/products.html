@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin:0;
+            padding: 0;
+        }
+        #content {
+           width: 700px;
+           position: absolute;
+           left: 50%;
+           top: 50%;
+           margin-left: -350px;
+           margin-top: -250px;
+           background-color: #EEEDEB;
+           padding: 20px;
+           border-radius: 5%;
+        }
+        #tableBox {
+           height: 500px;
+           overflow: scroll;
+        }
+        #header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        img {
+            width: 100px;
+        }
+        th {
+            width: 200px;
+            text-align: center;
+        }
+        button {
+            margin: 0;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: 400;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            width: auto;
+            border: none; 
+            border-radius: 4px;
+            background: aqua;
+            cursor: pointer;
+        }
+        .editBtn {
+            background: #419DD9;
+        }
+        .removeBtn {
+            background: #F05650;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="content">
+        <div id="header">
+            <h1>상품 리스트</h1>
+            <a href="/products/new"><button>새로운 상품 생성</button></a>
+        </div>
+        <div id="tableBox">
+        <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>이름</th>
+                <th>가격</th>
+                <th>이미지</th>
+                <th colspan="2"></th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            <tr>
+        </tbody>
+    </table>
+        </div>
+    </div>
+    <script>
+        function deleteProduct(id) {
+            fetch(`/api/products/${id}`, {method: 'DELETE'})
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert("상품 삭제 실행 중 오류 발생");
+                }
+            });
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            const tableBody = document.getElementById("tableBody");
+            tableBody.innerHTML = "";
+
+
+            fetch('/api/products')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(product => {
+                        tableBody.innerHTML += `
+                        <tr>
+                            <td>${product.id}</td>
+                            <td>${product.name}</td>
+                            <td>${product.price}</td>
+                            <td><img src="${product.imageUrl}" alt="image"></td>
+                            <td>
+                            <form onsubmit="
+                            event.preventDefault();
+                            window.location.href = '/products/edit/${product.id}'
+                            "><button class="editBtn">수정</button></form>
+                            </td>
+                            <td>
+                            <form onsubmit="
+                            event.preventDefault();
+                            deleteProduct(${product.id});
+                            "><button class="removeBtn">삭제</button></form>
+                            </td>
+                        </tr>
+                        `
+                    })
+                })
+        })
+    </script>
+</body>
+</html>
