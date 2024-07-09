@@ -26,14 +26,12 @@ public class MemberController {
     public MemberResponseDto register(
         @Valid @RequestBody MemberRequestDto memberRequestDto) {
         memberService.insertMember(memberRequestDto);
-        return new MemberResponseDto(
-            authService.getToken(memberRequestDto));
+        return authService.getToken(memberRequestDto);
     }
 
     @PostMapping("/login")
     public MemberResponseDto login(
         @Valid @RequestBody MemberRequestDto memberRequestDto) {
-        return new MemberResponseDto(
-            authService.getToken(memberRequestDto));
+        return authService.getToken(memberRequestDto);
     }
 }

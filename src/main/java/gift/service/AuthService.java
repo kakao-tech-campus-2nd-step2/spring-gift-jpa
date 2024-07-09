@@ -4,6 +4,7 @@ import gift.exception.MemberErrorCode;
 import gift.exception.MemberException;
 import gift.model.Member;
 import gift.model.dto.MemberRequestDto;
+import gift.model.dto.MemberResponseDto;
 import gift.repository.MemberRepository;
 import gift.util.TokenProvider;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,12 @@ public class AuthService {
         this.memberRepository = memberRepository;
     }
 
-    public String getToken(MemberRequestDto memberRequestDto) throws MemberException {
+    public MemberResponseDto getToken(MemberRequestDto memberRequestDto) throws MemberException {
         Member member = memberRepository.findByEmail(memberRequestDto.getEmail());
         if (!member.matchPassword(memberRequestDto.getPassword())) {
             throw new MemberException(MemberErrorCode.FAILURE_LOGIN);
         }
-        return tokenProvider.generateToken(member);
+        return new MemberResponseDto(tokenProvider.generateToken(member));
     }
 
     public boolean validateAuthorization(String authorizationHeader) {
