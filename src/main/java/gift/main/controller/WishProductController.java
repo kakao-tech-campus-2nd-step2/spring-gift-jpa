@@ -4,8 +4,8 @@ import gift.main.annotation.SessionUser;
 import gift.main.dto.UserVo;
 import gift.main.entity.Product;
 import gift.main.entity.WishProduct;
-import gift.main.repository.ProductRepository;
-import gift.main.repository.WishProductRepository;
+import gift.main.service.ProductService;
+import gift.main.service.WishProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -17,17 +17,18 @@ import java.util.Map;
 @RestController
 @RequestMapping("/product")
 public class WishProductController {
-    private final WishProductRepository wishProductRepository;
-    private final ProductRepository productRepository;
 
-    public WishProductController(WishProductRepository wishProductRepository, ProductRepository productRepository) {
-        this.wishProductRepository = wishProductRepository;
-        this.productRepository = productRepository;
+    private final WishProductService wishProductService;
+    private final ProductService productService;
+
+    public WishProductController(WishProductService wishProductService, ProductService productService) {
+        this.wishProductService = wishProductService;
+        this.productService = productService;
     }
 
     @GetMapping
     public ResponseEntity<?> getProducts() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productService.getProducts();
         Map<String, List<Product>> response = new HashMap<>();
         response.put("products", products);
         return ResponseEntity.ok(response);
@@ -35,14 +36,14 @@ public class WishProductController {
 
     @DeleteMapping("/wishlist/{productId}")
     @Transactional
-    public ResponseEntity<?> deleteProducts(@PathVariable(name = "productId") Long productId, @SessionUser UserVo sessionUserVo) {
-        wishProductRepository.deleteByProductIdAndUserId(productId, sessionUserVo.getId());
+    public ResponseEntity<?> deleteWishProduct(@PathVariable(name = "productId") Long productId, @SessionUser UserVo sessionUserVo) {
+        wishProductService.deleteProducts(productId, sessionUserVo);
         return ResponseEntity.ok("성공적으로 삭제 완료~!");
     }
 
     @GetMapping("/wishlist")
-    public ResponseEntity<?> deleteProducts(@SessionUser UserVo sessionUser) {
-        List<WishProduct> wishProducts = wishProductRepository.findAllByUserId(sessionUser.getId());
+    public ResponseEntity<?> getWishProduct(@SessionUser UserVo sessionUser) {
+        List<WishProduct> wishProducts = wishProductService.getWishProducts(sessionUser.getId());
         Map<String, List<WishProduct>> response = new HashMap<>();
         response.put("wishlistProducts", wishProducts);
         return ResponseEntity.ok(response);
@@ -51,8 +52,7 @@ public class WishProductController {
     @Transactional
     @PostMapping("/wishlist/{productId}")
     public ResponseEntity<?> addWishlistProduct(@PathVariable(name = "productId") Long productId, @SessionUser UserVo sessionUser){
-        WishProduct wishProduct = new WishProduct(productId, sessionUser.getId());
-        wishProductRepository.save(wishProduct);
+        wishProductService.addWishlistProduct(productId, sessionUser);
         return ResponseEntity.ok("성공적으로 등록~");
     }
 
