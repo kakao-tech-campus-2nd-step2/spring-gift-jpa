@@ -1,4 +1,4 @@
-package gift.product;
+package gift.product.model;
 
 // 관리할 객체 만들기
 public class Product {

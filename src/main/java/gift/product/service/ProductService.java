@@ -1,5 +1,9 @@
-package gift.product;
+package gift.product.service;
 
+import gift.product.dto.ProductDto;
+import gift.product.model.Product;
+import gift.product.model.ProductDao;
+import gift.product.model.ProductName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

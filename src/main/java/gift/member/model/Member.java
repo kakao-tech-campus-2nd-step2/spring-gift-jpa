@@ -1,4 +1,4 @@
-package gift.member;
+package gift.member.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

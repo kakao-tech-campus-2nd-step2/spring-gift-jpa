@@ -1,4 +1,4 @@
-package gift.product;
+package gift.product.model;
 
 public class ProductModel {
     public long id; // 상품의 고유 식별자

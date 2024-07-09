@@ -1,6 +1,8 @@
-package gift.member;
+package gift.member.service;
 
 import gift.exception.UnauthorizedException;
+import gift.member.model.Member;
+import gift.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

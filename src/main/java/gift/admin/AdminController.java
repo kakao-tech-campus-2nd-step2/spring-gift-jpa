@@ -1,7 +1,7 @@
 package gift.admin;
 
-import gift.product.ProductDto;
-import gift.product.ProductService;
+import gift.product.dto.ProductDto;
+import gift.product.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

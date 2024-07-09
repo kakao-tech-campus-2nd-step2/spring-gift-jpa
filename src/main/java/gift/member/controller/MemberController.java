@@ -1,6 +1,10 @@
-package gift.member;
+package gift.member.controller;
 
-import gift.product.ProductService;
+import gift.member.model.Member;
+import gift.member.dto.MemberDto;
+import gift.member.service.MemberService;
+import gift.member.service.TokenService;
+import gift.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,6 +1,7 @@
-package gift.wishlist;
+package gift.wishlist.repository;
 
-import gift.product.Product;
+import gift.product.model.Product;
+import gift.wishlist.model.WishList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

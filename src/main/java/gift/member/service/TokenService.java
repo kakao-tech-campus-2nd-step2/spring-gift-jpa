@@ -1,6 +1,7 @@
-package gift.member;
+package gift.member.service;
 
 import gift.exception.UnauthorizedException;
+import gift.member.model.Member;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Service;

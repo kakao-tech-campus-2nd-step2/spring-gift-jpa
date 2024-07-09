@@ -1,5 +1,6 @@
-package gift.member;
+package gift.member.repository;
 
+import gift.member.model.Member;
 import org.springframework.data.repository.CrudRepository;
 
 import java.sql.*;

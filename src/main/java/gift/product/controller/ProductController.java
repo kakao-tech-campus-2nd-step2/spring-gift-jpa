@@ -1,5 +1,7 @@
-package gift.product;
+package gift.product.controller;
 
+import gift.product.dto.ProductDto;
+import gift.product.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

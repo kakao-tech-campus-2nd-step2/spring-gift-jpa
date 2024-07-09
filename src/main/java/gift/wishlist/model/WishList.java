@@ -1,6 +1,6 @@
-package gift.wishlist;
+package gift.wishlist.model;
 
-import gift.product.Product;
+import gift.product.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
