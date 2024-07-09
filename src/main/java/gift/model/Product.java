@@ -14,7 +14,9 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(nullable = false , length = 15)
     private String name;
+    @Column(nullable = false)
     private int price;
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
