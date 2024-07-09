@@ -7,12 +7,17 @@
 - @DataJpaTest를 사용하여 학습 테스트를 해 본다.
 
 ### 구현할 기능 목록
-JPA로 리팩토링
+엔티티 맵핑
 - [ ] product
 - [ ] member
 - [ ] wish
 
+JPA repository로 수정
+- [ ] ProductRepository
+- [ ] MemberRepository
+- [ ] WishRepository
+
 JPA 테스트
-- [ ] product
-- [ ] member
-- [ ] wish
+- [ ] ProductRepository
+- [ ] MemberRepository
+- [ ] WishRepository
