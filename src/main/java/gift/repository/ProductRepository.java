@@ -9,7 +9,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 
-@Repository
+/*
+ * @deprecated Replaced by JpaProductRepository
+ */
+@Deprecated
 public class ProductRepository {
     private final JdbcClient jdbcClient;
 
