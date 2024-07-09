@@ -59,7 +59,7 @@ class ProductRepositoryTest {
         //given
         Product product = new Product("아이스 아메리카노", 3500, "https://examle.com");
         Product savedProduct = productRepository.save(product);
-        Long productId =savedProduct.getId();
+        Long productId = savedProduct.getId();
 
         ProductRequest request = new ProductRequest("망고 스무디", 5000, "https://test.com");
 
