@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -51,6 +52,24 @@ class ProductRepositoryTest {
                 () -> assertThat(actual.getName()).isEqualTo(newProduct.getName()),
                 () -> assertThat(actual.getPrice()).isEqualTo(newProduct.getPrice()),
                 () -> assertThat(actual.getImageUrl()).isEqualTo(newProduct.getImageUrl())
+        );
+    }
+
+    @Test
+    @DisplayName("Find All Product")
+    void findAllProduct() {
+        // given
+        Product product2 = repository.save(new Product("Ice Americano",
+                4200,
+                "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"));
+        // when
+        List<Product> products = repository.findAll();
+
+        // then
+        assertAll(
+                () ->  assertThat(products.size()).isEqualTo(2),
+                () -> assertThat(products.contains(savedProduct)).isTrue(),
+                () -> assertThat(products.contains(product2)).isTrue()
         );
     }
 
