@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface WishlistRepository {
     void addItem(WishlistItem item);
-    void deleteItem(Long itemId);
+    void deleteItem(Long productId);
     List<WishlistItem> getItemsByMemberId(Long memberId);
 }

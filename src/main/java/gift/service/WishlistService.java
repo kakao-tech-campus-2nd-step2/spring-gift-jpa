@@ -27,17 +27,17 @@ public class WishlistService {
         wishlistRepository.addItem(item);
     }
 
-    public void deleteItemFromWishlist(Long itemId, String token) {
+    public void deleteItemFromWishlist(Long productId, String token) {
         String memberId = tokenService.getMemberIdFromToken(token);
         boolean itemExists = wishlistRepository.getItemsByMemberId(Long.parseLong(memberId))
                 .stream()
-                .anyMatch(item -> item.getId().equals(itemId));
+                .anyMatch(item -> item.getId().equals(productId));
 
         if (!itemExists) {
-            throw new MemberNotFoundException("해당 아이템이 존재하지 않습니다: " + itemId);
+            throw new MemberNotFoundException("해당 아이템이 존재하지 않습니다: " + productId);
         }
 
-        wishlistRepository.deleteItem(itemId);
+        wishlistRepository.deleteItem(productId);
     }
 
     public List<WishlistItem> getWishlistByMemberId(Long memberId) {

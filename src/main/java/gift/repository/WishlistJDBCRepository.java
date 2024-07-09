@@ -24,9 +24,9 @@ public class WishlistJDBCRepository implements WishlistRepository {
         item.setId(id); // WishlistItem 객체에 자동 생성된 id 할당
     }
     @Override
-    public void deleteItem(Long itemId) {
-        String sql = "DELETE FROM wishlist WHERE id = ?";
-        jdbcTemplate.update(sql, itemId);
+    public void deleteItem(Long productId) {
+        String sql = "DELETE FROM wishlist WHERE product_id = ?";
+        jdbcTemplate.update(sql, productId);
     }
     @Override
     public List<WishlistItem> getItemsByMemberId(Long memberId) {
