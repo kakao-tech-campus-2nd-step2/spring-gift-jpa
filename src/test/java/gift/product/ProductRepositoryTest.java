@@ -31,7 +31,7 @@ public class ProductRepositoryTest {
         productRepository.save(newProduct);
 
         // 제품 검색
-        Product foundProduct = productRepository.findActiveProductById(newProduct.getId())
+        Product foundProduct = productRepository.findByIdAndIsActiveTrue(newProduct.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
         assertEquals("Test", foundProduct.getName());
     }

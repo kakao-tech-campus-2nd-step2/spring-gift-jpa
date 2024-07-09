@@ -1,16 +1,20 @@
 package gift.wishlist.model.dto;
 
-import gift.product.model.dto.ProductResponse;
-
 public class WishListResponse {
     private Long wishId;
-    private ProductResponse product;
+    private Long productId;
+    private String productName;
+    private int productPrice;
+    private String productImageUrl;
     private int quantity;
 
     public WishListResponse(Long wishId, Long productId, String productName, int productPrice, String productImageUrl,
                             int quantity) {
         this.wishId = wishId;
-        this.product = new ProductResponse(productId, productName, productPrice, productImageUrl);
+        this.productId = productId;
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productImageUrl = productImageUrl;
         this.quantity = quantity;
     }
 
@@ -18,8 +22,20 @@ public class WishListResponse {
         return wishId;
     }
 
-    public ProductResponse getProduct() {
-        return product;
+    public Long getProductId() {
+        return productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public int getProductPrice() {
+        return productPrice;
+    }
+
+    public String getProductImageUrl() {
+        return productImageUrl;
     }
 
     public int getQuantity() {
