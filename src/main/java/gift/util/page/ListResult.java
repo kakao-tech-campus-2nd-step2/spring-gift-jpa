@@ -1,5 +1,6 @@
-package gift.errorException;
+package gift.util.page;
 
+import gift.errorException.BaseResult;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
