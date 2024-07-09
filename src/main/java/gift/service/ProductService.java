@@ -2,13 +2,17 @@ package gift.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.compositeKey.OptionId;
 import gift.dto.ProductDTO;
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.exception.exception.BadRequestException;
 import gift.exception.exception.UnAuthException;
 import gift.exception.exception.NotFoundException;
+import gift.repository.OptionRepository;
+import gift.repository.ProductOptionRepository;
 import gift.repository.ProductRepository;
+import gift.repository.WishListRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,21 +20,28 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Validated
 public class ProductService {
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    WishListRepository wishListRepository;
+    @Autowired
+    private OptionRepository optionRepository;
+    @Autowired
+    private ProductOptionRepository productOptionRepository;
 
-    public List<ProductDTO> getAllProducts() {
-        List<ProductDTO> products = productRepository.getAllProduct();
+    public List<Product> getAllProducts() {
+        List<Product> products = productRepository.findAll();
         return products;
     }
 
     public String getJsonAllProducts(){
         ObjectMapper objectMapper = new ObjectMapper();
-        List<ProductDTO> products = productRepository.getAllProduct();
+        List<Product> products = productRepository.findAll();
         String jsonProduct="";
         try {
              jsonProduct = objectMapper.writeValueAsString(products);
@@ -47,15 +58,15 @@ public class ProductService {
         Product saveProduct = new Product(product.getId(),product.getName(), product.getPrice(), product.getImageUrl());
 
         if(isValidProduct(saveProduct)){
-            productRepository.saveProduct(saveProduct);
+            productRepository.save(saveProduct);
         }
 
         List<String> optionList = Arrays.stream(product.getOption().split(",")).toList();
         for(String str : optionList){
-            Option option = new Option(product.getId(), str);
+            OptionId optionId = new OptionId(product.getId(), str);
 
-            if(isValidOption(option))
-                productRepository.saveOption(option);
+            if(isValidOption(optionId))
+                optionRepository.save(new Option(optionId));
 
         }
     }
@@ -63,29 +74,30 @@ public class ProductService {
     private boolean isValidProduct(@Valid Product product){
         if(product.getName().contentEquals("카카오"))
             throw new UnAuthException("MD와 상담해주세요.");
-        if(productRepository.isExistProduct(product)){
-            Product product1 = productRepository.findProductByID(product.getId());
-            return product.equals(product1);
-        }
-        return true;
+        Optional<Product> productOptional = productRepository.findById(product.getId());
+        return productOptional.map(value -> value.equals(product)).orElse(true);
     }
 
-    private boolean isValidOption(@Valid Option option){
-        if(productRepository.isExistOption(option))
+    private boolean isValidOption(@Valid OptionId optionID){
+        if(optionRepository.findById(optionID).isPresent())
             throw new BadRequestException("이미 존재하는 옵션입니다.");
         return true;
     }
 
     public void deleteProduct(int id) {
-        if(productRepository.findProductByID(id)==null)
+        if(!productRepository.findById(id).isPresent())
             throw new NotFoundException("존재하지 않는 id입니다.");
-        productRepository.deleteProductByID(id);
-        productRepository.deleteOptionsByID(id);
+        productRepository.deleteById(id);
+        optionRepository.deleteByProductID(id);
     }
 
 
     public String getProductByID(int id) {
-        Product product = productRepository.findProductByID(id);
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if(optionalProduct.isEmpty())
+            throw new NotFoundException("해당 물건이 없습니다.");
+        Product product = optionalProduct.get();
+
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonProduct="";
         try {
@@ -93,13 +105,17 @@ public class ProductService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        if(jsonProduct==null)
-            throw new NotFoundException("해당 물건이 없습니다.");
         return jsonProduct;
     }
 
     public void modifyProduct(Product product) {
-        productRepository.updateProduct(product);
+        if(productRepository.findById(product.getId()).isEmpty())
+            throw new NotFoundException("물건이없습니다.");
+        productRepository.deleteById(product.getId());
+        productRepository.save(product);
     }
 
+    public List<ProductDTO> getProductWithOption() {
+        return productOptionRepository.findProductWithOptions();
+    }
 }

@@ -1,28 +1,27 @@
 package gift.entity;
 
+import gift.compositeKey.WishListId;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 
 @Entity
 public class WishList {
-    @Id
-    int user_id;
-    @Id
-    int product_id;
 
-    public WishList(int user_id, int product_id) {
-        this.user_id = user_id;
-        this.product_id = product_id;
+    @EmbeddedId
+    private WishListId id;
+
+    // getters and setters
+
+    public WishList(WishListId id) {
+        this.id = id;
     }
 
     public WishList() {
     }
 
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public int getProduct_id() {
-        return product_id;
+    public WishListId getId() {
+        return id;
     }
 }
