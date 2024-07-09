@@ -19,9 +19,9 @@ public abstract class BasicEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    public BasicEntity() {}
+    protected BasicEntity() {}
 
-    public BasicEntity(Long id, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    protected BasicEntity(Long id, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
