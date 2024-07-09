@@ -53,7 +53,7 @@ public class ProductRepositoryTest {
         Product product2 = new Product("아이스 아메리카노 T", 4700, "https://example.com/image.jpg");
 
         // when
-        productRepository.saveAndFlush(product1);
+        productRepository.save(product1);
 
         /// then
         assertThrows(DataIntegrityViolationException.class,
@@ -97,7 +97,6 @@ public class ProductRepositoryTest {
         flushAndClear();
 
         // then
-        System.out.println("savedProduct.getId() = " + savedProduct.getId());
         Optional<Product> findProduct = productRepository.findById(savedProduct.getId());
         assertThat(findProduct.isPresent()).isEqualTo(false);
     }

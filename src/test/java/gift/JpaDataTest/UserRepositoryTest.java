@@ -60,17 +60,15 @@ public class UserRepositoryTest {
     @Description("로그인")
     public void login() {
         // given
+        User user = new User("minji@example.com", "password1");
+        User savedUser = userRepository.saveAndFlush(user);
+
         UserDTO userDTO = new UserDTO("minji@example.com", "password1");
         // when
-        User findUser = userRepository.findByEmailAndPassword(userDTO.getEmail(),
-            userDTO.getPassword());
-
         String token = userService.login(userDTO);
         UserInfo userInfo = jwtProvider.getUserInfo(token);
         // then
-        assertThat(userInfo.getId()).isEqualTo(findUser.getId());
-
-        assertThat(userInfo.getEmail()).isEqualTo(userDTO.getEmail());
+        assertThat(userInfo.getId()).isEqualTo(savedUser.getId());
         assertThat(userInfo.getEmail()).isEqualTo(userDTO.getEmail());
     }
 
