@@ -34,22 +34,22 @@ public class ProductController {
     public ResponseEntity<List<Product>> getAllProducts() {
         try {
             List<Product> products = productService.getAllProducts();
-            return new ResponseEntity<>(products, HttpStatus.OK);
+            return ResponseEntity.ok(products);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity(null, HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        return ResponseEntity.ok(product);
     }
 
     @PostMapping
     public ResponseEntity<ProductResponse> addProduct(@RequestBody @Valid AddProductRequest request) {
         ProductResponse response = productService.addProduct(request);
-        return new ResponseEntity<>(response, getProductLocationHeader(response.id()),
+        return new ResponseEntity(response, getProductLocationHeader(response.id()),
             HttpStatus.CREATED);
     }
 
@@ -63,7 +63,7 @@ public class ProductController {
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 
     private HttpHeaders getProductLocationHeader(Long productId) {

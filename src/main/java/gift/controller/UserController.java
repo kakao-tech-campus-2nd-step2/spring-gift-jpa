@@ -23,12 +23,12 @@ public class UserController {
 
     @PostMapping("register")
     public ResponseEntity<UserResponse> register(@RequestBody @Valid UserRegisterRequest request) {
-        return new ResponseEntity<>(userService.registerUser(request), HttpStatus.OK);
+        return ResponseEntity.ok(userService.registerUser(request));
     }
 
     @PostMapping("login")
     public ResponseEntity<UserResponse> login(@RequestBody @Valid UserLoginRequest userRequest) {
-        return new ResponseEntity<>(userService.loginUser(userRequest), HttpStatus.OK);
+        return ResponseEntity.ok(userService.loginUser(userRequest));
     }
 
 }
