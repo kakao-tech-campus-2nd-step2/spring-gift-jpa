@@ -23,9 +23,8 @@ public class ProductOptionService {
     }
 
     public ProductOptionResponse addOption(ProductOptionRequest productOptionRequest) {
-        var option = createProductOptionWithProductRequest(productOptionRequest);
-        var savedOption = optionRepository.save(option);
-        return getProductOptionResponseFromProductOption(savedOption);
+        var option = saveProductOptionWithProductRequest(productOptionRequest);
+        return getProductOptionResponseFromProductOption(option);
     }
 
     public void updateOption(Long id, ProductOptionRequest productOptionRequest) {
@@ -57,11 +56,12 @@ public class ProductOptionService {
         return productOption.get();
     }
 
-    private ProductOption createProductOptionWithProductRequest(ProductOptionRequest productOptionRequest) {
+    private ProductOption saveProductOptionWithProductRequest(ProductOptionRequest productOptionRequest) {
         var product = productService.findProductWithId(productOptionRequest.productId());
         var option = new ProductOption(productOptionRequest.name(), productOptionRequest.additionalPrice());
         option.addProduct(product);
-        return option;
+        var savedOption = optionRepository.save(option);
+        return savedOption;
     }
 
     private void updateProductOptionWithId(ProductOption option, ProductOptionRequest productOptionRequest) {

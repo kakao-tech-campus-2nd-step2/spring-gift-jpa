@@ -1,9 +1,18 @@
 package gift.service;
 
+import gift.dto.ProductRequest;
+import gift.dto.RegisterRequest;
 import gift.dto.WishProductAddRequest;
 import gift.dto.WishProductUpdateRequest;
 import gift.exception.ForeignKeyConstraintViolationException;
+import gift.exception.NotFoundElementException;
+import gift.model.MemberRole;
+import gift.reflection.AuthTestReflectionComponent;
+import gift.service.auth.AuthService;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +23,42 @@ class WishProductServiceTest {
 
     @Autowired
     private WishProductService wishProductService;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private AuthService authService;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private AuthTestReflectionComponent authTestReflectionComponent;
 
-    private final Long managerId = 1L;
-    private final Long memberId = 2L;
+    private Long managerId;
+    private Long memberId;
 
-    private final Long product1Id = 1L;
-    private final Long product2Id = 2L;
+    private Long product1Id;
+    private Long product2Id;
+
+    @BeforeEach
+    @DisplayName("멤버, 상품 기본 데이터 세팅하기")
+    void addBaseData(){
+        var registerManagerRequest = new RegisterRequest("관리자", "admin@naver.com", "password", "ADMIN");
+        var registerMemberRequest = new RegisterRequest("멤버", "'member@naver.com'", "password", "MEMBER");
+        managerId = authTestReflectionComponent.getMemberIdWithToken(authService.register(registerManagerRequest).token());
+        memberId = authTestReflectionComponent.getMemberIdWithToken(authService.register(registerMemberRequest).token());
+        var product1Request = new ProductRequest("Apple 정품 아이폰 15", 1700000, "https://lh5.googleusercontent.com/proxy/M33I-cZvIHdtsY_uyd5R-4KXJ8uZBBAgVw4bmZagF1T5krxkC6AHpxPUvU_02yDsRljgOHwa-cUTlhgYG_bSNJbbmnf6k9OOPRQyvPf5m4nD");
+        var product2Request = new ProductRequest("Apple 정품 2024 아이패드 에어 11 M2칩", 900000, "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcThcspVP4EUYTEiUD0udG3dzUZDZOQH9eopFO7_7zZmIafSouktNeyQn8jzKwYTMxcQwaWN_iglo8LAus6DJTG_ogEaU_tHSOtNL3wiYJhYqisdTuMRT2o97h503C6gWd9BxV8_ow&usqp=CAc");
+        product1Id = productService.addProduct(product1Request, MemberRole.MEMBER).id();
+        product2Id = productService.addProduct(product2Request, MemberRole.MEMBER).id();
+    }
+
+    @AfterEach
+    @DisplayName("이미 있는 데이터 지워 beforeEach 에서 예외가 발생하지 않도록 설정")
+    void deleteBaseData(){
+        memberService.deleteMember(managerId);
+        memberService.deleteMember(memberId);
+        productService.deleteProduct(product1Id);
+        productService.deleteProduct(product2Id);
+    }
 
     @Test
     @DisplayName("위시 리스트 상품 추가하기")
@@ -95,7 +134,7 @@ class WishProductServiceTest {
         var invalidWishProductAddRequest = new WishProductAddRequest(10L, 5);
 
         Assertions.assertThatThrownBy(() -> wishProductService.addWishProduct(invalidWishProductAddRequest, memberId))
-                .isInstanceOf(ForeignKeyConstraintViolationException.class);
+                .isInstanceOf(NotFoundElementException.class);
     }
 
     @Test

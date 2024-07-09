@@ -30,8 +30,9 @@ public class MemberServiceTest {
         var auth = authService.register(registerRequest);
         var id = authTestReflectionComponent.getMemberIdWithToken(auth.token());
         var loginAuth = authService.login(loginRequest);
+        var loginId = authTestReflectionComponent.getMemberIdWithToken(loginAuth.token());
 
-        Assertions.assertThat(auth.token()).isEqualTo(loginAuth.token());
+        Assertions.assertThat(id).isEqualTo(loginId);
 
         memberService.deleteMember(id);
 

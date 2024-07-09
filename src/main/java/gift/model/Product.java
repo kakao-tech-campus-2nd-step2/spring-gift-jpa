@@ -31,6 +31,8 @@ public class Product {
     private String imageUrl;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductOption> options = new ArrayList<>();
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WishProduct> wishes = new ArrayList<>();
 
     protected Product() {
     }
@@ -59,6 +61,10 @@ public class Product {
 
     public List<ProductOption> getOptions() {
         return options;
+    }
+
+    public List<WishProduct> getWishes() {
+        return wishes;
     }
 
     public void updateProductInfo(String name, Integer price, String imageUrl) {
