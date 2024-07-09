@@ -3,14 +3,18 @@ package gift.product.domain;
 import com.fasterxml.jackson.annotation.JsonValue;
 import gift.product.exception.ProductNameLengthException;
 import gift.product.exception.ProductNamePatternException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+@Embeddable
 public class ProductName {
     private static final int MAX_LENGTH = 15;
     private static final Pattern PATTERN = Pattern.compile("^[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣 ()\\[\\]+\\-&/_]*$");
 
+    @Column(name = "name")
     private String value;
 
     public ProductName() {}

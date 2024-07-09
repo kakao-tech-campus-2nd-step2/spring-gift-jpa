@@ -1,17 +1,17 @@
 package gift.product.domain;
 
 import gift.product.dto.ProductRequestDto;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Embedded;
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.*;
 
-@Table("products")
+@Entity
+@Table(name = "products")
 public class Product {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
+    @Embedded
     private ProductName name;
-    @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
+    @Embedded
     private ProductPrice price;
     private String imageUrl;
 

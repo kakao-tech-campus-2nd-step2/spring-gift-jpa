@@ -2,9 +2,13 @@ package gift.product.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import gift.product.exception.ProductPriceOutOfRangeException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
+@Embeddable
 public class ProductPrice {
 
+    @Column(name = "price")
     private Long value;
 
     public ProductPrice() {}
