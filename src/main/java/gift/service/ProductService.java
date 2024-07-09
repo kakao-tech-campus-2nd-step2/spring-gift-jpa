@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dto.Product;
+import gift.DTO.ProductDTO;
 import gift.model.product.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,10 @@ public class ProductService {
     /**
      * 새 상품을 생성하고 맵에 저장함
      *
-     * @param product 저장할 상품 객체
+     * @param productDTO 저장할 상품 객체
      */
-    public Product createProduct(Product product) {
-        return productRepository.createProduct(product);
+    public ProductDTO createProduct(ProductDTO productDTO) {
+        return productRepository.createProduct(productDTO);
     }
 
     /**
@@ -27,14 +27,14 @@ public class ProductService {
      *
      * @param id 조회할 상품의 ID
      */
-    public Product getProduct(Long id) {
+    public ProductDTO getProduct(Long id) {
         return productRepository.getProduct(id);
     }
 
     /**
      * 모든 상품을 반환함
      */
-    public List<Product> getAllProducts() {
+    public List<ProductDTO> getAllProducts() {
         return productRepository.getAllProducts();
     }
 
@@ -50,10 +50,10 @@ public class ProductService {
     /**
      * 주어진 상품을 갱신함
      *
-     * @param product 갱신할 상품 객체
+     * @param productDTO 갱신할 상품 객체
      */
-    public Product updateProduct(Long id, Product product) {
-        return productRepository.updateProduct(id, product);
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
+        return productRepository.updateProduct(id, productDTO);
     }
 
     /**

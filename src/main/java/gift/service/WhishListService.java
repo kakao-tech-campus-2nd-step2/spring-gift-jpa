@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dto.WishList;
+import gift.DTO.WishListDTO;
 import gift.model.wishlist.WishListRepository;
 import java.util.Collections;
 import java.util.List;
@@ -36,8 +36,8 @@ public class WhishListService {
      */
     public List<Long> createWishList(long productId, long userId) {
         productService.productNotFoundDetector(productId);
-        WishList newWishList = wishListRepository.createWishList(productId, userId);
-        return Collections.singletonList(newWishList.getProductId());
+        WishListDTO newWishListDTO = wishListRepository.createWishList(productId, userId);
+        return Collections.singletonList(newWishListDTO.getProductId());
     }
 
     /**
@@ -47,9 +47,9 @@ public class WhishListService {
      * @return 지정된 사용자의 모든 WishList 객체의 productId 리스트
      */
     public List<Long> getWishListsByUserId(long userId) {
-        List<WishList> wishLists = wishListRepository.getWishListsByUserId(userId);
-        return wishLists.stream()
-                        .map(WishList::getProductId)
+        List<WishListDTO> wishListDTOS = wishListRepository.getWishListsByUserId(userId);
+        return wishListDTOS.stream()
+                        .map(WishListDTO::getProductId)
                         .collect(Collectors.toList());
     }
 

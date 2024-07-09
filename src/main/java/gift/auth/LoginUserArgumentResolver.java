@@ -21,7 +21,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
      */
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(Login.class);
+        return parameter.getParameterType().equals(LoginDTO.class);
     }
 
     /**
@@ -46,7 +46,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
             if (claims != null) {
                 String email = claims.get("email", String.class);
                 Long id = claims.get("id", Long.class);
-                return new Login(id, email, null);
+                return new LoginDTO(id, email, null);
             }
         }
 

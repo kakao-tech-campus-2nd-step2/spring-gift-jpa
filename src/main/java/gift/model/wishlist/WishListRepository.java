@@ -1,6 +1,6 @@
 package gift.model.wishlist;
 
-import gift.dto.WishList;
+import gift.DTO.WishListDTO;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -38,11 +38,11 @@ public class WishListRepository {
      * @param userId    WishList에 추가할 사용자의 ID
      * @return 생성된 WishList 객체
      */
-    public WishList createWishList(long productId, long userId) {
-        WishList wishList = new WishList(productId, userId);
-        SqlParameterSource parameters = new BeanPropertySqlParameterSource(wishList);
+    public WishListDTO createWishList(long productId, long userId) {
+        WishListDTO wishListDTO = new WishListDTO(productId, userId);
+        SqlParameterSource parameters = new BeanPropertySqlParameterSource(wishListDTO);
         Number newId = insertWishList.executeAndReturnKey(parameters);
-        return new WishList(newId.longValue(), wishList.getProductId(), wishList.getUserId());
+        return new WishListDTO(newId.longValue(), wishListDTO.getProductId(), wishListDTO.getUserId());
     }
 
     /**
@@ -51,11 +51,11 @@ public class WishListRepository {
      * @param userId 조회할 사용자의 ID
      * @return 지정된 사용자의 모든 WishList 객체의 리스트
      */
-    public List<WishList> getWishListsByUserId(long userId) {
+    public List<WishListDTO> getWishListsByUserId(long userId) {
         String sql = "SELECT * FROM wishlist WHERE user_id = :userId";
         return jdbcTemplate.query(sql,
             new MapSqlParameterSource("userId", userId),
-            (rs, rowNum) -> new WishList(rs.getLong("id"), rs.getLong("product_id"),
+            (rs, rowNum) -> new WishListDTO(rs.getLong("id"), rs.getLong("product_id"),
                 rs.getLong("user_id")));
     }
 
@@ -64,10 +64,10 @@ public class WishListRepository {
      *
      * @return 모든 WishList 객체의 리스트
      */
-    public List<WishList> getAllWishLists() {
+    public List<WishListDTO> getAllWishLists() {
         String sql = "SELECT * FROM wishlist";
         return jdbcTemplate.query(sql,
-            (rs, rowNum) -> new WishList(rs.getLong("id"), rs.getLong("product_id"),
+            (rs, rowNum) -> new WishListDTO(rs.getLong("id"), rs.getLong("product_id"),
                 rs.getLong("user_id")));
     }
 

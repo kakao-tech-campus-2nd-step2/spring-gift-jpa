@@ -1,8 +1,8 @@
-package gift.dto;
+package gift.DTO;
 
 import jakarta.validation.constraints.NotNull;
 
-public class WishList {
+public class WishListDTO {
 
     private final Long id;
 
@@ -18,7 +18,7 @@ public class WishList {
      * @param productId
      * @param userId
      */
-    public WishList(Long productId, long userId) {
+    public WishListDTO(Long productId, long userId) {
         this.id = null;
         this.productId = productId;
         this.userId = userId;
@@ -31,7 +31,7 @@ public class WishList {
      * @param productId
      * @param userId
      */
-    public WishList(Long id, Long productId, long userId) {
+    public WishListDTO(Long id, Long productId, long userId) {
         this.id = id;
         this.productId = productId;
         this.userId = userId;

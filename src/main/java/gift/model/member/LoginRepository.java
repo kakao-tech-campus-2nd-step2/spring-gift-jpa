@@ -1,6 +1,6 @@
 package gift.model.member;
 
-import gift.auth.Login;
+import gift.auth.LoginDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -24,24 +24,24 @@ public class LoginRepository {
     /**
      * 사용자 존재 여부 확인 메서드
      *
-     * @param login 로그인 정보
+     * @param loginDTO 로그인 정보
      * @return 사용자 존재 여부
      */
-    public boolean isExist(Login login) {
+    public boolean isExist(LoginDTO loginDTO) {
         String sql = "SELECT EXISTS(SELECT 1 FROM Users WHERE email = ? and password = ? and isDelete = FALSE)";
-        return jdbcTemplate.queryForObject(sql, new Object[]{login.getEmail(), login.getPassword()},
+        return jdbcTemplate.queryForObject(sql, new Object[]{loginDTO.getEmail(), loginDTO.getPassword()},
             Boolean.class);
     }
 
     /**
      * 사용자 회원가입 메서드
      *
-     * @param login 로그인 정보
+     * @param loginDTO 로그인 정보
      * @return 사용자 존재 여부
      */
-    public boolean SignUp(Login login) {
+    public boolean SignUp(LoginDTO loginDTO) {
         String sql = "INSERT INTO Users (email, password) VALUES (?, ?)";
-        if (jdbcTemplate.update(sql, login.getEmail(), login.getPassword()) == 1) {
+        if (jdbcTemplate.update(sql, loginDTO.getEmail(), loginDTO.getPassword()) == 1) {
             return true;
         }
         return false;
@@ -50,12 +50,12 @@ public class LoginRepository {
     /**
      * 사용자 ID 조회 메서드
      *
-     * @param login 로그인 정보
+     * @param loginDTO 로그인 정보
      * @return 사용자 ID
      */
-    public long getUserId(Login login) {
+    public long getUserId(LoginDTO loginDTO) {
         String sql = "SELECT id FROM Users WHERE email = ? and password = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{login.getEmail(), login.getPassword()},
+        return jdbcTemplate.queryForObject(sql, new Object[]{loginDTO.getEmail(), loginDTO.getPassword()},
             Integer.class);
     }
 }
