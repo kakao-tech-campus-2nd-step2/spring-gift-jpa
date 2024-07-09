@@ -10,4 +10,4 @@
   - [x] Product
   - [x] Member
   - [x] WishList
-- [ ] @DataJpaTest 사용해서 테스트 코드 작성
+- [x] @DataJpaTest 사용해서 테스트 코드 작성
