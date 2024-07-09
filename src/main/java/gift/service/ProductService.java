@@ -7,6 +7,7 @@ import gift.model.product.ProductListResponse;
 import gift.model.product.ProductRequest;
 import gift.model.product.ProductResponse;
 import gift.repository.ProductRepository;
+import gift.repository.WishRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final WishService wishService;
+    private final WishRepository wishRepository;
 
-    public ProductService(ProductRepository productRepository, WishService wishService) {
+    public ProductService(ProductRepository productRepository, WishRepository wishRepository) {
         this.productRepository = productRepository;
-        this.wishService = wishService;
+        this.wishRepository = wishRepository;
     }
 
     public ProductResponse register(ProductRequest productRequest) {
@@ -51,9 +52,9 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteProduct(Long userId, Long productId) {
+    public void deleteProduct(Long productId) {
         if (productRepository.existsById(productId)) {
-            wishService.deleteWishList(userId, productId);
+            wishRepository.deleteByProductId(productId);
             productRepository.deleteById(productId);
         } else {
             throw new ProductNotFoundException();
