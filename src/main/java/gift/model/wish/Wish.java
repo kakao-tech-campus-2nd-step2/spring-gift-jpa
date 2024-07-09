@@ -15,6 +15,10 @@ public class Wish {
     @Column(nullable = false)
     private int amount;
 
+    public Wish(){
+
+    }
+
     public Wish(Long productId, Long memberId, int amount){
         this.productId = productId;
         this.memberId = memberId;

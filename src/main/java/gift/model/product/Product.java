@@ -11,13 +11,16 @@ public class Product {
     private long id;
     @Column(nullable = false, length = 15)
     @Embedded
-    private final ProductName name;
+    private  ProductName name;
     @Column(nullable = false)
-    private final int price;
+    private  int price;
     @Column(nullable = false)
-    private final String imageUrl;
+    private  String imageUrl;
     @Column(nullable = false)
-    private final int amount;
+    private  int amount;
+
+    public Product(){
+    }
 
     public Product(ProductName name, int price, String imageUrl, int amount){
         this.name = name;

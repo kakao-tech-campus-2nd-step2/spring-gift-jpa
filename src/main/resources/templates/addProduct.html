@@ -7,9 +7,6 @@
 <body>
 <h1>Add Product</h1>
 <form id="productForm">
-    <label for="productID">Product ID:</label>
-    <input type="number" id="productID" name="productID" required><br><br>
-
     <label for="productName">Product Name:</label>
     <input type="text" id="productName" name="productName" required><br><br>
 
@@ -30,7 +27,6 @@
             event.preventDefault();
 
             var product = {
-                id: document.getElementById("productID").value,
                 name: document.getElementById("productName").value,
                 price: document.getElementById("productPrice").value,
                 imageUrl: document.getElementById("productImage").value,
