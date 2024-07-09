@@ -7,9 +7,11 @@ import gift.domain.product.Product;
 import gift.domain.user.User;
 import gift.domain.user.repository.JpaUserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("!test") // 테스트 환경에서는 동작하지 않도록
 public class DataLoader implements CommandLineRunner {
 
     private final JpaProductRepository jpaProductRepository;
