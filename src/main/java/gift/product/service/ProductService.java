@@ -22,13 +22,16 @@ public class ProductService {
     }
 
     public ResponseEntity<String> registerProduct(Product product) {
+        System.out.println(product.getId()+" "+product.getName()+" "+ product.getPrice()+" "+product.getImageUrl());
         productValidation.registerValidation(product);
         productDao.save(product);
         return ResponseEntity.status(HttpStatus.CREATED).body("Product registered successfully");
     }
 
-    public void updateProduct(Product product) {
+    public ResponseEntity<String> updateProduct(Product product) {
+        productValidation.updateValidation(product);
         productDao.save(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Product update successfully");
     }
 
     public void deleteProduct(Long id) {

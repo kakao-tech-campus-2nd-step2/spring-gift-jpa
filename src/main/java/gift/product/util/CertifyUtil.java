@@ -39,8 +39,8 @@ public class CertifyUtil {
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
             String subject = claimsJws.getBody().getSubject();
-            if(!memberDao.isExistsMember(Base64.getEncoder().encodeToString(subject.getBytes())))
-                return false;
+            //if(!memberDao.isExistsMember(Base64.getEncoder().encodeToString(subject.getBytes())))
+             //   return false;
         } catch (SignatureException e) {
             System.out.println("Invalid JWT signature: " + e.getMessage());
         } catch (MalformedJwtException e) {

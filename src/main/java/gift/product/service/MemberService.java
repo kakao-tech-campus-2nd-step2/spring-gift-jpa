@@ -19,27 +19,18 @@ public class MemberService {
     private final LoginValidation loginValidation;
 
     @Autowired
-    public MemberService(MemberDao memberDao, CertifyUtil certifyUtil,
-        LoginValidation loginValidation) {
+    public MemberService(MemberDao memberDao, CertifyUtil certifyUtil, LoginValidation loginValidation) {
         this.memberDao = memberDao;
         this.certifyUtil = certifyUtil;
         this.loginValidation = loginValidation;
-        memberDao.createMemberTable();
     }
 
     public ResponseEntity<Map<String, String>> signUp(Map<String, String> request) {
         String email = request.get("email");
 
-        if(isExistsMember(email))
+        if(memberDao.findByEmail(email).isPresent())
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        memberDao.signUp(
-            new Member(
-                email,
-                certifyUtil.encodingPassword(request.get("password")),
-                0
-            )
-        );
 
         return new ResponseEntity<>(responseToken(certifyUtil.generateToken(email)), HttpStatus.OK);
     }
@@ -53,9 +44,9 @@ public class MemberService {
         return new ResponseEntity<>(responseToken(loginValidation.getToken(email)), HttpStatus.OK);
     }
 
-    public boolean isExistsMember(String email) {
-        return memberDao.isExistsMember(email);
-    }
+//    public boolean isExistsMember(String email) {
+//        return memberDao.isExistsMember(email);
+//    }
 
     public Map<String, String> responseToken(String token) {
         Map<String, String> response = new HashMap<>();

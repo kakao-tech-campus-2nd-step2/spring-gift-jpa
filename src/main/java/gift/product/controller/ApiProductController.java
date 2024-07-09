@@ -38,12 +38,10 @@ public class ApiProductController {
         return productService.registerProduct(product);
     }
 
-    @PutMapping()
-    public ResponseEntity<String> updateProduct(@Valid @RequestBody Product product) {
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
         System.out.println("[ProductController] updateProduct()");
-        productValidation.isIncludeNameKakao(product.getName());
-        productService.updateProduct(product);
-        return ResponseEntity.ok("Product updated successfully");
+        return productService.updateProduct(new Product(id, product.getName(),product.getPrice(), product.getImageUrl()));
     }
 
     @DeleteMapping("/{id}")

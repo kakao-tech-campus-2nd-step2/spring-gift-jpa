@@ -59,7 +59,7 @@ public class AdminProductController {
         return "product-update-form";
     }
 
-    @PutMapping()
+    @PutMapping("/{id}")
     public String updateProduct(@ModelAttribute Product product, BindingResult bindingResult, Model model) {
         System.out.println("[ProductController] updateProduct()");
         if (bindingResult.hasErrors()) {

@@ -24,10 +24,10 @@ public class LoginValidation {
     }
 
     public boolean login(String email, String password) {
-        if(memberDao.validateMember(email, password)) {
-            tokenMap.put(email, certifyUtil.generateToken(email));
-            return true;
-        }
+//        if(memberDao.validateMember(email, password)) {
+//            tokenMap.put(email, certifyUtil.generateToken(email));
+//            return true;
+//        }
         return false;
     }
 
