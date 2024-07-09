@@ -1,5 +1,6 @@
 package gift.exception;
 
+import gift.auth.exception.AuthException;
 import java.util.ArrayList;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

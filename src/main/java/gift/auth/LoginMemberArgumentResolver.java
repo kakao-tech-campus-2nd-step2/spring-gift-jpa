@@ -1,5 +1,7 @@
 package gift.auth;
 
+import gift.auth.DTO.MemberDTO;
+import gift.auth.utill.JwtToken;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;

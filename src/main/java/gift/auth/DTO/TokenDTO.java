@@ -1,4 +1,4 @@
-package gift.auth;
+package gift.auth.DTO;
 
 public record TokenDTO(String token) {
 

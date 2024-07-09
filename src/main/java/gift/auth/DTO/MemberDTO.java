@@ -1,4 +1,4 @@
-package gift.auth;
+package gift.auth.DTO;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

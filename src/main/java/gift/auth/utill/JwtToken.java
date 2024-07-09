@@ -1,5 +1,7 @@
-package gift.auth;
+package gift.auth.utill;
 
+import gift.auth.DTO.MemberDTO;
+import gift.auth.DTO.TokenDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

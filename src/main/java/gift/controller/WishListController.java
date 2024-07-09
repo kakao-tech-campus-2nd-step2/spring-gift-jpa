@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.auth.MemberDTO;
+import gift.auth.DTO.MemberDTO;
 import gift.auth.LoginMember;
 import gift.service.WhishListService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,7 @@
 package gift.auth;
 
-import gift.exception.AuthException;
+import gift.auth.utill.JwtToken;
+import gift.auth.exception.AuthException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
