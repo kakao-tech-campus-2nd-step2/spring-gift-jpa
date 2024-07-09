@@ -28,4 +28,8 @@ public class Member {
         public String getPassword() {
                 return password;
         }
+
+        public boolean isPasswordEqual(String inputPassword) {
+                return this.password.equals(inputPassword);
+        }
 }

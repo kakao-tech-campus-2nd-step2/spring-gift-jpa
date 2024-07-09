@@ -38,7 +38,7 @@ public class MemberService {
     public LoginResultDto loginMember(MemberDto memberDto) {
         Member member = new Member(memberDto.email(),memberDto.password());
         Optional<Member> registeredMember = memberDao.findByEmail(member.getEmail());
-        if (registeredMember.isPresent() && member.getPassword().equals(registeredMember.get().getPassword())) {
+        if (registeredMember.isPresent() && member.isPasswordEqual(registeredMember.get().getPassword())) {
             String token = jwtUtil.generateToken(member);
             return new LoginResultDto(token, true);
         }
