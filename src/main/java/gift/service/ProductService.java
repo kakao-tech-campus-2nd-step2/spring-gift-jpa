@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -26,6 +27,7 @@ public class ProductService {
         this.parameterValidator = parameterValidator;
     }
 
+    @Transactional
     public void addProduct(ProductDTO productDTO) throws RuntimeException {
         try {
             productRepository.save(new Product(productDTO));
@@ -42,6 +44,7 @@ public class ProductService {
         return ProductConverter.convertToProductDTO(productRepository.findAll());
     }
 
+    @Transactional
     public void updateProduct(Long id, ProductDTO productDTO) throws RuntimeException {
         parameterValidator.validateParameter(id, productDTO);
         Optional<Product> productInDb = productRepository.findById(id);
@@ -52,8 +55,10 @@ public class ProductService {
         Product productInDB = productInDb.get();
         Product product = new Product(productDTO); //이따가 검증하는거 해야함
         productInDB.changeProduct(product);
+        productRepository.save(productInDB);
     }
 
+    @Transactional
     public void deleteProduct(Long id) throws RuntimeException {
         try {
             productRepository.deleteById(id);
