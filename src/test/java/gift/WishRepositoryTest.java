@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
 public class WishRepositoryTest {
@@ -59,4 +60,39 @@ public class WishRepositoryTest {
     }
 
 
+    @Test
+    void save() {
+        Member member = new Member("admin@gmail.com", "password");
+        memberRepository.save(member);
+
+        Product product = new Product("치킨", 20000, "chicken.com");
+        productRepository.save(product);
+
+        Wish expected = new Wish(member.getId(), product.getId());
+        Wish actual = wishRepository.save(expected);
+        assertAll(
+            () -> assertThat(actual.getId()).isNotNull(),
+            () -> assertThat(actual.getMemberId()).isEqualTo(expected.getMemberId()),
+            () -> assertThat(actual.getProductId()).isEqualTo(expected.getProductId())
+        );
+    }
+
+
+    @Test
+    void findByMemberId() {
+        Member member = new Member("admin@gmail.com", "password");
+        memberRepository.save(member);
+
+        Product product = new Product("치킨", 20000, "chicken.com");
+        productRepository.save(product);
+
+        Product product2 = new Product("피자", 30000, "pizza.com");
+        productRepository.save(product2);
+
+        wishRepository.save(new Wish(member.getId(), product.getId()));
+        wishRepository.save(new Wish(member.getId(), product2.getId()));
+
+        List<Wish> wishlists = wishRepository.findByMemberId(member.getId());
+        assertThat(wishlists).hasSize(2);
+    }
 }

@@ -1,6 +1,7 @@
 package gift;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.entity.Member;
 import gift.entity.Product;
@@ -18,7 +19,6 @@ public class MemberRepositoryTest {
     private MemberRepository memberRepository;
 
     @Test
-    @DisplayName("회원가입 테스트")
     public void registMemberTest() {
         Member member = new Member("admin@gmail.com", "password");
         memberRepository.save(member);
@@ -40,6 +40,25 @@ public class MemberRepositoryTest {
 
         Optional<Member> deleteMember = memberRepository.findByEmail("admin@gmail.com");
         assertThat(deleteMember).isEmpty();
+    }
+
+    @Test
+    void save() {
+        Member expected = new Member("admin@gmail.com", "password");
+        Member actual = memberRepository.save(expected);
+        assertAll(
+            () -> assertThat(actual.getId()).isNotNull(),
+            () -> assertThat(actual.getEmail()).isEqualTo(expected.getEmail())
+        );
+    }
+
+    @Test
+    void findByEmail() {
+        String expected = "admin@gmail.com";
+        memberRepository.save(new Member(expected, "password"));
+        Member actual = memberRepository.findByEmail(expected).orElse(null);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getEmail()).isEqualTo(expected);
     }
 
 }
