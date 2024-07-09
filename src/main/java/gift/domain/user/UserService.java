@@ -34,7 +34,8 @@ public class UserService {
      * 로그인, 성공 시 JWT 반환
      */
     public String login(UserDTO userDTO) {
-        User user = userRepository.findByEmailAndPassword(userDTO.getEmail(), userDTO.getPassword());
+        User user = userRepository.findByEmailAndPassword(userDTO.getEmail(), userDTO.getPassword())
+            .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, "유효한 사용자가 없습니다."));
 
         // jwt 토큰 생성
         String jwt = JwtProvider.generateToken(user);
