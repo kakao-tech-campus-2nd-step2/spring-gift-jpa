@@ -56,12 +56,15 @@ class WishRepositoryTest {
     void deleteByMemberIdAndProductId() {
         Wish expected = new Wish(1L, 1L, 1);
         wishRepository.save(expected);
-        Wish actual = wishRepository.findByMemberIdAndProductId(expected.getMemberId(), expected.getProductId());
+        Wish actual = wishRepository.findByMemberIdAndProductId(expected.getMemberId(),
+            expected.getProductId());
         assertThat(actual).isNotNull();
 
-        wishRepository.deleteByMemberIdAndProductId(expected.getMemberId(), expected.getProductId());
+        wishRepository.deleteByMemberIdAndProductId(expected.getMemberId(),
+            expected.getProductId());
 
-        actual = wishRepository.findByMemberIdAndProductId(expected.getMemberId(), expected.getProductId());
+        actual = wishRepository.findByMemberIdAndProductId(expected.getMemberId(),
+            expected.getProductId());
         assertThat(actual).isNull();
     }
 }

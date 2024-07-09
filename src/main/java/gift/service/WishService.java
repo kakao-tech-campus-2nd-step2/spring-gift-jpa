@@ -30,7 +30,7 @@ public class WishService {
 
     public void updateProductInWishList(WishRequestDto wishRequestDto,
         LoginMemberDto loginMemberDto) {
-        if(wishRequestDto.getCount() == 0) {
+        if (wishRequestDto.getCount() == 0) {
             wishRepository.deleteByMemberIdAndProductId(loginMemberDto.getId(),
                 wishRequestDto.getProductId());
             return;
@@ -43,6 +43,7 @@ public class WishService {
 
     public void deleteProductInWishList(WishRequestDto wishRequestDto,
         LoginMemberDto loginMemberDto) {
-        wishRepository.deleteByMemberIdAndProductId(loginMemberDto.getId(), wishRequestDto.getProductId());
+        wishRepository.deleteByMemberIdAndProductId(loginMemberDto.getId(),
+            wishRequestDto.getProductId());
     }
 }
