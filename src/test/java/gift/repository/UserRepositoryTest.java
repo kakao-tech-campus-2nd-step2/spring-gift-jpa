@@ -57,6 +57,7 @@ public class UserRepositoryTest {
         userRepository.deleteById(1L);
         List<User> savedUser = userRepository.findAll();
 
+        // then
         assertThat(savedUser.size()).isEqualTo(1);
 
     }

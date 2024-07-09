@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import gift.domain.WishList;
 import gift.repository.wish.WishListRepository;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,20 @@ public class WishListRepositoryTest {
         assertThat(findId).isEqualTo(id);
     }
 
-    
+    @Test
+    void deletebyid() {
+        // given
+        WishList wish1 = new WishList(1L, 1L, 1L, 2);
+        WishList wish2 = new WishList(2L, 1L, 3L, 3);
+        wishListRepository.save(wish1);
+        wishListRepository.save(wish2);
+        // when
+        wishListRepository.deleteById(1L);
+        List<WishList> savedWish = wishListRepository.findAll();
+        // then
+        assertThat(savedWish.size()).isEqualTo(1);
+    }
+
+
 
 }
