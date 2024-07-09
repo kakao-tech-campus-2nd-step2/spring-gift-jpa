@@ -33,7 +33,7 @@ public class WishlistController {
         if (user == null) {
             return "redirect:/members/login";
         }
-        wishlistService.addWishlist(user.email(), wishlistRequest.productId());
+        wishlistService.addWishlist(user.getEmail(), wishlistRequest.productId());
         return "위시리스트에 추가되었습니다.";
     }
 
@@ -42,7 +42,7 @@ public class WishlistController {
         if (user == null) {
             return "redirect:/members/login";
         }
-        List<Product> wishlist = wishlistService.getWishlist(user.email());
+        List<Product> wishlist = wishlistService.getWishlist(user.getEmail());
         model.addAttribute("wishlist", wishlist);
         return "wishlist";
     }
@@ -53,7 +53,7 @@ public class WishlistController {
         if (user == null) {
             return "redirect:/members/login";
         }
-        wishlistService.removeWishlist(user.email(), productId);
+        wishlistService.removeWishlist(user.getEmail(), productId);
         return "{\"status\": \"success\"}";
     }
 }

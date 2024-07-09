@@ -22,7 +22,7 @@ public class WishlistService {
     public List<Product> getWishlist(String email) {
         List<Wishlist> wishlistItems = wishlistRepository.getWishlist(email);
         return wishlistItems.stream()
-            .map(item -> productService.findProductsById(item.productId()))
+            .map(item -> productService.findProductsById(item.getProductId()))
             .collect(Collectors.toList());
     }
 

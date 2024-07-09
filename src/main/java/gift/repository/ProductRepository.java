@@ -54,12 +54,12 @@ public class ProductRepository {
 
     public Product saveProduct(Product product) {
         Map<String, Object> params = new HashMap<>();
-        params.put(FIELD_NAME, product.name());
-        params.put(FIELD_PRICE, product.price());
-        params.put(FIELD_IMAGE_URL, product.imageUrl());
+        params.put(FIELD_NAME, product.getName());
+        params.put(FIELD_PRICE, product.getPrice());
+        params.put(FIELD_IMAGE_URL, product.getImageUrl());
 
         Number newId = simpleJdbcInsert.executeAndReturnKey(params);
-        return new Product(newId.longValue(), product.name(), product.price(), product.imageUrl());
+        return new Product(newId.longValue(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public void deleteProduct(long id) {
@@ -70,7 +70,7 @@ public class ProductRepository {
     public void updateProduct(Product product, long id) {
         String sql = "UPDATE " + TABLE_NAME + " SET " + FIELD_ID + " = ?, " + FIELD_NAME + " = ?, "
             + FIELD_PRICE + " = ?, " + FIELD_IMAGE_URL + " = ? WHERE " + FIELD_ID + " = ?";
-        jdbcTemplate.update(sql, product.id(), product.name(), product.price(), product.imageUrl(),
+        jdbcTemplate.update(sql, product.getId(), product.getName(), product.getPrice(), product.getImageUrl(),
             id);
     }
 

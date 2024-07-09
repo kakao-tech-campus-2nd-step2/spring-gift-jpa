@@ -65,12 +65,12 @@ public class UserController {
         }
 
         User user = userService.findUserByEmail(loginDTO.email());
-        if (user == null || !user.password().equals(loginDTO.password())) {
+        if (user == null || !user.getPassword().equals(loginDTO.password())) {
             model.addAttribute("loginError", "잘못된 이메일 또는 비밀번호입니다.");
             return "login_user_form";
         }
 
-        String token = jwtUtil.generateToken(user.email(), user.role());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
         model.addAttribute("token", token);
 
         return "login_success";
