@@ -1,6 +1,7 @@
 package gift.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "gift")
@@ -9,11 +10,14 @@ public class Gift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name",nullable = false)
+    @Column(name = "name")
+    @NotNull
     private String name;
-    @Column(name = "price",nullable = false)
+    @Column(name = "price")
+    @NotNull
     private int price;
-    @Column(name = "imageUrl",nullable = false)
+    @Column(name = "imageUrl")
+    @NotNull
     private String imageUrl;
 
     public Gift() {
