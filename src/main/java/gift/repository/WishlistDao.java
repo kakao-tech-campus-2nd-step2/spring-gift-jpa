@@ -1,4 +1,4 @@
-package gift.dao;
+package gift.repository;
 
 import gift.vo.WishProduct;
 import org.springframework.jdbc.core.simple.JdbcClient;

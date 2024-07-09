@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dao.ProductDao;
+import gift.repository.ProductDao;
 import gift.vo.Product;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
