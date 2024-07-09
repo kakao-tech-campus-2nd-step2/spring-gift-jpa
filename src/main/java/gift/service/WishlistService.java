@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dao.WishlistDao;
+import gift.repository.WishlistDao;
 import gift.vo.WishProduct;
 import org.springframework.stereotype.Service;
 

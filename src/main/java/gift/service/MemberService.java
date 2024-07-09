@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dao.MemberRepository;
+import gift.repository.MemberRepository;
 import gift.vo.Member;
 import org.springframework.stereotype.Service;
 
