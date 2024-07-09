@@ -23,48 +23,42 @@ public class WishListController {
         this.jwtService = jwtService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/save")
     public ResponseEntity<String> create(
             @RequestHeader("Authorization") String token,
             @RequestParam("menuId") Long menuId
     ) {
         String jwtId = jwtService.getMemberId();
         WishListRequest wishListRequest = new WishListRequest(jwtId,menuId);
-        wishListService.create(wishListRequest);
+        wishListService.save(wishListRequest);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization",token.replace("Bearer ",""));
         return ResponseEntity.ok().headers(headers).body("success");
     }
 
     @GetMapping("/read")
-    public ResponseEntity<HashMap<String,Object>> read(){
+    public ResponseEntity<List<WishListResponse>> read(){
         String jwtId = jwtService.getMemberId();
         if(jwtId == null){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         else{
             List<WishListResponse> nowWishList = wishListService.findById(jwtId);
-            HashMap<String,Object> answer = new HashMap<>();
-            answer.put("data",nowWishList);
-            return ResponseEntity.ok().body(answer);
+            return ResponseEntity.ok().body(nowWishList);
         }
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ResponseEntity<String> delete(
-            @RequestParam("menuId") Long menuId
+            @RequestParam("Id") Long id
     ){
         String jwtId = jwtService.getMemberId();
         if(jwtId == null){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
         }
         else{
-            if(wishListService.delete(jwtId,menuId)){
-                return ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
-            }
-            else{
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("해당 메뉴가 존재하지 않습니다.");
-            }
+            wishListService.delete(id);
+            return ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
         }
     }
 }
