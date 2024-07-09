@@ -8,10 +8,11 @@ import gift.repository.MemberJpaRepository;
 import gift.repository.ProductJpaRepository;
 import gift.repository.WishJpaRepository;
 import gift.validate.NotFoundException;
-import jakarta.transaction.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishService {
@@ -27,6 +28,7 @@ public class WishService {
         this.productJpaRepository = productJpaRepository;
     }
 
+    @Transactional
     public void addWish(Long userId, AddWishRequest request) {
         System.out.println("userId = " + userId);
         var member = memberJpaRepository.findById(userId)
@@ -57,6 +59,7 @@ public class WishService {
         wish.updateCount(request.count());
     }
 
+    @Transactional
     public void deleteWish(Long memberId, Long wishId) {
         Wish wish = wishJpaRepository.findById(wishId)
             .orElseThrow(() -> new NotFoundException("Wish not found"));
@@ -70,6 +73,7 @@ public class WishService {
         wishJpaRepository.deleteById(wishId);
     }
 
+    @Transactional(readOnly = true)
     public List<WishListResponse> getWishes(Long memberId) {
         var response = wishJpaRepository.findByMemberId(memberId)
             .stream()
