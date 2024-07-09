@@ -20,15 +20,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final EntityManager em;
     private final ProductRepository productRepository;
     private final WishRepository wishRepository;
+    private final AuthRepository authRepository;
 
 
-    public WebConfig(EntityManager em, ProductRepository productRepository, WishRepository wishRepository) {
-        this.em = em;
+    public WebConfig(ProductRepository productRepository, WishRepository wishRepository, AuthRepository authRepository) {
         this.productRepository = productRepository;
         this.wishRepository = wishRepository;
+        this.authRepository = authRepository;
     }
 
     @Bean
@@ -40,18 +40,11 @@ public class WebConfig implements WebMvcConfigurer {
     public WishService wishService() { return new WishService(wishRepository, productService());}
 
     @Bean
-    public WishRepository wishRepository() {
-        return new JpaWishRepository(em);
-    }
-
-    @Bean
-    public AuthRepository authRepository() {
-        return new JpaAuthRepository(em);
-    }
+    public AuthService authService() { return new AuthService(authRepository); }
 
     @Bean
     public TokenValidationInterceptor tokenValidationInterceptor() {
-        return new TokenValidationInterceptor(authRepository());
+        return new TokenValidationInterceptor(authRepository);
     }
 
     @Override

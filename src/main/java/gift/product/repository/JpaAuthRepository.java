@@ -27,8 +27,9 @@ public class JpaAuthRepository implements AuthRepository {
     }
 
     @Transactional
-    public void save(Member member) {
+    public Member save(Member member) {
         em.persist(member);
+        return member;
     }
 
     public Member findByEmail(String email) {

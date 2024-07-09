@@ -8,7 +8,7 @@ public interface AuthRepository {
 
     public boolean existsById(Long id);
 
-    public void save(Member member);
+    public Member save(Member member);
 
     public Member findByEmail(String email);
 }
