@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.exceptions.InvalidNameException;
+import gift.exceptions.CustomException;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,7 @@ public class ProductController {
 
     private void validateProductName(String name) {
         if (name.contains("카카오")) {
-            throw new InvalidNameException("이름에 카카오는 포함할 수 없습니다. 수정해 주세요");
+            throw CustomException.invalidNameException();
         }
     }
 }
