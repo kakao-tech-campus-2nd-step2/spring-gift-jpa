@@ -4,7 +4,7 @@ import gift.main.annotation.SessionUser;
 import gift.main.dto.UserVo;
 import gift.main.entity.Product;
 import gift.main.entity.WishProduct;
-import gift.main.repository.ProductDao;
+import gift.main.repository.ProductRepository;
 import gift.main.repository.WishProductRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,23 +17,24 @@ import java.util.Map;
 @RestController
 @RequestMapping("/product")
 public class WishProductController {
-    private final ProductDao productDao;
     private final WishProductRepository wishProductRepository;
+    private final ProductRepository productRepository;
 
-    public WishProductController(ProductDao productDao, WishProductRepository wishProductRepository) {
-        this.productDao = productDao;
+    public WishProductController(WishProductRepository wishProductRepository, ProductRepository productRepository) {
         this.wishProductRepository = wishProductRepository;
+        this.productRepository = productRepository;
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> getProducts() {
-        List<Product> products = productDao.selectProductAll();
+        List<Product> products = productRepository.findAll();
         Map<String, List<Product>> response = new HashMap<>();
         response.put("products", products);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/wishlist/{productId}")
+    @Transactional
     public ResponseEntity<?> deleteProducts(@PathVariable(name = "productId") Long productId, @SessionUser UserVo sessionUserVo) {
         wishProductRepository.deleteByProductIdAndUserId(productId, sessionUserVo.getId());
         return ResponseEntity.ok("성공적으로 삭제 완료~!");

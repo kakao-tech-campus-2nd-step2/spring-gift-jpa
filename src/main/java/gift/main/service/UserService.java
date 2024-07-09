@@ -1,16 +1,14 @@
 package gift.main.service;
 
-import gift.main.dto.UserDto;
 import gift.main.dto.UserJoinRequest;
 import gift.main.dto.UserLoginRequest;
-import gift.main.dto.UserVo;
 import gift.main.entity.User;
 import gift.main.Exception.ErrorCode;
 import gift.main.Exception.CustomException;
-import gift.main.repository.UserDao;
 import gift.main.repository.UserRepository;
 import gift.main.util.JwtUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -23,9 +21,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public String joinUser(UserJoinRequest userJoinRequest) {
         //유효성 검사해야하는데용~!
-        if (!userRepository.existsByEmail(userJoinRequest.email())) {
+        if (userRepository.existsByEmail(userJoinRequest.email())) {
             throw new CustomException(ErrorCode.ALREADY_EMAIL.getErrorMessage(), ErrorCode.ALREADY_EMAIL.getHttpStatus());
         }
         User userdto = new User(userJoinRequest) ;
@@ -33,6 +32,7 @@ public class UserService {
         return jwtUtil.createToken(user);
 
     }
+
 
     public String loginUser(UserLoginRequest userLoginRequest) {
         User user = userRepository.findByEmailAndPassword(userLoginRequest.email(),userLoginRequest.password());

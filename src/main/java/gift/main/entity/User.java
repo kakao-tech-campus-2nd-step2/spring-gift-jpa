@@ -1,24 +1,30 @@
 package gift.main.entity;
 
 import gift.main.dto.UserJoinRequest;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "`user`")
 public class User {
-
-    public User() {
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  long id;
-    private  String name;
-    private  String email;
-    private  String password;
-    private  Role role;
+    private long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private Role role;
+
+    public User() {
+    }
 
     public User(long id, String name, String email, String password, Role role) {
         this.id = id;
@@ -27,6 +33,7 @@ public class User {
         this.password = password;
         this.role = role;
     }
+
     public User(String name, String email, String password, Role role) {
         this.name = name;
         this.email = email;
