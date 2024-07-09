@@ -1,5 +1,6 @@
 package gift.controller.member;
 
+import gift.exception.EmailDuplicateException;
 import gift.exception.MemberNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -31,6 +32,13 @@ public class MemberControllerAdvice {
 
     @ExceptionHandler(MemberNotFoundException.class)
     public ProblemDetail handleMemberNotFoundException(MemberNotFoundException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setTitle(e.getMessage());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(EmailDuplicateException.class)
+    public ProblemDetail handleEmailDuplicateException(EmailDuplicateException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setTitle(e.getMessage());
         return problemDetail;
