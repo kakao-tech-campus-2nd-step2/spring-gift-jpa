@@ -36,7 +36,7 @@ public class ProductService {
     }
 
     public List<Product> searchProduct(String name) {
-        List<ProductEntity> productEntities = productRepository.findByNameLike(name);
+        List<ProductEntity> productEntities = productRepository.findByNameContaining(name);
         return productEntities.stream()
             .map(this::entityToDto)
             .collect(Collectors.toList());
