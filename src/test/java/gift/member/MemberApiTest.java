@@ -2,7 +2,7 @@ package gift.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.global.authentication.jwt.JwtToken;
+import gift.member.business.dto.JwtToken;
 import gift.global.authentication.jwt.JwtValidator;
 import gift.global.authentication.jwt.TokenType;
 import gift.member.persistence.repository.MemberRepository;

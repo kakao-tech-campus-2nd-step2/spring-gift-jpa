@@ -11,8 +11,6 @@ public interface ProductRepository {
 
     Long saveProduct(Product product);
 
-    Long updateProduct(Long id, Product product);
-
     Long deleteProductById(Long id);
 
     List<Product> getAllProducts();
@@ -20,4 +18,8 @@ public interface ProductRepository {
     void deleteProductByIdList(List<Long> productIds);
 
     Map<Long, Product> getProductsByIds(List<Long> productIds);
+
+    void deleteAll();
+
+    Product getReferencedProduct(Long productId);
 }

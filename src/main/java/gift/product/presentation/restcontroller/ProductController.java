@@ -20,7 +20,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseProductDto> getProduct(@PathVariable Long id) {
+    public ResponseEntity<ResponseProductDto> getProduct(@PathVariable("id") Long id) {
         var productDto = productService.getProduct(id);
         var responseProductDto = ResponseProductDto.from(productDto);
         return ResponseEntity.ok(responseProductDto);
@@ -43,7 +43,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Long> deleteProduct(@PathVariable("id") Long id) {
         Long deletedId = productService.deleteProduct(id);
         return ResponseEntity.ok(deletedId);
     }

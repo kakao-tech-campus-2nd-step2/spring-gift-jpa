@@ -24,6 +24,15 @@ public class JwtValidator {
         return Long.valueOf(validateTokenType(token, type));
     }
 
+    public SecretKey secretKey() {
+        try {
+            return Keys.hmacShaKeyFor(
+                MessageDigest.getInstance("SHA-256").digest(secret.getBytes()));
+        } catch (NoSuchAlgorithmException e) {
+            throw new JwtException("암호화 알고리즘이 존재하지 않습니다.");
+        }
+    }
+
     private String validateForm(String rawToken) {
         if (rawToken == null || !rawToken.startsWith("Bearer ")) {
             throw new JwtException("JWT 토큰이 없거나 유효하지 않은 형식입니다.");
@@ -54,15 +63,6 @@ public class JwtValidator {
                 .getPayload();
         } catch (JwtException e) {
             throw new JwtException("토큰을 파싱하는데 실패했습니다.");
-        }
-    }
-
-    protected SecretKey secretKey() {
-        try {
-            return Keys.hmacShaKeyFor(
-                MessageDigest.getInstance("SHA-256").digest(secret.getBytes()));
-        } catch (NoSuchAlgorithmException e) {
-            throw new JwtException("암호화 알고리즘이 존재하지 않습니다.");
         }
     }
 }

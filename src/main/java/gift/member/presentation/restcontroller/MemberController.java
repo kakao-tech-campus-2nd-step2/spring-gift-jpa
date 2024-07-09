@@ -1,8 +1,7 @@
 package gift.member.presentation.restcontroller;
 
 import gift.global.authentication.annotation.MemberId;
-import gift.global.authentication.jwt.JwtGenerator;
-import gift.global.authentication.jwt.JwtToken;
+import gift.member.business.dto.JwtToken;
 import gift.member.business.service.MemberService;
 import gift.member.business.service.WishlistService;
 import gift.member.presentation.dto.RequestMemberDto;
@@ -28,12 +27,10 @@ public class MemberController {
 
     private final MemberService memberService;
     private final WishlistService wishlistService;
-    private final JwtGenerator jwtGenerator;
 
-    public MemberController(MemberService memberService, WishlistService wishlistService, JwtGenerator jwtGenerator) {
+    public MemberController(MemberService memberService, WishlistService wishlistService) {
         this.memberService = memberService;
         this.wishlistService = wishlistService;
-        this.jwtGenerator = jwtGenerator;
     }
 
     @PostMapping("/register")
@@ -53,7 +50,7 @@ public class MemberController {
     @PostMapping("/reissue")
     public ResponseEntity<String> reissueRefreshToken(
         @RequestHeader("Authorization") String refreshToken) {
-        var accessToken = jwtGenerator.reissueAccessToken(refreshToken);
+        var accessToken = memberService.reissueAccessToken(refreshToken);
         return ResponseEntity.ok(accessToken);
     }
 
@@ -67,21 +64,21 @@ public class MemberController {
     }
 
     @PostMapping("/wishlists/products/{productId}")
-    public ResponseEntity<Long> addWishList(@MemberId Long memberId, @PathVariable Long productId) {
+    public ResponseEntity<Long> addWishList(@MemberId Long memberId, @PathVariable("productId") Long productId) {
         var wishListId = wishlistService.addWishList(memberId, productId);
         return ResponseEntity.status(HttpStatus.CREATED).body(wishListId);
     }
 
     @PutMapping("/wishlists/products/{productId}")
     public ResponseEntity<Long> updateWishList(@MemberId Long memberId,
-        @PathVariable Long productId,
+        @PathVariable("productId") Long productId,
         @RequestBody @Valid RequestWishlistDto requestWishlistDto) {
         var wishListId = wishlistService.updateWishList(memberId, requestWishlistDto.toWishListUpdateDto(productId));
         return ResponseEntity.ok(wishListId);
     }
 
     @DeleteMapping("/wishlists/products/{productId}")
-    public ResponseEntity<Void> deleteWishList(@MemberId Long memberId, @PathVariable Long productId) {
+    public ResponseEntity<Void> deleteWishList(@MemberId Long memberId, @PathVariable("productId") Long productId) {
         wishlistService.deleteWishList(memberId, productId);
         return ResponseEntity.ok().build();
     }

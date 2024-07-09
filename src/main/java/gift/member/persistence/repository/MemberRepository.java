@@ -9,4 +9,6 @@ public interface MemberRepository {
     Member getMemberByEmail(String email);
 
     Member getMemberById(Long id);
+
+    Member getReferencedMember(Long memberId);
 }
