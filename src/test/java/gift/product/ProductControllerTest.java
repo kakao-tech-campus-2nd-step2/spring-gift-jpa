@@ -59,14 +59,14 @@ class ProductControllerTest {
         mockMvc.perform(get(apiUrl))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.size()").value(products.size()))
-            .andExpect(jsonPath("$[0].id").value(product1.id()))
-            .andExpect(jsonPath("$[0].name").value(product1.name()))
-            .andExpect(jsonPath("$[0].price").value(product1.price()))
-            .andExpect(jsonPath("$[0].imageUrl").value(product1.imageUrl()))
-            .andExpect(jsonPath("$[1].id").value(product2.id()))
-            .andExpect(jsonPath("$[1].name").value(product2.name()))
-            .andExpect(jsonPath("$[1].price").value(product2.price()))
-            .andExpect(jsonPath("$[1].imageUrl").value(product2.imageUrl()));
+            .andExpect(jsonPath("$[0].id").value(product1.getId()))
+            .andExpect(jsonPath("$[0].name").value(product1.getName()))
+            .andExpect(jsonPath("$[0].price").value(product1.getPrice()))
+            .andExpect(jsonPath("$[0].imageUrl").value(product1.getImageUrl()))
+            .andExpect(jsonPath("$[1].id").value(product2.getId()))
+            .andExpect(jsonPath("$[1].name").value(product2.getName()))
+            .andExpect(jsonPath("$[1].price").value(product2.getPrice()))
+            .andExpect(jsonPath("$[1].imageUrl").value(product2.getImageUrl()));
     }
 
     @ParameterizedTest

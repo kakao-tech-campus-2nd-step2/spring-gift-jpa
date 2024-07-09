@@ -64,7 +64,7 @@ class WishlistRepositoryTest {
         memberRepository.addMember(new Member("bbb@email.com", "password"));
 
         for (int i = 1; i < 4; i++) {
-            productRepository.addProduct(
+            productRepository.save(
                 new Product(i, "product-" + i, i * 100, "product-" + i + "-image"));
         }
     }
@@ -80,9 +80,9 @@ class WishlistRepositoryTest {
         );
 
         for (Product product : expect) {
-            wishlistRepository.addWishlist(new Wishlist(product.id(), "aaa@email.com"));
+            wishlistRepository.addWishlist(new Wishlist(product.getId(), "aaa@email.com"));
         }
-        productRepository.addProduct(new Product(4L, "product-4", 400, "product-4-image"));
+        productRepository.save(new Product(4L, "product-4", 400, "product-4-image"));
         wishlistRepository.addWishlist(new Wishlist(4L, "bbb@email.com"));
 
         //when

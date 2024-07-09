@@ -38,7 +38,7 @@ public class WishlistService {
     }
 
     private void hasProductByProductID(long productId) {
-        if (!productRepository.existProduct(productId)) {
+        if (!productRepository.existsById(productId)) {
             throw new IllegalArgumentException("Product does not exist");
         }
     }

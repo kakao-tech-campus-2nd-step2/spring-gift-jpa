@@ -23,9 +23,9 @@ public class AdminPageController {
 
     @GetMapping(path = "/admin")
     public String adminPage(Model model, @RequestParam("page") Integer currentPage) {
-        List<Product> totalProducts = productRepository.getAllProducts();
+        List<Product> totalProducts = productRepository.findAll();
         List<Product> subProducts = totalProducts.subList((currentPage - 1) *
-                PAGE_SIZE.getValue(),
+                                                          PAGE_SIZE.getValue(),
             Math.min(currentPage * PAGE_SIZE.getValue(), totalProducts.size()));
 
         Integer totalProductsSize = totalProducts.size();
@@ -46,8 +46,8 @@ public class AdminPageController {
 
         // 내림 연산이 반드시 필요하기에, 약분을 통해 나누면 안된다.
         Integer startPage = (Math.floorDiv(page - 1, MAX_PAGE_INDEX.getValue()) + 1)
-            * MAX_PAGE_INDEX.getValue()
-            - (MAX_PAGE_INDEX.getValue() - 1);
+                            * MAX_PAGE_INDEX.getValue()
+                            - (MAX_PAGE_INDEX.getValue() - 1);
 
         return IntStream.rangeClosed(
                 startPage,
