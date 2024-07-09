@@ -10,5 +10,5 @@
   - entity, repository
 - [x] 사용자 객체 매핑
   - entity, repository
-- [ ] 위시리스트 객체 매핑
+- [x] 위시리스트 객체 매핑
   - entity, repository
