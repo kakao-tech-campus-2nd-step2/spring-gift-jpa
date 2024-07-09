@@ -2,7 +2,7 @@ package gift.domain;
 
 import gift.controller.TokenInterceptor;
 import gift.dao.MemberDao;
-import gift.model.JwtUtil;
+import gift.model.CreatJwtToken;
 import gift.model.Member;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ import java.util.Objects;
 @Component
 public class MemberDomain {
     TokenInterceptor interceptor = new TokenInterceptor();
-    JwtUtil jwtUtil = new JwtUtil();
+    CreatJwtToken jwtUtil = new CreatJwtToken();
     private final MemberDao memberDao;
 
     public MemberDomain(MemberDao memberDao) {
