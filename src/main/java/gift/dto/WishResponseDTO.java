@@ -4,6 +4,6 @@ import gift.model.Product;
 
 import java.util.List;
 
-public record WishlistResponseDTO(Long userID,
+public record WishResponseDTO(Long userID,
                                   List<Product> products) {
 }
