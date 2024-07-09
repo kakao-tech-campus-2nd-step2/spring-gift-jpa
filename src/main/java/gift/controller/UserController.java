@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.model.AccessTokenDO;
 import gift.model.User;
+import gift.model.UserDTO;
 import gift.repository.UserRepository;
 import gift.util.UserUtility;
 import io.jsonwebtoken.Claims;
@@ -28,21 +29,21 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> signup(@RequestBody @Valid User user) {
-        userRepository.save(user);
-        String accessToken = userUtility.makeAccessToken(user);
+    public ResponseEntity<Object> signup(@RequestBody @Valid UserDTO user) {
+        User savedUser = userRepository.save(user);
+        String accessToken = userUtility.makeAccessToken(savedUser);
         return ResponseEntity.ok().body(userUtility.accessTokenToObject(accessToken));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody @Valid User user) {
+    public ResponseEntity<Object> login(@RequestBody @Valid UserDTO user) {
         Optional<User> result = userRepository.findByEmail(user.getEmail());
         if (!result.isPresent())
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email does not exist");
         User foundUser = result.get();
         if (!user.getPassword().equals(foundUser.getPassword()))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Password does not match");
-        String accessToken = userUtility.makeAccessToken(user);
+        String accessToken = userUtility.makeAccessToken(foundUser);
         return ResponseEntity.ok().body(userUtility.accessTokenToObject(accessToken));
     }
 
