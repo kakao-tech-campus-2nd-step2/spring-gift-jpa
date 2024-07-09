@@ -35,7 +35,7 @@ public class WishResponse {
         return productImageurl;
     }
 
-    public void setProductImageUrl(String productImageurl) {
+    public void setProductImageurl(String productImageurl) {
         this.productImageurl = productImageurl;
     }
 }

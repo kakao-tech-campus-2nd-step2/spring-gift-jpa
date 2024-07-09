@@ -39,7 +39,7 @@ public class WishService {
         wishResponse.setId(wish.getId());
         wishResponse.setProductName(wish.getProduct().getName());
         wishResponse.setProductPrice(wish.getProduct().getPrice());
-        wishResponse.setProductImageUrl(wish.getProduct().getImageurl());
+        wishResponse.setProductImageurl(wish.getProduct().getImageurl());
         return wishResponse;
     }
 }
