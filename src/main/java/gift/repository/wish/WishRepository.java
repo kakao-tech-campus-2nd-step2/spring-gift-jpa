@@ -1,20 +1,20 @@
 package gift.repository.wish;
 
 import gift.domain.Wish;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface WishRepository {
 
-    Optional<Wish> findById(Long wishId);
+public interface WishRepository extends JpaRepository<Wish, Long> {
 
-    Integer findWishCountByWishIdAndMemberEmail(Long likesId, String email);
-    List<Wish> findWishByMemberEmail(String email);
+    @Query("SELECT w FROM Wish w WHERE w.member.email = :email")
+    List<Wish> findWishByByMemberEmail(@Param("email") String email);
 
-    Long wishSave(Long productId, String email, int count);
-
-    Long updateWish(Long likesId, int count);
-
-    Long deleteWish(Long likesId);
+    @Query("SELECT w FROM Wish w " +
+            "WHERE w.id = :id and w.member.email = :email")
+    Optional<Wish> findWishByIdAndMemberEmail(@Param("id") Long id, @Param("email") String email);
 }

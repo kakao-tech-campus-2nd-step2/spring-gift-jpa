@@ -34,7 +34,7 @@ public class WishController {
     public ResponseEntity<List<WishResponseDto>> getWishProducts(HttpServletRequest request){
         AuthToken token = getAuthVO(request);
 
-        List<WishResponseDto> findProducts = wishService.findAllWish(token.email());
+        List<WishResponseDto> findProducts = wishService.findAllWish(token.getEmail());
 
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(findProducts);
     }
@@ -44,7 +44,7 @@ public class WishController {
                                  @RequestBody @Valid WishCreateRequest wishCreateRequest){
         AuthToken token = getAuthVO(request);
 
-        wishService.addWish(wishCreateRequest.product_id(), token.email(), wishCreateRequest.count());
+        wishService.addWish(wishCreateRequest.product_id(), token.getEmail(), wishCreateRequest.count());
 
         return "redirect:/wishes";
     }
@@ -54,7 +54,7 @@ public class WishController {
     public String editWishProduct(HttpServletRequest request,
                                   @RequestBody @Valid WishEditRequest wishEditRequest){
         AuthToken token = getAuthVO(request);
-        wishService.editWish(wishEditRequest.wish_id(), token.email() , wishEditRequest.count());
+        wishService.editWish(wishEditRequest.wish_id(), token.getEmail() , wishEditRequest.count());
         return "redirect:/wishes";
     }
 
@@ -62,7 +62,7 @@ public class WishController {
     public String deleteLikesProduct(HttpServletRequest request,
                                      @RequestBody @Valid WishDeleteRequest wishDeleteRequest){
         AuthToken token = getAuthVO(request);
-        wishService.deleteWish(wishDeleteRequest.wish_id(), token.email());
+        wishService.deleteWish(wishDeleteRequest.wish_id(), token.getEmail());
         return "redirect:/wishes";
     }
 

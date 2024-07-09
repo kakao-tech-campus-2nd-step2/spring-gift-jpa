@@ -22,8 +22,11 @@ public class AuthService {
     }
 
     @Transactional
-    public void memberJoin(MemberRequestDto memberRequestDto){
-        Member member = Member.toEntity(memberRequestDto);
+    public MemberResponseDto memberJoin(MemberRequestDto memberRequestDto){
+        Member member = new Member.Builder()
+                .email(memberRequestDto.email())
+                .password(memberRequestDto.password())
+                .build();
 
         Optional<Member> memberByEmail = memberRepository.findMemberByEmail(memberRequestDto.email());
 
@@ -31,7 +34,9 @@ public class AuthService {
             throw new EmailDuplicationException();
         }
 
-        memberRepository.memberSave(member);
+        Member savedMember = memberRepository.save(member);
+
+        return MemberResponseDto.from(savedMember);
     }
 
     public MemberResponseDto findOneByEmailAndPassword(MemberRequestDto memberRequestDto){

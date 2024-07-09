@@ -23,19 +23,25 @@ public class ProductService {
     }
 
     @Transactional
-    public Long addProduct(ProductRequestDto productDto){
+    public ProductResponseDto addProduct(ProductRequestDto productDto){
         checkNameInKakao(productDto);
 
-        Product product = Product.toEntity(productDto);
+        Product product = new Product.Builder()
+                .name(productDto.name())
+                .price(productDto.price())
+                .imageUrl(productDto.imageUrl())
+                .build();
 
         Product savedProduct = productRepository.save(product);
 
-        return savedProduct.getId();
+
+        return ProductResponseDto.from(savedProduct);
     }
 
     public ProductResponseDto findProductById(Long id){
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("존재 하지 않는 상품입니다."));
+
         return ProductResponseDto.from(product);
     }
 
@@ -46,28 +52,23 @@ public class ProductService {
     }
 
     @Transactional
-    public Long updateProduct(Long id, ProductRequestDto productRequestDto){
+    public ProductResponseDto updateProduct(Long id, ProductRequestDto productRequestDto){
         checkNameInKakao(productRequestDto);
-        Product product = Product.toEntity(productRequestDto);
 
-        Long updatedRow = productRepository.update(id, product);
+        Product findProduct = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("존재 하지 않는 상품입니다."));
 
-        if(updatedRow == 0){
-            throw new EntityNotFoundException("존재 하지 않는 상품입니다.");
-        }
+        findProduct.update(productRequestDto);
 
-        return updatedRow;
+        return ProductResponseDto.from(findProduct);
     }
 
     @Transactional
-    public Long deleteProduct(Long id){
-        Long deletedRow = productRepository.delete(id);
+    public ProductResponseDto deleteProduct(Long id){
+        Product findProduct = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("존재 하지 않는 상품입니다."));
 
-        if(deletedRow == 0){
-            throw new EntityNotFoundException("존재 하지 않는 상품입니다.");
-        }
+        productRepository.delete(findProduct);
 
-        return deletedRow;
+        return ProductResponseDto.from(findProduct);
     }
 
     private void checkNameInKakao(ProductRequestDto productDto) {

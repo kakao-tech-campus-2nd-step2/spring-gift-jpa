@@ -41,7 +41,7 @@ public class LoginFilter implements Filter {
         String authHeader = httpRequest.getHeader("Authorization");
 
         if (!(authHeader == null || authHeader.isEmpty())){
-            Optional<AuthToken> findAuthToken = tokenRepository.findTokenByToken(authHeader.substring(7));
+            Optional<AuthToken> findAuthToken = tokenRepository.findAuthTokenByToken(authHeader.substring(7));
 
             if (findAuthToken.isEmpty()){
                 filterChain.doFilter(request, response);

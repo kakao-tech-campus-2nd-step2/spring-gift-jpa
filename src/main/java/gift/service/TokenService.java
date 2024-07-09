@@ -27,11 +27,13 @@ public class TokenService {
             throw new EmailDuplicationException("이미 토큰을 발급한 아이디 입니다.");
         }
 
-        return tokenRepository.tokenSave(token, email);
+        AuthToken authToken = new AuthToken(token, email);
+        tokenRepository.save(authToken);
+        return token;
     }
 
     public AuthToken findToken(String token){
-        AuthToken authToken = tokenRepository.findTokenByToken(token)
+        AuthToken authToken = tokenRepository.findAuthTokenByToken(token)
                 .orElseThrow(UnAuthorizationException::new);
 
         return authToken;
