@@ -41,7 +41,7 @@ class MemberControllerTest {
     public void afterEach(){
         // 유저 삭제
         Member member = memberService.getMemberFromToken(token);
-        memberService.removeMember(member.getId());
+        memberService.deleteMember(member.getId());
     }
     @Test
     @DisplayName("로그인 성공 E2E 테스트")
