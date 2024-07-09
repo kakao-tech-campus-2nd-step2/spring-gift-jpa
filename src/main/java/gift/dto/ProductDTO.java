@@ -23,6 +23,6 @@ public record ProductDTO(
 ) {
 
     public Product toEntity() {
-        return new Product(id, name, price, imageUrl);
+        return new Product(name, price, imageUrl);
     }
 }

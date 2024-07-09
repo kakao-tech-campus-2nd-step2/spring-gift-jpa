@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.domain.Product;
 import gift.repository.ProductRepository;
 import gift.dto.ProductDTO;
 import gift.exception.NoSuchProductException;
@@ -25,7 +26,6 @@ public class ProductService {
             .collect(Collectors.toList());
     }
 
-
     public ProductDTO findById(Long id) {
         return productRepository.findById(id)
             .orElseThrow(NoSuchProductException::new)
@@ -38,8 +38,8 @@ public class ProductService {
 
     public ProductDTO update(long id, ProductDTO productDTO) {
         findById(id);
-        ProductDTO updatedProductDTO = new ProductDTO(id, productDTO.name(), productDTO.price(), productDTO.imageUrl());
-        return productRepository.save(updatedProductDTO.toEntity()).toDTO();
+        Product product = new Product(id, productDTO.name(), productDTO.price(), productDTO.imageUrl());
+        return productRepository.save(product).toDTO();
     }
 
     public ProductDTO delete(long id) {
