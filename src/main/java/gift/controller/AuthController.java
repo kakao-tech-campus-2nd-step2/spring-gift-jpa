@@ -1,11 +1,14 @@
 package gift.controller;
 
+import gift.dto.common.apiResponse.ApiResponseBody.SuccessBody;
+import gift.dto.common.apiResponse.ApiResponseGenerator;
 import gift.dto.requestDTO.UserLoginRequestDTO;
 import gift.dto.requestDTO.UserSignupRequestDTO;
 import gift.dto.responseDTO.UserResponseDTO;
 import gift.service.AuthService;
 import gift.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,16 +27,16 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> signUp(@Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO){
+    public ResponseEntity<SuccessBody<UserResponseDTO>> signUp(@Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO){
         userService.join(userSignupRequestDTO);
         UserResponseDTO userResponseDTO = authService.register(userSignupRequestDTO);
-        return ResponseEntity.ok(userResponseDTO);
+        return ApiResponseGenerator.success(HttpStatus.CREATED, "회원가입에 성공했습니다.", userResponseDTO);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDTO> login(@Valid @RequestBody UserLoginRequestDTO userLoginRequestDTO){
+    public ResponseEntity<SuccessBody<UserResponseDTO>> login(@Valid @RequestBody UserLoginRequestDTO userLoginRequestDTO){
         userService.findByEmail(userLoginRequestDTO);
         UserResponseDTO userResponseDTO = authService.login(userLoginRequestDTO);
-        return ResponseEntity.ok(userResponseDTO);
+        return ApiResponseGenerator.success(HttpStatus.ACCEPTED, "로그인에 성공했습니다.", userResponseDTO);
     }
 }

@@ -2,11 +2,14 @@ package gift.controller;
 
 import gift.auth.LoginUser;
 import gift.domain.User;
+import gift.dto.common.apiResponse.ApiResponseBody.SuccessBody;
+import gift.dto.common.apiResponse.ApiResponseGenerator;
 import gift.dto.requestDTO.WishRequestDTO;
 import gift.dto.responseDTO.WishListResponseDTO;
 import gift.dto.responseDTO.WishResponseDTO;
 import gift.service.AuthService;
 import gift.service.WishService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,24 +31,24 @@ public class WishController {
     }
 
     @GetMapping()
-    public ResponseEntity<WishListResponseDTO> getAllWishes(@LoginUser User user){
+    public ResponseEntity<SuccessBody<WishListResponseDTO>> getAllWishes(@LoginUser User user){
         WishListResponseDTO wishListResponseDTO = wishService.getAllWishes(user.getId());
-        return ResponseEntity.ok(wishListResponseDTO);
+        return ApiResponseGenerator.success(HttpStatus.OK, "위시리스트를 조회했습니다.", wishListResponseDTO);
     }
 
     @PostMapping()
-    public ResponseEntity<Long> addWishes(@LoginUser User user, @RequestBody WishRequestDTO wishRequestDTO){
+    public ResponseEntity<SuccessBody<Long>> addWishes(@LoginUser User user, @RequestBody WishRequestDTO wishRequestDTO){
         authService.authorizeUser(user, wishRequestDTO.userId());
         Long wishInsertedId = wishService.addWish(wishRequestDTO);
-        return ResponseEntity.ok(wishInsertedId);
+        return ApiResponseGenerator.success(HttpStatus.CREATED, "위시리스트를 추가했습니다.", wishInsertedId);
     }
 
     @DeleteMapping("/{wishId}")
-    public ResponseEntity<Long> deleteWishes(@LoginUser User user, @PathVariable Long wishId){
+    public ResponseEntity<SuccessBody<Long>> deleteWishes(@LoginUser User user, @PathVariable Long wishId){
         WishResponseDTO wishResponseDTO = wishService.getOneWish(wishId);
         authService.authorizeUser(user, wishResponseDTO.userId());
 
         Long wishDeletedId = wishService.deleteWish(wishId);
-        return ResponseEntity.ok(wishDeletedId);
+        return ApiResponseGenerator.success(HttpStatus.OK, "위시리스트를 삭제했습니다.", wishDeletedId);
     }
 }
