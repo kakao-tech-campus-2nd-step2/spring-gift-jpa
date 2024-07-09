@@ -1,6 +1,6 @@
 package gift.member.dto;
 
-import gift.member.Member;
+import gift.member.entity.Member;
 
 public record MemberResDto(
         Long id,
