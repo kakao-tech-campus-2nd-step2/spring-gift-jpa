@@ -24,7 +24,9 @@ CREATE TABLE members(
 DROP TABLE wishes IF EXISTS;
 
 CREATE TABLE wishes(
-                product_name VARCHAR(255),
-                count VARCHAR(255),
-                member_id BIGINT
+                id BIGINT AUTO_INCREMENT,
+                product_name VARCHAR(255) NOT NULL,
+                count VARCHAR(255) NOT NULL,
+                member_id BIGINT,
+                PRIMARY KEY (id)
             );
