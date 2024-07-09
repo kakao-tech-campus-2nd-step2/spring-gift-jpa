@@ -38,11 +38,9 @@ public class ValidAdminUserArgumentResolver implements HandlerMethodArgumentReso
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
         String authorizationHeader = webRequest.getHeader("Authorization");
-        log.info("Header/Authorization: {}", authorizationHeader);
-        jwtUtil.checkPrefixOrThrow("Bearer", authorizationHeader);
-        String token = jwtUtil.extractTokenFrom(authorizationHeader);
+        log.info("Header/Authorization: \"{}\"", authorizationHeader);
 
-        String userEmail = jwtUtil.getSubject(token);
+        String userEmail = jwtUtil.getSubject(authorizationHeader);
         User user = userService.findByEmail(userEmail);
         if (!user.permission().equals("admin")) {
             throw new UserNotAdminException();

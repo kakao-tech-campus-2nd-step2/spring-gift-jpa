@@ -14,6 +14,8 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import java.security.Key;
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,9 @@ public class JwtUtil {
     @Value("${jwt.secretKey}")
     private String secretKey;
     private Key key;
+    @Value("${jwt.tokenPrefix}")
+    private String tokenPrefix;
+    private final Logger log = LoggerFactory.getLogger(JwtUtil.class);
 
     @PostConstruct
     public void init() {
@@ -50,33 +55,42 @@ public class JwtUtil {
                 .getBody();
         } catch (ExpiredJwtException e) {
             // 토큰이 만료됨
+            log.warn("Token '{}' has been expired.", token);
             throw new TokenExpiredException();
         } catch (JwtException e) {
             // 알수 없는 Jwt 예외 발생
+            log.warn("Token '{}' was invalid.", token);
             throw new TokenUnexpectedErrorException();
         }
     }
 
-    public void checkPrefixOrThrow(String prefix, String authorizationHeader) {
-        if (prefix == null || authorizationHeader == null) {
+    private void checkPrefixOrThrow(String authorizationHeader) {
+        if (authorizationHeader == null) {
+            log.warn("authorizationHeader was null.");
             throw new TokenNotFoundException();
         }
-        if (!authorizationHeader.startsWith(prefix + " ")) {
+        if (!authorizationHeader.startsWith(tokenPrefix + " ")) {
+            log.warn("header/Authorization's value was not starts with '{}'.", tokenPrefix);
             throw new TokenStringInvalidException();
         }
     }
 
-    public String extractTokenFrom(String authorizationHeader) {
+    private String extractTokenFrom(String authorizationHeader) {
         try {
-            return authorizationHeader.split(" ")[1];
+            return authorizationHeader.substring(tokenPrefix.length() + 1);
         } catch (NullPointerException e) {
             throw new TokenNotFoundException();
         } catch (ArrayIndexOutOfBoundsException e) {
+            log.warn("authorizationHeader.substring(begin) indexes was out of bounds. "
+                    + "begin was {}, authorizationHeader.length() was {}.", tokenPrefix.length() + 1,
+                authorizationHeader.length());
             throw new TokenStringInvalidException();
         }
     }
 
-    public String getSubject(String token) {
+    public String getSubject(String authorizationHeader) {
+        checkPrefixOrThrow(authorizationHeader);
+        String token = extractTokenFrom(authorizationHeader);
         return parseClaims(token).getSubject();
     }
 }

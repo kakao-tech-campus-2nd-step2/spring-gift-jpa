@@ -37,11 +37,9 @@ public class ValidUserArgumentResolver implements HandlerMethodArgumentResolver 
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
         String authorizationHeader = webRequest.getHeader("Authorization");
-        log.info("Header/Authorization: {}", authorizationHeader);
-        jwtUtil.checkPrefixOrThrow("Bearer", authorizationHeader);
-        String token = jwtUtil.extractTokenFrom(authorizationHeader);
+        log.info("Header/Authorization: \"{}\"", authorizationHeader);
 
-        String userEmail = jwtUtil.getSubject(token);
+        String userEmail = jwtUtil.getSubject(authorizationHeader);
         return userService.findByEmail(userEmail);
     }
 }
