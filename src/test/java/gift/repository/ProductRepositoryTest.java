@@ -85,9 +85,10 @@ class ProductRepositoryTest {
         productRepository.save(product1);
         productRepository.save(product2);
 
-        Optional<Product> expected = productRepository.findById(product2.getId());
+        Optional<Product> optionalProduct = productRepository.findById(product2.getId());
+        Product expected = optionalProduct.get();
 
-        expected.get().changeProduct(new Product("커피2", 31240941,"https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"));
+        expected.changeProduct(new Product("커피2", 31240941,"https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"));
 
         Optional<Product> actual = productRepository.findById(product2.getId());
 
