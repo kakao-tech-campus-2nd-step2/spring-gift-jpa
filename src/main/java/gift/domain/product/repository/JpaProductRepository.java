@@ -18,4 +18,6 @@ public interface JpaProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query("DELETE FROM Product p WHERE p.id IN :productIds")
     void deleteByIds(@Param("productIds") List<Long> productIds);
+
+    Product findByName(String name);
 }
