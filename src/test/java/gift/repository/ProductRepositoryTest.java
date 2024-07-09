@@ -66,6 +66,7 @@ class ProductRepositoryTest {
 
         //then
         assertAll(
+            ()->assertThat(actual).isPresent(),
             () -> assertThat(actual.get().getName()).isEqualTo("product"),
             () -> assertThat(actual.get().getPrice()).isEqualTo(100),
             () -> assertThat(actual.get().getImageUrl()).isEqualTo("image.jpg")
