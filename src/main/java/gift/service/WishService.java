@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.domain.Wish;
 import gift.domain.Wish.createWish;
 import gift.domain.Wish.wishDetail;
 import gift.domain.Wish.wishSimple;
@@ -13,6 +14,7 @@ import gift.repository.UserRepository;
 import gift.repository.WishRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -40,8 +42,8 @@ public class WishService {
         return wishMapper.toDetail(wishEntity);
     }
 
-    public List<wishSimple> getWishList(Long userId) {
-        List<WishEntity> wishEntities = wishRepository.findByUserEntityId(userId);
+    public Page<wishSimple> getWishList(Long userId, Wish.getList param) {
+        Page<WishEntity> wishEntities = wishRepository.findByUserEntityId(userId, param.toPageable());
 
         return wishMapper.toSimpleList(wishEntities);
     }

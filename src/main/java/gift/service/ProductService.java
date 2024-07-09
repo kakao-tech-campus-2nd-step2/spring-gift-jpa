@@ -3,12 +3,15 @@ package gift.service;
 
 import gift.domain.Product;
 import gift.domain.Product.ProductSimple;
+import gift.domain.Product.getList;
 import gift.entity.ProductEntity;
 import gift.errorException.BaseHandler;
 import gift.mapper.ProductMapper;
 import gift.repository.ProductRepository;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +23,13 @@ public class ProductService {
     @Autowired
     private ProductMapper productMapper;
 
-    public List<ProductEntity> getProductList() {
-        return productRepository.findAll();
+    public Page<ProductEntity> getProductList(getList param) {
+
+        return productRepository.findAll(param.toPageable());
     }
 
-    public List<ProductSimple> getSimpleProductList() {
-        return productMapper.toSimpleList(productRepository.findAll());
+    public Page<ProductSimple> getSimpleProductList(getList param) {
+        return productMapper.toSimpleList(productRepository.findAll(param.toPageable()));
     }
 
     public ProductEntity getProduct(Long id) {
