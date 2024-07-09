@@ -1,7 +1,11 @@
 package gift.service;
 
-import gift.dto.Product;
-import gift.repository.ProductRepository;
+import gift.dto.request.ProductRequest;
+import gift.dto.response.AddedProductIdResponse;
+import gift.dto.response.ProductResponse;
+import gift.entity.Product;
+import gift.exception.ProductNotFoundException;
+import gift.jpaRepo.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +19,9 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getProducts() {
-        return productRepository.getProducts();
+    public AddedProductIdResponse addProduct(ProductRequest addRequest) {
+        Long addedId = productRepository.save(new Product(addRequest.getName(), addRequest.getPrice(), addRequest.getImageUrl())).getId();
+        return new AddedProductIdResponse(addedId);
     }
 
     public Long addProduct(Product product) {

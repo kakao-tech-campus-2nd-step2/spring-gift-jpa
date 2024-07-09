@@ -1,7 +1,8 @@
 package gift.controller.product;
 
-import gift.dto.Product;
-import gift.dto.response.ProductIdResponse;
+import gift.dto.request.ProductRequest;
+import gift.dto.response.AddedProductIdResponse;
+import gift.dto.response.ProductResponse;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,9 @@ public class ProductController {
     }
 
     @PostMapping("api/products")
-    public ResponseEntity<ProductIdResponse> addProduct(@Valid @RequestBody Product product) {
-        return new ResponseEntity<>(new ProductIdResponse(productService.addProduct(product)), HttpStatus.CREATED);
+    public ResponseEntity<AddedProductIdResponse> addProduct(@Valid @RequestBody ProductRequest addRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(productService.addProduct(addRequest));
     }
 
     @GetMapping("api/products")
