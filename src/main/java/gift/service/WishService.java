@@ -1,41 +1,49 @@
 package gift.service;
 
 import gift.constants.Messages;
-import gift.domain.Product;
 import gift.domain.Wish;
 import gift.dto.MemberResponseDto;
+import gift.dto.ProductResponseDto;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
-import gift.exception.ProductNotFoundException;
 import gift.exception.WishNotFoundException;
-import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 public class WishService {
     private final WishRepository wishRepository;
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    public WishService(WishRepository wishRepository, ProductRepository productRepository) {
+    public WishService(WishRepository wishRepository, ProductService productService) {
         this.wishRepository = wishRepository;
-        this.productRepository = productRepository;
+        this.productService = productService;
     }
 
     public void save(MemberResponseDto memberResponseDto, WishRequestDto request){
-        Product product = productRepository.findByName(request.getProductName())
-                .orElseThrow(() -> new ProductNotFoundException(Messages.NOT_FOUND_PRODUCT_BY_NAME));
-        wishRepository.save(new Wish(memberResponseDto.getId(),product.getId(),request.getQuantity()));
+        ProductResponseDto productDto = productService.findByName(request.getProductName());
+        wishRepository.save(new Wish(memberResponseDto.getId(),productDto.getId(),request.getQuantity()));
     }
 
     public List<WishResponseDto> findByMemberEmail(MemberResponseDto memberResponseDto){
-        return wishRepository.findByMemberId(memberResponseDto.getId())
-                .orElseThrow(() -> new WishNotFoundException(Messages.NOT_FOUND_WISH))
+        List<Wish> wishes = wishRepository.findByMemberId(memberResponseDto.getId())
+                .orElseThrow(() -> new WishNotFoundException(Messages.NOT_FOUND_WISH));
+
+        List<Long> productIds = wishes.stream()
+                .map(Wish::getProductId)
+                .toList();
+
+        Map<Long, ProductResponseDto> productMap = productService.findByIds(productIds)
                 .stream()
-                .map(this::convertToWishDto)
+                .collect(Collectors.toMap(ProductResponseDto::getId, Function.identity()));
+
+        return wishes.stream()
+                .map(wish -> convertToWishResponseDto(wish,productMap.get(wish.getProductId())))
                 .collect(Collectors.toList());
     }
 
@@ -51,15 +59,13 @@ public class WishService {
         wishRepository.updateQuantity(id, request.getQuantity());
     }
 
-    private WishResponseDto convertToWishDto(Wish wish) {
-        Product product = productRepository.findById(wish.getProductId())
-                .orElseThrow(() -> new ProductNotFoundException(Messages.NOT_FOUND_PRODUCT_BY_NAME));
+    private WishResponseDto convertToWishResponseDto(Wish wish, ProductResponseDto productResponseDto) {
         return new WishResponseDto(
                 wish.getId(),
                 wish.getProductId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl(),
+                productResponseDto.getName(),
+                productResponseDto.getPrice(),
+                productResponseDto.getImageUrl(),
                 wish.getQuantity()
         );
     }
