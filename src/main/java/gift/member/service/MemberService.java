@@ -4,7 +4,7 @@ import static gift.member.Role.USER;
 
 import gift.auth.token.AuthToken;
 import gift.auth.token.AuthTokenGenerator;
-import gift.member.Member;
+import gift.member.entity.Member;
 import gift.member.dto.MemberReqDto;
 import gift.member.dto.MemberResDto;
 import gift.member.exception.MemberAlreadyExistsByEmailException;
@@ -28,18 +28,18 @@ public class MemberService {
     }
 
     public List<MemberResDto> getMembers() {
-        return memberRepository.findMembers().stream()
+        return memberRepository.findAll().stream()
                 .map(MemberResDto::new)
                 .toList();
     }
 
     public MemberResDto getMember(Long memberId) {
-        Member findMember = memberRepository.findMemberByIdOrThrow(memberId);
+        Member findMember = findMemberByIdOrThrow(memberId);
         return new MemberResDto(findMember);
     }
 
     public String getMemberPassword(Long memberId) {
-        Member findMember = memberRepository.findMemberByIdOrThrow(memberId);
+        Member findMember = findMemberByIdOrThrow(memberId);
         return findMember.getPassword();
     }
 
@@ -48,46 +48,42 @@ public class MemberService {
 
         // 일반 사용자로 회원 가입
         // 관리자 계정은 데이터베이스에서 직접 추가
-        Long memberId;
+        Member newMember;
         try {
-            memberId = memberRepository.addMember(memberReqDto, USER.getValue());
+            newMember = memberRepository.save(memberReqDto.toEntity(USER));
         } catch (Exception e) {
             throw MemberCreateException.EXCEPTION;
         }
-
-        Member newMember = memberRepository.findMemberByIdOrThrow(memberId);
 
         return authTokenGenerator.generateToken(new MemberResDto(newMember));
     }
 
     public void updateMember(Long memberId, MemberReqDto memberReqDto) {
-        validateMemberExistsById(memberId);
+        Member findMember = findMemberByIdOrThrow(memberId);
         try {
-            memberRepository.updateMemberById(memberId, memberReqDto);
+            findMember.update(memberReqDto);    // 변경 감지 이용
         } catch (Exception e) {
             throw MemberUpdateException.EXCEPTION;
         }
     }
 
     public void deleteMember(Long memberId) {
-        validateMemberExistsById(memberId);
+        Member findMember = findMemberByIdOrThrow(memberId);
         try {
-            memberRepository.deleteMemberById(memberId);
+            memberRepository.delete(findMember);
         } catch (Exception e) {
             throw MemberDeleteException.EXCEPTION;
         }
     }
 
-    private void validateMemberExistsById(Long memberId) {
-        boolean isExist = memberRepository.isMemberExistById(memberId);
-
-        if (!isExist) {
-            throw MemberNotFoundByIdException.EXCEPTION;
-        }
+    private Member findMemberByIdOrThrow(Long memberId) {
+        return memberRepository.findById(memberId).orElseThrow(
+                () -> MemberNotFoundByIdException.EXCEPTION
+        );
     }
 
     private void checkDuplicateEmail(String email) {
-        boolean isExist = memberRepository.isMemberExistByEmail(email);
+        boolean isExist = memberRepository.existsByEmail(email);
 
         if (isExist) {
             throw MemberAlreadyExistsByEmailException.EXCEPTION;
