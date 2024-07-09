@@ -1,4 +1,6 @@
-package gift.errorException;
+package gift.util.page;
+
+import gift.errorException.BaseResult;
 
 public class SingleResult<T> extends BaseResult {
 
