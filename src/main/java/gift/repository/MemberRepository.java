@@ -1,9 +1,7 @@
 package gift.repository;
 
-import gift.domain.Member;
 import gift.domain.MemberRequest;
 import gift.domain.MemberResponse;
-import gift.domain.Menu;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

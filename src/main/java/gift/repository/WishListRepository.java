@@ -1,6 +1,5 @@
 package gift.repository;
 
-import gift.domain.Menu;
 import gift.domain.WishListRequest;
 import gift.domain.WishListResponse;
 import org.springframework.dao.EmptyResultDataAccessException;

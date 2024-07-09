@@ -1,17 +1,12 @@
 package gift.service;
 
-import gift.controller.MemberController;
-import gift.domain.Member;
 import gift.domain.MemberRequest;
 import gift.domain.MemberResponse;
 import gift.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 @Service
 public class MemberService {

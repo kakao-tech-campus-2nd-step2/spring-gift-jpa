@@ -1,18 +1,16 @@
 package gift.controller;
 
+import gift.domain.Menu;
 import gift.domain.MenuRequest;
 import gift.domain.MenuResponse;
 import gift.service.MenuService;
-import gift.domain.Menu;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-
-import org.springframework.ui.Model;
 
 @Controller
 @RequestMapping("/menus/view")
