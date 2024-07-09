@@ -3,8 +3,9 @@ package gift.controller;
 import gift.annotation.LoginUser;
 import gift.dto.WishlistRequestDto;
 import gift.dto.WishlistResponseDto;
+import gift.entity.Wish;
 import gift.service.MemberService;
-import gift.service.WishlistService;
+import gift.service.WishService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/wishlist")
 public class WishlistController {
-    private final WishlistService wishlistService;
+    private final WishService wishlistService;
     private final MemberService userService;
 
-    public WishlistController(WishlistService wishlistService, MemberService userService) {
+    public WishlistController(WishService wishlistService, MemberService userService) {
         this.wishlistService = wishlistService;
         this.userService = userService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Wishlist>> getAllWishlists(@LoginUser String email) {
+    public ResponseEntity<List<Wish>> getAllWishlists(@LoginUser String email) {
         Long userId = userService.getUserId(email);
         return new ResponseEntity<>(wishlistService.getWishlist(userId), HttpStatus.OK);
     }
@@ -37,8 +38,8 @@ public class WishlistController {
     @PostMapping
     public ResponseEntity<WishlistResponseDto> addWishlist (@LoginUser String email, @RequestBody WishlistRequestDto requestDto) {
         Long userId = userService.getUserId(email);
-        WishlistResponseDto wishlistResponseDto = new WishlistResponseDto(userId, requestDto.getProductId(), requestDto.getQuantity());
-        if(wishlistService.addWishlist(new Wishlist(userId, requestDto.getProductId(), requestDto.getQuantity()))) {
+        WishlistResponseDto wishlistResponseDto = new WishlistResponseDto(userId, requestDto.getProductId());
+        if(wishlistService.addWishlist(new Wish(userId, requestDto.getProductId()))) {
             return new ResponseEntity<>(wishlistResponseDto, HttpStatus.OK);
         }
         return new ResponseEntity<>(wishlistResponseDto, HttpStatus.BAD_REQUEST);

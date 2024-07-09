@@ -30,7 +30,7 @@ public class ProductService {
         productRepository.deleteById(id);
     }
     public Long addProduct(Product product) {
-        if(!productRepository.existsById(product.getId())) {
+        if(productRepository.existsByName(product.getName())) {
             return -1L;
         }
         return productRepository.save(product).getId();

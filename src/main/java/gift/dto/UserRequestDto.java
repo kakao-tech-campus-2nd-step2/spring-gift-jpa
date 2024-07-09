@@ -35,7 +35,4 @@ public class UserRequestDto {
         this.password = password;
     }
 
-    public Member toUser() {
-        return new Member(this.email, this.password);
-    }
 }
