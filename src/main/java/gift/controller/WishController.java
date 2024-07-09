@@ -40,7 +40,7 @@ public class WishController {
 
 //    Wish 삭제
     @DeleteMapping
-    public void deleteWish(@RequestBody RequestWishDto requestWishDto, @LoginMember MemberDto memberDto){
+    public void deleteWish(@LoginMember MemberDto memberDto, @RequestBody RequestWishDto requestWishDto){
         wishService.deleteWish(memberDto.getMemberId(), requestWishDto.getProductId());
 
     }
