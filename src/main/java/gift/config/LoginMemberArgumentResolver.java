@@ -15,6 +15,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.Optional;
+
 
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
@@ -55,12 +57,8 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         }
 
         String email = jwtUtil.getEmailFromToken(token);
-        Member member = memberService.findByEmail(email);
+        Optional<Member> member = memberService.findByEmail(email);
 
-        if (member == null) {
-            throw new IllegalStateException("Authenticated member not found in the database.");
-        }
-
-        return member;
+        return member.orElseThrow(() -> new IllegalStateException("Authenticated member not found in the database."));
     }
 }

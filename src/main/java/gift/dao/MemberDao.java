@@ -1,8 +1,11 @@
 package gift.dao;
 
 import gift.model.member.Member;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 
 @Repository
@@ -18,10 +21,10 @@ public class MemberDao {
         jdbcTemplate.update(sql,member.getEmail(),member.getPassword());
     }
 
-    public Member findByEmail(String email){
+    public Optional<Member> findByEmail(String email){
         var sql = "select email, password from members where email = ?";
         try {
-            return jdbcTemplate.queryForObject(
+            Member member = jdbcTemplate.queryForObject(
                     sql,
                     (resultSet, rowNum) -> new Member(
                             resultSet.getString("email"),
@@ -29,8 +32,9 @@ public class MemberDao {
                     ),
                     email
             );
-        } catch (org.springframework.dao.EmptyResultDataAccessException e){
-            return null;
+            return Optional.ofNullable(member);
+        } catch (EmptyResultDataAccessException e){
+            return Optional.empty();
         }
     }
 }

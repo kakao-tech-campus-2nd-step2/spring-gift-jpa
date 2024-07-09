@@ -23,7 +23,6 @@ public class MemberController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerNewMember(@RequestBody MemberDto memberDto) {
-        Member member = new Member(memberDto.email(),memberDto.password());
         if(memberService.registerNewMember(memberDto)){
             String token = memberService.returnToken(memberDto);
             return ResponseEntity.ok().body(Collections.singletonMap("token", token));

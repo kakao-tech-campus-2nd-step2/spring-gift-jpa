@@ -5,8 +5,9 @@ import gift.dto.LoginResultDto;
 import gift.dto.MemberDto;
 import gift.jwt.JwtUtil;
 import gift.model.member.Member;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class MemberService {
@@ -15,7 +16,6 @@ public class MemberService {
 
     private final JwtUtil jwtUtil;
 
-    @Autowired
     public MemberService(MemberDao memberDao, JwtUtil jwtUtil){
         this.jwtUtil = jwtUtil;
         this.memberDao = memberDao;
@@ -23,7 +23,7 @@ public class MemberService {
 
     public boolean registerNewMember(MemberDto memberDto) {
         Member member = new Member(memberDto.email(),memberDto.password());
-        if(memberDao.findByEmail(member.getEmail()) == null){
+        if(memberDao.findByEmail(member.getEmail()).isEmpty()){
             memberDao.registerNewMember(member);
             return true;
         }
@@ -37,15 +37,15 @@ public class MemberService {
 
     public LoginResultDto loginMember(MemberDto memberDto) {
         Member member = new Member(memberDto.email(),memberDto.password());
-        Member registeredMember = memberDao.findByEmail(member.getEmail());
-        if (registeredMember != null &&member.getPassword().equals(registeredMember.getPassword())) {
+        Optional<Member> registeredMember = memberDao.findByEmail(member.getEmail());
+        if (registeredMember.isPresent() && member.getPassword().equals(registeredMember.get().getPassword())) {
             String token = jwtUtil.generateToken(member);
             return new LoginResultDto(token, true);
         }
         return new LoginResultDto(null, false);
     }
 
-    public Member findByEmail(String email){
+    public Optional<Member> findByEmail(String email){
         return memberDao.findByEmail(email);
     }
 }
