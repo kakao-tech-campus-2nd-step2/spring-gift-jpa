@@ -75,4 +75,17 @@ public class ProductRepositoryTest {
         assertThat(updateProduct).isPresent();
         assertThat(updateProduct.get().getPrice()).isEqualTo(2000);
     }
+
+    @Test
+    void testDeleteProduct() {
+        Product savedProduct = productDao.save(product);
+
+        Optional<Product> retrievedProduct = productDao.findById(savedProduct.getId());
+        assertThat(retrievedProduct).isPresent();
+
+        productDao.deleteById(savedProduct.getId());
+
+        Optional<Product> deletedProduct = productDao.findById(savedProduct.getId());
+        assertThat(deletedProduct).isNotPresent();
+    }
 }
