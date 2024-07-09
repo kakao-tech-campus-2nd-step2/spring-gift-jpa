@@ -25,4 +25,8 @@ public class WishDTO {
     public Product getProduct() {
         return product;
     }
+
+    public Wish toEntity(){
+        return new Wish(member,product);
+    }
 }
