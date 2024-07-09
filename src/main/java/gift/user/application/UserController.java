@@ -2,18 +2,12 @@ package gift.user.application;
 
 import gift.user.application.dto.request.UserSignUpRequest;
 import gift.user.application.dto.response.UserSignInResponse;
-import gift.user.domain.User;
-import gift.user.exception.UserAlreadyExistsException;
-import gift.user.exception.UserNotFoundException;
-import gift.user.persistence.UserRepository;
-import gift.user.service.JwtProvider;
-import gift.user.service.PasswordProvider;
+import gift.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
-import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,12 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    private final UserRepository userRepository;
-    private final JwtProvider jwtProvider;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository, JwtProvider jwtProvider) {
-        this.userRepository = userRepository;
-        this.jwtProvider = jwtProvider;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @Operation(summary = "회원 가입", description = "회원 가입을 합니다.")
@@ -40,26 +32,10 @@ public class UserController {
     })
     @PostMapping("/sign-up")
     public ResponseEntity<UserSignInResponse> signUp(@RequestBody UserSignUpRequest userSignupRequest) {
-        User user = userSignupRequest.toModel();
+        var response = userService.signUp(userSignupRequest);
 
-        Optional<User> existingUser = userRepository.findByUsername(user.getUsername());
-        if (existingUser.isPresent()) {
-            throw new UserAlreadyExistsException();
-        }
-
-        userRepository.save(user);
-        User savedUser = userRepository.findByUsername(user.getUsername())
-                .orElseThrow(UserNotFoundException::new);
-        if (PasswordProvider.match(userSignupRequest.username(), userSignupRequest.password(),
-                savedUser.getPassword())) {
-            throw new UserNotFoundException();
-        }
-
-        String token = jwtProvider.generateToken(savedUser);
-
-        return ResponseEntity
-                .created(URI.create("/api/users/" + savedUser.getId().toString()))
-                .body(new UserSignInResponse(token));
+        return ResponseEntity.created(URI.create("/api/users/temp"))
+                .body(response);
     }
 
     @Operation(summary = "로그인", description = "로그인을 합니다.")
@@ -69,15 +45,9 @@ public class UserController {
     })
     @PostMapping("/sign-in")
     public ResponseEntity<UserSignInResponse> signIn(@RequestBody UserSignUpRequest userSignupRequest) {
-        User savedUser = userRepository.findByUsername(userSignupRequest.username())
-                .orElseThrow(UserNotFoundException::new);
-        if (PasswordProvider.match(userSignupRequest.username(), userSignupRequest.password(),
-                savedUser.getPassword())) {
-            throw new UserNotFoundException();
-        }
+        var response = userService.signIn(userSignupRequest);
 
-        String token = jwtProvider.generateToken(savedUser);
-
-        return ResponseEntity.ok(new UserSignInResponse(token));
+        return ResponseEntity.ok()
+                .body(response);
     }
 }
