@@ -1,6 +1,7 @@
 package gift.vo;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(name = "uk_member", columnNames = {"email"})})
@@ -10,10 +11,11 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @NotNull
+    @Column(unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @NotNull
     private String password;
 
     public Member(String email, String password) {
