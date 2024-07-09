@@ -26,25 +26,27 @@ public class WishlistController {
     WishlistService wishlistService;
     MemberService memberService;
 
-    public WishlistController(WishlistService wishlistService,MemberService memberService){
-        this.wishlistService=wishlistService;
-        this.memberService=memberService;
+    public WishlistController(WishlistService wishlistService, MemberService memberService) {
+        this.wishlistService = wishlistService;
+        this.memberService = memberService;
     }
+
     @GetMapping()
-    public ResponseEntity<List<Wish>> getWishlist(@LoginUser String email){
+    public ResponseEntity<List<Wish>> getWishlist(@LoginUser String email) {
         List<Wish> wishlist = wishlistService.getWishlistByEmail(email);
-        return new ResponseEntity<>(wishlist,HttpStatus.OK);
+        return new ResponseEntity<>(wishlist, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<String> addWishlist(@RequestBody Wish wish, @LoginUser String email){
-        wishlistService.addWishlist(wish,email);
+    public ResponseEntity<String> addWishlist(@RequestBody Wish wish, @LoginUser String email) {
+        wishlistService.addWishlist(wish, email);
         return new ResponseEntity<>("위시리스트 상품 추가 완료", HttpStatus.OK);
     }
 
     @DeleteMapping("/{wishId}")
-    public ResponseEntity<String> deleteWishlist(@PathVariable("wishId") long wishId ,@LoginUser String email){
-        wishlistService.deleteWishlist(wishId,email);
+    public ResponseEntity<String> deleteWishlist(@PathVariable("wishId") long wishId,
+        @LoginUser String email) {
+        wishlistService.deleteWishlist(wishId, email);
         return new ResponseEntity<>("위시리스트 상품 삭제 완료", HttpStatus.NO_CONTENT);
     }
 }

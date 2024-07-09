@@ -17,50 +17,53 @@ public class GlobalControllerExceptionHandler {
 
 
     //@Valid에서 발생한 예외 처리
-    @ExceptionHandler(value= MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex){
-        Map<String,String> errors = new HashMap<>();
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationException(
+        MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName,errorMessage);
+            errors.put(fieldName, errorMessage);
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value=NullPointerException.class)
-    public ResponseEntity<String> handleNullPointerException(NullPointerException ex){
-        return new ResponseEntity<>("Null Pointer Exception occurred", HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(value = NullPointerException.class)
+    public ResponseEntity<String> handleNullPointerException(NullPointerException ex) {
+        return new ResponseEntity<>("Null Pointer Exception occurred",
+            HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    @ExceptionHandler(value=IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex){
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
         return new ResponseEntity<>("Illegal Argument", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     //Product 중복 이름값을 추가했을 때 Handling
-    @ExceptionHandler(value=DuplicateProductNameException.class)
-    public ResponseEntity<String> handleDuplicatedId(DuplicateProductNameException ex){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(value = DuplicateProductNameException.class)
+    public ResponseEntity<String> handleDuplicatedId(DuplicateProductNameException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = AccessDeniedException.class)
-    public ResponseEntity<String> handleAccessDenied(AccessDeniedException ex){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<String> handleAccessDenied(AccessDeniedException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(value=DuplicateUserEmailException.class)
-    public ResponseEntity<String> handleDuplicatedEmail(DuplicateUserEmailException ex){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(value = DuplicateUserEmailException.class)
+    public ResponseEntity<String> handleDuplicatedEmail(DuplicateUserEmailException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value=DataNotFoundException.class)
-    public ResponseEntity<String> handleDataNotFoundE(DataNotFoundException ex){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(value = DataNotFoundException.class)
+    public ResponseEntity<String> handleDataNotFoundE(DataNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value= ConstraintViolationException.class)
-    public ResponseEntity<String> handleDataIntegritViolation(ConstraintViolationException ex){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(value = ConstraintViolationException.class)
+    public ResponseEntity<String> handleDataIntegritViolation(ConstraintViolationException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 

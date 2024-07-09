@@ -16,9 +16,11 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
 
 
     private final JwtUtil jwtUtil;
-    LoginUserHandlerMethodArgumentResolver(JwtUtil jwtUtil){
-        this.jwtUtil=jwtUtil;
+
+    LoginUserHandlerMethodArgumentResolver(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
     }
+
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.hasParameterAnnotation(LoginUser.class);
@@ -31,7 +33,7 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String token = request.getHeader("Authorization");
 
-        if(token!=null){
+        if (token != null) {
             return jwtUtil.getEmailFromToken(token);
         }
         throw new AccessDeniedException("권한이 없습니다.");

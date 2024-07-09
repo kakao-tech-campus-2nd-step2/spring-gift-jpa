@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminController {
 
     ProductService productService;
-    public AdminController(ProductService productService){
-        this.productService= productService;
+
+    public AdminController(ProductService productService) {
+        this.productService = productService;
     }
 
     //기본화면
@@ -25,7 +26,7 @@ public class AdminController {
     //상품 관리 화면
     @GetMapping("/product-management")
     public String productManage(Model model) {
-        model.addAttribute("products",productService.getAllProducts());
+        model.addAttribute("products", productService.getAllProducts());
 
         return "product-manage";
 

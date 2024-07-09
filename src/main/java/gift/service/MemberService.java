@@ -20,11 +20,10 @@ public class MemberService {
     }
 
 
-
     public void generateUser(Member member) {
-        if(memberRepository.findByEmail(member.getEmail())!=null){
+        if (memberRepository.findByEmail(member.getEmail()) != null) {
             throw new DuplicateUserEmailException(
-                "UserEmail " + member.getEmail()+"already exists."
+                "UserEmail " + member.getEmail() + "already exists."
             );
         }
         memberRepository.save(member);
@@ -35,13 +34,12 @@ public class MemberService {
         Member loginMember = memberRepository.findByEmailAndPassword(member.getEmail(),
             member.getPassword());
 
-        if(loginMember==null){
+        if (loginMember == null) {
             throw new DataNotFoundException("존재하지 않는 회원이거나 비밀번호가 틀렸습니다.");
         }
         return jwtUtil.generateToken(loginMember.getEmail());
 
     }
-
 
 
 }
