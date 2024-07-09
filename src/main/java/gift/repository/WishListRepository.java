@@ -20,20 +20,19 @@ public class WishListRepository {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public List<Product> selectWishList(Long memberId) {
-        // get productIds
-        String getIdSql = "SELECT productId FROM wishlist WHERE memberId = :memberId";
-        Map<String, Object> params = new HashMap<>();
-        params.put("memberId", memberId);
-
-        List<Long> productIds = namedParameterJdbcTemplate.queryForList(getIdSql, params, Long.class);
-
-        // get products
+    public List<Product> selectProductsFromWishList(List<Long> productIds) {
         String getProductSql = "SELECT * FROM products WHERE id IN (:productIds)";
         Map<String, Object> productParams = new HashMap<>();
         productParams.put("productIds", productIds);
 
         return namedParameterJdbcTemplate.query(getProductSql, productParams, new BeanPropertyRowMapper<>(Product.class));
+    }
+
+    public List<Long> selectProductIdsFromWishList(Long memberId) {
+        String getIdSql = "SELECT productId FROM wishlist WHERE memberId = :memberId";
+        Map<String, Object> params = new HashMap<>();
+        params.put("memberId", memberId);
+        return namedParameterJdbcTemplate.queryForList(getIdSql, params, Long.class);
     }
 
     public void addWishProduct(WishProduct wishProduct) {

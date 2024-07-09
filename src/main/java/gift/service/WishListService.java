@@ -20,7 +20,8 @@ public class WishListService {
     }
 
     public List<Product> getWishList(Long memberId) {
-        return wishListRepository.selectWishList(memberId);
+        List<Long> productIds = wishListRepository.selectProductIdsFromWishList(memberId);
+        return wishListRepository.selectProductsFromWishList(productIds);
     }
 
     public String addWishProduct(WishProduct wishProduct) {
