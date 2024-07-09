@@ -29,6 +29,10 @@ public class MemberEntity {
         this.password = password;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getEmail() {
         return email;
     }
