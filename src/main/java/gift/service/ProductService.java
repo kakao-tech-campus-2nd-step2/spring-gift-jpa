@@ -35,6 +35,10 @@ public class ProductService {
 
     public void updateProduct(Long id, String name, Integer price, String imageUrl) {
         Product product = new Product(id, name, price, imageUrl);
+        productRepository.findById(id)
+                .ifPresentOrElse(productRepository::save,
+                    () -> { throw new ProductException("상품이 존재하지 않습니다."); }
+                );
         productRepository.save(product);
     }
 
