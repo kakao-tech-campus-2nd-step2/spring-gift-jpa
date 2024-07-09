@@ -45,7 +45,21 @@ public class UserRepositoryTest {
         assertThat(findId).isEqualTo(id);
     }
 
-    
+    @Test
+    void deletebyid() {
+        // given
+        User user1 = new User(1L, "kakao", "kakao@google.com", "password", "BE");
+        User user2 = new User(2L, "name", "name@google.com", "password", "BE");
+        userRepository.save(user1);
+        userRepository.save(user2);
+
+        // when
+        userRepository.deleteById(1L);
+        List<User> savedUser = userRepository.findAll();
+
+        assertThat(savedUser.size()).isEqualTo(1);
+
+    }
 
 
 
