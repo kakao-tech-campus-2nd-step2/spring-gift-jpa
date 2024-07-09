@@ -1,6 +1,5 @@
 package gift.user;
 
-import gift.product.Product;
 import jakarta.validation.constraints.*;
 
 public record UserDTO(Long id,

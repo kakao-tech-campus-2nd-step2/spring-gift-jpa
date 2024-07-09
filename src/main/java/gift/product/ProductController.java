@@ -26,7 +26,7 @@ public class ProductController {
 
     @GetMapping("/add")
     public String showPostProduct(Model model){
-        model.addAttribute("productDTO", new ProductDTO(1L,"1",1,"1"));
+        model.addAttribute("productDTO", new ProductDTO());
         return "add";
     }
 
