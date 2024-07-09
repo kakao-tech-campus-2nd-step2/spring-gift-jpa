@@ -4,6 +4,7 @@ import gift.form.ProductAddForm;
 import gift.form.ProductUpdateForm;
 import gift.model.Product;
 import gift.repository.ProductDao;
+import gift.repository.ProductRepository;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -20,12 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ProductViewController {
 
-    private final ProductDao productDao;
     private final ProductService productService;
 
     @Autowired
-    public ProductViewController(ProductDao productDao, ProductService productService) {
-        this.productDao = productDao;
+    public ProductViewController(ProductService productService) {
         this.productService = productService;
     }
 
@@ -38,7 +37,7 @@ public class ProductViewController {
 
     @GetMapping("/step2/products/add")
     public String addForm(Model model) {
-        model.addAttribute("product", new Product());
+        model.addAttribute("product", new Product("", null, ""));
         return "addForm";
     }
 

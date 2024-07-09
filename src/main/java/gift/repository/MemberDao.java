@@ -36,8 +36,7 @@ public class MemberDao {
                 return ps;
             }, keyHolder);
 
-            member.setId(keyHolder.getKey().longValue());
-            return member;
+            return new Member(keyHolder.getKey().longValue(), member.getEmail(), member.getPassword(), member.getRole());
             //jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
             //return getMemberByEmail(member.getEmail());
         } catch (DuplicateKeyException e) {

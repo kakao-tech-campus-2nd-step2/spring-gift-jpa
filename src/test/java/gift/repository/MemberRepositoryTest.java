@@ -22,13 +22,13 @@ class MemberRepositoryTest {
     @DisplayName("Member insert 테스트")
     void insert() {
         assertThat(member.getId()).isNull();
-        Member savedMember = memberRepository.save(member);
-        assertThat(savedMember.getId()).isNotNull();
-        assertThat(savedMember.getRole()).isEqualTo(Role.ROLE_USER);
+        Member normalMember = memberRepository.save(member);
+        assertThat(normalMember.getId()).isNotNull();
+        assertThat(normalMember.getRole()).isEqualTo(Role.ROLE_USER);
 
-        member.setRole(Role.ROLE_ADMIN);
-        Member savedAdminMember = memberRepository.save(member);
-        assertThat(savedMember.getRole()).isEqualTo(Role.ROLE_ADMIN);
+        Member adminMember = new Member("bbb123@b.com", "1234", Role.ROLE_ADMIN);
+        Member savedAdminMember = memberRepository.save(adminMember);
+        assertThat(savedAdminMember.getRole()).isEqualTo(Role.ROLE_ADMIN);
     }
 
     @Test

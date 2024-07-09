@@ -37,18 +37,14 @@ class ProductRepositoryTest {
     @DisplayName("Product update 테스트")
     void update() {
         Product savedProduct = productRepository.save(product);
+        Long id = productRepository.findById(savedProduct.getId()).get().getId();
+        Product modifiedProduct = new Product(id, "productAB", 5000, "https://b.com");
+        Product modifiedSavedProduct = productRepository.save(modifiedProduct);
 
-        Product findProduct = productRepository.findById(savedProduct.getId()).get();
-        findProduct.setName("productB");
-        findProduct.setPrice(10000);
-        findProduct.setImageUrl("https://b.com");
-        Product modifiedSavedProduct = productRepository.save(findProduct);
-
-        assertThat(modifiedSavedProduct.getId()).isEqualTo(savedProduct.getId());
-        assertThat(modifiedSavedProduct.getName()).isEqualTo(findProduct.getName());
-        assertThat(modifiedSavedProduct.getPrice()).isEqualTo(findProduct.getPrice());
-        assertThat(modifiedSavedProduct.getImageUrl()).isEqualTo(findProduct.getImageUrl());
-
+        assertThat(modifiedSavedProduct.getId()).isEqualTo(id);
+        assertThat(modifiedSavedProduct.getName()).isEqualTo(modifiedProduct.getName());
+        assertThat(modifiedSavedProduct.getPrice()).isEqualTo(modifiedProduct.getPrice());
+        assertThat(modifiedSavedProduct.getImageUrl()).isEqualTo(modifiedProduct.getImageUrl());
     }
 
     @Test
@@ -93,9 +89,9 @@ class ProductRepositoryTest {
         assertThat(findProduct).isEqualTo(savedProduct);
 
         //존재하지 않는 상품 조회
-        savedProduct.setId(999L);
+        Long notExisted = 999L;
         assertThatThrownBy(
-            () -> productRepository.findById(999L).get())
+            () -> productRepository.findById(notExisted).get())
             .isInstanceOf(NoSuchElementException.class);
 
     }
