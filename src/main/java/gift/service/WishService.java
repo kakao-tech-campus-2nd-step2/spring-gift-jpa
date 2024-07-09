@@ -11,6 +11,7 @@ import gift.dto.WishResponseDto;
 import gift.exception.WishNotFoundException;
 import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class WishService {
         this.productService = productService;
     }
 
+    @Transactional
     public void save(MemberResponseDto memberResponseDto, WishRequestDto request){
         Member member = new Member(memberResponseDto.getId(),memberResponseDto.getEmail(),memberResponseDto.getPassword());
 
@@ -33,6 +35,7 @@ public class WishService {
         wishRepository.save(new Wish(member,product,request.getQuantity()));
     }
 
+    @Transactional(readOnly = true)
     public List<WishResponseDto> findByMemberEmail(MemberResponseDto memberResponseDto){
         return wishRepository.findByMemberId(memberResponseDto.getId())
                 .orElseThrow(() -> new WishNotFoundException(Messages.NOT_FOUND_WISH))
@@ -42,12 +45,14 @@ public class WishService {
 
     }
 
+    @Transactional
     public void deleteById(MemberResponseDto memberResponseDto, Long id){
         wishRepository.findByIdAndMemberId(id, memberResponseDto.getId())
                 .orElseThrow(()-> new WishNotFoundException(Messages.NOT_FOUND_WISH));
         wishRepository.deleteById(id);
     }
 
+    @Transactional
     public void updateQuantity(MemberResponseDto memberResponseDto, Long id, WishRequestDto request){
         Wish existingWish = wishRepository.findByIdAndMemberId(id, memberResponseDto.getId())
                 .orElseThrow(()-> new WishNotFoundException(Messages.NOT_FOUND_WISH));
