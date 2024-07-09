@@ -29,6 +29,13 @@ public class ProductEntity {
         this.imageUrl = imageUrl;
     }
 
+    public ProductEntity(String name, Integer price, String imageUrl) {
+        this.id = 0L;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
     public Long getId() {
         return id;
     }

@@ -20,6 +20,10 @@ public class UserEntity {
         this.name = name;
     }
 
+    public UserEntity(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }
