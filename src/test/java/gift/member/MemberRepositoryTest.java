@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,20 @@ class MemberRepositoryTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.execute("DROP TABLE IF EXISTS member");
+        jdbcTemplate.execute(
+            """
+                CREATE TABLE member
+                (
+                    email    VARCHAR(255) PRIMARY KEY,
+                    password VARCHAR(255)
+                )
+                """
+        );
+    }
 
     @Test
     @DisplayName("[Unit] addMemberTest")
