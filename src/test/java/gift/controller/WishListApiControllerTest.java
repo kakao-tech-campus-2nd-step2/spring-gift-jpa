@@ -7,6 +7,7 @@ import gift.auth.JwtTokenProvider;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.WishProduct;
+import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishProductRepository;
 import gift.request.WishListRequest;
@@ -16,6 +17,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,6 +51,9 @@ class WishListApiControllerTest {
     MemberService memberService;
 
     @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
     JwtTokenProvider jwtTokenProvider;
 
     Member member;
@@ -71,6 +76,13 @@ class WishListApiControllerTest {
             .map(product -> new WishProduct(member.getId(), product.getId()))
             .toList();
         wishProductRepository.saveAll(wishProducts);
+    }
+
+    @AfterEach
+    void after() {
+        memberRepository.delete(member);
+        productRepository.deleteAll();
+        wishProductRepository.deleteAll();
     }
 
     @Test

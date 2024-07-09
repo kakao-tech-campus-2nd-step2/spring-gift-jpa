@@ -7,6 +7,7 @@ import gift.auth.JwtService;
 import gift.auth.JwtTokenProvider;
 import gift.model.Member;
 import gift.model.Product;
+import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.request.ProductAddRequest;
 import gift.request.ProductUpdateRequest;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,6 +53,9 @@ class ProductApiControllerTest {
     MemberService memberService;
 
     @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
     JwtTokenProvider jwtTokenProvider;
 
     Member member;
@@ -65,9 +70,14 @@ class ProductApiControllerTest {
                 products.add(new Product("product"+i, 1000, "https://a.com"));
             });
         savedProducts = productRepository.saveAll(products);
-
         member = memberService.join("aaa123@a.com", "1234");
         token = jwtTokenProvider.generateToken(member);
+    }
+
+    @AfterEach
+    void after() {
+        memberRepository.delete(member);
+        productRepository.deleteAll();
     }
 
     @Test
@@ -144,7 +154,7 @@ class ProductApiControllerTest {
         URI uri = UriComponentsBuilder
             .fromUriString("http://localhost:" + port)
             .path("/api/products")
-            .queryParam("id", 1)
+            .queryParam("id", savedProducts.get(0).getId())
             .encode()
             .build()
             .toUri();
