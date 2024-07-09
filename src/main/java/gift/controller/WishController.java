@@ -32,7 +32,7 @@ public class WishController {
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> addWish(@RequestBody Wish wish, @LoginMember Member member) {
-        wish.setMemberId(member.getId());
+        wish.setMember(member);
         Wish savedWish = wishService.addWish(wish);
         Map<String, Object> response = new HashMap<>();
         response.put("wish", savedWish);
