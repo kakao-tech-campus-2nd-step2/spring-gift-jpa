@@ -1,15 +1,20 @@
 package gift.model.product;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "products")
 public class Product {
 
-    private final long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private final ProductName name;
     private final int price;
     private final String imageUrl;
     private final int amount;
 
-    public Product(Long id, ProductName name, int price, String imageUrl, int amount){
-        this.id = id;
+    public Product(ProductName name, int price, String imageUrl, int amount){
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

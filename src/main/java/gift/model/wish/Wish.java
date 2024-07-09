@@ -1,13 +1,20 @@
 package gift.model.wish;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "wishes")
 public class Wish {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Long productId;
-    private String productName;
+    private Long memberId;
     private int amount;
 
-    public Wish(Long productId,String productName,int amount){
+    public Wish(Long productId, Long memberId, int amount){
         this.productId = productId;
-        this.productName = productName;
+        this.memberId = memberId;
         this.amount = amount;
     }
 
@@ -15,8 +22,8 @@ public class Wish {
         return productId;
     }
 
-    public String getProductName(){
-        return productName;
+    public Long getMemberId(){
+        return memberId;
     }
 
     public int getAmount(){
