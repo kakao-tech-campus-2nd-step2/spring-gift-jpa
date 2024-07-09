@@ -26,13 +26,10 @@ public class WishListService {
         wishListRepository.save(wish);
     }
 
-    public boolean deleteProductInWishList(Long memberId, Long productId) {
-        boolean isAlreadyExist = isAlreadyExistProduct(memberId, productId);
-        if (!isAlreadyExist) {
-            return false;
-        }
-        wishListRepository.deleteProduct(memberId, productId);
-        return true;
+    public void deleteProductInWishList(Long memberId, Long productId) {
+        Wish wish = wishListRepository.findByMemberIdAndProductId(memberId, productId)
+                .orElseThrow(() -> new WishNotFoundException("위시리스트에 없는 상품"));
+        wishListRepository.delete(wish);
     }
 
     public void updateWishList(Long memberId, Long productId, int amount) {

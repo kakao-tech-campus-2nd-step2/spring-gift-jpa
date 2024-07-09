@@ -43,13 +43,10 @@ public class WishListController {
     }
 
     @DeleteMapping("api/wishlist")
-    public ResponseEntity<String> deleteWishList(HttpServletRequest request,@RequestBody WishListRequest wishListRequest){
+    public ResponseEntity<Void> deleteWishList(HttpServletRequest request, @RequestBody WishListRequest wishListRequest) {
         Long memberId = (Long) request.getAttribute("memberId");
-        boolean isDeleted = wishListService.deleteProductInWishList(memberId, wishListRequest.getProductId());
-        if(!isDeleted){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("위시리스트에 없는 상품");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body("삭제 성공");
+        wishListService.deleteProductInWishList(memberId, wishListRequest.getProductId());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }
