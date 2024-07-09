@@ -42,7 +42,7 @@
               <td th:text="${product.imageUrl}"></td>
               <td><a th:href="@{/products/update/{id}(id = ${product.id})}">상품 수정</a></td>
               <td>
-                <form th:action="@{/products/delete/{id}(id=${product.id})}" method="post">
+                <form th:action="@{/products/{id}(id=${product.id})}" method="post">
                   <input type="hidden" name="_method" value="delete"/>
                   <button type="submit">상품 삭제</button>
                 </form>
