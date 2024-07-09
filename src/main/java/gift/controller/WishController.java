@@ -1,7 +1,8 @@
 package gift.controller;
 
 import gift.annotation.LoginUserId;
-import gift.dto.wish.WishRequest;
+import gift.dto.wish.AddWishRequest;
+import gift.dto.wish.UpdateWishRequest;
 import gift.dto.wish.WishResponse;
 import gift.service.WishService;
 import jakarta.validation.Valid;
@@ -30,23 +31,25 @@ public class WishController {
     }
 
     @PostMapping
-    public ResponseEntity<List<WishResponse>> addWish(
-        @LoginUserId Long userId, @RequestBody @Valid WishRequest wishRequest
+    public ResponseEntity<Long> addWish(
+        @LoginUserId Long userId, @RequestBody @Valid AddWishRequest request
     ) {
-        return ResponseEntity.ok(wishService.addWish(userId, wishRequest));
+        return ResponseEntity.ok(wishService.addWish(userId, request));
     }
 
     @PatchMapping
-    public ResponseEntity<List<WishResponse>> updateWishes(
-        @LoginUserId Long userId, @RequestBody List<WishRequest> wishRequests
+    public ResponseEntity updateWishes(
+        @LoginUserId Long userId, @RequestBody List<UpdateWishRequest> requests
     ) {
-        return ResponseEntity.ok(wishService.updateWishes(userId, wishRequests));
+        wishService.updateWishes(requests);
+        return ResponseEntity.ok(null);
     }
 
     @DeleteMapping
-    public ResponseEntity<List<WishResponse>> deleteWishes(
-        @LoginUserId Long userId, @RequestBody List<WishRequest> wishRequests
+    public ResponseEntity deleteWishes(
+        @LoginUserId Long userId, @RequestBody List<UpdateWishRequest> requests
     ) {
-        return ResponseEntity.ok(wishService.deleteWishes(userId, wishRequests));
+        wishService.deleteWishes(requests);
+        return ResponseEntity.ok(null);
     }
 }

@@ -1,88 +1,86 @@
 package gift.service;
 
-import gift.dto.wish.WishRequest;
+import gift.dto.wish.AddWishRequest;
+import gift.dto.wish.UpdateWishRequest;
 import gift.dto.wish.WishResponse;
+import gift.entity.Product;
+import gift.entity.User;
 import gift.entity.Wish;
 import gift.exception.wish.WishNotFoundException;
 import gift.repository.WishRepository;
+import gift.util.mapper.WishMapper;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
 public class WishService {
     private final WishRepository wishRepository;
     private final ProductService productService;
+    private final UserService userService;
 
-    public WishService(WishRepository wishRepository, ProductService productService) {
+    public WishService(WishRepository wishRepository, ProductService productService, UserService userService) {
         this.wishRepository = wishRepository;
         this.productService = productService;
+        this.userService = userService;
     }
 
     public List<WishResponse> getWishes(Long userId) {
-        List<WishResponse> wishes = wishRepository.findByUserId(userId);
+        List<Wish> wishes = wishRepository.findByUserId(userId);
 
-        if (wishes == null) {
-            throw new WishNotFoundException("해당 사용자의 위시 리스트가 존재하지 않습니다.");
+        if(wishes == null || wishes.isEmpty()) {
+            throw new WishNotFoundException("위시리스트가 존재하지 않습니다.");
         }
 
-        return wishes;
+        return wishes.stream()
+            .map(WishMapper::toResponse)
+            .collect(Collectors.toList());
     }
 
-    public List<WishResponse> addWish(Long userId, WishRequest wishRequest) {
+    public Long addWish(Long userId, AddWishRequest request) {
+        Product product = productService.getProductById(request.productId());
+        User user = userService.getUserById(userId);
+
         Wish wish = Wish.builder()
-            .userId(userId)
-            .productId(wishRequest.productId())
-            .quantity(wishRequest.quantity())
+            .quantity(request.quantity())
+            .user(user)
+            .product(product)
             .build();
-        productService.checkProductExist(wish.getProductId());
 
-        return wishRepository.insert(wish);
+        Wish savedWish = wishRepository.save(wish);
+        return savedWish.getId();
     }
 
-    public List<WishResponse> updateWishes(Long userId, List<WishRequest> requests) {
-        for (WishRequest request : requests) {
-            Wish wish = Wish.builder()
-                    .id(getWishId(userId, request.productId()))
-                    .userId(userId)
-                    .productId(request.productId())
-                    .quantity(request.quantity())
-                    .build();
+    public void updateWishes(List<UpdateWishRequest> requests) {
+        for (UpdateWishRequest request : requests) {
+            Wish wish = getWish(request.id());
+            wish.setQuantity(request.quantity());
             updateWish(wish);
         }
-        return wishRepository.findByUserId(userId);
     }
 
-    public void updateWish(Wish wish) {
+    private void updateWish(Wish wish) {
         if (wish.getQuantity() <= 0) {
             deleteWish(wish);
             return;
         }
-        wishRepository.update(wish);
+
+        wishRepository.save(wish);
     }
 
-    public List<WishResponse> deleteWishes(Long userId, List<WishRequest> requests) {
-        for (WishRequest request : requests) {
-            Wish wish = Wish.builder()
-                .id(getWishId(userId, request.productId()))
-                .userId(userId)
-                .productId(request.productId())
-                .quantity(request.quantity())
-                .build();
-            deleteWish(wish);
+    public void deleteWishes(List<UpdateWishRequest> requests) {
+        for (UpdateWishRequest request : requests) {
+            deleteWish(getWish(request.id()));
         }
-        return wishRepository.findByUserId(userId);
     }
 
-    public void deleteWish(Wish wish) {
+    private void deleteWish(Wish wish) {
         wishRepository.delete(wish);
     }
 
-    private Long getWishId(Long userId, Long productId) {
-        Long wishId = wishRepository.findWishId(userId, productId);
-        if (wishId == null) {
-            throw new WishNotFoundException("존재하지 않는 항목입니다.");
-        }
-        return wishId;
+    private Wish getWish(Long id) {
+        return wishRepository.findById(id)
+            .orElseThrow(() -> new WishNotFoundException("위시리스트를 찾을 수 없습니다."));
     }
 
 }

@@ -16,12 +16,6 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false, insertable = false, updatable = false)
-    private Long userId;
-
-    @Column(name = "product_id", nullable = false, insertable = false, updatable = false)
-    private Long productId;
-
     @Column(nullable = false)
     private Integer quantity;
 
@@ -36,8 +30,6 @@ public class Wish {
     private Wish(Builder builder) {
         this.id = builder.id;
         this.quantity = builder.quantity;
-        this.userId = builder.userId;
-        this.productId = builder.productId;
         this.user = builder.user;
         this.product = builder.product;
     }
@@ -48,14 +40,6 @@ public class Wish {
 
     public Long getId() {
         return id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public Long getProductId() {
-        return productId;
     }
 
     public Integer getQuantity() {
@@ -70,26 +54,18 @@ public class Wish {
         return product;
     }
 
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     public static class Builder {
         private Long id;
-        private Long userId;
-        private Long productId;
         private Integer quantity;
         private User user;
         private Product product;
 
         public Builder id(Long id) {
             this.id = id;
-            return this;
-        }
-
-        public Builder userId(Long userId) {
-            this.userId = userId;
-            return this;
-        }
-
-        public Builder productId(Long productId) {
-            this.productId = productId;
             return this;
         }
 
