@@ -83,16 +83,16 @@ public class Product {
         return imageUrl;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    private void setName(String name) { this.name = name; }
 
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
+    private void setPrice(Integer price) { this.price = price; }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    private void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public void changeProduct(Product product){
+        this.setName(product.getName());
+        this.setPrice(product.getPrice());
+        this.setImageUrl(product.getImageUrl());
     }
 
     public ProductDTO convertToProductDTO(Product product) {

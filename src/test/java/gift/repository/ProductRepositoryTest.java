@@ -87,7 +87,7 @@ class ProductRepositoryTest {
 
         Optional<Product> expected = productRepository.findById(product2.getId());
 
-        expected.get().setPrice(31240941);
+        expected.get().changeProduct(new Product("커피2", 31240941,"https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"));
 
         Optional<Product> actual = productRepository.findById(product2.getId());
 
