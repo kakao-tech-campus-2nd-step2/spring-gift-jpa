@@ -1,5 +1,6 @@
 package gift.dto;
 
-public record WishListDTO() {
+import gift.entity.Wish;
+import java.util.List;
 
-}
+public record WishListDTO(List<Wish> wishList) { }
