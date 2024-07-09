@@ -3,8 +3,10 @@ package gift.controller;
 import gift.domain.User;
 import gift.domain.User.UserSimple;
 import gift.entity.UserEntity;
-import gift.errorException.ListResult;
-import gift.errorException.SingleResult;
+import gift.mapper.PageMapper;
+import gift.util.page.ListResult;
+import gift.util.page.PageResult;
+import gift.util.page.SingleResult;
 import gift.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ListResult<UserSimple> getUserList() {
-        return new ListResult<>(userService.getUserList());
+    public PageResult<UserSimple> getUserList(@Valid User.getList param) {
+        return PageMapper.toPageResult(userService.getUserList(param));
     }
 
     @GetMapping("/{id}")

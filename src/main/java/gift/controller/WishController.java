@@ -3,10 +3,11 @@ package gift.controller;
 import gift.domain.Wish;
 import gift.domain.Wish.wishDetail;
 import gift.domain.Wish.wishSimple;
-import gift.errorException.ListResult;
-import gift.errorException.SingleResult;
+import gift.mapper.PageMapper;
 import gift.service.WishService;
 import gift.util.ParsingPram;
+import gift.util.page.PageResult;
+import gift.util.page.SingleResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,9 @@ public class WishController {
     //    user id로 위시리스트 반환
     //    user id 검증
     @GetMapping
-    public ListResult<wishSimple> getWishList(HttpServletRequest req) {
-        return new ListResult(wishListService.getWishList(parsingPram.getId(req)));
+    public PageResult<wishSimple> getWishList(HttpServletRequest req,
+        @Valid Wish.getList pram) {
+        return PageMapper.toPageResult(wishListService.getWishList(parsingPram.getId(req), pram));
     }
 
     //  위시리스트 추가
