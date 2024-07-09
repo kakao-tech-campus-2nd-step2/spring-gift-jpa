@@ -33,7 +33,7 @@ public class ProductService {
     }
 
     public Product addProduct(ProductDTO productDTO) {
-        Product product = new Product(productDTO.getPrice(), productDTO.getName(), productDTO.getImgURL());
+        Product product = new Product(productDTO.price(), productDTO.name(), productDTO.imgURL());
         try {
             return productRepository.save(product);
         }
@@ -43,7 +43,7 @@ public class ProductService {
     }
 
     public Product updateProduct(int id, ProductDTO productDTO) {
-        Product product = new Product(id, productDTO.getPrice(), productDTO.getName(), productDTO.getImgURL());
+        Product product = new Product(id, productDTO.price(), productDTO.name(), productDTO.imgURL());
         try {
             return productRepository.save(product);
         }
