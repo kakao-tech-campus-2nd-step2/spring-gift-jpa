@@ -32,13 +32,12 @@
     document.getElementById('editProductForm').addEventListener('submit', async function(event) {
       event.preventDefault();
       const product = {
-        id: parseInt(document.getElementById('productId').value, 10),
         name: document.getElementById('productName').value,
         price: parseInt(document.getElementById('productPrice').value, 10),
         imageUrl: document.getElementById('productImageUrl').value
       };
 
-      const response = await fetch(`/api/products/${product.id}`, {
+      const response = await fetch(`/api/products/${document.getElementById('productId').value}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

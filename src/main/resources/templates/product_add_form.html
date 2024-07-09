@@ -7,10 +7,6 @@
 <body>
   <form id="addProductForm">
     <div>
-      <label>ID: </label>
-      <input type="text" id="productId" />
-    </div>
-    <div>
       <label>상품 이름: </label>
       <input type="text" id="productName" />
     </div>
@@ -32,7 +28,6 @@
     document.getElementById('addProductForm').addEventListener('submit', async function(event) {
       event.preventDefault();
       const product = {
-        id: parseInt(document.getElementById('productId').value, 10),
         name: document.getElementById('productName').value,
         price: parseInt(document.getElementById('productPrice').value, 10),
         imageUrl: document.getElementById('productImageUrl').value

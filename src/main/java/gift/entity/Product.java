@@ -61,6 +61,18 @@ public class Product {
         return wishes;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public static class Builder {
         private Long id;
         private String name;

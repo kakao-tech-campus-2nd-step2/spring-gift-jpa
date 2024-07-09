@@ -3,49 +3,65 @@ package gift.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import gift.dto.product.AddProductRequest;
+
 import gift.dto.product.UpdateProductRequest;
 import gift.exception.product.ProductNotFoundException;
 import gift.entity.Product;
 import gift.util.mapper.ProductMapper;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @SpringBootTest
 class ProductServiceTest {
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Autowired
     private ProductService productService;
 
-    @BeforeEach
-    void setupTable() {
-        jdbcTemplate.execute("DROP TABLE IF EXISTS products CASCADE");
-        jdbcTemplate.execute("CREATE TABLE products ("
-            + "id LONG,"
-            + " name VARCHAR(255),"
-            + " price INT,"
-            + " imageUrl VARCHAR(255),"
-            + " PRIMARY KEY (id))"
-        );
-    }
-
-    void setupInsertion() {
-        var product1 = new AddProductRequest(1L, "product1", 10000, null);
-        var product2 = new AddProductRequest(2L, "product2", 20000, null);
-
-        productService.addProduct(product1);
-        productService.addProduct(product2);
-    }
+    /*
+     * dummy data
+     *
+     * Product product1 = Product.builder()
+     *     .name("Product A")
+     *     .price(1000)
+     *     .imageUrl("http://example.com/images/product_a.jpg")
+     *     .build();
+     *
+     * Product product2 = Product.builder()
+     *     .name("Product B")
+     *     .price(2000)
+     *     .imageUrl("http://example.com/images/product_b.jpg")
+     *     .build();
+     *
+     * Product product3 = Product.builder()
+     *     .name("Product C")
+     *     .price(3000)
+     *     .imageUrl("http://example.com/images/product_c.jpg")
+     *     .build();
+     *
+     * Product product4 = Product.builder()
+     *     .name("Product D")
+     *     .price(4000)
+     *     .imageUrl("http://example.com/images/product_d.jpg")
+     *     .build();
+     *
+     * Product product5 = Product.builder()
+     *     .name("Product E")
+     *     .price(5000)
+     *     .imageUrl("http://example.com/images/product_e.jpg")
+     *     .build();
+     *
+     */
 
     @Test
     @DisplayName("getAllProducts empty test")
+    @Transactional
     void getAllProductsEmptyTest() {
+        productService.getAllProducts().forEach(product -> productService.deleteProduct(product.getId()));
+
         //when
         List<Product> products = productService.getAllProducts();
 
@@ -55,89 +71,98 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("getAllProducts test")
+    @Transactional
     void getAllProductsTest() {
-        //given
-        setupInsertion();
-        Product product1 = new Product(1L, "product1", 10000, null);
-        Product product2 = new Product(2L, "product2", 20000, null);
-        List<Product> expected = List.of(product1, product2);
-
         //when
         List<Product> products = productService.getAllProducts();
 
         //then
         assertThat(products).isNotNull();
-        assertThat(products.size()).isEqualTo(2);
-        assertThat(products).containsAll(expected);
+        assertThat(products.size()).isEqualTo(5);
     }
 
     @Test
     @DisplayName("getProductById exception test")
+    @Transactional
     void getProductByIdExceptionTest() {
-        //given
-        setupInsertion();
-
         //when & then
-        assertThatThrownBy(() -> productService.getProductById(3L))
+        assertThatThrownBy(() -> productService.getProductById(7L))
             .isInstanceOf(ProductNotFoundException.class);
     }
 
     @Test
     @DisplayName("getProductById test")
+    @Transactional
     void getProductByIdTest() {
         //given
-        setupInsertion();
-        Product product2 = new Product(2L, "product2", 20000, null);
+        Product expected = Product.builder()
+            .id(2L)
+            .name("Product B")
+            .price(2000)
+            .imageUrl("http://example.com/images/product_b.jpg")
+            .build();
 
         //when
-        Product product = productService.getProductById(2L);
+        Product actual = productService.getProductById(2L);
 
         //then
-        assertThat(product).isEqualTo(product2);
+        assertThat(actual.getId()).isEqualTo(expected.getId());
+        assertThat(actual.getName()).isEqualTo(expected.getName());
+        assertThat(actual.getPrice()).isEqualTo(expected.getPrice());
+        assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl());
     }
 
     @Test
     @DisplayName("updateProduct test")
+    @Transactional
     void updateProductTest() {
         //given
-        setupInsertion();
         UpdateProductRequest request = new UpdateProductRequest("product3", 30000, null);
 
         //when
         productService.updateProduct(1L, request);
         Product actual = productService.getProductById(1L);
-        Product expected = ProductMapper.toProduct(1L, request);
+        ProductMapper.updateProduct(actual, request);
+        Product expected = Product.builder()
+            .id(1L)
+            .name("product3")
+            .price(30000)
+            .build();
 
         //then
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual.getId()).isEqualTo(expected.getId());
+        assertThat(actual.getName()).isEqualTo(expected.getName());
+        assertThat(actual.getPrice()).isEqualTo(expected.getPrice());
+        assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl());
     }
-    
+
     @Test
     @DisplayName("deleteProduct test")
+    @Transactional
     void deleteProductTest() {
         //given
-        setupInsertion();
-        Product product1 = new Product(1L, "product1", 10000, null);
-        Product product2 = new Product(2L, "product2", 20000, null);
+        Product product1 = Product.builder()
+            .name("Product A")
+            .price(1000)
+            .imageUrl("http://example.com/images/product_a.jpg")
+            .build();
 
         //when
         productService.deleteProduct(1L);
-        List<Product> deletedProducts = productService.getAllProducts();
+        List<Product> actual = productService.getAllProducts();
 
         //then
-        assertThat(deletedProducts).hasSize(1);
-        assertThat(deletedProducts).doesNotContain(product1);
-        assertThat(deletedProducts).contains(product2);
+        assertThat(actual).hasSize(4);
+        assertThat(actual).extracting(Product::getId)
+            .doesNotContain(product1.getId());
     }
 
     @Test
     @DisplayName("deleteProduct exception test")
+    @Transactional
     void deleteProductExceptionTest() {
-        //given
-        setupInsertion();
-
         //when & then
-        assertThatThrownBy(() -> productService.getProductById(3L))
+        assertThatThrownBy(() -> productService.deleteProduct(9L))
             .isInstanceOf(ProductNotFoundException.class);
     }
 }

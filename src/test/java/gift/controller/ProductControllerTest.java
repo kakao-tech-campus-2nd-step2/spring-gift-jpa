@@ -34,7 +34,7 @@ public class ProductControllerTest {
     void createTest() {
         // given
         var url = "http://localhost:" + port + "/api/products";
-        var request = new AddProductRequest(9L, "product", 1_000, "image.jpg");
+        var request = new AddProductRequest( "product", 1_000, "image.jpg");
         var requestEntity = new RequestEntity<>(request, HttpMethod.POST, URI.create(url));
 
         // when
