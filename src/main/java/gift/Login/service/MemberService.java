@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class MemberService {
@@ -22,10 +23,15 @@ public class MemberService {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public Member registerMember(String email, String password) {
+    public void registerMember(String email, String password) {
         Member member = new Member(email, password);
+        // validation
+        Optional<Member> existingMember = memberRepository.findByEmail(email);
+        if (existingMember.isPresent()) {
+            throw new IllegalArgumentException("Email already exists: " + email);
+        }
+
         memberRepository.save(member);
-        return member;
     }
 
     public String generateToken(Member member) {
@@ -38,15 +44,13 @@ public class MemberService {
                 .compact();
     }
 
-    public Member findMemberByEmail(String email) {
-        return memberRepository.findByEmail(email);
-    }
-
     public String login(String email, String password) {
-        Member member = findMemberByEmail(email);
-        if (member != null && member.getPassword().equals(password)) {
-            return generateToken(member);
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("No such member: " )
+        );
+        if (!member.getPassword().equals(password)) {
+            return null;
         }
-        return null;
+        return generateToken(member);
     }
 }

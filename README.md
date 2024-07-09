@@ -5,6 +5,13 @@
 ### 2. 지금까지 작성한 JdbcTemplate 기반 코드를 JPA 기반 코드로 리팩토링
 - [x] Login/repository 리팩토링
 - [x] Login/model 리팩토링 
-### 3. @DataJpaTest를 사용하여 테스트를 해 본다.
-- [ ] 동작 쿼리를 로그로 확인해보기
-- [ ] @DataJpaTest를 사용하여 테스트를 해 본다.
+### 3. 테스트해보기
+- [x] E2E Test
+  - [x] 회원가입 테스트
+  - [x] 로그인 테스트
+- [x] @DataJpaTest
+
+### 4. Login 디렉토리 전부 리팩토링
+- [ ] controller 리팩토링 (예외처리는 전부 서비스에서!!!)
+- [ ] service 리팩토링
+- [ ] errordto 만들기 

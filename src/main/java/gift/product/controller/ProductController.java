@@ -43,11 +43,9 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable("id") Long id) {
-        Product product = productService.getProductById(id);
-        if (product == null) {
+        if (!productService.deleteProduct(id)) {
             throw new ProductNotFoundException(id);
         }
-        productService.deleteProduct(id);
         return "redirect:/products";
     }
 }
