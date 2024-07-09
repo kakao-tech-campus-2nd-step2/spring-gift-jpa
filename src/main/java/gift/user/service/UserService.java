@@ -20,18 +20,20 @@ public class UserService {
     }
 
     public UserSignInDto signUp(UserSignUpRequest userSignupRequest) {
-        User user = userSignupRequest.toModel();
-
-        userRepository.findByUsername(user.getUsername())
+        userRepository.findByUsername(userSignupRequest.username())
                 .ifPresent(u -> {
                     throw new UserAlreadyExistsException();
                 });
 
-        userRepository.save(user);
-        User savedUser = userRepository.findByUsername(user.getUsername())
+        User newUser = new User(userSignupRequest.username(),
+                PasswordProvider.encode(userSignupRequest.username(), userSignupRequest.password()));
+        userRepository.save(newUser);
+
+        User savedUser = userRepository.findByUsername(newUser.getUsername())
                 .orElseThrow(UserNotFoundException::new);
-        if (PasswordProvider.match(userSignupRequest.username(), userSignupRequest.password(),
-                savedUser.getPassword())) {
+        if (!PasswordProvider.match
+                (userSignupRequest.username(), userSignupRequest.password(), savedUser.getPassword())
+        ) {
             throw new UserNotFoundException();
         }
 

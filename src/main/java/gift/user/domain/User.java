@@ -1,7 +1,5 @@
 package gift.user.domain;
 
-import gift.user.service.PasswordProvider;
-
 public class User {
     private Long id;
     private String username;
@@ -17,14 +15,14 @@ public class User {
 
     public User(String username, String password) {
         this.username = username;
-        this.password = PasswordProvider.encode(username, password);
+        this.password = password;
         this.role = Role.USER;
     }
 
     public User(Long id, String username, String password, Role role) {
         this.id = id;
         this.username = username;
-        this.password = PasswordProvider.encode(username, password);
+        this.password = password;
         this.role = role;
     }
 
