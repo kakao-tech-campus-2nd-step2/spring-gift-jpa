@@ -2,6 +2,7 @@ package gift.repository;
 
 
 import gift.model.User;
+import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Test
-    public void testGetIdByEmailPassword(){
+    public void testFindByEmailPassword(){
         //given
         String email = "abc@naver.com";
         String password = "123";
@@ -22,8 +23,8 @@ class UserRepositoryTest {
         expected.setPassword(password);
         userRepository.save(expected);
         //when
-        Long actualId = userRepository.getIdByEmailPassword(email, password);
+        Optional<User> actual = userRepository.findByEmailAndPassword(email, password);
         //then
-        Assertions.assertThat(actualId).isEqualTo(expected.getId());
+        Assertions.assertThat(actual.get()).isEqualToComparingFieldByField(expected);
     }
 }
