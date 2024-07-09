@@ -22,6 +22,10 @@ public class Wish {
     @Column(name = "count", nullable = false)
     private Integer count;
 
+    protected Wish() {
+
+    }
+
     public Wish(Long memberId, Long productId, Integer count) {
         this.memberId = memberId;
         this.productId = productId;

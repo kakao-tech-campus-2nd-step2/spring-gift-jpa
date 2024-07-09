@@ -23,6 +23,10 @@ public class Member {
     @Column(name = "role")
     private String role;
 
+    protected Member() {
+
+    }
+
     public Member(String email, String password, String name, String role) {
         this.email = email;
         this.password = password;
