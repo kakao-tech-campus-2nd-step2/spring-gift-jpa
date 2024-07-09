@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
     @Query("SELECT new gift.model.Product(p.id, p.name, p.price, p.imageUrl) " +
-            "FROM Product p " +
-            "JOIN Wish w ON p.id = w.productId " +
+            "FROM products p " +
+            "JOIN wishes w ON p.id = w.productId " +
             "WHERE w.memberId = :memberId")
-    List<Product> findAllByUserId(@Param("memberId") Long memberId);
+    List<Product> findAllByMemberId(@Param("memberId") Long memberId);
     void deleteByProductId(Long productId);
 }

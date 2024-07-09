@@ -32,7 +32,7 @@ public class WishService {
     }
 
     public List<Product> getAllWishProductsByMember(Member member) {
-        return wishRepository.findAllByUserId(member.getId());
+        return wishRepository.findAllByMemberId(member.getId());
     }
 
     @Transactional
