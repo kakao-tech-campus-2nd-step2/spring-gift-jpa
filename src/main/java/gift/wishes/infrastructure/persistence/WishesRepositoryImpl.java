@@ -2,16 +2,9 @@ package gift.wishes.infrastructure.persistence;
 
 import gift.core.domain.product.Product;
 import gift.core.domain.wishes.WishesRepository;
-import gift.core.domain.wishes.exception.WishAlreadyExistsException;
-import gift.product.infrastructure.persistence.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Objects;
 
 @Repository
 public class WishesRepositoryImpl implements WishesRepository {
@@ -24,9 +17,6 @@ public class WishesRepositoryImpl implements WishesRepository {
 
     @Override
     public void saveWish(Long userId, Long productId) {
-        if (jpaWishRepository.existsByUserIdAndProductId(userId, productId)) {
-            throw new WishAlreadyExistsException();
-        }
         jpaWishRepository.save(new WishEntity(0L, userId, productId));
     }
 
