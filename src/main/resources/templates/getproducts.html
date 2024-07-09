@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Products</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link rel="stylesheet" th:href="@{/css/get-products.css}">
+</head>
+<body>
+<h1>Product List</h1>
+
+
+<div class="actions">
+  <div class="actions">
+    <a href="product/add/form" class="btn add-btn"> Add Product</a>
+    <a href="product/delete/form" class="btn delete-btn">Delete Product</a>
+    <a href="product/update/form" class="btn update-btn">Update Product</a>
+  </div>
+
+  <div th:if="${not #lists.isEmpty(productDto)}">
+    <ul class="product-list">
+      <li th:each="product : ${productDto}" class="product-item">
+        <span th:text="${product.id}" class="product-id">Id</span>
+        <span th:text="${product.name}" class="product-name">Product Name</span>
+        <span th:text="${product.price}" class="product-price">Price</span>
+        <span th:text="${product.imageUrl}" class="product-image">imageUrl</span>
+      </li>
+    </ul>
+  </div>
+  <div th:if="${#lists.isEmpty(productDto)}" class="empty-message">
+    No products available.
+  </div>
+  <div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+  </div>
+</body>
+</html>
