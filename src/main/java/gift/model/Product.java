@@ -1,5 +1,7 @@
 package gift.model;
 
+import gift.exception.ProductErrorCode;
+import gift.exception.ProductException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +28,7 @@ public class Product {
     }
 
     public Product(Long id, String name, int price, String imageUrl) {
+        validateKakaoWord(name);
         this.id = id;
         this.name = name;
         this.price = price;
@@ -46,5 +49,11 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    private void validateKakaoWord(String name) throws ProductException {
+        if (name.contains("카카오")) {
+            throw new ProductException(ProductErrorCode.HAS_KAKAO_WORD);
+        }
     }
 }

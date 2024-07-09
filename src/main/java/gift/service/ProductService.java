@@ -31,23 +31,15 @@ public class ProductService {
     }
 
     public void insertProduct(ProductRequestDto productRequestDto) throws ProductException {
-        validateKakaoWord(productRequestDto.getName());
         productRepository.save(productRequestDto.toEntity(null));
     }
 
     public void updateProductById(Long id, ProductRequestDto productRequestDto)
         throws ProductException {
-        validateKakaoWord(productRequestDto.getName());
         productRepository.save(productRequestDto.toEntity(id));
     }
 
     public void deleteProductById(Long id) {
         productRepository.deleteById(id);
-    }
-
-    private void validateKakaoWord(String name) throws ProductException {
-        if (name.contains("카카오")) {
-            throw new ProductException(ProductErrorCode.HAS_KAKAO_WORD);
-        }
     }
 }
