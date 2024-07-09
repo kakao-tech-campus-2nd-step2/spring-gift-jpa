@@ -8,4 +8,8 @@ public class AddedProductIdResponse {
         this.id = id;
     }
 
+    public Long getId() {
+        return id;
+    }
+
 }
