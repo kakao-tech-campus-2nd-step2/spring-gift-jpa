@@ -2,16 +2,8 @@ package gift.product.repository;
 
 import gift.product.model.Product;
 import jakarta.persistence.EntityManager;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.sql.DataSource;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
 
 public class JpaProductRepository implements ProductRepository {
@@ -24,7 +16,12 @@ public class JpaProductRepository implements ProductRepository {
 
     @Transactional
     public Product save(Product product) {
-        em.persist(product);
+        if (product.getId() == null) {
+            em.persist(product);
+            return product;
+        }
+
+        em.merge(product);
         return product;
     }
 
@@ -32,23 +29,14 @@ public class JpaProductRepository implements ProductRepository {
         return em.createQuery("SELECT p FROM Product p", Product.class).getResultList();
     }
 
-    public Product findById(Long id) throws Exception {
+    public Optional<Product> findById(Long id) {
         Product product = em.find(Product.class, id);
 
-        if (product == null) {
-            throw new Exception();
-        }
-
-        return product;
+        return Optional.ofNullable(product);
     }
 
     @Transactional
-    public void update(Product product) {
-        em.merge(product);
-    }
-
-    @Transactional
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         Product product = em.find(Product.class, id);
         em.remove(product);
     }

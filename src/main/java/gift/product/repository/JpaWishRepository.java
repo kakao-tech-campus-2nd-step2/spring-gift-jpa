@@ -3,16 +3,7 @@ package gift.product.repository;
 import gift.product.dto.LoginMember;
 import gift.product.model.Wish;
 import jakarta.persistence.EntityManager;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.sql.DataSource;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 public class JpaWishRepository implements WishRepository {

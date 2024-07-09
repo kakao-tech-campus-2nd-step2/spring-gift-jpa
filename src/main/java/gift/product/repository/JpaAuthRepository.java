@@ -2,12 +2,6 @@ package gift.product.repository;
 
 import gift.product.model.Member;
 import jakarta.persistence.EntityManager;
-import java.util.HashMap;
-import java.util.Map;
-import javax.sql.DataSource;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 public class JpaAuthRepository implements AuthRepository {

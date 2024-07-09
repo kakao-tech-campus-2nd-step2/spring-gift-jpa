@@ -9,6 +9,7 @@ import gift.product.repository.JpaWishRepository;
 import gift.product.repository.ProductRepository;
 import gift.product.repository.WishRepository;
 import gift.product.service.AuthService;
+import gift.product.service.ProductService;
 import jakarta.persistence.EntityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,13 +21,16 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final EntityManager em;
 
-    public WebConfig(EntityManager em) {
+    private final ProductRepository productRepository;
+
+    public WebConfig(EntityManager em, ProductRepository productRepository) {
         this.em = em;
+        this.productRepository = productRepository;
     }
 
     @Bean
-    public ProductRepository productRepository() {
-        return new JpaProductRepository(em);
+    public ProductService productService() {
+        return new ProductService(productRepository);
     }
 
     @Bean
