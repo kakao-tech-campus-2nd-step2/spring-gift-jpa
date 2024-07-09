@@ -1,10 +1,27 @@
 package gift.product.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Member {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final Long id;
+
+    @Column(nullable = false, unique = true)
     private final String email;
+
+    @Column(nullable = false)
     private final String password;
+
+    public Member() {
+        this(null, null, null);
+    }
 
     public Member(String email, String password) {
         this(null, email, password);
