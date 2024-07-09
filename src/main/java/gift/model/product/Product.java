@@ -9,9 +9,13 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(nullable = false, length = 15)
     private final ProductName name;
+    @Column(nullable = false)
     private final int price;
+    @Column(nullable = false)
     private final String imageUrl;
+    @Column(nullable = false)
     private final int amount;
 
     public Product(ProductName name, int price, String imageUrl, int amount){
