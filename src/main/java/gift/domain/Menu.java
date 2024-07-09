@@ -59,4 +59,12 @@ public class Menu {
         this.price = menu.price;
         this.imageUrl = menu.imageUrl;
     }
+
+    public static Menu MapMenuRequestToMenu(MenuRequest menuRequest){
+        return new Menu(menuRequest.name(),menuRequest.price(), menuRequest.imageUrl());
+    }
+
+    public static MenuResponse MapMenuToMenuResponse(Menu menu){
+        return new MenuResponse(menu.getId(),menu.getName(),menu.getPrice(),menu.getImageUrl());
+    }
 }

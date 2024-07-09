@@ -32,8 +32,8 @@ public class MenuRestController {
             return ResponseEntity.badRequest().body(result.getFieldError().getDefaultMessage());
         }
         else{
-            Menu menu =  menuService.save(request);
-            return ResponseEntity.ok().body(menu);
+            MenuResponse menuResponse =  menuService.save(request);
+            return ResponseEntity.ok().body(menuResponse);
         }
     }
 
@@ -47,8 +47,7 @@ public class MenuRestController {
             @PathVariable("id") Long id,
             @Valid @ModelAttribute MenuRequest request
     ) {
-        Menu menu = menuService.update(id, request);
-        return ResponseEntity.ok().body(menu);
+        return ResponseEntity.ok().body(menuService.update(id, request));
     }
 
     @DeleteMapping("{id}")
