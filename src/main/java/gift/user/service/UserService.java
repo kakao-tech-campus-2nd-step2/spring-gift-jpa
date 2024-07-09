@@ -6,6 +6,7 @@ import gift.user.domain.User;
 import gift.user.exception.UserAlreadyExistsException;
 import gift.user.exception.UserNotFoundException;
 import gift.user.persistence.UserRepository;
+import gift.user.service.dto.UserSignInDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,7 +19,7 @@ public class UserService {
         this.jwtProvider = jwtProvider;
     }
 
-    public UserSignInResponse signUp(UserSignUpRequest userSignupRequest) {
+    public UserSignInDto signUp(UserSignUpRequest userSignupRequest) {
         User user = userSignupRequest.toModel();
 
         userRepository.findByUsername(user.getUsername())
@@ -36,7 +37,7 @@ public class UserService {
 
         String token = jwtProvider.generateToken(savedUser);
 
-        return new UserSignInResponse(token);
+        return new UserSignInDto(savedUser.getId(), token);
     }
 
     public UserSignInResponse signIn(UserSignUpRequest userSignupRequest) {
