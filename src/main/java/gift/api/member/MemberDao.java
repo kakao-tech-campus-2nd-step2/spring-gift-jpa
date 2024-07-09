@@ -10,41 +10,26 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class MemberDao {
 
-    private final JdbcClient jdbcClient;
+    private final MemberRepository memberRepository;
 
-    public MemberDao(JdbcClient jdbcClient) {
-        this.jdbcClient = jdbcClient;
+    public MemberDao(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     public boolean hasMemberByEmail(String email) {
-        return jdbcClient.sql("select exists (select 1 from member where email = :email)")
-                        .param("email", email, Types.VARCHAR)
-                        .query(Boolean.class)
-                        .single();
+        return memberRepository.existsByEmail(email);
     }
 
     public boolean hasMemberByEmailAndPassword(MemberRequest memberRequest) {
-        return jdbcClient.sql("select exists (select 1 from member where email = :email and password = :password)")
-                        .param("email", memberRequest.email(), Types.VARCHAR)
-                        .param("password", memberRequest.password(), Types.VARCHAR)
-                        .query(Boolean.class)
-                        .single();
+        return memberRepository.existsByEmailAndPassword(
+                    memberRequest.email(), memberRequest.password());
     }
 
     public Optional<Member> getMemberByEmail(String email) {
-        return jdbcClient.sql("select * from member where email = :email")
-                        .param("email", email, Types.VARCHAR)
-                        .query(Member.class)
-                        .optional();
+        return memberRepository.findByEmail(email);
     }
 
     public Long insert(MemberRequest memberRequest) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcClient.sql("insert into member (email, password, role) values (:email, :password, :role)")
-            .param("email", memberRequest.email(), Types.VARCHAR)
-            .param("password", memberRequest.password(), Types.VARCHAR)
-            .param("role", memberRequest.role(), Types.VARCHAR)
-            .update(keyHolder);
-        return keyHolder.getKey().longValue();
+        return memberRepository.save(new Member(memberRequest)).getId();
     }
 }
