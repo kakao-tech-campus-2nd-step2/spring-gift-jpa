@@ -34,26 +34,12 @@ public class ApiProductController {
         return ResponseEntity.ok(productList);
     }
 
-    @GetMapping("/register")
-    public ResponseEntity<Product> showProductForm() {
-        System.out.println("[ProductController] showProductForm()");
-        Product product = new Product(idCounter.incrementAndGet(), "", 0, "");
-        return ResponseEntity.ok(product);
-    }
-
     @PostMapping()
     public ResponseEntity<String> registerProduct(@Valid @RequestBody Product product) {
         System.out.println("[ProductController] registerProduct()");
         productValidation.isIncludeKakao(product.getName());
         adminProductService.registerProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body("Product registered successfully");
-    }
-
-    @GetMapping("/update/{id}")
-    public ResponseEntity<Product> updateProductForm(@PathVariable Long id) {
-        System.out.println("[ProductController] updateProductForm()");
-        Product product = adminProductService.getProductById(id);
-        return ResponseEntity.ok(product);
     }
 
     @PutMapping()
