@@ -17,6 +17,19 @@
       }
     }
 
+    function checkLogin() {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        document.querySelectorAll('.login-required').forEach(element => {
+          element.style.display = 'none';
+        });
+      } else {
+        document.querySelectorAll('.login-required').forEach(element => {
+          element.style.display = 'inline';
+        });
+      }
+    }
+
     function addToWishlist(productId) {
       const token = localStorage.getItem("authToken");
       if (token) {
@@ -78,7 +91,10 @@
       }
     }
 
-    window.onload = checkAuth;
+    window.onload = function() {
+      checkAuth();
+      checkLogin();
+    };
   </script>
 </head>
 <body>
@@ -86,7 +102,7 @@
 <form th:action="@{/admin/products/add}" method="get" style="display:inline;" class="auth-required">
   <button type="submit">상품 추가</button>
 </form>
-<form th:action="@{/members/login}" method="get">
+<form th:action="@{/members/login}" method="get" style="display:inline;" class="login-required">
   <button type="submit">로그인</button>
 </form>
 <button onclick="goToWishlist()">위시리스트로 이동</button>
