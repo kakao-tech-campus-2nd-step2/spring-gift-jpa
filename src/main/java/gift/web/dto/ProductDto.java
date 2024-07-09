@@ -21,7 +21,7 @@ public record ProductDto(
     ) {
 
     public static ProductDto from(Product product) {
-        return new ProductDto(product.id(), product.name(), product.price(), product.imageUrl());
+        return new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public static Product toEntity(ProductDto productDto) {
