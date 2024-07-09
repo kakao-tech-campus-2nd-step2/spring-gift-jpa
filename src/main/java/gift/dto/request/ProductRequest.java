@@ -16,20 +16,13 @@ public class ProductRequest {
     private int price;
     private String imageUrl;
 
-    public ProductRequest(Long id, String name, int price, String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public ProductRequest() {
     }
 
     public ProductRequest(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-    }
-
-    public ProductRequest() {
     }
 
     public Long getId() {
@@ -50,18 +43,6 @@ public class ProductRequest {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
 }
