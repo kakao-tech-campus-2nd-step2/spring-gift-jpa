@@ -41,12 +41,17 @@ public class UserService {
         return UserMapper.toResponse(user, getToken(user.getEmail(), user.getPassword()));
     }
 
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
     public Long getUserIdByToken(String token) {
         HashMap<String, String> credentials = decodeToken(token);
         User user = userRepository.findByEmailAndPassword(
             credentials.get("email"),
             credentials.get("password"))
-            .orElseThrow(() -> new UserUnauthorizedException("접근할 수 없습니다."));
+            .orElseThrow(() -> new UserUnauthorizedException("접근할 수 없습니다." + "Email: " + credentials.get("email") + ", Password: " + credentials.get("password")));
 
         return user.getId();
     }
