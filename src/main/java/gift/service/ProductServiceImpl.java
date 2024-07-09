@@ -5,6 +5,7 @@ import gift.exception.ProductNotFoundException;
 import gift.model.Product;
 import gift.repository.ProductRepository;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,20 +28,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Long id) {
-        Product product = productRepository.findById(id);
-        if (product == null) {
-            throw new ProductNotFoundException("Product not found with id: " + id);
-        }
-        return product;
+        return productRepository.findById(id)
+            .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
     }
-
 
     @Override
     public boolean createProduct(@Valid Product product) {
         if (product.getName().contains("카카오")) {
             throw new ForbiddenWordException("상품 이름에 '카카오'가 포함된 경우 담당 MD와 협의가 필요합니다.");
         }
-        return productRepository.save(product);
+        productRepository.save(product);
+        return true;
     }
 
     @Override
@@ -48,24 +46,26 @@ public class ProductServiceImpl implements ProductService {
         if (product.getName().contains("카카오")) {
             throw new ForbiddenWordException("상품 이름에 '카카오'가 포함된 경우 담당 MD와 협의가 필요합니다.");
         }
-        Product existingProduct = productRepository.findById(id);
-        if (existingProduct != null) {
-            existingProduct.setName(product.getName());
-            existingProduct.setPrice(product.getPrice());
-            existingProduct.setImageUrl(product.getImageUrl());
-            return productRepository.update(existingProduct);
-        }
-        return false;
+        return productRepository.findById(id)
+            .map(existingProduct -> {
+                existingProduct.setName(product.getName());
+                existingProduct.setPrice(product.getPrice());
+                existingProduct.setImageUrl(product.getImageUrl());
+                productRepository.save(existingProduct);
+                return true;
+            })
+            .orElse(false);
     }
 
     @Override
     public boolean patchProduct(Long id, Map<String, Object> updates) {
-        Product existingProduct = productRepository.findById(id);
-        if (existingProduct != null) {
-            applyUpdates(existingProduct, updates);
-            return productRepository.update(existingProduct);
-        }
-        return false;
+        return productRepository.findById(id)
+            .map(existingProduct -> {
+                applyUpdates(existingProduct, updates);
+                productRepository.save(existingProduct);
+                return true;
+            })
+            .orElse(false);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
             try {
                 Long id = ((Number) updates.get("id")).longValue();
                 if (patchProduct(id, updates)) {
-                    updatedProducts.add(productRepository.findById(id));
+                    updatedProducts.add(productRepository.findById(id).orElseThrow());
                 }
             } catch (ProductNotFoundException | ForbiddenWordException ignored) {
             }
@@ -110,13 +110,17 @@ public class ProductServiceImpl implements ProductService {
         throw new IllegalArgumentException("Invalid field: " + key);
     }
 
-
     @Override
     public boolean deleteProduct(Long id) {
-        return productRepository.delete(id);
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
+    @Override
     public List<Product> getProducts(int page, int size) {
-        return productRepository.findPaginated(page, size);
+        return productRepository.findAll(PageRequest.of(page, size)).getContent();
     }
 }
