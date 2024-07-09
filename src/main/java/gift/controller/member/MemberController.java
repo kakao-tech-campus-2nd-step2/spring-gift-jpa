@@ -22,15 +22,15 @@ public class MemberController {
     }
 
     @PostMapping("/members/register")
-    public ResponseEntity<TokenResponse> registerMember(@Valid @RequestBody MemberRequest memberInfo) {
-        Long registeredMemberId = memberService.registerMember(memberInfo.getEmail(), memberInfo.getPassword());
+    public ResponseEntity<TokenResponse> registerMember(@Valid @RequestBody MemberRequest request) {
+        Long registeredMemberId = memberService.registerMember(request.getEmail(), request.getPassword());
         TokenResponse token = tokenService.generateToken(registeredMemberId);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/members/login")
-    public ResponseEntity<TokenResponse> loginMember(@Valid @RequestBody MemberRequest loginInfo) {
-        Long registeredMemberId = memberService.loginMember(loginInfo.getEmail(), loginInfo.getPassword());
+    public ResponseEntity<TokenResponse> loginMember(@Valid @RequestBody MemberRequest request) {
+        Long registeredMemberId = memberService.login(request.getEmail(), request.getPassword());
         TokenResponse token = tokenService.generateToken(registeredMemberId);
         return ResponseEntity.ok(token);
     }

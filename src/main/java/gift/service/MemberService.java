@@ -16,21 +16,18 @@ public class MemberService {
     }
 
     public Long registerMember(String email, String password) {
-        if (memberRepository.findByEmail(email).isPresent()) {
-            throw new EmailDuplicateException("Email already in use");
-        }
+        memberRepository.findByEmail(email)
+                .ifPresent((duplicateMember) -> {
+                    throw new EmailDuplicateException("Email already in use");
+                });
         return memberRepository.save(new Member(email, password)).getId();
     }
 
 
-    public Long loginMember(String email, String password) {
+    public Long login(String email, String password) {
         Member registeredMember = memberRepository.findMemberByEmailAndPassword(email, password)
-                .orElseThrow(() -> new MemberNotFoundException("이메일 혹은 비밀번호가 틀렸습니다."));
+                .orElseThrow(() -> new MemberNotFoundException("Email or Password wrong"));
         return registeredMember.getId();
-    }
-
-    public boolean hasDuplicatedEmail(String email) {
-        return memberRepository.findByEmail(email).isPresent();
     }
 
 }
