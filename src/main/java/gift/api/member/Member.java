@@ -35,6 +35,10 @@ public class Member {
         return id;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     @Override
     public String toString() {
         return "Member{" +
