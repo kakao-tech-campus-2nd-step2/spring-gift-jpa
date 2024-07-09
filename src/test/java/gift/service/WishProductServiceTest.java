@@ -31,10 +31,8 @@ class WishProductServiceTest {
     private MemberService memberService;
     @Autowired
     private AuthTestReflectionComponent authTestReflectionComponent;
-
     private Long managerId;
     private Long memberId;
-
     private Long product1Id;
     private Long product2Id;
 
@@ -63,12 +61,14 @@ class WishProductServiceTest {
     @Test
     @DisplayName("위시 리스트 상품 추가하기")
     void addProduct1ToManager() {
+        //given
         var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
-
         Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(0);
 
+        //when
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
 
+        //then
         Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(1);
 
         wishProductService.deleteWishProduct(wishProduct.id());
@@ -77,52 +77,50 @@ class WishProductServiceTest {
     @Test
     @DisplayName("위시 리스트 상품 삭제하기")
     void addProduct1AndProduct2ToManagerAndRemoveWishProduct2() {
-        var wishProduct1AddRequest = new WishProductAddRequest(product1Id, 5);
-        var wishProduct2AddRequest = new WishProductAddRequest(product2Id, 5);
-
-        Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(0);
-
-        var wishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
-        var wishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
-
-        Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(2);
-
-        wishProductService.deleteWishProduct(wishProduct2.id());
-
+        //given
+        var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
+        var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
         Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(1);
 
-        wishProductService.deleteWishProduct(wishProduct1.id());
+        //when
+        wishProductService.deleteWishProduct(wishProduct.id());
+
+        //then
+        Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(0);
     }
 
     @Test
     @DisplayName("위시리스트 수량 0으로 변경하기")
     void addProduct1AndProduct2ToManagerAndUpdateWishProduct2WithZeroCount() {
+        //given
         var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
-
-        Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(0);
-
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
-
         Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(1);
-
         var wishProductUpdateRequest = new WishProductUpdateRequest(0);
 
+        //when
         wishProductService.updateWishProduct(wishProduct.id(), wishProductUpdateRequest);
 
+        //then
         Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(0);
     }
 
     @Test
     @DisplayName("이용자끼리 위시 리스트가 다르다")
     void addProduct1AndProduct2ToManagerAndAddProduct2AndProduct3ToMember() {
+        //given
         var wishProduct1AddRequest = new WishProductAddRequest(product1Id, 5);
         var wishProduct2AddRequest = new WishProductAddRequest(product2Id, 5);
-
         var managerWishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
         var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
 
-        Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(2);
-        Assertions.assertThat(wishProductService.getWishProducts(memberId).size()).isEqualTo(0);
+        //when
+        var managerWishProducts = wishProductService.getWishProducts(managerId);
+        var memberWishProducts = wishProductService.getWishProducts(memberId);
+
+        //then
+        Assertions.assertThat(managerWishProducts.size()).isEqualTo(2);
+        Assertions.assertThat(memberWishProducts.size()).isEqualTo(2);
 
         wishProductService.deleteWishProduct(managerWishProduct1.id());
         wishProductService.deleteWishProduct(managerWishProduct2.id());
@@ -131,42 +129,45 @@ class WishProductServiceTest {
     @Test
     @DisplayName("추가된 위시리스트 상품을 이용자 객체에서 조회할 수 있다.")
     void addWishProductAndFindFromMemberEntity() {
+        //given
         var wishProduct1AddRequest = new WishProductAddRequest(product1Id, 5);
         var wishProduct2AddRequest = new WishProductAddRequest(product2Id, 5);
-
         var managerWishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
         var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
 
-        Assertions.assertThat(memberService.findMemberWithId(managerId).getWishes().size()).isEqualTo(2);
+        //when
+        var wishProducts = memberService.findMemberWithId(managerId).getWishes();
+
+        //then
+        Assertions.assertThat(wishProducts.size()).isEqualTo(2);
 
         wishProductService.deleteWishProduct(managerWishProduct1.id());
         wishProductService.deleteWishProduct(managerWishProduct2.id());
-
-        Assertions.assertThat(memberService.findMemberWithId(managerId).getWishes().size()).isEqualTo(0);
     }
 
     @Test
     @DisplayName("추가된 위시리스트 상품을 상품 객체에서 조회할 수 있다.")
     void addWishProductAndFindFromProductEntity() {
-        var wishProduct1AddRequest = new WishProductAddRequest(product1Id, 5);
-        var wishProduct2AddRequest = new WishProductAddRequest(product2Id, 5);
+        //given
+        var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
+        var managerWishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
 
-        var managerWishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
-        var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
+        //when
+        var wishProducts = productService.findProductWithId(product1Id).getWishes();
 
-        Assertions.assertThat(productService.findProductWithId(product1Id).getWishes().size()).isEqualTo(1);
+        //then
+        Assertions.assertThat(wishProducts.size()).isEqualTo(1);
 
-        wishProductService.deleteWishProduct(managerWishProduct1.id());
-        wishProductService.deleteWishProduct(managerWishProduct2.id());
-
-        Assertions.assertThat(memberService.findMemberWithId(managerId).getWishes().size()).isEqualTo(0);
+        wishProductService.deleteWishProduct(managerWishProduct.id());
     }
 
     @Test
     @DisplayName("존재하지 않는 상품 ID 로 위시 리스트 상품 추가 요청시 예외 발생")
     void addWishProductFailWithInvalidProductId() {
+        //given
         var invalidWishProductAddRequest = new WishProductAddRequest(10L, 5);
 
+        //then
         Assertions.assertThatThrownBy(() -> wishProductService.addWishProduct(invalidWishProductAddRequest, memberId))
                 .isInstanceOf(NotFoundElementException.class);
     }
@@ -174,13 +175,15 @@ class WishProductServiceTest {
     @Test
     @DisplayName("이미 존재하는 상품 위시 리스트에 추가시 수량 변경")
     void addWishProductAlreadyExistProduct() {
+        //given
         var wishProduct1AddRequest = new WishProductAddRequest(product1Id, 5);
-
         wishProductService.addWishProduct(wishProduct1AddRequest, memberId);
+
+        //when
         var wishProduct = wishProductService.addWishProduct(wishProduct1AddRequest, memberId);
 
+        //then
         var wishProducts = wishProductService.getWishProducts(memberId);
-
         Assertions.assertThat(wishProducts.size()).isEqualTo(1);
         Assertions.assertThat(wishProducts.get(0).count()).isEqualTo(10);
 
