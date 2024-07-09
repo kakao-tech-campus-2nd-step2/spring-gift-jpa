@@ -8,7 +8,7 @@ public class WishEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "`id`")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "user_id", nullable = false)
@@ -22,6 +22,12 @@ public class WishEntity {
 
     public WishEntity(Long id, Long userId, Long productId) {
         this.id = id;
+        this.userId = userId;
+        this.productId = productId;
+    }
+
+    public WishEntity(Long userId, Long productId) {
+        this.id = 0L;
         this.userId = userId;
         this.productId = productId;
     }
