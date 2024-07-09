@@ -4,20 +4,24 @@ import gift.domain.Product.CreateProduct;
 import gift.domain.Product.ProductSimple;
 import gift.domain.Product.UpdateProduct;
 import gift.entity.ProductEntity;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductMapper {
 
-    public List<ProductSimple> toSimpleList(List<ProductEntity> li) {
-        List<ProductSimple> list = new ArrayList<>();
+    public Page<ProductSimple> toSimpleList(Page<ProductEntity> all) {
+        List<ProductSimple> simpleList = all.stream()
+            .map(entity -> new ProductSimple(
+                entity.getId(),
+                entity.getName()
+            ))
+            .collect(Collectors.toList());
 
-        for (ProductEntity p : li) {
-            list.add(new ProductSimple(p.getId(), p.getName()));
-        }
-        return list;
+        return new PageImpl<>(simpleList, all.getPageable(), all.getTotalElements());
     }
 
     public ProductEntity toEntity(CreateProduct create) {
