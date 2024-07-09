@@ -6,11 +6,13 @@ import gift.member.application.command.MemberLoginCommand;
 import gift.member.application.command.MemberUpdateCommand;
 import gift.member.domain.Member;
 import gift.member.domain.MemberRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,80 +35,81 @@ public class MemberServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        member = new Member("test@example.com", "password");
+        member = new Member(1L, "test@example.com", "password");
     }
 
     @Test
     void 회원가입_테스트() {
         // Given
         MemberJoinCommand command = new MemberJoinCommand("test@example.com", "password");
-        when(memberRepository.join(any())).thenReturn(member.getEmail());
+        when(memberRepository.save(any())).thenReturn(member);
 
         // When
-        String email = memberService.join(command);
+        Long memberId = memberService.join(command);
 
         // Then
-        assertEquals(member.getEmail(), email);
-        verify(memberRepository, times(1)).join(any());
+        assertEquals(member.getId(), memberId);
+        verify(memberRepository, times(1)).save(any());
     }
 
     @Test
     void 로그인_테스트() {
         // Given
         MemberLoginCommand command = new MemberLoginCommand("test@example.com", "password");
-        when(memberRepository.login(any())).thenReturn(member.getEmail());
+        when(memberRepository.findByEmailAndPassword(any(), any())).thenReturn(Optional.of(member));
 
         // When
-        String email = memberService.login(command);
+        Long memberId = memberService.login(command);
 
         // Then
-        assertEquals(member.getEmail(), email);
-        verify(memberRepository, times(1)).login(any());
+        assertEquals(member.getId(), memberId);
+        verify(memberRepository, times(1)).findByEmailAndPassword(any(), any());
     }
 
     @Test
     void 회원_업데이트_테스트() {
         // Given
-        MemberUpdateCommand command = new MemberUpdateCommand("test@example.com", "newPassword");
-        when(memberRepository.findByEmail(command.email())).thenReturn(Optional.of(member));
+        MemberUpdateCommand command = new MemberUpdateCommand(1L, "new@example.com", "newPassword");
+        when(memberRepository.findById(command.id())).thenReturn(Optional.of(member));
 
         // When
         assertDoesNotThrow(() -> memberService.update(command));
 
         // Then
-        verify(memberRepository, times(1)).update(any());
+        Assertions.assertThat(member.getEmail()).isEqualTo("new@example.com");
+        Assertions.assertThat(member.getPassword()).isEqualTo("newPassword");
     }
 
     @Test
     void 회원_업데이트_테스트_회원_없음() {
         // Given
-        MemberUpdateCommand command = new MemberUpdateCommand("test@example.com", "newPassword");
-        when(memberRepository.findByEmail(command.email())).thenReturn(Optional.empty());
+        MemberUpdateCommand command = new MemberUpdateCommand(1L, "test@example.com", "newPassword");
+        when(memberRepository.findById(command.id())).thenReturn(Optional.empty());
 
         // When & Then
         assertThrows(NotFoundException.class, () -> memberService.update(command));
     }
 
     @Test
-    void 이메일로_회원_찾기_테스트() {
+    void ID로_회원_찾기_테스트() {
         // Given
-        when(memberRepository.findByEmail(member.getEmail())).thenReturn(Optional.of(member));
+        when(memberRepository.findById(member.getId())).thenReturn(Optional.of(member));
 
         // When
-        MemberResponse response = memberService.findByEmail(member.getEmail());
+        MemberResponse response = memberService.findById(member.getId());
 
         // Then
-        assertEquals(member.getEmail(), response.email());
-        verify(memberRepository, times(1)).findByEmail(member.getEmail());
+        assertEquals(member.getId(), response.id());
+        verify(memberRepository, times(1)).findById(member.getId());
     }
 
     @Test
-    void 이메일로_회원_찾기_테스트_회원_없음() {
+    void ID로_회원_찾기_테스트_회원_없음() {
         // Given
-        when(memberRepository.findByEmail(member.getEmail())).thenReturn(Optional.empty());
+        when(memberRepository.findById(member.getId())).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(NotFoundException.class, () -> memberService.findByEmail(member.getEmail()));
+        assertThrows(NotFoundException.class, () -> memberService.findById(member.getId()));
     }
 
     @Test
@@ -128,12 +131,14 @@ public class MemberServiceTest {
     @Test
     void 회원_삭제_테스트() {
         // Given
-        doNothing().when(memberRepository).delete(member.getEmail());
+        when(memberRepository.findById(member.getId())).thenReturn(Optional.of(member));
+        doNothing().when(memberRepository).delete(member);
 
         // When
-        assertDoesNotThrow(() -> memberService.delete(member.getEmail()));
+        assertDoesNotThrow(() -> memberService.delete(member.getId()));
 
         // Then
-        verify(memberRepository, times(1)).delete(member.getEmail());
+        verify(memberRepository, times(1)).findById(member.getId());
+        verify(memberRepository, times(1)).delete(member);
     }
 }
