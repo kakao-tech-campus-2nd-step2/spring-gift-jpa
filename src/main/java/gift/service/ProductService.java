@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.exception.ProductException;
+import gift.exception.WishListException;
 import gift.model.Product;
 import gift.repository.ProductDao;
 import gift.repository.ProductRepository;
@@ -43,6 +44,9 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+        productRepository.findById(id)
+            .ifPresentOrElse(productRepository::delete
+                , () -> { throw new ProductException("상품이 존재하지 않습니다."); }
+            );
     }
 }
