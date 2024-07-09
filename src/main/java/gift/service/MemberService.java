@@ -1,24 +1,28 @@
 package gift.service;
 
 import gift.model.Member;
-import gift.repository.JdbcMemberRepository;
+import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
+
 @Service
 public class MemberService {
 
-  private final JdbcMemberRepository memberRepository;
+  private final MemberRepository memberRepository;
   private final JwtUtil jwtUtil;
 
-  public MemberService(JdbcMemberRepository memberRepository, JwtUtil jwtUtil) {
+  @Autowired
+  public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil) {
     this.memberRepository = memberRepository;
     this.jwtUtil = jwtUtil;
   }
 
   public String register(Member member) {
-    Long memberId = memberRepository.save(member);
-    return jwtUtil.generateToken(memberId, member.getEmail());
+    Member savedMember = memberRepository.save(member);
+    return jwtUtil.generateToken(savedMember.getId(), savedMember.getEmail());
   }
 
   public String login(String email, String password) {
@@ -27,6 +31,7 @@ public class MemberService {
             .map(member -> jwtUtil.generateToken(member.getId(), member.getEmail()))
             .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
   }
+
   public Optional<Member> findById(Long id) {
     return memberRepository.findById(id);
   }

@@ -25,17 +25,17 @@ public class ProductService {
   }
 
   public Product save(Product product) {
-    productRepository.save(product);
-    return product;
+    return productRepository.save(product);
   }
 
-  public boolean updateProduct(Long id, Product product) {
-    if (productRepository.findById(id).isPresent()) {
-      product.setId(id);
-      productRepository.update(product);
+  public boolean updateProduct(Long id, Product productDetails) {
+    return productRepository.findById(id).map(product -> {
+      product.setName(productDetails.getName());
+      product.setPrice(productDetails.getPrice());
+      product.setImageUrl(productDetails.getImageUrl());
+      productRepository.save(product);
       return true;
-    }
-    return false;
+    }).orElse(false);
   }
 
   public void deleteById(Long id) {

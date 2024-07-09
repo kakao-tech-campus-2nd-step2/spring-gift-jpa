@@ -2,17 +2,24 @@ package gift.model;
 
 import gift.exception.KakaoValidationException;
 import gift.exception.StringValidationException;
-
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
+@Entity
+@Table(name= "product")
 public class Product {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Size(max = 15, message = "상품 이름은 최대 15자까지 가능합니다.")
   @NotBlank
   private String name;
+  @Column(nullable = false)
   private int price;
+  @Column(name = "image_url", nullable = false)
   private String imageUrl;
 
   public Product() {
