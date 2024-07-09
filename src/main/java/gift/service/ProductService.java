@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.constants.Messages;
 import gift.domain.Product;
 import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
@@ -10,13 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-
-    private final String NOT_FOUND_PRODUCT_MESSAGE = "ID가 %d 인 상품이 존재하지 않습니다.";
 
     @Autowired
     public ProductService(ProductRepository productRepository){
@@ -33,6 +33,22 @@ public class ProductService {
     public ProductResponseDto findById(Long id){
          Product product = findProductByIdOrThrow(id);
          return ProductResponseDto.from(product);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductResponseDto findByName(String name){
+        Product product =  productRepository.findByName(name)
+                .orElseThrow(()->  new ProductNotFoundException(Messages.NOT_FOUND_PRODUCT_BY_NAME));
+        return ProductResponseDto.from(product);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponseDto> findByIds(List<Long> ids){
+        return productRepository.findByIds(ids)
+                .orElseThrow(()-> new ProductNotFoundException(Messages.NOT_FOUND_PRODUCT_BY_ID))
+                .stream()
+                .map(ProductResponseDto::from)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -60,6 +76,6 @@ public class ProductService {
 
     private Product findProductByIdOrThrow(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException(NOT_FOUND_PRODUCT_MESSAGE.formatted(id)));
+                .orElseThrow(() -> new ProductNotFoundException(Messages.NOT_FOUND_PRODUCT_BY_ID));
     }
 }
