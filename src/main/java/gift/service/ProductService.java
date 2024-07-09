@@ -57,4 +57,12 @@ public class ProductService {
         productRepository.deleteById(id);
         return true;
     }
+
+    public List<ProductResponseDto> getProductsByIds(List<Long> ids) {
+        List<Product> products = productRepository.findAllById(ids);
+        return products.stream()
+                .map(ProductMapper::toProductResponseDTO)
+                .collect(Collectors.toList());
+    }
+
 }

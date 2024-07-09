@@ -11,6 +11,7 @@ import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,13 +35,22 @@ public class WishService {
 
     public List<WishResponseDto> getWishesByUserId(Long userId) {
         List<Wish> wishes = wishRepository.findByUserId(userId);
+        List<Long> productIds = wishes.stream()
+                .map(Wish::getProductId)
+                .collect(Collectors.toList());
+
+        List<ProductResponseDto> products = productService.getProductsByIds(productIds);
+        Map<Long, ProductResponseDto> productMap = products.stream()
+                .collect(Collectors.toMap(ProductResponseDto::getId, product -> product));
+
         return wishes.stream()
                 .map(wish -> {
-                    ProductResponseDto product = productService.getProductById(wish.getProductId());
+                    ProductResponseDto product = productMap.get(wish.getProductId());
                     return WishMapper.toWishResponseDto(wish, product);
                 })
                 .collect(Collectors.toList());
     }
+
 
     public void deleteWish(Long wishId) {
         Wish wish = wishRepository.findById(wishId)
