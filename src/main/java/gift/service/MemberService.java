@@ -9,6 +9,7 @@ import gift.repository.MemberJpaRepository;
 import gift.validate.InvalidAuthRequestException;
 import gift.validate.NotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -21,6 +22,7 @@ public class MemberService {
         this.jwtProvider = jwtProvider;
     }
 
+    @Transactional
     public void register(Register request) {
         if (memberJpaRepository.existsByEmail(request.email())) {
             throw new InvalidAuthRequestException("User already exists.");
@@ -28,6 +30,7 @@ public class MemberService {
         memberJpaRepository.save(request.toEntity());
     }
 
+    @Transactional
     public String login(Login request) {
         var member = memberJpaRepository.findByEmail(request.email())
             .orElseThrow(() -> new NotFoundException("User not found."));
@@ -39,6 +42,7 @@ public class MemberService {
 
     }
 
+    @Transactional(readOnly = true)
     public InfoResponse getUser(Long memberId) {
         var member = memberJpaRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException("User not found."));
