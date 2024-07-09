@@ -2,6 +2,7 @@ package gift.service;
 
 
 import gift.entity.Member;
+import gift.exception.DataNotFoundException;
 import gift.exception.DuplicateUserEmailException;
 import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
@@ -33,14 +34,14 @@ public class MemberService {
     public String authenticateUser(Member member) {
         Member loginMember = memberRepository.findByEmailAndPassword(member.getEmail(),
             member.getPassword());
+
+        if(loginMember==null){
+            throw new DataNotFoundException("존재하지 않는 회원이거나 비밀번호가 틀렸습니다.");
+        }
         return jwtUtil.generateToken(loginMember.getEmail());
 
     }
 
-    public Long getMemberId(String email){
-        Member member = memberRepository.findByEmail(email);
-        return member.getId();
-    }
 
 
 }
