@@ -27,11 +27,10 @@ public class Product {
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true; // 선물의 활성화 상태
 
-    public Product(String name, int price, String imageUrl, Boolean isActive) {
+    public Product(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.isActive = isActive;
     }
 
     public Product() {

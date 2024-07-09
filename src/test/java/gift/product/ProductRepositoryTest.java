@@ -27,7 +27,7 @@ public class ProductRepositoryTest {
     @Test
     public void testFindActiveProductById() {
         // 테스트 데이터 세팅
-        Product newProduct = new Product("Test", 1000, "url", true);
+        Product newProduct = new Product("Test", 1000, "url");
         productRepository.save(newProduct);
 
         // 제품 검색
@@ -46,7 +46,7 @@ public class ProductRepositoryTest {
     @Test
     public void testSaveAndDelete() {
         // 제품 저장 후 삭제 테스트
-        Product product = new Product("delete", 1000, "url", true);
+        Product product = new Product("delete", 1000, "url");
         Product savedProduct = productRepository.save(product);
 
         productRepository.delete(savedProduct);
