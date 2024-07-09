@@ -6,7 +6,6 @@ import gift.user.domain.User;
 import gift.user.exception.UserAlreadyExistsException;
 import gift.user.exception.UserNotFoundException;
 import gift.user.persistence.UserRepository;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,10 +21,10 @@ public class UserService {
     public UserSignInResponse signUp(UserSignUpRequest userSignupRequest) {
         User user = userSignupRequest.toModel();
 
-        Optional<User> existingUser = userRepository.findByUsername(user.getUsername());
-        if (existingUser.isPresent()) {
-            throw new UserAlreadyExistsException();
-        }
+        userRepository.findByUsername(user.getUsername())
+                .ifPresent(u -> {
+                    throw new UserAlreadyExistsException();
+                });
 
         userRepository.save(user);
         User savedUser = userRepository.findByUsername(user.getUsername())
