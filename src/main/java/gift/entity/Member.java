@@ -1,6 +1,6 @@
-package gift.entityForJpa;
+package gift.entity;
 
-import gift.dtoForJpa.MemberDTO;
+import gift.dto.MemberDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -105,23 +105,23 @@ public class Member {
     }
 
 
-    public Wish addWish(Item item) {
+    public Wish addWish(Product product) {
         for (Wish wish : wishList) {
-            if (wish.getItem().equals(item)) {
+            if (wish.getItem().equals(product)) {
                 wish.incrementQuantity();
                 return wish;
             }
         }
-        wishList.add(new Wish(this, item, 1));
+        wishList.add(new Wish(this, product, 1));
         return wishList.getLast();
     }
 
-    public boolean setWishQuantity(Item item, Integer value) {
+    public boolean setWishQuantity(Product product, Integer value) {
         if (value < 1) {
-            return removeWish(item);
+            return removeWish(product);
         }
         for (Wish wish : wishList) {
-            if (wish.getItem().equals(item)) {
+            if (wish.getItem().equals(product)) {
                 wish.setQuantity(value);
                 return true;
             }
@@ -129,9 +129,9 @@ public class Member {
         return false;
     }
 
-    public boolean removeWish(Item item) {
+    public boolean removeWish(Product product) {
         for (Wish wish : wishList) {
-            if (wish.getItem().equals(item)) {
+            if (wish.getItem().equals(product)) {
                 return wishList.remove(wish);
             }
         }

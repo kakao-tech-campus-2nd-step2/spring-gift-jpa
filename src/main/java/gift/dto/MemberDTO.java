@@ -1,6 +1,6 @@
-package gift.dtoForJpa;
+package gift.dto;
 
-import gift.entityForJpa.Wish;
+import gift.entity.Wish;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;

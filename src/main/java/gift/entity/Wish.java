@@ -1,4 +1,4 @@
-package gift.entityForJpa;
+package gift.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,27 +22,27 @@ public class Wish {
 
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
-    private Item item;
+    private Product product;
 
     @Column(nullable = false)
     private Integer quantity;
 
     public Wish() { }
 
-    public Wish(Member member, Item item, Integer quantity) {
+    public Wish(Member member, Product product, Integer quantity) {
         this.member = member;
-        this.item = item;
+        this.product = product;
         this.quantity = quantity;
     }
 
     public Long getId() { return id; }
 
-    public Item getItem() {
-        return item;
+    public Product getItem() {
+        return product;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
+    public void setItem(Product product) {
+        this.product = product;
     }
 
     public Member getMember() {
@@ -70,20 +70,20 @@ public class Wish {
         }
         Wish wish = (Wish) o;
         return Objects.equals(id, wish.id) && Objects.equals(member, wish.member)
-                && Objects.equals(item, wish.item) && Objects.equals(quantity,
+                && Objects.equals(product, wish.product) && Objects.equals(quantity,
                 wish.quantity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, member, item, quantity);
+        return Objects.hash(id, member, product, quantity);
     }
 
     @Override
     public String toString() {
         return "Wish{" +
                 "id=" + id +
-                ", item=" + item +
+                ", item=" + product +
                 ", quantity=" + quantity +
                 '}';
     }
