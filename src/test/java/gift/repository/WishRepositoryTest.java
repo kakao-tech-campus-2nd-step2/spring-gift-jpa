@@ -2,9 +2,9 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.entityForJpa.Item;
-import gift.entityForJpa.Member;
-import gift.entityForJpa.Wish;
+import gift.entity.Product;
+import gift.entity.Member;
+import gift.entity.Wish;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import org.junit.jupiter.api.AfterEach;
@@ -18,7 +18,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 class WishRepositoryTest {
 
     @Autowired
-    private ItemRepository itemRepository;
+    private ProductRepository productRepository;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -28,17 +28,17 @@ class WishRepositoryTest {
 
     private Member member;
 
-    private Item item;
+    private Product product;
 
     @BeforeEach
     void setUp() throws Exception {
-        itemRepository.deleteAll();
+        productRepository.deleteAll();
         memberRepository.deleteAll();
         wishRepository.deleteAll();
 
         member = memberRepository.save(new Member("12345@12345.com", "1", "홍길동", "default_user", new ArrayList<>()));
 
-        item = itemRepository.save(new Item("커피", 10000,
+        product = productRepository.save(new Product("커피", 10000,
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"));
 
     }
@@ -46,27 +46,27 @@ class WishRepositoryTest {
     @AfterEach
     void tearDown() throws Exception {
         wishRepository.deleteAll(); //wish부터 먼저 삭제하기
-        itemRepository.deleteAll();
+        productRepository.deleteAll();
         memberRepository.deleteAll();
     }
 
     @Test
     void save(){
-        Wish wish = member.addWish(item);
+        Wish wish = member.addWish(product);
         Wish actualWish = wishRepository.save(wish);
 
-        assertThat(actualWish.getItem()).isEqualTo(item);
+        assertThat(actualWish.getItem()).isEqualTo(product);
         assertThat(actualWish.getMember()).isEqualTo(member);
         assertThat(actualWish.getQuantity()).isEqualTo(1);
 
-        member.addWish(item);
+        member.addWish(product);
 
         assertThat(actualWish.getQuantity()).isEqualTo(2);
     }
 
     @Test
     void updateQuantity(){
-        Wish wish = member.addWish(item);
+        Wish wish = member.addWish(product);
         wish.setQuantity(3);
 
         Wish actualWish = wishRepository.save(wish); //Wish 영속화
@@ -80,7 +80,7 @@ class WishRepositoryTest {
 
     @Test
     void delete(){
-        Wish wish = member.addWish(item);
+        Wish wish = member.addWish(product);
         wishRepository.save(wish);
 
         assertThat(wishRepository.count()).isEqualTo(1);

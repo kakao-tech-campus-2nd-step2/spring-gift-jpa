@@ -1,13 +1,13 @@
 package gift.repository;
 
 
-import gift.entityForJpa.Item;
+import gift.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ItemRepository extends JpaRepository<Item, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Item findItemById(long id);
+    Product findItemById(long id);
 
 }

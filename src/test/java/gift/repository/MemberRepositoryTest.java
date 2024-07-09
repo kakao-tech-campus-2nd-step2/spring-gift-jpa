@@ -3,8 +3,7 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import gift.entityForJpa.Member;
-import gift.entityForJpa.Wish;
+import gift.entity.Member;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
