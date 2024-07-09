@@ -1,13 +1,11 @@
 package gift.service;
 
 import gift.dto.WishDto;
-import gift.entity.Product;
+import gift.entity.Wish;
 import gift.repository.WishRepository;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class WishService {
@@ -17,18 +15,29 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public ResponseEntity<Map<String, Object>> insert(WishDto.Request request) {
-        return ResponseEntity.ok()
-                .header("Authorization", "Basic" + request.getToken())
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(wishRepository.save(request.getProductId(), request.getToken()));
+    public void save(WishDto request) {
+
+        //1. 토큰 -> id 복호화
+        long id = translateIdFromtoken(request.getToken());
+
+        return wishRepository.save(request.getProductId(), id);
+
     }
 
-    public Map<WishDto, Product> getAll(String token) {
-        return wishRepository.getAll(token);
+    private long translateIdFromtoken(String token) {
+
     }
 
-    public ResponseEntity<Map<String, Object>> delete(Long id, String token) {
-        return wishRepository.delete(id, token);
+    public List<WishDto> getAll(String userId) {
+
+        List<Wish> wishes = wishRepository.getAll(userId);
+
+        List<WishDto> wishDtos = wishes.stream().map(WishDto::fromEntity).toList();
+        return wishDtos;
+    }
+
+    //delete 보통 크게응답안하면 void로 하기도함
+    public void delete(long id, String token) {
+        wishRepository.delete(id, token);
     }
 }

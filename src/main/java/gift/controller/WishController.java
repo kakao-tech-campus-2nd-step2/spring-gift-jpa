@@ -1,13 +1,11 @@
 package gift.controller;
 
 import gift.dto.WishDto;
-import gift.entity.Product;
 import gift.service.WishService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 @RequestMapping("/wish")
 @Controller
@@ -20,19 +18,22 @@ public class WishController {
 
     //insert
     @PostMapping()
-    public ResponseEntity<Map<String, Object>> insert(@RequestBody WishDto.Request request) {
-        return wishService.insert(request);
+    public void save(@RequestBody WishDto.Request request) {
+        wishService.save(new WishDto(
+                request.getProductId(),
+                request.getToken())
+        );
     }
 
     //getAll
     @GetMapping()
-    public Map<WishDto, Product> getAll(@RequestParam String token) {
+    public List<WishDto> getAll(@RequestParam String token) {
         return wishService.getAll(token);
     }
 
     //delete one by id
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> delete(@PathVariable("id") Long id, @RequestParam String token) {
-        return wishService.delete(id, token);
+    public void delete(@PathVariable("id") Long id, @RequestParam String token) {
+        wishService.delete(id, token);
     }
 }

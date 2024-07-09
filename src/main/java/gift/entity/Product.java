@@ -4,10 +4,16 @@ public class Product {
     private long id;
     private String name;
     private String url;
-    private int price;
+    private long price;
 
-    public Product(int id, String name, int price, String url) {
+    public Product(long id, String name, long price, String url) {
         this.id = id;
+        this.name = name;
+        this.price = price;
+        this.url = url;
+    }
+
+    public Product(String name, long price, String url) {
         this.name = name;
         this.price = price;
         this.url = url;
@@ -19,7 +25,7 @@ public class Product {
         return name;
     }
 
-    public int getPrice() {
+    public long getPrice() {
         return price;
     }
 

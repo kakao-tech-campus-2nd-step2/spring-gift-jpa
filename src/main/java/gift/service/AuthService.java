@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.dto.UserDto;
+import gift.entity.User;
 import gift.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,10 @@ public class AuthService {
     }
 
     public String save(UserDto.Request request) {
-        if (userRepository.save(request)) {
+
+        User newUser= new User(request.getEmail(), request.getPassword());
+
+        if (userRepository.save(newUser)) {
             return generateToken(request.getEmail(), request.getPassword());
         }
         return "";

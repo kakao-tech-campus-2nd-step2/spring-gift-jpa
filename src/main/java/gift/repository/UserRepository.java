@@ -1,6 +1,5 @@
 package gift.repository;
 
-import gift.dto.UserDto;
 import gift.entity.User;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,21 +22,21 @@ public class UserRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public boolean save(UserDto.Request request) {
+    public User save(User user) {
         try {
             Map<String, Object> parameters = Map.of(
-                    "email", request.getEmail(),
-                    "password", request.getPassword()
+                    "email", user.getEmail(),
+                    "password", user.getPassword()
             );
             Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
             long id = newId.longValue();
-            return true;
+            return new User(id, user.getEmail(),user.getPassword());
         } catch (DataAccessException e) {
-            return false;
+            return null;
         }
     }
 
-    public List<User> getAll() {
+    public List<User> findAll() {
         var sql = "select * from users";
         return jdbcTemplate.query(
                 sql,

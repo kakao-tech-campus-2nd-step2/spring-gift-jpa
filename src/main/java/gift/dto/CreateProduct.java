@@ -4,53 +4,49 @@ public class CreateProduct {
 
     public static class Request {
 
-        private Long id;
+        private long id;
         private String name;
-        private int price;
+        private long price;
         private String imageUrl;
 
-        public Request(Long id, String name, int price, String imageUrl) {
+        public Request(long id, String name, long price, String imageUrl) {
             this.id = id;
             this.name = name;
             this.price = price;
             this.imageUrl = imageUrl;
-        }
-
-        public Long getId() {
-            return id;
         }
 
         public String getName() {
             return name;
         }
 
-        public int getPrice() {
+        public long getPrice() {
             return price;
         }
 
-        public String getImageUrl() {
+        public String getUrl() {
             return imageUrl;
         }
     }
 
     public static class Response {
-        private Long id;
+        private long id;
         private String name;
-        private int price;
-        private String imageUrl;
+        private long price;
+        private String url;
 
-        public Response(Long id, String name, int price, String imageUrl) {
+        public Response(long id, String name, long price, String url) {
             this.id = id;
             this.name = name;
             this.price = price;
-            this.imageUrl = imageUrl;
+            this.url = url;
         }
 
-        public Long getId() {
+        public long getId() {
             return id;
         }
 
-        public void setId(Long id) {
+        public void setId(long id) {
             this.id = id;
         }
 
@@ -62,20 +58,20 @@ public class CreateProduct {
             this.name = name;
         }
 
-        public int getPrice() {
+        public long getPrice() {
             return price;
         }
 
-        public void setPrice(int price) {
+        public void setPrice(long price) {
             this.price = price;
         }
 
-        public String getImageUrl() {
-            return imageUrl;
+        public String getUrl() {
+            return url;
         }
 
-        public void setImageUrl(String imageUrl) {
-            this.imageUrl = imageUrl;
+        public void setUrl(String url) {
+            this.url = url;
         }
 
     }

@@ -16,6 +16,6 @@ public class UserListService {
     }
 
     public List<UserDto> getAll() {
-        return userRepository.getAll().stream().map(UserDto::fromEntity).toList();
+        return userRepository.findAll().stream().map(UserDto::fromEntity).toList();
     }
 }

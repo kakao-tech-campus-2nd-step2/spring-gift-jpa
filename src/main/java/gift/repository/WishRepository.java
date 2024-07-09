@@ -1,18 +1,15 @@
 package gift.repository;
 
 import gift.dto.WishDto;
-import gift.entity.Product;
 import gift.entity.Wish;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.AbstractMap;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 
 @Repository
 public class WishRepository {
@@ -20,61 +17,65 @@ public class WishRepository {
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     public WishRepository(JdbcTemplate jdbcTemplate, DataSource dataSource) {
+
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource).withTableName("wishes").usingGeneratedKeyColumns("id");
+
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("wishes")
+                .usingGeneratedKeyColumns("id");
     }
 
-    public Map<String, Object> save(Long productId, String token) {
+    public Wish save(long productId, long userId) {
 
-        Map<String, Object> parameters = Map.of("product_id", productId, "token", token);
+        Map<String, Object> parameters = Map.of("product_id", productId, "user_id", userId);
 
         Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
         long id = newId.longValue();
 
-        parameters.put("id", id);
-
-        return parameters;
-
+        return new Wish(id, productId, userId);
     }
 
-    public Map<Wish, Product> getAll(String token) {
+    //List<Wish>로 반환
+    public List<Wish> getAll(String userId) {
         var sql = """
-                select w.id, p.id, w.token,p.name,p.price,p.url
-                from (wishes as w 
-                join products as p
-                where w.productId=p.id) as wish_product
-                where w.token =? 
+                select * from wishes
+                where id =? 
                 """;
         return jdbcTemplate.query(
-                        sql,
-                        (resultSet, rowNum) -> {
-                            WishDto wishDto = new WishDto(resultSet.getLong("w.id"), resultSet.getLong("p.id"), resultSet.getString("w.token"));
-                            Product product = new Product(resultSet.getInt("p.id"), resultSet.getString("p.name"), resultSet.getInt("p.price"), resultSet.getString("p.url"));
-                            return new AbstractMap.SimpleEntry<>(wishDto, product);
-                        },
-                        token).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
+                sql,
+                (resultSet, rowNum)
+                        -> new Wish(
+                        resultSet.getLong("id"),
+                        resultSet.getLong("product_id"),
+                        resultSet.getLong("user_id")
+                )
+        ).stream().toList();
     }
 
-    public ResponseEntity<Map<String, Object>> delete(Long id, String token) {
+    public void delete(long id, String token) {
 
-        WishDto wishDto = findOneById(id);
+        Wish wish = findOneById(id);
 
-        if (!(token.equals(wishDto.getToken()))) {
+        if (!(token.equals(wish.getToken()))) {
             Map<String, Object> parameters = Map.of("메세지", "삭제할 권한이 없습니다.");
-            return ResponseEntity.badRequest().contentType(MediaType.APPLICATION_JSON).body(parameters);
         }
 
         var sql = "delete from wish where id = ?";
 
-        Map<String, Object> parameters = Map.of("wish", wishDto);
+        Map<String, Object> parameters = Map.of("wish", wish);
 
         jdbcTemplate.update(sql, id);
-        return ResponseEntity.ok().header("Authorization", "Basic" + wishDto.getToken()).contentType(MediaType.APPLICATION_JSON).body(parameters);
+
     }
 
-    public WishDto findOneById(Long id) {
+    public Wish findOneById(long id) {
         var sql = "select id,productId,token from wish where id= ?";
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new WishDto(id, resultSet.getLong("productId"), resultSet.getString("token")), id);
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> new Wish(
+                        id,
+                        resultSet.getLong("product_id"),
+                        resultSet.getLong("user_id")),
+                id);
     }
 }

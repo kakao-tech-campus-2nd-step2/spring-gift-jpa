@@ -1,6 +1,5 @@
 package gift.repository;
 
-import gift.dto.CreateProduct;
 import gift.dto.EditProduct;
 import gift.entity.Product;
 import org.springframework.dao.DataAccessException;
@@ -24,14 +23,15 @@ public class ProductRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public long insert(CreateProduct.Request request) {
+    public Product save(Product product) {
         Map<String, Object> parameters = Map.of(
-                "name", request.getName(),
-                "url", request.getImageUrl(),
-                "price", request.getPrice()
+                "name", product.getName(),
+                "url", product.getUrl(),
+                "price", product.getPrice()
         );
         Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return newId.longValue();
+        Long id = newId.longValue();
+        return new Product(id, product.getName(), product.getPrice(), product.getUrl());
     }
 
     public List<Product> findAll() {
@@ -39,7 +39,7 @@ public class ProductRepository {
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> new Product(
-                        resultSet.getInt("id"),
+                        resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getInt("price"),
                         resultSet.getString("url")
@@ -47,7 +47,7 @@ public class ProductRepository {
         );
     }
 
-    public Product findOneById(int id) {
+    public Product findOneById(Long id) {
         var sql = "select name,price,url from products where id=?";
         return jdbcTemplate.queryForObject(
                 sql,
@@ -61,23 +61,23 @@ public class ProductRepository {
         );
     }
 
-    public boolean update(int id, EditProduct.Request request) {
+    public Product update(Long id, Product newProduct) {
         try {
             var sql = "update products set name=?, price=?, url=? where id=?";
-            jdbcTemplate.update(sql, request.getName(), request.getPrice(), request.getImageUrl(), id);
-            return true;
+            jdbcTemplate.update(sql, newProduct.getName(), newProduct.getPrice(), newProduct.getUrl(), id);
+            return new Product(id, newProduct.getName(), newProduct.getPrice(), newProduct.getUrl());
         } catch (DataAccessException e) {
-            return false;
+            return null;
         }
     }
 
-    public boolean delete(int id) {
+    public Long delete(Long id) {
         try {
             var sql = "delete from products where id= ?";
             jdbcTemplate.update(sql, id);
-            return true;
+            return id;
         } catch (DataAccessException e) {
-            return false;
+            return null;
         }
     }
 }

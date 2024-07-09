@@ -4,19 +4,25 @@ public class EditProduct {
 
     public static class Request {
 
-        private int id;
+        private Long id;
         private String name;
-        private int price;
-        private String imageUrl;
+        private Long price;
+        private String url;
 
-        public Request(int id, String name, int price, String imageUrl) {
+        public Request(Long id, String name, Long price, String url) {
             this.id = id;
             this.name = name;
             this.price = price;
-            this.imageUrl = imageUrl;
+            this.url = url;
         }
 
-        public int getId() { return id; }
+        public Request( String name, Long price, String url) {
+            this.name = name;
+            this.price = price;
+            this.url = url;
+        }
+
+        public Long getId() { return id; }
 
         public String getName() {
             return name;
@@ -26,20 +32,20 @@ public class EditProduct {
             this.name = name;
         }
 
-        public int getPrice() {
+        public Long getPrice() {
             return price;
         }
 
-        public void setPrice(int price) {
+        public void setPrice(Long price) {
             this.price = price;
         }
 
-        public String getImageUrl() {
-            return imageUrl;
+        public String getUrl() {
+            return url;
         }
 
-        public void setImageUrl(String imageUrl) {
-            this.imageUrl = imageUrl;
+        public void setUrl(String url) {
+            this.url = url;
         }
     }
 }

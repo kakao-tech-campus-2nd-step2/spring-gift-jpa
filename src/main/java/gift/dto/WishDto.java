@@ -3,21 +3,26 @@ package gift.dto;
 import gift.entity.Wish;
 
 public class WishDto {
-    private Long id;
-    private Long productId;
+    private long id;
+    private long productId;
     private String token;
 
-    public WishDto(Long id, Long productId, String token) {
+    public WishDto(long id, long productId, String token) {
         this.id = id;
         this.productId = productId;
         this.token = token;
     }
 
-    public Long getId() {
+    public WishDto(long productId, String token) {
+        this.productId = productId;
+        this.token = token;
+    }
+
+    public long getId() {
         return id;
     }
 
-    public Long getProductId() {
+    public long getProductId() {
         return productId;
     }
 
@@ -25,26 +30,26 @@ public class WishDto {
         return token;
     }
 
-    public WishDto fromEntity(Wish wish) {
+    public static WishDto fromEntity(Wish wish) {
         return new WishDto(wish.getId(), wish.getProductId(), wish.getToken());
     }
 
     public static class Request {
-        private Long id;
-        private Long productId;
+        private long id;
+        private long productId;
         private String token;
 
-        public Request(Long id, Long productId, String token) {
+        public Request(long id, long productId, String token) {
             this.id = id;
             this.productId = productId;
             this.token = token;
         }
 
-        public Long getId() {
+        public long getId() {
             return id;
         }
 
-        public Long getProductId() {
+        public long getProductId() {
             return productId;
         }
 
