@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.dao.MemberDAO;
 import gift.domain.Member;
+import gift.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,29 +10,29 @@ import java.util.Objects;
 @Service
 public class MemberService {
 
-    private final MemberDAO memberDAO;
+    private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
     @Autowired
-    public MemberService(MemberDAO memberDAO, JwtService jwtService) {
-        this.memberDAO = memberDAO;
+    public MemberService(MemberRepository memberRepository, JwtService jwtService) {
+        this.memberRepository = memberRepository;
         this.jwtService = jwtService;
     }
 
 
     public Member register(Member member) throws Exception {
-        Member getMember = memberDAO.findByEmail(member.getEmail());
+        Member getMember = memberRepository.findByEmail(member.getEmail());
 
         if (getMember != null) {
             throw new Exception("해당 email의 계정이 이미 존재합니다.");
         }
 
-        return memberDAO.save(member);
+        return memberRepository.save(member);
 
     }
 
     public String login(Member member) throws Exception {
-        Member getMember = memberDAO.findByEmail(member.getEmail());
+        Member getMember = memberRepository.findByEmail(member.getEmail());
 
         if (getMember == null || !Objects.equals(getMember.getPassword(), member.getPassword())) {
             throw new Exception("이메일 또는 비밀번호가 일치하지 않습니다.");
@@ -42,11 +42,11 @@ public class MemberService {
     }
 
     public Member findById(Long id) {
-        return memberDAO.findById(id);
+        return memberRepository.findById(id).orElse(null);
     }
 
     public Member findByEmail(String email) {
-        return memberDAO.findByEmail(email);
+        return memberRepository.findByEmail(email);
     }
 
 }

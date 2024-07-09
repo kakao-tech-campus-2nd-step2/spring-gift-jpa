@@ -1,8 +1,7 @@
 package gift.service;
 
-import gift.dao.ProductDAO;
 import gift.domain.Product;
-import org.springframework.beans.factory.annotation.Autowired;
+import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,29 +9,30 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private final ProductDAO productDAO;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDAO productDAO) {
-        this.productDAO = productDAO;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public List<Product> getAllProducts() {
-        return productDAO.findAll();
+        return productRepository.findAll();
     }
 
     public Product getProductById(Long id) {
-        return productDAO.findById(id);
+        return productRepository.findById(id).orElse(null);
     }
 
     public void addProduct(Product product) {
-        productDAO.save(product);
+        productRepository.save(product);
     }
 
     public void updateProduct(Long id, Product product) {
-        productDAO.update(id, product);
+        product.setId(id);
+        productRepository.save(product);
     }
 
     public void deleteProduct(Long id) {
-        productDAO.delete(id);
+        productRepository.deleteById(id);
     }
 }
