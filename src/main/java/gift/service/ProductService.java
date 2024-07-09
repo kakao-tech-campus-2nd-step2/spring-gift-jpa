@@ -45,7 +45,7 @@ public class ProductService {
     }
 
     public void checkValidId(Long id) {
-        if (repository.isNotExistProductId(id)){
+        if (repository.isNotValidProductId(id)){
             throw new IllegalArgumentException("유효하지 않은 상품 정보입니다.");
         }
     }

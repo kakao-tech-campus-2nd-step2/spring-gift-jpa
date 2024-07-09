@@ -41,13 +41,13 @@ public class WishService {
     }
 
     private void checkProductValidation(Long productId) {
-        if (productRepository.isNotExistProductId(productId)) {
+        if (productRepository.isNotValidProductId(productId)) {
             throw new IllegalArgumentException("유효하지 않은 상품 정보입니다.");
         }
     }
 
     private void checkMemberValidation(Long id) {
-        if (memberRepository.isNotExistMemberById(id)) {
+        if (memberRepository.isNotValidMemberById(id)) {
             throw new IllegalArgumentException("유효하지 않은 회원 정보입니다.");
         }
     }

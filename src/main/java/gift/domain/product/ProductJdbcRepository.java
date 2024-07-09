@@ -62,7 +62,7 @@ public class ProductJdbcRepository implements ProductRepository {
     }
 
     @Override
-    public boolean isNotExistProductId(Long id) {
+    public boolean isNotValidProductId(Long id) {
         String sql = "SELECT * FROM product WHERE id=?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> 0, id).isEmpty();
     }

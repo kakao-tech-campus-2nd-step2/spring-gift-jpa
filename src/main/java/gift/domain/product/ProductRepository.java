@@ -10,5 +10,5 @@ public interface ProductRepository {
     Product findById(Long id);
     void deleteById(Long id);
     void update(Long id, ProductRequestDto dto);
-    boolean isNotExistProductId(Long id);
+    boolean isNotValidProductId(Long id);
 }
