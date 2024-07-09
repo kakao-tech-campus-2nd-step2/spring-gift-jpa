@@ -4,15 +4,12 @@ import gift.dto.ProductRequest;
 import gift.dto.RegisterRequest;
 import gift.dto.WishProductAddRequest;
 import gift.dto.WishProductUpdateRequest;
-import gift.exception.ForeignKeyConstraintViolationException;
 import gift.exception.NotFoundElementException;
-import gift.model.Member;
 import gift.model.MemberRole;
 import gift.reflection.AuthTestReflectionComponent;
 import gift.service.auth.AuthService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,7 +52,7 @@ class WishProductServiceTest {
     }
 
     @AfterEach
-    @DisplayName("이미 있는 데이터 지워 beforeEach 에서 예외가 발생하지 않도록 설정")
+    @DisplayName("이미 있는 데이터를 지워서 예외가 발생하지 않도록 설정")
     void deleteBaseData() {
         memberService.deleteMember(managerId);
         memberService.deleteMember(memberId);
@@ -141,6 +138,23 @@ class WishProductServiceTest {
         var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
 
         Assertions.assertThat(memberService.findMemberWithId(managerId).getWishes().size()).isEqualTo(2);
+
+        wishProductService.deleteWishProduct(managerWishProduct1.id());
+        wishProductService.deleteWishProduct(managerWishProduct2.id());
+
+        Assertions.assertThat(memberService.findMemberWithId(managerId).getWishes().size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("추가된 위시리스트 상품을 상품 객체에서 조회할 수 있다.")
+    void addWishProductAndFindFromProductEntity() {
+        var wishProduct1AddRequest = new WishProductAddRequest(product1Id, 5);
+        var wishProduct2AddRequest = new WishProductAddRequest(product2Id, 5);
+
+        var managerWishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
+        var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
+
+        Assertions.assertThat(productService.findProductWithId(product1Id).getWishes().size()).isEqualTo(1);
 
         wishProductService.deleteWishProduct(managerWishProduct1.id());
         wishProductService.deleteWishProduct(managerWishProduct2.id());
