@@ -19,7 +19,7 @@ public class Member {
     @Column(nullable = false)
     private final String password;
 
-    public Member() {
+    protected Member() {
         this(null, null, null);
     }
 

@@ -19,7 +19,7 @@ public class Wish {
     @Column(nullable = false)
     private final Long productId;
 
-    public Wish() {
+    protected Wish() {
         this(null, null, null);
     }
 

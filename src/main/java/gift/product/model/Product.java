@@ -22,7 +22,7 @@ public class Product {
     @Column(nullable = false)
     private final String imageUrl;
 
-    public Product() {
+    protected Product() {
         this(null, null, 0, null);
     }
 
