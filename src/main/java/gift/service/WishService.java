@@ -37,7 +37,7 @@ public class WishService {
 
     public wishDetail getWish(long id) {
         WishEntity wishEntity = wishRepository.findById(id)
-            .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "유저가 존재하지 않습니다."));
+            .orElseThrow(() -> new BaseHandler(HttpStatus.NOT_FOUND, "위시리스트에 존재하지 않습니다."));
 
         return wishMapper.toDetail(wishEntity);
     }
