@@ -32,7 +32,7 @@ public class ProductController {
 
         return products.stream()
             .map(product -> new ProductResponseDto(
-                product.getId(),
+                (product.getId()-1),
                 product.getName(),
                 product.getPrice(),
                 product.getUrl()
@@ -40,17 +40,18 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ProductResponseDto getProduct(@PathVariable Long id) {
-        Optional<Product> product = productService.getProductById(id);
+    public Optional<ProductResponseDto> getProduct(@PathVariable Long id) {
+        Optional<ProductResponseDto> product = productService.getProductById(id);
         if (product == null) {
             throw new InvalidProduct("유효하지 않은 상품입니다");
         }
-        return new ProductResponseDto(
-            product.get().getId(),
-            product.get().getName(),
-            product.get().getPrice(),
-            product.get().getUrl()
-        );
+        return product;
+//        return new ProductResponseDto(
+//            product.get().getId(),
+//            product.get().getName(),
+//            product.get().getPrice(),
+//            product.get().getUrl()
+//        );
 
     }
 
@@ -73,20 +74,21 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ProductResponseDto updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequestDto productRequestDto) {
-        Optional<Product> product = productService.getProductById(id);
+    public Optional<ProductResponseDto> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequestDto productRequestDto) {
+        Optional<ProductResponseDto> product = productService.getProductById(id);
         if (product.isPresent()) {
             productService.putProduct(id, productRequestDto);
         } else {
             throw new InvalidProduct("유효하지 않은 상품입니다");
         }
+        return product;
 
-        return new ProductResponseDto(
-            product.get().getId(),
-            product.get().getName(),
-            product.get().getPrice(),
-            product.get().getUrl()
-        );
+//        return new ProductResponseDto(
+//            product.get().getId(),
+//            product.get().getName(),
+//            product.get().getPrice(),
+//            product.get().getUrl()
+//        );
     }
 
     @DeleteMapping("/{id}")

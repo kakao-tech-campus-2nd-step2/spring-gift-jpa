@@ -1,22 +1,22 @@
 package gift.wishlist;
 
 import gift.member.Member;
-import gift.product.Product;
-import gift.product.ProductDao;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Repository
 public class WishlistDao {
 
     private JdbcClient jdbcClient;
+    private JdbcTemplate jdbcTemplate;
 
-    public WishlistDao(JdbcClient jdbcClient) {
+    public WishlistDao(JdbcClient jdbcClient, JdbcTemplate jdbcTemplate) {
         this.jdbcClient = jdbcClient;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public void insertWish(Member member, Long productId) {
@@ -24,10 +24,11 @@ public class WishlistDao {
             INSERT INTO wishlist (member_id, product_id) 
             VALUES (?,?)
             """;
-        jdbcClient.sql(sql)
-            .param(member.getId())
-            .param(productId)
-            .update();
+//        jdbcClient.sql(sql)
+//            .param(member.getId())
+//            .param(productId)
+//            .update();
+        jdbcTemplate.update(sql,member.getId(), productId);
     }
 
     public List<Long> findAllWish() {
@@ -35,7 +36,12 @@ public class WishlistDao {
             SELECT product_id
             FROM wishlist
             """;
-        return  jdbcClient.sql(sql).query(Long.class).list();
+
+        RowMapper<Long> rowMapper = (rs, rowNum) -> rs.getLong("product_id");
+
+        return jdbcTemplate.query(sql, rowMapper);
+
+        //return  jdbcClient.sql(sql).query(Long.class).list();
 
     }
 
@@ -45,7 +51,16 @@ public class WishlistDao {
             FROM wishlist 
             WHERE product_id = ?
             """;
-        return jdbcClient.sql(sql).param(product_id).query(Long.class).optional();
+
+        Long productId = jdbcTemplate.queryForObject(
+            sql,
+            (rs, rowNum) -> rs.getLong("product_id"),
+            product_id
+        );
+
+        return Optional.ofNullable(productId);
+
+        //return jdbcClient.sql(sql).param(product_id).query(Long.class).optional();
     }
 
     public void deleteWish(Long productId) {
@@ -53,9 +68,10 @@ public class WishlistDao {
             DELETE FROM wishlist 
             WHERE product_id = ?
             """;
-        jdbcClient.sql(sql)
-            .param(productId)
-            .update();
+//        jdbcClient.sql(sql)
+//            .param(productId)
+//            .update();
+        jdbcTemplate.update(sql,productId);
     }
 }
 
