@@ -9,5 +9,7 @@
 - [x] E2E Test
   - [x] 회원가입 테스트
   - [x] 로그인 테스트
-- [ ] @DataJpaTest
+- [x] @DataJpaTest
+    - [x] wishlist CRUD 테스트
+
 - [x] 전체적인 리팩토링 

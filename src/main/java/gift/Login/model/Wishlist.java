@@ -18,15 +18,14 @@ public class Wishlist {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "wishlist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
 
-    // Default constructor
+
+    // 생성자
     public Wishlist() {}
 
-    // Constructor with memberId only
     public Wishlist(Long memberId) {
         this.memberId = memberId;
     }
 
-    // Constructor with memberId and products
     public Wishlist(Long memberId, List<Product> products) {
         this.memberId = memberId;
         this.products = products;
