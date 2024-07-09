@@ -20,15 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    public ProductController(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
     public List<ProductResponseDto> getAllProducts() {
-        List<Product> products = productDao.findAllProduct();
+        List<Product> products = productService.getAllPrdouct();
 
         return products.stream()
             .map(product -> new ProductResponseDto(
@@ -41,7 +41,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ProductResponseDto getProduct(@PathVariable Long id) {
-        Optional<Product> product = productDao.findProductById(id);
+        Optional<Product> product = productService.getProductById(id);
         if (product == null) {
             throw new InvalidProduct("유효하지 않은 상품입니다");
         }
@@ -51,6 +51,7 @@ public class ProductController {
             product.get().getPrice(),
             product.get().getUrl()
         );
+
     }
 
     @PostMapping
@@ -61,7 +62,7 @@ public class ProductController {
             productRequestDto.url()
         );
 
-        productDao.addProduct(product);
+        productService.postProduct(product);
 
         return new ProductResponseDto(
             product.getId(),
@@ -73,9 +74,9 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ProductResponseDto updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequestDto productRequestDto) {
-        Optional<Product> product = productDao.findProductById(id);
+        Optional<Product> product = productService.getProductById(id);
         if (product.isPresent()) {
-            productDao.updateProductById(id, productRequestDto);
+            productService.putProduct(id, productRequestDto);
         } else {
             throw new InvalidProduct("유효하지 않은 상품입니다");
         }
@@ -90,11 +91,11 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public HttpEntity<String> deleteProduct(@PathVariable Long id) {
-        if (productDao.findProductById(id).isEmpty()) {
+        if (productService.getProductById(id).isEmpty()) {
             throw new InvalidProduct("유효하지 않은 상품입니다.");
         }
         else {
-            productDao.deleteProductById(id);
+            productService.deleteProductById(id);
         }
         return ResponseEntity.ok("성공적으로 삭제되었습니다");
     }
