@@ -4,7 +4,7 @@ CREATE TABLE Product (
                           price INT NOT NULL CHECK (price >= 0),
                           image_url TEXT,
                           is_active BOOLEAN DEFAULT TRUE
-);
+)engine=InnoDB;
 
 CREATE TABLE AppUser (
                       id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -13,7 +13,7 @@ CREATE TABLE AppUser (
                       is_active BOOLEAN NOT NULL DEFAULT TRUE,
                       role VARCHAR(50) NOT NULL DEFAULT 'USER',
                       salt VARCHAR(255)
-);
+)engine=InnoDB;
 
 CREATE TABLE Wish (
                     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -23,4 +23,4 @@ CREATE TABLE Wish (
                     is_active BOOLEAN DEFAULT TRUE,
                     FOREIGN KEY (userId) REFERENCES AppUser(id),
                     FOREIGN KEY (productId) REFERENCES Product(id)
-);
+)engine=InnoDB;
