@@ -26,11 +26,8 @@ public class MemberService {
 
     public String register(MemberRequest memberRequest) {
         String encodedPassword = passwordEncoder.encode(memberRequest.getPassword());
-        Member member = new Member();
-        member.setEmail(memberRequest.getEmail());
-        member.setPassword(encodedPassword);
+        Member member = new Member(memberRequest.getEmail(), encodedPassword);
         memberRepository.save(member);
-
         return jwtUtil.generateToken(member.getId(), member.getEmail(), "USER");
     }
 
