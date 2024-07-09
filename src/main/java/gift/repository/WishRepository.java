@@ -1,6 +1,5 @@
 package gift.repository;
 
-import gift.dto.WishDto;
 import gift.entity.Wish;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;

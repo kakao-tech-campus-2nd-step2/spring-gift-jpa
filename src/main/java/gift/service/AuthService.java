@@ -17,7 +17,7 @@ public class AuthService {
 
     public String save(UserDto.Request request) {
 
-        User newUser= new User(request.getEmail(), request.getPassword());
+        User newUser = new User(request.getEmail(), request.getPassword());
 
         if (userRepository.save(newUser) != null) {
             return generateToken(request.getEmail(), request.getPassword());

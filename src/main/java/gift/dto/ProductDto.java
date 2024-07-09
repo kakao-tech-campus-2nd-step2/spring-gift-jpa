@@ -28,8 +28,6 @@ public class ProductDto {
         return new ProductDto(product.getName(), product.getPrice(), product.getUrl());
     }
 
-
-    // 이름 유효성 검사 코드
     public boolean checkValidProductName(String name) {
         boolean result = true;
         if (!(checkValidLength(name, 1, 15))) {

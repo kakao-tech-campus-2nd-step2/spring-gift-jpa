@@ -1,6 +1,5 @@
 package gift.repository;
 
-import gift.dto.EditProduct;
 import gift.entity.Product;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

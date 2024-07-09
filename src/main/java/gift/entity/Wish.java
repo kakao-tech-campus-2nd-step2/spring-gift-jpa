@@ -11,7 +11,15 @@ public class Wish {
         this.userId = userId;
     }
 
-    public Long getId() { return id; }
-    public Long getProductId() { return productId; }
-    public Long getUserId() { return userId; }
+    public Long getId() {
+        return id;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
 }

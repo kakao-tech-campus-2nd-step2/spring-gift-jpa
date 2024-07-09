@@ -24,7 +24,6 @@ public class WishService {
         Long productId = request.getProductId();
 
         return wishRepository.save(productId, id);
-
     }
 
     public List<WishDto> getAll(String userId) {
@@ -35,7 +34,6 @@ public class WishService {
         return wishDtos;
     }
 
-    //delete 보통 크게응답안하면 void로 하기도함
     public void delete(Long id, String token) {
         Long userId = translateIdFrom(token);
         wishRepository.delete(id, userId);
