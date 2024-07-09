@@ -38,6 +38,21 @@ public class ProductRepositoryTest {
     }
 
     @Test
+    void testSearchProductById() {
+        Product savedProduct = productDao.save(product);
+
+        Optional<Product> retrievedProduct = productDao.findById(savedProduct.getId());
+
+        assertThat(retrievedProduct).isPresent();
+        assertAll(
+            () -> assertThat(retrievedProduct.get().getId()).isEqualTo(savedProduct.getId()),
+            () -> assertThat(retrievedProduct.get().getName()).isEqualTo("상품1"),
+            () -> assertThat(retrievedProduct.get().getPrice()).isEqualTo(1500),
+            () -> assertThat(retrievedProduct.get().getImageUrl()).isEqualTo("product1.images")
+        );
+    }
+
+    @Test
     void testUpdateProduct() {
         Product registerProduct = productDao.save(product);
 
@@ -59,20 +74,5 @@ public class ProductRepositoryTest {
 
         assertThat(updateProduct).isPresent();
         assertThat(updateProduct.get().getPrice()).isEqualTo(2000);
-    }
-
-    @Test
-    void testSearchProductById() {
-        Product savedProduct = productDao.save(product);
-
-        Optional<Product> retrievedProduct = productDao.findById(savedProduct.getId());
-
-        assertThat(retrievedProduct).isPresent();
-        assertAll(
-            () -> assertThat(retrievedProduct.get().getId()).isEqualTo(savedProduct.getId()),
-            () -> assertThat(retrievedProduct.get().getName()).isEqualTo("상품1"),
-            () -> assertThat(retrievedProduct.get().getPrice()).isEqualTo(1500),
-            () -> assertThat(retrievedProduct.get().getImageUrl()).isEqualTo("product1.images")
-        );
     }
 }
