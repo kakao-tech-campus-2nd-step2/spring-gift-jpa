@@ -55,7 +55,7 @@ class WishRepositoryTest {
         Wish wish = member.addWish(product);
         Wish actualWish = wishRepository.save(wish);
 
-        assertThat(actualWish.getItem()).isEqualTo(product);
+        assertThat(actualWish.getProduct()).isEqualTo(product);
         assertThat(actualWish.getMember()).isEqualTo(member);
         assertThat(actualWish.getQuantity()).isEqualTo(1);
 
@@ -84,7 +84,7 @@ class WishRepositoryTest {
         wishRepository.save(wish);
 
         assertThat(wishRepository.count()).isEqualTo(1);
-        wishRepository.delete(wish);
+        wishRepository.deleteByMemberAndProduct_Id(member, product.getId());
         assertThat(wishRepository.count()).isEqualTo(0);
     }
 
