@@ -6,8 +6,8 @@ import jakarta.persistence.IdClass;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@IdClass(WishListId.class)
-public class WishList {
+@IdClass(WishId.class)
+public class Wish {
     @Id
     private Long memberId;
     @Id
@@ -15,13 +15,13 @@ public class WishList {
     @NotNull
     private Integer quantity;
 
-    protected WishList() {
+    protected Wish() {
     }
 
-    public WishList(Long memberId, WishListRequest wishListRequest) {
+    public Wish(Long memberId, WishRequest wishRequest) {
         this.memberId = memberId;
-        this.productId = wishListRequest.productId();
-        this.quantity = wishListRequest.quantity();
+        this.productId = wishRequest.productId();
+        this.quantity = wishRequest.quantity();
     }
 
     public Long getMemberId() {
