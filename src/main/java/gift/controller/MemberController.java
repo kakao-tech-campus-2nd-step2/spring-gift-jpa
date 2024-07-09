@@ -5,11 +5,15 @@ import gift.dto.MemberRequest;
 import gift.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/members")
 public class MemberController {
     private final MemberService memberService;
 
@@ -25,13 +29,18 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody MemberRequest memberDto){
+    public ResponseEntity<JwtResponse> login(@RequestBody MemberRequest memberRequest){
 
-        String token = memberService.login(memberDto.getEmail(), memberDto.getPassword());
+        String token = memberService.login(memberRequest);
 
         if (token != null) {
             return new ResponseEntity<>(new JwtResponse(token), HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") Long id){
+        memberService.deleteMember(id);
     }
 }
