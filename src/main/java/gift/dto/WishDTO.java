@@ -6,27 +6,27 @@ import gift.entity.Wish;
 
 public class WishDTO {
 
-    private Member member;
-    private Product product;
+    private Long memberId;
+    private Long productId;
 
     public WishDTO() {
 
     }
 
-    public WishDTO(Member member, Product product) {
-        this.member = member;
-        this.product = product;
+    public WishDTO(Long memberId, Long productId) {
+        this.memberId = memberId;
+        this.productId = productId;
     }
 
-    public Member getMember() {
-        return member;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public Product getProduct() {
-        return product;
+    public Long getProductId() {
+        return productId;
     }
 
-    public Wish toEntity(){
+    public Wish toEntity(Member member,Product product){
         return new Wish(member,product);
     }
 }

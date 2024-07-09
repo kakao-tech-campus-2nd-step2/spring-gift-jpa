@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.entity.Member;
 import gift.entity.Product;
 
 import gift.exception.DataNotFoundException;
@@ -55,6 +56,15 @@ public class ProductService {
 
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
+    }
+
+    public Product findById(Long id){
+        Optional<Product> product = productRepository.findById(id);
+
+        if(product.isEmpty()){
+            throw new DataNotFoundException("존재하지 않는 상품입니다.");
+        }
+        return product.get();
     }
 
 }

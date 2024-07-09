@@ -1,10 +1,13 @@
 package gift.controller;
 
 import gift.annotation.LoginUser;
+import gift.dto.WishDTO;
 import gift.entity.Member;
+import gift.entity.Product;
 import gift.entity.Wish;
 import gift.repository.MemberRepository;
 import gift.service.MemberService;
+import gift.service.ProductService;
 import gift.service.WishlistService;
 import java.util.List;
 import org.apache.juli.logging.Log;
@@ -25,10 +28,12 @@ public class WishlistController {
 
     WishlistService wishlistService;
     MemberService memberService;
+    ProductService productService;
 
-    public WishlistController(WishlistService wishlistService, MemberService memberService) {
+    public WishlistController(WishlistService wishlistService, MemberService memberService,ProductService productService) {
         this.wishlistService = wishlistService;
         this.memberService = memberService;
+        this.productService = productService;
     }
 
     @GetMapping()
@@ -38,7 +43,10 @@ public class WishlistController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addWishlist(@RequestBody Wish wish, @LoginUser String email) {
+    public ResponseEntity<String> addWishlist(@RequestBody WishDTO wishDTO, @LoginUser String email) {
+        Member member = memberService.findById(wishDTO.getMemberId());
+        Product product =productService.findById(wishDTO.getProductId());
+        Wish wish = wishDTO.toEntity(member,product);
         wishlistService.addWishlist(wish, email);
         return new ResponseEntity<>("위시리스트 상품 추가 완료", HttpStatus.OK);
     }
