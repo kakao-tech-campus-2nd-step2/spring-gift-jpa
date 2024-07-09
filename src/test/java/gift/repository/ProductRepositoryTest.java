@@ -37,8 +37,8 @@ class ProductRepositoryTest {
         // Given
         Product product1 = new Product("아몬드", 500, "image.jpg");
         Product product2 = new Product("초코", 5400, "image2.jpg");
-        Long savedProductId1 = productRepository.save(product1).getId();
-        Long savedProductId2 = productRepository.save(product2).getId();
+        productRepository.save(product1);
+        productRepository.save(product2);
         Set<Product> savedProducts = new HashSet<>();
         savedProducts.add(product1);
         savedProducts.add(product2);
@@ -48,20 +48,18 @@ class ProductRepositoryTest {
 
         // Then
         assertThat(foundProducts.size()).isEqualTo(2);
-        foundProducts.stream()
-                .forEach((product -> {
-                    assertThat(product).isIn(savedProducts);
-                }));
+        foundProducts.forEach((product -> assertThat(product).isIn(savedProducts)));
     }
 
     @Test
-    void updateTest() throws Exception {
+    void updateTest() {
         // Given
         Product product = new Product("아몬드", 500, "image.jpg");
         Long savedProductId = productRepository.save(product).getId();
 
         // When
         Optional<Product> foundProduct = productRepository.findById(savedProductId);
+        assertThat(foundProduct).isPresent();
         foundProduct.get().setName("아몬드봉봉");
         productRepository.save(foundProduct.get());
 
@@ -71,13 +69,14 @@ class ProductRepositoryTest {
     }
 
     @Test
-    void deleteTest() throws Exception {
+    void deleteTest() {
         // Given
         Product product = new Product("아몬드", 500, "image.jpg");
         Long savedProductId = productRepository.save(product).getId();
 
         // When
         Optional<Product> foundProduct = productRepository.findById(savedProductId);
+        assertThat(foundProduct).isPresent();
         productRepository.delete(foundProduct.get());
         foundProduct = productRepository.findById(savedProductId);
 
