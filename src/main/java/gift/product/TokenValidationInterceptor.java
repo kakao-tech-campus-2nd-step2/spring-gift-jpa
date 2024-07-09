@@ -1,6 +1,7 @@
 package gift.product;
 
 import gift.product.dto.LoginMember;
+import gift.product.repository.AuthRepository;
 import gift.product.service.AuthService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -28,10 +29,10 @@ public class TokenValidationInterceptor implements HandlerInterceptor {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
 
-    private final AuthService authService;
+    private final AuthRepository authRepository;
 
-    public TokenValidationInterceptor(AuthService authService) {
-        this.authService = authService;
+    public TokenValidationInterceptor(AuthRepository authRepository) {
+        this.authRepository = authRepository;
     }
 
     @Override
@@ -77,7 +78,7 @@ public class TokenValidationInterceptor implements HandlerInterceptor {
 
     private void validateMemberExistence(HttpServletResponse response, Long memberId)
         throws IOException {
-        if (!authService.existsMember(new LoginMember(memberId))) {
+        if (!authRepository.existsById(memberId)) {
             response.sendError(401, "회원 정보가 존재하지 않습니다.");
         }
     }

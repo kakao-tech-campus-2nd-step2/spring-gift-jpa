@@ -2,7 +2,14 @@ package gift.product.config;
 
 import gift.product.JwtCookieToHeaderInterceptor;
 import gift.product.TokenValidationInterceptor;
+import gift.product.repository.AuthRepository;
+import gift.product.repository.JpaAuthRepository;
+import gift.product.repository.JpaProductRepository;
+import gift.product.repository.JpaWishRepository;
+import gift.product.repository.ProductRepository;
+import gift.product.repository.WishRepository;
 import gift.product.service.AuthService;
+import jakarta.persistence.EntityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -11,15 +18,30 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final AuthService authService;
+    private final EntityManager em;
 
-    public WebConfig(AuthService authService) {
-        this.authService = authService;
+    public WebConfig(EntityManager em) {
+        this.em = em;
+    }
+
+    @Bean
+    public ProductRepository productRepository() {
+        return new JpaProductRepository(em);
+    }
+
+    @Bean
+    public WishRepository wishRepository() {
+        return new JpaWishRepository(em);
+    }
+
+    @Bean
+    public AuthRepository authRepository() {
+        return new JpaAuthRepository(em);
     }
 
     @Bean
     public TokenValidationInterceptor tokenValidationInterceptor() {
-        return new TokenValidationInterceptor(authService);
+        return new TokenValidationInterceptor(authRepository());
     }
 
     @Override
