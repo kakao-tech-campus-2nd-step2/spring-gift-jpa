@@ -14,23 +14,16 @@ public class WishListService {
 
     private final WishRepository wishListRepository;
 
-    public WishListService(WishListRepository wIshListRepository) {
-        this.wishListRepository = wIshListRepository;
     public WishListService(WishRepository wishListRepository) {
         this.wishListRepository = wishListRepository;
     }
 
-    public List<ProductAmount> getProductIdsAndAmount(Long memberId) {
-        return wishListRepository.getWishListProductIdsByMemberId(memberId);
-    }
 
-    public boolean addProductToWishList(Long memberId, Long productId, int amount) {
-        boolean isAlreadyExist = isAlreadyExistProduct(memberId, productId);
-        if (isAlreadyExist) {
-            return false;
-        }
-        wishListRepository.addWishProduct(memberId, productId, amount);
-        return true;
+    public void addProductToWishList(Long memberId, Long productId, int amount) {
+        wishListRepository.findByMemberIdAndProductId(memberId, productId)
+                .orElseThrow(() -> new WishAlreadyExistsException("위시리스트에 이미 추가된 상품"));
+        Wish wish = new Wish(memberId, productId, amount);
+        wishListRepository.save(wish);
     }
 
     public boolean deleteProductInWishList(Long memberId, Long productId) {

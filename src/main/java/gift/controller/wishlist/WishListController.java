@@ -29,13 +29,10 @@ public class WishListController {
     }
 
     @PostMapping("api/wishlist")
-    public ResponseEntity<String> addWishList(HttpServletRequest request, @RequestBody WishListRequest wishListRequest) {
+    public ResponseEntity<Void> addWishList(HttpServletRequest request, @RequestBody WishListRequest wishListRequest) {
         Long memberId = (Long) request.getAttribute("memberId");
-        boolean isAdded = wishListService.addProductToWishList(memberId, wishListRequest.getProductId(), wishListRequest.getAmount());
-        if (!isAdded) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 상품");
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body("추가 성공");
+        wishListService.addProductToWishList(memberId, wishListRequest.getProductId(), wishListRequest.getAmount());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("api/wishlist")
