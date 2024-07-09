@@ -1,9 +1,9 @@
 package gift.service;
 
 import gift.entity.Product;
-import gift.repository.ProductJdbcRepository;
 import gift.repository.ProductRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,20 +18,39 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Long addProduct(Product product){
-        return productRepository.addProduct(product);
-    }
-
-    public Product getProduct(Long id){
+    public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
     }
 
-    public Long updateProduct(Product product){
-        return productRepository.updateProduct(product);
+    public Product save(Product product) {
+        return productRepository.save(product);
     }
 
-    public Long deleteProduct(Long id){
-        return productRepository.deleteProduct(id);
+    public void deleteById(Long id) {
+        productRepository.deleteById(id);
     }
+    public Long addProduct(Product product) {
+        if(!productRepository.existsById(product.getId())) {
+            return -1L;
+        }
+        return productRepository.save(product).getId();
+    }
+
+    public Long updateProduct(Product product) {
+        if(!productRepository.existsById(product.getId())) {
+            return -1L;
+        }
+        return productRepository.save(product).getId();
+    }
+
+    public Long deleteProduct(Long id) {
+        if(!productRepository.existsById(id)) {
+            return -1L;
+        }
+        productRepository.deleteById(id);
+        return id;
+    }
+
+
 
 }
