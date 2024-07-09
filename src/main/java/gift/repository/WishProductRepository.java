@@ -4,11 +4,13 @@ import gift.model.Member;
 import gift.model.Product;
 import gift.model.WishProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface WishProductRepository extends JpaRepository<WishProduct,Long> {
+@Repository
+public interface WishProductRepository extends JpaRepository<WishProduct, Long> {
     WishProduct save(WishProduct wishProduct);
 
     boolean existsByProductAndMember(Product product, Member member);
