@@ -18,7 +18,7 @@ public class UserService {
     }
 
     public Long insertUser(UserForm userForm) {
-        userRepository.save(new User(0L, userForm.getEmail(), userForm.getPassWord()));
+        userRepository.save(new User(0L, userForm.getEmail(), userForm.getPassword()));
         return userRepository.findByEmail(userForm.getEmail())
             .orElseThrow(() -> new UserNotFoundException(
                 ErrorCode.USER_NOT_FOUND)).getId();
@@ -27,18 +27,18 @@ public class UserService {
     public UserDTO findByEmail(String email) {
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
-        return new UserDTO(user.getId(), user.getEmail(), user.getPassWord());
+        return new UserDTO(user.getId(), user.getEmail(), user.getPassword());
     }
 
     public boolean existsEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
-    public boolean isPassWordMatch(UserForm userForm) {
-        return userForm.getPassWord()
+    public boolean isPasswordMatch(UserForm userForm) {
+        return userForm.getPassword()
             .equals(userRepository.findByEmail(userForm.getEmail())
                 .orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND))
-                .getPassWord());
+                .getPassword());
     }
 
     public void deleteUser(Long id) {

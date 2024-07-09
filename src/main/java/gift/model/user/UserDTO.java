@@ -10,11 +10,11 @@ public class UserDTO {
     @NotBlank
     private final String email;
     @NotBlank
-    private final String passWord;
+    private final String password;
 
-    public UserDTO(Long id, String email, String passWord) {
+    public UserDTO(Long id, String email, String password) {
         this.id = id;
-        this.passWord = passWord;
+        this.password = password;
         this.email = email;
     }
 
@@ -22,8 +22,8 @@ public class UserDTO {
         return id;
     }
 
-    public String getPassWord() {
-        return passWord;
+    public String getPassword() {
+        return password;
     }
 
     public String getEmail() {

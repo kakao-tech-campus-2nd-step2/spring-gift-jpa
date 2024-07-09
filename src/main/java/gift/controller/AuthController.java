@@ -34,8 +34,8 @@ public class AuthController {
             result.rejectValue("email", "", ErrorCode.EMAIL_NOT_FOUND.getMessage());
             throw new EmailNotFoundException(null, result);
         }
-        if (!userService.isPassWordMatch(userForm)) {
-            result.rejectValue("passWord", "", ErrorCode.PASSWORD_MISMATCH.getMessage());
+        if (!userService.isPasswordMatch(userForm)) {
+            result.rejectValue("password", "", ErrorCode.PASSWORD_MISMATCH.getMessage());
             throw new PassWordMissMatchException(null, result);
         }
         return ResponseEntity.ok(jwtProvider.generateToken(userService.findByEmail(userForm.getEmail())));
@@ -44,6 +44,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> handleSignUpRequest(@Valid @RequestBody UserForm userForm,
         BindingResult result) throws MethodArgumentNotValidException {
+        System.out.println(userForm.getEmail()+"\n"+userForm.getPassword());
         if (userService.existsEmail(userForm.getEmail())) {
             result.rejectValue("email", "", ErrorCode.DUPLICATE_EMAIL.getMessage());
             throw new DuplicateEmailException(null, result);
