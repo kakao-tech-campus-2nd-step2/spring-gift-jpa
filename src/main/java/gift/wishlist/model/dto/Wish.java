@@ -30,16 +30,18 @@ public class Wish {
     public Wish() {
     }
 
-    public Wish(Long id, Long userId, Long productId, int quantity, boolean isActive) {
-        this.id = id;
+    public Wish(Long userId, Long productId, int quantity) {
         this.userId = userId;
         this.productId = productId;
         this.quantity = quantity;
-        this.isActive = isActive;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getUserId() {

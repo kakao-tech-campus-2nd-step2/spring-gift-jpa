@@ -21,7 +21,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse findProduct(Long id) {
-        Product product = productRepository.findActiveProductById(id)
+        Product product = productRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
         return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
@@ -43,7 +43,7 @@ public class ProductService {
 
     @Transactional
     public void updateProduct(Long id, UpdateProductRequest updateProductRequest) {
-        Product product = productRepository.findById(id)
+        Product product = productRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
         product.setName(updateProductRequest.name());
         product.setPrice(updateProductRequest.price());
@@ -53,7 +53,7 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(Long id) {
-        Product product = productRepository.findById(id)
+        Product product = productRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
         product.setActive(false);
         productRepository.save(product);
