@@ -3,8 +3,8 @@ package gift.Model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="userInfo")
-public class UserInfo {
+@Table(name="member")
+public class Member {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
@@ -15,6 +15,7 @@ public class UserInfo {
         @Column(name="password")
         private String password;
 
+        @Enumerated(EnumType.STRING)
         @Column(name="role")
         private Role role;
 
@@ -50,7 +51,9 @@ public class UserInfo {
                 this.role = role;
         }
 
-        public UserInfo(String email, String password, Role role){
+        public Member(){}
+
+        public Member(String email, String password, Role role){
                 this.email = email;
                 this.password = password;
                 this.role = role;
