@@ -24,14 +24,13 @@ public class WishService {
     }
 
     public WishResponseDto addWish(Long userId, WishRequestDto wishRequestDto) {
-        validateProductId(wishRequestDto.getProductId());
+        ProductResponseDto product = productService.getProductById(wishRequestDto.getProductId());
         Wish wish = new Wish(userId, wishRequestDto.getProductId());
         Wish createdWish = wishRepository.save(wish);
 
-        ProductResponseDto product = productService.getProductById(wishRequestDto.getProductId());
-
         return WishMapper.toWishResponseDto(createdWish, product);
     }
+
 
     public List<WishResponseDto> getWishesByUserId(Long userId) {
         List<Wish> wishes = wishRepository.findByUserId(userId);

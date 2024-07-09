@@ -29,15 +29,12 @@ public class ProductService {
 
     public ProductResponseDto updateProduct(Long id, ProductRequestDto productRequestDTO) {
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() ->
-                        new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "ID: " + id));
-
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "ID: " + id));
         existingProduct.update(
                 new ProductName(productRequestDTO.getName()),
                 productRequestDTO.getPrice(),
                 productRequestDTO.getImageUrl());
-        Product updatedProduct = productRepository.save(existingProduct);
-        return ProductMapper.toProductResponseDTO(updatedProduct);
+        return ProductMapper.toProductResponseDTO(existingProduct);
     }
 
     public List<ProductResponseDto> getAllProducts() {
@@ -54,10 +51,10 @@ public class ProductService {
     }
 
     public boolean deleteProduct(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() ->
-                        new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "ID: " + id));
-        productRepository.delete(product);
+        if (!productRepository.existsById(id)) {
+            throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "ID: " + id);
+        }
+        productRepository.deleteById(id);
         return true;
     }
 }

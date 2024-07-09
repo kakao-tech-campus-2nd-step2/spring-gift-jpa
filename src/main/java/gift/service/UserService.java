@@ -24,13 +24,12 @@ public class UserService {
     }
 
     public UserResponseDto registerUser(UserRegisterDto userRegisterDto) {
-        userRepository.findByEmail(userRegisterDto.getEmail())
-                .ifPresent(user -> {
-                    throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
-                });
-
+        if (userRepository.existsByEmail(userRegisterDto.getEmail())) {
+            throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
+        }
         User user = new User(userRegisterDto.getEmail(), userRegisterDto.getPassword());
         User createdUser = userRepository.save(user);
+
         return UserMapper.toUserResponseDTO(createdUser);
     }
 
