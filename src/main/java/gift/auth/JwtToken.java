@@ -18,7 +18,7 @@ public class JwtToken {
     private long tokenExpTime;
 
     public JwtToken(@Value("${jwt.secretKey}") String secretKey,
-        @Value("${jwt.tokenExpTime:3600}") long tokenExpTime) {
+        @Value("${jwt.tokenExpTime}") long tokenExpTime) {
         this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
         this.tokenExpTime = tokenExpTime;
     }
