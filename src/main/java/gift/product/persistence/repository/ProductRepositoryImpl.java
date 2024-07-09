@@ -32,6 +32,12 @@ public class ProductRepositoryImpl implements ProductRepository{
 
     @Override
     public Long deleteProductById(Long id) {
+        if(!productJpaRepository.existsById(id)) {
+            throw new NotFoundException(
+                ErrorCode.DB_NOT_FOUND,
+                "Product with id " + id + " not found"
+            );
+        }
         productJpaRepository.deleteById(id);
         return id;
     }
@@ -54,5 +60,10 @@ public class ProductRepositoryImpl implements ProductRepository{
                 Product::getId,
                 product -> product
             ));
+    }
+
+    @Override
+    public void deleteAll() {
+        productJpaRepository.deleteAll();
     }
 }

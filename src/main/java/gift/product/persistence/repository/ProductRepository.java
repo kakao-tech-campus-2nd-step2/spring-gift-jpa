@@ -18,4 +18,6 @@ public interface ProductRepository {
     void deleteProductByIdList(List<Long> productIds);
 
     Map<Long, Product> getProductsByIds(List<Long> productIds);
+
+    void deleteAll();
 }
