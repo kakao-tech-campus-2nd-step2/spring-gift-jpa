@@ -5,7 +5,7 @@ import gift.dto.response.AddedProductIdResponse;
 import gift.dto.response.ProductResponse;
 import gift.entity.Product;
 import gift.exception.ProductNotFoundException;
-import gift.jpaRepo.ProductRepository;
+import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

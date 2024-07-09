@@ -3,7 +3,7 @@ package gift.service;
 import gift.dto.request.MemberRequest;
 import gift.entity.Member;
 import gift.exception.MemberNotFoundException;
-import gift.jpaRepo.MemberRepository;
+import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
 @Service
