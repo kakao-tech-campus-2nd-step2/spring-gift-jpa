@@ -29,9 +29,10 @@ public class ProductService {
     }
 
     public Long updateProduct(ProductRegisterDto productRegisterDto, Long id) {
-        Product product = productRegisterDto.toProduct();
-        return productRepository.updateProduct(id, product);
-
+        var product = productRepository.getProductById(id);
+        product.update(productRegisterDto.name(), productRegisterDto.description(),
+                productRegisterDto.price(), productRegisterDto.url());
+        return productRepository.saveProduct(product);
     }
 
     public Long deleteProduct(Long id) {

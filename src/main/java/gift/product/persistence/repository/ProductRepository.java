@@ -11,8 +11,6 @@ public interface ProductRepository {
 
     Long saveProduct(Product product);
 
-    Long updateProduct(Long id, Product product);
-
     Long deleteProductById(Long id);
 
     List<Product> getAllProducts();
