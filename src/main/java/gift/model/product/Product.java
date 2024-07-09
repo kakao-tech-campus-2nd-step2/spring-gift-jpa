@@ -10,6 +10,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(nullable = false, length = 15)
+    @Embedded
     private final ProductName name;
     @Column(nullable = false)
     private final int price;

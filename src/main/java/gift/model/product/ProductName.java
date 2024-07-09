@@ -1,11 +1,13 @@
 package gift.model.product;
 
+import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.util.Objects;
 
+@Embeddable
 public class ProductName {
     @NotEmpty(message = "상품 이름은 필수 입력값입니다.")
     @Size(max = 15, message = "상품 이름은 최대 15자까지(공백 포함) 입력 가능합니다.")

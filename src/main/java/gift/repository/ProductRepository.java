@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    boolean existsByProductName(ProductName name);
+    boolean existsByName(ProductName name);
 
     @Modifying
     @Transactional
