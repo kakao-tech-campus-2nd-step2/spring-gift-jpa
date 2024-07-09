@@ -35,14 +35,14 @@ public class MemberRepository {
         String sql = "SELECT * FROM member WHERE email = ?";
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{email}, (rs, rowNum) -> {
-                Member member = new Member();
-                member.setId(rs.getLong("id"));
-                member.setEmail(rs.getString("email"));
-                member.setPassword(rs.getString("password"));
-                return member;
+                return new Member(rs.getLong("id"), rs.getString("email"), rs.getString("password"));
             });
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
+    }
+
+    public void delete(Long id){
+        jdbcTemplate.update("DELETE FROM member WHERE id = ?", id);
     }
 }
