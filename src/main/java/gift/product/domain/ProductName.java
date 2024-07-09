@@ -1,9 +1,8 @@
 package gift.product.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import gift.product.exception.ProductNameLengthException;
-import gift.product.exception.ProductNamePatternException;
-import gift.wish.domain.ProductCount;
+import gift.global.response.ErrorCode;
+import gift.product.exception.ProductValidException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -22,17 +21,17 @@ public class ProductName {
 
     public ProductName(String value) {
         if (Objects.isNull(value)) {
-            throw new ProductNameLengthException();
+            throw new ProductValidException(ErrorCode.PRODUCT_NAME_LENGTH_ERROR);
         }
 
         value = value.trim();
 
         if (value.isEmpty() || value.length() > MAX_LENGTH) {
-            throw new ProductNameLengthException();
+            throw new ProductValidException(ErrorCode.PRODUCT_NAME_LENGTH_ERROR);
         }
 
         if (!PATTERN.matcher(value).matches()) {
-            throw new ProductNamePatternException();
+            throw new ProductValidException(ErrorCode.PRODUCT_NAME_PATTER_ERROR);
         }
         this.value = value;
     }

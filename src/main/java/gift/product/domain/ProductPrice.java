@@ -1,7 +1,8 @@
 package gift.product.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import gift.product.exception.ProductPriceOutOfRangeException;
+import gift.global.response.ErrorCode;
+import gift.product.exception.ProductValidException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -17,7 +18,7 @@ public class ProductPrice {
 
     public ProductPrice(Long value) {
         if (value < 0) {
-            throw new ProductPriceOutOfRangeException();
+            throw new ProductValidException(ErrorCode.PRODUCT_PRICE_OUT_OF_RANGE_ERROR);
         }
         this.value = value;
     }
