@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,21 +30,21 @@ public class WishedProductController {
 
     @GetMapping
     public ResponseEntity<Collection<WishedProductDTO>> getWishedProducts(@LoginMember MemberDTO memberDTO) {
-        return ResponseEntity.ok().body(wishedProductService.getWishedProducts(memberDTO.email()));
+        return ResponseEntity.ok().body(wishedProductService.findAll(memberDTO.email()));
     }
 
     @PostMapping
     public ResponseEntity<WishedProductDTO> addWishedProduct(@LoginMember MemberDTO memberDTO, @Valid @RequestBody WishedProductDTO wishedProductDTO) {
-        return ResponseEntity.ok().body(wishedProductService.addWishedProduct(memberDTO.email(), wishedProductDTO));
+        return ResponseEntity.ok().body(wishedProductService.save(memberDTO.email(), wishedProductDTO));
     }
 
-    @DeleteMapping
-    public ResponseEntity<WishedProductDTO> deleteWishedProduct(@LoginMember MemberDTO memberDTO, @Valid @RequestBody WishedProductDTO wishedProductDTO) {
-        return ResponseEntity.ok().body(wishedProductService.deleteWishedProduct(memberDTO.email(), wishedProductDTO));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<WishedProductDTO> deleteWishedProduct(@PathVariable("id") long id, @LoginMember MemberDTO memberDTO) {
+        return ResponseEntity.ok().body(wishedProductService.delete(id));
     }
 
-    @PutMapping
-    public ResponseEntity<WishedProductDTO> updateWishedProduct(@LoginMember MemberDTO memberDTO, @Valid @RequestBody WishedProductDTO wishedProductDTO) {
-        return ResponseEntity.ok().body(wishedProductService.updateWishedProduct(memberDTO.email(), wishedProductDTO));
+    @PutMapping("/{id}")
+    public ResponseEntity<WishedProductDTO> updateWishedProduct(@PathVariable("id") long id, @LoginMember MemberDTO memberDTO, @Valid @RequestBody WishedProductDTO wishedProductDTO) {
+        return ResponseEntity.ok().body(wishedProductService.update(id, memberDTO.email(), wishedProductDTO));
     }
 }
