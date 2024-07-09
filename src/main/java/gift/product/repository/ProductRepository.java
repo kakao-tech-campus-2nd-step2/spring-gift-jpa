@@ -34,7 +34,13 @@ public class ProductRepository {
     }
 
     public Product findById(Long id) throws Exception {
-        return em.find(Product.class, id);
+        Product product = em.find(Product.class, id);
+
+        if (product == null) {
+            throw new Exception();
+        }
+
+        return product;
     }
 
     @Transactional

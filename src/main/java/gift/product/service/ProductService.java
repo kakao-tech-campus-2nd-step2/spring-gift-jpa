@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
-    public static final String NAME_KAKAO = "카카오";
     private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
