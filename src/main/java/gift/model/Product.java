@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
 import java.util.List;
 
 @Entity
@@ -28,55 +27,79 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<Wish> wishes;
 
-    // 기본 생성자
+
+    private Product(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.price = builder.price;
+        this.imageurl = builder.imageurl;
+        this.wishes = builder.wishes;
+    }
+
     public Product() {
+
     }
 
-    public Product(Long id, String name, Integer price, String imageurl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageurl = imageurl;
-    }
 
-    // Getters and settersa
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Integer getPrice() {
         return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
     }
 
     public String getImageurl() {
         return imageurl;
     }
 
-    public void setImageurl(String imageurl) {
-        this.imageurl = imageurl;
-    }
-
     public List<Wish> getWishes() {
         return wishes;
     }
 
-    public void setWishes(List<Wish> wishes) {
-        this.wishes = wishes;
+    public static class Builder {
+        private Long id;
+        private String name;
+        private Integer price;
+        private String imageurl;
+        private List<Wish> wishes;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder price(Integer price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder imageurl(String imageurl) {
+            this.imageurl = imageurl;
+            return this;
+        }
+
+        public Builder wishes(List<Wish> wishes) {
+            this.wishes = wishes;
+            return this;
+        }
+
+        public Product build() {
+            return new Product(this);
+        }
+    }
+
+
+    public static Builder builder() {
+        return new Builder();
     }
 }

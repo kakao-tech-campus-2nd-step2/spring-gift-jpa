@@ -6,36 +6,67 @@ public class WishResponse {
     private int productPrice;
     private String productImageurl;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    public WishResponse() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    private WishResponse(Builder builder) {
+        this.id = builder.id;
+        this.productName = builder.productName;
+        this.productPrice = builder.productPrice;
+        this.productImageurl = builder.productImageurl;
+    }
+
+
+    public Long getId() {
+        return id;
     }
 
     public String getProductName() {
         return productName;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
     public int getProductPrice() {
         return productPrice;
-    }
-
-    public void setProductPrice(int productPrice) {
-        this.productPrice = productPrice;
     }
 
     public String getProductImageurl() {
         return productImageurl;
     }
 
-    public void setProductImageurl(String productImageurl) {
-        this.productImageurl = productImageurl;
+
+    public static class Builder {
+        private Long id;
+        private String productName;
+        private int productPrice;
+        private String productImageurl;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder productName(String productName) {
+            this.productName = productName;
+            return this;
+        }
+
+        public Builder productPrice(int productPrice) {
+            this.productPrice = productPrice;
+            return this;
+        }
+
+        public Builder productImageurl(String productImageurl) {
+            this.productImageurl = productImageurl;
+            return this;
+        }
+
+        public WishResponse build() {
+            return new WishResponse(this);
+        }
+    }
+
+
+    public static Builder builder() {
+        return new Builder();
     }
 }

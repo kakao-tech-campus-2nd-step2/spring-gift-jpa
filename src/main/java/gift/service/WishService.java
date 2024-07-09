@@ -14,8 +14,12 @@ import java.util.stream.Collectors;
 @Service
 public class WishService {
 
+    private final WishRepository wishRepository;
+
     @Autowired
-    private WishRepository wishRepository;
+    public WishService(WishRepository wishRepository) {
+        this.wishRepository = wishRepository;
+    }
 
     public List<WishResponse> getWishesByMemberId(Long memberId) {
         return wishRepository.findByMemberId(memberId).stream()
@@ -24,22 +28,26 @@ public class WishService {
     }
 
     public Wish addWish(Member member, Product product) {
-        Wish wish = new Wish();
-        wish.setMember(member);
-        wish.setProduct(product);
+        Wish wish = Wish.builder()
+                .member(member)
+                .product(product)
+                .build();
         return wishRepository.save(wish);
     }
 
     public void deleteWish(Long wishId) {
+        if (!wishRepository.existsById(wishId)) {
+            throw new IllegalArgumentException("Wish not found with id: " + wishId);
+        }
         wishRepository.deleteById(wishId);
     }
 
     private WishResponse convertToWishResponse(Wish wish) {
-        WishResponse wishResponse = new WishResponse();
-        wishResponse.setId(wish.getId());
-        wishResponse.setProductName(wish.getProduct().getName());
-        wishResponse.setProductPrice(wish.getProduct().getPrice());
-        wishResponse.setProductImageurl(wish.getProduct().getImageurl());
-        return wishResponse;
+        return WishResponse.builder()
+                .id(wish.getId())
+                .productName(wish.getProduct().getName())
+                .productPrice(wish.getProduct().getPrice())
+                .productImageurl(wish.getProduct().getImageurl())
+                .build();
     }
 }

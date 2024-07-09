@@ -16,10 +16,11 @@ class ProductRepositoryTest {
 
     @Test
     void save() {
-        Product product = new Product();
-        product.setName("열라면");
-        product.setPrice(1600);
-        product.setImageurl("https://i.namu.wiki/i/fuvd7qkb8P6PA_sD5ufjgpKUhRgxxTrIWnkPIg5H_UAPMUaArn1U1DweD7T_f_8RVxTDjqaiFwKr-quURwc_eQ.webp");
+        Product product = Product.builder()
+                .name("열라면")
+                .price(1600)
+                .imageurl("https://i.namu.wiki/i/fuvd7qkb8P6PA_sD5ufjgpKUhRgxxTrIWnkPIg5H_UAPMUaArn1U1DweD7T_f_8RVxTDjqaiFwKr-quURwc_eQ.webp")
+                .build();
 
         Product savedProduct = productRepository.save(product);
 

@@ -8,10 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +16,8 @@ import java.util.Map;
 @Controller
 public class WebController {
 
-
+    @Autowired
+    private ProductController productController;
 
     @GetMapping("/register")
     public String showRegisterForm() {
@@ -46,9 +44,6 @@ public class WebController {
         return "user-products";
     }
 
-    @Autowired
-    private ProductController productController;
-
     @GetMapping("/products")
     public String viewProductPage(Model model) {
         ResponseEntity<List<Product>> response = productController.getAllProducts();
@@ -61,7 +56,7 @@ public class WebController {
 
     @GetMapping("/products/new")
     public String showNewProductForm(Model model) {
-        Product product = new Product();
+        Product product = Product.builder().build();
         model.addAttribute("product", product);
         return "product/new";
     }
@@ -112,7 +107,10 @@ public class WebController {
 
     @GetMapping("/products/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
-        productController.deleteProduct(id);
+        ResponseEntity<Void> response = productController.deleteProduct(id);
+        if (response.getStatusCode() != HttpStatus.NO_CONTENT) {
+            return "error/500";
+        }
         return "redirect:/products";
     }
 }
