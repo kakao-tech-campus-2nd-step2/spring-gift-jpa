@@ -21,12 +21,6 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
-    public MemberDto findById(Long id){
-        Member member = memberRepository.findById(id)
-            .orElseThrow(() -> new CustomException("Member with id " + id + " not found", HttpStatus.NOT_FOUND));
-        return member.toDto();
-    }
-
     public void addMember(MemberDto memberDto){
 
         if(memberRepository.findByEmail(memberDto.getEmail()).isEmpty()){
