@@ -4,18 +4,15 @@ import gift.member.Member;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @Repository
 public class WishlistDao {
 
-    private JdbcClient jdbcClient;
     private JdbcTemplate jdbcTemplate;
 
-    public WishlistDao(JdbcClient jdbcClient, JdbcTemplate jdbcTemplate) {
-        this.jdbcClient = jdbcClient;
+    public WishlistDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -24,10 +21,7 @@ public class WishlistDao {
             INSERT INTO wishlist (member_id, product_id) 
             VALUES (?,?)
             """;
-//        jdbcClient.sql(sql)
-//            .param(member.getId())
-//            .param(productId)
-//            .update();
+
         jdbcTemplate.update(sql,member.getId(), productId);
     }
 
@@ -40,8 +34,6 @@ public class WishlistDao {
         RowMapper<Long> rowMapper = (rs, rowNum) -> rs.getLong("product_id");
 
         return jdbcTemplate.query(sql, rowMapper);
-
-        //return  jdbcClient.sql(sql).query(Long.class).list();
 
     }
 
@@ -60,7 +52,6 @@ public class WishlistDao {
 
         return Optional.ofNullable(productId);
 
-        //return jdbcClient.sql(sql).param(product_id).query(Long.class).optional();
     }
 
     public void deleteWish(Long productId) {
@@ -68,9 +59,7 @@ public class WishlistDao {
             DELETE FROM wishlist 
             WHERE product_id = ?
             """;
-//        jdbcClient.sql(sql)
-//            .param(productId)
-//            .update();
+
         jdbcTemplate.update(sql,productId);
     }
 }

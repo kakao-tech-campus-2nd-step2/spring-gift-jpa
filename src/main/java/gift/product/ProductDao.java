@@ -4,18 +4,15 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @Repository
 public class ProductDao {
     @Autowired
-    private JdbcClient jdbcClient;
     private JdbcTemplate jdbcTemplate;
 
-    public ProductDao(JdbcClient jdbcClient, JdbcTemplate jdbcTemplate) {
-        this.jdbcClient = jdbcClient;
+    public ProductDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -33,8 +30,6 @@ public class ProductDao {
 
         return jdbcTemplate.query(sql,rowMapper);
 
-//        List<Product> products = jdbcClient.sql(sql).query(Product.class).list();
-//        return products;
     }
 
     public Optional<ProductResponseDto> findProductById(Long id) {
@@ -61,22 +56,7 @@ public class ProductDao {
 
         return Optional.ofNullable(productResponseDto);
 
-        //return jdbcClient.sql(sql).param(id).query(Product.class).optional();
     }
-
-//    public List<Product> findProductById(List<Long> id) {
-//        var sql = """
-//            SELECT
-//              id,
-//              name,
-//              price,
-//              url
-//            FROM product
-//            WHERE id = ?
-//            """;
-//        return jdbcClient.sql(sql).param(id).query(Product.class).list();
-//    }
-
 
     public void addProduct(Product product) {
         String sql = """
@@ -84,12 +64,6 @@ public class ProductDao {
             VALUES (?,?,?,?)
             """;
 
-//        jdbcClient.sql(sql)
-//            .param(product.getId())
-//            .param(product.getName())
-//            .param(product.getPrice())
-//            .param(product.getUrl())
-//            .update();
         jdbcTemplate.update(sql,
             product.getId(),
             product.getName(),
@@ -104,12 +78,6 @@ public class ProductDao {
             WHERE id = ?
             """;
 
-//        return jdbcClient.sql(sql)
-//            .param(productRequestDto.name())
-//            .param(productRequestDto.price())
-//            .param(productRequestDto.url())
-//            .param(id)
-//            .update();
         return jdbcTemplate.update(sql,
             productRequestDto.name(),
             productRequestDto.price(),
@@ -121,9 +89,7 @@ public class ProductDao {
             DELETE FROM product
             WHERE id = ?
             """;
-//        jdbcClient.sql(sql)
-//            .param(id)
-//            .update();
+
         jdbcTemplate.update(sql,id);
     }
 }

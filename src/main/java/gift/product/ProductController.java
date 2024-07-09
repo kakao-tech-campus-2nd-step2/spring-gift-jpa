@@ -46,13 +46,6 @@ public class ProductController {
             throw new InvalidProduct("유효하지 않은 상품입니다");
         }
         return product;
-//        return new ProductResponseDto(
-//            product.get().getId(),
-//            product.get().getName(),
-//            product.get().getPrice(),
-//            product.get().getUrl()
-//        );
-
     }
 
     @PostMapping
@@ -82,13 +75,6 @@ public class ProductController {
             throw new InvalidProduct("유효하지 않은 상품입니다");
         }
         return product;
-
-//        return new ProductResponseDto(
-//            product.get().getId(),
-//            product.get().getName(),
-//            product.get().getPrice(),
-//            product.get().getUrl()
-//        );
     }
 
     @DeleteMapping("/{id}")

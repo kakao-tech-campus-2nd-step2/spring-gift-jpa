@@ -3,18 +3,15 @@ package gift.member;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @Repository
 public class MemberDao {
     @Autowired
-    private JdbcClient jdbcClient;
     private JdbcTemplate jdbcTemplate;
 
-    public MemberDao(JdbcClient jdbcClient, JdbcTemplate jdbcTemplate) {
-        this.jdbcClient = jdbcClient;
+    public MemberDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -23,13 +20,7 @@ public class MemberDao {
             INSERT INTO member (id, name, email, password, role) 
             VALUES (?,?,?,?,?)
             """;
-//        jdbcClient.sql(sql)
-//            .param(member.getId())
-//            .param(member.getName())
-//            .param(member.getEmail())
-//            .param(member.getPassword())
-//            .param(member.isRole())
-//            .update();
+
         jdbcTemplate.update(sql,
             member.getId(),
             member.getName(),
@@ -63,11 +54,6 @@ public class MemberDao {
         } else {
             return Optional.empty();
         }
-
-//        return jdbcClient.sql(sql)
-//            .param(member.getEmail())
-//            .param(member.getPassword())
-//            .query(Member.class).optional();
     }
 
     public Member findMemberById(String userEmail) {
@@ -88,21 +74,6 @@ public class MemberDao {
             ),
             userEmail
         );
-
-//        //return jdbcClient.sql(sql)
-//            .param(userEmail)
-//            .query(Member.class).single();
     }
-
-//    public List<Member> findAllMember() {
-//        String sql = """
-//            SELECT
-//              email,
-//              password
-//            FROM member
-//            """;
-//        List<Member> members = jdbcClient.sql(sql).query(Member.class).list();
-//        return members;
-//    }
 }
 
