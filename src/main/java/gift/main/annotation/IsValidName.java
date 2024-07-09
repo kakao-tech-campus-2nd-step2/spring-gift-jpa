@@ -1,6 +1,7 @@
-package gift.main.global.validator;
+package gift.main.annotation;
 
 
+import gift.main.global.validator.ProductNameValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

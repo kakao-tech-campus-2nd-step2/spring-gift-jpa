@@ -1,7 +1,6 @@
 package gift.main.dto;
 
 
-import gift.main.global.Exception.ErrorCode;
 import jakarta.validation.constraints.NotBlank;
 
 public record UserJoinRequest(

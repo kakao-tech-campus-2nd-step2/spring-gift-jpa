@@ -1,7 +1,6 @@
-package gift.main.global;
+package gift.main.Exception;
 import io.jsonwebtoken.security.SignatureException;
 import gift.main.global.Exception.TokenException;
-import gift.main.global.Exception.CustomException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;

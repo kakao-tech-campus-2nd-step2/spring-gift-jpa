@@ -1,8 +1,8 @@
 package gift.main.interceptor;
 
 import gift.main.dto.UserVo;
-import gift.main.global.Exception.CustomException;
-import gift.main.global.Exception.ErrorCode;
+import gift.main.Exception.CustomException;
+import gift.main.Exception.ErrorCode;
 import gift.main.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

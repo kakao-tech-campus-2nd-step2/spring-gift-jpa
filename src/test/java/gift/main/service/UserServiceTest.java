@@ -1,7 +1,7 @@
 package gift.main.service;
 
 import gift.main.dto.UserJoinRequest;
-import gift.main.global.Exception.CustomException;
+import gift.main.Exception.CustomException;
 import gift.main.repository.UserDao;
 import gift.main.util.JwtUtil;
 import org.assertj.core.api.Assertions;

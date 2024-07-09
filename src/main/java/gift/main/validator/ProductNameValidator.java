@@ -25,7 +25,6 @@ public class ProductNameValidator implements ConstraintValidator<IsValidName, St
             return false;
         }
 
-
         if (!name.matches("^[가-힣a-zA-Z0-9 ()\\[\\]\\+\\-&/_]*$")) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("상품명에 사용할 수 있는 특수 기호는 ( ), [ ], +, -, &, /, _  입니다.")
