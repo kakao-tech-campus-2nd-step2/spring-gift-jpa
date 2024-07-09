@@ -1,11 +1,13 @@
 package gift.main.repository;
 
-import gift.main.entity.WishlistProduct;
+import gift.main.entity.WishProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface WishProductRepository extends JpaRepository<WishlistProduct, Long> {
+@Repository
+public interface WishProductRepository extends JpaRepository<WishProduct, Long> {
     public boolean deleteByProductIdAndUserId(Long productId, Long userId);
-    public List<WishlistProduct> findAllByUserId(Long userId);
+    public List<WishProduct> findAllByUserId(Long userId);
 }
