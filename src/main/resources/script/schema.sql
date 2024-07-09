@@ -17,10 +17,10 @@ CREATE TABLE AppUser (
 
 CREATE TABLE Wish (
                     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                    userId BIGINT NOT NULL,
-                    productId BIGINT NOT NULL,
+                    user_id BIGINT NOT NULL,
+                    product_id BIGINT NOT NULL,
                     quantity INT DEFAULT 1,
                     is_active BOOLEAN DEFAULT TRUE,
-                    FOREIGN KEY (userId) REFERENCES AppUser(id),
-                    FOREIGN KEY (productId) REFERENCES Product(id)
+                    FOREIGN KEY (user_id) REFERENCES AppUser(id),
+                    FOREIGN KEY (product_id) REFERENCES Product(id)
 )engine=InnoDB;
