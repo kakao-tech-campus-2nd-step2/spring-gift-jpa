@@ -10,11 +10,12 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
-@Repository
-public class ProductJDBCRepository implements ProductRepository {
+public abstract class ProductJDBCRepository implements ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
@@ -43,11 +44,11 @@ public class ProductJDBCRepository implements ProductRepository {
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), product.getId());
     }
 
-    public Product findById(Long id) {
+    public Optional<Product> findById(Long id) {
         var sql = "select id, name, price, image_url from product where id = ?";
         try {
             var product = jdbcTemplate.queryForObject(sql, productRowMapper, id);
-            return product;
+            return Optional.of(product);
         } catch (EmptyResultDataAccessException exception) {
             throw new NotFoundElementException(exception.getMessage());
         }

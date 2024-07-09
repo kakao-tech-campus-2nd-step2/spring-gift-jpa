@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-public class ProductMemoryRepository implements ProductRepository {
+public abstract class ProductMemoryRepository implements ProductRepository {
 
     private final Map<Long, Product> products = new HashMap<>();
 
@@ -22,9 +23,9 @@ public class ProductMemoryRepository implements ProductRepository {
         products.put(product.getId(), product);
     }
 
-    public Product findById(Long id) {
+    public Optional<Product> findById(Long id) {
         productIdValidation(id);
-        return products.get(id);
+        return Optional.of(products.get(id));
     }
 
     public List<Product> findAll() {

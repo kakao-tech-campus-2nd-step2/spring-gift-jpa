@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.dto.ProductResponse;
 import gift.exception.InvalidProductNameWithKAKAOException;
+import gift.exception.NotFoundElementException;
 import gift.model.MemberRole;
 import gift.model.Product;
 import gift.dto.ProductRequest;
@@ -10,6 +11,7 @@ import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -52,7 +54,9 @@ public class ProductService {
     }
 
     private Product findProductWithId(Long id) {
-        return productRepository.findById(id);
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isEmpty()) throw new NotFoundElementException("존재하지 않는 리소스에 대한 접근입니다.");
+        return product.get();
     }
 
     private Product createProductWithProductRequest(ProductRequest productRequest) {
@@ -61,7 +65,7 @@ public class ProductService {
 
     private void updateProductWithProductRequest(Product product, ProductRequest productRequest) {
         product.updateProductInfo(productRequest.name(), productRequest.price(), productRequest.imageUrl());
-        productRepository.update(product);
+        productRepository.save(product);
     }
 
     private void productNameValidation(ProductRequest productRequest, MemberRole memberRole) {
