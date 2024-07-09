@@ -95,10 +95,6 @@ public class Product {
         this.setImageUrl(product.getImageUrl());
     }
 
-    public ProductDTO convertToProductDTO(Product product) {
-        return new ProductDTO(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-    }
-
     private void blankCatch(ProductDTO productDTO) throws BlankContentException {
         if (productDTO.name().isBlank() || productDTO.price() == null || productDTO.imageUrl()
                 .isBlank()) {
