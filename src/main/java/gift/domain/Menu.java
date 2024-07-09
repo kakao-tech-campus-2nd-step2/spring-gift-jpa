@@ -30,6 +30,13 @@ public class Menu {
         this.imageUrl = imageUrl;
     }
 
+    public Menu(Long id, MenuRequest menuRequest){
+        this.id = id;
+        this.name = menuRequest.name();
+        this.price = menuRequest.price();
+        this.imageUrl = menuRequest.imageUrl();
+    }
+
     public Long getId() {
         return id;
     }
@@ -46,4 +53,10 @@ public class Menu {
         return imageUrl;
     }
 
+    public void update(Menu menu) {
+        this.id = menu.id;
+        this.name = menu.name;
+        this.price = menu.price;
+        this.imageUrl = menu.imageUrl;
+    }
 }

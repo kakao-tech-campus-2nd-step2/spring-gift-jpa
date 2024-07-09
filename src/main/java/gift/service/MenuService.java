@@ -8,6 +8,7 @@ import gift.repository.MenuRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,16 +34,19 @@ public class MenuService {
     }
 
     public Menu findById(Long id) {
-        Menu menu = menuRepository.findById(id);
+        Menu menu = menuRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("메뉴 정보가 없습니다."));
         return menu;
     }
 
-    public void update(Long id,MenuRequest menuRequest) {
-        menuRepository.update(id, menuMapper.MapMenuRequestToMenu(menuRequest));
+    public Menu update(Long id,MenuRequest menuRequest) {
+        Menu menu =  menuRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("메뉴 정보가 없습니다."));
+        menu.update(new Menu(id,menuRequest));
+        return menuRepository.save(menu);
     }
 
-    public Long delete(Long id) {
-        Long deletedId = menuRepository.delete(id);
-        return deletedId;
+    public void delete(Long id) {
+        menuRepository.deleteById(id);
     }
 }
