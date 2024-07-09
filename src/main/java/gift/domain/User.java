@@ -1,10 +1,15 @@
 package gift.domain;
 
+import gift.util.page.PageParam;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class User {
+
+    public static class getList extends PageParam {
+
+    }
 
     public static class CreateUser {
 
