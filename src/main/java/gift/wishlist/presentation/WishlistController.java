@@ -17,13 +17,13 @@ public class WishlistController {
     }
 
     @PostMapping("")
-    public void add(@RequestAttribute("email") String memberEmail, @RequestParam Long productId) {
-        wishlistService.add(memberEmail, productId);
+    public void add(@RequestAttribute("memberId") Long memberId, @RequestParam Long productId) {
+        wishlistService.save(memberId, productId);
     }
 
     @GetMapping("")
-    public ResponseEntity<List<WishlistResponse>> findAll(@RequestAttribute("email") String memberEmail) {
-        return ResponseEntity.ok(wishlistService.findAllByMember(memberEmail));
+    public ResponseEntity<List<WishlistResponse>> findAll(@RequestAttribute("memberId") Long memberId) {
+        return ResponseEntity.ok(wishlistService.findByMemberId(memberId));
     }
 
     @DeleteMapping("/{id}")
