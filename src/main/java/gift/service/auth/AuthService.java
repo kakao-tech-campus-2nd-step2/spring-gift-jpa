@@ -5,10 +5,8 @@ import gift.dto.LoginRequest;
 import gift.dto.RegisterRequest;
 import gift.exception.DuplicatedEmailException;
 import gift.exception.InvalidLoginInfoException;
-import gift.exception.NotFoundElementException;
 import gift.model.Member;
 import gift.model.MemberRole;
-import gift.model.Product;
 import gift.repository.MemberRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -35,8 +33,7 @@ public class AuthService {
     public AuthResponse register(RegisterRequest registerRequest) {
         emailValidation(registerRequest.email());
         var member = createMemberWithMemberRequest(registerRequest);
-        var savedMember = memberRepository.save(member);
-        var token = createAccessTokenWithMember(savedMember);
+        var token = createAccessTokenWithMember(member);
         return AuthResponse.of(token);
     }
 
@@ -78,6 +75,8 @@ public class AuthService {
     }
 
     private Member createMemberWithMemberRequest(RegisterRequest registerRequest) {
-        return new Member(registerRequest.name(), registerRequest.email(), registerRequest.password(), MemberRole.valueOf(registerRequest.role()));
+        var member = new Member(registerRequest.name(), registerRequest.email(), registerRequest.password(), MemberRole.valueOf(registerRequest.role()));
+        var savedMember = memberRepository.save(member);
+        return savedMember;
     }
 }

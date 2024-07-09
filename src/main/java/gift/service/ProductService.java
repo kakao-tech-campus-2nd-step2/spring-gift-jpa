@@ -1,18 +1,16 @@
 package gift.service;
 
+import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.exception.InvalidProductNameWithKAKAOException;
 import gift.exception.NotFoundElementException;
 import gift.model.MemberRole;
 import gift.model.Product;
-import gift.dto.ProductRequest;
-import gift.repository.ProductOptionRepository;
 import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -26,9 +24,8 @@ public class ProductService {
 
     public ProductResponse addProduct(ProductRequest productRequest, MemberRole memberRole) {
         productNameValidation(productRequest, memberRole);
-        var product = createProductWithProductRequest(productRequest);
-        var savedProduct = productRepository.save(product);
-        return getProductResponseFromProduct(savedProduct);
+        var product = saveProductWithProductRequest(productRequest);
+        return getProductResponseFromProduct(product);
     }
 
     public void updateProduct(Long id, ProductRequest productRequest) {
@@ -58,8 +55,10 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    private Product createProductWithProductRequest(ProductRequest productRequest) {
-        return new Product(productRequest.name(), productRequest.price(), productRequest.imageUrl());
+    private Product saveProductWithProductRequest(ProductRequest productRequest) {
+        var product = new Product(productRequest.name(), productRequest.price(), productRequest.imageUrl());
+        var savedProduct = productRepository.save(product);
+        return savedProduct;
     }
 
     private void updateProductWithProductRequest(Product product, ProductRequest productRequest) {
