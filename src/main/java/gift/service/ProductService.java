@@ -27,20 +27,20 @@ public class ProductService {
     }
 
     public void save(ProductRequest productRequest) {
-        Product product = new Product(0, productRequest.name(), productRequest.price(), productRequest.imageUrl());
+        Product product = new Product(productRequest.name(), productRequest.price(), productRequest.imageUrl());
         productRepository.save(product);
     }
 
     public void update(Long id, ProductRequest productRequest) {
         Product product = new Product(id, productRequest.name(), productRequest.price(), productRequest.imageUrl());
-        productRepository.update(product);
+        productRepository.save(product); // save() can be used for both insert and update
     }
 
     public void delete(Long id) {
-        productRepository.delete(id);
+        productRepository.deleteById(id);
     }
 
     public void deleteBatch(List<Long> ids) {
-        productRepository.deleteBatch(ids);
+        productRepository.deleteAllById(ids);
     }
 }
