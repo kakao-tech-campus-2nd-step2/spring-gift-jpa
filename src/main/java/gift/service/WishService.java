@@ -4,7 +4,6 @@ import gift.domain.Member;
 import gift.domain.Wish;
 import gift.dto.WishRequest;
 import gift.repository.WishRepository;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +17,8 @@ public class WishService {
         return wishRepository.findByMemberId(member.getId());
     }
 
-    public void addWish(WishRequest wishRequest, Member member) {
-        Wish wish = new Wish(wishRequest.getProductId(), member.getId());
-        wishRepository.save(wish);
+    public Wish addWish(WishRequest wishRequest, Member member) {
+        return wishRepository.save(wishRequest, member.getId());
     }
 
     public void deleteWish(Long id, Member member) {
