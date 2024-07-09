@@ -1,6 +1,7 @@
 package gift.service;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import gift.domain.model.*;
 import gift.domain.repository.WishRepository;
 =======
@@ -9,6 +10,10 @@ import gift.domain.model.WishResponseDto;
 import gift.domain.model.WishUpdateRequestDto;
 import gift.domain.repository.WishListRepository;
 >>>>>>> 4b5ff17 (refacotr: ProductRepository JPA 방식으로 리팩토링)
+=======
+import gift.domain.model.*;
+import gift.domain.repository.WishRepository;
+>>>>>>> 96f4edd (refacotr: WishRepository JPA 방식으로 리팩토링)
 import gift.exception.DuplicateWishItemException;
 import gift.exception.NoSuchWishException;
 import java.util.List;
@@ -38,11 +43,16 @@ public class WishListService {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     @Transactional
     public WishResponseDto addWish(String email, Long productId) {
 =======
     public ProductResponseDto addWish(String email, Long productId) {
 >>>>>>> 4b5ff17 (refacotr: ProductRepository JPA 방식으로 리팩토링)
+=======
+    @Transactional
+    public WishResponseDto addWish(String email, Long productId) {
+>>>>>>> 96f4edd (refacotr: WishRepository JPA 방식으로 리팩토링)
         productService.validateExistProductId(productId);
         if (wishRepository.existsByUserEmailAndProductId(email, productId)) {
             throw new DuplicateWishItemException("이미 위시리스트에 존재하는 상품입니다.");

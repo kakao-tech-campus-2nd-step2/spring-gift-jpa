@@ -71,11 +71,16 @@ public class ProductService {
             throw new IllegalArgumentException("이미 존재하는 상품명입니다.");
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
         product.update(productAddRequestDto.getName(), productAddRequestDto.getPrice(),
             productAddRequestDto.getImageUrl());
 =======
         product.update(productAddRequestDto.getName(), productAddRequestDto.getPrice(), productAddRequestDto.getImageUrl());
 >>>>>>> 4b5ff17 (refacotr: ProductRepository JPA 방식으로 리팩토링)
+=======
+        product.update(productAddRequestDto.getName(), productAddRequestDto.getPrice(),
+            productAddRequestDto.getImageUrl());
+>>>>>>> 96f4edd (refacotr: WishRepository JPA 방식으로 리팩토링)
         return convertToResponseDto(productRepository.save(product));
     }
 
@@ -119,5 +124,14 @@ public class ProductService {
         );
 =======
 >>>>>>> 4b5ff17 (refacotr: ProductRepository JPA 방식으로 리팩토링)
+    }
+
+    protected Product convertResponseDtoToEntity(ProductResponseDto productResponseDto) {
+        return new Product(
+            productResponseDto.getId(),
+            productResponseDto.getName(),
+            productResponseDto.getPrice(),
+            productResponseDto.getImageUrl()
+        );
     }
 }

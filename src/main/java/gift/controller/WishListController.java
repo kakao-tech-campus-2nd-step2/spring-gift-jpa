@@ -43,10 +43,14 @@ public class WishListController {
     public ResponseEntity<Map<String, Object>> addWish(@PathVariable Long productId,
         @LoginUser User user) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         WishResponseDto wishedProduct = wishListService.addWish(user.getEmail(), productId);
 =======
         ProductResponseDto wishedProduct = wishListService.addWish(user.getEmail(), productId);
 >>>>>>> 4b5ff17 (refacotr: ProductRepository JPA 방식으로 리팩토링)
+=======
+        WishResponseDto wishedProduct = wishListService.addWish(user.getEmail(), productId);
+>>>>>>> 96f4edd (refacotr: WishRepository JPA 방식으로 리팩토링)
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
