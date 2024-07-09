@@ -25,24 +25,24 @@ public class MemberController {
     }
 
     @GetMapping("/{email}")
-    public ResponseEntity<MemberDto> getMember(@PathVariable String email) {
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.find(email));
+    public ResponseEntity<MemberDto> getMemberByEmail(@PathVariable String email) {
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.findByEmail(email));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Token> signUp(@RequestBody MemberDto member) {
+    public ResponseEntity<Token> createMember(@RequestBody MemberRequest member) {
         memberService.save(member);
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.login(member));
     }
 
-    @PutMapping("/{email}")
-    public ResponseEntity<MemberDto> putMember(@PathVariable String email, @RequestBody MemberDto member) {
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.update(email, member));
+    @PutMapping("/{id}")
+    public ResponseEntity<MemberDto> updateMember(@PathVariable Long id, @RequestBody MemberDto member) {
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.update(id, member.password()));
     }
 
-    @DeleteMapping("/{email}")
-    public ResponseEntity<Void> deleteMember(@PathVariable String email) {
-        memberService.delete(email);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
+        memberService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 }
