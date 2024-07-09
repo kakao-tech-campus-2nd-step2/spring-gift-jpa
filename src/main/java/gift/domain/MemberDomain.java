@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.naming.AuthenticationException;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class MemberDomain {
@@ -26,7 +27,8 @@ public class MemberDomain {
     }
 
     public String signin(Member member){
-        if (memberDao.selectMember(member.getEmail()) == null){
+        Optional<Member> memberOptional = Optional.ofNullable(memberDao.selectMember(member.getEmail()));
+        if (!memberOptional.isPresent()) {
             memberDao.insertMember(member);
             return jwtUtil.createJwt(member.getId(), member.getEmail());
         }
