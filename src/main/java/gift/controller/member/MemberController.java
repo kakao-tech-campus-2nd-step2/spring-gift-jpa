@@ -1,7 +1,5 @@
 package gift.controller.member;
 
-import gift.dto.Token;
-import gift.dto.request.LoginInfoRequest;
 import gift.dto.request.MemberRequest;
 import gift.dto.response.TokenResponse;
 import gift.service.MemberService;
@@ -31,10 +29,10 @@ public class MemberController {
     }
 
     @PostMapping("/members/login")
-    public ResponseEntity<TokenResponse> loginMember(@Valid @RequestBody LoginInfoRequest loginInfo) {
+    public ResponseEntity<TokenResponse> loginMember(@Valid @RequestBody MemberRequest loginInfo) {
         Long registeredMemberId = memberService.loginMember(loginInfo);
-        Token token = tokenService.generateToken(registeredMemberId);
-        return ResponseEntity.ok(new TokenResponse(token.getValue()));
+        TokenResponse token = tokenService.generateToken(registeredMemberId);
+        return ResponseEntity.ok(token);
     }
 
 }

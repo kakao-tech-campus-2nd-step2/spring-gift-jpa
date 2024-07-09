@@ -16,12 +16,14 @@ public class MemberService {
     }
 
     public Long registerMember(MemberRequest memberInfo) {
-       return memberRepository.save(new Member(memberInfo.getEmail(), memberInfo.getPassword())).getId();
+        return memberRepository.save(new Member(memberInfo.getEmail(), memberInfo.getPassword())).getId();
     }
 
 
-    public Long loginMember(LoginInfoRequest loginInfo) {
-        return memberRepository.getMemberIdByEmailAndPassword(loginInfo);
+    public Long loginMember(MemberRequest loginInfo) {
+        Member registeredMember = memberRepository.findIdByEmailAndPassword(loginInfo.getEmail(), loginInfo.getPassword())
+                .orElseThrow(() -> new MemberNotFoundException("이메일 혹은 비밀번호가 틀렸습니다."));
+        return registeredMember.getId();
     }
 
     public boolean hasDuplicatedEmail(String email) {
