@@ -5,12 +5,12 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class Email {
-    @Column(name = "email")
+public class Nickname {
+    @Column(name = "nickname")
     private String value;
 
-    public Email() {}
-    public Email(String value) {
+    public Nickname() {}
+    public Nickname(String value) {
         this.value = value;
     }
 

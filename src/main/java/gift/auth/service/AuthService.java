@@ -23,7 +23,7 @@ public class AuthService {
     }
 
     public Map<String, String> login(LoginRequestDto loginRequestDto) {
-        Member member = memberRepository.findByEmailValueAndPasswordValue(loginRequestDto.email(), loginRequestDto.password())
+        Member member = memberRepository.findByEmailAndPassword(loginRequestDto.email(), loginRequestDto.password())
                 .orElseThrow(MemberNotFoundException::new);
         String accessToken = BEARER_TYPE + " " + tokenManager.createAccessToken(new AuthInfo(member));
         Map<String, String> headers = new HashMap<>();

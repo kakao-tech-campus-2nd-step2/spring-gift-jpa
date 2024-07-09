@@ -1,8 +1,12 @@
 package gift.member.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
+@Embeddable
 public class Password {
+    @Column(name = "password")
     private String value;
 
     public Password() {}
