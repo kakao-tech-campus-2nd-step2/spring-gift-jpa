@@ -2,13 +2,23 @@ package gift.model;
 
 import java.beans.ConstructorProperties;
 import gift.exception.InvalidProductException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+@Entity
+@Table(name = "products")
 public class Product {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
   
 	@NotBlank(message = "이름은 필수로 입력해야 합니다.")
@@ -17,8 +27,10 @@ public class Product {
 	private String name;
 	
 	@Min(value = 0, message = "음수를 입력할 수 없습니다.")
+	@Column(nullable = false)
 	private int price;
 	
+	@Column(nullable = false)
 	private String imageUrl;
 	
 	public Product() {}
