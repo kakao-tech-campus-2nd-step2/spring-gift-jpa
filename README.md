@@ -14,6 +14,7 @@
         primary key (id)
     )
     ```
+    
     ```json
     create table product
     (
@@ -24,6 +25,7 @@
         primary key (id)
     )
     ```
+    
     ```json
     create table wish
     (
