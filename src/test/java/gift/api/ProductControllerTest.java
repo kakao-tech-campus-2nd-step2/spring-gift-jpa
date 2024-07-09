@@ -54,10 +54,10 @@ class ProductControllerTest {
     void getAllProducts() throws Exception {
         List<ProductResponse> response = new ArrayList<>();
         ProductResponse productResponse1 = ProductMapper.toResponseDto(
-                new Product(1L, "product1", 1000, "https://testshop.com")
+                new Product("product1", 1000, "https://testshop.com")
         );
         ProductResponse productResponse2 = ProductMapper.toResponseDto(
-                new Product(2L, "product2", 3000, "https://testshop.com")
+                new Product("product2", 3000, "https://testshop.com")
         );
         response.add(productResponse1);
         response.add(productResponse2);
@@ -77,12 +77,13 @@ class ProductControllerTest {
     @DisplayName("상품 상세 조회 기능 테스트")
     void getProduct() throws Exception {
         ProductResponse response = ProductMapper.toResponseDto(
-                new Product(1L, "product1", 1000, "https://testshop.com")
+                new Product("product1", 1000, "https://testshop.com")
         );
+        Long responseId = 1L;
         String responseJson = objectMapper.writeValueAsString(response);
         when(productService.getProductByIdOrThrow(any())).thenReturn(response);
 
-        mockMvc.perform(get("/api/products/{id}", response.id())
+        mockMvc.perform(get("/api/products/{id}", responseId)
                         .header(HttpHeaders.AUTHORIZATION, bearerToken))
                 .andExpect(status().isOk())
                 .andExpect(content().json(responseJson))
@@ -92,7 +93,7 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.imageUrl").value(response.imageUrl()))
                 .andDo(print());
 
-        verify(productService).getProductByIdOrThrow(response.id());
+        verify(productService).getProductByIdOrThrow(responseId);
     }
 
     @Test

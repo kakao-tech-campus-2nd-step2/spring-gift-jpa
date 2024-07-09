@@ -1,6 +1,7 @@
 package gift.dao;
 
 import gift.product.dao.ProductRepository;
+import gift.product.dto.ProductRequest;
 import gift.product.entity.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +30,7 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("상품 추가 및 ID 조회 테스트")
     void saveAndFindById() {
-        Product product = new Product(null, "newproduct", 12345, "new.jpg");
+        Product product = new Product("newproduct", 12345, "new.jpg");
         Product savedProduct = productRepository.save(product);
 
         Product foundProduct = productRepository.findById(savedProduct.getId())
@@ -44,7 +45,7 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("상품 ID 조회 실패 테스트")
     void findByIdFailed() {
-        Product product = new Product(null, "newproduct", 12345, "new.jpg");
+        Product product = new Product("newproduct", 12345, "new.jpg");
         Product savedProduct = productRepository.save(product);
 
         Product foundProduct = productRepository.findById(123456789L)
@@ -60,7 +61,6 @@ class ProductRepositoryTest {
         productIds.add(
                 productRepository.save(
                         new Product(
-                                null,
                                 "product1L",
                                 1000,
                                 "1L.jpg")
@@ -69,7 +69,6 @@ class ProductRepositoryTest {
         productIds.add(
                 productRepository.save(
                         new Product(
-                                null,
                                 "product2L",
                                 2000,
                                 "2L.jpg")
@@ -78,7 +77,6 @@ class ProductRepositoryTest {
         productIds.add(
                 productRepository.save(
                         new Product(
-                                null,
                                 "product3L",
                                 3000,
                                 "3L.jpg")
@@ -87,7 +85,6 @@ class ProductRepositoryTest {
         productIds.add(
                 productRepository.save(
                         new Product(
-                                null,
                                 "product4L",
                                 4000,
                                 "4L.jpg")
@@ -102,9 +99,9 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("상품 수정 테스트")
     void updateProduct() {
-        Product product = new Product(null, "product1", 1000, "product1.jpg");
+        Product product = new Product("product1", 1000, "product1.jpg");
         Product savedProduct = productRepository.save(product);
-        savedProduct = new Product(savedProduct.getId(), "updateproduct", 12345, "updateproduct.jpg");
+        savedProduct.update(new ProductRequest("updateproduct", 12345, "updateproduct.jpg"));;
 
         Product updatedProduct = productRepository.save(savedProduct);
 
@@ -119,7 +116,7 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("상품 삭제 테스트")
     void deleteProduct() {
-        Product product = new Product(null, "product", 1000, "product.jpg");
+        Product product = new Product("product", 1000, "product.jpg");
         Product savedProduct = productRepository.save(product);
 
         productRepository.deleteById(savedProduct.getId());

@@ -17,7 +17,6 @@ public class ProductMapper {
 
     public static Product toEntity(ProductRequest request) {
         return new Product(
-                null,
                 request.name(),
                 request.price(),
                 request.imageUrl()

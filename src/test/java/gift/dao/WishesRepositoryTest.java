@@ -61,9 +61,9 @@ class WishesRepositoryTest {
         wishesRepository.save(wish2L);
         wishesRepository.save(wish1L2);
 
-        List<Long> productIdList = wishesRepository.findByMemberId(wish1L.getMemberId());
+        List<Wish> wishList = wishesRepository.findByMemberId(wish1L.getMemberId());
 
-        assertThat(productIdList.size()).isEqualTo(2);
+        assertThat(wishList.size()).isEqualTo(2);
     }
 
     @Test
@@ -72,13 +72,13 @@ class WishesRepositoryTest {
         Wish wish1L = new Wish(1L, 2L);
         Wish wish2L = new Wish(2L, 4L);
         Wish wish1L2 = new Wish(1L, 6L);
-        Wish savedWish = wishesRepository.save(wish1L);
+        wishesRepository.save(wish1L);
         wishesRepository.save(wish2L);
         wishesRepository.save(wish1L2);
 
-        List<Long> productIdList = wishesRepository.findByMemberId(4L);
+        List<Wish> wishList = wishesRepository.findByMemberId(4L);
 
-        assertThat(productIdList).isEmpty();
+        assertThat(wishList).isEmpty();
     }
 
     @Test

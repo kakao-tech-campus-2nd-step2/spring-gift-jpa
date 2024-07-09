@@ -1,5 +1,6 @@
 package gift.member.entity;
 
+import gift.member.dto.MemberDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,8 +21,7 @@ public class Member {
     protected Member() {
     }
 
-    public Member(Long id, String email, String password) {
-        this.id = id;
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
     }
@@ -36,6 +36,11 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public void update(MemberDto memberDto) {
+        email = memberDto.email();
+        password = memberDto.password();
     }
 
 }
