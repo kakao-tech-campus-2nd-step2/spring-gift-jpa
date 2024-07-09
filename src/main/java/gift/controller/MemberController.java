@@ -1,7 +1,9 @@
 package gift.controller;
 
+import gift.domain.Member;
 import gift.domain.MemberRequest;
 import gift.service.MemberService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,16 +26,22 @@ public class MemberController {
             @RequestParam("password") String password
     ) {
         MemberRequest memberRequest = new MemberRequest(id,password);
-        return memberService.join(memberRequest);
+        String jwt = memberService.join(memberRequest);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization",jwt);
+        return ResponseEntity.ok().headers(headers).body("회원가입 성공");
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(
+    public ResponseEntity<String> login(
             @RequestParam("id") String id,
             @RequestParam("password") String password
     ) {
         MemberRequest memberRequest = new MemberRequest(id,password);
-        return memberService.login(memberRequest);
+        String jwt = memberService.login(memberRequest);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization",jwt);
+        return ResponseEntity.ok().headers(headers).body("로그인 성공");
     }
 
     @PostMapping("/changePassword")
