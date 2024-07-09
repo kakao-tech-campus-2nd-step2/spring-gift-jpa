@@ -27,4 +27,13 @@ class ProductRepositoryTest {
             () -> assertThat(savedProduct.getName()).isEqualTo(product1.getName())
         );
     }
+
+    @Test
+    void findbyid() {
+        //given
+        Long id = 1L;
+        productRepository.save(new Product(1L, "아메리카노", 4500, "americano"));
+        Long findId = productRepository.findById(id).get().getId();
+        assertThat(id).isEqualTo(findId);
+    }
 }
