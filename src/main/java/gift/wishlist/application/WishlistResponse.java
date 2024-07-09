@@ -4,19 +4,19 @@ import gift.wishlist.domain.Wishlist;
 
 public class WishlistResponse {
     private Long id;
-    private String memberEmail;
+    private Long memberId;
     private Long productId;
 
-    public WishlistResponse(Long id, String memberEmail, Long productId) {
+    public WishlistResponse(Long id, Long memberId, Long productId) {
         this.id = id;
-        this.memberEmail = memberEmail;
+        this.memberId = memberId;
         this.productId = productId;
     }
 
     public static WishlistResponse from(Wishlist wishlist) {
         return new WishlistResponse(
                 wishlist.getId(),
-                wishlist.getMemberEmail(),
+                wishlist.getMemberId(),
                 wishlist.getProductId()
         );
     }
@@ -25,8 +25,8 @@ public class WishlistResponse {
         return id;
     }
 
-    public String getMemberEmail() {
-        return memberEmail;
+    public Long getMemberId() {
+        return memberId;
     }
 
     public Long getProductId() {
