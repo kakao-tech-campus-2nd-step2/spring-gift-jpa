@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>선물하기</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>🎁선물하기 상품 목록</h1>
+<table>
+    <thead>
+    <tr>
+        <th>상품명</th>
+        <th>가격</th>
+        <th>이미지</th>
+        <th>액션</th>
+    </tr>
+    </thead>
+    <tbody id="product-list">
+    <tr th:each="product : ${products}">
+        <td th:text="${product.name}">상품명</td>
+        <td th:text="${product.price}">가격</td>
+        <td><img th:src="${product.imageUrl}" alt="상품 이미지" width="100"></td>
+        <td>
+            <button onclick="editProduct(${product.id})">수정</button>
+            <button onclick="deleteProduct(${product.id})">삭제</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+
+<!--상품 수정-->
+<form id="edit-product-form" style="display: none;">
+    <h2>상품 수정</h2>
+    <input type="hidden" id="edit-id" name="id">
+    <label for="edit-name">상품명:</label>
+    <input type="text" id="edit-name" name="name">
+    <label for="edit-price">가격:</label>
+    <input type="text" id="edit-price" name="price">
+    <label for="edit-imageUrl">이미지 URL:</label>
+    <input type="text" id="edit-imageUrl" name="imageUrl">
+    <button class="edit-button" type="button" onclick="updateProduct()">수정</button>
+</form>
+
+<script>
+    function fetchProducts() {
+        $.get("/api/products", function(data) {
+            var productList = $("#product-list");
+            productList.empty();
+            data.forEach(function(product) {
+                productList.append(`
+                    <tr>
+                        <td>${product.name}</td>
+                        <td>${product.price}</td>
+                        <td><img src="${product.imageUrl}" alt="상품 이미지" width="100"></td>
+                        <td>
+                            <button onclick="editProduct(${product.id})">수정</button>
+                            <button onclick="deleteProduct(${product.id})">삭제</button>
+                        </td>
+                    </tr>
+                `);
+            });
+        });
+    }
+
+    // 상품 수정
+    function editProduct(id) {
+        $.get(`/api/products/${id}`, function(product) {
+            $("#edit-id").val(product.id);
+            $("#edit-name").val(product.name);
+            $("#edit-price").val(product.price);
+            $("#edit-imageUrl").val(product.imageUrl);
+            $("#edit-product-form").show();
+        });
+    }
+
+    // 상품 수정
+    function updateProduct() {
+        var id = $("#edit-id").val();
+        var name = $("#edit-name").val();
+        var price = $("#edit-price").val();
+        var imageUrl = $("#edit-imageUrl").val();
+
+        $.ajax({
+            url: `/api/products`,
+            type: "PUT",
+            contentType: "application/json",
+            data: JSON.stringify({id: id, name: name, price: price, imageUrl: imageUrl}),
+            success: function() {
+                fetchProducts();
+                resetEditProductForm();
+                $("#edit-product-form").hide();   // 성공 시 숨기기
+            }
+        });
+    }
+
+    // 상품 삭제
+    function deleteProduct(id) {
+        $.ajax({
+            url: `/api/products/${id}`,
+            type: "DELETE",
+            success: function() {
+                fetchProducts();
+            }
+        });
+    }
+
+    // 상품 수정
+    function resetEditProductForm() {
+        $("#edit-id").val("");
+        $("#edit-name").val("");
+        $("#edit-price").val("");
+        $("#edit-imageUrl").val("");
+    }
+
+    $(document).ready(function() {
+        fetchProducts();
+    });
+</script>
+</body>
+</html>
