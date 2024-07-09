@@ -51,5 +51,10 @@ public class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value=DataNotFoundException.class)
+    public ResponseEntity<String> handleDataNotFoundE(DataNotFoundException ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
 
 }
