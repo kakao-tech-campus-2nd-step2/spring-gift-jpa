@@ -11,6 +11,7 @@ import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WishListService {
@@ -24,25 +25,25 @@ public class WishListService {
     }
 
     public void addProductToWishList(Long memberId, Long productId, int amount) {
-        wishListRepository.findByMemberIdAndProductId(memberId, productId)
-                .ifPresent(duplicatedWish -> {
-                    throw new WishAlreadyExistsException("Product already exist in your wishlist");
-                });
+        Optional<Wish> existingWish = wishListRepository.findByMemberIdAndProductId(memberId, productId);
+        if(existingWish.isPresent()){
+            throw new WishAlreadyExistsException(existingWish.get());
+        }
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+                .orElseThrow(ProductNotFoundException::new);
         Wish wish = new Wish(memberId, amount, product);
         wishListRepository.save(wish);
     }
 
     public void deleteProductInWishList(Long memberId, Long productId) {
         Wish wish = wishListRepository.findByMemberIdAndProductId(memberId, productId)
-                .orElseThrow(() -> new WishNotFoundException("Wish not found"));
+                .orElseThrow(WishNotFoundException::new);
         wishListRepository.delete(wish);
     }
 
     public void updateWishProductAmount(Long memberId, Long productId, int amount) {
         Wish wish = wishListRepository.findByMemberIdAndProductId(memberId, productId)
-                .orElseThrow(() -> new WishNotFoundException("Wish not found"));
+                .orElseThrow(WishNotFoundException::new);
         wish.setAmount(amount);
 
         wishListRepository.save(wish);

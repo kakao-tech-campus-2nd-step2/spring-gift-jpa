@@ -26,7 +26,7 @@ public class ProductService {
     public ProductResponse getProduct(Long productId) {
         return productRepository.findById(productId)
                 .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
-                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+                .orElseThrow(ProductNotFoundException::new);
     }
 
     public List<ProductResponse> getProducts() {
@@ -38,7 +38,7 @@ public class ProductService {
 
     public void updateProduct(Long id, String name, int price, String imageUrl) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+                .orElseThrow(ProductNotFoundException::new);
 
         product.setName(name);
         product.setPrice(price);
@@ -49,7 +49,7 @@ public class ProductService {
 
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException("Product not found"));
+                .orElseThrow(ProductNotFoundException::new);
         productRepository.delete(product);
     }
 
