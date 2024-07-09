@@ -7,12 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
-public class ProductRepositoryH2Impl implements ProductRepository {
+public class ProductRepositoryJdbcImpl implements ProductRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductRepositoryH2Impl(JdbcTemplate jdbcTemplate) {
+    public ProductRepositoryJdbcImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -54,6 +55,27 @@ public class ProductRepositoryH2Impl implements ProductRepository {
                 name
         );
         return products.stream().findFirst();
+    }
+
+    @Override
+    public Optional<List<Product>> findByIds(List<Long> ids) {
+        String sql = "SELECT * FROM products WHERE id IN (" + ids.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(",")) + ")";
+
+        List<Product> products = jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> new Product(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getInt("price"),
+                        resultSet.getString("imageUrl")
+                )
+        );
+        if(products.isEmpty()){
+            return Optional.empty();
+        }
+        return Optional.of(products);
     }
 
     @Override
