@@ -4,7 +4,7 @@ import gift.exception.MemberErrorCode;
 import gift.exception.MemberException;
 import gift.model.Member;
 import gift.model.dto.MemberRequestDto;
-import gift.repository.MemberDao;
+import gift.repository.MemberRepository;
 import gift.util.TokenProvider;
 import org.springframework.stereotype.Service;
 
@@ -12,15 +12,15 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final TokenProvider tokenProvider;
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public AuthService(TokenProvider tokenProvider, MemberDao memberDao) {
+    public AuthService(TokenProvider tokenProvider, MemberRepository memberRepository) {
         this.tokenProvider = tokenProvider;
-        this.memberDao = memberDao;
+        this.memberRepository = memberRepository;
     }
 
     public String getToken(MemberRequestDto memberRequestDto) throws MemberException {
-        Member member = memberDao.selectMemberByEmail(memberRequestDto.getEmail());
+        Member member = memberRepository.findByEmail(memberRequestDto.getEmail());
         if (!member.matchPassword(memberRequestDto.getPassword())) {
             throw new MemberException(MemberErrorCode.FAILURE_LOGIN);
         }

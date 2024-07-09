@@ -6,12 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
-    @Override
-    List<Wish> findAllById(Iterable<Long> id);
+    List<Wish> findAllByMemberId(Long memberId);
 
-    @Override
-    Wish save(Wish wish);
-
-    @Override
-    void deleteById(Long id);
+    Wish findByMemberIdAndProductId(Long memberId, Long ProductId);
+    void deleteByMemberIdAndProductId(Long memberId, Long ProductId);
 }

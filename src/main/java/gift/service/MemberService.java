@@ -3,7 +3,6 @@ package gift.service;
 import gift.model.Member;
 import gift.model.dto.LoginMemberDto;
 import gift.model.dto.MemberRequestDto;
-import gift.repository.MemberDao;
 import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 

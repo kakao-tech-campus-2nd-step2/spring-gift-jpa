@@ -9,7 +9,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Override
     Optional<Member> findById(Long id);
 
-    Optional<Member> findByEmail(String email);
+    Member findByEmail(String email);
 
     @Override
     Member save(Member member);

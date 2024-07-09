@@ -17,14 +17,14 @@ public class Wish {
 
     @Column(name = "member_id", nullable = false)
     private Long memberId;
-    @Column(name = "product_name", nullable = false)
-    private String productName;
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
     @Column(name = "count", nullable = false)
     private Integer count;
 
-    public Wish(Long memberId, String productName, Integer count) {
+    public Wish(Long memberId, Long productId, Integer count) {
         this.memberId = memberId;
-        this.productName = productName;
+        this.productId = productId;
         this.count = count;
     }
 
@@ -32,11 +32,15 @@ public class Wish {
         return memberId;
     }
 
-    public String getProductName() {
-        return productName;
+    public Long getProductId() {
+        return productId;
     }
 
     public Integer getCount() {
         return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }
