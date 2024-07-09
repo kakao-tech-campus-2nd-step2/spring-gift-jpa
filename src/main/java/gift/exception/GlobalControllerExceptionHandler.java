@@ -1,8 +1,10 @@
 package gift.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -53,6 +55,11 @@ public class GlobalControllerExceptionHandler {
 
     @ExceptionHandler(value=DataNotFoundException.class)
     public ResponseEntity<String> handleDataNotFoundE(DataNotFoundException ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value= ConstraintViolationException.class)
+    public ResponseEntity<String> handleDataIntegritViolation(ConstraintViolationException ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
 
