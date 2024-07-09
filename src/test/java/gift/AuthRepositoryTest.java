@@ -5,13 +5,13 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import gift.product.model.Member;
 import gift.product.repository.AuthRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 class AuthRepositoryTest {
+
     @Autowired
     AuthRepository authRepository;
 

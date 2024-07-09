@@ -1,6 +1,5 @@
 package gift.product.repository;
 
-import gift.product.dto.LoginMember;
 import gift.product.model.Wish;
 import jakarta.persistence.EntityManager;
 import java.util.List;
@@ -33,7 +32,7 @@ public class JpaWishRepository implements WishRepository {
         String jpql = "SELECT w FROM Wish w WHERE w.id = :id AND w.memberId = :memberId";
         return em.createQuery(jpql, Wish.class)
             .setParameter("id", id)
-            .setParameter("memberId",memberId)
+            .setParameter("memberId", memberId)
             .getResultList().stream().findAny();
     }
 

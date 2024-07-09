@@ -3,15 +3,11 @@ package gift.product.config;
 import gift.product.JwtCookieToHeaderInterceptor;
 import gift.product.TokenValidationInterceptor;
 import gift.product.repository.AuthRepository;
-import gift.product.repository.JpaAuthRepository;
-import gift.product.repository.JpaProductRepository;
-import gift.product.repository.JpaWishRepository;
 import gift.product.repository.ProductRepository;
 import gift.product.repository.WishRepository;
 import gift.product.service.AuthService;
 import gift.product.service.ProductService;
 import gift.product.service.WishService;
-import jakarta.persistence.EntityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -25,7 +21,8 @@ public class WebConfig implements WebMvcConfigurer {
     private final AuthRepository authRepository;
 
 
-    public WebConfig(ProductRepository productRepository, WishRepository wishRepository, AuthRepository authRepository) {
+    public WebConfig(ProductRepository productRepository, WishRepository wishRepository,
+        AuthRepository authRepository) {
         this.productRepository = productRepository;
         this.wishRepository = wishRepository;
         this.authRepository = authRepository;
@@ -37,10 +34,14 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public WishService wishService() { return new WishService(wishRepository, productService());}
+    public WishService wishService() {
+        return new WishService(wishRepository, productService());
+    }
 
     @Bean
-    public AuthService authService() { return new AuthService(authRepository); }
+    public AuthService authService() {
+        return new AuthService(authRepository);
+    }
 
     @Bean
     public TokenValidationInterceptor tokenValidationInterceptor() {

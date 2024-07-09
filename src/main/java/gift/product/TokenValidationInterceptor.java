@@ -1,8 +1,6 @@
 package gift.product;
 
-import gift.product.dto.LoginMember;
 import gift.product.repository.AuthRepository;
-import gift.product.service.AuthService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
