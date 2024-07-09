@@ -1,6 +1,7 @@
 package gift.repository;
 
 import gift.model.User;
+import gift.model.UserDTO;
 import jakarta.persistence.EntityManager;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,9 +18,13 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
+    public User save(UserDTO userDTO) {
+        User user = new User(userDTO.getEmail(), userDTO.getPassword());
         em.persist(user);
-        return user;
+
+        Optional<User> result = findByEmail(userDTO.getEmail());
+
+        return result.orElse(user);
     }
 
     @Override

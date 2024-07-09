@@ -28,6 +28,8 @@ public class JpaProductRepository implements ProductRepository {
         int result = em.createQuery("delete from Product p where p.id= :id")
                 .setParameter("id", id)
                 .executeUpdate();
+        em.flush();
+        em.clear();
         return result > 0;
     }
 

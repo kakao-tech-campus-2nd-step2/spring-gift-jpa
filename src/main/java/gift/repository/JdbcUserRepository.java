@@ -1,6 +1,7 @@
 package gift.repository;
 
 import gift.model.User;
+import gift.model.UserDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,7 +26,7 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
+    public User save(UserDTO user) {
         // 이미 존재하는 계정
         if (findByEmail(user.getEmail()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email already exists");
@@ -40,7 +41,9 @@ public class JdbcUserRepository implements UserRepository {
 
         jdbcInsert.execute(parameters);
 
-        return user;
+        Optional<User> result = findByEmail(user.getEmail());
+
+        return result.get();
     }
 
     @Override
