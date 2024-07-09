@@ -41,8 +41,8 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public Long authenticateUser(String email, String password) {
-        return userRepository.getIdByEmailPassword(email, password);
+    public Optional<User> authenticateUser(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password);
     }
 
     public String generateToken(String email) {
