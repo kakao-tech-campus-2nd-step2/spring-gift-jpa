@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS products CASCADE;
 CREATE TABLE products (
-    id LONG PRIMARY KEY ,
-    name VARCHAR(255),
+    id LONG PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
     price INT,
     imageUrl VARCHAR(255)
 );
@@ -9,16 +9,16 @@ CREATE TABLE products (
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
     id LONG AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255),
-    password VARCHAR(255)
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
 );
 
 DROP TABLE IF EXISTS wishes CASCADE;
 CREATE TABLE wishes (
     id LONG AUTO_INCREMENT PRIMARY KEY,
-    user_id LONG,
-    product_id LONG,
-    quantity INT,
+    user_id LONG NOT NULL,
+    product_id LONG NOT NULL,
+    quantity INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
