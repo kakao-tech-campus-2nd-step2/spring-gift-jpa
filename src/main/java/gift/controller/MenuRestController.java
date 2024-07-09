@@ -1,9 +1,7 @@
 package gift.controller;
 
-import gift.domain.Menu;
 import gift.domain.MenuRequest;
 import gift.domain.MenuResponse;
-import gift.service.MemberService;
 import gift.service.MenuService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +9,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/menus")

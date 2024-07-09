@@ -2,15 +2,10 @@ package gift.service;
 
 import gift.domain.Member;
 import gift.domain.MemberRequest;
-import gift.domain.MemberResponse;
 import gift.repository.MemberRepository;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class MemberService {

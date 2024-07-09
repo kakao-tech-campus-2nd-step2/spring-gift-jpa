@@ -2,9 +2,7 @@ package gift;
 
 
 import gift.domain.Member;
-import gift.domain.Menu;
 import gift.repository.MemberRepository;
-import gift.repository.MenuRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
