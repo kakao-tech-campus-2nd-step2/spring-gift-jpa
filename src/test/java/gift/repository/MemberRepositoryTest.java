@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,11 +20,18 @@ public class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
+    private Member expected;
+    private Member actual;
+
+    @BeforeEach
+    void setUp(){
+        expected = new Member("testEmail", "testPassword", "testRole");
+        actual = memberRepository.save(expected);
+    }
+
     @Transactional
     @Test
     void save() {
-        Member expected = new Member("testEmail", "testPassword", "testRole");
-        Member actual = memberRepository.save(expected);
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
             () -> assertThat(actual.getEmail()).isEqualTo(expected.getEmail())
@@ -34,9 +42,6 @@ public class MemberRepositoryTest {
     @Test
     void findByEmail() {
     
-        Member expected = new Member("testEmail", "testPassword", "testRole");
-        memberRepository.save(expected);
-
         Optional<Member> member = memberRepository.findByEmail("testEmail");
 
         assertAll(
@@ -49,13 +54,9 @@ public class MemberRepositoryTest {
     @Test
     void delete(){
         
-        Member expected = new Member("testEmail", "testPassword", "testRole");
-        memberRepository.save(expected);
+        memberRepository.delete(expected);
 
-        long memberId = 1L;
-        memberRepository.deleteById(memberId);
-
-        Optional<Member> member = memberRepository.findById(memberId);
+        Optional<Member> member = memberRepository.findByEmail("testEmail");
         assertThat(member).isNotPresent();
     }
 }

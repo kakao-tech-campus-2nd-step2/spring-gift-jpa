@@ -2,6 +2,7 @@ package gift.repository;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -17,11 +18,19 @@ public class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
+    private Product expected;
+    private Product actual;
+
+    @BeforeEach
+    void setUp(){
+        expected = new Product("testName", 1, "testUrl");
+        actual = productRepository.save(expected);
+    }
+
     @Transactional
     @Test
     void save() {
-        Product expected = new Product("testName", 1, "testUrl");
-        Product actual = productRepository.save(expected);
+    
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
             () -> assertThat(actual.getName()).isEqualTo(expected.getName())
@@ -31,10 +40,6 @@ public class ProductRepositoryTest {
     @Transactional
     @Test
     void findById() {
-
-        Product expected = new Product("testName", 1, "testUrl");
-        expected.setId(1L);
-        productRepository.save(expected);
 
         Optional<Product> product = productRepository.findById(expected.getId());
 
@@ -47,10 +52,6 @@ public class ProductRepositoryTest {
     @Transactional
     @Test
     void update() {
-
-        Product expected = new Product("testName", 1, "testUrl");
-        expected.setId(1L);
-        productRepository.save(expected);
 
         String updateName = "update name";
 
@@ -69,15 +70,10 @@ public class ProductRepositoryTest {
     @Transactional
     @Test
     void delete(){
-
-        Product expected = new Product("testName", 1, "testUrl");
-        expected.setId(1L);
-        productRepository.save(expected);
         
-        long productId = 1L;
-        productRepository.deleteById(productId);
+        productRepository.delete(expected);
 
-        Optional<Product> product = productRepository.findById(productId);
+        Optional<Product> product = productRepository.findById(expected.getId());
         assertThat(product).isNotPresent();
     }
 

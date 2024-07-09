@@ -2,6 +2,7 @@ package gift.repository;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,11 +20,18 @@ public class WishListRepositoryTest {
     @Autowired
     private WishListRepository wishListRepository;
 
+    private WishList expected;
+    private WishList actual;
+
+    @BeforeEach
+    void setUp(){
+        expected = new WishList(1L, 1L);
+        actual = wishListRepository.save(expected);
+    }
+
     @Test
     void save(){
         
-        WishList expected = new WishList(1L, 1L);
-        WishList actual = wishListRepository.save(expected);
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
             () -> assertThat(actual.getMemberId()).isEqualTo(expected.getMemberId())
@@ -33,32 +41,26 @@ public class WishListRepositoryTest {
     @Test
     void findWishListById(){
 
-        List<WishList> expected = new ArrayList<>();
-        expected.add(new WishList(1L, 1L));
-        expected.add(new WishList(1L, 2L));
+        List<WishList> expectedList = new ArrayList<>();
+        expectedList.add(new WishList(1L, 1L));
+        expectedList.add(new WishList(1L, 2L));
 
-        wishListRepository.save(new WishList(1L, 1L));
         wishListRepository.save(new WishList(1L, 2L));
         List<WishList> actual = wishListRepository.findProductIdsByMemberId(1L);
 
-        assertThat(actual.size()).isEqualTo(expected.size());
+        assertThat(actual.size()).isEqualTo(expectedList.size());
 
-        for (int i = 0; i < expected.size(); i++) {
-            assertThat(actual.get(i).getProductId()).isEqualTo(expected.get(i).getProductId());
+        for (int i = 0; i < expectedList.size(); i++) {
+            assertThat(actual.get(i).getProductId()).isEqualTo(expectedList.get(i).getProductId());
         }
     }
 
     @Test
     void delete(){
 
-        WishList expected = new WishList(1L, 1L);
-        wishListRepository.save(expected);
+        wishListRepository.delete(expected);
         
-        long id = wishListRepository.findId(1L, 1L);
-
-        wishListRepository.deleteById(id);
-        
-        Optional<WishList> wishList = wishListRepository.findById(id);
+        Optional<WishList> wishList = wishListRepository.findById(expected.getId());
         assertThat(wishList).isNotPresent();
     }
 
