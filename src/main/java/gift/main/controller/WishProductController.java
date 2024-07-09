@@ -1,5 +1,6 @@
 package gift.main.controller;
 
+import gift.main.annotation.SessionUser;
 import gift.main.dto.UserVo;
 import gift.main.dto.WishListProductDto;
 import gift.main.entity.Product;
@@ -36,25 +37,22 @@ public class WishProductController {
     }
 
     @DeleteMapping("/wishlist/{productId}")
-    public ResponseEntity<?> deleteProducts(@PathVariable(name = "productId") Long productId, HttpSession session) {
-        UserVo seesionUser = AuthUtil.getSessionUser(session);
-        wishlistProductDao.deleteWishlistProductByUserIdAndProductId(seesionUser.getId(), productId);
+    public ResponseEntity<?> deleteProducts(@PathVariable(name = "productId") Long productId, @SessionUser UserVo sessionUserVo) {
+        wishlistProductDao.deleteWishlistProductByUserIdAndProductId(sessionUserVo.getId(), productId);
         return ResponseEntity.ok("성공적으로 삭제 완료~!");
     }
 
     @GetMapping("/wishlist")
-    public ResponseEntity<?> deleteProducts(HttpSession session) {
-        UserVo seesionUser = AuthUtil.getSessionUser(session);
-        List<WishlistProduct> wishlistProducts = wishlistProductDao.selectWishlistProductsByUserId(seesionUser.getId());
+    public ResponseEntity<?> deleteProducts(@SessionUser UserVo sessionUser) {
+        List<WishlistProduct> wishlistProducts = wishlistProductDao.selectWishlistProductsByUserId(sessionUser.getId());
         Map<String, List<WishlistProduct>> response = new HashMap<>();
         response.put("wishlistProducts", wishlistProducts);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/wishlist/{productId}")
-    public ResponseEntity<?> addWishlistProduct(@PathVariable(name = "productId") Long productId, HttpSession session){
-        UserVo seesionUser = AuthUtil.getSessionUser(session);
-        WishListProductDto wishListProductDto = new WishListProductDto(productId, seesionUser.getId());
+    public ResponseEntity<?> addWishlistProduct(@PathVariable(name = "productId") Long productId, @SessionUser UserVo sessionUser){
+        WishListProductDto wishListProductDto = new WishListProductDto(productId, sessionUser.getId());
         wishlistProductDao.insertWishlistProduct(wishListProductDto);
         return ResponseEntity.ok("성공적으로 등록~");
     }
