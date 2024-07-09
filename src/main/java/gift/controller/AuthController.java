@@ -44,7 +44,6 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> handleSignUpRequest(@Valid @RequestBody UserForm userForm,
         BindingResult result) throws MethodArgumentNotValidException {
-        System.out.println(userForm.getEmail()+"\n"+userForm.getPassword());
         if (userService.existsEmail(userForm.getEmail())) {
             result.rejectValue("email", "", ErrorCode.DUPLICATE_EMAIL.getMessage());
             throw new DuplicateEmailException(null, result);
