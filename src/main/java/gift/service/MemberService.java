@@ -20,8 +20,8 @@ public class MemberService {
     }
 
 
-    public Long loginMember(MemberRequest loginInfo) {
-        Member registeredMember = memberRepository.findIdByEmailAndPassword(loginInfo.getEmail(), loginInfo.getPassword())
+    public Long loginMember(String email, String password) {
+        Member registeredMember = memberRepository.findMemberByEmailAndPassword(email, password)
                 .orElseThrow(() -> new MemberNotFoundException("이메일 혹은 비밀번호가 틀렸습니다."));
         return registeredMember.getId();
     }
