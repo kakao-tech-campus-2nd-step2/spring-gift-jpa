@@ -51,17 +51,7 @@ public class Product {
     public String getImgUrl() {
         return imgUrl;
     }
-
-    public void setId(Long id) {
-        if (this.id == null) {
-            this.id = id;
-        }
-    }
-
-    public boolean isNew() {
-        return this.id == null;
-    }
-
+    
     private void checkName(String name) {
         if (name.contains("카카오")) {
             throw new ProductNoConferredException(List.of("카카오"));

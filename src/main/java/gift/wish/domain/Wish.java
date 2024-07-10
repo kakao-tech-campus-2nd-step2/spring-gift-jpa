@@ -50,8 +50,4 @@ public class Wish {
     public Integer getAmount() {
         return amount;
     }
-
-    public boolean isNew() {
-        return id == null;
-    }
 }
