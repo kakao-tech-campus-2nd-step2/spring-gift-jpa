@@ -5,8 +5,9 @@ import gift.model.Member;
 import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
 import gift.util.PasswordUtil;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequestMapping
@@ -22,15 +23,15 @@ public class MemberService {
 
     public Member registerMember(Member member) {
         member.setPassword(PasswordUtil.hashPassword(member.getPassword()));
-        return memberRepository.registerMember(member);
+        return memberRepository.save(member);
     }
 
-    public Member authenticate(String email, String password) {
-        Member member = memberRepository.findByEmail(email);
-        if (member != null && member.getPassword().equals(PasswordUtil.hashPassword(password))) {
+    public Optional<Member> authenticate(String email, String password) {
+        Optional<Member> member = memberRepository.findByEmail(email);
+        if (member. isPresent() && member.get().getPassword().equals(PasswordUtil.hashPassword(password))) {
             return member;
         }
-        return null;
+        return Optional.empty();
     }
 
     public boolean existsByEmail(String email) {
