@@ -24,7 +24,6 @@
     <td>
       <input type="number" class="amountInput" min="0" value="0"
              th:data-product-id="${product.id}"
-             th:data-product-name="${product.name}"
              th:data-user-id="${userId}"/>
     </td>
   </tr>
@@ -41,7 +40,6 @@
     var amountInputs = document.getElementsByClassName('amountInput');
     for (var i = 0; i < amountInputs.length; i++) {
       var productId = amountInputs[i].getAttribute('data-product-id');
-      var productName = amountInputs[i].getAttribute('data-product-name');
       var userId = amountInputs[i].getAttribute('data-user-id');
       var amount = amountInputs[i].value;
 
@@ -50,7 +48,6 @@
         wishlistItems.push({
           userId: parseInt(userId),
           productId: parseInt(productId),  // Ensure productId is a number
-          productName: productName,
           amount: parseInt(amount)        // Ensure amount is a number
         });
       }
