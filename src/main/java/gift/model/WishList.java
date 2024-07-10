@@ -1,6 +1,7 @@
 package gift.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,11 +20,11 @@ public class WishList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private User user;
+    private final User user;
 
     @ManyToMany
     @JoinTable(
@@ -31,30 +32,36 @@ public class WishList {
         joinColumns = @JoinColumn(name = "wish_list_id"),
         inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private List<Product> products = new ArrayList<>(); // 리스트 초기화
+    private final List<Product> products = new ArrayList<>();
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    protected WishList(){
+        id = 1L;
+        user = new User();
     }
 
-    public void setId(Long id) {
+    public WishList(Long id, User user, List<Product> products) {
         this.id = id;
+        this.user = user;
+        this.products.addAll(products);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void addProduct(Product product) {
+        this.products.add(product);
+    }
+
+    public void removeProduct(Product product) {
+        this.products.remove(product);
     }
 }

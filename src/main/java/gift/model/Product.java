@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import java.util.Objects;
 import jakarta.persistence.Id;
 
@@ -16,19 +17,23 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final Long id;
 
     @Valid
     @NotNull(message = "이름을 입력해주세요.")
-    private Name name;
+    private final Name name;
 
-    private int price;
+    private final int price;
 
     @Column(name = "image_url")
-    private String imageUrl;
+    private final String imageUrl;
 
-    // 기본 생성자
-    public Product() {}
+    protected Product() {
+        id = null;
+        name = new Name();
+        price = 0;
+        imageUrl = null;
+    }
 
     public Product(Long id, Name name, int price, String imageUrl) {
         this.id = id;
@@ -41,16 +46,8 @@ public class Product {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Name getName() {
         return name;
-    }
-
-    public void setName(Name name) {
-        this.name = name;
     }
 
     public int getPrice() {
@@ -60,7 +57,6 @@ public class Product {
     public String getImageUrl() {
         return imageUrl;
     }
-
 
     @Override
     public boolean equals(Object o) {
