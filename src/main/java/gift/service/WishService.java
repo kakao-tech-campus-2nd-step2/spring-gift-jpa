@@ -29,7 +29,6 @@ public class WishService {
 
     @Transactional
     public void addWish(Long userId, WishRequest.Register request) {
-        System.out.println("userId = " + userId);
         var member = memberJpaRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
 

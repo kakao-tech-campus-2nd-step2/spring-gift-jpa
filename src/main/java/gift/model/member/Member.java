@@ -17,13 +17,17 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
     @Column(unique = true)
     private String email;
+
     @NotNull
     private String password;
+
     @NotNull
     private String name;
+    
     @NotNull
     private Role role;
 
