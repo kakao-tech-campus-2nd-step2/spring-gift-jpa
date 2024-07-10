@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "wish")
 public class Wish {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,7 +20,7 @@ public class Wish {
     @JoinColumn(name = "gift_id")
     @NotNull
     private Gift gift;
-    @Column(name = "quantity")
+
     @NotNull
     private int quantity;
 

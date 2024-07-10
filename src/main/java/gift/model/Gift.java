@@ -12,13 +12,10 @@ public class Gift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name")
     @NotNull
     private String name;
-    @Column(name = "price")
     @NotNull
     private int price;
-    @Column(name = "imageUrl")
     @NotNull
     private String imageUrl;
 
