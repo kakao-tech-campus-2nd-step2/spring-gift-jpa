@@ -5,11 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import gift.member.domain.Member;
-import gift.member.domain.Token;
-import gift.member.repository.MemberRepository;
-import gift.member.service.MemberService;
-import gift.member.util.JwtUtil;
+import gift.domain.Member;
+import gift.domain.Token;
+import gift.repository.MemberRepository;
+import gift.service.MemberService;
+import gift.util.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
