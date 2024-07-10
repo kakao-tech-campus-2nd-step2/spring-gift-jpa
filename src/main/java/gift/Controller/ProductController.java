@@ -14,9 +14,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 public class ProductController {
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
     private NameValidator nameValidator;
+
+    public ProductController(ProductService productService){
+        this.productService = productService;
+    }
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {

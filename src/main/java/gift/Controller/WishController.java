@@ -9,8 +9,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/wishlist")
 public class WishController {
-    @Autowired
-    private WishService wishService;
+    private final WishService wishService;
+
+    public  WishController(WishService wishService){
+        this.wishService = wishService;
+    }
 
     @PostMapping()
     public void addWish(@RequestHeader("Bearer") String token, @RequestParam String name){
