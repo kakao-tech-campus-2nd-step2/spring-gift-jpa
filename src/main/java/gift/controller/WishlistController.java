@@ -28,9 +28,6 @@ public class WishlistController {
         Long memberId = Long.parseLong(claims.getSubject());
         product.setMemberId(memberId);
         WishList addedItem = wishlistService.addProduct(product);
-        if (addedItem.getPrice() < 0){
-            ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("가격이 음수 일 수는 없습니다.");
-        }
         return ResponseEntity.ok(addedItem);
     }
 
@@ -39,9 +36,6 @@ public class WishlistController {
         Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
         Long memberId = Long.parseLong(claims.getSubject());
         List<WishList> products = wishlistService.getProductsByMemberId(memberId);
-        if (products == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("목록이 비었습니다");
-        }
         return ResponseEntity.ok(products);
     }
 

@@ -26,55 +26,23 @@ public class ProductController {
         return "product-list";
     }
 
-    @PostMapping
-    public String addProduct(@ModelAttribute @Valid Product product, RedirectAttributes redirectAttributes) {
-        try {
-            productService.addProduct(product);
-        } catch (InvalidProductException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Invalid product: " + e.getMessage());
-        }
-
-        return "redirect:/products";
+    @PostMapping("/add")
+        Product addedProduct = productService.addProduct(product);
     }
 
-    @PostMapping("/{id}")
-    public String updateProduct(@Valid @PathVariable Long id, @ModelAttribute Product product, RedirectAttributes redirectAttributes) {
-        try {
-            productService.updateProduct(id, product);
-        } catch (InvalidProductException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Invalid product: " + e.getMessage());
-        } catch (ProductNotFoundException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Product not found: " + e.getMessage());
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error updating product: " + e.getMessage());
-        }
-        return "redirect:/products";
+    //@PostMapping("/{id}")
+
+        productService.updateProduct(id, product);
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        try {
-            productService.deleteProduct(id);
-        } catch (ProductNotFoundException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Product not found: " + e.getMessage());
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting product: " + e.getMessage());
-        }
-        return "redirect:/products";
+        productService.deleteProduct(id);
     }
 
     @GetMapping("/view/{id}")
-    public String getProductDetails(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
-        try {
-            Product product = productService.getProductById(id);
-            model.addAttribute("product", product);
-        } catch (ProductNotFoundException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Product not found: " + e.getMessage());
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Product not found" );
-            return "redirect:/products";
-        }
-        return "product-detail";
+        Optional<Product> product = productService.getProductById(id);
+        model.addAttribute("product", product);
+
     }
 
     @GetMapping("/{id}")
