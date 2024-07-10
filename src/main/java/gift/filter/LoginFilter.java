@@ -2,6 +2,7 @@ package gift.filter;
 
 import gift.domain.TokenAuth;
 import gift.repository.token.TokenRepository;
+import gift.repository.token.TokenSpringDataJpaRepository;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,10 +15,10 @@ import java.util.Optional;
 @Component
 public class LoginFilter implements Filter {
 
-    private final TokenRepository tokenRepository;
+    private final TokenSpringDataJpaRepository tokenRepository;
 
     @Autowired
-    public LoginFilter(TokenRepository tokenRepository) {
+    public LoginFilter(TokenSpringDataJpaRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
     }
 
@@ -34,11 +35,9 @@ public class LoginFilter implements Filter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            Optional<TokenAuth> tokenAuthOptional = tokenRepository.findTokenByToken(token);
+            Optional<TokenAuth> tokenAuthOptional = tokenRepository.findByToken(token);
 
             if (tokenAuthOptional.isPresent()) {
-                TokenAuth tokenAuth = tokenAuthOptional.get();
-                // 인증된 사용자라면 다음 필터로 요청을 전달
                 filterChain.doFilter(request, response);
                 return;
             }
