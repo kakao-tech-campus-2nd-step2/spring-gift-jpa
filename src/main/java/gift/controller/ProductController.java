@@ -1,13 +1,10 @@
 package gift.controller;
 
-import gift.ProductConverter;
-import gift.model.Product;
-import gift.model.ProductDTO;
+import gift.dto.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,17 +25,14 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @Autowired
+
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
     @GetMapping
     public String allProducts(Model model) {
-        List<Product> products = productService.findAllProducts();
-        List<ProductDTO> productDTOs = products.stream()
-            .map(ProductConverter::convertToDTO)
-            .collect(Collectors.toList());
+        List<ProductDTO> productDTOs = productService.findAllProducts();
         model.addAttribute("products", productDTOs);
         return "Products";
     }
@@ -54,26 +48,26 @@ public class ProductController {
         if (bindingResult.hasErrors()) {
             return "Add_product";
         }
-        Product product = ProductConverter.convertToEntity(productDTO);
-        productService.addProduct(product);
+        productService.addProduct(productDTO);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/edit/{id}")
     public String editProductForm(@PathVariable Long id, Model model) {
-        Product product = productService.findProductById(id);
-        ProductDTO productDTO = ProductConverter.convertToDTO(product);
-        model.addAttribute("product", productDTO);
+        Optional<ProductDTO> productDTO = productService.findProductById(id);
+        if (productDTO.isEmpty()) {
+            return "redirect:/admin/products";
+        }
+        model.addAttribute("product", productDTO.get());
         return "Edit_product";
     }
 
     @PutMapping("/{id}")
-    public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute("product") ProductDTO productDTO, BindingResult bindingResult, Model model) {
+    public String updateProduct(@Valid @ModelAttribute("product") ProductDTO productDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "Edit_product";
         }
-        Product product = ProductConverter.convertToEntity(productDTO);
-        productService.updateProduct(id, product);
+        productService.updateProduct(productDTO);
         return "redirect:/admin/products";
     }
 
