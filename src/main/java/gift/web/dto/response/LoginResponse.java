@@ -4,7 +4,10 @@ import gift.authentication.token.Token;
 
 public class LoginResponse {
 
-    private final Token token;
+    private Token token;
+
+    private LoginResponse() {
+    }
 
     public LoginResponse(Token token) {
         this.token = token;
