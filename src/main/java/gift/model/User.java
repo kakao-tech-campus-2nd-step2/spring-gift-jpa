@@ -1,9 +1,6 @@
 package gift.model;
 
-import gift.util.EmailConstraint;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = "users")
