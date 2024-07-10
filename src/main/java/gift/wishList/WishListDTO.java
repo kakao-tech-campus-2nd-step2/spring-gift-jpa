@@ -8,12 +8,6 @@ public class WishListDTO {
     public WishListDTO() {
     }
 
-
-    public WishListDTO(WishList wishList) {
-        this.productID = wishList.productID;
-        this.count = wishList.count;
-    }
-
     public WishListDTO(long productID, long count) {
         this.productID = productID;
         this.count = count;
