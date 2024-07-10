@@ -4,7 +4,10 @@ import gift.controller.dto.ProductDTO;
 import gift.domain.Product;
 import gift.service.GiftService;
 import jakarta.validation.Valid;
+import java.awt.print.Pageable;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,8 +26,9 @@ public class GiftController {
 
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> allProducts = giftService.getAllProduct();
+    public ResponseEntity<Page<Product>> getAllProducts(@PageableDefault(size = 10, sort = "id")
+    Pageable pageable) {
+        Page<Product> allProducts = giftService.getAllProduct(pageable);
         return ResponseEntity.ok(allProducts);
     }
 
