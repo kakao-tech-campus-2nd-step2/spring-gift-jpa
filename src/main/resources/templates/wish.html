@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>위시리스트</title>
+</head>
+<body>
+<h1>위시리스트</h1>
+<ul>
+    <li th:each="wish : ${wishes}">
+        <span th:text="${wish.product.name}">Product Name</span>
+        <button th:onclick="'deleteWish(' + ${wish.id} + ')'">삭제</button>
+    </li>
+</ul>
+<script>
+    function deleteWish(wishId) {
+        fetch('/wishes/' + wishId, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
+        }).then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('삭제 실패');
+            }
+        });
+    }
+</script>
+</body>
+</html>
