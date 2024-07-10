@@ -1,6 +1,6 @@
 package gift.product.dto;
 
-import gift.product.Product;
+import gift.product.entity.Product;
 
 public record ProductResDto(
         Long id,

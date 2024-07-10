@@ -21,10 +21,8 @@ public class JwtTokenProvider {
     public String generateToken(MemberResDto memberResDto, Date expiredAt) {
         Date now = new Date();
         return Jwts.builder()
-                .subject(memberResDto.name())
                 .claim("id", memberResDto.id())
                 .claim("email", memberResDto.email())
-                .claim("role", memberResDto.role())
                 .issuedAt(now)
                 .expiration(expiredAt)
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))

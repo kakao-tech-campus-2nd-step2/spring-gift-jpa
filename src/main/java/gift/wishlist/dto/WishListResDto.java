@@ -1,6 +1,6 @@
 package gift.wishlist.dto;
 
-import gift.wishlist.WishList;
+import gift.wishlist.entity.WishList;
 
 public record WishListResDto(
         Long id,

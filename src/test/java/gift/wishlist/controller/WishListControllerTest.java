@@ -4,9 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.TestUtils;
 import gift.auth.dto.LoginReqDto;
-import gift.auth.service.AuthService;
 import gift.auth.token.AuthToken;
-import gift.auth.token.AuthTokenGenerator;
 import gift.common.exception.ErrorResponse;
 import gift.product.exception.ProductErrorCode;
 import gift.utils.JwtTokenProvider;
@@ -18,14 +16,10 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -61,7 +55,7 @@ class WishListControllerTest {
         baseUrl = "http://localhost:" + port;
 
         var url = baseUrl + "/api/members/register";
-        var uniqueEmail = "abc123@test.com";
+        var uniqueEmail = "wishListController@test.com";
         var reqBody = new LoginReqDto(uniqueEmail, "1234");
         var requestEntity = new RequestEntity<>(reqBody, HttpMethod.POST, URI.create(url));
         var actual = restTemplate.exchange(requestEntity, AuthToken.class);

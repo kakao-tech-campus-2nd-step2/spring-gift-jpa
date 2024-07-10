@@ -1,104 +1,10 @@
 package gift.product.repository;
 
-import gift.product.Product;
-import gift.product.dto.ProductReqDto;
-import gift.product.exception.ProductNotFoundException;
-import java.util.List;
-import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.jdbc.core.simple.JdbcClient.MappedQuerySpec;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
+import gift.product.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ProductRepository {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    private final JdbcClient jdbcClient;
-
-    public ProductRepository(JdbcClient jdbcClient) {
-        this.jdbcClient = jdbcClient;
-    }
-
-    public List<Product> findProducts() {
-        var sql = """
-                select id, name, price, imageUrl
-                from product
-                """;
-
-        return jdbcClient.sql(sql)
-                .query(Product.class)
-                .list();
-    }
-
-    public Product findProductByIdOrThrow(Long productId) {
-        var sql = """
-                select id, name, price, imageUrl
-                from product
-                where id = ?
-                """;
-
-        MappedQuerySpec<Product> productQuery = jdbcClient.sql(sql).
-                param(productId)
-                .query(Product.class);
-
-        // 상품이 없을 경우 예외 발생
-        return productQuery.optional().orElseThrow(
-                () -> ProductNotFoundException.EXCEPTION);
-    }
-
-    public Long addProduct(ProductReqDto productReqDto) {
-        var sql = """
-                insert into product (name, price, imageUrl)
-                values (?, ?, ?)
-                """;
-
-        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcClient.sql(sql)
-                .param(productReqDto.name())
-                .param(productReqDto.price())
-                .param(productReqDto.imageUrl())
-                .update(keyHolder);
-
-        return keyHolder.getKey().longValue();
-    }
-
-    public boolean isProductExistById(Long productId) {
-        var sql = """
-                select count(*)
-                from product
-                where id = ?
-                """;
-
-        MappedQuerySpec<Long> query = jdbcClient.sql(sql)
-                .param(productId)
-                .query(Long.class);
-
-        return query.single() > 0L; // count 결과는 single()로 조회해도 0 이상의 값이 존재하므로 오류 없이 처리 가능
-    }
-
-    public void updateProductById(Long productId, ProductReqDto productReqDto) {
-        var sql = """
-                update product
-                set name = ?, price = ?, imageUrl = ?
-                where id = ?
-                """;
-
-        jdbcClient.sql(sql)
-                .param(productReqDto.name())
-                .param(productReqDto.price())
-                .param(productReqDto.imageUrl())
-                .param(productId)
-                .update();
-    }
-
-    public void deleteProductById(Long productId) {
-        var sql = """
-                delete from product
-                where id = ?
-                """;
-
-        jdbcClient.sql(sql)
-                .param(productId)
-                .update();
-    }
 }

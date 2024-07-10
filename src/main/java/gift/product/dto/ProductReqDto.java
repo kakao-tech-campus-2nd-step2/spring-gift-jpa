@@ -1,5 +1,6 @@
 package gift.product.dto;
 
+import gift.product.entity.Product;
 import gift.product.message.ProductInfo;
 import gift.product.validation.ValidProductName;
 import jakarta.validation.constraints.NotBlank;
@@ -19,4 +20,13 @@ public record ProductReqDto(
         @NotBlank(message = ProductInfo.PRODUCT_IMAGE_URL_REQUIRED)
         String imageUrl
 ) {
+
+    public Product toEntity() {
+
+        return new Product(
+                name,
+                price,
+                imageUrl
+        );
+    }
 }

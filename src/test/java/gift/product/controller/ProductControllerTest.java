@@ -46,7 +46,7 @@ class ProductControllerTest {
         baseUrl = "http://localhost:" + port;
 
         var url = baseUrl + "/api/members/register";
-        var reqBody = new LoginReqDto("abc123@test.com", "1234");
+        var reqBody = new LoginReqDto("productController@test.com", "1234");
         var requestEntity = new RequestEntity<>(reqBody, HttpMethod.POST, URI.create(url));
         var actual = restTemplate.exchange(requestEntity, AuthToken.class);
 
@@ -172,8 +172,12 @@ class ProductControllerTest {
     @Test
     @DisplayName("상품 수정")
     void 상품_수정() {
-        //given
-        Long productId = 3L;
+        //given: 상품 조회 후 마지막 상품을 수정
+        var lastProductRequest = TestUtils.createRequestEntity(baseUrl + "/api/products", null, HttpMethod.GET, accessToken);
+        var lastProductResponse = restTemplate.exchange(lastProductRequest, new ParameterizedTypeReference<List<ProductResDto>>() {});
+        var lastProduct = lastProductResponse.getBody().getLast();
+        Long productId = lastProduct.id();
+
         var reqBody = new ProductReqDto("이름 수정", 20000, "https://www.google.com/modify.png");
         var request = TestUtils.createRequestEntity(baseUrl + "/api/products/" + productId, reqBody, HttpMethod.PUT, accessToken);
 

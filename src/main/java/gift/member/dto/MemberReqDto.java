@@ -1,8 +1,17 @@
 package gift.member.dto;
 
+import gift.member.entity.Member;
+
 public record MemberReqDto(
-        String name,
         String email,
         String password
 ) {
+
+    public Member toEntity() {
+
+        return new Member(
+                email,
+                password
+        );
+    }
 }
