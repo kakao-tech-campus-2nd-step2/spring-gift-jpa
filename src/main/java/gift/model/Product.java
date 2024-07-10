@@ -4,10 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import org.springframework.validation.annotation.Validated;
 
 @Entity
@@ -27,6 +29,9 @@ public class Product {
     private long price;
     @NotNull
     private String imageUrl;
+
+    @OneToMany(mappedBy = "product")
+    private List<WishlistItem> wishlistItemList;
 
     public Product() {}
 
@@ -67,5 +72,12 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+    public List<WishlistItem> getWishlistItemList() {
+        return wishlistItemList;
+    }
+
+    public void setWishlistItemList(List<WishlistItem> wishlistItemList) {
+        this.wishlistItemList = wishlistItemList;
     }
 }
