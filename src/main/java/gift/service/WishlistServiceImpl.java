@@ -5,7 +5,7 @@ import gift.model.Product;
 import gift.model.SiteUser;
 import gift.model.Wishlist;
 import gift.repository.ProductRepository;
-import gift.repository.UserRepository;
+import gift.repository.SiteUserRepository;
 import gift.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,19 +17,19 @@ import java.util.stream.Collectors;
 public class WishlistServiceImpl implements WishlistService {
 
     private final WishlistRepository wishlistRepository;
-    private final UserRepository userRepository;
+    private final SiteUserRepository siteUserRepository; // 수정: UserRepository -> SiteUserRepository
     private final ProductRepository productRepository;
 
     @Autowired
-    public WishlistServiceImpl(WishlistRepository wishlistRepository, UserRepository userRepository, ProductRepository productRepository) {
+    public WishlistServiceImpl(WishlistRepository wishlistRepository, SiteUserRepository siteUserRepository, ProductRepository productRepository) {
         this.wishlistRepository = wishlistRepository;
-        this.userRepository = userRepository;
+        this.siteUserRepository = siteUserRepository;
         this.productRepository = productRepository;
     }
 
     @Override
     public List<WishlistDTO> getWishlistByUser(String username) {
-        List<Wishlist> wishlistEntities = wishlistRepository.findByUsername(username);
+        List<Wishlist> wishlistEntities = wishlistRepository.findByUserUsername(username); // 수정: findByUsername -> findByUserUsername
         return wishlistEntities.stream()
             .map(this::convertToDTO)
             .collect(Collectors.toList());
@@ -37,7 +37,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public void addToWishlist(String username, Long productId, int quantity) {
-        SiteUser user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Invalid username: " + username));
+        SiteUser user = siteUserRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Invalid username: " + username)); // 수정: userRepository -> siteUserRepository
         Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Invalid product ID: " + productId));
 
         Wishlist wishlist = new Wishlist();
