@@ -1,13 +1,9 @@
 package gift.service;
 
-import gift.common.ErrorMessage;
-import gift.dto.TokenDTO;
 import gift.dto.UserDTO;
-import gift.exceptions.InvalidUserException;
+import gift.exceptions.CustomException;
 import gift.model.User;
 import gift.repository.UserRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -23,22 +19,22 @@ public class AuthService {
     }
 
     public void redundantUser(String state, UserDTO userDTO) {
-        boolean userExists = userRepository.countUsers(userDTO.email())
-                .orElse(0) > 0;
+        boolean userExists = userRepository.existsByEmail(userDTO.email());
 
         if (state.equals("login") & !userExists) {
-            throw new InvalidUserException(ErrorMessage.emailNotExists);
+            throw CustomException.userNotFoundException();
         }
 
         if (state.equals("regist") & userExists) {
-            throw new InvalidUserException(ErrorMessage.emailAlreadyExists);
+            throw CustomException.redundantEmailException();
         }
     }
 
     public void comparePassword(UserDTO userDTO) {
-        User realUser = userRepository.selectUser(userDTO.email());
+        User realUser = userRepository.findByEmail(userDTO.email()).orElse(null);
+
         if(!realUser.getPassword().equals(userDTO.password())) {
-            throw new InvalidUserException(ErrorMessage.passwordInvalid);
+            throw CustomException.invalidPasswordException();
         }
     }
 }

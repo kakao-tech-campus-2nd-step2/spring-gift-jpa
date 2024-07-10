@@ -3,7 +3,8 @@ package gift.controller;
 import gift.annotation.LoginUser;
 import gift.dto.ProductRequestDTO;
 import gift.dto.ProductsResponseDTO;
-import gift.dto.WishlistResponseDTO;
+import gift.dto.WishRequestDTO;
+import gift.dto.WishResponseDTO;
 import gift.model.User;
 import gift.service.ProductService;
 import gift.service.WishService;
@@ -23,21 +24,21 @@ public class WishListController {
 
     @GetMapping
     public String getWishlist(@LoginUser User user, Model model) {
-        WishlistResponseDTO wishProducts = wishService.getWishlist(user.getId());
+        WishResponseDTO wishProducts = wishService.getWishlist(user.getId());
         model.addAttribute("wishProducts", wishProducts);
         return "wishlist";
     }
 
     @GetMapping("/addWishProduct")
-    public String addWishProductPage(Model model) {
+    public String addWishProductPage(@LoginUser User user, Model model) {
         ProductsResponseDTO products = productService.getAllProducts();
         model.addAttribute("products", products);
         return "addWishProduct"; // addWishProduct.html로 이동
     }
 
     @PostMapping
-    public String addWishProduct(@LoginUser User user, @RequestBody ProductRequestDTO productRequestDTO) {
-        wishService.addWishProduct(user.getId(), productRequestDTO.id());
+    public String addWishProduct(@LoginUser User user, @RequestBody WishRequestDTO wishRequestDTO) {
+        wishService.addWishProduct(wishRequestDTO);
         return "wishlist";
     }
 

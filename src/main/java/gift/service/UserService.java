@@ -16,15 +16,13 @@ public class UserService {
     }
 
     public void createUser(UserDTO userDTO) {
-        userRepository.insertUser(new User(
-                userDTO.email(),
-                userDTO.password(),
-                "user"
-        ));
+        userRepository.save(new User(userDTO.email(),
+                                     userDTO.password(),
+                                "user"));
     }
 
     public User findUser(String email) {
-        return userRepository.selectUser(email);
+        return userRepository.findByEmail(email).orElse(null);
     }
 
 }
