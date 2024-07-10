@@ -1,50 +1,57 @@
 package gift.main.service;
 
-import gift.main.dto.ProductDto;
+import gift.main.Exception.CustomException;
+import gift.main.Exception.ErrorCode;
 import gift.main.dto.ProductRequest;
 import gift.main.entity.Product;
-import gift.main.repository.ProductDao;
+import gift.main.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
 
 @Service
 public class ProductService {
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public List<Product> getProducts() {
-        List<Product> productList= productDao.selectProductAll();
+        List<Product> productList = productRepository.findAll();
         return productList;
     }
 
+    @Transactional
     public void addProduct(ProductRequest productRequest) {
-        ProductDto productDto = new ProductDto(productRequest);
-        productDao.insertProduct(productDto);
+        Product product = new Product(productRequest);
+        productRepository.save(product);
     }
 
+    @Transactional
     public void deleteProduct(long id) {
-
-        productDao.deleteProduct(id);
+        productRepository.deleteById(id);
     }
 
+    @Transactional
     public void updateProduct(long id,ProductRequest productRequest) {
-        if (!productDao.existsProduct(id)) {
-            throw new IllegalArgumentException("해당 id는 없습니다.");
-        }
-        ProductDto productDto = new ProductDto(productRequest);
-        productDao.updateProduct(id, productDto);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+        product.setName(product.getName());
+        product.setPrice(product.getPrice());
+        product.setImageUrl(product.getImageUrl());
+
+        productRepository.save(product);
     }
+
 
     public Product getProduct(long id) {
-        if (!productDao.existsProduct(id)) {
-            throw new IllegalArgumentException("해당 id는 없습니다.");
-        }
-        return productDao.selectProduct(id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        return product;
     }
 
 

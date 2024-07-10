@@ -2,15 +2,12 @@ package gift.main.controller;
 
 import gift.main.annotation.SessionUser;
 import gift.main.dto.UserVo;
-import gift.main.dto.WishListProductDto;
 import gift.main.entity.Product;
-import gift.main.entity.WishlistProduct;
-import gift.main.repository.ProductDao;
-import gift.main.repository.WishlistProductDao;
-import gift.main.util.AuthUtil;
-import gift.main.util.JwtUtil;
-import jakarta.servlet.http.HttpSession;
+import gift.main.entity.WishProduct;
+import gift.main.service.ProductService;
+import gift.main.service.WishProductService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,40 +17,42 @@ import java.util.Map;
 @RestController
 @RequestMapping("/product")
 public class WishProductController {
-    private final ProductDao productDao;
-    private final WishlistProductDao wishlistProductDao;
 
-    public WishProductController(ProductDao productDao, WishlistProductDao wishlistProductDao) {
-        this.productDao = productDao;
-        this.wishlistProductDao = wishlistProductDao;
+    private final WishProductService wishProductService;
+    private final ProductService productService;
+
+    public WishProductController(WishProductService wishProductService, ProductService productService) {
+        this.wishProductService = wishProductService;
+        this.productService = productService;
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> getProducts() {
-        List<Product> products = productDao.selectProductAll();
+        List<Product> products = productService.getProducts();
         Map<String, List<Product>> response = new HashMap<>();
         response.put("products", products);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/wishlist/{productId}")
-    public ResponseEntity<?> deleteProducts(@PathVariable(name = "productId") Long productId, @SessionUser UserVo sessionUserVo) {
-        wishlistProductDao.deleteWishlistProductByUserIdAndProductId(sessionUserVo.getId(), productId);
+    @Transactional
+    public ResponseEntity<?> deleteWishProduct(@PathVariable(name = "productId") Long productId, @SessionUser UserVo sessionUserVo) {
+        wishProductService.deleteProducts(productId, sessionUserVo);
         return ResponseEntity.ok("성공적으로 삭제 완료~!");
     }
 
     @GetMapping("/wishlist")
-    public ResponseEntity<?> deleteProducts(@SessionUser UserVo sessionUser) {
-        List<WishlistProduct> wishlistProducts = wishlistProductDao.selectWishlistProductsByUserId(sessionUser.getId());
-        Map<String, List<WishlistProduct>> response = new HashMap<>();
-        response.put("wishlistProducts", wishlistProducts);
+    public ResponseEntity<?> getWishProduct(@SessionUser UserVo sessionUser) {
+        List<WishProduct> wishProducts = wishProductService.getWishProducts(sessionUser.getId());
+        Map<String, List<WishProduct>> response = new HashMap<>();
+        response.put("wishlistProducts", wishProducts);
         return ResponseEntity.ok(response);
     }
 
+    @Transactional
     @PostMapping("/wishlist/{productId}")
     public ResponseEntity<?> addWishlistProduct(@PathVariable(name = "productId") Long productId, @SessionUser UserVo sessionUser){
-        WishListProductDto wishListProductDto = new WishListProductDto(productId, sessionUser.getId());
-        wishlistProductDao.insertWishlistProduct(wishListProductDto);
+        wishProductService.addWishlistProduct(productId, sessionUser);
         return ResponseEntity.ok("성공적으로 등록~");
     }
 

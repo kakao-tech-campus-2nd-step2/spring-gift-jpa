@@ -12,6 +12,7 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
     ALREADY_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
     ERROR_LOGIN(HttpStatus.BAD_REQUEST, "이메일과 비밀번호를 정확히 입력해주세요"),
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 제품을 찾을 수 없습니다."),
     ;
     //이메일과 비밀번호 코드가 401이 아닌 400인 이유: 코드를 보고 해당 유저가 있다고 판단할 것 같아서
 
