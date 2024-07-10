@@ -1,10 +1,12 @@
 package gift.application;
 
+import gift.error.ErrorCode;
 import gift.product.application.ProductService;
 import gift.product.dao.ProductRepository;
-import gift.product.entity.Product;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
+import gift.product.entity.Product;
+import gift.product.error.ProductNotFoundException;
 import gift.product.util.ProductMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -71,8 +72,9 @@ class ProductServiceTest {
         given(productRepository.findById(anyLong())).willReturn(Optional.empty());
 
         Assertions.assertThatThrownBy(() -> productService.getProductByIdOrThrow(productId))
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 상품은 존재하지 않습니다");
+                .isInstanceOf(ProductNotFoundException.class)
+                .hasMessage(ErrorCode.PRODUCT_NOT_FOUND
+                                     .getMessage());
     }
 
     @Test
@@ -128,8 +130,9 @@ class ProductServiceTest {
         given(productRepository.findById(anyLong())).willReturn(Optional.empty());
 
         Assertions.assertThatThrownBy(() -> productService.updateProduct(productId, request))
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessage("해당 상품은 존재하지 않습니다");
+                .isInstanceOf(ProductNotFoundException.class)
+                .hasMessage(ErrorCode.PRODUCT_NOT_FOUND
+                                     .getMessage());
     }
 
 }
