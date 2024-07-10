@@ -3,11 +3,9 @@ package gift.util;
 import gift.model.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
-import javax.crypto.SecretKey;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,13 +13,12 @@ public class JwtUtil {
     private final String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
     private final Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
 
-    public String generateToken(Long memberId, String name, String role) {
+    public String generateToken(Long memberId, String email) {
         return Jwts.builder()
-            .setSubject(memberId.toString())
-            .claim("name", name)
-            .claim("role", role)
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + 2400000L))
+            .subject(memberId.toString())
+            .claim("email", email)
+            .issuedAt(new Date())
+            .expiration(new Date(System.currentTimeMillis() + 2400000L))
             .signWith(key)
             .compact();
     }
@@ -31,7 +28,7 @@ public class JwtUtil {
             .setSigningKey(key)
             .build()
             .parseClaimsJws(token)
-            .getBody();
+            .getPayload();
         return claims;
     }
 
