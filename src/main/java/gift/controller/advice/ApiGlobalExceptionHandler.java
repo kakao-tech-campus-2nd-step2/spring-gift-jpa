@@ -41,7 +41,7 @@ public class ApiGlobalExceptionHandler {
 
     @ExceptionHandler(EmailDuplicateException.class)
     public ProblemDetail handleEmailDuplicateException(EmailDuplicateException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
         problemDetail.setTitle(e.getMessage());
         return problemDetail;
     }
