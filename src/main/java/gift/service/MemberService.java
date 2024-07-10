@@ -1,16 +1,13 @@
 package gift.service;
 
 import gift.dao.MemberDao;
-import gift.model.CreatJwtToken;
+import gift.model.CreateJwtToken;
 import gift.model.Member;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.naming.AuthenticationException;
@@ -19,12 +16,13 @@ import java.util.Optional;
 
 @Service
 public class MemberService {
-    TokenInterceptor interceptor = new TokenInterceptor();
-    CreatJwtToken jwtUtil = new CreatJwtToken();
+    private final TokenInterceptor tokenInterceptor;
+    private final CreateJwtToken createJwtToken;
     private final MemberDao memberDao;
 
-    @Autowired
-    public MemberService(MemberDao memberDao) {
+    public MemberService(TokenInterceptor tokenInterceptor, CreateJwtToken createJwtToken, MemberDao memberDao) {
+        this.tokenInterceptor = tokenInterceptor;
+        this.createJwtToken = createJwtToken;
         this.memberDao = memberDao;
     }
 
@@ -32,7 +30,7 @@ public class MemberService {
         Optional<Member> memberOptional = Optional.ofNullable(memberDao.selectMember(member.getEmail()));
         if (!memberOptional.isPresent()) {
             memberDao.insertMember(member);
-            return jwtUtil.createJwt(member.getId(), member.getEmail());
+            return createJwtToken.createJwt(member.getId(), member.getEmail());
         }
         else {
             throw new IllegalArgumentException("이미 가입한 이메일 입니다.");
@@ -47,7 +45,7 @@ public class MemberService {
         Member loginMember = memberDao.selectMember(member.getEmail());
 
         if(Objects.equals(member.getPassword(), loginMember.getPassword())){
-            return jwtUtil.createJwt(loginMember.getId(), member.getEmail());
+            return createJwtToken.createJwt(loginMember.getId(), member.getEmail());
         }
         else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
@@ -57,7 +55,7 @@ public class MemberService {
     // 토큰으로 멤버 id 가져옴
     public Long getIdByToken(HttpServletRequest request) throws AuthenticationException {
         Long id = 0L;
-        Claims claims = interceptor.getClaims(request);
+        Claims claims = tokenInterceptor.getClaims(request);
         id = claims.get("id", Long.class);
         return id;
     }

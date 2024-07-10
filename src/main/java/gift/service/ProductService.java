@@ -10,7 +10,6 @@ import java.util.List;
 public class ProductService {
 
     private final ProductDao productDao;
-    private final CatchError catchError = new CatchError();
 
     public ProductService(ProductDao productDao) {
         this.productDao = productDao;
@@ -35,26 +34,54 @@ public class ProductService {
 
     public void updateProduct(Long id, Product newProduct) {
         Product oldProduct = productDao.selectProduct(id);
-        if(newProduct.getName() == null){
+        String name = oldProduct.getName();
+        int price = oldProduct.getPrice();
+        String imageUrl = oldProduct.getImageUrl();
+
+        String newName = newProduct.getName();
+        String newImageUrl = newProduct.getImageUrl();
+
+        if (newName != null && !newName.isEmpty()) {
             validateProduct(newProduct);
+            name = newName;
+        }
+        if (newProduct.getPrice() != null) {
+            price = newProduct.getPrice();
         }
 
-        Product updatedProduct = new Product(
-                oldProduct.getId(),
-                newProduct.getName() != null && !newProduct.getName().isEmpty() ? newProduct.getName() : oldProduct.getName(),
-                newProduct.getPrice() != null ? newProduct.getPrice() : oldProduct.getPrice(),
-                newProduct.getImageUrl() != null && !newProduct.getImageUrl().isEmpty() ? newProduct.getImageUrl() : oldProduct.getImageUrl()
-        );
+        if (newImageUrl != null && !newImageUrl.isEmpty()) {
+            imageUrl = newImageUrl;
+        }
+
+        Product updatedProduct = new Product(oldProduct.getId(), name, price, imageUrl);
 
         productDao.updateProduct(updatedProduct);
     }
 
     private void validateProduct(Product product) {
-        if (!catchError.isCorrectName(product.getName())) {
+        if (!isCorrectName(product.getName())) {
             throw new IllegalArgumentException("이름은 최대 15자 이내이어야 하며, 특수문자로는 (),[],+,-,&,/,_만 사용 가능합니다.");
         }
-        if (catchError.isContainsKakao(product.getName())) {
+        if (isContainsKakao(product.getName())) {
             throw new IllegalArgumentException("\"카카오\"는 MD와 협의 후에 사용 가능합니다.");
         }
+    }
+
+    public boolean isCorrectName(String name){
+        if(name.length()>15){
+            return false;
+        }
+        String letters = "()[]+-&/_ ";
+        for(int i=0; i<name.length(); i++){
+            char one = name.charAt(i);
+            if(!Character.isLetterOrDigit(one) && !letters.contains(Character.toString(one))){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isContainsKakao(String name){
+        return name.contains("카카오");
     }
 }

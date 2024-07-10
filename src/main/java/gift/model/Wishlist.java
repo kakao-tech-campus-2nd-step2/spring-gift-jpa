@@ -2,7 +2,6 @@ package gift.model;
 
 import org.springframework.stereotype.Component;
 
-@Component
 public class Wishlist {
     private long id;
     private long userId;

@@ -1,8 +1,5 @@
 package gift.model;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class Product {
     private long id;
     private String name;
