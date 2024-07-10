@@ -62,13 +62,12 @@ public class WishService {
         Wish wish = wishJpaRepository.findById(wishId)
             .orElseThrow(() -> new NotFoundException("Wish not found"));
 
-        System.out.println("wish.getMember().getId() = " + wish.getMember().getId());
-        System.out.println("memberId = " + memberId);
-        if (!wish.getMember().getId().equals(memberId)) {
-            throw new IllegalArgumentException("본인의 위시리스트만 삭제 가능합니다.");
+        if (wish.isOwner(memberId)) {
+            wishJpaRepository.deleteById(wishId);
+            return;
         }
 
-        wishJpaRepository.deleteById(wishId);
+        throw new IllegalArgumentException("본인의 위시리스트만 삭제 가능합니다.");
     }
 
     @Transactional(readOnly = true)
