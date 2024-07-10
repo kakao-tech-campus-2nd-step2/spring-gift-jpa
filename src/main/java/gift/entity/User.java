@@ -2,9 +2,6 @@ package gift.entity;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Table(name="user_tb")
 public class User {

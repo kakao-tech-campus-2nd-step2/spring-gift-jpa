@@ -28,8 +28,12 @@ public class Product {
     @Column(nullable = false)
     String imageUrl;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "option")
+    List<Option> options = new ArrayList<>();
 
-
+    public void addOptions(Option option){
+        options.add(option);
+    }
     public int getId() {
         return id;
     }

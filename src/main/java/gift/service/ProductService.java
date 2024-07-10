@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.stream;
+
 @Service
 @Validated
 public class ProductService {
@@ -31,7 +33,8 @@ public class ProductService {
     private OptionRepository optionRepository;
 
     public List<ProductDTO.WithOptionDTO> getAllProducts() {
-        return optionRepository.findAllWithOption().stream()
+        return optionRepository.findAllWithOption()
+                .stream()
                 .map(array -> new ProductDTO.WithOptionDTO(
                         (Integer) array[0],
                         (String) array[1],
@@ -54,19 +57,22 @@ public class ProductService {
     }
 
     public void saveProduct(ProductDTO.SaveDTO product) {
-        if(product.getOption() == null)
+        if(product.option() == null)
             throw new BadRequestException("하나의 옵션은 필요합니다.");
 
-        Product saveProduct = new Product(product.getName(), product.getPrice(), product.getImageUrl());
+        Product saveProduct = new Product(product.name(), product.price(), product.imageUrl());
 
         if(isValidProduct(saveProduct)){
             productRepository.save(saveProduct);
         }
-        List<String> optionList = Arrays.stream(product.getOption().split(",")).toList();
+        List<String> optionList = stream(product.option().split(",")).toList();
         for(String str : optionList){
             OptionId optionId = new OptionId(saveProduct.getId(), str);
-            if(isValidOption(optionId))
-                optionRepository.save(new Option(optionId));
+            Option option = new Option(optionId);
+            if(isValidOption(optionId)) {
+                optionRepository.save(option);
+                saveProduct.addOptions(option);
+            }
 
         }
     }

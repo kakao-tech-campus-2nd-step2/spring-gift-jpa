@@ -13,6 +13,6 @@ public interface OptionRepository extends JpaRepository<Option, OptionId> {
     @Query("delete from Option u where u.id = :product_id")
     void deleteByProductID(@Param("product_id")int id);
 
-    @Query("SELECT p.id, p.name, p.price, p.imageUrl, o.id.option FROM Product p join Option o ON p.id = o.id.id")
+    @Query("SELECT p.id as id, p.name as name, p.price as price, p.imageUrl as imageUrl, o.id.option as option FROM Product p join Option o ON p.id = o.id.id")
     List<Object[]> findAllWithOption();
 }
