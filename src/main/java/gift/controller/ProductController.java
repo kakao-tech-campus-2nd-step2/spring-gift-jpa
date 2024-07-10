@@ -77,6 +77,7 @@ public class ProductController {
     // 삭제
     @GetMapping("/{id}/delete")
     public String deleteProduct(@PathVariable Long id){
+
         productService.deleteById(id);
         return "redirect:/products";
     }
