@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class ProdcutEntity {
+public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +21,7 @@ public class ProdcutEntity {
     @Column(nullable = false)
     private String imageUrl;
 
-    public ProdcutEntity() {
+    public ProductEntity() {
     }
 
     public Long getId() {
