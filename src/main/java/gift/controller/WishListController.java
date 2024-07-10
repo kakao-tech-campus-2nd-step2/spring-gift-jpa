@@ -51,7 +51,7 @@ public class WishListController {
     public ResponseEntity<ResponseDTO> addWishes(@RequestBody @Valid ProductDTO productDTO,
             @LoginMember MemberDTO memberDTO) {
         try {
-            wishListService.addWishListProduct(memberDTO, productDTO);
+            wishListService.addWishes(memberDTO, productDTO);
         } catch (Exception e) {
             responseError(e);
         }

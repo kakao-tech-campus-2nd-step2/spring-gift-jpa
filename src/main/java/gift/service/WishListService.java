@@ -44,7 +44,7 @@ public class WishListService {
     }
 
     @Transactional
-    public void addWishListProduct(MemberDTO memberDTO, ProductDTO productDTO) {
+    public void addWishes(MemberDTO memberDTO, ProductDTO productDTO) {
         Map<String, Object> validatedParameterMap = parameterValidator.validateParameter(memberDTO, productDTO);
         Member member = (Member) validatedParameterMap.get("member");
         Product product = (Product) validatedParameterMap.get("product");
