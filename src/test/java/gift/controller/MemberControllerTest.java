@@ -15,8 +15,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@Transactional
 class MemberControllerTest {
 
     @LocalServerPort
@@ -26,6 +28,7 @@ class MemberControllerTest {
     private TestRestTemplate restTemplate;
 
     @Test
+    @Transactional
     void registerTest() {
         var url = "http://localhost:" + port + "/api/member/register";
         MemberDto memberDto = new MemberDto(null, "testemail", "password", "admin");
@@ -35,15 +38,17 @@ class MemberControllerTest {
         ResponseEntity<RequestStateDTO> response = restTemplate.exchange(url, HttpMethod.POST,
             request, RequestStateDTO.class);
 
+        System.out.println("abec" + response.getBody().getStatus());
         assertEquals(200, response.getStatusCodeValue());
         assertNotNull(response.getBody());
         assertEquals(RequestStatus.success, response.getBody().getStatus());
     }
 
     @Test
+    @Transactional
     void loginTest() {
         var registerUrl = "http://localhost:" + port + "/api/member/register";
-        MemberDto memberDto = new MemberDto(null, "testemail", "password", "admin");
+        MemberDto memberDto = new MemberDto(null, "testemail2", "password", "admin");
 
         HttpEntity<MemberDto> registerRequest = new HttpEntity<>(memberDto);
         ResponseEntity<RequestStateDTO> registerResponse = restTemplate.exchange(registerUrl,
