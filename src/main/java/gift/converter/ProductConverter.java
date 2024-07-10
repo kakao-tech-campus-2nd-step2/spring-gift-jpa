@@ -1,7 +1,7 @@
 package gift;
 
 import gift.model.Product;
-import gift.model.ProductDTO;
+import gift.dto.ProductDTO;
 
 public class ProductConverter {
 
