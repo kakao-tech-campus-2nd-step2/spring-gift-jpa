@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.exception.member.LoginErrorException;
+import gift.exception.member.NotFoundMemberException;
 import gift.exception.member.DuplicateEmailException;
 import gift.model.Member;
 import gift.repository.MemberRepository;
@@ -32,7 +32,7 @@ public class MemberService {
 
         return memberRepository.findByEmail(email)
             .filter(member -> member.validating(email, password))
-            .orElseThrow(() -> new LoginErrorException("아이디 또는 비밀번호가 일치하지 않습니다."));
+            .orElseThrow(() -> new NotFoundMemberException("아이디 또는 비밀번호가 일치하지 않습니다."));
     }
 
 }
