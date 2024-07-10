@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Entity
 @Table(name = "product")
@@ -28,6 +27,12 @@ public class Product {
    protected Product() {}
 
     public Product(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    public void update(String name, int price, String imageUrl){
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

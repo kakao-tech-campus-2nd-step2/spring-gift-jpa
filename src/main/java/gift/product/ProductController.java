@@ -27,64 +27,73 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductResponseDto> getAllProducts() {
-        List<Product> products = productService.getAllPrdouct();
-
-        return products.stream()
-            .map(product -> new ProductResponseDto(
-                (product.getId()-1),
-                product.getName(),
-                product.getPrice(),
-                product.getUrl()
-            )).toList();
+    public List<Product> getAllProducts() {
+//        List<Product> products = productService.getAllPrdouct();
+//
+//        return products.stream()
+//            .map(product -> new ProductResponseDto(
+//                (product.getId()-1),
+//                product.getName(),
+//                product.getPrice(),
+//                product.getImageUrl()
+//            )).toList();
+        return productService.getAllPrdouct();
     }
 
     @GetMapping("/{id}")
-    public Optional<ProductResponseDto> getProduct(@PathVariable Long id) {
-        Optional<ProductResponseDto> product = productService.getProductById(id);
-        if (product == null) {
-            throw new InvalidProduct("유효하지 않은 상품입니다");
-        }
-        return product;
+    public ProductResponseDto getProduct(@PathVariable Long id) {
+//        Optional<ProductResponseDto> product = productService.getProductById(id);
+//        if (product == null) {
+//            throw new InvalidProduct("유효하지 않은 상품입니다");
+//        }
+//        return product;
+        return productService.getProductById(id);
     }
 
     @PostMapping
-    public ProductResponseDto addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
-        Product product = new Product(
-            productRequestDto.name(),
-            productRequestDto.price(),
-            productRequestDto.url()
-        );
-
-        productService.postProduct(product);
-
-        return new ProductResponseDto(
-            product.getId(),
-            product.getName(),
-            product.getPrice(),
-            product.getUrl()
-        );
+    public Product addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
+//        Product product = new Product(
+//            productRequestDto.name(),
+//            productRequestDto.price(),
+//            productRequestDto.url()
+//        );
+//
+//        productService.postProduct(product);
+//
+//        return new ProductResponseDto(
+//            product.getId(),
+//            product.getName(),
+//            product.getPrice(),
+//            product.getUrl()
+//        );
+        Product product = new Product(productRequestDto.name(), productRequestDto.price(), productRequestDto.url());
+        return productService.postProduct(product);
     }
 
     @PutMapping("/{id}")
-    public Optional<ProductResponseDto> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequestDto productRequestDto) {
-        Optional<ProductResponseDto> product = productService.getProductById(id);
-        if (product.isPresent()) {
-            productService.putProduct(id, productRequestDto);
-        } else {
-            throw new InvalidProduct("유효하지 않은 상품입니다");
-        }
-        return product;
+    public Product updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequestDto productRequestDto) {
+//        Optional<ProductResponseDto> product = productService.getProductById(id);
+//        if (product.isPresent()) {
+//            productService.putProduct(id, productRequestDto);
+//        } else {
+//            throw new InvalidProduct("유효하지 않은 상품입니다");
+//        }
+//        return product;
+        Product product = productService.putProduct(id, productRequestDto);
+        return productService.postProduct(product);
     }
 
     @DeleteMapping("/{id}")
-    public HttpEntity<String> deleteProduct(@PathVariable Long id) {
-        if (productService.getProductById(id).isEmpty()) {
-            throw new InvalidProduct("유효하지 않은 상품입니다.");
-        }
-        else {
-            productService.deleteProductById(id);
-        }
-        return ResponseEntity.ok("성공적으로 삭제되었습니다");
+    public void deleteProduct(@PathVariable Long id) {
+//        if (productService.getProductById(id).isEmpty()) {
+//            throw new InvalidProduct("유효하지 않은 상품입니다.");
+//        }
+//        else {
+//            productService.deleteProductById(id);
+//        }
+//        return ResponseEntity.ok("성공적으로 삭제되었습니다");
+        // }
+
+        productService.deleteProductById(id);
     }
 }
