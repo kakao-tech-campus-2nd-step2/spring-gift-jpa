@@ -52,7 +52,7 @@ class WishRepositoryTest {
         Wish wish = new Wish(1L, 1L);
         wishRepository.save(wish);
 
-        wishRepository.deleteByMemberIdAndProductId(1L, 1L);
+        wishRepository.delete(wish);
 
         List<Wish> wishList = wishRepository.findByMemberIdAndProductId(1L, 1L);
         assertThat(wishList).isEmpty();
@@ -83,7 +83,7 @@ class WishRepositoryTest {
         Wish wish = new Wish(1L, 1L);
         wishRepository.save(wish);
 
-        wishRepository.deleteByMemberIdAndProductId(1L, 1L);
+        wishRepository.delete(wish);
 
         List<Wish> wishList = wishRepository.findByMemberIdAndProductId(1L, 1L);
         assertThat(wishList).isEmpty();
