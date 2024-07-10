@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface WishProductRepository extends JpaRepository<WishProduct, Long> {
-    public boolean deleteByProductIdAndUserId(Long productId, Long userId);
-    public List<WishProduct> findAllByUserId(Long userId);
+    void deleteByProductIdAndUserId(Long productId, Long userId);
+    List<WishProduct> findAllByUserId(Long userId);
 }
