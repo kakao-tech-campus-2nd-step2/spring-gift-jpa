@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.dao.WishDao;
 import gift.model.Wish;
 import gift.repository.WishRepository;
 import jakarta.servlet.http.HttpServletRequest;

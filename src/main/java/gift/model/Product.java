@@ -33,18 +33,7 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", imageUrl='" + imageUrl + '\'' +
-                '}';
-    }
-
     public Product update(String name, Integer price, String imageUrl){
-        System.out.println(this.toString());
         if(!name.isEmpty()){
             this.setName(name);
         }
@@ -54,8 +43,6 @@ public class Product {
         if(!imageUrl.isEmpty()){
             this.imageUrl = imageUrl;
         }
-
-        System.out.println(this.toString());
         return this;
     }
 

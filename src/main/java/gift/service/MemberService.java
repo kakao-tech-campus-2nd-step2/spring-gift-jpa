@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.dao.MemberDao;
 import gift.model.CreateJwtToken;
 import gift.model.Member;
 import gift.repository.MemberRepository;
