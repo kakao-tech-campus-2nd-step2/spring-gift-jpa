@@ -24,4 +24,12 @@ class WishlistRepositoryTest {
         assertThat(actual.getProductId()).isEqualTo(expected.getProductId());
     }
 
+    @Test
+    void findById() {
+        WishList expected = new WishList(100L, 100L);
+        WishList actual = wishlistRepository.save(expected);
+
+        assertThat(actual.getMemberId()).isEqualTo(100L);
+    }
+
 }
