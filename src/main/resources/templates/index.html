@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>상품 관리</title>
+  <style>
+    table {
+      border: 3;
+      width: 400px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<h2>상품 관리</h2>
+<a href="/add">상품추가</a>
+
+<hr />
+<table>
+  <thead>
+  <tr>
+    <th>id</th>
+    <th>name</th>
+    <th>price</th>
+    <th>imageUrl</th>
+    <th>actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${products}">
+    <td th:text="${product.id}"></td>
+    <td th:text="${product.name}"></td>
+    <td th:text="${product.price}"></td>
+    <td th:text="${product.imageUrl}"></td>
+    <td>
+      <a th:href="@{/update?id={id}(id=${product.id})}" style="display:inline"
+      ><img src="update.png" style="width: 20px"
+      /></a>
+      <a th:href="@{/api/products/delete/{id}(id=${product.id})}" style="display:inline"
+      ><img src="update.png" style="width: 20px"
+      /></a>
+
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
