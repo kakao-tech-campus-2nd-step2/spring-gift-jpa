@@ -16,15 +16,23 @@ public class Wishlist {
     private Long id;
 
     @Column(name = "member_id", nullable = false)
-    private String memberId;
+    private Long memberId;
 
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
     protected Wishlist() {}
 
-    public Wishlist(String memberId, Long productId) {
+    public Wishlist(Long memberId, Long productId) {
         this.memberId = memberId;
         this.productId = productId;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 }

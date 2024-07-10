@@ -16,17 +16,37 @@ public class Product {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id;
 
-   @Column(name = "email", nullable = false)
-   private String email;
+   @Column(name = "name", nullable = false)
+   private String name;
 
-   @Column(name = "password", nullable = false)
-   private String password;
+   @Column(name = "price", nullable = false)
+   private int price;
+
+   @Column(name = "image_url", nullable = false)
+   private String imageUrl;
 
    protected Product() {}
 
-    public Product(String email, String password) {
-        this.email = email;
-        this.password = password;
+    public Product(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
 
