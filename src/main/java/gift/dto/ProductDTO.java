@@ -1,5 +1,6 @@
 package gift.dto;
 
+import gift.domain.Product;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
@@ -21,4 +22,7 @@ public record ProductDTO(
     String imageUrl
 ) {
 
+    public Product toEntity() {
+        return new Product(name, price, imageUrl);
+    }
 }

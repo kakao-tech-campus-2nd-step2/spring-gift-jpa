@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(NoSuchProductException.class)
-    public ProblemDetail handleNoSuchProductException(NoSuchProductException noSuchProductException) {
+    @ExceptionHandler({NoSuchProductException.class, NoSuchWishedProductException.class})
+    public ProblemDetail handleNotFoundException(RuntimeException runtimeException) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-        problemDetail.setDetail(noSuchProductException.getMessage());
+        problemDetail.setDetail(runtimeException.getMessage());
         return problemDetail;
     }
 
@@ -32,14 +32,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({AlreadyExistMemberException.class, NoSuchMemberException.class, InvalidPasswordException.class})
-    public ProblemDetail handleAlreadyExistMemberException(RuntimeException runtimeException) {
+    public ProblemDetail handleRuntimeException(RuntimeException runtimeException) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setDetail(runtimeException.getMessage());
         return problemDetail;
     }
 
     @ExceptionHandler(InvalidAccessTokenException.class)
-    public ProblemDetail handleAlreadyExistMemberException(InvalidAccessTokenException invalidAccessTokenException) {
+    public ProblemDetail handleInvalidAccessTokenException(InvalidAccessTokenException invalidAccessTokenException) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
         problemDetail.setDetail(invalidAccessTokenException.getMessage());
         return problemDetail;

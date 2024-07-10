@@ -1,5 +1,6 @@
 package gift.dto;
 
+import gift.domain.Member;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -12,4 +13,7 @@ public record MemberDTO(
     String password
 ) {
 
+    public Member toEntity() {
+        return new Member(email, password);
+    }
 }
