@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.domain.Product;
+import gift.entity.Product;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,27 +24,27 @@ public class ProductDao {
     };
 
     public List<Product> findAll() {
-        String sql = "SELECT * FROM product";
+        String sql = "SELECT * FROM products";
         return jdbcTemplate.query(sql, productRowMapper);
     }
 
     public Product findById(Long id) {
-        String sql = "SELECT * FROM product WHERE id = ?";
+        String sql = "SELECT * FROM products WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, productRowMapper);
     }
 
     public void save(Product product) {
-        String sql = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public void update(Long id, Product product) {
-        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
+        String sql = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
     }
 
     public void deleteById(Long id) {
-        String sql = "DELETE FROM product WHERE id = ?";
+        String sql = "DELETE FROM products WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

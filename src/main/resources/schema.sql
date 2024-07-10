@@ -1,4 +1,4 @@
-CREATE TABLE product (
+CREATE TABLE products (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     price DOUBLE NOT NULL,
@@ -17,5 +17,5 @@ CREATE TABLE wishlist (
     quantity INT NOT NULL,
     PRIMARY KEY (memberId, productId),
     FOREIGN KEY (memberId) REFERENCES members(id),
-    FOREIGN KEY (productId) REFERENCES product(id)
+    FOREIGN KEY (productId) REFERENCES products(id)
 );
