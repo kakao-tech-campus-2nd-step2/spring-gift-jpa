@@ -13,4 +13,5 @@ public class Message {
     public static final String KAKAO_CONTAIN_ERROR_MSG = "상품 이름에 \"카카오\"가 포함된 경우에는 담당 MD와 협의가 필요합니다.";
     public static final String REQUIRED_FIELD_MSG = "필수로 입력해야 하는 항목입니다.";
     public static final String POSITIVE_NUMBER_REQUIRED_MSG = "0이상의 값을 입력해 주세요.";
+    public static final String EMAIL_PATTERN_ERROR_MSG = "이메일 형식이 잘못되었습니다.";
 }
