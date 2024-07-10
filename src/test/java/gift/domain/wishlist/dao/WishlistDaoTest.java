@@ -45,7 +45,7 @@ class WishlistDaoTest {
     @DisplayName("DB 위시리스트 추가")
     void insert() {
         // given
-        WishItem wishItem = new WishItem(null, user.getId(), product.getId());
+        WishItem wishItem = new WishItem(null, user, product);
 
         // when
         WishItem savedItem = wishlistDao.insert(wishItem);
@@ -54,8 +54,8 @@ class WishlistDaoTest {
         assertAll(
             () -> assertThat(savedItem).isNotNull(),
             () -> assertThat(savedItem.getId()).isNotNull(),
-            () -> assertThat(savedItem.getUserId()).isEqualTo(user.getId()),
-            () -> assertThat(savedItem.getProductId()).isEqualTo(product.getId())
+            () -> assertThat(savedItem.getUser()).isEqualTo(user),
+            () -> assertThat(savedItem.getProduct()).isEqualTo(product)
         );
     }
 
@@ -63,7 +63,7 @@ class WishlistDaoTest {
     @DisplayName("DB 위시리스트 조회")
     void findAll() {
         // given
-        WishItem wishItem = new WishItem(null, user.getId(), product.getId());
+        WishItem wishItem = new WishItem(null, user, product);
         WishItem savedItem = wishlistDao.insert(wishItem);
 
         // when
@@ -81,7 +81,7 @@ class WishlistDaoTest {
     @DisplayName("DB 위시리스트 삭제")
     void delete() {
         // given
-        WishItem wishItem = new WishItem(null, user.getId(), product.getId());
+        WishItem wishItem = new WishItem(null, user, product);
         WishItem savedWishItem = wishlistDao.insert(wishItem);
 
         // when
