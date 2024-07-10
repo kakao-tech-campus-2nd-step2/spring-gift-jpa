@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.domain.Product;
+import gift.dto.request.UpdateProductRequest;
 import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,21 +19,22 @@ public class ProductService {
     }
 
     public Product getProduct(Long productId) {
-        return productRepository.selectOneProduct(productId);
+        return productRepository.findProductById(productId).orElse(null);
     }
 
     public List<Product> getAllProducts() {
-        return productRepository.selectAllProducts();
+        System.out.println(productRepository.findAll());
+        return productRepository.findAll();
     }
 
     public String addProduct(Product newProduct) {
-        productRepository.insertProduct(newProduct);
+        productRepository.save(newProduct);
         return ADD_SUCCESS_MSG;
     }
 
-    public String updateProduct(Long productId, Product product) {
+    public String updateProduct(Long productId, UpdateProductRequest product) {
 
-        Product productToUpdate = productRepository.selectOneProduct(productId);
+        Product productToUpdate = productRepository.findProductById(productId).get();
 
         if (product.getName() != null) {
             productToUpdate.setName(product.getName());
@@ -43,12 +45,12 @@ public class ProductService {
         if (product.getImageUrl() != null) {
             productToUpdate.setImageUrl(product.getImageUrl());
         }
-        productRepository.updateProduct(productToUpdate);
+        productRepository.save(productToUpdate);
         return UPDATE_SUCCESS_MSG;
     }
 
     public String deleteProduct(Long productId) {
-        productRepository.deleteProduct(productId);
+        productRepository.delete(productRepository.findProductById(productId).get());
         return DELETE_SUCCESS_MSG;
     }
 
