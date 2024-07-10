@@ -28,6 +28,9 @@ public class ProductService {
     }
 
     public void updateProduct(long id, ProductDTO productDTO) {
+        if (!productRepository.existsById(id)) {
+            throw new IllegalArgumentException("Product does not exist");
+        }
         productRepository.save(
             new Product(
                 id,
