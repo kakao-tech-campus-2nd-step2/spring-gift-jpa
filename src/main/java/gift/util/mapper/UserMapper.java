@@ -13,8 +13,8 @@ public class UserMapper {
             .build();
     }
 
-    public static UserResponse toResponse(User user, String token) {
-        return new UserResponse(user.getId(), user.getEmail(), token);
+    public static UserResponse toResponse(String token) {
+        return new UserResponse(token);
     }
 
 }

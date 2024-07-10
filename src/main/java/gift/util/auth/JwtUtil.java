@@ -31,18 +31,13 @@ public class JwtUtil {
             .compact();
     }
 
-    public Boolean validateToken(String token, Long userId, String email) {
+    public Boolean validateToken(String token, Long userId) {
         final Long extractedUserId = extractUserId(token);
-        final String extractedEmail = extractEmail(token);
-        return (extractedUserId.equals(userId) && extractedEmail.equals(email) && !isTokenExpired(token));
+        return (extractedUserId.equals(userId) && !isTokenExpired(token));
     }
 
     public Long extractUserId(String token) {
         return extractClaim(token, claims -> claims.get("user_id", Long.class));
-    }
-
-    public String extractEmail(String token) {
-        return extractClaim(token, claims -> claims.get("email", String.class));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

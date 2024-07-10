@@ -4,21 +4,22 @@ import gift.dto.user.UserLoginRequest;
 import gift.dto.user.UserRegisterRequest;
 import gift.dto.user.UserResponse;
 import gift.entity.User;
+import gift.exception.InvalidTokenException;
 import gift.exception.user.UserAlreadyExistException;
 import gift.exception.user.UserNotFoundException;
-import gift.exception.user.UserUnauthorizedException;
 import gift.repository.UserRepository;
+import gift.util.auth.JwtUtil;
 import gift.util.mapper.UserMapper;
-import java.util.Base64;
-import java.util.HashMap;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+    private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(JwtUtil jwtUtil, UserRepository userRepository) {
+        this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
     }
 
@@ -30,15 +31,17 @@ public class UserService {
 
         User registeredUser = userRepository.save(UserMapper.toUser(request));
 
-        return UserMapper.toResponse(registeredUser,
-            getToken(registeredUser.getEmail(), registeredUser.getPassword()));
+        return UserMapper.toResponse(jwtUtil.generateToken(registeredUser.getId(),
+            registeredUser.getEmail()));
     }
 
     public UserResponse loginUser(UserLoginRequest userRequest) {
         User user = userRepository.findByEmailAndPassword(userRequest.email(), userRequest.password())
             .orElseThrow(() -> new UserNotFoundException("로그인할 수 없습니다."));
 
-        return UserMapper.toResponse(user, getToken(user.getEmail(), user.getPassword()));
+        String token = jwtUtil.generateToken(user.getId(), user.getEmail());
+
+        return UserMapper.toResponse(token);
     }
 
     public User getUserById(Long userId) {
@@ -47,27 +50,11 @@ public class UserService {
     }
 
     public Long getUserIdByToken(String token) {
-        HashMap<String, String> credentials = decodeToken(token);
-        User user = userRepository.findByEmailAndPassword(
-            credentials.get("email"),
-            credentials.get("password"))
-            .orElseThrow(() -> new UserUnauthorizedException("접근할 수 없습니다." + "Email: " + credentials.get("email") + ", Password: " + credentials.get("password")));
-
-        return user.getId();
-    }
-
-    private HashMap<String, String> decodeToken(String token) {
-        String decodedString = new String(Base64.getDecoder().decode(token));
-        String[] parts = decodedString.split(":",2);
-        HashMap<String,String> credentials = new HashMap<>();
-        credentials.put("email", parts[0]);
-        credentials.put("password", parts[1]);
-        return credentials;
-    }
-
-    private String getToken(String email, String password) {
-        return Base64.getEncoder()
-            .encodeToString((email + ":" + password).getBytes());
+        Long userId = jwtUtil.extractUserId(token);
+        if(userId == null || !userRepository.existsById(userId)) {
+            throw new InvalidTokenException();
+        }
+        return userId;
     }
 
 }
