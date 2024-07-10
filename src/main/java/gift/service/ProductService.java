@@ -7,8 +7,11 @@ import gift.exception.BadRequestExceptions.NoSuchProductIdException;
 import gift.exception.InternalServerExceptions.InternalServerException;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,12 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
     private final ParameterValidator parameterValidator;
+    private final EntityValidator entityValidator;
     private final ProductRepository productRepository;
     private final WishRepository wishRepository;
 
     @Autowired
-    public ProductService(ParameterValidator parameterValidator,
+    public ProductService(ParameterValidator parameterValidator, EntityValidator entityValidator,
             ProductRepository productRepository, WishRepository wishRepository) {
+        this.entityValidator = entityValidator;
         this.productRepository = productRepository;
         this.parameterValidator = parameterValidator;
         this.wishRepository = wishRepository;
@@ -33,14 +38,17 @@ public class ProductService {
     @Transactional
     public void addProduct(ProductDTO productDTO) throws RuntimeException {
         try {
-            productRepository.save(new Product(productDTO));
+            Product product = entityValidator.validateProduct(productDTO);
+            productRepository.save(product);
         } catch (Exception e) {
-            if(e instanceof IllegalArgumentException || e instanceof DataIntegrityViolationException)
+            if (e instanceof IllegalArgumentException || e instanceof DataIntegrityViolationException)
                 throw new BadRequestException("잘못된 제품 값을 입력했습니다. 입력 칸 옆의 설명을 다시 확인해주세요");
+
+            if(e instanceof ConstraintViolationException)
+                throw new BadRequestException(e.getMessage());
 
             throw new InternalServerException(e.getMessage());
         }
-
     }
 
     public List<ProductDTO> getProductList() {
@@ -52,11 +60,17 @@ public class ProductService {
         parameterValidator.validateParameter(id, productDTO);
         Optional<Product> productInDb = productRepository.findById(id);
 
-        if(productInDb.isEmpty())
+        if (productInDb.isEmpty())
             throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
 
         Product productInDB = productInDb.get();
-        Product product = new Product(productDTO); //이따가 검증하는거 해야함
+        Product product;
+        try{
+            product = entityValidator.validateProduct(productDTO);
+        } catch (ConstraintViolationException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+
         productInDB.changeProduct(product);
         productRepository.save(productInDB);
     }
@@ -67,8 +81,9 @@ public class ProductService {
             wishRepository.deleteByProduct_Id(id); // 외래키 제약조건
             productRepository.deleteById(id);
         } catch (Exception e) {
-            if(e instanceof EmptyResultDataAccessException)
+            if (e instanceof EmptyResultDataAccessException) {
                 throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
+            }
 
             throw new InternalServerException(e.getMessage());
         }

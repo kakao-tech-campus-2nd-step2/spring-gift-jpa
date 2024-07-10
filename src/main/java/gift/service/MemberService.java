@@ -3,11 +3,13 @@ package gift.service;
 
 import gift.dto.MemberDTO;
 import gift.entity.Member;
+import gift.exception.BadRequestExceptions.BadRequestException;
 import gift.exception.BadRequestExceptions.EmailAlreadyHereException;
 import gift.exception.BadRequestExceptions.UserNotFoundException;
 import gift.exception.InternalServerExceptions.DuplicatedUserException;
 import gift.exception.InternalServerExceptions.InternalServerException;
 import gift.repository.MemberRepository;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -17,21 +19,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final EntityValidator entityValidator;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, EntityValidator entityValidator) {
         this.memberRepository = memberRepository;
+        this.entityValidator = entityValidator;
     }
 
     @Transactional
     public void register(MemberDTO memberDTO) throws RuntimeException {
-        Member member = new Member(memberDTO);
-
         try {
+            Member member = entityValidator.validateMember(memberDTO);
             memberRepository.save(member);
         } catch (Exception e) {
             if(e instanceof DataIntegrityViolationException)
                 throw new EmailAlreadyHereException("이미 있는 이메일입니다.");
+
+            if(e instanceof ConstraintViolationException)
+                throw new BadRequestException(e.getMessage());
 
             throw new InternalServerException(e.getMessage());
         }
