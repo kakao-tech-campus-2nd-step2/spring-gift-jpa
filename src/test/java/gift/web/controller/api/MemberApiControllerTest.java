@@ -139,5 +139,17 @@ class MemberApiControllerTest {
 
     @Test
     void deleteWishProduct() {
+        //given
+        String url = "http://localhost:" + port + "/api/members/wishlist/1";
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setBearerAuth(token.getValue());
+        HttpEntity httpEntity = new HttpEntity(httpHeaders);
+
+        //when
+        ResponseEntity<Void> response = restTemplate.exchange(url,
+            HttpMethod.DELETE, httpEntity, Void.class);
+
+        //then
+        assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 }
