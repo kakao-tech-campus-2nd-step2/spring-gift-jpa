@@ -4,6 +4,7 @@ import gift.common.annotation.LoginUser;
 import gift.model.product.ProductListResponse;
 import gift.model.product.ProductRequest;
 import gift.model.product.ProductResponse;
+import gift.model.user.LoginUserRequest;
 import gift.model.user.User;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
