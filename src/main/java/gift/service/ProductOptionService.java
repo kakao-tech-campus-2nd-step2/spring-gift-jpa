@@ -3,7 +3,6 @@ package gift.service;
 import gift.dto.ProductOptionRequest;
 import gift.dto.ProductOptionResponse;
 import gift.dto.ProductResponse;
-import gift.helper.RepositoryReader;
 import gift.model.ProductOption;
 import gift.repository.ProductOptionRepository;
 import gift.repository.ProductRepository;
@@ -18,12 +17,11 @@ public class ProductOptionService {
 
     private final ProductOptionRepository optionRepository;
     private final ProductRepository productRepository;
-    private final RepositoryReader repositoryReader;
 
-    public ProductOptionService(ProductOptionRepository optionRepository, ProductRepository productRepository, RepositoryReader repositoryReader) {
+
+    public ProductOptionService(ProductOptionRepository optionRepository, ProductRepository productRepository) {
         this.optionRepository = optionRepository;
         this.productRepository = productRepository;
-        this.repositoryReader = repositoryReader;
     }
 
     public ProductOptionResponse addOption(ProductOptionRequest productOptionRequest) {
@@ -32,13 +30,13 @@ public class ProductOptionService {
     }
 
     public void updateOption(Long id, ProductOptionRequest productOptionRequest) {
-        var option = repositoryReader.findEntityById(optionRepository, id);
+        var option = optionRepository.findByIdOrThrow(id);
         option.updateOptionInfo(productOptionRequest.name(), productOptionRequest.additionalPrice());
         optionRepository.save(option);
     }
 
     public ProductOptionResponse getOption(Long id) {
-        var option = repositoryReader.findEntityById(optionRepository, id);
+        var option = optionRepository.findByIdOrThrow(id);
         return getProductOptionResponseFromProductOption(option);
     }
 
@@ -50,13 +48,13 @@ public class ProductOptionService {
     }
 
     public void deleteOption(Long id) {
-        var productOption = repositoryReader.findEntityById(optionRepository, id);
-        productOption.removeOption();
+        var option = optionRepository.findByIdOrThrow(id);
+        option.removeOption();
         optionRepository.deleteById(id);
     }
 
     private ProductOption saveProductOptionWithProductRequest(ProductOptionRequest productOptionRequest) {
-        var product = repositoryReader.findEntityById(productRepository, productOptionRequest.productId());
+        var product = productRepository.findByIdOrThrow(productOptionRequest.productId());
         var option = new ProductOption(productOptionRequest.name(), productOptionRequest.additionalPrice());
         option.addProduct(product);
         var savedOption = optionRepository.save(option);

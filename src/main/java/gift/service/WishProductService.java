@@ -4,7 +4,6 @@ import gift.dto.ProductResponse;
 import gift.dto.WishProductAddRequest;
 import gift.dto.WishProductResponse;
 import gift.dto.WishProductUpdateRequest;
-import gift.helper.RepositoryReader;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.WishProduct;
@@ -23,18 +22,16 @@ public class WishProductService {
     private final WishProductRepository wishProductRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
-    private final RepositoryReader repositoryReader;
 
-    public WishProductService(WishProductRepository wishProductRepository, ProductRepository productRepository, MemberRepository memberRepository, RepositoryReader repositoryReader) {
+    public WishProductService(WishProductRepository wishProductRepository, ProductRepository productRepository, MemberRepository memberRepository) {
         this.wishProductRepository = wishProductRepository;
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
-        this.repositoryReader = repositoryReader;
     }
 
     public WishProductResponse addWishProduct(WishProductAddRequest wishProductAddRequest, Long memberId) {
-        var product = repositoryReader.findEntityById(productRepository, wishProductAddRequest.productId());
-        var member = repositoryReader.findEntityById(memberRepository, memberId);
+        var product = productRepository.findByIdOrThrow(wishProductAddRequest.productId());
+        var member = memberRepository.findByIdOrThrow(memberId);
         if (wishProductRepository.existsByProductAndMember(product, member)) {
             return updateWishProductWithProductAndMember(product, member, wishProductAddRequest.count());
         }
@@ -43,7 +40,7 @@ public class WishProductService {
     }
 
     public void updateWishProduct(Long id, WishProductUpdateRequest wishProductUpdateRequest) {
-        var wishProduct = repositoryReader.findEntityById(wishProductRepository, id);
+        var wishProduct = wishProductRepository.findByIdOrThrow(id);
         if (wishProductUpdateRequest.count() == 0) {
             deleteWishProduct(id);
             return;
@@ -59,7 +56,7 @@ public class WishProductService {
     }
 
     public void deleteWishProduct(Long id) {
-        var wishProduct = repositoryReader.findEntityById(wishProductRepository, id);
+        var wishProduct = wishProductRepository.findByIdOrThrow(id);
         wishProduct.removeWishProduct();
         wishProductRepository.deleteById(id);
     }

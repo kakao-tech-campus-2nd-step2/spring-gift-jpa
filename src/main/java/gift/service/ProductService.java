@@ -3,7 +3,6 @@ package gift.service;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.exception.InvalidProductNameWithKAKAOException;
-import gift.helper.RepositoryReader;
 import gift.model.MemberRole;
 import gift.model.Product;
 import gift.repository.ProductRepository;
@@ -17,11 +16,9 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final RepositoryReader repositoryReader;
 
-    public ProductService(ProductRepository productRepository, RepositoryReader repositoryReader) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.repositoryReader = repositoryReader;
     }
 
     public ProductResponse addProduct(ProductRequest productRequest, MemberRole memberRole) {
@@ -31,12 +28,12 @@ public class ProductService {
     }
 
     public void updateProduct(Long id, ProductRequest productRequest) {
-        var product = repositoryReader.findEntityById(productRepository, id);
+        var product = productRepository.findByIdOrThrow(id);
         updateProductWithProductRequest(product, productRequest);
     }
 
     public ProductResponse getProduct(Long id) {
-        var product = repositoryReader.findEntityById(productRepository, id);
+        var product = productRepository.findByIdOrThrow(id);
         return getProductResponseFromProduct(product);
     }
 

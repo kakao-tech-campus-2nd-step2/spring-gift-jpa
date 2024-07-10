@@ -5,7 +5,6 @@ import gift.dto.RegisterRequest;
 import gift.dto.WishProductAddRequest;
 import gift.dto.WishProductUpdateRequest;
 import gift.exception.NotFoundElementException;
-import gift.helper.RepositoryReader;
 import gift.model.MemberRole;
 import gift.reflection.AuthTestReflectionComponent;
 import gift.repository.MemberRepository;
@@ -32,8 +31,6 @@ class WishProductServiceTest {
     private AuthService authService;
     @Autowired
     private MemberService memberService;
-    @Autowired
-    private RepositoryReader repositoryReader;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -136,7 +133,7 @@ class WishProductServiceTest {
         var managerWishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
         var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
         //when
-        var wishProducts = repositoryReader.findEntityById(memberRepository, managerId).getWishes();
+        var wishProducts = memberRepository.findByIdOrThrow(managerId).getWishes();
         //then
         Assertions.assertThat(wishProducts.size()).isEqualTo(2);
 
@@ -151,7 +148,7 @@ class WishProductServiceTest {
         var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
         var managerWishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
         //when
-        var wishProducts = repositoryReader.findEntityById(productRepository, product1Id).getWishes();
+        var wishProducts = productRepository.findByIdOrThrow(product1Id).getWishes();
         //then
         Assertions.assertThat(wishProducts.size()).isEqualTo(1);
 
