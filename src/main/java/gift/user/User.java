@@ -1,11 +1,17 @@
 package gift.user;
 
 
+import gift.wishList.WishList;
 import jakarta.persistence.*;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @Entity
 @Table(name = "USERS")
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -15,6 +21,10 @@ public class User {
     String password;
     @Column(name = "nickname")
     String nickname;
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "user", orphanRemoval = true)
+    private List<WishList> wishLists = new ArrayList<>();
+
 
     public User() {
     }
@@ -24,6 +34,27 @@ public class User {
         this.email = email;
         this.password = password;
         this.nickname = nickName;
+    }
+
+    public void addWishList(WishList wishList) {
+        this.wishLists.add(wishList);
+        wishList.setUser(this);
+    }
+
+    public void removeWishList(WishList wishList) {
+        wishList.setUser(null);
+        this.wishLists.remove(wishList);
+    }
+
+    public void removeWishLists() {
+        Iterator<WishList> iterator = this.wishLists.iterator();
+
+        while (iterator.hasNext()) {
+            WishList wishList = iterator.next();
+
+            wishList.setUser(null);
+            iterator.remove();
+        }
     }
 
     public Long getId() {
@@ -42,4 +73,7 @@ public class User {
         return email;
     }
 
+    public List<WishList> getWishLists() {
+        return wishLists;
+    }
 }
