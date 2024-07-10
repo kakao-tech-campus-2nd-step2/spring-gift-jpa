@@ -8,4 +8,8 @@ public record UserRequest(
     String password,
     @Email
     String email) {
+
+    public User toEntity() {
+        return new User(null, password, email);
+    }
 }

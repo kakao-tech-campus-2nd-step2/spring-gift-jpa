@@ -63,4 +63,18 @@ public class GlobalExceptionHandler {
         problemDetail.setDetail(e.getMessage());
         return ResponseEntity.badRequest().body(problemDetail);
     }
+
+    @ExceptionHandler(ExistWishException.class)
+    public ResponseEntity<ProblemDetail> existWishException(ExistWishException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setDetail(e.getMessage());
+        return ResponseEntity.badRequest().body(problemDetail);
+    }
+
+    @ExceptionHandler(WishNotFoundException.class)
+    public ResponseEntity<ProblemDetail> wishNotFoundException(WishNotFoundException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problemDetail.setDetail(e.getMessage());
+        return ResponseEntity.badRequest().body(problemDetail);
+    }
 }
