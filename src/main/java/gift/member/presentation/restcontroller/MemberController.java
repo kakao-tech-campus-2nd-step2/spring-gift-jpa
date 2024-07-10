@@ -6,9 +6,8 @@ import gift.member.business.service.MemberService;
 import gift.member.business.service.WishlistService;
 import gift.member.presentation.dto.RequestMemberDto;
 import gift.member.presentation.dto.RequestWishlistDto;
-import gift.member.presentation.dto.ResponseWishListDto;
+import gift.member.presentation.dto.ResponsePagingWishlistDto;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -55,12 +55,11 @@ public class MemberController {
     }
 
     @GetMapping("/wishlists")
-    public ResponseEntity<List<ResponseWishListDto>> getWishLists(@MemberId Long memberId) {
-        var wishListDtoList = wishlistService.getWishLists(memberId);
-        var responseWishListDtoList = wishListDtoList.stream().map(ResponseWishListDto::from)
-            .toList();
-
-        return ResponseEntity.ok(responseWishListDtoList);
+    public ResponseEntity<ResponsePagingWishlistDto> getWishlistsByPage(@MemberId Long memberId,
+        @RequestParam int page) {
+        var wishListPagingDto = wishlistService.getWishListsByPage(memberId, page);
+        var responseWishlistPagingDto = ResponsePagingWishlistDto.from(wishListPagingDto);
+        return ResponseEntity.ok(responseWishlistPagingDto);
     }
 
     @PostMapping("/wishlists/products/{productId}")

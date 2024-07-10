@@ -1,6 +1,8 @@
 package gift.member.business.dto;
 
+import gift.member.persistence.entity.Wishlist;
 import gift.product.persistence.entity.Product;
+import java.util.List;
 
 public record WishListDto(
     Long id,
@@ -16,4 +18,9 @@ public record WishListDto(
             product.getUrl(), count);
     }
 
+    public static List<WishListDto> from(List<Wishlist> content) {
+        return content.stream()
+            .map(wishlist -> of(wishlist.getId(), wishlist.getProduct(), wishlist.getCount()))
+            .toList();
+    }
 }

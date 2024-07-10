@@ -1,12 +1,13 @@
 package gift.member.business.service;
 
-import gift.member.business.dto.WishListDto;
+import gift.member.business.dto.WishlistPagingDto;
 import gift.member.persistence.entity.Wishlist;
 import gift.member.persistence.repository.MemberRepository;
 import gift.member.persistence.repository.WishlistRepository;
-import gift.member.presentation.dto.WishlistUpdateDto;
+import gift.member.business.dto.WishlistUpdateDto;
 import gift.product.persistence.repository.ProductRepository;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,16 +24,10 @@ public class WishlistService {
         this.memberRepository = memberRepository;
     }
 
-    public List<WishListDto> getWishLists(Long memberId) {
-        var wishLists = wishlistRepository.getWishListByMemberId(memberId);
-
-        return wishLists.stream()
-            .map(wishlist -> WishListDto.of(
-                wishlist.getId(),
-                wishlist.getProduct(),
-                wishlist.getCount()
-            ))
-            .toList();
+    public WishlistPagingDto getWishListsByPage(Long memberId, int page) {
+        PageRequest pageRequest = PageRequest.of(page, 20);
+        Page<Wishlist> wishlists = wishlistRepository.getWishListByPage(memberId, pageRequest);
+        return WishlistPagingDto.from(wishlists);
     }
 
     public Long addWishList(Long memberId, Long productId) {
@@ -55,6 +50,5 @@ public class WishlistService {
     public void deleteWishList(Long memberId, Long productId) {
         wishlistRepository.deleteWishlist(memberId, productId);
     }
-
 
 }
