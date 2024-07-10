@@ -27,4 +27,8 @@ public class TokenAuth {
         return token;
     }
 
+    public String getEmail(){
+        return email;
+    }
+
 }
