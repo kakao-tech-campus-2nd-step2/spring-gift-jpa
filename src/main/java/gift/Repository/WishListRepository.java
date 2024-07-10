@@ -15,15 +15,8 @@ public interface WishListRepository extends JpaRepository<WishList, Long> {
             "FROM WishList w INNER JOIN Product p ON w.productId = p.id " +
             "WHERE w.email = :email")
     List<ResponseWishListDTO> findWishListsByEmail(@Param("email")String email);
+    
+    WishList findByEmailAndProductId(String email, Long productId);
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE WishList w SET w.count = :count " +
-            "WHERE w.email = :email AND w.productId = :productId")
-    void updateWishListCount(@Param("count")int count, @Param("email")String email, @Param("productId")Long productId);
-
-    @Transactional
-    @Modifying
-    @Query("DELETE FROM WishList w WHERE w.email = :email AND w.productId = :productId")
-    void deleteWishListByEmailAndProductId(@Param("email")String eamil, @Param("productId")Long productId);
+    void deleteWishListByEmailAndProductId(String email, Long productId);
 }
