@@ -6,6 +6,7 @@ import gift.exception.BadRequestExceptions.BadRequestException;
 import gift.exception.BadRequestExceptions.NoSuchProductIdException;
 import gift.exception.InternalServerExceptions.InternalServerException;
 import gift.repository.ProductRepository;
+import gift.repository.WishRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,14 @@ public class ProductService {
 
     private final ParameterValidator parameterValidator;
     private final ProductRepository productRepository;
+    private final WishRepository wishRepository;
 
     @Autowired
     public ProductService(ParameterValidator parameterValidator,
-            ProductRepository productRepository) {
+            ProductRepository productRepository, WishRepository wishRepository) {
         this.productRepository = productRepository;
         this.parameterValidator = parameterValidator;
+        this.wishRepository = wishRepository;
     }
 
     @Transactional
@@ -61,6 +64,7 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long id) throws RuntimeException {
         try {
+            wishRepository.deleteByProduct_Id(id); // 외래키 제약조건
             productRepository.deleteById(id);
         } catch (Exception e) {
             if(e instanceof EmptyResultDataAccessException)
