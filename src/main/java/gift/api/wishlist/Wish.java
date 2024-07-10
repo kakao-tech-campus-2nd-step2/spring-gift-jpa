@@ -1,9 +1,9 @@
 package gift.api.wishlist;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @IdClass(WishId.class)
@@ -12,7 +12,7 @@ public class Wish {
     private Long memberId;
     @Id
     private Long productId;
-    @NotNull
+    @Column(nullable = false)
     private Integer quantity;
 
     protected Wish() {

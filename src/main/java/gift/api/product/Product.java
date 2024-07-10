@@ -5,19 +5,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    @Column(length = 15)
+    @Column(length = 15, nullable = false)
     private String name;
-    @NotNull
+    @Column(nullable = false)
     private Integer price;
-    @NotNull
+    @Column(nullable = false)
     private String imageUrl;
 
     protected Product() {
