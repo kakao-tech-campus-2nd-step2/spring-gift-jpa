@@ -6,6 +6,7 @@ import gift.domain.Product;
 import gift.repository.product.ProductRepository;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,6 +17,7 @@ class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @DisplayName("상품 정보 저장 테스트")
     @Test
     void save() {
         // given
@@ -29,6 +31,7 @@ class ProductRepositoryTest {
         );
     }
 
+    @DisplayName("id에 따른 상품 찾기 테스트")
     @Test
     void findbyid() {
         // given
@@ -38,6 +41,7 @@ class ProductRepositoryTest {
         assertThat(id).isEqualTo(findId);
     }
 
+    @DisplayName("상품 삭제 기능 테스트")
     @Test
     void deletebyid() {
         // given
