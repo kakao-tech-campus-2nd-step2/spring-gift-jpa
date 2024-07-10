@@ -2,6 +2,9 @@ package gift.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name="user_tb")
 public class User {
@@ -15,7 +18,14 @@ public class User {
     private String password;
 
 
+    @OneToMany(mappedBy = "user")
+    List<WishList> wishlist = new ArrayList<>();
+
     public User() {
+    }
+
+    public void addWishlist(WishList wishList){
+        this.wishlist.add(wishList);
     }
 
     public int getId() {

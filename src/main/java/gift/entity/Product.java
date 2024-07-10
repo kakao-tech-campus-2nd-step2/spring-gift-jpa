@@ -28,7 +28,7 @@ public class Product {
     @Column(nullable = false)
     String imageUrl;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "option")
+    @OneToMany
     List<Option> options = new ArrayList<>();
 
     public void addOptions(Option option){
