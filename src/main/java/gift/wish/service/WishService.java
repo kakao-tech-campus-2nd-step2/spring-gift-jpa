@@ -19,7 +19,7 @@ public class WishService {
     }
 
     public List<Wish> getAllWishesByMember(Member member) {
-        return wishRepository.findAll(member.getId());
+        return wishRepository.findAllByMemberId(member.getId());
     }
 
     public Wish getWishById(Long id) {

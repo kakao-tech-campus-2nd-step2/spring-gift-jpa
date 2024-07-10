@@ -1,17 +1,21 @@
 package gift.product.domain;
 
 import gift.product.dto.ProductRequestDto;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Embedded;
-import org.springframework.data.relational.core.mapping.Table;
+import gift.wish.domain.Wish;
+import jakarta.persistence.*;
+import org.hibernate.Hibernate;
 
-@Table("products")
+import java.util.Objects;
+
+@Entity
+@Table(name = "products")
 public class Product {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
+    @Embedded
     private ProductName name;
-    @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
+    @Embedded
     private ProductPrice price;
     private String imageUrl;
 
@@ -51,5 +55,19 @@ public class Product {
 
     public boolean checkNew() {
         return id == null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+            return false;
+        Product item = (Product) o;
+        return Objects.equals(id, item.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.intValue();
     }
 }

@@ -1,19 +1,18 @@
 package gift.member.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import gift.product.domain.ProductPrice;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.util.Objects;
 
 @Embeddable
-public class Email {
-    @Column(name = "email")
+public class Nickname {
+    @Column(name = "nickname")
     private String value;
 
-    public Email() {}
-    public Email(String value) {
+    public Nickname() {}
+    public Nickname(String value) {
         this.value = value;
     }
 
@@ -32,11 +31,12 @@ public class Email {
         return value;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Email that = (Email) o;
+        Nickname that = (Nickname) o;
         return Objects.equals(value, that.value);
     }
 

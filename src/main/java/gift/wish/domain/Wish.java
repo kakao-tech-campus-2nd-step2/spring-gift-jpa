@@ -1,16 +1,19 @@
 package gift.wish.domain;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Embedded;
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.*;
+import org.hibernate.Hibernate;
 
-@Table("wishes")
+import java.util.Objects;
+
+@Entity
+@Table(name = "wishes")
 public class Wish {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long memberId;
     private Long productId;
-    @Embedded(onEmpty = Embedded.OnEmpty.USE_NULL)
+    @Embedded
     private ProductCount productCount;
 
     public Wish() {}
@@ -40,5 +43,19 @@ public class Wish {
 
     public ProductCount getProductCount() {
         return productCount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
+            return false;
+        Wish item = (Wish) o;
+        return Objects.equals(id, item.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.intValue();
     }
 }

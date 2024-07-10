@@ -1,7 +1,8 @@
 package gift.product.validation;
 
+import gift.global.response.ErrorCode;
 import gift.product.domain.ProductName;
-import gift.product.exception.ProductNameContainsException;
+import gift.product.exception.ProductValidException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -14,7 +15,7 @@ public class ProductNameKeywordValidator implements ConstraintValidator<ValidPro
     @Override
     public boolean isValid(ProductName productName, ConstraintValidatorContext constraintValidatorContext) {
         if (KEY_WORDS.stream().anyMatch(productName.getValue().replaceAll("\\s", "")::contains)) {
-            throw new ProductNameContainsException();
+            throw new ProductValidException(ErrorCode.PRODUCT_NAME_CONTAINS_ERROR);
         }
 
         return true;

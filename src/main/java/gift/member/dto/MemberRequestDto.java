@@ -2,12 +2,12 @@ package gift.member.dto;
 
 import gift.member.domain.Email;
 import gift.member.domain.MemberType;
-import gift.member.domain.NickName;
+import gift.member.domain.Nickname;
 import gift.member.domain.Password;
 
 import java.util.Objects;
 
-public record MemberRequestDto(Email email, Password password, NickName nickName) {
+public record MemberRequestDto(Email email, Password password, Nickname nickName) {
     public MemberRequestDto {
         Objects.requireNonNull(email);
         Objects.requireNonNull(password);

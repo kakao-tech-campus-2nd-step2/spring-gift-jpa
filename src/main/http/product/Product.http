@@ -27,5 +27,5 @@ Content-Type: application/json
 }
 
 ### delete product
-DELETE http://localhost:8080/api/products/1
+DELETE http://localhost:8080/api/products/3
 Content-Type: application/json
