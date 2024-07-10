@@ -48,4 +48,8 @@ public class Wish {
     public int getQuantity() {
         return quantity;
     }
+
+    public void increaseQuantity() {
+        this.quantity++;
+    }
 }

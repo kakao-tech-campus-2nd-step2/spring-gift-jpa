@@ -13,5 +13,7 @@ import java.util.List;
 public interface WishRepository extends JpaRepository<Wish, Long> {
     List<Wish> findByUser(User user);
 
+    List<Wish> findByUserAndGift(User user, Gift gift);
+
     void deleteByUserAndGift(User user, Gift gift);
 }

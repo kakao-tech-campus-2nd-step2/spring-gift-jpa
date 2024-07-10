@@ -1,11 +1,13 @@
 package gift.service;
 
 import gift.model.User;
+import gift.model.Wish;
 import gift.repository.UserRepository;
 import gift.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service

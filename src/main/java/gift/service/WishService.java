@@ -28,8 +28,16 @@ public class WishService {
     public void addGiftToUser(Long userId, Long giftId, int quantity) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
         Gift gift = giftRepository.findById(giftId).orElseThrow(() -> new IllegalArgumentException("Invalid gift ID"));
-        Wish userGift = new Wish(user, gift, quantity);
-        wishRepository.save(userGift);
+
+        List<Wish> existingWishes = wishRepository.findByUserAndGift(user, gift);
+        if (!existingWishes.isEmpty()) {
+            Wish existingWish = existingWishes.get(0);
+            existingWish.increaseQuantity();
+            wishRepository.save(existingWish);
+        } else {
+            Wish userGift = new Wish(user, gift, quantity);
+            wishRepository.save(userGift);
+        }
     }
 
     public void removeGiftFromUser(Long userId, Long giftId) {
