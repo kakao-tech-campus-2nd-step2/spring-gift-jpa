@@ -1,6 +1,7 @@
 package gift.Controller;
 
 import gift.DTO.ProductDto;
+import gift.Exception.ProductNotFoundException;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
 import java.util.Optional;
@@ -42,12 +43,10 @@ public class ProductAdminController {
 
   @GetMapping("product/{id}")
   public String editProductForm(@PathVariable Long id, Model model) {
-    Optional<ProductDto> productDTO = productService.getProductById(id);
-    if (productDTO != null) {
-      model.addAttribute("product", productDTO);
-      return "product-form";
-    }
-    return "redirect:/admin/products";
+    ProductDto product = productService.getProductById(id)
+      .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
+    model.addAttribute("product", product);
+    return "product-form";
   }
 
   @PostMapping("product/{id}")

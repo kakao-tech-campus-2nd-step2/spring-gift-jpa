@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,5 +35,12 @@ public class GlobalExceptionHandler {
   public ResponseEntity<String> handleForbiddenException(ForbiddenException ex,
     WebRequest request) {
     return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+  }
+
+  @ExceptionHandler(ProductNotFoundException.class)
+  public ModelAndView handleProductNotFoundException(ProductNotFoundException ex, WebRequest request) {
+    ModelAndView modelAndView = new ModelAndView("redirect:/admin/products");
+    modelAndView.addObject("error", ex.getMessage());
+    return modelAndView;
   }
 }
