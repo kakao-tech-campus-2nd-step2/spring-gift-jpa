@@ -20,11 +20,13 @@ public class ProductRepositoryTest {
 
     private Product expected;
     private Product actual;
+    private long notExistId;
 
     @BeforeEach
     void setUp(){
         expected = new Product("testName", 1, "testUrl");
         actual = productRepository.save(expected);
+        notExistId = 1000L;
     }
 
     @Transactional
@@ -42,10 +44,12 @@ public class ProductRepositoryTest {
     void findById() {
 
         Optional<Product> product = productRepository.findById(expected.getId());
+        Optional<Product> notExistProduct = productRepository.findById(notExistId);
 
         assertAll(
             () -> assertThat(product).isPresent(),
-            () -> assertThat(product.get().getId()).isEqualTo(expected.getId())
+            () -> assertThat(product.get().getId()).isEqualTo(expected.getId()),
+            () -> assertThat(notExistProduct).isNotPresent()
         );
     }
 

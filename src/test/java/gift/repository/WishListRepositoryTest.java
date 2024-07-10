@@ -22,11 +22,13 @@ public class WishListRepositoryTest {
 
     private WishList expected;
     private WishList actual;
+    private long notExistMemberId;
 
     @BeforeEach
     void setUp(){
         expected = new WishList(1L, 1L);
         actual = wishListRepository.save(expected);
+        notExistMemberId = 2L;
     }
 
     @Test
@@ -49,6 +51,7 @@ public class WishListRepositoryTest {
         List<WishList> actual = wishListRepository.findProductIdsByMemberId(1L);
 
         assertThat(actual.size()).isEqualTo(expectedList.size());
+        assertThat(wishListRepository.findProductIdsByMemberId(notExistMemberId)).isEmpty();
 
         for (int i = 0; i < expectedList.size(); i++) {
             assertThat(actual.get(i).getProductId()).isEqualTo(expectedList.get(i).getProductId());
