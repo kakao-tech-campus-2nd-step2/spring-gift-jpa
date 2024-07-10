@@ -32,9 +32,9 @@ public class UserController {
     })
     @PostMapping("/sign-up")
     public ResponseEntity<UserSignInResponse> signUp(@RequestBody UserSignUpRequest userSignupRequest) {
-        var savedUserInfo = userService.signUp(userSignupRequest);
+        var savedUserInfo = userService.signUp(userSignupRequest.toServiceDto());
 
-        var response = new UserSignInResponse(savedUserInfo.token());
+        var response = UserSignInResponse.from(savedUserInfo);
 
         return ResponseEntity.created(URI.create("/api/users/" + savedUserInfo.id()))
                 .body(response);
@@ -47,7 +47,9 @@ public class UserController {
     })
     @PostMapping("/sign-in")
     public ResponseEntity<UserSignInResponse> signIn(@RequestBody UserSignUpRequest userSignupRequest) {
-        var response = userService.signIn(userSignupRequest);
+        var signInUserInfo = userService.signIn(userSignupRequest.toServiceDto());
+
+        var response = UserSignInResponse.from(signInUserInfo);
 
         return ResponseEntity.ok()
                 .body(response);

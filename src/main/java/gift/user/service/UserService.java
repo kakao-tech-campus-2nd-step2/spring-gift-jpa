@@ -1,12 +1,12 @@
 package gift.user.service;
 
-import gift.user.application.dto.request.UserSignUpRequest;
-import gift.user.application.dto.response.UserSignInResponse;
 import gift.user.domain.User;
 import gift.user.exception.UserAlreadyExistsException;
 import gift.user.exception.UserNotFoundException;
 import gift.user.persistence.UserRepository;
-import gift.user.service.dto.UserSignInDto;
+import gift.user.service.dto.UserInfoParams;
+import gift.user.service.dto.UserSignInInfos;
+import gift.user.service.dto.UserSignupInfos;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +19,7 @@ public class UserService {
         this.jwtProvider = jwtProvider;
     }
 
-    public UserSignInDto signUp(UserSignUpRequest userSignupRequest) {
+    public UserSignupInfos signUp(UserInfoParams userSignupRequest) {
         userRepository.findByUsername(userSignupRequest.username())
                 .ifPresent(u -> {
                     throw new UserAlreadyExistsException();
@@ -39,10 +39,10 @@ public class UserService {
 
         String token = jwtProvider.generateToken(savedUser);
 
-        return new UserSignInDto(savedUser.getId(), token);
+        return UserSignupInfos.of(savedUser.getId(), token);
     }
 
-    public UserSignInResponse signIn(UserSignUpRequest userSignupRequest) {
+    public UserSignInInfos signIn(UserInfoParams userSignupRequest) {
         User savedUser = userRepository.findByUsername(userSignupRequest.username())
                 .orElseThrow(UserNotFoundException::new);
         if (PasswordProvider.match(userSignupRequest.username(), userSignupRequest.password(),
@@ -52,6 +52,6 @@ public class UserService {
 
         String token = jwtProvider.generateToken(savedUser);
 
-        return new UserSignInResponse(token);
+        return UserSignInInfos.of(token);
     }
 }
