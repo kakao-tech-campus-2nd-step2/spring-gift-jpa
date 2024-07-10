@@ -58,7 +58,7 @@ public class MemberTest {
         headers.setBearerAuth(token);
 
         HttpEntity<Member> requestEntity = new HttpEntity<>(member, headers);
-        ResponseEntity<String> loginResponse = restTemplate.exchange(url + "/members/login", POST, requestEntity, String.class);
+        ResponseEntity<String> loginResponse = restTemplate.postForEntity(url + "/members/login", requestEntity, String.class);
 
         assertThat(loginResponse.getStatusCode()).isEqualTo(OK);
     }
