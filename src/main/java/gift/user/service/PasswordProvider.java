@@ -8,7 +8,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
-public class PasswordProvider {
+class PasswordProvider {
     public static String encode(final String username, final String password) {
         try {
             byte[] salt = getSalt(username);
