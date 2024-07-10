@@ -1,33 +1,32 @@
 package gift.Service;
 
-import java.util.List;
-
-import gift.DAO.WishDAO;
-import gift.DTO.WishRequest;
 import gift.Entity.WishEntity;
+import gift.Repository.WishRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WishService {
 
-    private final WishDAO wishDAO;
+    @Autowired
+    private WishRepository wishRepository;
 
-    public WishService(WishDAO wishDAO) {
-        this.wishDAO = wishDAO;
+    public List<WishEntity> findAllWishes() {
+        return wishRepository.findAll();
     }
 
-    public void addWish(Long userId, WishRequest request) {
-        WishEntity wish = new WishEntity();
-        wish.setUserId(userId);
-        wish.setProductId(request.getProductId());
-        wishDAO.save(wish);
+    public Optional<WishEntity> findWishById(Long id) {
+        return wishRepository.findById(id);
     }
 
-    public List<WishEntity> getWishes(Long userId) {
-        return wishDAO.findByUserId(userId);
+    public WishEntity saveWish(WishEntity wishEntity) {
+        return wishRepository.save(wishEntity);
     }
 
-    public void removeWish(Long userId, Long wishId) {
-        wishDAO.deleteByUserIdAndWishId(userId, wishId);
+    public void deleteWish(Long id) {
+        wishRepository.deleteById(id);
     }
 }

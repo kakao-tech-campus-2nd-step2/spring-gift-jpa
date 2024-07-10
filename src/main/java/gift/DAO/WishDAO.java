@@ -1,37 +1,32 @@
 package gift.DAO;
 
 import gift.Entity.WishEntity;
-import java.util.List;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
+import gift.Repository.WishRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Repository
+import java.util.List;
+import java.util.Optional;
+
+@Service
 public class WishDAO {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<WishEntity> rowMapper = new BeanPropertyRowMapper<>(WishEntity.class);
+    @Autowired
+    private WishRepository wishRepository;
 
-    public WishDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public List<WishEntity> findAll() {
+        return wishRepository.findAll();
     }
 
-    public void save(WishEntity wish) {
-        String sql = "INSERT INTO wishes (user_id, product_id) VALUES (?, ?)";
-        jdbcTemplate.update(sql, wish.getUserId(), wish.getProductId());
+    public Optional<WishEntity> findById(Long id) {
+        return wishRepository.findById(id);
     }
 
-    public List<WishEntity> findByUserId(Long userId) {
-        String sql = "SELECT w.id, w.user_id, w.product_id, p.name AS product_name " +
-                "FROM wishes w " +
-                "JOIN product p ON w.product_id = p.id " +
-                "WHERE w.user_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{userId}, rowMapper);
+    public WishEntity save(WishEntity wishEntity) {
+        return wishRepository.save(wishEntity);
     }
 
-    public void deleteByUserIdAndWishId(Long userId, Long wishId) {
-        String sql = "DELETE FROM wishes WHERE user_id = ? AND id = ?";
-        jdbcTemplate.update(sql, userId, wishId);
+    public void deleteById(Long id) {
+        wishRepository.deleteById(id);
     }
 }
