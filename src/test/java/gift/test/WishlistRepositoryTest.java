@@ -1,7 +1,12 @@
 package gift.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import gift.model.Product;
+import gift.model.SiteUser;
 import gift.model.Wishlist;
+import gift.repository.ProductRepository;
+import gift.repository.UserRepository;
 import gift.repository.WishlistRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -17,14 +22,33 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class WishlistRepositoryTest {
     @Autowired
     private WishlistRepository wishlistRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ProductRepository productRepository;
+
 
     private Wishlist wishlist;
+    private SiteUser siteUser;
+    private Product product;
 
     @BeforeEach
     public void setUp() {
+        siteUser = new SiteUser();
+        siteUser.setUsername("testuser");
+        siteUser.setPassword("testpass");
+        siteUser.setEmail("testuser@example.com");
+        userRepository.save(siteUser);
+
+        product = new Product();
+        product.setName("Test Product");
+        product.setPrice(100);
+        product.setImageUrl("http://example.com/image.jpg");
+        productRepository.save(product);
+
         wishlist = new Wishlist();
-        wishlist.setUsername("testuser");
-        wishlist.setProductId(1L);
+        wishlist.setUser(siteUser);
+        wishlist.setProduct(product);
         wishlist.setQuantity(2);
     }
 
@@ -37,8 +61,8 @@ public class WishlistRepositoryTest {
         // then
         assertThat(savedWishlist).isNotNull();
         assertThat(savedWishlist.getId()).isNotNull();
-        assertThat(savedWishlist.getUsername()).isEqualTo("testuser");
-        assertThat(savedWishlist.getProductId()).isEqualTo(1L);
+        assertThat(savedWishlist.getUser()).isEqualTo(siteUser);
+        assertThat(savedWishlist.getProduct()).isEqualTo(product);
         assertThat(savedWishlist.getQuantity()).isEqualTo(2);
     }
 
@@ -49,13 +73,13 @@ public class WishlistRepositoryTest {
         wishlistRepository.save(wishlist);
 
         // when
-        List<Wishlist> foundWishlist = wishlistRepository.findByUsername("testuser");
+        List<Wishlist> foundWishlist = wishlistRepository.findByUserUsername("testuser");
 
         // then
         assertThat(foundWishlist).hasSize(1);
         Wishlist foundItem = foundWishlist.get(0);
-        assertThat(foundItem.getUsername()).isEqualTo("testuser");
-        assertThat(foundItem.getProductId()).isEqualTo(1L);
+        assertThat(foundItem.getUser().getUsername()).isEqualTo("testuser");
+        assertThat(foundItem.getProduct()).isEqualTo(product);
         assertThat(foundItem.getQuantity()).isEqualTo(2);
     }
 }

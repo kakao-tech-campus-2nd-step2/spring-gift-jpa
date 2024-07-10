@@ -1,6 +1,10 @@
 package gift.test;
 
+import gift.model.Product;
+import gift.model.SiteUser;
 import gift.model.Wishlist;
+import gift.repository.ProductRepository;
+import gift.repository.UserRepository;
 import gift.repository.WishlistRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,11 +17,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-
 
 @SpringBootTest
 @TestMethodOrder(OrderAnnotation.class)
@@ -27,14 +30,36 @@ public class WishlistControllerTest {
     private WishlistRepository wishlistRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
     private WebApplicationContext context;
 
     private MockMvc mockMvc;
+    private SiteUser siteUser;
+    private Product product;
 
     @BeforeEach
     void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         wishlistRepository.deleteAll();
+        userRepository.deleteAll();
+        productRepository.deleteAll();
+
+        siteUser = new SiteUser();
+        siteUser.setUsername("testuser");
+        siteUser.setPassword("testpass");
+        siteUser.setEmail("testuser@example.com");
+        userRepository.save(siteUser);
+
+        product = new Product();
+        product.setName("Test Product");
+        product.setPrice(100);
+        product.setImageUrl("http://example.com/image.jpg");
+        productRepository.save(product);
     }
 
     @Test
@@ -43,8 +68,8 @@ public class WishlistControllerTest {
     void testUpdateWishlistQuantity() throws Exception {
         // Given
         Wishlist item = new Wishlist();
-        item.setUsername("testuser");
-        item.setProductId(1L);
+        item.setUser(siteUser);  // 수정된 부분
+        item.setProduct(product);  // 수정된 부분
         item.setQuantity(2);
         wishlistRepository.save(item);
 
@@ -64,8 +89,8 @@ public class WishlistControllerTest {
     void testRemoveFromWishlist() throws Exception {
         // Given
         Wishlist item = new Wishlist();
-        item.setUsername("testuser");
-        item.setProductId(1L);
+        item.setUser(siteUser);  // 수정된 부분
+        item.setProduct(product);  // 수정된 부분
         item.setQuantity(2);
         wishlistRepository.save(item);
 

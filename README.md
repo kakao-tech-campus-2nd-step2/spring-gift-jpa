@@ -1,12 +1,11 @@
 # spring-gift-jpa
 
 
-# step1 과제
-1. 디렉토리 변경 <br>
-UserRepository  : user -> repository <br>
-SiteUser : user -> model<br>
-Securityconfig : gift -> gift/config (새로 생성)<br>
-2. jpa 형식에 맞게 model에 있는 엔티티 수정
-3.  test 패키지 생성후 test 코드 작성
-4.  data.sql , schema.sql , login.sql 삭제
-5. 기존의 sql에 있던 데이터를 주입하기 위해서 DatabaseLoarder 생성
+# step2 과제
+1. wishlist.java(model)-수정 <br>
+wishlist에는 상품정보와 유저정보가 들어가야하기 때문에
+product 와 user에 @ManyToOne 태그를 걸었습니다. <br>
+2.  문제발생 <br>
+UserRepository에서 findByUsername 으로 username을 찾아야하는데
+wishlist 엔티티를 수정하면서 user 객체까지만 불러올수 있음
+3. 해결책 - SiteUserRepository 생성 <br>
