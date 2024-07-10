@@ -4,7 +4,6 @@ import gift.model.Member;
 import gift.model.MemberRepository;
 import gift.model.WishList;
 import gift.model.WishListRepository;
-import gift.model.Product;
 import gift.model.ProductRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;

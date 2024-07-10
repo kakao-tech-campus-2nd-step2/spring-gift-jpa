@@ -47,7 +47,7 @@ public class WishListController {
         wishListService.addProductToWishList(email, product.getId());
         URI location = URI.create("/api/wishlist/" + product.getId());
         return ResponseEntity.created(location).build();
-    }
+    }//DTO클래스 사용하도록 나중에 리팩터링할 것!!
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> removeProductFromWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @PathVariable Long productId) {
