@@ -1,6 +1,8 @@
 package gift.controller;
 
-import gift.domain.model.ProductDto;
+import gift.domain.model.ProductAddRequestDto;
+import gift.domain.model.ProductResponseDto;
+import gift.domain.model.ProductUpdateRequestDto;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.HashMap;
@@ -33,22 +35,22 @@ public class ProductApiController {
     //    id로 상품 조회
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductDto getProduct(@PathVariable Long id) {
+    public ProductResponseDto getProduct(@PathVariable Long id) {
         return productService.getProduct(id);
     }
 
     //    전체 상품 조회
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductDto> getAllProducts() {
+    public List<ProductResponseDto> getAllProducts() {
         return productService.getAllProduct();
     }
 
     //    상품 추가
     @PostMapping
     public ResponseEntity<Map<String, Object>> addProduct(
-        @Valid @RequestBody ProductDto productDto) {
-        ProductDto createdProduct = productService.addProduct(productDto);
+        @Valid @RequestBody ProductAddRequestDto productAddRequestDto) {
+        ProductResponseDto createdProduct = productService.addProduct(productAddRequestDto);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
@@ -61,13 +63,12 @@ public class ProductApiController {
     //    상품 수정
     @PutMapping
     public ResponseEntity<Map<String, Object>> updateProduct(
-        @Valid @RequestBody ProductDto productDto) {
-        productService.updateProduct(productDto);
+        @Valid @RequestBody ProductUpdateRequestDto productUpdateRequestDto) {
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("message", "상품이 성공적으로 수정되었습니다.");
-        response.put("data", productDto);
+        response.put("data", productService.updateProduct(productUpdateRequestDto));
 
         return ResponseEntity.ok(response);
     }

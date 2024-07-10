@@ -1,8 +1,9 @@
 package gift.controller;
 
 import gift.config.auth.LoginUser;
-import gift.domain.model.ProductDto;
+import gift.domain.model.ProductResponseDto;
 import gift.domain.model.User;
+import gift.domain.model.Wish;
 import gift.domain.model.WishResponseDto;
 import gift.domain.model.WishUpdateRequestDto;
 import gift.service.WishListService;
@@ -41,7 +42,7 @@ public class WishListController {
     @PostMapping("/{productId}")
     public ResponseEntity<Map<String, Object>> addWish(@PathVariable Long productId,
         @LoginUser User user) {
-        ProductDto wishedProduct = wishListService.addWish(user.getEmail(), productId);
+        WishResponseDto wishedProduct = wishListService.addWish(user.getEmail(), productId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
@@ -54,12 +55,13 @@ public class WishListController {
     @PutMapping
     public ResponseEntity<Map<String, Object>> updateWishProduct(
         @Valid @RequestBody WishUpdateRequestDto wishUpdateRequestDto, @LoginUser User user) {
-        wishListService.updateWishProduct(user.getEmail(), wishUpdateRequestDto);
+        WishResponseDto wishedProduct = wishListService.updateWishProduct(user.getEmail(),
+            wishUpdateRequestDto);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("message", "상품이 성공적으로 수정되었습니다.");
-        response.put("data", wishUpdateRequestDto);
+        response.put("data", wishedProduct);
 
         return ResponseEntity.ok(response);
     }
