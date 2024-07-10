@@ -46,10 +46,10 @@
     - [x] wish
       - [x] id(Long, key), member_id(Long, not null), product_id(Long, not null)
       
-  - [ ] 리포지토리 인터페이스 작성
-    - [ ] MemberRepository 인터페이스 작성
-    - [ ] ProductRepository 인터페이스 작성
-    - [ ] WishRepository 인터페이스 작성
+  - [x] 리포지토리 인터페이스 작성
+    - [x] MemberRepository 인터페이스 작성
+    - [x] ProductRepository 인터페이스 작성
+    - [x] WishRepository 인터페이스 작성
   
   - [ ] 리포지토리 구현체 작성
     - [ ] MemberRepositoryImpl 클래스 작성

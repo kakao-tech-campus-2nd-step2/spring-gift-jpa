@@ -5,10 +5,11 @@ import gift.domain.Member;
 import java.util.Optional;
 
 public interface MemberRepository {
-    Optional<Member> findByEmail(String email);
-    Member save(Member member);
 
+    Member findById(long id);
+    Member findByEmail(String email);
+    void save(Member member);
+    void update(Member member);
+    void delete(Member member);
     boolean existsByEmail(String email);
-
-    Optional<Member> findById(long id);
 }
