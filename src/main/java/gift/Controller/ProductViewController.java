@@ -14,13 +14,13 @@ public class ProductViewController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/products")
+    @GetMapping("/products/view")
     public String viewAllProducts(Model model) {
         model.addAttribute("products", productService.findAllProducts());
         return "product-list";
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/products/view/{id}")
     public String viewProductById(@PathVariable Long id, Model model) {
         productService.findProductById(id).ifPresent(product -> model.addAttribute("product", product));
         return "product-detail";
