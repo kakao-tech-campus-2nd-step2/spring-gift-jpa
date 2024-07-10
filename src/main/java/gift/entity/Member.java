@@ -66,7 +66,7 @@ public class Member {
         return email;
     }
 
-    public void setEmail(String email) {
+    private void setEmail(String email) {
         this.email = email;
     }
 
@@ -74,7 +74,7 @@ public class Member {
         return password;
     }
 
-    public void setPassword(String password) {
+    private void setPassword(String password) {
         this.password = password;
     }
 
@@ -82,7 +82,7 @@ public class Member {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -90,7 +90,7 @@ public class Member {
         return role;
     }
 
-    public void setRole(String role) {
+    private void setRole(String role) {
         this.role = role;
     }
 
@@ -98,12 +98,20 @@ public class Member {
         return wishList;
     }
 
-    public void setWishList(List<Wish> wishList) {
+    private void setWishList(List<Wish> wishList) {
         this.wishList = wishList;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void changeMemberInfo(Member member){
+        setEmail(member.getEmail());
+        setPassword(member.getPassword());
+        setName(member.getName());
+        setRole(member.getRole());
+        setWishList(member.getWishList());
     }
 
 
