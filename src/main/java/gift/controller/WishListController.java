@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.common.annotation.LoginUser;
 import gift.model.product.ProductListResponse;
+import gift.model.user.LoginUserRequest;
 import gift.model.user.User;
 import gift.model.wish.WishDeleteRequest;
 import gift.model.wish.WishListResponse;
@@ -30,27 +31,27 @@ public class WishListController {
     }
 
     @GetMapping("")
-    public ResponseEntity<WishListResponse> getAllWishList(@LoginUser User user) {
-        WishListResponse responses = wishService.findAllWish(user.getId());
+    public ResponseEntity<WishListResponse> getAllWishList(@LoginUser LoginUserRequest user) {
+        WishListResponse responses = wishService.findAllWish(user.id());
         return ResponseEntity.ok().body(responses);
     }
 
     @PostMapping("")
-    public ResponseEntity<String> addWishProduct(@LoginUser User user, @Valid @RequestBody WishRequest wishRequest) {
-        wishService.addWistList(user.getId(), wishRequest);
+    public ResponseEntity<String> addWishProduct(@LoginUser LoginUserRequest user, @Valid @RequestBody WishRequest wishRequest) {
+        wishService.addWistList(user.id(), wishRequest);
         return ResponseEntity.ok().body("위시리스트에 상품이 추가되었습니다.");
     }
 
     @PatchMapping("")
-    public ResponseEntity<String> updateWishProduct(@LoginUser User user,
+    public ResponseEntity<String> updateWishProduct(@LoginUser LoginUserRequest user,
         @Valid @RequestBody WishRequest wishRequest) {
-        wishService.updateWishList(user.getId(), wishRequest);
+        wishService.updateWishList(user.id(), wishRequest);
         return ResponseEntity.ok().body("위시리스트에 상품이 수정되었습니다.");
     }
 
     @DeleteMapping("")
-    public ResponseEntity<String> deleteWishProduct(@LoginUser User user, @RequestBody WishDeleteRequest wishDeleteRequest) {
-        wishService.deleteWishList(user.getId(), wishDeleteRequest.productId());
+    public ResponseEntity<String> deleteWishProduct(@LoginUser LoginUserRequest user, @RequestBody WishDeleteRequest wishDeleteRequest) {
+        wishService.deleteWishList(user.id(), wishDeleteRequest.productId());
         return ResponseEntity.ok().body("위시리스트에서 상품이 삭제되었습니다.");
     }
 }

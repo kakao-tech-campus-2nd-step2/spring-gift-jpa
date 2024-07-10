@@ -41,12 +41,12 @@ public class WishService {
         return responses;
     }
 
+    @Transactional
     public void addWistList(Long userId, WishRequest wishRequest) {
         if (wishRepository.existsByProductIdAndUserId(wishRequest.productId(), userId)) {
             throw new ExistWishException();
-        } else {
-            wishRepository.save(wishRequest.toEntity(userId, wishRequest.count()));
         }
+        wishRepository.save(wishRequest.toEntity(userId, wishRequest.count()));
     }
 
     @Transactional
@@ -62,10 +62,9 @@ public class WishService {
 
     @Transactional
     public void deleteWishList(Long userId, Long productId) {
-        if (wishRepository.existsByProductIdAndUserId(productId, userId)) {
-            wishRepository.deleteByProductIdAndUserId(productId, userId);
-        } else {
+        if (!wishRepository.existsByProductIdAndUserId(productId, userId)) {
             throw new WishNotFoundException();
         }
+        wishRepository.deleteByProductIdAndUserId(productId, userId);
     }
 }

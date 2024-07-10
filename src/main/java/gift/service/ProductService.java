@@ -25,6 +25,7 @@ public class ProductService {
         this.wishRepository = wishRepository;
     }
 
+    @Transactional
     public ProductResponse register(ProductRequest productRequest) {
         Product product = productRepository.save(productRequest.toEntity());
         return ProductResponse.from(product);
@@ -53,11 +54,10 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(Long productId) {
-        if (productRepository.existsById(productId)) {
-            wishRepository.deleteByProductId(productId);
-            productRepository.deleteById(productId);
-        } else {
+        if (!productRepository.existsById(productId)) {
             throw new ProductNotFoundException();
         }
+        wishRepository.deleteByProductId(productId);
+        productRepository.deleteById(productId);
     }
 }

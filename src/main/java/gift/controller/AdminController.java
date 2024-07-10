@@ -2,9 +2,11 @@ package gift.controller;
 
 import gift.common.exception.ProductNotFoundException;
 import gift.model.product.Product;
+import gift.model.product.ProductListResponse;
 import gift.model.product.ProductRequest;
 import gift.model.product.ProductResponse;
 import gift.repository.ProductRepository;
+import gift.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AdminController {
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    AdminController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    AdminController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/admin/product")
@@ -31,22 +33,21 @@ public class AdminController {
 
     @PostMapping("/admin/product")
     public String registerProduct(ProductRequest productRequest) {
-        Product product = productRepository.save(productRequest.toEntity());
+       productService.register(productRequest);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/admin/products")
     public String getAllProducts(Model model) {
-        List<ProductResponse> productList = productRepository.findAll()
-            .stream().map(ProductResponse::from).toList();
+        ProductListResponse productList = productService.findAllProduct();
         model.addAttribute("products", productList);
         return "productList";
     }
 
     @GetMapping("/admin/product/{id}")
     public ProductResponse getProduct(@PathVariable("id") Long id) {
-        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
-        return ProductResponse.from(product);
+        ProductResponse response = productService.findProduct(id);
+        return response;
     }
 
     @GetMapping("/product")
@@ -55,14 +56,14 @@ public class AdminController {
     }
 
     @PutMapping("/admin/product/{id}")
-    public String updateProduct(@PathVariable("id") Long id, @RequestBody ProductRequest productRequest) {
-        Product product = productRepository.save(productRequest.toEntity());
+    public String updateProduct(@PathVariable("id") Long id, ProductRequest productRequest) {
+        productService.updateProduct(id, productRequest);
         return "redirect:/admin/products";
     }
 
     @DeleteMapping("/admin/product/{id}")
     public String deleteProduct(@PathVariable("id") Long id) {
-        productRepository.deleteById(id);
+        productService.deleteProduct(id);
         return "redirect:/admin/products";
     }
 }
