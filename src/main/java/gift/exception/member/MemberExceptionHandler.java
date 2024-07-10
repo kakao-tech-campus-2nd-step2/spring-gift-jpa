@@ -16,8 +16,8 @@ public class MemberExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler({LoginErrorException.class})
-    public ErrorResult notFoundUserExHandle(LoginErrorException e) {
+    @ExceptionHandler({NotFoundMemberException.class})
+    public ErrorResult notFoundUserExHandle(NotFoundMemberException e) {
         return new ErrorResult("로그인 에러", e.getMessage());
     }
 

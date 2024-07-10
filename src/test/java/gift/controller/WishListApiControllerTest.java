@@ -73,16 +73,16 @@ class WishListApiControllerTest {
         token = jwtTokenProvider.generateToken(member);
 
         List<WishProduct> wishProducts = products.stream()
-            .map(product -> new WishProduct(member.getId(), product.getId()))
+            .map(product -> new WishProduct(member, product))
             .toList();
         wishProductRepository.saveAll(wishProducts);
     }
 
     @AfterEach
     void after() {
+        wishProductRepository.deleteAll();
         memberRepository.delete(member);
         productRepository.deleteAll();
-        wishProductRepository.deleteAll();
     }
 
     @Test
