@@ -1,10 +1,12 @@
 package gift.service;
 
-import gift.domain.Product;
-import gift.dto.ProductDTO;
+import gift.model.product.Product;
+import gift.model.product.ProductRequest;
+import gift.model.product.ProductResponse;
 import gift.repository.product.ProductRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
@@ -14,31 +16,27 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+
+    public ProductResponse getProductById(Long id) {
+        Product product = productRepository.findById(id).orElseThrow();
+        return ProductResponse.from(product);
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll().stream()
+            .map(ProductResponse::from)
+            .collect(Collectors.toList());
     }
 
-    public Product createProduct(ProductDTO productDto) {
-        Product product = new Product();
-        product.setName(productDto.getName());
-        product.setPrice(productDto.getPrice());
-        product.setImageUrl(productDto.getImageUrl());
-        return productRepository.save(product);
+    public ProductResponse createProduct(ProductRequest productRequest) {
+        Product product = productRequest.toEntity();
+        return ProductResponse.from(productRepository.save(product));
     }
 
-    public void updateProduct(Long id, ProductDTO updatedProduct) {
-        Optional<Product> existingProduct = productRepository.findById(id);
-
-        Product product = existingProduct.get();
-        product.setName(updatedProduct.getName());
-        product.setPrice(updatedProduct.getPrice());
-        product.setImageUrl(updatedProduct.getImageUrl());
-
-        productRepository.save(product);
+    public ProductResponse updateProduct(Long id, ProductRequest updatedProduct) {
+        Product product = productRepository.findById(id).orElseThrow();
+        product.update(updatedProduct);
+        return ProductResponse.from(product);
     }
 
     public void deleteProduct(Long id) {
