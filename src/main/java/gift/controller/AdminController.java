@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AdminController {
+
     private final ProductService productService;
 
     AdminController(ProductService productService) {
