@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.naming.AuthenticationException;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class MemberService {
@@ -40,11 +38,13 @@ public class MemberService {
         if(!memberRepository.existsByEmail(member.getEmail())){
             throw new IllegalArgumentException("이메일을 확인해주세요.");
         }
-
         Member loginMember = memberRepository.findByEmail(member.getEmail());
+        return getTokenWhenCorrectPW(loginMember, member);
+    }
 
-        if(Objects.equals(member.getPassword(), loginMember.getPassword())){
-            return createJwtToken.createJwt(loginMember.getId(), member.getEmail());
+    public String getTokenWhenCorrectPW(Member member, Member inputMember){
+        if(member.equals(inputMember)){
+            return createJwtToken.createJwt(member.getId(), member.getEmail());
         }
         else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
