@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.domain.Product;
+import gift.dto.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -46,14 +47,14 @@ public class ProductRestController {
 
     // 상품 추가
     @PostMapping
-    public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product) {
+    public ResponseEntity<Product> addProduct(@Valid @RequestBody ProductDTO product) {
         Product createdProduct = productService.createProduct(product);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 
 //     상품 수정
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO product) {
         try {
             productService.updateProduct(id, product);
             return new ResponseEntity<>(HttpStatus.OK);

@@ -2,6 +2,7 @@ package gift.controller;
 
 
 import gift.domain.Product;
+import gift.dto.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -40,7 +41,7 @@ public class ProductController {
 
     // 상품 추가 후 홈으로 이동
     @PostMapping("/add")
-    public String addProduct(@ModelAttribute @Valid Product product) {
+    public String addProduct(@ModelAttribute @Valid ProductDTO product) {
         productService.createProduct(product);
         return "redirect:/products";
     }
@@ -54,7 +55,7 @@ public class ProductController {
 
     // 등록된 상품을 수정하는 기능
     @PutMapping("/edit/{id}")
-    public String editProduct(@PathVariable("id") Long id, @ModelAttribute @Valid Product product) {
+    public String editProduct(@PathVariable("id") Long id, @ModelAttribute @Valid ProductDTO product) {
         product.setId(id);
         productService.updateProduct(id, product);
         return "redirect:/products";

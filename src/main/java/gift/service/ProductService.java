@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.domain.Product;
+import gift.dto.ProductDTO;
 import gift.repository.product.ProductRepository;
 import java.util.List;
 import java.util.Optional;
@@ -21,12 +22,15 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product createProduct(Product product) {
-        Product savedproduct = productRepository.save(product);
-        return savedproduct;
+    public Product createProduct(ProductDTO productDto) {
+        Product product = new Product();
+        product.setName(productDto.getName());
+        product.setPrice(productDto.getPrice());
+        product.setImageUrl(productDto.getImageUrl());
+        return productRepository.save(product);
     }
 
-    public void updateProduct(Long id, Product updatedProduct) {
+    public void updateProduct(Long id, ProductDTO updatedProduct) {
         Optional<Product> existingProduct = productRepository.findById(id);
 
         Product product = existingProduct.get();
