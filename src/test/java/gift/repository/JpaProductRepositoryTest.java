@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -87,5 +89,20 @@ public class JpaProductRepositoryTest {
 
         // then
         assertThat(actual).isNull();
+    }
+
+    @Test
+    void findAll() {
+        // given
+        ProductDTO product1 = new ProductDTO("abc", 123, "test1.com");
+        ProductDTO product2 = new ProductDTO("def", 456, "test2.com");
+        productRepository.save(product1);
+        productRepository.save(product2);
+
+        // when
+        List<Product> expect = productRepository.findAll();
+
+        // then
+        assertThat(expect.size()).isEqualTo(2);
     }
 }
