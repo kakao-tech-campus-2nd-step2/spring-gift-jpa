@@ -12,10 +12,12 @@ import gift.service.MemberService;
 import gift.service.WishProductService;
 import gift.web.dto.request.LoginRequest;
 import gift.web.dto.request.member.CreateMemberRequest;
+import gift.web.dto.request.wishproduct.UpdateWishProductRequest;
 import gift.web.dto.response.LoginResponse;
 import gift.web.dto.response.member.CreateMemberResponse;
 import gift.web.dto.response.member.ReadMemberResponse;
 import gift.web.dto.response.wishproduct.ReadAllWishProductsResponse;
+import gift.web.dto.response.wishproduct.UpdateWishProductResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,6 +118,23 @@ class MemberApiControllerTest {
 
     @Test
     void updateWishProduct() {
+        //given
+        Long wishProductId = 1L;
+        String url = "http://localhost:" + port + "/api/members/wishlist/" + wishProductId;
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setBearerAuth(token.getValue());
+
+        UpdateWishProductRequest request = new UpdateWishProductRequest(wishProductId, 3);
+
+        HttpEntity httpEntity = new HttpEntity(request, httpHeaders);
+
+        //when
+        ResponseEntity<UpdateWishProductResponse> response = restTemplate.exchange(url,
+            HttpMethod.PUT, httpEntity, UpdateWishProductResponse.class);
+
+        //then
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertThat(response.getBody().getQuantity()).isEqualTo(request.getQuantity());
     }
 
     @Test
