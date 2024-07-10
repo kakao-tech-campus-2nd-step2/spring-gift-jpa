@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/wishlist")
@@ -28,7 +28,7 @@ public class WishlistController {
     }
 
     @GetMapping()
-    public List<Product> getWishlists(HttpServletRequest request) {
+    public Set<Product> getWishlists(HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
         return wishlistRepository.findByEmail(email).getProducts();
     }
@@ -48,7 +48,7 @@ public class WishlistController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<String> deleteWishlist(HttpServletRequest request, @RequestBody @Valid WishListDTO wishListDTO) {
+    public ResponseEntity<String> deleteWishlist(HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
         boolean result = wishlistRepository.delete(email);
         if (!result) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request");
