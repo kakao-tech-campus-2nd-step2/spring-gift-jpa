@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -13,32 +15,23 @@ public class WishlistItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotNull
-    private long userId;
-    @NotNull
-    private long productId;
-    @NotNull
-    private String productName;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
     @NotNull
     private long amount;
 
     public WishlistItem() {
     }
 
-    public WishlistItem(long id, long userId, long productId, String productName, long amount) {
+    public WishlistItem(long id, User user, Product product, long amount) {
         this.id = id;
-        this.userId = userId;
-        this.productId = productId;
-        this.productName = productName;
+        this.user = user;
+        this.product = product;
         this.amount = amount;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
     }
 
     public long getId() {
@@ -49,20 +42,20 @@ public class WishlistItem {
         this.id = id;
     }
 
-    public long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(long productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public long getAmount() {
