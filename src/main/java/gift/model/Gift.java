@@ -28,7 +28,7 @@ public class Gift {
     public Gift() {
     }
 
-    public Gift( String name, int price, String imageUrl) {
+    public Gift(String name, int price, String imageUrl) {
         if (!isValidName(name)) {
             throw new IllegalArgumentException("카카오 문구는 MD와 협의 후 사용가능합니다.");
         }
@@ -60,9 +60,9 @@ public class Gift {
         return name != null && !name.contains("카카오");
     }
 
-    public void modifyGift(String name,int price,String imageUrl){
+    public void modifyGift(String name, int price, String imageUrl) {
         this.name = name;
-        this.price= price;
-        this.imageUrl =imageUrl;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 }

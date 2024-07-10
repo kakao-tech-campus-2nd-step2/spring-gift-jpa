@@ -40,12 +40,13 @@ public class GiftRequest {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-    public Gift toEntity(){
-        return new Gift(name,price,imageUrl);
+
+    public Gift toEntity() {
+        return new Gift(name, price, imageUrl);
     }
 
-    public Gift toEntity(Long id){
-        return new Gift(name,price,imageUrl);
+    public Gift toEntity(Long id) {
+        return new Gift(name, price, imageUrl);
     }
 
 }

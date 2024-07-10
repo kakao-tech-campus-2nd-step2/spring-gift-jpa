@@ -1,4 +1,5 @@
 package gift.controller;
+
 import gift.model.User;
 import gift.model.UserRequest;
 import gift.service.UserService;
@@ -49,7 +50,7 @@ public class UserController {
     @PostMapping("/register")
     @ResponseBody
     public ResponseEntity<String> register(@RequestBody UserRequest userRequest) {
-        User user = new User(userRequest.getEmail(),userRequest.getPassword());
+        User user = new User(userRequest.getEmail(), userRequest.getPassword());
         boolean registered = userService.register(user);
         if (registered) {
             return ResponseEntity.ok("회원가입이 정상적으로 완료되었습니다.");

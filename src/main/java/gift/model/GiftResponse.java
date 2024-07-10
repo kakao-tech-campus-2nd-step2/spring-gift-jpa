@@ -13,8 +13,9 @@ public class GiftResponse {
         this.price = price;
         this.imageUrl = imageUrl;
     }
-    public static GiftResponse from(Gift gift){
-        return new GiftResponse(gift.getId(),gift.getName(),gift.getPrice(),gift.getImageUrl());
+
+    public static GiftResponse from(Gift gift) {
+        return new GiftResponse(gift.getId(), gift.getName(), gift.getPrice(), gift.getImageUrl());
     }
 
     public Long getId() {

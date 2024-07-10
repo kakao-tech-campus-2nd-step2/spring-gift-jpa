@@ -43,10 +43,10 @@ public class GiftService {
     }
 
     @Transactional
-    public void updateGift(GiftRequest giftReq,Long id) {
+    public void updateGift(GiftRequest giftReq, Long id) {
         Gift gift = giftRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Gift not found with id " + id));
-        gift.modifyGift(giftReq.getName(),giftReq.getPrice(),giftReq.getImageUrl());
+        gift.modifyGift(giftReq.getName(), giftReq.getPrice(), giftReq.getImageUrl());
         giftRepository.save(gift);
     }
 

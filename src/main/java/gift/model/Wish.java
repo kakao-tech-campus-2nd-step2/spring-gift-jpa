@@ -19,7 +19,7 @@ public class Wish {
     @JoinColumn(name = "gift_id")
     @NotNull
     private Gift gift;
-    @Column(name ="quantity")
+    @Column(name = "quantity")
     @NotNull
     private int quantity;
 
