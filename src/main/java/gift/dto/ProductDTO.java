@@ -1,5 +1,6 @@
-package gift.model;
+package gift.dto;
 
+import gift.model.Name;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -10,7 +11,7 @@ public class ProductDTO implements Serializable {
 
     @Valid
     @NotNull(message = "이름을 입력해주세요.")
-    private Name name;
+    private NameDTO name;
 
     @NotNull(message = "가격을 입력해주세요.")
     private Integer price;
@@ -18,17 +19,15 @@ public class ProductDTO implements Serializable {
     @NotNull(message = "이미지 URL을 입력해주세요.")
     private String imageUrl;
 
-    // 기본 생성자
     public ProductDTO() {}
 
-    public ProductDTO(Long id, Name name, Integer price, String imageUrl) {
+    public ProductDTO(Long id, NameDTO name, Integer price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -37,11 +36,11 @@ public class ProductDTO implements Serializable {
         this.id = id;
     }
 
-    public Name getName() {
+    public NameDTO getName() {
         return name;
     }
 
-    public void setName(Name name) {
+    public void setName(NameDTO name) {
         this.name = name;
     }
 
