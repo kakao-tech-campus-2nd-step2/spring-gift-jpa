@@ -3,6 +3,7 @@ package gift.service;
 import gift.exception.RepositoryException;
 import gift.model.Product;
 import gift.model.ProductDTO;
+import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

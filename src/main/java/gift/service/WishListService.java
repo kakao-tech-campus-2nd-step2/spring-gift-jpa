@@ -3,6 +3,7 @@ package gift.service;
 import gift.exception.RepositoryException;
 import gift.model.WishList;
 import gift.model.WishListDTO;
+import gift.repository.WishListRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.exception.RepositoryException;
 import gift.model.WishList;
-import gift.service.WishListRepository;
+import gift.repository.WishListRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
