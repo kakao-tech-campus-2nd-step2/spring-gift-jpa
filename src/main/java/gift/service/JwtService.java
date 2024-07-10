@@ -38,10 +38,10 @@ public class JwtService {
         String accessToken = getJWT();
         System.out.println(accessToken);
         if(accessToken == null){
-            return null;
+            throw new JwtException("토큰이 유효하지 않습니다.");
         }
         if(accessToken.isEmpty()){
-            return null;
+            throw new JwtException("토큰이 유효하지 않습니다.");
         }
         Jws<Claims> jws;
 

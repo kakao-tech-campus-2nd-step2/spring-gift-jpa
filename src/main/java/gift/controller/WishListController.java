@@ -38,26 +38,16 @@ public class WishListController {
     @GetMapping("/read")
     public ResponseEntity<List<WishListResponse>> read(){
         String jwtId = jwtService.getMemberId();
-        if(jwtId == null){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }
-        else{
-            List<WishListResponse> nowWishList = wishListService.findById(jwtId);
-            return ResponseEntity.ok().body(nowWishList);
-        }
+        List<WishListResponse> nowWishList = wishListService.findById(jwtId);
+        return ResponseEntity.ok().body(nowWishList);
     }
 
     @DeleteMapping
     public ResponseEntity<String> delete(
             @RequestParam("Id") Long id
     ){
-        String jwtId = jwtService.getMemberId();
-        if(jwtId == null){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
-        }
-        else{
-            wishListService.delete(id);
-            return ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
-        }
+        jwtService.getMemberId();
+        wishListService.delete(id);
+        return ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
     }
 }
