@@ -1,4 +1,4 @@
-package gift.member.presentation.dto;
+package gift.member.business.dto;
 
 public record WishlistUpdateDto(
     Long productId,
