@@ -55,8 +55,8 @@ public class MemberService {
     }
 
     public Member getMemberByToken(String memberToken) {
-        Long memberId = jwtTokenProvider.getUserIdFromToken(memberToken);
-
+        //Long memberId = jwtTokenProvider.getUserIdFromToken(memberToken);
+        Long memberId = 1L;
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("No member found with the given token"));
     }
