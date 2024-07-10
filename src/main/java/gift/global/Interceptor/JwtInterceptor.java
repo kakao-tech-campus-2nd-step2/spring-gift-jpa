@@ -2,6 +2,7 @@ package gift.global.Interceptor;
 
 import gift.global.exception.BusinessException;
 import gift.global.jwt.JwtProvider;
+import gift.global.jwt.JwtValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -12,9 +13,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class JwtInterceptor implements HandlerInterceptor {
 
     private final JwtProvider jwtProvider;
+    private final JwtValidator jwtValidator;
 
-    public JwtInterceptor(JwtProvider jwtProvider) {
+    public JwtInterceptor(JwtProvider jwtProvider, JwtValidator jwtValidator) {
         this.jwtProvider = jwtProvider;
+        this.jwtValidator = jwtValidator;
     }
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
@@ -24,10 +27,9 @@ public class JwtInterceptor implements HandlerInterceptor {
             throw new BusinessException(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다.");
         }
 
-        String token = request.getHeader("Authorization");
+        String rawToken = request.getHeader("Authorization");
 
-        // TODO 토큰 유효성 검사 필요
-        jwtProvider.validateToken(token);
+        String token = jwtValidator.validateForm(rawToken);
         request.setAttribute("id", jwtProvider.getId(token));
         request.setAttribute("email", jwtProvider.getEmail(token));
 

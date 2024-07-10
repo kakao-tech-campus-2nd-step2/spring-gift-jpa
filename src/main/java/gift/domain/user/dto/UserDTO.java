@@ -19,6 +19,14 @@ public class UserDTO {
     public UserDTO() {
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -29,5 +37,13 @@ public class UserDTO {
 
     public User toUser() {
         return new User(this.email, this.password); // dto to entity
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+               "email='" + email + '\'' +
+               ", password='" + password + '\'' +
+               '}';
     }
 }

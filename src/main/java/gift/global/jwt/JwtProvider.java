@@ -2,11 +2,18 @@ package gift.global.jwt;
 
 import gift.domain.user.User;
 import gift.domain.user.dto.UserInfo;
+import gift.global.exception.BusinessException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.PrematureJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.validation.constraints.Email;
 import java.util.Date;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,14 +35,29 @@ public class JwtProvider {
             .compact();
     }
 
+    /**
+     * JWT 에서 Claims 추출
+     */
     public Claims getClaimsBody(String token) {
-        Claims claimsBody = Jwts.parser()
-            .setSigningKey(SECRET_KEY)
-            .build()
-            .parseClaimsJws(removeBearer(token))
-            .getBody();
-
-        return claimsBody;
+        try {
+            return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        } catch (SignatureException e) {
+            throw new BusinessException(HttpStatus.UNAUTHORIZED, "JWT 서명이 올바르지 않습니다.");
+        } catch (MalformedJwtException e) {
+            throw new BusinessException(HttpStatus.UNAUTHORIZED, "JWT 토큰 형식이 잘못되었습니다.");
+        } catch (ExpiredJwtException e) {
+            throw new BusinessException(HttpStatus.UNAUTHORIZED, "JWT 유효기간이 만료되었습니다.");
+        } catch (UnsupportedJwtException e) {
+            throw new BusinessException(HttpStatus.UNAUTHORIZED, "지원되지 않는 JWT 형식입니다.");
+        } catch (IllegalArgumentException e) {
+            throw new BusinessException(HttpStatus.UNAUTHORIZED, "JWT 문자열이 올바르지 않습니다.");
+        } catch (PrematureJwtException e) {
+            throw new BusinessException(HttpStatus.UNAUTHORIZED, "JWT 가 아직 활성화 되지 않았습니다.");
+        }
     }
 
     /**
@@ -72,19 +94,4 @@ public class JwtProvider {
         return claimsBody.get("email").toString();
     }
 
-    private String removeBearer(String token) {
-        return token.replace("Bearer", "").trim();
-    }
-
-    // TODO 유효성 검사 메서드 작성 필요
-    public void validateToken(String token) {
-        if (token == null || !token.startsWith("Bearer")) {
-         // 토큰이 없거나 유효하지 않은 형식입니다.
-        }
-
-        var tokenValue = token.substring(7);
-        if (tokenValue.isEmpty()) {
-         // 토큰이 존재하지 않습니다.
-        }
-    }
 }
