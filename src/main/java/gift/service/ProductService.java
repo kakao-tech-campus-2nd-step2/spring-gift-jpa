@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,11 +25,11 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        Product product = productRepository.findById(id);
-        if (product == null) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isEmpty()) {
             throw new ProductNotFoundException("Product not found with id: " + id);
         }
-        return product;
+        return product.orElse(null);
     }
 
 
@@ -36,34 +37,34 @@ public class ProductService {
         if (product.getName().contains("카카오")) {
             throw new ForbiddenWordException("상품 이름에 '카카오'가 포함된 경우 담당 MD와 협의가 필요합니다.");
         }
-        return productRepository.save(product);
+        return productRepository.save(product) != null;
     }
 
     public boolean updateProduct(Long id, @Valid Product product) {
         if (product.getName().contains("카카오")) {
             throw new ForbiddenWordException("상품 이름에 '카카오'가 포함된 경우 담당 MD와 협의가 필요합니다.");
         }
-        Product existingProduct = productRepository.findById(id);
-        if (existingProduct != null) {
-            existingProduct.setName(product.getName());
-            existingProduct.setPrice(product.getPrice());
-            existingProduct.setImageUrl(product.getImageUrl());
-            return productRepository.update(existingProduct);
+        Optional<Product> existingProduct = productRepository.findById(id);
+        if (existingProduct.isPresent()) {
+            existingProduct.get().setName(product.getName());
+            existingProduct.get().setPrice(product.getPrice());
+            existingProduct.get().setImageUrl(product.getImageUrl());
+            return productRepository.save(existingProduct.get()) != null;
         }
         return false;
     }
 
     public boolean patchProduct(Long id, Map<String, Object> updates) {
-        Product existingProduct = productRepository.findById(id);
-        if (existingProduct != null) {
-            applyUpdates(existingProduct, updates);
-            return productRepository.update(existingProduct);
+        Optional<Product> existingProduct = productRepository.findById(id);
+        if (existingProduct.isPresent()) {
+            applyUpdates(existingProduct.orElse(null), updates);
+            return productRepository.save(existingProduct.get()) != null;
         }
         return false;
     }
 
-    public List<Product> patchProducts(List<Map<String, Object>> updatesList) {
-        List<Product> updatedProducts = new ArrayList<>();
+    public List<Optional<Product>> patchProducts(List<Map<String, Object>> updatesList) {
+        List<Optional<Product>> updatedProducts = new ArrayList<>();
         for (Map<String, Object> updates : updatesList) {
             try {
                 Long id = ((Number) updates.get("id")).longValue();
@@ -105,10 +106,7 @@ public class ProductService {
 
 
     public boolean deleteProduct(Long id) {
-        return productRepository.delete(id);
-    }
-
-    public List<Product> getProducts(int page, int size) {
-        return productRepository.findPaginated(page, size);
+        productRepository.deleteById(id);
+        return productRepository.findById(id).isEmpty();
     }
 }
