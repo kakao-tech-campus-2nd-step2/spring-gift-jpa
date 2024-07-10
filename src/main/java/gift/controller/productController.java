@@ -20,20 +20,38 @@ public class productController {
     }
 
     @PostMapping("")
-    public String createProduct(@RequestBody CreateProduct.Request request) {
+    public ProductDto createProduct(@RequestBody CreateProduct.Request request) {
 
-        productService.createProduct(new ProductDto(request.getName(), request.getPrice(), request.getUrl()));
-        return "product 가 생성되었습니다.";
+        Product newProduct = productService.createProduct(
+                new ProductDto(
+                        request.getName(),
+                        request.getPrice(),
+                        request.getUrl()
+                )
+        );
+
+        return new ProductDto(
+                newProduct.getId(),
+                newProduct.getName(),
+                newProduct.getPrice(),
+                newProduct.getUrl()
+        );
     }
 
     @GetMapping("")
-    public List<Product> getAll() {
-        return productService.getAll();
+    public List<ProductDto> getAll() {
+
+        return productService.getAll().stream().map(ProductDto::fromEntity).toList();
+
     }
 
     @GetMapping("/{id}")
-    public Product getOneById(@PathVariable("id") Long id) {
-        return productService.getOneById(id);
+    public ProductDto getOneById(@PathVariable("id") Long id) {
+
+        Product product = productService.getOneById(id);
+
+        return new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getUrl());
+
     }
 
     @PutMapping("/{id}")
