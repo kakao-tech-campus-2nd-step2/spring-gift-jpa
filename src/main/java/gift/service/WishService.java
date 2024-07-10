@@ -35,17 +35,18 @@ public class WishService {
         }
         Wish wish = wishRepository.findByMemberIdAndProductId(memberId, request.productId())
                 .orElseThrow(() -> new EntityNotFoundException("Wish not found"));
-        Member member = findMemberById(memberId);
-        Product product = findProductById(request.productId());
-        wish.updateWish(member, request.productCount(), product);
+        wish.updateWish(wish.getMember(), request.productCount(), wish.getProduct());
         wishRepository.save(wish);
+
     }
 
     public void save(WishInsertRequest request, int productCount, Long memberId) {
         checkProductExist(request.productId());
         checkDuplicateWish(request.productId(), memberId);
-        Member member = findMemberById(memberId);
-        Product product = findProductById(request.productId());
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(()-> new EntityNotFoundException("Member with id " + memberId + " not found"));
+        Product product = productRepository.findById(request.productId())
+                .orElseThrow(()-> new EntityNotFoundException("Product with id " + request.productId() + " not found"));
         wishRepository.save(new Wish(member, productCount, product));
     }
 
@@ -57,18 +58,6 @@ public class WishService {
 
     public void deleteByProductId(Long productId, Long memberId) {
         wishRepository.deleteByProductIdAndMemberId(productId, memberId);
-    }
-
-    public Member findMemberById(Long memberId) {
-        return  memberRepository.findById(memberId)
-                .orElseThrow(()->
-                        new EntityNotFoundException("Member with id " + memberId + " not found"));
-    }
-
-    public Product findProductById(Long productId) {
-        return productRepository.findById(productId)
-                .orElseThrow(()->
-                        new EntityNotFoundException("Product with id " + productId + " not found"));
     }
 
     private void checkProductExist(Long productId, Long memberId) {
