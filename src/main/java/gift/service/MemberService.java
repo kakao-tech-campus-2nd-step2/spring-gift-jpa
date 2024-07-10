@@ -33,7 +33,7 @@ public class MemberService {
         Member member = new Member();
         member.setEmail(requestDto.getEmail());
         member.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-        Member savedMember = memberRepository.save(member);
+        memberRepository.save(member);
 
         String token = securityService.generateJwtToken(member);
         return new MemberResponse(token);
