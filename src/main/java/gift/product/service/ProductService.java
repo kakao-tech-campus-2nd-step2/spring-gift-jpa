@@ -5,13 +5,12 @@ import gift.product.model.Product;
 import gift.product.repository.ProductRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
-import org.springframework.dao.DataAccessException;
-import org.springframework.stereotype.Service;
+import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service
+@Transactional
 public class ProductService {
 
-    public static final String NAME_KAKAO = "카카오";
     private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
@@ -28,9 +27,8 @@ public class ProductService {
 
     public Product insertProduct(ProductDto productDto) {
         Product product = new Product(productDto.name(), productDto.price(), productDto.imageUrl());
-        product = productRepository.save(product);
 
-        return product;
+        return productRepository.save(product);
     }
 
     public Product updateProduct(Long id, ProductDto productDTO) {
@@ -38,20 +36,22 @@ public class ProductService {
 
         Product product = new Product(id, productDTO.name(), productDTO.price(),
             productDTO.imageUrl());
-        productRepository.update(product);
-        return product;
+
+        return productRepository.save(product);
     }
 
     public void deleteProduct(Long id) {
         getValidatedProduct(id);
-        productRepository.delete(id);
+        productRepository.deleteById(id);
     }
 
     private Product getValidatedProduct(Long id) {
-        try {
-            return productRepository.findById(id);
-        } catch (DataAccessException e) {
+        Optional<Product> productOptional = productRepository.findById(id);
+
+        if (productOptional.isEmpty()) {
             throw new NoSuchElementException("해당 ID의 상품이 존재하지 않습니다.");
         }
+
+        return productOptional.get();
     }
 }

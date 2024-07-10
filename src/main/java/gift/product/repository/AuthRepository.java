@@ -1,52 +1,11 @@
 package gift.product.repository;
 
 import gift.product.model.Member;
-import java.util.HashMap;
-import java.util.Map;
-import javax.sql.DataSource;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public class AuthRepository {
+public interface AuthRepository extends JpaRepository<Member, Long> {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
+    boolean existsByEmail(String email);
 
-    public AuthRepository(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-            .withTableName("Member")
-            .usingGeneratedKeyColumns("id");
-    }
-
-    public boolean existsByEmail(String email) {
-        var sql = "SELECT * FROM Member WHERE email = ?";
-
-        return !jdbcTemplate.query(sql, (resultSet, rowNum) -> 0, email).isEmpty();
-    }
-
-    public boolean existsById(Long id) {
-        var sql = "SELECT * FROM Member WHERE id = ?";
-
-        return !jdbcTemplate.query(sql, (resultSet, rowNum) -> 0, id).isEmpty();
-    }
-
-    public void save(Member member) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("email", member.getEmail());
-        params.put("password", member.getPassword());
-
-        simpleJdbcInsert.execute(params);
-    }
-
-    public Member findByEmail(String email) {
-        var sql = "SELECT id, password FROM Member WHERE email = ?";
-
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-            new Member(resultSet.getLong("id"),
-                email,
-                resultSet.getString("password")), email);
-    }
+    Member findByEmail(String email);
 }

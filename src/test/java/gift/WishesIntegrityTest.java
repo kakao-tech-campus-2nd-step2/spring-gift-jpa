@@ -1,6 +1,6 @@
 package gift;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.product.dto.ClientProductDto;
 import gift.product.dto.MemberDto;
@@ -30,6 +30,7 @@ import org.springframework.http.RequestEntity;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@SuppressWarnings("NonAsciiCharacters")
 class WishesIntegrityTest {
 
     @LocalServerPort
