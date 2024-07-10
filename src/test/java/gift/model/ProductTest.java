@@ -3,7 +3,8 @@ package gift.model;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import gift.common.exception.ProductNoConferredException;
+import gift.product.domain.Product;
+import gift.product.exception.ProductNoConferredException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +26,6 @@ class ProductTest {
         assertThat(product.getName()).isEqualTo(name);
         assertThat(product.getPrice()).isEqualTo(price);
         assertThat(product.getImgUrl()).isEqualTo(imgUrl);
-        assertThat(product.isDeleted()).isFalse();
     }
 
     @Test
