@@ -26,6 +26,7 @@ public class Product {
     @Min(value = 0, message = "상품의 가격은 0보다 크거나 같아야 합니다.")
     private int price;
 
+    @Column(nullable = false)
     private String imgUrl;
 
     public Product() {}
