@@ -24,7 +24,7 @@ public class JwtTokenProvider {
     }
 
 
-    public Long getUserIdFromToken(String memberToken) {
+/*    public Long getUserIdFromToken(String memberToken) {
         Jws<Claims> claimsJws = Jwts.parserBuilder()
                 .setSigningKey(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
                 .build()
@@ -32,5 +32,5 @@ public class JwtTokenProvider {
 
         Claims claims = claimsJws.getBody();
         return Long.parseLong(claims.getSubject());
-    }
+    }*/
 }
