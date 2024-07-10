@@ -13,6 +13,11 @@ public class WishListDTO {
         this.count = count;
     }
 
+    public WishListDTO(WishList wishList) {
+        this.productID = wishList.getProduct().getId();
+        this.count = wishList.getCount();
+    }
+
     public long getCount() {
         return count;
     }
