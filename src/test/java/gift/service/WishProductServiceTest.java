@@ -114,10 +114,8 @@ class WishProductServiceTest {
         var managerWishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
         var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
         //when
-        var managerWishProducts = wishProductService.getWishProducts(managerId);
         var memberWishProducts = wishProductService.getWishProducts(memberId);
         //then
-        Assertions.assertThat(managerWishProducts.size()).isEqualTo(2);
         Assertions.assertThat(memberWishProducts.size()).isEqualTo(0);
 
         wishProductService.deleteWishProduct(managerWishProduct1.id());

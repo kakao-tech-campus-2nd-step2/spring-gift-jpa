@@ -3,9 +3,6 @@ package gift.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -13,11 +10,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "wish_product")
-public class WishProduct {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class WishProduct extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
@@ -28,7 +21,7 @@ public class WishProduct {
     @Column(name = "count")
     private Integer count;
 
-    public WishProduct(){
+    public WishProduct() {
     }
 
     public WishProduct(Integer count) {
