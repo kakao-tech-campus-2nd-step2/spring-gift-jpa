@@ -47,7 +47,20 @@ public class ProductController {
 //            throw new InvalidProduct("유효하지 않은 상품입니다");
 //        }
 //        return product;
-        return productService.getProductById(id);
+
+        Optional<Product> product = productService.getProductById(id);
+        if (product == null) {
+            throw new InvalidProduct("유효하지 않은 상품입니다");
+        }
+
+        return new ProductResponseDto(
+            product.get().getId(),
+            product.get().getName(),
+            product.get().getPrice(),
+            product.get().getImageUrl()
+        );
+
+//        return productService.getProductById(id);
     }
 
     @PostMapping
@@ -84,7 +97,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Long id) {
+    public HttpEntity<String> deleteProduct(@PathVariable Long id) {
 //        if (productService.getProductById(id).isEmpty()) {
 //            throw new InvalidProduct("유효하지 않은 상품입니다.");
 //        }
@@ -94,6 +107,6 @@ public class ProductController {
 //        return ResponseEntity.ok("성공적으로 삭제되었습니다");
         // }
 
-        productService.deleteProductById(id);
+        return productService.deleteProductById(id);
     }
 }
