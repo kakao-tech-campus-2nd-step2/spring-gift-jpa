@@ -1,4 +1,4 @@
-package gift.controller.wishlist;
+package gift.controller.api;
 
 import gift.dto.request.WishListRequest;
 import gift.dto.response.WishProductResponse;

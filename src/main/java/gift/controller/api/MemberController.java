@@ -1,4 +1,4 @@
-package gift.controller.member;
+package gift.controller.api;
 
 import gift.dto.request.MemberRequest;
 import gift.dto.response.TokenResponse;
