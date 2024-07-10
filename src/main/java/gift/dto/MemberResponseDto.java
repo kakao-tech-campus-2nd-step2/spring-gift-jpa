@@ -1,9 +1,9 @@
 package gift.dto;
 
-public class UserResponseDto {
+public class MemberResponseDto {
     private String message;
 
-    public UserResponseDto(String message) {
+    public MemberResponseDto(String message) {
         this.message = message;
     }
 
