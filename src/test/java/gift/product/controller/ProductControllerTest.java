@@ -173,7 +173,7 @@ class ProductControllerTest {
     @DisplayName("상품 수정")
     void 상품_수정() {
         //given
-        Long productId = 3L;
+        Long productId = 10L;
         var reqBody = new ProductReqDto("이름 수정", 20000, "https://www.google.com/modify.png");
         var request = TestUtils.createRequestEntity(baseUrl + "/api/products/" + productId, reqBody, HttpMethod.PUT, accessToken);
 
