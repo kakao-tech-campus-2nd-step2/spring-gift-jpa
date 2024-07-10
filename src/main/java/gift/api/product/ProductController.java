@@ -17,32 +17,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductController(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductController(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @GetMapping()
     public ResponseEntity<List<Product>> getProducts() {
-        return ResponseEntity.ok().body(productDao.getAllProducts());
+        return ResponseEntity.ok().body(productRepository.findAll());
     }
 
     @PostMapping()
     public ResponseEntity<Void> add(@Valid @RequestBody ProductRequest productRequest) {
-        return ResponseEntity.created(URI.create("/api/products/" + productDao.insert(
-            productRequest))).build();
+        Product product = new Product(
+            productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        return ResponseEntity.created(
+            URI.create("/api/products/" + productRepository.save(product).getId())).build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable("id") long id, @Valid @RequestBody ProductRequest productRequest) {
-        productDao.update(id, productRequest);
+        productRepository.save(new Product(
+            id, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl()));
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
-        productDao.delete(id);
+        productRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

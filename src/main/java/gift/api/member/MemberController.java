@@ -15,18 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/members")
 public class MemberController {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public MemberController(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberController(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody @Valid MemberRequest memberRequest) {
-        if (memberDao.hasMemberByEmail(memberRequest.email())) {
+        if (memberRepository.existsByEmail(memberRequest.email())) {
             throw new EmailAlreadyExistsException();
         }
-        Long id = memberDao.insert(memberRequest);
+        Long id = memberRepository.save(new Member(
+            memberRequest.email(), memberRequest.password(), memberRequest.role())).getId();
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Authorization", JwtUtil.generateHeaderValue(
@@ -36,8 +37,9 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody MemberRequest memberRequest, @RequestHeader("Authorization") String token) {
-        if (memberDao.hasMemberByEmailAndPassword(memberRequest)) {
-            var id = memberDao.getMemberByEmail(memberRequest.email()).get().getId();
+        if (memberRepository.existsByEmailAndPassword(
+                memberRequest.email(), memberRequest.password())) {
+            var id = memberRepository.findByEmail(memberRequest.email()).get().getId();
             if (token.split(" ")[1].equals(
                 JwtUtil.generateAccessToken(id, memberRequest.email(), memberRequest.role()))) {
                 return ResponseEntity.ok().build();

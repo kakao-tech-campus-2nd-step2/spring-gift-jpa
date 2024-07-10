@@ -16,36 +16,36 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/wishes")
 public class WishController {
 
-    private final WishDao wishDao;
+    private final WishRepository wishRepository;
 
-    public WishController(WishDao wishDao) {
-        this.wishDao = wishDao;
+    public WishController(WishRepository wishRepository) {
+        this.wishRepository = wishRepository;
     }
 
     @GetMapping()
-    public ResponseEntity<List<Wish>> getItems(@LoginMember Long id) {
-        return ResponseEntity.ok().body(wishDao.getAllWishes(id));
+    public ResponseEntity<List<Wish>> getItems(@LoginMember Long memberId) {
+        return ResponseEntity.ok().body(wishRepository.findByMemberId(memberId));
     }
 
     @PostMapping()
-    public ResponseEntity<Void> add(@RequestBody WishRequest wishRequest, @LoginMember Long id) {
-        wishDao.insert(wishRequest, id);
-        return ResponseEntity.created(URI.create("/api/wishes/" + id)).build();
+    public ResponseEntity<Void> add(@RequestBody WishRequest wishRequest, @LoginMember Long memberId) {
+        wishRepository.save(new Wish(memberId, wishRequest.productId(), wishRequest.quantity()));
+        return ResponseEntity.created(URI.create("/api/wishes/" + memberId)).build();
     }
 
     @PutMapping()
-    public ResponseEntity<Void> update(@RequestBody WishRequest wishRequest, @LoginMember Long id) {
+    public ResponseEntity<Void> update(@RequestBody WishRequest wishRequest, @LoginMember Long memberId) {
         if (wishRequest.quantity() == 0) {
-            wishDao.delete(wishRequest, id);
+            wishRepository.deleteByMemberIdAndProductId(memberId, wishRequest.productId());
             return ResponseEntity.noContent().build();
         }
-        wishDao.update(wishRequest, id);
+        wishRepository.save(new Wish(memberId, wishRequest.productId(), wishRequest.quantity()));
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping()
-    public ResponseEntity<Void> delete(@RequestBody WishRequest wishRequest, @LoginMember Long id) {
-        wishDao.delete(wishRequest, id);
+    public ResponseEntity<Void> delete(@RequestBody WishRequest wishRequest, @LoginMember Long memberId) {
+        wishRepository.deleteByMemberIdAndProductId(memberId, wishRequest.productId());
         return ResponseEntity.noContent().build();
     }
 }
