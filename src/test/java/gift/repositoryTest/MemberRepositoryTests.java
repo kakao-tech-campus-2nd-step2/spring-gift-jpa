@@ -1,2 +1,26 @@
-package gift.repositoryTest;public class MemberRepositoryTests {
+package gift.repositoryTest;
+
+import gift.model.Member;
+import gift.model.MemberRepository;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import java.util.Optional;
+import static org.assertj.core.api.Assertions.assertThat;
+
+@DataJpaTest
+class MemberRepositoryTests {
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Test
+    void testSaveAndFindMember() {
+        Member member = new Member(null, "테스트@example.com", "password", null);
+        memberRepository.save(member);
+
+        Optional<Member> foundMember = memberRepository.findByEmail("테스트@example.com");
+        assertThat(foundMember).isPresent();
+        assertThat(foundMember.get().getEmail()).isEqualTo("테스트@example.com");
+    }
 }
