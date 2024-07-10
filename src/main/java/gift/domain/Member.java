@@ -29,4 +29,12 @@ public class Member {
     public MemberDTO toDTO() {
         return new MemberDTO(email, password);
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }
