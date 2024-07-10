@@ -23,11 +23,11 @@ public class ProductRepository {
     }
 
     private final RowMapper<Product> productRowMapper = (ResultSet, rowNum) ->
-        new Product(
-                ResultSet.getLong("id"),
-                ResultSet.getString("name"),
-                ResultSet.getInt("price"),
-                ResultSet.getString("imageUrl")
+            new Product(
+                    ResultSet.getLong("id"),
+                    ResultSet.getString("name"),
+                    ResultSet.getInt("price"),
+                    ResultSet.getString("imageUrl")
             );
 
     public List<Product> findAll() {
