@@ -46,16 +46,17 @@ class MemberApiControllerTest {
     @Autowired
     private WishProductService wishProductService;
 
-    //테스트용 회원 정보
-    private Member member = new Member(1L, Email.from("member01@gmail.com"), Password.from("member010101"), "member01");
+    //테스트용 회원
+    private Member member;
     private Token token;
 
     @BeforeEach
     void setUp() {
+        member = new Member(1L, Email.from("member01@gmail.com"), Password.from("member010101"), "member01");
         String email = member.getEmail().getValue();
         String password = member.getPassword().getValue();
-        LoginRequest loginRequest = new LoginRequest(email, password);
 
+        LoginRequest loginRequest = new LoginRequest(email, password);
         LoginResponse loginResponse = memberService.login(loginRequest);
 
         token = loginResponse.getToken();
