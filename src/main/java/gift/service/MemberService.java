@@ -32,6 +32,7 @@ public class MemberService {
         } catch (Exception e) {
             if(e instanceof DataIntegrityViolationException)
                 throw new EmailAlreadyHereException("이미 있는 이메일입니다.");
+
             throw new InternalServerException(e.getMessage());
         }
 
