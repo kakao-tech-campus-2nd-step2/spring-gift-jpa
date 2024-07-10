@@ -2,6 +2,7 @@ package gift.common.exception;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class ErrorResponse {
@@ -14,7 +15,10 @@ public class ErrorResponse {
     private List<ValidationError> invalidParams;
 
     @JsonCreator
-    public ErrorResponse(String code, int status, String message) {
+    public ErrorResponse(
+            @JsonProperty("code") String code,
+            @JsonProperty("status") int status,
+            @JsonProperty("message") String message) {
         this.code = code;
         this.status = status;
         this.message = message;
