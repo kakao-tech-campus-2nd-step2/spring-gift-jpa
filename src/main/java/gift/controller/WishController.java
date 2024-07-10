@@ -6,6 +6,9 @@ import gift.domain.Wish;
 import gift.service.WishService;
 import gift.utils.JwtTokenProvider;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,9 +51,10 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Wish>> getWishlist(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<Page<Wish>> getWishlist(@RequestHeader("Authorization") String token,
+        @PageableDefault(size = 10, sort = "id") Pageable pageable) {
         String email = jwtTokenProvider.getEmailFromToken(token.substring(7));
-        List<Wish> wishlistProducts = wishlistService.getWishlistProducts(email);
+        Page<Wish> wishlistProducts = wishlistService.getWishlistProducts(email, pageable);
         return ResponseEntity.ok(wishlistProducts);
     }
 

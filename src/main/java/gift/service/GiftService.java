@@ -6,9 +6,9 @@ import gift.repository.ProductRepository;
 import gift.utils.error.NotpermitNameException;
 import gift.utils.error.ProductAlreadyExistException;
 import gift.utils.error.ProductNotFoundException;
-import java.awt.print.Pageable;
 import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service

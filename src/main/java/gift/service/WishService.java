@@ -12,6 +12,8 @@ import gift.utils.error.UserNotFoundException;
 import gift.utils.error.WishListAddFailedException;
 import gift.utils.error.WishListNotFoundException;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -65,11 +67,11 @@ public class WishService {
 
     }
 
-    public List<Wish> getWishlistProducts(String email) {
+    public Page<Wish> getWishlistProducts(String email, Pageable pageable) {
         UserInfo userInfo = userInfoRepository.findByEmail(email).orElseThrow(
             () -> new UserNotFoundException("User Not Found")
         );
-        return wishRepository.findByUserInfoId(userInfo.getId());
+        return wishRepository.findByUserInfoId(userInfo.getId(), pageable);
     }
 
     public boolean changeToWishlist(String email, WishRequestDTO wishRequestDTO) {
