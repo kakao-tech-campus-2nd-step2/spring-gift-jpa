@@ -1,9 +1,6 @@
 package gift.controller.advice;
 
-import gift.exception.EmailDuplicateException;
-import gift.exception.MemberNotFoundException;
-import gift.exception.ProductNotFoundException;
-import gift.exception.WishAlreadyExistsException;
+import gift.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.validation.FieldError;
@@ -56,6 +53,13 @@ public class ApiGlobalExceptionHandler {
     @ExceptionHandler(WishAlreadyExistsException.class)
     public ProblemDetail handleWishAlreadyExistsException(WishAlreadyExistsException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        problemDetail.setTitle(e.getMessage());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(WishNotFoundException.class)
+    public ProblemDetail handleWishNotFoundException(WishNotFoundException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
         problemDetail.setTitle(e.getMessage());
         return problemDetail;
     }
