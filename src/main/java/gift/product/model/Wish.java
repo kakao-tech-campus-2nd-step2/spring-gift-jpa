@@ -16,26 +16,27 @@ public class Wish {
     @NotNull(message = "희망하는 사람의 정보가 누락되었습니다.")
     private Member member;
 
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name="product_id", nullable = false, foreignKey = @ForeignKey(name = "fk_wish_product_id_ref_product_id"))
     @NotNull(message = "희망하는 상품의 정보가 누락되었습니다.")
-    private Long productId;
+    private Product product;
 
     public Wish() {
 
     }
 
-    public Wish(Member member, Long productId) {
+    public Wish(Member member, Product product) {
         this.member = member;
-        this.productId = productId;
+        this.product = product;
     }
 
     public Long getId() {
         return id;
     }
-    public Member getMemberId() {
+    public Member getMember() {
         return member;
     }
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 }

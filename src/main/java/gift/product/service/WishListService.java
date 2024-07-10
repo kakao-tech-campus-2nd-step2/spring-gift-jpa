@@ -41,7 +41,7 @@ public class WishListService {
         Collection<Wish> wishList = wishListDao.findAllByMember(memberDao.findMEmberByEmailLike(certifyUtil.getEmailByToken(token)));
         Collection<WishProduct> wishList2 = new ArrayList<>();
         for(Wish wish : wishList) {
-            Product product = productDao.findById(wish.getProductId()).orElse(null);
+            Product product = productDao.findById(wish.getProduct().getId()).orElse(null);
             if(product != null) {
                 wishList2.add(new WishProduct(
                     product.getName(),
@@ -58,8 +58,8 @@ public class WishListService {
         String token = certifyUtil.checkAuthorization(request.getHeader("Authorization"));
         if(token == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid");
-        Wish wish = new Wish(memberDao.findById(requestBody.get("memberId")).get(), requestBody.get("productId"));
-        wishListValidation.registerWishProduct(wish.getProductId());
+        Wish wish = new Wish(memberDao.findById(requestBody.get("memberId")).get(), productDao.findById(requestBody.get("productId")).get());
+        wishListValidation.registerWishProduct(wish.getProduct().getId());
         wishListDao.save(wish);
         return ResponseEntity.status(HttpStatus.CREATED).body("WishProduct registered successfully");
     }

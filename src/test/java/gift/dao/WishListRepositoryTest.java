@@ -34,13 +34,13 @@ public class WishListRepositoryTest {
 
     @Test
     void testRegisterWishList() {
-        Wish product = new Wish(originMember, originProduct.getId());
+        Wish product = new Wish(originMember, originProduct);
         wishListDao.save(product);
     }
 
     @Test
     void testDeleteWishList() {
-        Wish wish = wishListDao.save(new Wish(originMember, originProduct.getId()));
+        Wish wish = wishListDao.save(new Wish(originMember, originProduct));
         wishListDao.deleteById(wish.getId());
     }
 
