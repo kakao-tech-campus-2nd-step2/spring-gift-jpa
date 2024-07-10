@@ -24,7 +24,7 @@ public class WishListService {
             throw new InvalidWishListFormException("동일한 상품을 위시리스트에 또 넣을수는 없습니다");
         }
         // 수량 0개는 등록 불가
-        if (wishListForm.getQuantity().equals(0)) {
+        if (wishListForm.isZeroQuantity()) {
             throw new InvalidWishListFormException("위시리스트에 상품 0개를 넣을수는 없습니다");
         }
         var wishList = new WishList(userId, wishListForm.getProductId(),
@@ -38,10 +38,9 @@ public class WishListService {
 
     public void update(Long userId, WishListForm wishListForm) {
         Long productId = wishListForm.getProductId();
-        Integer quantity = wishListForm.getQuantity();
 
         // 수량을 지정하지 않았거나 0으로 수정하는 경우 위시리스트에서 삭제
-        if (quantity == null || quantity.equals(0)) {
+        if (wishListForm.isZeroQuantity()) {
             delete(userId, productId);
             return;
         }
@@ -53,7 +52,7 @@ public class WishListService {
             return;
         }
 
-        WishList updatedWishList = new WishList(userId, productId, quantity);
+        WishList updatedWishList = new WishList(userId, productId, wishListForm.getQuantity());
         updatedWishList.setId(wishList.get().getId());
         wishListRepository.save(updatedWishList);
     }
