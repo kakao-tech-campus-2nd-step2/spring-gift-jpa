@@ -1,8 +1,6 @@
 package gift.entity;
 
 import gift.dto.ProductDto;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +18,7 @@ public class Product{
     private String name;
 
     private int price;
-    
+
     private String imageUrl;
 
     public Product() {

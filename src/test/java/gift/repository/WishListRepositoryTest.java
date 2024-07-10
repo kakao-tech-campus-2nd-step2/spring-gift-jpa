@@ -48,10 +48,10 @@ public class WishListRepositoryTest {
         expectedList.add(new WishList(1L, 2L));
 
         wishListRepository.save(new WishList(1L, 2L));
-        List<WishList> actual = wishListRepository.findProductIdsByMemberId(1L);
+        List<WishList> actual = wishListRepository.findByMemberId(1L);
 
         assertThat(actual.size()).isEqualTo(expectedList.size());
-        assertThat(wishListRepository.findProductIdsByMemberId(notExistMemberId)).isEmpty();
+        assertThat(wishListRepository.findByMemberId(notExistMemberId)).isEmpty();
 
         for (int i = 0; i < expectedList.size(); i++) {
             assertThat(actual.get(i).getProductId()).isEqualTo(expectedList.get(i).getProductId());
