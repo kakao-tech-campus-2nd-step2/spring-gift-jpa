@@ -1,6 +1,7 @@
 package gift;
 
 import gift.wishlist.exception.InvalidForeignKeyException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.dao.DataAccessException;
@@ -44,6 +45,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<String> handleEmptyResultDataAccess(EmptyResultDataAccessException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청한 데이터가 존재하지 않습니다.");
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<String> handleEntityNotFound(EntityNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("요청한 데이터가 존재하지 않습니다 : " + ex.getMessage());
     }
 
     @ExceptionHandler(InvalidForeignKeyException.class)

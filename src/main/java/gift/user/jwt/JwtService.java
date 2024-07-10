@@ -10,6 +10,7 @@ import gift.user.model.UserRepository;
 import gift.user.model.dto.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Date;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class JwtService {
 
     public User getLoginUser(String token) {
         Long id = getIdFromToken(token);
-        return userRepository.findUser(id);
+        return userRepository.findByIdAndIsActiveTrue(id).orElseThrow(() -> new EntityNotFoundException("User"));
     }
 
     private Long getIdFromToken(String token) {

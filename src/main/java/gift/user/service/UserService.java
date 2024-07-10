@@ -7,7 +7,9 @@ import gift.user.model.dto.LoginRequest;
 import gift.user.model.dto.SignUpRequest;
 import gift.user.model.dto.UpdatePasswordRequest;
 import gift.user.model.dto.User;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import security.SHA256Util;
 
 @Service
@@ -21,51 +23,59 @@ public class UserService {
         this.jwtService = jwtService;
     }
 
+    @Transactional
     public void signUp(SignUpRequest signUpRequest) {
         String salt = SHA256Util.getSalt();
         String hashedPassword = SHA256Util.encodePassword(signUpRequest.getPassword(), salt);
         signUpRequest.setPassword(hashedPassword);
-        if (userRepository.signUpUser(signUpRequest, salt) <= 0) {
-            throw new IllegalArgumentException("회원가입 실패");
-        }
+        User user = new User(signUpRequest.getEmail(), signUpRequest.getPassword(), signUpRequest.getRole(), salt);
+        userRepository.save(user);
     }
 
+    @Transactional(readOnly = true)
     public String login(LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(loginRequest.getEmail());
-        if (user != null) {
-            if (isPasswordCorrect(loginRequest.getPassword(), user)) {
-                return jwtService.createToken(user.id());
-            }
+        User user = userRepository.findByEmailAndIsActiveTrue(loginRequest.email())
+                .orElseThrow(() -> new EntityNotFoundException("User"));
+        if (!isPasswordCorrect(loginRequest.password(), user)) {
+            throw new ForbiddenException("로그인 실패: 비밀번호 불일치");
         }
-        throw new ForbiddenException("로그인 실패");
+        return jwtService.createToken(user.getId());
+    }
+
+    @Transactional
+    public void updatePassword(UpdatePasswordRequest updatePasswordRequest, User loginUser) {
+        if (!isPasswordCorrect(updatePasswordRequest.oldPassword(), loginUser)) {
+            throw new ForbiddenException("비밀번호 변경 실패: 기존 비밀번호 불일치");
+        }
+
+        String newHashedPassword = SHA256Util.encodePassword(updatePasswordRequest.newPassword(),
+                loginUser.getSalt());
+
+        loginUser.setPassword(newHashedPassword);
+        userRepository.save(loginUser);
+    }
+
+    @Transactional(readOnly = true)
+    public User findUser(Long id) {
+        return userRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException("User"));
+    }
+
+    @Transactional(readOnly = true)
+    public String findEmail(Long id) {
+        User user = userRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException("User"));
+        return user.getEmail();
     }
 
     private boolean isPasswordCorrect(String inputPassword, User user) {
-        String hashedInputPassword = SHA256Util.encodePassword(inputPassword, user.salt());
-        return hashedInputPassword.equals(user.password());
+        String hashedInputPassword = SHA256Util.encodePassword(inputPassword, user.getSalt());
+        return hashedInputPassword.equals(user.getPassword());
     }
 
-    public void updatePassword(UpdatePasswordRequest updatePasswordRequest, User loginUser) {
-        if (isPasswordCorrect(updatePasswordRequest.getOldPassword(), loginUser)) {
-            String newHashedPassword = SHA256Util.encodePassword(updatePasswordRequest.getNewPassword(),
-                    loginUser.salt());
-            if (userRepository.updatePassword(loginUser.id(), newHashedPassword) <= 0) {
-                throw new IllegalArgumentException("비밀번호 변경 실패");
-            }
-        }
-        throw new ForbiddenException("비밀번호 변경 실패: 기존 비밀번호 불일치");
-    }
-
-    public String findEmail(Long id) {
-        String email = userRepository.findEmail(id);
-        if (email != null) {
-            return email;
-        }
-        throw new IllegalArgumentException("이메일 찾기 실패");
-    }
 
     public void verifyAdminAccess(User user) {
-        if (!user.role().equals("ADMIN")) {
+        if (!user.getRole().equals("ADMIN")) {
             throw new ForbiddenException("해당 요청에 대한 관리자 권한이 없습니다.");
         }
     }

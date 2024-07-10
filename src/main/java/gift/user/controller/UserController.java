@@ -51,7 +51,7 @@ public class UserController {
     @GetMapping("/email")
     public ResponseEntity<String> findEmail(@Valid @RequestParam Long id,
                                             @LoginUser User loginUser) {
-        if (loginUser.id().equals(id)) {
+        if (loginUser.getId().equals(id)) {
             String password = userService.findEmail(id);
             return ResponseEntity.ok().body(password);
         }
