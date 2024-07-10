@@ -2,7 +2,7 @@ package gift.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+
 
 @Entity
 @Table(name = "member")
@@ -12,14 +12,42 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(nullable = false)
     @Email
     private String email;
 
-    @NotBlank
+    @Column(nullable = false)
     private String password;
 
-    // getters and setters
-    // constructor
-    // other fields and methods
+    public Member(){}
+
+    public Member(Long id, String email, String password) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

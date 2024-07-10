@@ -1,9 +1,29 @@
 package gift.entity;
 
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name="wish")
 public class Wish {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id")
+    private long id;
+
+    @Column(nullable = false)
+    private long memberId;
+
+    @Column(nullable = false)
+    private long productId;
+
+
     private String email;
     private String type;
-    private long productId;
+
+
+    public Wish(){}
 
     public Wish(String email, String type, long productId) {
         this.email = email;

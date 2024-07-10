@@ -1,15 +1,23 @@
 package gift.entity;
 
+import jakarta.persistence.*;
+
 import java.beans.ConstructorProperties;
 
+@Entity
+@Table(name="User")
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(unique=true)
     private String email;
     private String password;
     private String type; //1 : admin  2 :user
 
-    public User(){
-
-    }
+    public User(){}
 
     @ConstructorProperties({"email", "password", "type"})
     public User(String email, String password, String type) {
