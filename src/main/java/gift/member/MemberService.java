@@ -19,22 +19,7 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-//    // 회원 인서트
-//    public void postMember(Member member) {
-////        memberDao.insertMember(member);
-//        memberRepository.saveAndFlush(member);
-//    }
-//
-//    // 회원으로 회원 조회, 존재하는 건지 보는 건가봐
-//    public Optional<Member> getMember(Member member) {
-////        return memberDao.findMember(member);
-////        memberRepository.findOne(member);
-//        return  memberRepository.findByEmailAndPassword(member.getEmail(), member.getPassword());
-//    }
-//
-    // 회원이메일로 회원조회 토큰 관련된거겠지?
     public Member getMemberByEmail(String userEmail) {
-//        return memberDao.findMemberById(userEmail);
         return memberRepository.findByEmail(userEmail);
     }
 

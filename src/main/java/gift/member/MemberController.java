@@ -27,27 +27,11 @@ public class MemberController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerMember(@RequestBody Member member) throws AlreadyExistMember {
-//        Optional<Member> existMember = memberService.getMember(member);
-//        if (!existMember.isPresent()) {
-//            memberService.postMember(member);
-//            String token = JwtTokenUtil.generateToken(member.getEmail());
-//            return ResponseEntity.ok(new TokenResponseDto(token));
-//        } else {
-//            throw new AlreadyExistMember("이미 회원정보가 존재합니다");
-//        }
         return memberService.register(member);
-
-    } // ㅋㅋ 회원가입, 로그인, 로그아웃만 하면 되자나 완전 럭키자나~~
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Member member) throws NotFoundMember {
-//        Optional<Member> existMember = memberService.getMember(member);
-//        if (existMember.isPresent()) {
-//            String token = JwtTokenUtil.generateToken(member.getEmail());
-//            return ResponseEntity.ok(new TokenResponseDto(token));
-//        } else {
-//            throw new NotFoundMember("회원정보가 존재하지 않습니다");
-//        }
         return memberService.login(member);
     }
 

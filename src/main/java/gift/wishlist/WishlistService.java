@@ -15,40 +15,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class WishlistService {
 
-//    private final WishlistRepository wishlistRepository;
-//    private final ProductRepository productRepository;
-//
-//    public WishlistService(WishlistRepository wishlistRepository, ProductRepository productRepository) {
-//        this.wishlistRepository = wishlistRepository;
-//        this.productRepository = productRepository;
-//    }
-//
-//    // post를 위한 wishlist 테이블에 insert
-//    public Wishlist postWishlist(Wishlist wishlist) {
-//        return wishlistRepository.save(wishlist);
-//    }
-//
-//    // 모든 장바구니 상품 조회를 위한
-//    public List<Long> getAllWishlist() {
-//        List<Wishlist> wishlists = wishlistRepository.findAll();
-//
-//        //return
-//        //return wishlistDao.findAllWish();
-//    }
-//
-//    // 삭제하기 전 상품이 존재하는지 확인을 위한
-//    public Optional<Long> getWishlistById(Long productId) {
-//        //return wishlistDao.findProductById(productId);
-//        //return wishlistRepository.findWishlistBy(productId);
-//    } // delete를 위한 것
-//
-//    // 상품 삭제를 위한
-//    public void deleteWishlist(Long productId) {
-//
-//        //wishlistDao.deleteWish(productId);
-//        wishlistRepository.deleteById(productId);
-//    }
-
     private final WishlistRepository wishlistRepository;
 
     public WishlistService(WishlistRepository wishlistRepository) {

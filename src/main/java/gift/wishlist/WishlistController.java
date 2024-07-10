@@ -38,13 +38,10 @@ public class WishlistController {
         String token = authHeader.replace("Bearer ", "");
         tokenValidator.validateToken(token);
         wishlistService.addWishlist(request, member);
-        //wishlistService.postWishlist(member,request.productId());
     }
 
-    @GetMapping // 관리자만 장바구니 테이블을 전체 볼 수 있어야 함 // 수정해야겠다
+    @GetMapping
     public List<Long> getWishlist() {
-//        List<Long> wishProducts = wishlistService.getAllWishlist();
-//        return wishProducts;
         return wishlistService.checkWishlist();
     }
 
@@ -53,12 +50,6 @@ public class WishlistController {
         throws UnAuthorizationException {
         String token = authHeader.replace("Bearer ", "");
         tokenValidator.validateToken(token);
-
-//        if (wishlistService.getWishlistById(wishId).isEmpty()) {
-//            throw new InvalidProduct("잘못된 접근입니다");
-//        }
-//        wishlistService.deleteWishlist(wishId);
-//        return ResponseEntity.ok("장바구니에서 제거되었습니다");
         return wishlistService.deleteWishlist(wishId);
     }
 

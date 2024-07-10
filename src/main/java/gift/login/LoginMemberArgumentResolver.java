@@ -13,9 +13,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    // JwtUitll 빈으로 등록하지 않기!!!!!!!!!!!!!!!!!!!!!
     private final MemberService memberService;
-    //private final JwtTokenUtil jwtTokenUtil;
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public LoginMemberArgumentResolver(MemberService memberService) {
