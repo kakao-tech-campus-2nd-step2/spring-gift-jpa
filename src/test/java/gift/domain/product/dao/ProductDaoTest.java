@@ -45,6 +45,10 @@ class ProductDaoTest {
     @DisplayName("DB 전체 상품 조회")
     void findAll() {
         // given
+        Product product1 = new Product(null, "아이스 카페 아메리카노 T", 4500, "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg");
+        productDao.insert(product1);
+        Product product2 = new Product(null, "아이스 카페 라떼 T", 5000, "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110569]_20210415143036138.jpg");
+        productDao.insert(product2);
 
         // when
         List<Product> productList = productDao.findAll();

@@ -74,7 +74,7 @@ class WishlistRestControllerTest {
         WishItemDto wishItemDto = new WishItemDto(null, 1L);
         String jsonContent = objectMapper.writeValueAsString(wishItemDto);
 
-        WishItem wishItem = wishItemDto.toWishItem(user, product);
+        WishItem wishItem = wishItemDto.toWishItem(user.getId());
         given(wishlistService.create(any(WishItemDto.class), any(User.class))).willReturn(wishItem);
 
         // when & then
@@ -90,7 +90,7 @@ class WishlistRestControllerTest {
     @DisplayName("위시리스트 전체 조회")
     void readAll_success() throws Exception {
         // given
-        List<WishItem> wishItems = List.of(new WishItem(1L, user, product));
+        List<WishItem> wishItems = List.of(new WishItem(1L, user.getId(), product.getId()));
         given(wishlistService.readAll(any(User.class))).willReturn(wishItems);
 
         // when & then
