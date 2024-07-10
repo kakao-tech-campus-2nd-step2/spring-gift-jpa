@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
-    List<Wish> findWishByMember(Member member);
+    List<Wish> findWishByMemberId(Long memberId);
 }
