@@ -29,7 +29,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         String rawToken = request.getHeader("Authorization");
 
-        String token = jwtValidator.validateForm(rawToken);
+        String token = jwtValidator.validateFormAndRemoveBearer(rawToken);
         request.setAttribute("id", jwtProvider.getId(token));
         request.setAttribute("email", jwtProvider.getEmail(token));
 

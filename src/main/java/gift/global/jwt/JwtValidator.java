@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtValidator {
 
-    public String validateForm(String rawToken) {
+    public String validateFormAndRemoveBearer(String rawToken) {
         if (rawToken == null || !rawToken.startsWith("Bearer")) {
             throw new JwtException("JWT 토큰이 없거나 유효하지 않은 형식입니다");
         }
