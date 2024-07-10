@@ -2,7 +2,7 @@
 
 
 -- 상품 데이터 입력
-INSERT INTO product (name, price, imageUrl)
+INSERT INTO product (name, price, image_url)
 VALUES ('키보드', 10000, 'https://www.google.com/keyboard.png'),
          ('마우스', 5000, 'https://www.google.com/mouse.png'),
          ('모니터', 20000, 'https://www.google.com/monitor.png'),
@@ -16,11 +16,11 @@ VALUES ('키보드', 10000, 'https://www.google.com/keyboard.png'),
 
 
 -- 회원 데이터 입력: 관리자 1명, 사용자 3명
-INSERT INTO member (name, email, password, role)
-VALUES ('admin', 'admin@email.com', 'admin', 'ADMIN'),
-       ('user1', 'user1@email.com', 'password1', 'USER'),
-       ('user2', 'user2@email.com', 'password2', 'USER'),
-       ('user3', 'user3@email.com', 'password3', 'USER');
+INSERT INTO member (email, password)
+VALUES ('admin@email.com', 'admin'),
+       ('user1@email.com', 'password1'),
+       ('user2@email.com', 'password2'),
+       ('user3@email.com', 'password3');
 
 -- 위시리스트 데이터 입력: 사용자 3명이 각각 3개씩 상품을 담음
 
