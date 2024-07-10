@@ -30,4 +30,13 @@ public class ProductRepositoryTest {
         assertThat(actual.getId()).isEqualTo(expected.getId());
     }
 
+    @Test
+    void delete(){
+        Product expected = new Product("그린티라떼", 3500, "example3.com");
+        productRepository.save(expected);
+        productRepository.deleteById(expected.getId());
+        Optional<Product> actual = productRepository.findById(expected.getId());
+        assertThat(actual).isNotPresent();
+    }
+
 }
