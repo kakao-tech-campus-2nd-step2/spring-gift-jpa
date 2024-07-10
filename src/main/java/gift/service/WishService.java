@@ -22,10 +22,8 @@ public class WishService{
         Wish wish = new Wish();
         wish.setUserId(userId);
         wish.setProductId(productId);
-        wish.setCreatedAt(LocalDateTime.now());
         wishRepository.save(wish);
     }
-
 
     public void removeFromWishList(Long userId, Long productId) {
         wishRepository.deleteByUserIdAndProductId(userId, productId);
