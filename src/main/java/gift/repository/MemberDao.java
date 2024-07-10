@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.exception.member.LoginErrorException;
+import gift.exception.member.NotFoundMemberException;
 import gift.exception.member.DuplicateEmailException;
 import gift.model.Member;
 import gift.model.Role;
@@ -49,7 +49,7 @@ public class MemberDao {
             var sql = "SELECT * FROM member WHERE email=?";
             return jdbcTemplate.queryForObject(sql, memberRowMapper, email);
         } catch (EmptyResultDataAccessException e) {
-            throw new LoginErrorException("아이디 또는 비밀번호가 일치하지 않습니다.");
+            throw new NotFoundMemberException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
     }
 
