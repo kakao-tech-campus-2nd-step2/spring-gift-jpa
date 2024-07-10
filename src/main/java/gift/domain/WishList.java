@@ -19,12 +19,6 @@ public class WishList {
 
     public WishList() {}
 
-    public WishList(Long id, Long userId, Long productId, int quantity) {
-        this.id = id;
-        this.userId = userId;
-        this.productId = productId;
-        this.quantity = quantity;
-    }
     public WishList(Long userId, Long productId, int quantity) {
         this.userId = userId;
         this.productId = productId;

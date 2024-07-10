@@ -7,6 +7,7 @@ import gift.repository.wish.WishListRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +18,28 @@ public class WishListRepositoryTest {
     @Autowired
     private WishListRepository wishListRepository;
 
+    private WishList wish1;
+    private WishList wish2;
+
+    @BeforeEach
+    void setup() {
+        wish1 = new WishList(1L, 1L, 2);
+        wish2 = new WishList(1L, 3L, 3);
+        wishListRepository.save(wish1);
+        wishListRepository.save(wish2);
+    }
+
     @DisplayName("위시리스트 정보 저장 테스트")
     @Test
     void save() {
         // given
-        WishList wishList = new WishList(1L, 1L, 1L, 2);
+        WishList wish3 = new WishList(1L, 1L, 2);
         // when
-        WishList savedWish = wishListRepository.save(wishList);
+        WishList savedWish = wishListRepository.save(wish3);
         // then
         Assertions.assertAll(
             () -> assertThat(savedWish.getId()).isNotNull(),
-            () -> assertThat(savedWish.getQuantity()).isEqualTo(wishList.getQuantity())
+            () -> assertThat(savedWish.getQuantity()).isEqualTo(wish3.getQuantity())
         );
     }
 
@@ -35,11 +47,8 @@ public class WishListRepositoryTest {
     @Test
     void findbyid() {
         // given
-        Long id = 1L;
-        WishList wish1 = new WishList(1L, 1L, 1L, 2);
-        WishList wish2 = new WishList(2L, 1L, 3L, 3);
-        wishListRepository.save(wish1);
-        wishListRepository.save(wish2);
+        Long id = wish1.getId();
+
         // when
         Optional<WishList> findWish = wishListRepository.findById(id);
         Long findId = findWish.get().getId();
@@ -51,12 +60,9 @@ public class WishListRepositoryTest {
     @Test
     void deletebyid() {
         // given
-        WishList wish1 = new WishList(1L, 1L, 1L, 2);
-        WishList wish2 = new WishList(2L, 1L, 3L, 3);
-        wishListRepository.save(wish1);
-        wishListRepository.save(wish2);
+        Long deleteId = wish2.getId();
         // when
-        wishListRepository.deleteById(1L);
+        wishListRepository.deleteById(deleteId);
         List<WishList> savedWish = wishListRepository.findAll();
         // then
         assertThat(savedWish.size()).isEqualTo(1);
