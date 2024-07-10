@@ -14,7 +14,7 @@ public class JwtUtil {
 
     private static final long EXPIRATION_TIME = 86400000; // 24 hours
 
-    public static String generateToken(String email, String password) {
+    public static String generateToken(String email) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
 

@@ -21,7 +21,7 @@ public class MemberService {
     public String generateMember(String email, String password) {
         Member member = new Member(email, password);
         memberDao.insertMember(member);
-        return JwtUtil.generateToken(email, password);
+        return JwtUtil.generateToken(email);
     }
 
     public String authenticateMember(String email, String password) {
@@ -30,7 +30,7 @@ public class MemberService {
             memberDao.selectMember(member).orElseThrow(() -> {
                 throw new NoSuchElementException("해당하는 사용자 데이터가 없습니다.");
             }));
-        return jwtUtil.generateToken(email, password);
+        return JwtUtil.generateToken(email);
     }
 
     public Long getMemberIdByEmail(String email) {
