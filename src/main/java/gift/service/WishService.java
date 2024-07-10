@@ -1,42 +1,41 @@
 package gift.service;
 
-import gift.dao.WishlistDao;
-import gift.model.Wishlist;
+import gift.dao.WishDao;
+import gift.model.Wish;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
 
 @Service
-public class WishlistService {
+public class WishService {
     private final MemberService memberService;
-    private final WishlistDao wishlistDao;
+    private final WishDao wishDao;
 
-    public WishlistService(MemberService memberService, WishlistDao wishlistDao) {
+    public WishService(MemberService memberService, WishDao wishDao) {
         this.memberService = memberService;
-        this.wishlistDao = wishlistDao;
+        this.wishDao = wishDao;
     }
 
-    public List<Wishlist> getWishlistController(HttpServletRequest request) throws AuthenticationException {
+    public List<Wish> getWishlistController(HttpServletRequest request) throws AuthenticationException {
         //auth로 유저 아이디 가져옴
         Long userid = memberService.getIdByToken(request);
         //가져온 유저아이디 검색
-        List<Wishlist> wishlist = wishlistDao.selectAllWishlist(userid);
-        return wishlist;
+        List<Wish> wish = wishDao.selectAllWishlist(userid);
+        return wish;
     }
 
     public void postWishlist(Long productid, HttpServletRequest request) throws AuthenticationException {
         // auth로 유저 아이디 가져옴
         Long userid = memberService.getIdByToken(request);
         // pathvariable로 상품 아이디 가져옴
-        Wishlist wishlist = new Wishlist(userid, productid);
+        Wish wish = new Wish(userid, productid);
 
-        wishlistDao.insertWishlist(wishlist);
+        wishDao.insertWishlist(wish);
     }
 
     public void deleteProduct(Long id){
-        wishlistDao.deleteWishlist(id);
+        wishDao.deleteWishlist(id);
     }
 }

@@ -1,40 +1,38 @@
 package gift.dao;
 
-import gift.model.Product;
-import gift.model.Wishlist;
+import gift.model.Wish;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class WishlistDao {
+public class WishDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public WishlistDao(JdbcTemplate jdbcTemplate) {
+    public WishDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public RowMapper<Wishlist> WishlistRowMapper() {
-        return (resultSet, rowNum) -> new Wishlist(
+    public RowMapper<Wish> WishlistRowMapper() {
+        return (resultSet, rowNum) -> new Wish(
                 resultSet.getLong("id"),
                 resultSet.getLong("userid"),
                 resultSet.getLong("productid")
         );
     }
 
-    public List<Wishlist> selectAllWishlist(Long id){
+    public List<Wish> selectAllWishlist(Long id){
         var sql = "select * from wishlist where userid = ?";
-        List<Wishlist> list = new ArrayList<>();
+        List<Wish> list = new ArrayList<>();
         return jdbcTemplate.query(sql, WishlistRowMapper(), id);
     }
 
-    public void insertWishlist(Wishlist wishlist){
+    public void insertWishlist(Wish wish){
         var sql = "insert into wishlist (userid, productid) values (?, ?)";
-        jdbcTemplate.update(sql, wishlist.getUserId(), wishlist.getProductId());
+        jdbcTemplate.update(sql, wish.getUserId(), wish.getProductId());
     }
 
     public void deleteWishlist(Long id){
