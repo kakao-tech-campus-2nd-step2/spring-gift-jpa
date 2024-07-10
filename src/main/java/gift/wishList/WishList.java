@@ -1,5 +1,7 @@
 package gift.wishList;
 
+import gift.product.Product;
+import gift.user.User;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,16 +10,18 @@ public class WishList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-    @Column(name = "userID")
-    long userID;
-    @Column(name = "productID")
-    long productID;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    Product product;
     @Column(name = "count")
     long count;
 
-    public WishList(long userID, long productID, long count) {
-        this.userID = userID;
-        this.productID = productID;
+    public WishList(User user, Product product, long count) {
+        this.user = user;
+        this.product = product;
         this.count = count;
     }
 
@@ -34,20 +38,20 @@ public class WishList {
         this.id = id;
     }
 
-    public long getUserID() {
-        return userID;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserID(long userID) {
-        this.userID = userID;
+    public void setUserID(User user) {
+        this.user = user;
     }
 
-    public long getProductID() {
-        return productID;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductID(long productID) {
-        this.productID = productID;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public long getCount() {
