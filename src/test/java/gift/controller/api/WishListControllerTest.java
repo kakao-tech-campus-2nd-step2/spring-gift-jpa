@@ -211,7 +211,7 @@ class WishListControllerTest {
     }
 
     @Test
-    @DisplayName("위시리스트에 없는 상품 수정 요청시 예외 던짐")
+    @DisplayName("위시리스트에 없는 상품 삭제 요청시 예외 던짐")
     void deleteThrow() throws Exception {
         //Given
         WishListRequest amountUpdateRequest = new WishListRequest(1L, 0);
