@@ -1,7 +1,7 @@
 package gift;
 
-import gift.domain.Member;
-import gift.domain.MemberRepository;
+import gift.entity.Member;
+import gift.repository.MemberRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class MemberTest {
     @Test
     void testFindById() {
         memberRepository.save(testMember);
-        Member findMember = memberRepository.findByToken("testToken");
+        Member findMember = memberRepository.findById(1);
         assertEquals(testMember, findMember);
     }
 
