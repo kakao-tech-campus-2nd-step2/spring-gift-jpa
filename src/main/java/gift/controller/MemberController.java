@@ -26,22 +26,14 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> signUp(@RequestBody MemberLoginDto memberLoginDto) {
-        String generatedToken = memberService.generateMember(memberLoginDto.email, memberLoginDto.password);
-        try {
-            return new ResponseEntity<>(objectMapper.writeValueAsString(new TokenResponseEntity(generatedToken)), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>("토큰 생성이 실패하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<String> signUp(@RequestBody MemberLoginDto memberLoginDto) throws Exception {
+        String generatedToken = memberService.registerMember(memberLoginDto.email, memberLoginDto.password);
+        return new ResponseEntity<>(objectMapper.writeValueAsString(new TokenResponseEntity(generatedToken)), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> signIn(@RequestBody MemberRegisterDto memberRegisterDto) {
+    public ResponseEntity<String> signIn(@RequestBody MemberRegisterDto memberRegisterDto) throws Exception {
         String generatedToken = memberService.authenticateMember(memberRegisterDto.email, memberRegisterDto.password);
-        try {
-            return new ResponseEntity<>(objectMapper.writeValueAsString(new TokenResponseEntity(generatedToken)), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("토큰 생성이 실패하였습니다.", HttpStatus.FORBIDDEN);
-        }
+        return new ResponseEntity<>(objectMapper.writeValueAsString(new TokenResponseEntity(generatedToken)), HttpStatus.OK);
     }
 }
