@@ -15,10 +15,6 @@ public class Member {
         this.role = role;
     }
 
-    public void setRole(boolean role) {
-        this.role = role;
-    }
-
     public String getId() {
         return id;
     }
