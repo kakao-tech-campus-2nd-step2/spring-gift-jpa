@@ -10,7 +10,6 @@ import gift.exception.BadRequestExceptions.BadRequestException;
 import gift.exception.BadRequestExceptions.NoSuchProductIdException;
 import gift.exception.BadRequestExceptions.UserNotFoundException;
 import gift.repository.MemberRepository;
-import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.util.Map;
 import java.util.Optional;
