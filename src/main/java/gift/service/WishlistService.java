@@ -21,7 +21,7 @@ public class WishlistService {
     }
 
     public List<Product> getWishlist(String email) {
-        List<Wishlist> wishlistItems = wishlistRepository.findByUserEmail(email);
+        List<Wishlist> wishlistItems = wishlistRepository.findByMemberEmail(email);
         return wishlistItems.stream()
             .map(item -> productService.findProductsById(item.getProductId()))
             .collect(Collectors.toList());
@@ -34,6 +34,6 @@ public class WishlistService {
 
     @Transactional
     public void removeWishlist(String email, Long productId) {
-        wishlistRepository.deleteByUserEmailAndProductId(email, productId);
+        wishlistRepository.deleteByMemberEmailAndProductId(email, productId);
     }
 }

@@ -5,6 +5,6 @@ VALUES ('예시1', '100', '예시1 Image Url'),
 INSERT INTO member (name, email, password, role)
 VALUES ('관리자', 'admin@email.com', 'password', 'admin');
 INSERT INTO member (name, email, password, role)
-VALUES ('사용자', 'user@email.com', 'password', 'user');
+VALUES ('사용자', 'member@email.com', 'password', 'user');
 INSERT INTO member (name, email, password, role)
 VALUES ('카카오', 'kakaouser@email.com', 'password', 'kakaouser');

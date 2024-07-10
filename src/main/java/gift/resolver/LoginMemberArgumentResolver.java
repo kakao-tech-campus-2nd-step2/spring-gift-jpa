@@ -1,9 +1,9 @@
 package gift.resolver;
 
-import gift.model.User;
-import gift.service.UserService;
+import gift.model.Member;
+import gift.service.MemberService;
 import gift.util.JwtUtil;
-import gift.annotation.LoginUser;
+import gift.annotation.LoginMember;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -11,23 +11,23 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
+public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private static final String HEADER_NAME = "Authorization";
     private static final String AUTHORIZATION_NAME = "Bearer ";
 
-    private final UserService userService;
+    private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
-    public LoginUserArgumentResolver(UserService userService, JwtUtil jwtUtil) {
-        this.userService = userService;
+    public LoginMemberArgumentResolver(MemberService memberService, JwtUtil jwtUtil) {
+        this.memberService = memberService;
         this.jwtUtil = jwtUtil;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterAnnotation(LoginUser.class) != null
-            && parameter.getParameterType().equals(User.class);
+        return parameter.getParameterAnnotation(LoginMember.class) != null
+            && parameter.getParameterType().equals(Member.class);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         if (isTokenPresent(authorizationHeader)) {
             String token = extractToken(authorizationHeader);
             if (jwtUtil.validateToken(token)) {
-                return getUserFromToken(token);
+                return getMemberFromToken(token);
             }
         }
         return null;
@@ -53,8 +53,8 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         return authorizationHeader.substring(7);
     }
 
-    private User getUserFromToken(String token) {
+    private Member getMemberFromToken(String token) {
         String email = jwtUtil.getSubject(token);
-        return userService.findUserByEmail(email);
+        return memberService.findMemberByEmail(email);
     }
 }

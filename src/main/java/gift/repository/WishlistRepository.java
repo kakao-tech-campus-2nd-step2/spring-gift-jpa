@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
-    List<Wishlist> findByUserEmail(String email);
+    List<Wishlist> findByMemberEmail(String email);
 
-    void deleteByUserEmailAndProductId(String email, Long productId);
+    void deleteByMemberEmailAndProductId(String email, Long productId);
 }

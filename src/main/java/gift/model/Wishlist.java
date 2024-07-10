@@ -16,7 +16,7 @@ public class Wishlist {
     private Long id;
 
     @Column(name = "member_id", nullable = false)
-    private String userEmail;
+    private String memberEmail;
 
     @Column(name = "product_id", nullable = false)
     private Long productId;
@@ -24,9 +24,9 @@ public class Wishlist {
     protected Wishlist() {
     }
 
-    public Wishlist(Long id, String userEmail, Long productId) {
+    public Wishlist(Long id, String memberEmail, Long productId) {
         this.id = id;
-        this.userEmail = userEmail;
+        this.memberEmail = memberEmail;
         this.productId = productId;
     }
 
@@ -38,12 +38,12 @@ public class Wishlist {
         this.id = id;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public String getMemberEmail() {
+        return memberEmail;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+    public void setMemberEmail(String memberEmail) {
+        this.memberEmail = memberEmail;
     }
 
     public Long getProductId() {
@@ -58,7 +58,7 @@ public class Wishlist {
     public String toString() {
         return "Wishlist{" +
             "id=" + id +
-            ", userEmail='" + userEmail + '\'' +
+            ", memberEmail='" + memberEmail + '\'' +
             ", productId=" + productId +
             '}';
     }

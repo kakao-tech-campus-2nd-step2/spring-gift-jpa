@@ -3,7 +3,7 @@ package gift.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record UserDTO(
+public record MemberDTO(
     @NotBlank(message = "이름을 입력하세요.")
     String name,
 
