@@ -28,7 +28,7 @@ public class ProductController {
 
     @GetMapping("api/products")
     public List<ProductResponse> getProducts() {
-        return productService.getProducts();
+        return productService.getProductResponses();
     }
 
     @PutMapping("api/products")

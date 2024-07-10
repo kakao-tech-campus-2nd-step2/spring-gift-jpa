@@ -3,10 +3,8 @@ package gift.service;
 import gift.dto.response.WishProductResponse;
 import gift.entity.Product;
 import gift.entity.Wish;
-import gift.exception.ProductNotFoundException;
 import gift.exception.WishAlreadyExistsException;
 import gift.exception.WishNotFoundException;
-import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,11 +16,11 @@ import java.util.Optional;
 public class WishListService {
 
     private final WishRepository wishListRepository;
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    public WishListService(WishRepository wishListRepository, ProductRepository productRepository) {
+    public WishListService(WishRepository wishListRepository, ProductService productService) {
         this.wishListRepository = wishListRepository;
-        this.productRepository = productRepository;
+        this.productService = productService;
     }
 
     @Transactional
@@ -31,8 +29,7 @@ public class WishListService {
         if (existingWish.isPresent()) {
             throw new WishAlreadyExistsException(existingWish.get());
         }
-        Product product = productRepository.findById(productId)
-                .orElseThrow(ProductNotFoundException::new);
+        Product product = productService.getProduct(productId);
         Wish wish = new Wish(memberId, amount, product);
         wishListRepository.save(wish);
     }

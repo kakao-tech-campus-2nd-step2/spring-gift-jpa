@@ -25,13 +25,12 @@ public class ProductService {
         return new AddedProductIdResponse(addedProductId);
     }
 
-    public ProductResponse getProduct(Long productId) {
+    public Product getProduct(Long productId) {
         return productRepository.findById(productId)
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
                 .orElseThrow(ProductNotFoundException::new);
     }
 
-    public List<ProductResponse> getProducts() {
+    public List<ProductResponse> getProductResponses() {
         return productRepository.findAll()
                 .stream()
                 .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))

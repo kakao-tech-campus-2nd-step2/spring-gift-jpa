@@ -24,7 +24,7 @@ public class ProductAdminController {
 
     @GetMapping("/")
     public String getProducts(Model model) {
-        model.addAttribute("products", productService.getProducts());
+        model.addAttribute("products", productService.getProductResponses());
         return "version-SSR/index";
     }
 
