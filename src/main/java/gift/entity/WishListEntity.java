@@ -1,11 +1,14 @@
 package gift.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.Optional;
 
 @Entity
 @Table(name = "wish_lists")
@@ -15,38 +18,41 @@ public class WishListEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @ManyToOne(targetEntity = MemberEntity.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private MemberEntity memberEntity;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @ManyToOne(targetEntity = ProductEntity.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private ProductEntity productEntity;
 
-    public WishListEntity() {
+    public WishListEntity(Optional<MemberEntity> memberEntity,
+        Optional<ProductEntity> productEntity) {
 
     }
 
-    public WishListEntity(Long memberId, Long productId) {
-        this.memberId = memberId;
-        this.productId = productId;
+    public WishListEntity(MemberEntity memberEntity, ProductEntity productEntity) {
+        this.memberEntity = memberEntity;
+        this.productEntity = productEntity;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public MemberEntity getMemberEntity() {
+        return memberEntity;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setMemberId(MemberEntity memberEntity) {
+        this.memberEntity = memberEntity;
     }
 
-    public Long getProductId() {
-        return productId;
+    public ProductEntity getProductEntity() {
+        return productEntity;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProductId(ProductEntity productEntity) {
+        this.productEntity = productEntity;
     }
 }
