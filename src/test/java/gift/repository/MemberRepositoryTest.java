@@ -1,79 +1,80 @@
 package gift.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.model.Member;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.transaction.annotation.Transactional;
 
+@DataJpaTest
+@Transactional
 public class MemberRepositoryTest {
 
-    @Mock
-    private JdbcTemplate jdbcTemplate;
-
-    @InjectMocks
+    @Autowired
     private MemberRepository memberRepository;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     @DisplayName("회원 저장 및 ID로 조회")
     public void testSaveAndFindById() {
         Member member = new Member(null, "test@example.com", "password");
-        Member savedMember = new Member(1L, "test@example.com", "password");
+        Member savedMember = memberRepository.save(member);
+        Optional<Member> foundMember = memberRepository.findById(savedMember.getId());
 
-        when(jdbcTemplate.update(anyString(), anyString(), anyString())).thenReturn(1);
-        when(jdbcTemplate.query(anyString(), any(RowMapper.class), anyLong())).thenReturn(List.of(savedMember));
-
-        memberRepository.create(member);
-        Optional<Member> foundMember = memberRepository.findById(1L);
-
-        assertTrue(foundMember.isPresent());
-        assertEquals("test@example.com", foundMember.get().getEmail());
+        assertThat(foundMember).isPresent();
+        assertThat(foundMember.get().getEmail()).isEqualTo("test@example.com");
     }
 
     @Test
     @DisplayName("모든 회원 조회")
     public void testFindAll() {
-        Member member1 = new Member(1L, "user1@example.com", "password1");
-        Member member2 = new Member(2L, "user2@example.com", "password2");
+        long initialCount = memberRepository.count();
 
-        when(jdbcTemplate.query(anyString(), any(RowMapper.class))).thenReturn(Arrays.asList(member1, member2));
+        Member member1 = new Member(null, "user1@example.com", "password1");
+        Member member2 = new Member(null, "user2@example.com", "password2");
 
-        List<Member> members = memberRepository.findAll();
-        assertEquals(2, members.size());
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        Iterable<Member> members = memberRepository.findAll();
+        assertThat(members).hasSize((int) initialCount + 2);
     }
 
     @Test
     @DisplayName("회원 삭제")
     public void testDelete() {
-        Member member = new Member(1L, "test@example.com", "password");
+        Member member = new Member(null, "test@example.com", "password");
+        Member savedMember = memberRepository.save(member);
 
-        when(jdbcTemplate.update(anyString(), anyLong())).thenReturn(1);
-        when(jdbcTemplate.query(anyString(), any(RowMapper.class), anyLong())).thenReturn(List.of());
+        memberRepository.deleteById(savedMember.getId());
+        Optional<Member> foundMember = memberRepository.findById(savedMember.getId());
 
-        memberRepository.create(member);
-        memberRepository.delete(1L);
+        assertThat(foundMember).isNotPresent();
+    }
 
-        Optional<Member> foundMember = memberRepository.findById(1L);
-        assertFalse(foundMember.isPresent());
+    @Test
+    @DisplayName("이메일로 회원 조회")
+    public void testFindByEmail() {
+        Member member = new Member(null, "test@example.com", "password");
+        memberRepository.save(member);
+
+        Optional<Member> foundMember = memberRepository.findByEmail("test@example.com");
+
+        assertThat(foundMember).isPresent();
+        assertThat(foundMember.get().getEmail()).isEqualTo("test@example.com");
+    }
+
+    @Test
+    @DisplayName("이메일 존재 여부 확인")
+    public void testExistsByEmail() {
+        Member member = new Member(null, "test@example.com", "password");
+        memberRepository.save(member);
+
+        boolean exists = memberRepository.existsByEmail("test@example.com");
+
+        assertThat(exists).isTrue();
     }
 }

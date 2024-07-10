@@ -39,7 +39,7 @@ public class ProductService {
     public ProductResponse addProduct(ProductRequest productDTO) {
         validatePrice(productDTO.price());
         Product product = convertToEntity(productDTO);
-        Product savedProduct = productRepository.create(product);
+        Product savedProduct = productRepository.save(product);
         return convertToDTO(savedProduct);
     }
 
@@ -49,7 +49,7 @@ public class ProductService {
             .orElseThrow(() -> new ProductNotFoundException(PRODUCT_NOT_FOUND + id));
         validatePrice(productDTO.price());
         product.update(productDTO.name(), productDTO.price(), productDTO.imageUrl());
-        Product updatedProduct = productRepository.update(product);
+        Product updatedProduct = productRepository.save(product);
         return convertToDTO(updatedProduct);
     }
 
@@ -57,7 +57,7 @@ public class ProductService {
         if (!productRepository.existsById(id)) {
             throw new ProductNotFoundException(PRODUCT_NOT_FOUND + id);
         }
-        productRepository.delete(id);
+        productRepository.deleteById(id);
     }
 
     private static void validatePrice(int price) {

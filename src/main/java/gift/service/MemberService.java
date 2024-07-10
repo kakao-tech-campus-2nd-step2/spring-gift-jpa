@@ -36,7 +36,7 @@ public class MemberService {
         }
 
         Member member = new Member(null, memberDTO.email(), memberDTO.password());
-        Member savedMember = memberRepository.create(member);
+        Member savedMember = memberRepository.save(member);
 
         String token = jwtUtil.generateToken(savedMember.getId(), member.getEmail());
         return new MemberResponse(savedMember.getId(), savedMember.getEmail(), token);
@@ -53,20 +53,6 @@ public class MemberService {
 
         String token = jwtUtil.generateToken(member.getId(), member.getEmail());
         return new MemberResponse(member.getId(), member.getEmail(), token);
-    }
-
-    // 토큰 검증
-    public void validateToken(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader("Authorization");
-
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            throw new InvalidTokenException(INVALID_AUTHORIZATION_HEADER);
-        }
-
-        String token = authorizationHeader.substring(7);
-        Claims claims = jwtUtil.validateToken(token);
-        Long memberId = claims.get("memberId", Long.class);
-        request.setAttribute("memberId", memberId);
     }
 
     // 모든 회원 조회
@@ -93,7 +79,7 @@ public class MemberService {
         }
 
         member.update(memberDTO.email(), memberDTO.password());
-        Member updatedMember = memberRepository.update(member);
+        Member updatedMember = memberRepository.save(member);
         return convertToDTO(updatedMember);
     }
 
@@ -102,7 +88,7 @@ public class MemberService {
         if (!memberRepository.existsById(id)) {
             throw new ForbiddenException(ID_NOT_FOUND);
         }
-        memberRepository.delete(id);
+        memberRepository.deleteById(id);
     }
 
     // Mapper methods
