@@ -2,7 +2,10 @@ package gift.authentication.token;
 
 public class Token {
 
-    private final String value;
+    private String value;
+
+    private Token() {
+    }
 
     private Token(String value) {
         this.value = value;
