@@ -5,6 +5,7 @@ import gift.domain.Product;
 import gift.exception.InvalidProductDataException;
 import gift.exception.ProductNotFoundException;
 import gift.repository.product.ProductRepository;
+import gift.repository.product.ProductSpringDataJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,10 @@ import java.util.List;
 @Service
 @Transactional()
 public class ProductService {
-    private final ProductRepository productRepository;
+    private final ProductSpringDataJpaRepository productRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository){
+    public ProductService(ProductSpringDataJpaRepository productRepository){
         this.productRepository = productRepository;
     }
 
@@ -42,16 +43,18 @@ public class ProductService {
     }
 
     public Product update(Long productId, ProductRequest productRequest) {
-        try {
-            return productRepository.updateById(productId, productRequest)
-                    .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
-        } catch (DataIntegrityViolationException e) {
-            throw new InvalidProductDataException("상품 데이터가 유효하지 않습니다: " + e.getMessage(), e);
-        }
+        return productRepository.findById(productId).map(product -> {
+            product.setName(productRequest.getName());
+            product.setPrice(productRequest.getPrice());
+            product.setImageUrl(productRequest.getImageUrl());
+            return productRepository.save(product);
+        }).orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
     }
 
     public Product delete(Long productId){
-        return productRepository.deleteById(productId)
+        Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("존재하지 않는 상품입니다."));
+        productRepository.delete(product);
+        return product;
     }
 }

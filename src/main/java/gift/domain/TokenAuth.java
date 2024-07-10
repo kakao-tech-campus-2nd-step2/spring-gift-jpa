@@ -23,4 +23,8 @@ public class TokenAuth {
 
     }
 
+    public String getToken(){
+        return token;
+    }
+
 }
