@@ -3,6 +3,7 @@ package gift.service;
 import gift.dao.MemberDao;
 import gift.model.CreateJwtToken;
 import gift.model.Member;
+import gift.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -18,18 +19,18 @@ import java.util.Optional;
 public class MemberService {
     private final TokenInterceptor tokenInterceptor;
     private final CreateJwtToken createJwtToken;
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public MemberService(TokenInterceptor tokenInterceptor, CreateJwtToken createJwtToken, MemberDao memberDao) {
+    public MemberService(TokenInterceptor tokenInterceptor, CreateJwtToken createJwtToken, MemberRepository memberRepository) {
         this.tokenInterceptor = tokenInterceptor;
         this.createJwtToken = createJwtToken;
-        this.memberDao = memberDao;
+        this.memberRepository = memberRepository;
     }
 
     public String signin(Member member){
-        Optional<Member> memberOptional = Optional.ofNullable(memberDao.selectMember(member.getEmail()));
+        Optional<Member> memberOptional = Optional.ofNullable(memberRepository.findByEmail(member.getEmail()));
         if (!memberOptional.isPresent()) {
-            memberDao.insertMember(member);
+            memberRepository.save(member);
             return createJwtToken.createJwt(member.getId(), member.getEmail());
         }
         else {
@@ -38,11 +39,11 @@ public class MemberService {
     }
 
     public String login(Member member){
-        Optional<Member> memberOptional = Optional.ofNullable(memberDao.selectMember(member.getEmail()));
+        Optional<Member> memberOptional = Optional.ofNullable(memberRepository.findByEmail(member.getEmail()));
         if (!memberOptional.isPresent()) {
             throw new IllegalArgumentException("이메일을 확인해주세요.");
         }
-        Member loginMember = memberDao.selectMember(member.getEmail());
+        Member loginMember = memberRepository.findByEmail(member.getEmail());
 
         if(Objects.equals(member.getPassword(), loginMember.getPassword())){
             return createJwtToken.createJwt(loginMember.getId(), member.getEmail());
@@ -54,10 +55,8 @@ public class MemberService {
 
     // 토큰으로 멤버 id 가져옴
     public Long getIdByToken(HttpServletRequest request) throws AuthenticationException {
-        Long id = 0L;
         Claims claims = tokenInterceptor.getClaims(request);
-        id = claims.get("id", Long.class);
-        return id;
+        return claims.get("id", Long.class);
     }
 
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
