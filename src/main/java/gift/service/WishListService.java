@@ -1,53 +1,58 @@
 package gift.service;
 
-import gift.dto.ProductAmount;
-import gift.repository.WishListRepository;
+import gift.dto.response.WishProductResponse;
+import gift.entity.Product;
+import gift.entity.Wish;
+import gift.exception.WishAlreadyExistsException;
+import gift.exception.WishNotFoundException;
+import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WishListService {
 
-    private final WishListRepository wishListRepository;
+    private final WishRepository wishListRepository;
+    private final ProductService productService;
 
-    public WishListService(WishListRepository wIshListRepository) {
-        this.wishListRepository = wIshListRepository;
+    public WishListService(WishRepository wishListRepository, ProductService productService) {
+        this.wishListRepository = wishListRepository;
+        this.productService = productService;
     }
 
-    public List<ProductAmount> getProductIdsAndAmount(Long memberId) {
-        return wishListRepository.getWishListProductIdsByMemberId(memberId);
-    }
-
-    public boolean addProductToWishList(Long memberId, Long productId, int amount) {
-        boolean isAlreadyExist = isAlreadyExistProduct(memberId, productId);
-        if (isAlreadyExist) {
-            return false;
+    @Transactional
+    public void addProductToWishList(Long memberId, Long productId, int amount) {
+        Optional<Wish> existingWish = wishListRepository.findByMemberIdAndProductId(memberId, productId);
+        if (existingWish.isPresent()) {
+            throw new WishAlreadyExistsException(existingWish.get());
         }
-        wishListRepository.addWishProduct(memberId, productId, amount);
-        return true;
+        Product product = productService.getProduct(productId);
+        Wish wish = new Wish(memberId, amount, product);
+        wishListRepository.save(wish);
     }
 
-    public boolean deleteProductInWishList(Long memberId, Long productId) {
-        boolean isAlreadyExist = isAlreadyExistProduct(memberId, productId);
-        if (!isAlreadyExist) {
-            return false;
-        }
-        wishListRepository.deleteProduct(memberId, productId);
-        return true;
+    @Transactional
+    public void deleteProductInWishList(Long memberId, Long productId) {
+        Wish wish = wishListRepository.findByMemberIdAndProductId(memberId, productId)
+                .orElseThrow(WishNotFoundException::new);
+        wishListRepository.delete(wish);
     }
 
-    public boolean isAlreadyExistProduct(Long memberId, Long productId) {
-        return wishListRepository.isAlreadyExistProduct(memberId, productId);
+    @Transactional
+    public void updateWishProductAmount(Long memberId, Long productId, int amount) {
+        Wish wish = wishListRepository.findByMemberIdAndProductId(memberId, productId)
+                .orElseThrow(WishNotFoundException::new);
+        wish.setAmount(amount);
     }
 
-    public boolean updateWishList(Long memberId, Long productId, int amount) {
-        boolean isAlreadyExist = isAlreadyExistProduct(memberId, productId);
-        if (!isAlreadyExist) {
-            return false;
-        }
-        wishListRepository.updateProductInWishList(memberId, productId, amount);
-        return true;
+    public List<WishProductResponse> getWishProductsByMemberId(Long memberId) {
+        return wishListRepository.findAllByMemberIdWithProduct(memberId)
+                .stream()
+                .map(wish -> new WishProductResponse(wish.getProduct().getId(), wish.getProduct().getName(), wish.getProduct().getPrice(), wish.getProduct().getImageUrl(), wish.getAmount()))
+                .toList();
     }
 
 }

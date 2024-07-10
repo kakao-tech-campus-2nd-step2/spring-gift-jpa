@@ -1,9 +1,13 @@
 package gift.service;
 
-import gift.dto.request.LoginInfoRequest;
-import gift.dto.request.MemberRequest;
+import gift.entity.Member;
+import gift.exception.EmailDuplicateException;
+import gift.exception.MemberNotFoundException;
 import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class MemberService {
@@ -14,17 +18,22 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public Long registerMember(MemberRequest member) {
-        return memberRepository.registerMember(member.getEmail(), member.getPassword());
+    @Transactional
+    public Long registerMember(String email, String password) {
+        Optional<Member> existingMember = memberRepository.findByEmail(email);
+
+        if (existingMember.isPresent()) {
+            throw new EmailDuplicateException(existingMember.get());
+        }
+
+        return memberRepository.save(new Member(email, password)).getId();
     }
 
 
-    public Long loginMember(LoginInfoRequest loginInfo) {
-        return memberRepository.getMemberIdByEmailAndPassword(loginInfo);
-    }
-
-    public boolean hasDuplicatedEmail(String email) {
-        return memberRepository.hasDuplicatedEmail(email);
+    public Long login(String email, String password) {
+        Member registeredMember = memberRepository.findMemberByEmailAndPassword(email, password)
+                .orElseThrow(MemberNotFoundException::new);
+        return registeredMember.getId();
     }
 
 }

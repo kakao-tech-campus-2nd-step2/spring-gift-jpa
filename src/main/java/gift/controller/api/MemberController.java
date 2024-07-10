@@ -1,7 +1,5 @@
-package gift.controller.member;
+package gift.controller.api;
 
-import gift.dto.Token;
-import gift.dto.request.LoginInfoRequest;
 import gift.dto.request.MemberRequest;
 import gift.dto.response.TokenResponse;
 import gift.service.MemberService;
@@ -24,17 +22,17 @@ public class MemberController {
     }
 
     @PostMapping("/members/register")
-    public ResponseEntity<TokenResponse> registerMember(@Valid @RequestBody MemberRequest member) {
-        Long registeredMemberId = memberService.registerMember(member);
-        Token newToken = tokenService.generateToken(registeredMemberId);
-        return ResponseEntity.ok(new TokenResponse(newToken.getValue()));
+    public ResponseEntity<TokenResponse> registerMember(@Valid @RequestBody MemberRequest request) {
+        Long registeredMemberId = memberService.registerMember(request.email(), request.password());
+        TokenResponse token = tokenService.generateToken(registeredMemberId);
+        return ResponseEntity.ok(token);
     }
 
     @PostMapping("/members/login")
-    public ResponseEntity<TokenResponse> loginMember(@Valid @RequestBody LoginInfoRequest loginInfo) {
-        Long registeredMemberId = memberService.loginMember(loginInfo);
-        Token token = tokenService.generateToken(registeredMemberId);
-        return ResponseEntity.ok(new TokenResponse(token.getValue()));
+    public ResponseEntity<TokenResponse> loginMember(@Valid @RequestBody MemberRequest request) {
+        Long registeredMemberId = memberService.login(request.email(), request.password());
+        TokenResponse token = tokenService.generateToken(registeredMemberId);
+        return ResponseEntity.ok(token);
     }
 
 }

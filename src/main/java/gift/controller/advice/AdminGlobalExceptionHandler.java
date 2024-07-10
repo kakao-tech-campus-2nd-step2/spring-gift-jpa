@@ -1,4 +1,4 @@
-package gift.controller.admin;
+package gift.controller.advice;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.FieldError;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
 
-@ControllerAdvice(basePackageClasses = ProductAdminController.class)
+@ControllerAdvice(basePackages = "gift.controller.admin")
 public class AdminGlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

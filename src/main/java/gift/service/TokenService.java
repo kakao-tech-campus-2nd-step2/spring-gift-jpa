@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dto.Token;
+import gift.dto.response.TokenResponse;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Service;
@@ -11,23 +11,23 @@ import java.util.Date;
 @Service
 public class TokenService {
 
-    private final static SecretKey key = Jwts.SIG.HS256.key().build();
-    private final static int jwtExpirationInMs = 7200000; // 2hour
+    private final static SecretKey KEY = Jwts.SIG.HS256.key().build();
+    private final static int JWT_EXPIRATION_IN_MS = 1000 * 60 * 60 * 2;
 
-    public Token generateToken(Long registeredMemberId) {
+    public TokenResponse generateToken(Long registeredMemberId) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION_IN_MS);
         String tokenValue = Jwts.builder()
                 .claim("memberId", registeredMemberId)
                 .expiration(expiryDate)
-                .signWith(key)
+                .signWith(KEY)
                 .compact();
-        return new Token(tokenValue);
+        return new TokenResponse(tokenValue);
     }
 
     public Long getMemberIdByToken(String tokenValue) {
         String resultOfString = Jwts.parser()
-                .verifyWith(key)
+                .verifyWith(KEY)
                 .build()
                 .parseSignedClaims(tokenValue)
                 .getPayload()
@@ -39,7 +39,7 @@ public class TokenService {
     public boolean isValidateToken(String tokenValue) {
         try {
             Jwts.parser()
-                    .verifyWith(key)
+                    .verifyWith(KEY)
                     .build()
                     .parseSignedClaims(tokenValue);
             return true;

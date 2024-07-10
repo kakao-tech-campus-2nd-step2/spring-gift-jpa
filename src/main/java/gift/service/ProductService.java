@@ -1,8 +1,12 @@
 package gift.service;
 
-import gift.dto.Product;
+import gift.dto.response.AddedProductIdResponse;
+import gift.dto.response.ProductResponse;
+import gift.entity.Product;
+import gift.exception.ProductNotFoundException;
 import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,24 +19,44 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getProducts() {
-        return productRepository.getProducts();
-    }
-
-    public Long addProduct(Product product) {
-        return productRepository.addProduct(product);
-    }
-
-    public boolean updateProduct(Product product) {
-        return productRepository.updateProduct(product);
-    }
-
-    public boolean deleteProduct(Long id) {
-        return productRepository.deleteProduct(id);
+    @Transactional
+    public AddedProductIdResponse addProduct(String name, int price, String imageUrl) {
+        Long addedProductId = productRepository.save(new Product(name, price, imageUrl)).getId();
+        return new AddedProductIdResponse(addedProductId);
     }
 
     public Product getProduct(Long productId) {
-        return productRepository.getProduct(productId);
+        return productRepository.findById(productId)
+                .orElseThrow(ProductNotFoundException::new);
+    }
+
+    public List<ProductResponse> getProductResponses() {
+        return productRepository.findAll()
+                .stream()
+                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
+                .toList();
+    }
+
+    @Transactional
+    public void updateProduct(Long id, String name, int price, String imageUrl) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
+
+        product.setName(name);
+        product.setPrice(price);
+        product.setImageUrl(imageUrl);
+    }
+
+    @Transactional
+    public void deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
+        productRepository.delete(product);
+    }
+
+    @Transactional
+    public void deleteProducts(List<Long> ids) {
+        productRepository.deleteAllById(ids);
     }
 
 }
