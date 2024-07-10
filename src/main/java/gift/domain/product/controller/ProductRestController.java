@@ -54,9 +54,7 @@ public class ProductRestController {
         Product product = productJpaRepository.findById(productId)
             .orElseThrow(() -> new InvalidProductInfoException("error.invalid.product.id"));
 
-        product.setName(productDto.name());
-        product.setPrice(productDto.price());
-        product.setImageUrl(productDto.imageUrl());
+        product.updateInfo(productDto.name(), productDto.price(), productDto.imageUrl());
 
         Product updatedProduct = productJpaRepository.save(product);
 
