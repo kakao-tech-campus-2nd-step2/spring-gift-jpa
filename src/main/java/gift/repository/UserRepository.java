@@ -16,7 +16,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     List<User> findAll();
     /*
-     * User 정보를 email을 기준으로 DB에서 찾아와 반환
+     * User 정보를 userId를 기준으로 DB에서 찾아와 반환
      */
     User findByUserId(String userId);
+    /*
+     * User 정보를 userId를 기준으로 DB에서 삭제
+     */
+    void deleteByUserId(String userId);
 }

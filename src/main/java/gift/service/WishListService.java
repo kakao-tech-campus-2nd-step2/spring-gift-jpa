@@ -25,7 +25,7 @@ public class WishListService {
 
         if(wishListRepository.existsByUserIdAndProductId(userId, productId)){
             WishProduct wishProduct = wishListRepository.findByUserIdAndProductId(userId, productId);
-            wishProduct.setCount(wishProduct.getCount() + 1);
+            wishProduct.changeCount(wishProduct.getCount() + 1);
             wishListRepository.save(wishProduct);
             return;
         }
@@ -56,7 +56,7 @@ public class WishListService {
      */
     public void updateWishProduct(String userId, Long productId, int count){
         WishProduct wish = wishListRepository.findByUserIdAndProductId(userId, productId);
-        wish.setCount(count);
+        wish.changeCount(count);
         wishListRepository.save(wish);
     }
     /*

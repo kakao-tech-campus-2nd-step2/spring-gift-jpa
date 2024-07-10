@@ -38,24 +38,19 @@ public class ProductService {
      * DB에 저장된 Product를 ID를 기준으로 찾아 반환
      */
     public ProductDTO loadOneProduct(Long id){
-        Optional<Product> byId = productRepository.findById(id);
-        if(byId.isPresent()) {
-            Product product = byId.get();
-            return new ProductDTO(
-                    product.getId(),
-                    product.getName(),
-                    product.getPrice(),
-                    product.getImageUrl()
-            );
-        }
-        throw new NullPointerException("해당 id를 가진 객체는 존재하지 않습니다");
+        Product product = productRepository.findById(id).orElseThrow(NoSuchFieldError::new);
+        return new ProductDTO(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl()
+        );
     }
     /*
      * 객체를 전달받아 DB에 저장
      */
     public void createProduct(ProductDTO product){
         Product productEntity = new Product(
-                product.getId(),
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl()

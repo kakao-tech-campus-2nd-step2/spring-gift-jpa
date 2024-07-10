@@ -16,7 +16,7 @@ public class ProductRepositoryTest {
 
     @Test
     void save(){
-        Product expected = new Product(100L, "name", 4500, "none");
+        Product expected = new Product("name", 4500, "none");
         Product actual = productRepository.save(expected);
         assertAll(
                 () -> assertThat(actual.getId()).isNotNull(),
@@ -27,7 +27,7 @@ public class ProductRepositoryTest {
     @Test
     void findByName() {
         String name = "잠실역";
-        productRepository.save(new Product(1L, name, 4500, "none"));
+        productRepository.save(new Product( name, 4500, "none"));
         String actual = productRepository.findByName(name).get().getName();
         assertThat(actual).isEqualTo(name);
     }

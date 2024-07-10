@@ -27,4 +27,14 @@ public class PageController {
     public String wishList(){
         return "wishList.html";
     }
+
+    @GetMapping("/adminProducts")
+    public String manageProduct(){
+        return "adminProduct.html";
+    }
+
+    @GetMapping("/adminUsers")
+    public String manageUser(){
+        return "adminUser.html";
+    }
 }

@@ -15,7 +15,7 @@ public class WishProduct {
     @Column(nullable = false)
     int count;
 
-    public WishProduct(){
+    protected WishProduct(){
 
     }
 
@@ -35,7 +35,10 @@ public class WishProduct {
     public int getCount(){
         return count;
     }
-    public void setCount(int count){
+    public void changeCount(int count){
+        if (count < 0) {
+            count = 0;
+        }
         this.count = count;
     }
 }

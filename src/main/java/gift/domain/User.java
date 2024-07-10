@@ -17,8 +17,10 @@ public class User {
     String email;
     @Column(nullable = false)
     String password;
+    @Column(nullable = false)
+    Boolean admin;
 
-    public User(){
+    protected User(){
 
     }
 
@@ -26,6 +28,7 @@ public class User {
         this.userId = userId;
         this.email = email;
         this.password = password;
+        this.admin = false;
     }
 
     public String getUserId(){
@@ -44,5 +47,13 @@ public class User {
     }
     public void setPassword(String password){
         this.password = password;
+    }
+
+    public Boolean getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
     }
 }

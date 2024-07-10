@@ -77,4 +77,10 @@ public class UserService {
         }
         return false;
     }
+    /*
+     * user 정보를 삭제하는 로직
+     */
+    public void delete(String userId){
+        userRepository.deleteByUserId(userId);
+    }
 }
