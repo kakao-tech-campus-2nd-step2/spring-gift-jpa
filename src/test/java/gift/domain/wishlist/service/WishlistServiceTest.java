@@ -5,12 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 
-import gift.domain.product.dao.ProductDao;
+import gift.domain.product.dao.ProductJpaRepository;
 import gift.domain.product.entity.Product;
 import gift.domain.user.entity.Role;
 import gift.domain.user.entity.User;
-import gift.domain.wishlist.dao.WishlistDao;
+import gift.domain.wishlist.dao.WishlistJpaRepository;
 import gift.domain.wishlist.dto.WishItemDto;
 import gift.domain.wishlist.entity.WishItem;
 import gift.exception.InvalidProductInfoException;
@@ -31,10 +32,10 @@ class WishlistServiceTest {
     private WishlistService wishlistService;
 
     @MockBean
-    private WishlistDao wishlistDao;
+    private WishlistJpaRepository wishlistJpaRepository;
 
     @MockBean
-    private ProductDao productDao;
+    private ProductJpaRepository productJpaRepository;
 
 
     private static final User user = new User(1L, "testUser", "test@test.com", "test123", Role.USER);
@@ -46,11 +47,11 @@ class WishlistServiceTest {
     void create_success() {
         // given
         WishItemDto wishItemDto = new WishItemDto(null, 1L);
-        given(productDao.findById(anyLong())).willReturn(Optional.of(product));
+        given(productJpaRepository.findById(anyLong())).willReturn(Optional.of(product));
 
-        WishItem wishItem = wishItemDto.toWishItem(user, product);
+        WishItem wishItem = wishItemDto.toWishItem(product.getId());
         wishItem.setId(1L);
-        given(wishlistDao.insert(any(WishItem.class))).willReturn(wishItem);
+        given(wishlistJpaRepository.save(any(WishItem.class))).willReturn(wishItem);
 
         // when
         WishItem savedWishItem = wishlistService.create(wishItemDto, user);
@@ -69,7 +70,7 @@ class WishlistServiceTest {
     void create_fail_product_id_error() {
         // given
         WishItemDto wishItemDto = new WishItemDto(null, 2L);
-        given(productDao.findById(anyLong())).willReturn(Optional.empty());
+        given(productJpaRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when & then
         assertThatThrownBy(() -> wishlistService.create(wishItemDto, user))
@@ -84,11 +85,11 @@ class WishlistServiceTest {
         Product product2 = new Product(2L, "아이스 카페 라떼 T", 4500, "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg");
 
         List<WishItem> wishItemList = List.of(
-            new WishItem(1L, user, product),
-            new WishItem(2L, user, product2)
+            new WishItem(1L, user.getId(), product.getId()),
+            new WishItem(2L, user.getId(), product2.getId())
         );
 
-        given(wishlistDao.findAll(user)).willReturn(wishItemList);
+        given(wishlistJpaRepository.findAllByUserId(user.getId())).willReturn(wishItemList);
 
         // when
         List<WishItem> wishItems = wishlistService.readAll(user);
@@ -104,17 +105,23 @@ class WishlistServiceTest {
     @DisplayName("위시리스트 삭제 성공")
     void delete_success() {
         // given
-        given(wishlistDao.delete(anyLong())).willReturn(1);
+        WishItem wishItem = new WishItem(1L, user.getId(), product.getId());
+        given(wishlistJpaRepository.findById(anyLong())).willReturn(Optional.of(wishItem));
+        willDoNothing().given(wishlistJpaRepository).delete(any(WishItem.class));
 
-        // when & then
+        // when
         wishlistService.delete(1L);
+
+        // then
+        List<WishItem> wishItemList = wishlistService.readAll(user);
+        assertThat(wishItemList).isEmpty();
     }
 
     @Test
     @DisplayName("위시리스트 삭제 실패 - 존재하지 않는 항목 ID")
     void delete_fail_id_error() {
         // given
-        given(wishlistDao.delete(anyLong())).willReturn(0);
+        given(wishlistJpaRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when & then
         assertThatThrownBy(() -> wishlistService.delete(2L))

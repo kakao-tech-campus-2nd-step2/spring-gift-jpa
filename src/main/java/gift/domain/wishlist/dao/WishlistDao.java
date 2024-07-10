@@ -47,7 +47,7 @@ public class WishlistDao {
             .stream()
             .map(wishItemDto -> {
                 Product product = productDao.findById(wishItemDto.productId()).orElse(null);
-                return wishItemDto.toWishItem(user, product);
+                return wishItemDto.toWishItem(product.getId());
             }).toList();
     }
 
