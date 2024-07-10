@@ -4,7 +4,10 @@ import java.util.List;
 
 public class ReadAllWishProductsResponse {
 
-    private final List<ReadWishProductResponse> wishlist;
+    private List<ReadWishProductResponse> wishlist;
+
+    private ReadAllWishProductsResponse() {
+    }
 
     public ReadAllWishProductsResponse(List<ReadWishProductResponse> wishlist) {
         this.wishlist = wishlist;
