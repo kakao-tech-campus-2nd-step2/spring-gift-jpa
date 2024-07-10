@@ -35,4 +35,14 @@ public class MemberRepositoryTest {
         assertThat(actual.isPresent()).isTrue();
     }
 
+    @Test
+    void exists(){
+        String email = "test200@gmail.com";
+        String password = "test";
+        Member expected = new Member(email,password);
+        memberRepository.save(expected);
+        boolean result = memberRepository.existsByEmail(email);
+        assertThat(result).isTrue();
+    }
+
 }
