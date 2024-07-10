@@ -22,45 +22,54 @@ class WishlistJpaDaoTest {
     @Autowired
     WishlistJpaDao wishlistJpaDao;
 
+
+    Wishlist generateWishlist() {
+        Member member = new Member("sgoh", "pass");
+        Product product = new Product(1L, "coffee", 4500L, "http");
+        Wishlist wishlist = new Wishlist(member, product);
+
+        member.getWishlist().add(wishlist);
+        product.getWishlist().add(wishlist);
+        memberJpaDao.save(member);
+        productJpaDao.save(product);
+
+        return wishlist;
+    }
+
     @Test
     @DisplayName("위시리스트에 상품 추가 테스트")
     void save() {
-        Wishlist wish = wishlistJpaDao.save(new Wishlist("sgoh", 1L));
+        Wishlist wish = wishlistJpaDao.save(generateWishlist());
         assertThat(wish).isNotNull();
     }
 
     @Test
     @DisplayName("이메일과 상품ID로 조회 테스트")
     void findByEmailAndProductId() {
-        wishlistJpaDao.save(new Wishlist("sgoh", 1L));
+        Wishlist wishlist = generateWishlist();
+        wishlistJpaDao.save(wishlist);
 
         Assertions.assertDoesNotThrow(() -> {
-            wishlistJpaDao.findByWishlist(new Wishlist("sgoh", 1L)).get();
-//            wishlistJpaDao.findByEmailAndProductId("sgoh", 1L).get();
+            wishlistJpaDao.findByWishlist(wishlist);
         });
     }
 
     @Test
     @DisplayName("이메일로 위시리스트 목록 조회 테스트")
     void findWishlistByEmail() {
-        memberJpaDao.save(new Member("sgoh", "hello"));
-        productJpaDao.save(new Product(1L, "아메리카노", 4500, "https://"));
-        productJpaDao.save(new Product(2L, "티", 9000, "https://"));
-        wishlistJpaDao.save(new Wishlist("sgoh", 1L));
-        wishlistJpaDao.save(new Wishlist("sgoh", 2L));
+        wishlistJpaDao.save(generateWishlist());
 
-        List<Product> wishlist = wishlistJpaDao.findAllWishlistByEmail("sgoh");
-        assertThat(wishlist.size()).isEqualTo(2);
+        List<Wishlist> wishlists = memberJpaDao.findByEmail("sgoh").get().getWishlist();
+        assertThat(wishlists.size()).isEqualTo(1);
     }
 
     @Test
     @DisplayName("이메일과 상품ID로 위시리스트 상품 삭제 테스트")
     void deleteByEmailAndProductId() {
-        wishlistJpaDao.save(new Wishlist("sgoh", 1L));
-        wishlistJpaDao.save(new Wishlist("sgoh", 2L));
+        Wishlist wishlist = generateWishlist();
+        wishlistJpaDao.save(wishlist);
 
-//        wishlistJpaDao.deleteByEmailAndProductId("sgoh", 1L);
-        wishlistJpaDao.deleteByWishlist(new Wishlist("sgoh", 1L));
-        assertThat(wishlistJpaDao.findAll().size()).isEqualTo(1);
+        wishlistJpaDao.deleteByWishlist(wishlist);
+        assertThat(wishlistJpaDao.findAll().size()).isZero();
     }
 }

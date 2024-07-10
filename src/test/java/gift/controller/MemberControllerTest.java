@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -78,16 +79,23 @@ class MemberControllerTest {
         String product = """
             {"id": 10,"name": "커피", "price": 5500,"imageUrl": "https://..."}
             """;
+        String product2 = """
+            {"id": 11,"name": "커피", "price": 5500,"imageUrl": "https://..."}
+            """;
         registerMember(member);
         addProduct(product);
+        addProduct(product2);
         String token = loginAndGetToken(member);
 
         mockMvc.perform(post("/api/members/wishlist/10")
             .header("Authorization", "Bearer " + token));
+        mockMvc.perform(post("/api/members/wishlist/11")
+            .header("Authorization", "Bearer " + token));
 
         mockMvc.perform(get("/api/members/wishlist")
                 .header("Authorization", "Bearer " + token))
-            .andExpect(jsonPath("$", hasSize(1)));
+            .andExpect(jsonPath("$", hasSize(2)))
+            .andDo(print());
     }
 
     @Test
@@ -96,7 +104,11 @@ class MemberControllerTest {
         String member = """
             {"email": "sgoh", "password": "sgohpass"}
             """;
+        String product = """
+            {"id": 10,"name": "커피", "price": 5500,"imageUrl": "https://..."}
+            """;
         registerMember(member);
+        addProduct(product);
         String token = loginAndGetToken(member);
 
         mockMvc.perform(post("/api/members/wishlist/10")
