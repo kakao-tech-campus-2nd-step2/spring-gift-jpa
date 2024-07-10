@@ -20,12 +20,14 @@ public class ProductRepositoryTest {
 
     private Product expected;
     private Product actual;
+    private Product updateProduct;
     private long notExistId;
 
     @BeforeEach
     void setUp(){
         expected = new Product("testName", 1, "testUrl");
         actual = productRepository.save(expected);
+        updateProduct = new Product("updateName", 1, "testUrl");
         notExistId = 1000L;
     }
 
@@ -57,17 +59,15 @@ public class ProductRepositoryTest {
     @Test
     void update() {
 
-        String updateName = "update name";
-
         Product product = productRepository.findById(expected.getId()).orElseThrow();
-        product.setName(updateName);
-        productRepository.save(product);
+        productRepository.delete(product);
+        productRepository.save(updateProduct);
 
-        Optional<Product> updatedProduct = productRepository.findById(expected.getId());
+        Optional<Product> updatedProduct = productRepository.findById(updateProduct.getId());
 
         assertAll(
             () -> assertThat(updatedProduct).isPresent(),
-            () -> assertThat(updatedProduct.get().getName()).isEqualTo(updateName)
+            () -> assertThat(updatedProduct.get().getName()).isEqualTo("updateName")
         );
     }
 

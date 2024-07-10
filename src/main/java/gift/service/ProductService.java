@@ -55,10 +55,8 @@ public class ProductService{
         Optional<Product> optionalProduct = productRepository.findById(productDto.getId());
 
         if (optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
-            product.setName(productDto.getName());
-            product.setPrice(productDto.getPrice());
-            product.setImageUrl(productDto.getImageUrl());
+            Product product = productDto.toEntity();
+            productRepository.delete(optionalProduct.get());
             productRepository.save(product);
         }else{
             throw new CustomException("Product with id " + productDto.getId() + " not found", HttpStatus.NOT_FOUND);
