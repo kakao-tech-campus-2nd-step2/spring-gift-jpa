@@ -15,7 +15,7 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(readOnly = true)
 public class AuthService {
 
     private final AuthRepository authRepository;
@@ -27,6 +27,7 @@ public class AuthService {
         this.authRepository = authRepository;
     }
 
+    @Transactional
     public void register(MemberDto memberDto) {
         validateMemberExist(memberDto);
 

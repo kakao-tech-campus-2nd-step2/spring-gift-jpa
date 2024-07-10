@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -25,12 +25,14 @@ public class ProductService {
         return getValidatedProduct(id);
     }
 
+    @Transactional
     public Product insertProduct(ProductDto productDto) {
         Product product = new Product(productDto.name(), productDto.price(), productDto.imageUrl());
 
         return productRepository.save(product);
     }
 
+    @Transactional
     public Product updateProduct(Long id, ProductDto productDTO) {
         getValidatedProduct(id);
 
@@ -40,6 +42,7 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    @Transactional
     public void deleteProduct(Long id) {
         getValidatedProduct(id);
         productRepository.deleteById(id);

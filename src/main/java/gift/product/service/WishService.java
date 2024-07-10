@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(readOnly = true)
 public class WishService {
 
     private final WishRepository wishRepository;
@@ -28,6 +28,7 @@ public class WishService {
         return getValidatedWish(id, loginMember);
     }
 
+    @Transactional
     public Wish insertWish(WishDto wishDto, LoginMember loginMember) {
         productService.getProduct(wishDto.productId());
 
@@ -37,6 +38,7 @@ public class WishService {
         return wish;
     }
 
+    @Transactional
     public void deleteWish(Long id, LoginMember loginMember) {
         getValidatedWish(id, loginMember);
         wishRepository.deleteById(id);
