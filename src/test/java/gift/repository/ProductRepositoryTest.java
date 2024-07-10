@@ -30,7 +30,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    @DisplayName("ProductDao의 insertProduct 메서드에 대응")
+    @DisplayName("상품 추가")
     void save() {
         Product expected = new Product("커피", 10000,
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
@@ -44,7 +44,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    @DisplayName("ProductDao의 selectProduct 메서드에 대응")
+    @DisplayName("상품 조회")
     void findAll(){
         Product product1 = new Product("커피1", 10000,
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
@@ -59,7 +59,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    @DisplayName("ProductDao의 selectOneProduct에 대응")
+    @DisplayName("상품 하나 조회")
     void findOne(){
         Product product1 = new Product("커피1", 10000,
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
@@ -75,7 +75,7 @@ class ProductRepositoryTest {
     }
 
     @Test
-    @DisplayName("ProductDao의 updateProduct에 대응, 변경감지")
+    @DisplayName("상품 수정")
     void update(){
         Product product1 = new Product("커피1", 10000,
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");

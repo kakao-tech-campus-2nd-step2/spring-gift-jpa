@@ -29,7 +29,7 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("UserDao의 insertUser 메서드에 대응")
+    @DisplayName("회원가입")
     void save() {
         Member expected = new Member("12345@12345.com", "1", "홍길동", "default_user", new ArrayList<>());
         Member actual = memberRepository.save(expected);
@@ -45,7 +45,7 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("모든 유저 불러오는 신규 메서드")
+    @DisplayName("모든 유저 불러오기")
     void findAll(){
         memberRepository.save(new Member("12345@12345.com", "1", "홍길동", "default_user", new ArrayList<>()));
         memberRepository.save(new Member("22345@12345.com", "2", "홍길동", "default_user", new ArrayList<>()));
@@ -65,7 +65,7 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("UserDao의 countUser 메서드에 대응")
+    @DisplayName("조건에 맞는 유저 수 세기 (db 무결성 검증용)")
     void countByEmail(){
         memberRepository.save(new Member("12345@12345.com", "1", "홍길동", "default_user", new ArrayList<>()));
         memberRepository.save(new Member("22345@12345.com", "2", "홍길동", "default_user", new ArrayList<>()));
@@ -73,7 +73,7 @@ class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("UserDao의 getUser 메서드에 대응")
+    @DisplayName("이메일로 한명 찾기")
     void findOne(){
         memberRepository.save(new Member("12345@12345.com", "1", "홍길동", "default_user", new ArrayList<>()));
         memberRepository.save(new Member("22345@12345.com", "2", "홍길동", "default_user", new ArrayList<>()));

@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -51,6 +52,7 @@ class WishRepositoryTest {
     }
 
     @Test
+    @DisplayName("위시리스트 추가")
     void save(){
         Wish wish = member.addWish(product);
         Wish actualWish = wishRepository.save(wish);
@@ -65,6 +67,7 @@ class WishRepositoryTest {
     }
 
     @Test
+    @DisplayName("위시리스트 개수 수정")
     void updateQuantity(){
         Wish wish = member.addWish(product);
         wish.setQuantity(3);
@@ -79,6 +82,7 @@ class WishRepositoryTest {
     }
 
     @Test
+    @DisplayName("위시리스트 제거")
     void delete(){
         Wish wish = member.addWish(product);
         wishRepository.save(wish);
