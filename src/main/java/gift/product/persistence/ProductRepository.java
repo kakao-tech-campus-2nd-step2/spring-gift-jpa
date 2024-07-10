@@ -1,8 +1,9 @@
 package gift.product.persistence;
 
-import gift.common.persistence.RepositoryInterface;
 import gift.product.domain.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ProductRepository extends RepositoryInterface<Product, Long> {
-
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long> {
 }

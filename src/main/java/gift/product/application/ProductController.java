@@ -59,7 +59,7 @@ public class ProductController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductDetails(@PathVariable("id") Long id) {
-        Product foundProduct = productRepository.find(id)
+        Product foundProduct = productRepository.findById(id)
                 .orElseThrow(() -> ProductNotFoundException.of(id));
 
         ProductResponse response = ProductResponse.fromModel(foundProduct);
@@ -86,7 +86,7 @@ public class ProductController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void modifyProduct(@PathVariable("id") Long id, @RequestBody @Valid ProductRequest modifyProduct) {
-        Product foundProduct = productRepository.find(id)
+        Product foundProduct = productRepository.findById(id)
                 .orElseThrow(() -> ProductNotFoundException.of(id));
 
         productRepository.save(modifyProduct.toModel(id));
@@ -100,7 +100,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteProduct(@PathVariable("id") Long id) {
-        Product foundProduct = productRepository.find(id)
+        Product foundProduct = productRepository.findById(id)
                 .orElseThrow(() -> ProductNotFoundException.of(id));
 
         foundProduct.delete();

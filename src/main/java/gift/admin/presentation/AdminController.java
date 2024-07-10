@@ -35,7 +35,7 @@ public class AdminController {
 
     @GetMapping("/products/{id}")
     public String showEditProductForm(@PathVariable("id") Long id, Model model) {
-        Product product = productRepository.find(id)
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> ProductNotFoundException.of(id));
 
         model.addAttribute("product", product);
@@ -52,7 +52,7 @@ public class AdminController {
 
     @PatchMapping("/products/{id}")
     public String modifyProduct(@PathVariable("id") Long id, @RequestBody ProductRequest modifyProduct) {
-        Product findedProduct = productRepository.find(id)
+        Product findedProduct = productRepository.findById(id)
                 .orElseThrow(() -> ProductNotFoundException.of(id));
 
         productRepository.save(modifyProduct.toModel(id));
@@ -62,7 +62,7 @@ public class AdminController {
 
     @DeleteMapping("/products/{id}")
     public String deleteProduct(@PathVariable("id") Long id) {
-        Product findedProduct = productRepository.find(id)
+        Product findedProduct = productRepository.findById(id)
                 .orElseThrow(() -> ProductNotFoundException.of(id));
 
         findedProduct.delete();

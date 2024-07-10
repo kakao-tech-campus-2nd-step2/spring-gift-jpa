@@ -23,7 +23,7 @@ public class WishService {
     }
 
     public void saveWish(WishRequest wishRequest, final Long userId) {
-        Product product = productRepository.find(wishRequest.productId())
+        Product product = productRepository.findById(wishRequest.productId())
                 .orElseThrow(() -> ProductNotFoundException.of(wishRequest.productId()));
 
         Wish wish = wishRequest.toModel(userId);
