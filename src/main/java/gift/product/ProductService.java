@@ -20,7 +20,6 @@ public class ProductService {
 
     public HttpStatus updateProduct(Product changeProduct) {
         productRepository.save(changeProduct);
-
         return HttpStatus.OK;
     }
 
