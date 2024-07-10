@@ -1,9 +1,8 @@
 package gift.domain.product.controller;
 
-import gift.domain.product.dao.ProductJpaRepository;
 import gift.domain.product.dto.ProductDto;
 import gift.domain.product.entity.Product;
-import gift.exception.InvalidProductInfoException;
+import gift.domain.product.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -21,52 +20,41 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 public class ProductRestController {
 
-    private final ProductJpaRepository productJpaRepository;
+    private final ProductService productService;
 
-    public ProductRestController(ProductJpaRepository productJpaRepository) {
-        this.productJpaRepository = productJpaRepository;
+    public ProductRestController(ProductService productService) {
+        this.productService = productService;
     }
 
     @PostMapping
     public ResponseEntity<Product> create(@RequestBody @Valid ProductDto productDto) {
-        Product product = productDto.toProduct();
-        Product savedProduct = productJpaRepository.save(product);
+        Product savedProduct = productService.create(productDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
     }
 
     @GetMapping
     public ResponseEntity<List<Product>> readAll() {
-        List<Product> productList = productJpaRepository.findAll();
+        List<Product> productList = productService.readAll();
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
 
     @GetMapping("/{productId}")
     public ResponseEntity<Product> readById(@PathVariable("productId") long productId) {
-        Product product = productJpaRepository.findById(productId)
-            .orElseThrow(() -> new InvalidProductInfoException("error.invalid.product.id"));
-
+        Product product = productService.readById(productId);
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @PutMapping("/{productId}")
     public ResponseEntity<Product> update(@PathVariable("productId") long productId, @RequestBody @Valid ProductDto productDto) {
-        Product product = productJpaRepository.findById(productId)
-            .orElseThrow(() -> new InvalidProductInfoException("error.invalid.product.id"));
-
-        product.updateInfo(productDto.name(), productDto.price(), productDto.imageUrl());
-
-        Product updatedProduct = productJpaRepository.save(product);
+        Product updatedProduct = productService.update(productId, productDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> delete(@PathVariable("productId") long productId) {
-        Product product = productJpaRepository.findById(productId)
-            .orElseThrow(() -> new InvalidProductInfoException("error.invalid.product.id"));
-
-        productJpaRepository.delete(product);
+        productService.delete(productId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
