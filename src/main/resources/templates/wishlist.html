@@ -18,9 +18,9 @@
   </thead>
   <tbody>
   <tr th:each="wishlist : ${wishlists}">
-    <td th:text="${wishlist.userId}"></td>
-    <td th:text="${wishlist.productId}"></td>
-    <td th:text="${wishlist.productName}"></td>
+    <td th:text="${wishlist.user.id}"></td>
+    <td th:text="${wishlist.product.id}"></td>
+    <td th:text="${wishlist.product.name}"></td>
     <td th:text="${wishlist.amount}"></td>
   </tr>
   </tbody>
