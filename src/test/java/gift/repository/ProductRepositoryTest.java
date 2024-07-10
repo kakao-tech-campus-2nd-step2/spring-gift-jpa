@@ -13,13 +13,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 public class ProductRepositoryTest {
+
     @Autowired
     private ProductRepository productRepository;
 
 
     @Test
     @DisplayName("아이디로 찾기 테스트")
-    void findById(){
+    void findById() {
         Product product = new Product("kakao", 1000, "img");
         Product savedProduct = productRepository.save(product);
 
@@ -34,7 +35,7 @@ public class ProductRepositoryTest {
 
     @Test
     @DisplayName("전체 상품 테스트")
-    void findALL(){
+    void findALL() {
         Product product1 = new Product("kakao", 1000, "img1");
         Product product2 = new Product("pnu", 2000, "img2");
         Product product3 = new Product("uni", 3000, "img3");
@@ -45,9 +46,12 @@ public class ProductRepositoryTest {
 
         assertThat(all).isNotNull();
         assertThat(all).hasSize(3);
-        assertThat(all).extracting(Product::getName).containsExactlyInAnyOrder("kakao", "pnu", "uni");
-        assertThat(all).extracting(Product::getPrice).containsExactlyInAnyOrder(1000.0, 2000.0, 3000.0);
-        assertThat(all).extracting(Product::getImageUrl).containsExactlyInAnyOrder("img1", "img2", "img3");
+        assertThat(all).extracting(Product::getName)
+            .containsExactlyInAnyOrder("kakao", "pnu", "uni");
+        assertThat(all).extracting(Product::getPrice)
+            .containsExactlyInAnyOrder(1000.0, 2000.0, 3000.0);
+        assertThat(all).extracting(Product::getImageUrl)
+            .containsExactlyInAnyOrder("img1", "img2", "img3");
     }
 
     @Test

@@ -34,8 +34,8 @@ public class WishService {
             () -> new ProductNotFoundException("Product Not Found")
         );
         UserInfo byEmail = userInfoRepository.findByEmail(email).orElseThrow(
-            ()-> new UserNotFoundException("User Not Found"));
-        Wish wish = new Wish(product,byEmail,wishRequestDTO.getQuantity());
+            () -> new UserNotFoundException("User Not Found"));
+        Wish wish = new Wish(product, byEmail, wishRequestDTO.getQuantity());
         try {
             wishRepository.save(wish);
             return true;
@@ -50,7 +50,7 @@ public class WishService {
             () -> new UserNotFoundException("User Not Found")
         );
         try {
-            wishRepository.deleteByProduct_IdAndUserInfo_Id(productId,userInfo.getId());
+            wishRepository.deleteByProduct_IdAndUserInfo_Id(productId, userInfo.getId());
             return true;
         } catch (Exception e) {
             throw new WishListNotFoundException("Not Found");
@@ -64,6 +64,7 @@ public class WishService {
         );
         return wishRepository.findByUserInfo_Id(userInfo.getId());
     }
+
     public boolean changeToWishlist(String email, WishRequestDTO wishRequestDTO) {
         Product product = productRepository.findById(wishRequestDTO.getProductId()).orElseThrow(
             () -> new ProductNotFoundException("Product Not Found")
@@ -71,16 +72,19 @@ public class WishService {
         UserInfo userInfo = userInfoRepository.findByEmail(email).orElseThrow(
             () -> new UserNotFoundException("User Not Found")
         );
-        Wish wish = new Wish(product,userInfo,wishRequestDTO.getQuantity());
+        Wish wish = new Wish(product, userInfo, wishRequestDTO.getQuantity());
         try {
-            if (wishRequestDTO.getQuantity()==0){
-                wishRepository.deleteByProduct_IdAndUserInfo_Id(wishRequestDTO.getProductId(),userInfo.getId());
+            if (wishRequestDTO.getQuantity() == 0) {
+                wishRepository.deleteByProduct_IdAndUserInfo_Id(wishRequestDTO.getProductId(),
+                    userInfo.getId());
                 return true;
             }
-            if (!wishRepository.existsByUserInfo_IdAndProduct_Id(userInfo.getId(),wishRequestDTO.getProductId())){
+            if (!wishRepository.existsByUserInfo_IdAndProduct_Id(userInfo.getId(),
+                wishRequestDTO.getProductId())) {
                 throw new ProductNotFoundException("Product Not Found");
             }
-            Wish byUserIdAndProductId = wishRepository.findByUserInfo_IdAndProduct_Id(wish.getProduct().getId(),
+            Wish byUserIdAndProductId = wishRepository.findByUserInfo_IdAndProduct_Id(
+                wish.getProduct().getId(),
                 wish.getUserInfo().getId());
             byUserIdAndProductId.setQuantity(wish.getQuantity());
             return true;

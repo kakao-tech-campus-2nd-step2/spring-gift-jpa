@@ -23,7 +23,7 @@ public class WishRepositoryTest {
     @DisplayName("userId로 Wish 찾기 테스트")
     void findByUserId() {
         Wish wish = new Wish(new Product("original", 1000, "img"),
-            new UserInfo("kakaocampus@gmail.com","kakao2024"),1L);
+            new UserInfo("kakaocampus@gmail.com", "kakao2024"), 1L);
 
         wishRepository.save(wish);
 
@@ -45,15 +45,18 @@ public class WishRepositoryTest {
         savedWish.setQuantity(5L);
         wishRepository.save(savedWish);
 
-        Wish updatedWish = wishRepository.findByUserInfo_IdAndProduct_Id(wish.getUserInfo().getId(), wish.getProduct().getId());
+        Wish updatedWish = wishRepository.findByUserInfo_IdAndProduct_Id(wish.getUserInfo().getId(),
+            wish.getProduct().getId());
         assertThat(updatedWish.getQuantity()).isEqualTo(5L);
     }
+
     @Test
     @DisplayName("존재하지 않는 위시 아이템 조회")
     void findNonExistentWish() {
         Wish wish = wishRepository.findByUserInfo_IdAndProduct_Id(999L, 999L);
         assertThat(wish).isNull();
     }
+
     @Test
     @DisplayName("여러 사용자의 위시 리스트 테스트")
     void multipleUserWishLists() {
@@ -91,45 +94,51 @@ public class WishRepositoryTest {
         // 전체 Wish 개수 검증
         assertThat(wishRepository.findAll()).hasSize(3);
     }
+
     @Test
     @DisplayName("유저아이디와 제품아이디로 위시리스트 삭제하기,존재하는지 확인하기")
-    void deleteByProductIdAndUserId(){
+    void deleteByProductIdAndUserId() {
         Wish wish = new Wish(new Product("original", 1000, "img"),
-            new UserInfo("kakaocampus@gmail.com","kakao2024"),1L);
+            new UserInfo("kakaocampus@gmail.com", "kakao2024"), 1L);
         wishRepository.save(wish);
         List<Wish> byUserId = wishRepository.findByUserInfo_Id(wish.getUserInfo().getId());
 
         assertThat(byUserId).isNotNull();
-        assertThat(wishRepository.existsByUserInfo_IdAndProduct_Id(wish.getUserInfo().getId(), wish.getProduct().getId())).isTrue();
+        assertThat(wishRepository.existsByUserInfo_IdAndProduct_Id(wish.getUserInfo().getId(),
+            wish.getProduct().getId())).isTrue();
 
-
-        wishRepository.deleteByProduct_IdAndUserInfo_Id(wish.getProduct().getId(),wish.getUserInfo().getId());
+        wishRepository.deleteByProduct_IdAndUserInfo_Id(wish.getProduct().getId(),
+            wish.getUserInfo().getId());
 
         assertThat(wishRepository.findByUserInfo_Id(wish.getUserInfo().getId())).isEmpty();
-        assertThat(wishRepository.existsByUserInfo_IdAndProduct_Id(wish.getUserInfo().getId(), wish.getProduct().getId())).isFalse();
+        assertThat(wishRepository.existsByUserInfo_IdAndProduct_Id(wish.getUserInfo().getId(),
+            wish.getProduct().getId())).isFalse();
     }
 
     @Test
     @DisplayName("유저아이디와 제품아이디로 위시리스트 찾기")
     void findByUserIdAndProductId() {
         Wish wish = new Wish(new Product("original", 1000, "img"),
-            new UserInfo("kakaocampus@gmail.com","kakao2024"),1L);
+            new UserInfo("kakaocampus@gmail.com", "kakao2024"), 1L);
         wishRepository.save(wish);
 
-        Wish byUserIdAndProductId = wishRepository.findByUserInfo_IdAndProduct_Id(wish.getUserInfo().getId(), wish.getProduct().getId());
+        Wish byUserIdAndProductId = wishRepository.findByUserInfo_IdAndProduct_Id(
+            wish.getUserInfo().getId(), wish.getProduct().getId());
 
         assertThat(byUserIdAndProductId).isNotNull();
         assertThat(byUserIdAndProductId.getProduct().getId()).isEqualTo(wish.getProduct().getId());
-        assertThat(byUserIdAndProductId.getUserInfo().getId()).isEqualTo(wish.getUserInfo().getId());
+        assertThat(byUserIdAndProductId.getUserInfo().getId()).isEqualTo(
+            wish.getUserInfo().getId());
         assertThat(byUserIdAndProductId.getQuantity()).isEqualTo(1L);
-        
+
     }
+
     @Test
     @DisplayName("위시 아이템 삭제 후 재생성")
     void deleteAndRecreateWish() {
         Product product = new Product("original", 1000, "img");
         Wish wish = new Wish(product,
-            new UserInfo("kakaocampus@gmail.com","kakao2024"),1L);
+            new UserInfo("kakaocampus@gmail.com", "kakao2024"), 1L);
         wishRepository.save(wish);
 
         wishRepository.deleteByProduct_IdAndUserInfo_Id(1L, 1L);

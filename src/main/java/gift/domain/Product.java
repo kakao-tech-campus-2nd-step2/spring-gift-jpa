@@ -27,7 +27,7 @@ public class Product {
     @Column(nullable = false)
     private String imageUrl;
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes = new ArrayList<>();
 
 
@@ -53,7 +53,9 @@ public class Product {
         return imageUrl;
     }
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
     public void setId(Long id) {
         this.id = id;

@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public class WishRequestDTO {
+
     @NotNull
     private Long productId;
     @Min(1)

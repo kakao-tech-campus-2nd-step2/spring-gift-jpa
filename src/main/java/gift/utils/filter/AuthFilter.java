@@ -26,14 +26,16 @@ public class AuthFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
+        throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         String path = httpRequest.getRequestURI();
 
         // Filter 를 통과하지 않아도 되는 url
-        if (path.equals("/user/login") || path.equals("/user/register") || path.startsWith("/user") || path.startsWith("/h2-console")) {
+        if (path.equals("/user/login") || path.equals("/user/register") || path.startsWith("/user")
+            || path.startsWith("/h2-console")) {
             filterChain.doFilter(request, response);
             return;
         }

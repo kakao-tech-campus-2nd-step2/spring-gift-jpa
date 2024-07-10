@@ -10,8 +10,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+
 @Entity
 public class Wish {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
