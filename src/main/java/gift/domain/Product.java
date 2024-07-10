@@ -45,4 +45,20 @@ public class Product {
     public ProductDTO toDTO() {
         return new ProductDTO(id, name, price, imageUrl);
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
 }
