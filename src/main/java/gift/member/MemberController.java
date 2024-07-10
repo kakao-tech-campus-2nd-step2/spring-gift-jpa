@@ -1,5 +1,6 @@
 package gift.member;
 
+import gift.exception.AlreadyExistMember;
 import gift.login.JwtTokenUtil;
 import gift.login.TokenResponseDto;
 import gift.logout.LogoutTokenDao;
@@ -26,14 +27,14 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerMember(@RequestBody Member member) {
+    public ResponseEntity<?> registerMember(@RequestBody Member member) throws AlreadyExistMember {
         Optional<Member> existMember = memberService.getMember(member);
         if (!existMember.isPresent()) {
             memberService.postMember(member);
             String token = JwtTokenUtil.generateToken(member.getEmail());
             return ResponseEntity.ok(new TokenResponseDto(token));
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 회원정보가 존재합니다");
+            throw new AlreadyExistMember("이미 회원정보가 존재합니다");
         }
 
     }
