@@ -1,36 +1,32 @@
 package gift.product;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Entity
+@Table(name = "product")
 public class Product {
-    private Long id;
-    private String name;
-    private int price;
-    private String url;
 
-    public Product(String name, int price, String url) {
-        this.id = idCounter.getAndIncrement();
-        this.name = name;
-        this.price = price;
-        this.url = url;
-    }
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Long id;
 
-    private static AtomicLong idCounter = new AtomicLong(1);
+   @Column(name = "email", nullable = false)
+   private String email;
 
-    public Long getId() {
-        return id;
-    }
+   @Column(name = "password", nullable = false)
+   private String password;
 
-    public String getName() {
-        return name;
-    }
+   protected Product() {}
 
-    public int getPrice() {
-        return price;
-    }
-
-    public String getUrl() {
-        return url;
+    public Product(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 }
 
