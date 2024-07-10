@@ -1,8 +1,8 @@
 package gift.controller;
 
 import gift.service.AuthService;
-import gift.dto.AuthRequest;
-import gift.dto.AuthResponse;
+import gift.dto.request.AuthRequest;
+import gift.dto.response.AuthResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,7 +1,7 @@
 package gift.repository;
 
 import gift.domain.Member;
-import gift.dto.AuthRequest;
+import gift.dto.request.AuthRequest;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
