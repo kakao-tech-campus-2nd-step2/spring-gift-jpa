@@ -55,7 +55,7 @@
     - [ ] MemberRepositoryImpl 클래스 작성
     - [ ] ProductRepositoryImpl 클래스 작성
     - [ ] WishRepositoryImpl 클래스 작성
-- [ ] 동작 쿼리를 로그로 확인하도록 property 설정
+- [x] 동작 쿼리를 로그로 확인하도록 property 설정
 - [ ] MySQL Dialect을 사용을 위한 property 추가
 - [ ] 학습 테스트 작성
   - [ ] @DataJpaTest 어노테이션을 사용하여 테스트 클래스 작성
