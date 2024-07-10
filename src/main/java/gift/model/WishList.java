@@ -1,13 +1,31 @@
 package gift.model;
 
-public class WishList {
-    private Long id;
-    private String userEmail;
-    private Long productId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
-    public WishList(String userEmail, Long productId) {
-        this.userEmail = userEmail;
-        this.productId = productId;
+@Entity
+public class WishList {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    public WishList(User user, Product product) {
+        this.user = user;
+        this.product = product;
     }
 
     public WishList() {
@@ -18,18 +36,24 @@ public class WishList {
     }
 
     public String getUserEmail() {
-        return userEmail;
+        return user != null ? user.getEmail() : null;
     }
 
     public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+        if (this.user == null) {
+            this.user = new User();
+        }
+        this.user.setEmail(userEmail, this.user.getPassword());
     }
 
     public Long getProductId() {
-        return productId;
+        return product != null ? product.getId() : null;
     }
 
     public void setProductId(Long productId) {
-        this.productId = productId;
+        if (this.product == null) {
+            this.product = new Product();
+        }
+        this.product.setId(productId);
     }
 }
