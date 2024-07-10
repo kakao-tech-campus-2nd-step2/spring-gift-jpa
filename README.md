@@ -60,20 +60,23 @@ create table wish
     - id: Long, 자동 생성
     - memberId: Member 객체와 연관관계
     - productId: Product 객체와 연관관계
+  - Token 엔티티 클래스 작성
+    - id: Long, 자동 생성
+    - token: String, 길이 255
+    - email: Member 객체와 연관관계
+      
 - 리포지토리 클래스 작성
-  - MemberJPARepository 클래스 작성
-    - 기본적인 CRUD 메서드 포함
-  - ProductJPARepository 클래스 작성
-    - 기본적인 CRUD 메서드 포함
-  - WishJPARepository 클래스 작성
-    - 기본적인 CRUD 메서드 포함
+  - MemberJpaRepository 작성
+  - ProductJpaRepository 작성
+  - WishJpaRepository 작성
+  - TokenJpaRepository 작성
+
 - 테스트 코드 작성
   - MemberRepository 테스트 작성
-    - 멤버 저장 테스트
-    - 멤버 조회 테스트
-  - ProductRepository 테스트 작성  
-    - 상품 저장 테스트
-    - 상품 조회 테스트
+  - MemberService 테스트 작성
+  - ProductRepository 테스트 작성
+  - ProductService 테스트 작성
   - WishRepository 테스트 작성
-    - 위시리스트 저장 테스트
-    - 위시리스트 조회 테스트
+  - WishService 테스트 작성
+  - TokenRepository 테스트 작성
+  - TokenService 테스트 작성
