@@ -51,10 +51,10 @@
     - [x] ProductRepository 인터페이스 작성
     - [x] WishRepository 인터페이스 작성
   
-  - [ ] 리포지토리 구현체 작성
-    - [ ] MemberRepositoryImpl 클래스 작성
-    - [ ] ProductRepositoryImpl 클래스 작성
-    - [ ] WishRepositoryImpl 클래스 작성
+  - [x] 리포지토리 구현체 작성
+    - [x] MemberRepositoryImpl 클래스 작성
+    - [x] ProductRepositoryImpl 클래스 작성
+    - [x] WishRepositoryImpl 클래스 작성
 - [x] 동작 쿼리를 로그로 확인하도록 property 설정
 - [x] MySQL Dialect을 사용을 위한 property 추가
 - [ ] 학습 테스트 작성

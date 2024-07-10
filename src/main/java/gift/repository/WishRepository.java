@@ -3,9 +3,10 @@ package gift.repository;
 import gift.domain.Wish;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WishRepository {
-    Wish findById(Long id);
+    Optional<Wish> findById(Long id);
     List<Wish> findByMemberId(Long memberId);
     List<Wish> findByProductId(Long productId);
     void save(Wish wish);
