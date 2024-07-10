@@ -23,7 +23,7 @@ public class WishlistController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addItem(@RequestHeader("Authorization") String token, @RequestBody WishList product) {
+    public ResponseEntity<WishList> addItem(@RequestHeader("Authorization") String token, @RequestBody WishList product) {
         Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
         Long memberId = Long.parseLong(claims.getSubject());
         product.setMemberId(memberId);
@@ -32,7 +32,7 @@ public class WishlistController {
     }
 
     @GetMapping("/items")
-    public ResponseEntity<?> getItems(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<WishList>> getItems(@RequestHeader("Authorization") String token) {
         Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
         Long memberId = Long.parseLong(claims.getSubject());
         List<WishList> products = wishlistService.getProductsByMemberId(memberId);
@@ -40,8 +40,8 @@ public class WishlistController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteItem(@PathVariable Long id) {
-        wishlistService.deleteItem(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    public ResponseEntity<String> deleteItem(@PathVariable("id") Long productId) {
+        wishlistService.deleteById(productId);
+        return ResponseEntity.ok().body("delete complete!");
     }
 }
