@@ -16,4 +16,9 @@ public class ExceptionController {
     public ResponseEntity<?> handleAuthorizedException(LoginException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<?> handleProductNotFoundException(ProductNotFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

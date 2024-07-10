@@ -16,7 +16,7 @@ public class NameValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Product product = (Product) target;
-        if (product.name().contains("카카오")) {
+        if (product.getName().contains("카카오")) {
             errors.rejectValue("name", "name.invalid", "이름에 '카카오'가 포함될 수 없습니다.");
         }
     }

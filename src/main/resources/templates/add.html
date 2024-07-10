@@ -8,8 +8,6 @@
 <body>
 <h1>제품 추가</h1>
 <form th:action="@{/admin/products/add}" th:object="${product}" method="post">
-    <label for="name">Id:</label>
-    <input type="number" id="id" name="id" required><br>
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required><br>
     <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">이름이 잘못 입력되었거나, 카카오가 포함되어 있습니다.</div>

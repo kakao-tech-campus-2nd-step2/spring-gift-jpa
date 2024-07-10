@@ -3,38 +3,39 @@ package gift.Service;
 import gift.Exception.LoginException;
 import gift.Model.Role;
 import gift.Model.User;
-import gift.Model.UserInfo;
-import gift.Model.UserInfoDAO;
+import gift.Model.Member;
+import gift.Repository.MemberRepository;
 import gift.Token.JwtToken;
 import gift.Token.JwtTokenProvider;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
-        private final UserInfoDAO userInfoDAO;
+        private final MemberRepository memberRepository;
         private final JwtTokenProvider jwtTokenProvider;
 
-        public UserService(UserInfoDAO userInfoDAO, JwtTokenProvider jwtTokenProvider){
-            this.userInfoDAO = userInfoDAO;
+        public UserService(MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider){
+            this.memberRepository = memberRepository;
             this.jwtTokenProvider = jwtTokenProvider;
-            //테스트옹 admin 추가
-            userInfoDAO.insertUser(new UserInfo("admin", "1234", Role.ADMIN));
         }
 
         public JwtToken register(User user){
-            if(userInfoDAO.selectUser(user.email()) != null){
+            if(memberRepository.findByEmail(user.email()).isPresent())
                 throw new LoginException();
-            }
-            UserInfo userInfo = new UserInfo(user.email(), user.password(), Role.CONSUMER);
-            userInfoDAO.insertUser(userInfo);
-            return new JwtToken(jwtTokenProvider.createToken(userInfo));
+
+            Member member = new Member(user.email(), user.password(), Role.CONSUMER);
+            memberRepository.save(member);
+            return new JwtToken(jwtTokenProvider.createToken(member));
         }
 
         public JwtToken login(User user){
-            UserInfo userInfo1 = userInfoDAO.selectUser(user.email());
-            if(userInfo1 == null || !userInfo1.password().equals(user.password())){
+            Optional<Member> member = memberRepository.findByEmail(user.email());
+
+            if(member.isEmpty() || !member.get().getPassword().equals(user.password()))
                 throw new LoginException();
-            }
-            return new JwtToken(jwtTokenProvider.createToken(userInfo1));
+
+            return new JwtToken(jwtTokenProvider.createToken(member.get()));
         }
 }

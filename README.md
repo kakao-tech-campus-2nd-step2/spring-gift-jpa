@@ -70,3 +70,13 @@ step-3의 구현 사항
       => 위시 리스트 데이터베이스에 추가한다.
    4. 위시 리스트에 담긴 상품을 삭제할 수 있다.
       => 위시 리스트 데이터베이스에 있을 경우 삭제한다.
+
+3주차
+
+1. step-1의 구현사항
+   1. 지금까지 작성한 JdbcTemplate 기반 코드를 JPA로 리팩터링한다.
+      => 기존의 DAO 클래스는 모두 삭제
+      => Member, Product, Wishlist 클래스를 각각 Entity로 생성
+      => 각각의 데이터베이스를 담당할 MemberRepository, ProductRepository, WishlistRepository 생성
+      => 테스트를 위해 data.sql 추가 및 데이터 삽입
+      => 테스트를 위해 각 데이터베이스 별 테스트 코드 작성, 크게 추가와 interface에 추가한 기능 확인용으로 사용

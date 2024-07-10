@@ -1,12 +1,16 @@
 package gift.Controller;
 
+import gift.Exception.ProductNotFoundException;
 import gift.Model.Product;
-import gift.Model.ProductDAO;
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
+
+import gift.Service.ProductService;
 import gift.Valid.NameValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,12 +20,12 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/admin/products")
 public class AdminController {
-    private ProductDAO productDAO;
     private NameValidator nameValidator;
+    private final ProductService productService;
+    private String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJBRE1JTiJ9.M5YfW43tAR9_HEvIj-1Wgvkc9b_Cg23TZgDRNBoPqdU";
 
-    @Autowired
-    public void setProductDao(ProductDAO productDao){
-        this.productDAO = productDao;
+    public AdminController(ProductService productService){
+        this.productService = productService;
     }
 
     @Autowired
@@ -34,14 +38,14 @@ public class AdminController {
 
     @GetMapping
     public String getAllProducts(Model model){
-        List<Product> products = productDAO.selectAllProduct();
+        List<Product> products = productService.getAll(token);
         model.addAttribute("products", products);
         return "products";
     }
 
     @GetMapping("/add")
     public String addProductForm(Model model){
-        model.addAttribute("product", new Product(1,"",0,""));
+        model.addAttribute("product", new Product());
         return "add";
     }
 
@@ -50,13 +54,19 @@ public class AdminController {
         if(bindingResult.hasErrors()) {
             return "add";
         }
-        productDAO.insertProduct(product);
+        productService.add(token, product);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/edit/{id}")
     public String updateProductForm(@PathVariable("id") Long id, Model model){
-        model.addAttribute("product", productDAO.selectProduct(id));
+        Optional<Product> productOptional = productService.getById(token, id);
+        if(productOptional.isEmpty()){
+            throw new ProductNotFoundException();
+        }
+
+        Product product = productOptional.get();
+        model.addAttribute("product", product);
         return "edit";
     }
 
@@ -65,14 +75,13 @@ public class AdminController {
         if(bindingResult.hasErrors()) {
             return "edit";
         }
-
-        productDAO.updateProduct(id, product);
+        productService.edit(token, id, product);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") Long id){
-        productDAO.deleteProduct(id);
+        productService.delete(token, id);
         return "redirect:/admin/products";
     }
 }
