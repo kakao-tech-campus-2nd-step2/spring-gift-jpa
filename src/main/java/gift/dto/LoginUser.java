@@ -1,4 +1,4 @@
-package gift.entity;
+package gift.dto;
 
 public class LoginUser {
     private String email;
