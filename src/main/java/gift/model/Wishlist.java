@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,42 +17,43 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
-    @Column(name = "username", nullable = false)
-    private String username;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private SiteUser user;
 
     @Column(name = "quantity", nullable = false)
     private int quantity; // 수량 추가
 
-    // Getters and Setters
     public Long getId() {
         return id;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public SiteUser getUser() {
+        return user;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getProductId() {
-        return productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public int getQuantity() {
-        return quantity;
+    public void setUser(SiteUser user) {
+        this.user = user;
     }
 
     public void setQuantity(int quantity) {
