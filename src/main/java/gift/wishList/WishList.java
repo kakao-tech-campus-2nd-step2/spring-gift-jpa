@@ -4,22 +4,20 @@ import gift.product.Product;
 import gift.user.User;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
-
 @Entity
 @Table(name = "WISHLISTS")
-public class WishList implements Serializable {
+public class WishList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    User user;
+    private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    Product product;
+    private Product product;
     @Column(name = "count")
-    long count;
+    private long count;
 
     public WishList(long count) {
         this.count = count;

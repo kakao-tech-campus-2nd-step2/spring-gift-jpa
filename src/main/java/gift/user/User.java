@@ -4,14 +4,12 @@ package gift.user;
 import gift.wishList.WishList;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Entity
 @Table(name = "USERS")
-public class User implements Serializable {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

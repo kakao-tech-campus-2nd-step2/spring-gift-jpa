@@ -3,14 +3,12 @@ package gift.product;
 import gift.wishList.WishList;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Entity
 @Table(name = "PRODUCTS")
-public class Product implements Serializable {
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
