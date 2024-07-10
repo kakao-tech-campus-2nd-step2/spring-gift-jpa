@@ -24,7 +24,7 @@ public class MemberRestController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> registerUser(@RequestBody MemberRequestDto request){
+    public ResponseEntity<Void> registerMember(@RequestBody MemberRequestDto request){
         memberService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
