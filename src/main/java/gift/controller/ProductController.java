@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-<<<<<<< HEAD
 import java.util.Optional;
-=======
->>>>>>> d25c602 (feat: Week2 파일 복사)
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -99,7 +96,7 @@ public class ProductController {
 
     @PatchMapping
     public ResponseEntity<Map<String, Object>> patchProducts(@RequestBody List<Map<String, Object>> updatesList) {
-        List<Product> updatedProducts = productService.patchProducts(updatesList);
+        List<Optional<Product>> updatedProducts = productService.patchProducts(updatesList);
         Map<String, Object> response = new HashMap<>();
         int originalCount = updatesList.size();
         int updateCount = updatedProducts.size();
