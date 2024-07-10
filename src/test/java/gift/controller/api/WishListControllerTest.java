@@ -53,7 +53,8 @@ class WishListControllerTest {
 
     @Test
     @Order(1)
-    void addProductToWishList() throws Exception {
+    @DisplayName("위시리스트에 상품 추가")
+    void wishListAdd() throws Exception {
         //Given
         WishListRequest wishListRequest = new WishListRequest(1L, 100);
         String json = objectMapper.writeValueAsString(wishListRequest);
@@ -71,7 +72,50 @@ class WishListControllerTest {
 
     @Test
     @Order(2)
-    void getWishProducts() throws Exception {
+    @DisplayName("위시리스트에 저장된 상품 추가 요청시 예외 던짐")
+    void duplicatedProductAddThrowException() throws Exception {
+        //Given
+        WishListRequest sameProductRequest = new WishListRequest(1L, 100);
+        String json = objectMapper.writeValueAsString(sameProductRequest);
+
+        //When
+        mockMvc.perform(MockMvcRequestBuilders.post(URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                //Then
+                .andExpectAll(
+                        status().isConflict(),
+                        content().contentType(MediaType.APPLICATION_PROBLEM_JSON),
+                        jsonPath("title").value("ProductId: 1 already exist in your wishlist")
+                );
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("저장하려는 상품ID가 상품DB에 없을시 예외 던짐")
+    void noProductThrowException() throws Exception {
+        //Given
+        WishListRequest noExistProductRequest = new WishListRequest(100L, 100);
+        String json = objectMapper.writeValueAsString(noExistProductRequest);
+
+        //When
+        mockMvc.perform(MockMvcRequestBuilders.post(URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                //Then
+                .andExpectAll(
+                        status().isBadRequest(),
+                        content().contentType(MediaType.APPLICATION_PROBLEM_JSON),
+                        jsonPath("title").value("Product not found")
+                );
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("위시리스트에 추가된 상품들 조회")
+    void getWishListProducts() throws Exception {
         //When
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(URL)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
@@ -88,8 +132,9 @@ class WishListControllerTest {
     }
 
     @Test
-    @Order(3)
-    void updateWishProductAmount() throws Exception {
+    @Order(5)
+    @DisplayName("위시리스트에 저장된 수량 수정")
+    void updateProductAmount() throws Exception {
         //Given
         WishListRequest amountUpdateRequest = new WishListRequest(1L, 99999);
         String json = objectMapper.writeValueAsString(amountUpdateRequest);
@@ -107,7 +152,8 @@ class WishListControllerTest {
     }
 
     @Test
-    @Order(4)
+    @Order(6)
+    @DisplayName("수정 되었는지 확인")
     void updateCheck() throws Exception {
         //When
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(URL)
@@ -124,8 +170,9 @@ class WishListControllerTest {
     }
 
     @Test
-    @Order(5)
-    void deleteWishProduct() throws Exception {
+    @Order(7)
+    @DisplayName("위시리스트에 저장된 상품 삭제")
+    void deleteProduct() throws Exception {
         //Given
         WishListRequest amountUpdateRequest = new WishListRequest(1L, 0);
         String json = objectMapper.writeValueAsString(amountUpdateRequest);
@@ -139,6 +186,48 @@ class WishListControllerTest {
                 //Then
                 .andExpect(
                         status().isOk()
+                );
+    }
+
+    @Test
+    @DisplayName("위시리스트에 없는 상품 수정 요청시 예외 던짐")
+    void updateThrow() throws Exception {
+        //Given
+        WishListRequest amountUpdateRequest = new WishListRequest(1L, 99999);
+        String json = objectMapper.writeValueAsString(amountUpdateRequest);
+
+        //When
+        mockMvc.perform(MockMvcRequestBuilders.put(URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                )
+                //Then
+                .andExpectAll(
+                        status().isNotFound(),
+                        content().contentType(MediaType.APPLICATION_PROBLEM_JSON),
+                        jsonPath("title").value("Wish not found")
+                );
+    }
+
+    @Test
+    @DisplayName("위시리스트에 없는 상품 수정 요청시 예외 던짐")
+    void deleteThrow() throws Exception {
+        //Given
+        WishListRequest amountUpdateRequest = new WishListRequest(1L, 0);
+        String json = objectMapper.writeValueAsString(amountUpdateRequest);
+
+        //When
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                )
+                //Then
+                .andExpectAll(
+                        status().isNotFound(),
+                        content().contentType(MediaType.APPLICATION_PROBLEM_JSON),
+                        jsonPath("title").value("Wish not found")
                 );
     }
 
