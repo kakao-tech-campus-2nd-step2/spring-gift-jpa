@@ -4,8 +4,7 @@ import gift.model.Gift;
 import gift.model.User;
 import gift.repository.GiftRepository;
 import gift.repository.UserRepository;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
@@ -18,7 +17,7 @@ public class Application {
 
     //초기 더미데이터 추가
     @Bean
-    public CommandLineRunner loadData(GiftRepository giftRepository, UserRepository userRepository) {
+    public ApplicationRunner loadData(GiftRepository giftRepository, UserRepository userRepository) {
         return (args) -> {
             giftRepository.save(new Gift("Gift1", 1000, "http://example.com/image1.jpg"));
             giftRepository.save(new Gift("Gift2", 2000, "http://example.com/image2.jpg"));
