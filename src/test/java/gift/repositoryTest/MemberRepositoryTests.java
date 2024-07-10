@@ -16,11 +16,21 @@ class MemberRepositoryTests {
 
     @Test
     void testSaveAndFindMember() {
-        Member member = new Member(null, "테스트@example.com", "password", null);
+        Member member = new Member(null, "테스트1@example.com", "password", null);
         memberRepository.save(member);
 
-        Optional<Member> foundMember = memberRepository.findByEmail("테스트@example.com");
+        Optional<Member> foundMember = memberRepository.findByEmail("테스트1@example.com");
         assertThat(foundMember).isPresent();
-        assertThat(foundMember.get().getEmail()).isEqualTo("테스트@example.com");
+        assertThat(foundMember.get().getEmail()).isEqualTo("테스트1@example.com");
+    }
+
+    @Test
+    void testFindByActiveToken() {
+        Member member = new Member(null, "테스트2@example.com", "password", "activeToken123");
+        memberRepository.save(member);
+
+        Optional<Member> foundMember = memberRepository.findByActiveToken("activeToken123");
+        assertThat(foundMember).isPresent();
+        assertThat(foundMember.get().getActiveToken()).isEqualTo("activeToken123");
     }
 }
