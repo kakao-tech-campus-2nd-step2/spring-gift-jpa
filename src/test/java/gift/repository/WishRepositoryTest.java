@@ -28,8 +28,10 @@ class WishRepositoryTest {
     private WishRepository wishRepository;
 
     private Member member;
+    private Member member2;
 
     private Product product;
+    private Product product2;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -38,15 +40,19 @@ class WishRepositoryTest {
         wishRepository.deleteAll();
 
         member = memberRepository.save(new Member("12345@12345.com", "1", "홍길동", "default_user", new ArrayList<>()));
+        member2 = memberRepository.save(new Member("22345@12345.com", "2", "라이언", "default_user", new ArrayList<>()));
 
         product = productRepository.save(new Product("커피", 10000,
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"));
+        product = productRepository.save(new Product("아이스 카페라뗴", 10000,
+                "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"));
+
 
     }
 
     @AfterEach
     void tearDown() throws Exception {
-        wishRepository.deleteAll(); //wish부터 먼저 삭제하기
+        wishRepository.deleteAll();
         productRepository.deleteAll();
         memberRepository.deleteAll();
     }
@@ -82,8 +88,8 @@ class WishRepositoryTest {
     }
 
     @Test
-    @DisplayName("위시리스트 제거")
-    void delete(){
+    @DisplayName("위시리스트 Member & 상품 ID로 제거")
+    void delete1(){
         Wish wish = member.addWish(product);
         wishRepository.save(wish);
 
@@ -91,5 +97,20 @@ class WishRepositoryTest {
         wishRepository.deleteByMemberAndProduct_Id(member, product.getId());
         assertThat(wishRepository.count()).isEqualTo(0);
     }
+
+    @Test
+    @DisplayName("위시리스트 상품 ID로 제거")
+    void delete2(){
+        Wish wish = member.addWish(product);
+        wishRepository.save(wish);
+        Wish wish2 = member2.addWish(product);
+        wishRepository.save(wish2);
+
+
+        assertThat(wishRepository.count()).isEqualTo(2);
+        wishRepository.deleteByProduct_Id(product.getId());
+        assertThat(wishRepository.count()).isEqualTo(0);
+    }
+
 
 }
