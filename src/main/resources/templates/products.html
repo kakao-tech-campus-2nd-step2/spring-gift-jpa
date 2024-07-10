@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #2A2A2A;
+            font-size: 24px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4CAF50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        a {
+            color: blue;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .button-link {
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #4CAF50; /* Green */
+        }
+
+        .button-red {
+            background-color: #f44336; /* Red */
+        }
+
+        form {
+            display: inline;
+        }
+
+        .popup {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 400px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+            display: none; /* Initially hidden */
+        }
+
+        .popup.active {
+            display: block; /* Show popup */
+        }
+
+        .close-btn {
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 24px;
+            transform: rotate(0deg);
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<h1>상품 목록</h1>
+<!-- 메시지 표시 -->
+<div id="popup" class="popup">
+    <span class="close-btn" onclick="closePopup()">&times;</span>
+    <div th:if="${message}" th:text="${message}"></div>
+</div>
+
+<div>
+    <a th:href="@{/product/add}" class="button-link">상품 추가</a>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>상품 ID</th>
+        <th>상품 이름</th>
+        <th>가격</th>
+        <th>이미지 URL</th>
+        <th>관리</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price}"></td>
+        <td th:text="${product.imageUrl}" style="height: 50px; width: auto;"/></td>
+        <td>
+            <a th:href="@{/product/edit/{id}(id=${product.id})}" class="button-link">수정</a>
+            <form th:action="@{/product/delete/{id}(id=${product.id})}" method="post" style="display:inline;">
+                <input type="submit" value="삭제" class="button-link button-red"
+                       onclick="return confirm('정말로 상품을 삭제하시겠습니까?');"/>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    function closePopup() {
+        document.getElementById('popup').style.display = 'none';
+    }
+
+    window.onload = function() {
+        const message = document.querySelector('#popup div');
+        if (message.textContent.trim() !== '') {
+            const popup = document.getElementById('popup');
+            popup.classList.add('active');
+
+            setTimeout(function() {
+                closePopup();
+            }, 2000);
+        }
+    }
+</script>
+</body>
+</html>
