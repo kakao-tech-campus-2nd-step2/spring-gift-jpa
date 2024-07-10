@@ -2,9 +2,8 @@ package gift.product.application;
 
 import gift.product.application.dto.request.ProductRequest;
 import gift.product.application.dto.response.ProductResponse;
-import gift.product.domain.Product;
-import gift.product.exception.ProductNotFoundException;
 import gift.product.persistence.ProductRepository;
+import gift.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -30,10 +29,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 public class ProductController {
     private final ProductRepository productRepository;
+    private final ProductService productService;
 
     @Autowired
-    public ProductController(ProductRepository productRepository) {
+    public ProductController(ProductRepository productRepository, ProductService productService) {
         this.productRepository = productRepository;
+        this.productService = productService;
     }
 
     @Operation(summary = "상품 목록 조회", description = "상품 목록을 조회합니다.")
@@ -42,11 +43,7 @@ public class ProductController {
     })
     @GetMapping()
     public ResponseEntity<List<ProductResponse>> getProductList() {
-        List<Product> foundProducts = productRepository.findAll();
-
-        List<ProductResponse> responses = foundProducts.stream()
-                .map(ProductResponse::fromModel)
-                .toList();
+        var responses = productService.getProducts();
 
         return ResponseEntity.ok()
                 .body(responses);
@@ -59,10 +56,7 @@ public class ProductController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductDetails(@PathVariable("id") Long id) {
-        Product foundProduct = productRepository.findById(id)
-                .orElseThrow(() -> ProductNotFoundException.of(id));
-
-        ProductResponse response = ProductResponse.fromModel(foundProduct);
+        var response = productService.getProductDetails(id);
 
         return ResponseEntity.ok()
                 .body(response);
@@ -75,7 +69,7 @@ public class ProductController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public void saveProduct(@RequestBody @Valid ProductRequest newProduct) {
-        productRepository.save(newProduct.toModel());
+        productService.saveProduct(newProduct);
     }
 
     @Operation(summary = "상품 수정", description = "상품을 수정합니다.")
@@ -86,10 +80,7 @@ public class ProductController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void modifyProduct(@PathVariable("id") Long id, @RequestBody @Valid ProductRequest modifyProduct) {
-        Product foundProduct = productRepository.findById(id)
-                .orElseThrow(() -> ProductNotFoundException.of(id));
-
-        productRepository.save(modifyProduct.toModel(id));
+        productService.modifyProduct(id, modifyProduct);
     }
 
     @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
@@ -100,10 +91,6 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteProduct(@PathVariable("id") Long id) {
-        Product foundProduct = productRepository.findById(id)
-                .orElseThrow(() -> ProductNotFoundException.of(id));
-
-        foundProduct.delete();
-        productRepository.save(foundProduct);
+        productService.deleteProduct(id);
     }
 }
