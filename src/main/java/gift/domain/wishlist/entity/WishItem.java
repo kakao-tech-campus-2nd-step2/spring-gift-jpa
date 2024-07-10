@@ -2,8 +2,8 @@ package gift.domain.wishlist.entity;
 
 import gift.domain.product.entity.Product;
 import gift.domain.user.entity.User;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,11 +23,11 @@ public class WishItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     Product product;
 
@@ -45,16 +45,20 @@ public class WishItem {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public User getUser() {
         return user;
     }
 
-    public Product getProduct() {
-        return product;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Product getProduct() {
+        return product;
     }
 
     public Long getUserId() {
