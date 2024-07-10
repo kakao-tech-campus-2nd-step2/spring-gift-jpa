@@ -2,13 +2,14 @@ package gift.service;
 
 import gift.model.Wishlist;
 import gift.repository.WishlistRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class WishlistService {
-
+  @Autowired
   private final WishlistRepository wishlistRepository;
 
   public WishlistService(WishlistRepository wishlistRepository) {
@@ -25,5 +26,6 @@ public class WishlistService {
 
   public void removeWishlistItem(Long id) {
     wishlistRepository.deleteById(id);
+
   }
 }
