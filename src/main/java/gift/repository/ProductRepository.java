@@ -1,6 +1,4 @@
 package gift.repository;
-
-import gift.model.Member;
 import gift.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
