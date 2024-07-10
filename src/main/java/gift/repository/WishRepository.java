@@ -30,10 +30,11 @@ public class WishRepository {
 
         Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
         Long id = newId.longValue();
+
         return new Wish(id, productId, userId);
     }
 
-    public List<Wish> getAll(String userId) {
+    public List<Wish> getAll(Long userId) {
         var sql = """
                 select * from wishes
                 where id =? 
@@ -45,34 +46,33 @@ public class WishRepository {
                         resultSet.getLong("id"),
                         resultSet.getLong("product_id"),
                         resultSet.getLong("user_id")
-                )
+                ),
+                userId
         ).stream().toList();
     }
 
-    public void delete(Long id, Long userId) {
+    public void delete(Long id, Long userId) throws IllegalAccessException {
 
         Wish wish = findOneById(id);
 
-        if (wish.getId().equals(userId)) {
-            Map<String, Object> parameters = Map.of("메세지", "삭제할 권한이 없습니다.");
+        if (wish.getUserId().equals(userId)) {
+            throw new IllegalAccessException() ;
         }
 
-        var sql = "delete from wish where id = ?";
-
-        Map<String, Object> parameters = Map.of("wish", wish);
+        var sql = "delete from wishes where id = ?";
 
         jdbcTemplate.update(sql, id);
-
     }
 
     public Wish findOneById(Long id) {
-        var sql = "select id,productId,token from wish where id= ?";
+        var sql = "select id, productId, token from wishes where id= ?";
         return jdbcTemplate.queryForObject(
                 sql,
                 (resultSet, rowNum) -> new Wish(
                         id,
                         resultSet.getLong("product_id"),
                         resultSet.getLong("user_id")),
-                id);
+                id
+        );
     }
 }

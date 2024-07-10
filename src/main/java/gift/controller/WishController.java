@@ -16,7 +16,6 @@ public class WishController {
         this.wishService = wishService;
     }
 
-    //insert
     @PostMapping()
     public void save(@RequestBody WishDto.Request request) {
         wishService.save(new WishDto(
@@ -25,15 +24,13 @@ public class WishController {
         );
     }
 
-    //getAll
     @GetMapping()
     public List<WishDto> getAll(@RequestParam String token) {
         return wishService.getAll(token);
     }
 
-    //delete one by id
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id, @RequestParam String token) {
+    public void delete(@PathVariable("id") Long id, @RequestParam String token) throws IllegalAccessException {
         wishService.delete(id, token);
     }
 }

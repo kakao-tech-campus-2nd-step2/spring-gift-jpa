@@ -19,7 +19,6 @@ public class productController {
         this.productService = productService;
     }
 
-    //insert
     @PostMapping("")
     public String createProduct(@RequestBody CreateProduct.Request request) {
 
@@ -27,27 +26,21 @@ public class productController {
         return "product 가 생성되었습니다.";
     }
 
-    // get all
     @GetMapping("")
     public List<Product> getAll() {
         return productService.getAll();
     }
 
-    // get one by id
     @GetMapping("/{id}")
     public Product getOneById(@PathVariable("id") Long id) {
         return productService.getOneById(id);
     }
 
-    //update
     @PutMapping("/{id}")
     public void update(@PathVariable("id") Long id, @RequestBody EditProduct.Request request) {
-
         productService.update(id, new ProductDto(request.getName(), request.getPrice(), request.getUrl()));
-
     }
 
-    //delete
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long id) {
         productService.delete(id);
