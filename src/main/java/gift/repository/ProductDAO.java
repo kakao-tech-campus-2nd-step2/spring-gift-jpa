@@ -1,7 +1,6 @@
 package gift.repository;
 
-import gift.model.ProductRecord;
-import org.springframework.beans.factory.annotation.Autowired;
+import gift.entity.ProductRecord;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,9 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Repository

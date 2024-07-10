@@ -46,7 +46,7 @@
     }
 
     function delete_product(id) {
-        fetch('/products/' + id, {
+        fetch('/api/products/' + id, {
             method: 'delete',
             headers: {
                 'Content-Type': 'application/json'

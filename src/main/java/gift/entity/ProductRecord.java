@@ -1,4 +1,4 @@
-package gift.model;
+package gift.entity;
 
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.URL;

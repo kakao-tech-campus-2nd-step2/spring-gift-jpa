@@ -30,6 +30,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
+    @ExceptionHandler(DuplicatedEmailException.class)
+    public ResponseEntity<String> handleDuplicatedEmail(DuplicatedEmailException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<String> handleInvalidPassword(InvalidPasswordException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
+    @ExceptionHandler(ForbiddenRequestException.class)
+    public ResponseEntity<String> handleForbiddenRequest(ForbiddenRequestException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
         //TODO 로그 파일에 로깅하는 과정 추가하기.
