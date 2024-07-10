@@ -4,11 +4,9 @@ import gift.domain.Wish;
 import gift.dto.WishRequestDto;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface WishRepository {
-
-    Optional<List<Wish>> findById(Long id);
-    void addWish(Wish wish);
-    void deleteWish(Long userId, Long productId);
-    void updateWish(Long userId, Long productId, int quantity);
+public interface WishRepository extends JpaRepository<Wish,Long> {
+    Optional<List<Wish>> findByMemberId(Long memberId);
+    Optional<Wish> findByMemberIdAndProductId(Long memberId, Long productId);
 }
