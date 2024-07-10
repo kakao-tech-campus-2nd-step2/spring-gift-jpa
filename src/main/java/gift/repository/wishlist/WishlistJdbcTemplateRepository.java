@@ -9,11 +9,11 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class WishlistJDBCRepository implements WishlistRepository {
+public class WishlistJdbcTemplateRepository implements WishlistRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public WishlistJDBCRepository(DataSource dataSource) {
+    public WishlistJdbcTemplateRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
     @Override

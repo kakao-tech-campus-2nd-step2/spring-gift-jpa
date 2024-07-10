@@ -2,7 +2,7 @@ package gift.repository;
 
 import gift.dto.request.ProductRequest;
 import gift.domain.Product;
-import gift.repository.product.ProductDBRepository;
+import gift.repository.product.ProductJdbcTemplateRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
-public class ProductDBRepositoryTest {
+public class ProductJdbcTemplateRepositoryTest {
 
-    private ProductDBRepository repository;
+    private ProductJdbcTemplateRepository repository;
 
     @Mock
     private DataSource dataSource;
@@ -32,7 +32,7 @@ public class ProductDBRepositoryTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        repository = new ProductDBRepository(dataSource);
+        repository = new ProductJdbcTemplateRepository(dataSource);
     }
 
     @Test

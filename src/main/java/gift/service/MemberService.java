@@ -5,7 +5,7 @@ import gift.domain.Member;
 import gift.exception.DuplicateMemberException;
 import gift.exception.InvalidCredentialsException;
 import gift.exception.MemberNotFoundException;
-import gift.repository.member.MemberJDBCRepository;
+import gift.repository.member.MemberJdbcTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +14,10 @@ import java.util.Optional;
 @Service
 public class MemberService {
 
-    private final MemberJDBCRepository memberRepository;
+    private final MemberJdbcTemplateRepository memberRepository;
 
     @Autowired
-    public MemberService(MemberJDBCRepository memberRepository) {
+    public MemberService(MemberJdbcTemplateRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
 

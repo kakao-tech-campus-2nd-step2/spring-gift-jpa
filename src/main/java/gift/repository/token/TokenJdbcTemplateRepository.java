@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class TokenJDBCRepository implements TokenRepository {
+public class TokenJdbcTemplateRepository implements TokenRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public TokenJDBCRepository(DataSource dataSource) {
+    public TokenJdbcTemplateRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

@@ -14,11 +14,11 @@ import java.sql.Statement;
 import java.util.*;
 
 @Repository
-public class ProductDBRepository implements ProductRepository {
+public class ProductJdbcTemplateRepository implements ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ProductDBRepository(DataSource dataSource) {
+    public ProductJdbcTemplateRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class MemberJDBCRepository implements MemberRepository {
+public class MemberJdbcTemplateRepository implements MemberRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public MemberJDBCRepository(DataSource dataSource) {
+    public MemberJdbcTemplateRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
