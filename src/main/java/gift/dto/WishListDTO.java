@@ -1,18 +1,26 @@
 package gift.dto;
 
+import gift.model.Wish;
+import java.util.HashMap;
+import java.util.Map;
+
 public class WishListDTO {
 
     private Long memberId;
-    private Long productId;
-    private Integer productValue;
+    private Map<String,Integer> wishList;
+
 
     public WishListDTO() {
     }
 
-    public WishListDTO(Long memberId, Long productId, Integer productValue) {
+    public WishListDTO(Wish wish){
+        this.memberId = wish.getMember().getId();
+        this.wishList = new HashMap<>();
+    }
+
+    public WishListDTO(Long memberId, Map<String, Integer> wishList) {
         this.memberId = memberId;
-        this.productId = productId;
-        this.productValue = productValue;
+        this.wishList = wishList;
     }
 
     public Long getMemberId() {
@@ -23,19 +31,12 @@ public class WishListDTO {
         this.memberId = memberId;
     }
 
-    public Long getProductId() {
-        return productId;
+    public void addProduct(String, Integer value) {
+        this.wishList.put(productId.toString(), value);
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public Map<String, Integer> getWishList() {
+        return wishList;
     }
 
-    public Integer getProductValue() {
-        return productValue;
-    }
-
-    public void setProductValue(Integer productValue) {
-        this.productValue = productValue;
-    }
 }
