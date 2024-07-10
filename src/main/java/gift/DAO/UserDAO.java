@@ -1,31 +1,32 @@
 package gift.DAO;
 
 import gift.Entity.UserEntity;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
+import gift.Repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
-@Repository
+@Service
 public class UserDAO {
 
-    private final JdbcTemplate jdbcTemplate;
+    @Autowired
+    private UserRepository userRepository;
 
-    private final RowMapper<UserEntity> rowMapper = new BeanPropertyRowMapper<>(UserEntity.class);
-
-    public UserDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public List<UserEntity> findAll() {
+        return userRepository.findAll();
     }
 
-    public List<UserEntity> findByEmail(String email) {
-        String sql = "SELECT * FROM users WHERE email = ?";
-        return jdbcTemplate.query(sql, new Object[]{email}, rowMapper);
+    public Optional<UserEntity> findById(Long id) {
+        return userRepository.findById(id);
     }
 
-    public void save(UserEntity user) {
-        String sql = "INSERT INTO users (email, password) VALUES (?, ?)";
-        jdbcTemplate.update(sql, user.getEmail(), user.getPassword());
+    public UserEntity save(UserEntity userEntity) {
+        return userRepository.save(userEntity);
+    }
+
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 }
