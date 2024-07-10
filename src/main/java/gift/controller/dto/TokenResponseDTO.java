@@ -1,6 +1,7 @@
 package gift.controller.dto;
 
 public class TokenResponseDTO {
+
     private String token;
 
     public TokenResponseDTO(String token) {

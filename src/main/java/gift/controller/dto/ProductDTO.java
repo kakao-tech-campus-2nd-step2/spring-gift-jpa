@@ -27,7 +27,6 @@ public class ProductDTO {
     }
 
 
-
     public String getName() {
         return name;
     }

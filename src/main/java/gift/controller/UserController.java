@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 
 public class UserController {
+
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -23,10 +24,11 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponseDTO> registerUser(@Valid @RequestBody UserDTO userDTO){
+    public ResponseEntity<TokenResponseDTO> registerUser(@Valid @RequestBody UserDTO userDTO) {
         TokenResponseDTO tokenResponseDTO = userService.registerUser(userDTO);
         return new ResponseEntity<>(tokenResponseDTO, HttpStatus.CREATED);
     }
+
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDTO> loginUser(@Valid @RequestBody UserDTO userDTO) {
         TokenResponseDTO login = userService.login(userDTO);
@@ -34,13 +36,14 @@ public class UserController {
     }
 
     @PostMapping("/change")
-    public ResponseEntity<Boolean> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO){
+    public ResponseEntity<Boolean> changePassword(
+        @Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
         boolean b = userService.changePassword(changePasswordDTO);
         return ResponseEntity.ok(b);
     }
 
     @PostMapping("/find")
-    public ResponseEntity<UserDTO> findPassword(@RequestBody String email){
+    public ResponseEntity<UserDTO> findPassword(@RequestBody String email) {
         UserDTO password = userService.findPassword(email);
         return ResponseEntity.ok(password);
     }

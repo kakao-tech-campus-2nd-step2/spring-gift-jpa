@@ -1,11 +1,12 @@
 package gift.service;
 
 import gift.controller.dto.WishRequestDTO;
+import gift.domain.Product;
 import gift.domain.UserInfo;
 import gift.domain.Wish;
 import gift.repository.ProductRepository;
 import gift.repository.UserInfoRepository;
-import gift.repository.WishsRepository;
+import gift.repository.WishRepository;
 import gift.utils.error.ProductNotFoundException;
 import gift.utils.error.UserNotFoundException;
 import gift.utils.error.WishListAddFailedException;
@@ -16,25 +17,31 @@ import org.springframework.stereotype.Service;
 @Service
 public class WishService {
 
-    private final WishsRepository wishsRepository;
+    private final WishRepository wishRepository;
     private final UserInfoRepository userInfoRepository;
+    private final ProductRepository productRepository;
 
-    public WishService(WishsRepository wishsRepository,
-        UserInfoRepository userInfoRepository) {
-        this.wishsRepository = wishsRepository;
+    public WishService(WishRepository wishRepository, UserInfoRepository userInfoRepository,
+        ProductRepository productRepository) {
+        this.wishRepository = wishRepository;
         this.userInfoRepository = userInfoRepository;
+        this.productRepository = productRepository;
     }
 
+
     public boolean addToWishlist(String email, WishRequestDTO wishRequestDTO) {
+        Product product = productRepository.findById(wishRequestDTO.getProductId()).orElseThrow(
+            () -> new ProductNotFoundException("Product Not Found")
+        );
         UserInfo byEmail = userInfoRepository.findByEmail(email).orElseThrow(
-            ()-> new UserNotFoundException("User Not Found"));
-        Wish wish = new Wish( wishRequestDTO.getProductId(),byEmail.getId(),wishRequestDTO.getQuantity());
-        try {
-            wishsRepository.save(wish);
-            return true;
-        } catch (Exception e) {
-            throw new WishListAddFailedException("Add Failed");
-        }
+            () -> new UserNotFoundException("User Not Found"));
+        Wish wish = new Wish(product, byEmail, wishRequestDTO.getQuantity());
+
+        product.addWish(wish);
+        byEmail.addWish(wish);
+
+        wishRepository.save(wish);
+        return true;
 
     }
 
@@ -42,12 +49,19 @@ public class WishService {
         UserInfo userInfo = userInfoRepository.findByEmail(email).orElseThrow(
             () -> new UserNotFoundException("User Not Found")
         );
-        try {
-            wishsRepository.deleteByProductIdAndUserId(productId,userInfo.getId());
-            return true;
-        } catch (Exception e) {
+        Product product = productRepository.findById(productId).orElseThrow(
+            () -> new ProductNotFoundException("Product Not Found")
+        );
+        if (!wishRepository.existsByUserInfoIdAndProductId(userInfo.getId(), productId)) {
             throw new WishListNotFoundException("Not Found");
         }
+        Wish wish = wishRepository.findByUserInfoIdAndProductId(userInfo.getId(), productId);
+
+        product.removeWish(wish);
+        userInfo.removeWish(wish);
+
+        wishRepository.deleteByProductIdAndUserInfoId(productId, userInfo.getId());
+        return true;
 
     }
 
@@ -55,28 +69,32 @@ public class WishService {
         UserInfo userInfo = userInfoRepository.findByEmail(email).orElseThrow(
             () -> new UserNotFoundException("User Not Found")
         );
-        return wishsRepository.findByUserId(userInfo.getId());
+        return wishRepository.findByUserInfoId(userInfo.getId());
     }
+
     public boolean changeToWishlist(String email, WishRequestDTO wishRequestDTO) {
+        Product product = productRepository.findById(wishRequestDTO.getProductId()).orElseThrow(
+            () -> new ProductNotFoundException("Product Not Found")
+        );
         UserInfo userInfo = userInfoRepository.findByEmail(email).orElseThrow(
             () -> new UserNotFoundException("User Not Found")
         );
-        Wish wish = new Wish(userInfo.getId(), wishRequestDTO.getProductId(),wishRequestDTO.getQuantity());
-        try {
-            if (wishRequestDTO.getQuantity()==0){
-                wishsRepository.deleteByProductIdAndUserId(wishRequestDTO.getProductId(),userInfo.getId());
-                return true;
+        Wish existingWish = wishRepository.findByUserInfoIdAndProductId(userInfo.getId(),
+            product.getId());
+
+        if (wishRequestDTO.getQuantity() == 0) {
+            if (existingWish != null) {
+                product.removeWish(existingWish);
+                userInfo.removeWish(existingWish);
+                wishRepository.delete(existingWish);
             }
-            if (!wishsRepository.existsByUserIdAndProductId(userInfo.getId(),wishRequestDTO.getProductId())){
-                throw new ProductNotFoundException("Product Not Found");
-            }
-            Wish byUserIdAndProductId = wishsRepository.findByUserIdAndProductId(wish.getUserId(),
-                wish.getProductId());
-            byUserIdAndProductId.setQuantity(wish.getQuantity());
             return true;
-        } catch (Exception e) {
-            throw new WishListAddFailedException("Change Failed");
         }
+        if (existingWish == null) {
+            throw new ProductNotFoundException("Product Not Found");
+        }
+        existingWish.setQuantity(wishRequestDTO.getQuantity());
+        return true;
 
     }
 

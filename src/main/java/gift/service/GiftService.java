@@ -34,14 +34,13 @@ public class GiftService {
     public ProductDTO postProducts(ProductDTO productDTO) {
         validateProductName(productDTO.getName());
 
-
-
         Product product = new Product(productDTO.getName(),
             productDTO.getPrice(), productDTO.getImageUrl());
 
         Product savedProduct = productRepository.save(product);
 
-        return productDTO;
+        return new ProductDTO(savedProduct.getName(), savedProduct.getPrice(),
+            savedProduct.getImageUrl());
     }
 
     public ProductDTO putProducts(ProductDTO productDTO, Long id) {
@@ -53,15 +52,15 @@ public class GiftService {
         productById.setName(productDTO.getName());
         productById.setPrice(productDTO.getPrice());
         productById.setImageUrl(productDTO.getImageUrl());
-        Product save = productRepository.save(productById);
+        Product saveProduct = productRepository.save(productById);
 
-
-        return productDTO;
+        return new ProductDTO(saveProduct.getName(), saveProduct.getPrice(),
+            saveProduct.getImageUrl());
     }
 
     public Long deleteProducts(Long id) {
         productRepository.findById(id).orElseThrow(
-            ()-> new ProductNotFoundException("Product NOT FOUND"));
+            () -> new ProductNotFoundException("Product NOT FOUND"));
         productRepository.deleteById(id);
         return id;
     }

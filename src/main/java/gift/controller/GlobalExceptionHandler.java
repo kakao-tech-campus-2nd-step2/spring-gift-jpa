@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<?> handleProductNotFoundException(ProductNotFoundException ex,
         WebRequest request) {
@@ -42,35 +43,40 @@ public class GlobalExceptionHandler {
         WebRequest request) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex,
-        WebRequest request){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.UNAUTHORIZED);
+        WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
+
     @ExceptionHandler(TokenAuthException.class)
     public ResponseEntity<?> handleTokenAuthException(TokenAuthException ex,
-        WebRequest request){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.UNAUTHORIZED);
+        WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
+
     @ExceptionHandler(UserPasswordNotFoundException.class)
     public ResponseEntity<?> handleUserPasswordNotFoundException(UserPasswordNotFoundException ex,
-        WebRequest request){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.UNAUTHORIZED);
+        WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
+
     @ExceptionHandler(WishListAddFailedException.class)
     public ResponseEntity<?> handleWishListAddFailedException(WishListAddFailedException ex,
-        WebRequest request){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+        WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(WishListNotFoundException.class)
     public ResponseEntity<?> handleWishListNotFoundException(WishListNotFoundException ex,
-        WebRequest request){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+        WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(WishListChangeFailedException.class)
     public ResponseEntity<?> handleWishListChangeFailedException(WishListChangeFailedException ex,
-        WebRequest request){
-        return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+        WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
