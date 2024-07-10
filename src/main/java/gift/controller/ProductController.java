@@ -6,8 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @Controller
 @RequestMapping("/products")
 public class ProductController {
@@ -26,7 +24,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Optional<Product> getProductById(@PathVariable Long id) {
+    public Product getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
