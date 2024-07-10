@@ -1,5 +1,6 @@
 package gift.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,7 +18,7 @@ public class GlobalExceptionHandler {
                 .body(new ExceptionResponse(exception.getErrorCode()));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
     @ResponseBody
     public ResponseEntity<?> validationExceptionHandler(Exception exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
