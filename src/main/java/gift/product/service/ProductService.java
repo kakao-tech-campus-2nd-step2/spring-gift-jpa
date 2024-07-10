@@ -20,10 +20,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse findProduct(Long id) {
-        Product product = productRepository.findByIdAndIsActiveTrue(id)
+    public Product findProduct(Long id) {
+        return productRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     @Transactional(readOnly = true)

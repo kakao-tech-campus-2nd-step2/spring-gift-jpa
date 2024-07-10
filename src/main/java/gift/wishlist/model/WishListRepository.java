@@ -11,12 +11,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WishListRepository extends JpaRepository<Wish, Long> {
-    @Query(value = """
-            SELECT p.id, p.name, p.price, p.image_url, w.quantity 
-            FROM Wish w
-            JOIN Product p ON w.product_id = p.id
-            WHERE w.user_id = ?
-            """, nativeQuery = true)
+    @Query("SELECT new gift.wishlist.model.dto.WishListResponse(w.id, w.product.id, w.product.name, w.product.price, w.product.imageUrl, w.quantity) "
+            +
+            "FROM Wish w " +
+            "WHERE w.user.id = :userId AND w.isActive = true")
     List<WishListResponse> findWishesByUserId(@Param("userId") Long userId);
 
     Optional<Wish> findByIdAndUserIdAndIsActiveTrue(Long id, Long userId);

@@ -1,6 +1,7 @@
 package gift.product.controller;
 
 import gift.product.model.dto.CreateProductRequest;
+import gift.product.model.dto.Product;
 import gift.product.model.dto.ProductResponse;
 import gift.product.model.dto.UpdateProductRequest;
 import gift.product.service.ProductService;
@@ -29,7 +30,9 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> findProductById(@PathVariable Long id) {
-        final ProductResponse response = productService.findProduct(id);
+        final Product product = productService.findProduct(id);
+        ProductResponse response = new ProductResponse(product.getId(), product.getName(), product.getPrice(),
+                product.getImageUrl());
         return ResponseEntity.ok().body(response);
     }
 

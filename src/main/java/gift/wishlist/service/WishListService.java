@@ -1,5 +1,9 @@
 package gift.wishlist.service;
 
+import gift.product.model.dto.Product;
+import gift.product.service.ProductService;
+import gift.user.model.dto.User;
+import gift.user.service.UserService;
 import gift.wishlist.model.WishListRepository;
 import gift.wishlist.model.dto.AddWishRequest;
 import gift.wishlist.model.dto.Wish;
@@ -12,9 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class WishListService {
     private final WishListRepository wishListRepository;
+    private final UserService userService;
+    private final ProductService productService;
 
-    public WishListService(WishListRepository wishListRepository) {
+    public WishListService(WishListRepository wishListRepository, UserService userService,
+                           ProductService productService) {
         this.wishListRepository = wishListRepository;
+        this.userService = userService;
+        this.productService = productService;
     }
 
     @Transactional(readOnly = true)
@@ -28,7 +37,9 @@ public class WishListService {
 
     @Transactional
     public void addWish(Long userId, AddWishRequest addWishRequest) {
-        Wish wish = new Wish(userId, addWishRequest.productId(), addWishRequest.quantity());
+        User user = userService.findUser(userId);
+        Product product = productService.findProduct(addWishRequest.productId());
+        Wish wish = new Wish(user, product, addWishRequest.quantity());
         wishListRepository.save(wish);
     }
 

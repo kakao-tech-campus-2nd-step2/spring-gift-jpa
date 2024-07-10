@@ -40,7 +40,7 @@ public class WishListRepositoryTest {
         user = userRepository.save(user);
         product = productRepository.save(product);
 
-        Wish wish = new Wish(user.getId(), product.getId(), 1);
+        Wish wish = new Wish(user, product, 1);
         wishListRepository.save(wish);
     }
 

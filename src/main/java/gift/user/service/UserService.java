@@ -56,6 +56,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public User findUser(Long id) {
+        return userRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException("User"));
+    }
+
+    @Transactional(readOnly = true)
     public String findEmail(Long id) {
         User user = userRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("User"));
