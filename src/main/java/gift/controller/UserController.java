@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.authorization.JwtUtil;
-import gift.entity.LoginUser;
+import gift.dto.LoginUser;
 import gift.entity.User;
 import gift.service.LoginMember;
 import gift.service.UserService;

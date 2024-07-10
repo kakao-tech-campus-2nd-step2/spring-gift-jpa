@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.authorization.JwtUtil;
-import gift.entity.LoginUser;
+import gift.dto.LoginUser;
 import gift.entity.User;
 import gift.repository.JdbcUserRepository;
 import jdk.jfr.Description;

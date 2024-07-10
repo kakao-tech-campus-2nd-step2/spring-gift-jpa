@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.authorization.JwtUtil;
-import gift.entity.LoginUser;
+import gift.dto.LoginUser;
 import gift.entity.Wish;
 import gift.repository.JdbcWishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
