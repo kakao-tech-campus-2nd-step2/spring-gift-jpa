@@ -5,8 +5,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.SoftDelete;
 
 @Entity
+@SoftDelete
 public class Wish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +23,6 @@ public class Wish {
     @NotNull
     private Integer amount;
 
-    private Boolean isDeleted;
-
     protected Wish() {
     }
 
@@ -31,14 +31,12 @@ public class Wish {
         this.productId = productId;
         this.userId = userId;
         this.amount = amount;
-        this.isDeleted = false;
     }
 
     public Wish(Long productId, Long userId, Integer amount) {
         this.productId = productId;
         this.userId = userId;
         this.amount = amount;
-        this.isDeleted = false;
     }
 
     public Long getId() {
@@ -49,23 +47,11 @@ public class Wish {
         return productId;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
     public Integer getAmount() {
         return amount;
     }
 
-    public Boolean isDeleted() {
-        return isDeleted;
-    }
-
     public boolean isNew() {
         return id == null;
-    }
-
-    public void delete() {
-        this.isDeleted = true;
     }
 }
