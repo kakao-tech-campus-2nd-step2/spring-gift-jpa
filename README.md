@@ -107,13 +107,18 @@ alter table member
 
 ### 1단계 기능 목록
 
-- [x] Product entity 매핑
-- [x] User entity 매핑
-- [x] Wish entity 매핑
-
-
-
-
+- [x] 엔티티 매핑
+  - [x] product
+  - [x] member(이름 User 사용)
+  - [x] wish
+- [x] Repository 인터페이스
+  - [x] product
+  - [x] member(user)
+  - [x] wish
+- [ ] 학습 테스트 작성
+  - [ ] ProductRepository
+  - [ ] UserRepository
+  - [ ] WishRepository
 
 
 
