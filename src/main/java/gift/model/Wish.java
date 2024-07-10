@@ -15,14 +15,13 @@ public class Wish {
     @Column(name = "PRODUCT_ID")
     private long productId;
 
-    public Wish(long id, long userId, long productId) {
+    public Wish(long id, long memberId, long productId) {
         this.id = id;
         this.memberId = memberId;
         this.productId = productId;
     }
 
-    public Wish(long userId, long productId) {
-        this.id = 0;
+    public Wish(long memberId, long productId) {
         this.memberId = memberId;
         this.productId = productId;
     }
@@ -34,7 +33,7 @@ public class Wish {
         return id;
     }
 
-    public long getUserId() {
+    public long getMemberId() {
         return memberId;
     }
 

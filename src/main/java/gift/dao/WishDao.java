@@ -32,7 +32,7 @@ public class WishDao {
 
     public void insertWishlist(Wish wish){
         var sql = "insert into wishlist (userid, productid) values (?, ?)";
-        jdbcTemplate.update(sql, wish.getUserId(), wish.getProductId());
+        jdbcTemplate.update(sql, wish.getMemberId(), wish.getProductId());
     }
 
     public void deleteWishlist(Long id){

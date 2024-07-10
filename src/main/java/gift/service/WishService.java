@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.dao.WishDao;
 import gift.model.Wish;
+import gift.repository.WishRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
@@ -11,31 +12,29 @@ import java.util.List;
 @Service
 public class WishService {
     private final MemberService memberService;
-    private final WishDao wishDao;
+    private final WishRepository wishRepository;
 
-    public WishService(MemberService memberService, WishDao wishDao) {
+    public WishService(MemberService memberService, WishRepository wishRepository) {
         this.memberService = memberService;
-        this.wishDao = wishDao;
+        this.wishRepository = wishRepository;
     }
 
     public List<Wish> getWishlistController(HttpServletRequest request) throws AuthenticationException {
         //auth로 유저 아이디 가져옴
-        Long userid = memberService.getIdByToken(request);
+        long memberId = memberService.getIdByToken(request);
         //가져온 유저아이디 검색
-        List<Wish> wish = wishDao.selectAllWishlist(userid);
-        return wish;
+        return wishRepository.findByMemberId(memberId);
     }
 
     public void postWishlist(Long productid, HttpServletRequest request) throws AuthenticationException {
         // auth로 유저 아이디 가져옴
-        Long userid = memberService.getIdByToken(request);
+        long memberId = memberService.getIdByToken(request);
         // pathvariable로 상품 아이디 가져옴
-        Wish wish = new Wish(userid, productid);
-
-        wishDao.insertWishlist(wish);
+        Wish wish = new Wish(memberId, productid);
+        wishRepository.save(wish);
     }
 
     public void deleteProduct(Long id){
-        wishDao.deleteWishlist(id);
+        wishRepository.deleteById(id);
     }
 }
