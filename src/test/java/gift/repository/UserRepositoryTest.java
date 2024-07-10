@@ -16,6 +16,7 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
+
     @DisplayName("회원 정보 저장 테스트")
     @Test
     void save() {
