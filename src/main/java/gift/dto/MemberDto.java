@@ -1,28 +1,19 @@
-package gift.domain;
+package gift.dto;
 
-import gift.dto.UserDto;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import gift.entity.Member;
 
-public class User {
-
+public class MemberDto {
+    
     private long id;
-
-    @Size(max = 15, message = "Name is too long!")
-    @Pattern(regexp = "^[a-zA-Z0-9 ()\\[\\]+\\-\\&\\/\\_가-힣]*$", message = "Name has invalid character")
-    private String name;
-
-    @Size(max = 20)
     private String password;
     private String email;
     private String role;
 
-    public User() {
+    public MemberDto() {
     }
 
-    public User(long id, String name, String password, String email, String role) {
+    public MemberDto(long id, String password, String email, String role) {
         this.id = id;
-        this.name = name;
         this.password = password;
         this.email = email;
         this.role = role;
@@ -34,14 +25,6 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getPassword() {
@@ -68,7 +51,7 @@ public class User {
         this.role = role;
     }
 
-    public UserDto toDto(User user){
-        return new UserDto(this.id, this.name, this.password, this.email, this.role);
+    public Member toEntity(MemberDto memberDto){
+        return new Member(this.password, this.email, this.role);
     }
 }

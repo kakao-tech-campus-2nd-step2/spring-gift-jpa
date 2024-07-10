@@ -6,10 +6,10 @@
 </head>
 <body>
     <p>Edit Product Form</p>
-    <form th:action="@{'/admin/edit/' + ${product.id}}" th:object="${product}" method="post">
+    <form th:action="@{'/admin/edit/' + ${product.getId()}}" th:object="${product}" method="post">
         <div>
             <label>id</label>
-            <input type="text" th:value="${product.id}" readonly/>
+            <input type="text" th:value="${product.getId()}" readonly/>
         </div>
         <div>
             <label>name</label> 
@@ -18,11 +18,11 @@
         </div>
         <div>
             <label>price</label>
-            <input type="number" name="price" th:value="${product.price}"/>
+            <input type="number" name="price" th:value="${product.getPrice()}"/>
         </div>
         <div>
             <label>imageUrl</label>
-            <input type="text" name="imageUrl" th:value="${product.imageUrl}"/>
+            <input type="text" name="imageUrl" th:value="${product.getImageUrl()}"/>
         </div>
         <div>
             <button type="submit">Save</button>

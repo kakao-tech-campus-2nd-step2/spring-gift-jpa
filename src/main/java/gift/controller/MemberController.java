@@ -8,32 +8,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import gift.dto.UserDto;
+import gift.dto.MemberDto;
 import gift.dto.request.LoginRequest;
-import gift.service.UserService;
+import gift.service.MemberService;
 import gift.util.JwtUtil;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/members")
-public class UserController {
+public class MemberController {
 
-    private UserService userService;
+    private MemberService memberService;
 
-    public UserController(UserService userService, JwtUtil jwtUtil){
-        this.userService = userService;
+    public MemberController(MemberService memberService, JwtUtil jwtUtil){
+        this.memberService = memberService;
     }
     
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody UserDto userDto, BindingResult bindingResult){
-        userService.addUser(userDto);
-        String token = userService.generateToken(userDto.getEmail());
+    public ResponseEntity<String> register(@Valid @RequestBody MemberDto memberDto, BindingResult bindingResult){
+        memberService.addMember(memberDto);
+        String token = memberService.generateToken(memberDto.getEmail());
         return new ResponseEntity<>(token, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest, BindingResult bindingResult){
-        String token = userService.authenticateUser(loginRequest);
+        String token = memberService.authenticateMember(loginRequest);
         return new ResponseEntity<>(token, HttpStatus.ACCEPTED);
     }
 }

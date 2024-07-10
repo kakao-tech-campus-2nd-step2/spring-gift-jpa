@@ -1,6 +1,6 @@
 package gift.dto;
 
-import gift.domain.Product;
+import gift.entity.Product;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -58,7 +58,7 @@ public class ProductDto {
     }
 
     public Product toEntity() {
-        return new Product(this.id, this.name, this.price, this.imageUrl);
+        return new Product(this.name, this.price, this.imageUrl);
     }
 
     public static ProductDto fromEntity(Product product) {

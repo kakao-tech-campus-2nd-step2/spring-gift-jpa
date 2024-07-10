@@ -21,15 +21,15 @@
           </thead>
           <tbody>
             <tr th:each="product: ${products}">
-              <td th:text="${product.id()}"></td>
-              <td th:text="${product.name()}"></td>
-              <td th:text="${product.price()}"></td>
-              <td th:text="${product.imageUrl()}"></td>
+              <td th:text="${product.getId()}"></td>
+              <td th:text="${product.getName()}"></td>
+              <td th:text="${product.getPrice()}"></td>
+              <td th:text="${product.getImageUrl()}"></td>
               <td> 
-                <form th:action="@{'/admin/edit/' + ${product.id}}" method="get">
+                <form th:action="@{'/admin/edit/' + ${product.getId()}}" method="get">
                   <button type="submit">Edit</button>
                 </form>
-                <form th:action="@{'/admin/delete/' + ${product.id}}" method="post">
+                <form th:action="@{'/admin/delete/' + ${product.getId()}}" method="post">
                   <button type="submit">Delete</button>
                 </form>
               </td>
