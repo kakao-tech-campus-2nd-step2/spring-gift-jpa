@@ -1,7 +1,9 @@
 package gift.repository;
 
-import gift.entity.Product;
 import gift.entity.Wish;
+import gift.service.ProductService;
+import gift.service.WishListService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,24 +17,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class WishRepositoryTest {
 
-    private static final Long MEMBER_ID = 1L;
-
     @Autowired
     private WishRepository wishRepository;
-    @Autowired
-    private ProductRepository productRepository;
+
+    @BeforeAll
+    static void dataInit(@Autowired WishListService wishListService,
+                         @Autowired ProductService productService) {
+        //Given
+        productService.addProduct("almond", 500, "almond.jpg");
+        productService.addProduct("choco", 55000, "choco.jpg");
+        wishListService.addProductToWishList(MEMBER_ID, 1L, 100);
+        wishListService.addProductToWishList(MEMBER_ID, 2L, 100);
+    }
+
+    private static final Long MEMBER_ID = 1L;
 
     @Test
     @Transactional
     void findAllByMemberIdWithProduct() {
-        //Given
-        Product product1 = productRepository.save(new Product("아몬드", 500, "image.jpg"));
-        Product product2 = productRepository.save(new Product("초코", 500, "image.2jpg"));
-        Wish wish1 = new Wish(MEMBER_ID, 5, product1);
-        Wish wish2 = new Wish(MEMBER_ID, 10, product2);
-        wishRepository.save(wish1);
-        wishRepository.save(wish2);
-
         //When
         List<Wish> wishes = wishRepository.findAllByMemberIdWithProduct(MEMBER_ID);
 
@@ -45,20 +47,12 @@ class WishRepositoryTest {
 
     @Test
     void findByMemberIdAndProductId() {
-        //Given
-        Product product1 = productRepository.save(new Product("아몬드", 500, "image.jpg"));
-        Product product2 = productRepository.save(new Product("초코", 500, "image.2jpg"));
-        Wish wish1 = new Wish(MEMBER_ID, 5, product1);
-        Wish wish2 = new Wish(MEMBER_ID, 10, product2);
-        wishRepository.save(wish1);
-        wishRepository.save(wish2);
-
         //When
-        Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(MEMBER_ID, product1.getId());
+        Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(MEMBER_ID, 1L);
 
         //Then
         assertThat(wish).isPresent();
-        assertThat(wish.get().getId()).isEqualTo(product1.getId());
+        assertThat(wish.get().getProduct().getName()).isEqualTo("almond");
     }
 
 }
