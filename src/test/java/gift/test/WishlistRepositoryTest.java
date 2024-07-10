@@ -1,39 +1,54 @@
 package gift.test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import gift.model.Product;
 import gift.model.SiteUser;
 import gift.model.Wishlist;
 import gift.repository.ProductRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishlistRepository;
-import jakarta.transaction.Transactional;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@Transactional
+@TestMethodOrder(OrderAnnotation.class)
 public class WishlistRepositoryTest {
+
     @Autowired
     private WishlistRepository wishlistRepository;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private WebApplicationContext context;
 
-    private Wishlist wishlist;
+    private MockMvc mockMvc;
     private SiteUser siteUser;
     private Product product;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+        wishlistRepository.deleteAll();
+        userRepository.deleteAll();
+        productRepository.deleteAll();
+
         siteUser = new SiteUser();
         siteUser.setUsername("testuser");
         siteUser.setPassword("testpass");
@@ -45,41 +60,45 @@ public class WishlistRepositoryTest {
         product.setPrice(100);
         product.setImageUrl("http://example.com/image.jpg");
         productRepository.save(product);
-
-        wishlist = new Wishlist();
-        wishlist.setUser(siteUser);
-        wishlist.setProduct(product);
-        wishlist.setQuantity(2);
     }
 
     @Test
-    @DisplayName("위시리스트에 상품 추가하기")
-    public void testSaveWishlist() {
-        // when
-        Wishlist savedWishlist = wishlistRepository.save(wishlist);
+    @DisplayName("담긴 상품 수량 변경")
+    @WithMockUser(username = "testuser")
+    void testUpdateWishlistQuantity() throws Exception {
+        // Given
+        Wishlist item = new Wishlist();
+        item.setUser(siteUser);  // Ensure SiteUser is set
+        item.setProduct(product);  // Ensure Product is set
+        item.setQuantity(2);
+        wishlistRepository.save(item);
 
-        // then
-        assertThat(savedWishlist).isNotNull();
-        assertThat(savedWishlist.getId()).isNotNull();
-        assertThat(savedWishlist.getUser()).isEqualTo(siteUser);
-        assertThat(savedWishlist.getProduct()).isEqualTo(product);
-        assertThat(savedWishlist.getQuantity()).isEqualTo(2);
+        // When
+        mockMvc.perform(post("/web/wishlist/update/" + item.getId())
+                .param("quantity", "5"))
+            .andExpect(status().isOk());
+
+        // Then
+        Wishlist updatedItem = wishlistRepository.findById(item.getId()).orElseThrow();
+        assertThat(updatedItem.getQuantity()).isEqualTo(5);
     }
 
     @Test
-    @DisplayName("위시리스트에 상품 조회하기")
-    public void testFindByUsername() {
-        // given
-        wishlistRepository.save(wishlist);
+    @DisplayName("담긴 상품 삭제")
+    @WithMockUser(username = "testuser")
+    void testRemoveFromWishlist() throws Exception {
+        // Given
+        Wishlist item = new Wishlist();
+        item.setUser(siteUser);  // Ensure SiteUser is set
+        item.setProduct(product);  // Ensure Product is set
+        item.setQuantity(2);
+        wishlistRepository.save(item);
 
-        // when
-        List<Wishlist> foundWishlist = wishlistRepository.findByUserUsername("testuser");
+        // When
+        mockMvc.perform(post("/web/wishlist/delete/" + item.getId()))
+            .andExpect(status().isOk());
 
-        // then
-        assertThat(foundWishlist).hasSize(1);
-        Wishlist foundItem = foundWishlist.get(0);
-        assertThat(foundItem.getUser().getUsername()).isEqualTo("testuser");
-        assertThat(foundItem.getProduct()).isEqualTo(product);
-        assertThat(foundItem.getQuantity()).isEqualTo(2);
+        // Then
+        assertThat(wishlistRepository.findById(item.getId())).isEmpty();
     }
 }
