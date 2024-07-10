@@ -81,7 +81,18 @@ class MemberApiControllerTest {
 
     @Test
     void login() {
+        //given
+        String url = "http://localhost:" + port + "/api/members/login";
+        String email = member.getEmail().getValue();
+        String password = member.getPassword().getValue();
+        LoginRequest request = new LoginRequest(email, password);
 
+        //when
+        ResponseEntity<LoginResponse> response = restTemplate.postForEntity(url, request, LoginResponse.class);
+
+        //then
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertThat(response.getBody().getToken()).isNotNull();
     }
 
     @Test
