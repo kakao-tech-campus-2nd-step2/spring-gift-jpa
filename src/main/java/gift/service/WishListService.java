@@ -4,13 +4,14 @@ import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
 import gift.dto.WishProduct;
+import gift.dto.response.WishProductsResponse;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static gift.constant.Message.ADD_SUCCESS_MSG;
 import static gift.constant.Message.DELETE_SUCCESS_MSG;
@@ -28,9 +29,10 @@ public class WishListService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getWishList(Long memberId) {
-        Member member = memberRepository.findMemberById(memberId).get();
-        return findProducts(wishRepository.findWishByMember(member));
+    public List<WishProductsResponse> getWishList(Long memberId) {
+        List<Wish> wishes = wishRepository.findWishByMemberId(memberId);
+        return wishes.stream()
+                .map(wish -> new WishProductsResponse(wish.getProduct())).collect(Collectors.toList());
     }
 
     public String addWishProduct(WishProduct wishProduct) {
@@ -47,14 +49,5 @@ public class WishListService {
         Member member = memberRepository.findMemberById(memberId).get();
         Product product = productRepository.findProductById(productId).get();
         return new Wish(member, product);
-    }
-
-    private List<Product> findProducts(List<Wish> wishes) {
-        List<Product> products = new ArrayList<>();
-        for (Wish wish : wishes) {
-            System.out.println(products);
-            products.add(productRepository.findProductById(wish.getProduct().getId()).get());
-        }
-        return products;
     }
 }
