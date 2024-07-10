@@ -23,9 +23,9 @@ public class MenuController {
     }
 
     public String returnView(
-          String errorMsg,
-          Model model){
-        if(errorMsg != null){
+            String errorMsg,
+            Model model) {
+        if (errorMsg != null) {
             model.addAttribute("errors", errorMsg);
             model.addAttribute("menus", menuService.findall());
             return "Menu";
@@ -41,10 +41,10 @@ public class MenuController {
             Model model
     ) {
         if (result.hasErrors()) {
-            returnView(result.getFieldError().getDefaultMessage(),model);
+            returnView(result.getFieldError().getDefaultMessage(), model);
             return;
         }
-        returnView(null,model);
+        returnView(null, model);
     }
 
     @GetMapping
