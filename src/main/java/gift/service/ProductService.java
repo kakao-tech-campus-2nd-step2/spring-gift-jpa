@@ -29,10 +29,11 @@ public class ProductService {
 
     public void updateProduct(Long id, ProductRequestDTO productRequestDTO) {
         productRepository.findById(id).ifPresent(product -> {
-            product.setName(productRequestDTO.name());
-            product.setPrice(productRequestDTO.price());
-            product.setImageUrl(productRequestDTO.imageUrl());
-            productRepository.save(product);
+            Product updatedProduct = new Product(product.getId(),
+                    productRequestDTO.name(),
+                    productRequestDTO.price(),
+                    productRequestDTO.imageUrl());
+            productRepository.save(updatedProduct);
         });
     }
 
