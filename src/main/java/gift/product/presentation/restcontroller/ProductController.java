@@ -2,6 +2,7 @@ package gift.product.presentation.restcontroller;
 
 import gift.product.presentation.dto.RequestProductDto;
 import gift.product.presentation.dto.RequestProductIdsDto;
+import gift.product.presentation.dto.ResponsePagingProductDto;
 import gift.product.presentation.dto.ResponseProductDto;
 import gift.product.business.service.ProductService;
 import jakarta.validation.Valid;
@@ -24,6 +25,13 @@ public class ProductController {
         var productDto = productService.getProduct(id);
         var responseProductDto = ResponseProductDto.from(productDto);
         return ResponseEntity.ok(responseProductDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponsePagingProductDto> getProductsByPage(@RequestParam int page) {
+        var productPagingDto = productService.getProductsByPage(page);
+        var responsePagingProductDto = ResponsePagingProductDto.from(productPagingDto);
+        return ResponseEntity.ok(responsePagingProductDto);
     }
 
     @PostMapping

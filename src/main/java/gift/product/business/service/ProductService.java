@@ -1,9 +1,12 @@
 package gift.product.business.service;
 
+import gift.product.business.dto.ProductPagingDto;
 import gift.product.persistence.entity.Product;
 import gift.product.persistence.repository.ProductRepository;
 import gift.product.business.dto.ProductDto;
 import gift.product.business.dto.ProductRegisterDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,5 +49,11 @@ public class ProductService {
 
     public void deleteProducts(List<Long> productIds) {
         productRepository.deleteProductByIdList(productIds);
+    }
+
+    public ProductPagingDto getProductsByPage(int page) {
+        PageRequest pageRequest = PageRequest.of(page, 20);
+        Page<Product> products = productRepository.getProductsByPage(pageRequest);
+        return ProductPagingDto.from(products);
     }
 }
