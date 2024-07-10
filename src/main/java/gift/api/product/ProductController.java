@@ -1,5 +1,7 @@
 package gift.api.product;
 
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -17,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 public class ProductController {
 
+    private final EntityManager entityManager;
     private final ProductRepository productRepository;
 
-    public ProductController(ProductRepository productRepository) {
+    public ProductController(EntityManager entityManager, ProductRepository productRepository) {
+        this.entityManager = entityManager;
         this.productRepository = productRepository;
     }
 
@@ -36,10 +40,13 @@ public class ProductController {
             URI.create("/api/products/" + productRepository.save(product).getId())).build();
     }
 
+    @Transactional
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable("id") long id, @Valid @RequestBody ProductRequest productRequest) {
-        productRepository.save(new Product(
-            id, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl()));
+        Product product = entityManager.find(Product.class, id);
+        product.setName(productRequest.getName());
+        product.setPrice(productRequest.getPrice());
+        product.setImageUrl(productRequest.getImageUrl());
         return ResponseEntity.ok().build();
     }
 

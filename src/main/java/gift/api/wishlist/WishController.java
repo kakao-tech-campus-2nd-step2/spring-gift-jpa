@@ -1,6 +1,8 @@
 package gift.api.wishlist;
 
 import gift.global.LoginMember;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/wishes")
 public class WishController {
 
+    private final EntityManager entityManager;
     private final WishRepository wishRepository;
 
-    public WishController(WishRepository wishRepository) {
+    public WishController(EntityManager entityManager, WishRepository wishRepository) {
+        this.entityManager = entityManager;
         this.wishRepository = wishRepository;
     }
 
@@ -33,13 +37,15 @@ public class WishController {
         return ResponseEntity.created(URI.create("/api/wishes/" + memberId)).build();
     }
 
+    @Transactional
     @PutMapping()
     public ResponseEntity<Void> update(@RequestBody WishRequest wishRequest, @LoginMember Long memberId) {
         if (wishRequest.quantity() == 0) {
             wishRepository.deleteByMemberIdAndProductId(memberId, wishRequest.productId());
             return ResponseEntity.noContent().build();
         }
-        wishRepository.save(new Wish(memberId, wishRequest.productId(), wishRequest.quantity()));
+        Wish wish = entityManager.find(Wish.class, new WishId(memberId, wishRequest.productId()));
+        wish.setQuantity(wishRequest.quantity());
         return ResponseEntity.ok().build();
     }
 
