@@ -25,7 +25,7 @@ public class JwtTokenUtil {
             .compact();
     }
 
-    public Claims decodeJwt(String token) {
+    public static Claims decodeJwt(String token) {
         return Jwts.parser()
             .setSigningKey(key)
             .build()
