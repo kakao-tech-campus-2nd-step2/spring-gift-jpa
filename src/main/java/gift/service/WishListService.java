@@ -100,6 +100,10 @@ public class WishListService {
      */
     @CheckProductExists
     public boolean addWishListByUserIdAndProductId(long userId, long productId) {
-        return wishListRepository.addWishListByUserIdAndProductId(userId, productId);
+        var wishListEntity = new WishListEntity();
+        wishListEntity.setUserId(userId);
+        wishListEntity.setProductId(productId);
+        wishListRepository.save(wishListEntity);
+        return true;
     }
 }
