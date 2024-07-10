@@ -1,9 +1,23 @@
 package gift.entity;
 
 public class Token {
-    Long id ;
+    private Long id;
+    private String tokenValue;
 
-    public Token(Long id) {
-        this.id = id;
+    public Token(String tokenValue) {
+        this.tokenValue = tokenValue;
+    }
+
+    public Token(Long newId, String tokenValue) {
+        this.id = newId;
+        this.tokenValue= tokenValue;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTokenValue() {
+        return tokenValue;
     }
 }

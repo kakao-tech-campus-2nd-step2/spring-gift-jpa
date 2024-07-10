@@ -32,7 +32,7 @@ Authorization: <유형> <자격증명> ex) Authorization: Bearer token
  
 ### 기능목록 
 * 토큰 
-    - [ ] 토큰 entity 만들기
+    - [x] 토큰 entity 만들기
       - [ ] user id 로 토큰 생성해서 토큰 value에 넣는 메서드 
             * Basic 방식 (Base64)
       - [ ] 토큰 value 값 가져오는 getter 

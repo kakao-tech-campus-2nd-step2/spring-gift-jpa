@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS wishes;
+DROP TABLE IF EXISTS tokens;
 
 CREATE TABLE IF NOT EXISTS products (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -21,4 +22,9 @@ CREATE TABLE IF NOT EXISTS wishes (
     user_id BIGINT,
     FOREIGN KEY (product_id) REFERENCES products(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS tokens (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    token_value VARCHAR(255)
 );
