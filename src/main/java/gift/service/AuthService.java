@@ -5,6 +5,7 @@ import gift.entity.User;
 import gift.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import javax.naming.AuthenticationException;
 import java.util.Base64;
 
 @Service
@@ -32,18 +33,18 @@ public class AuthService {
         return "Basic" + Base64.getEncoder().encodeToString(credentials.getBytes());
     }
 
-    public UserDto login(UserDto.Request inputInfo) {
+    public UserDto login(UserDto inputInfo) throws AuthenticationException {
 
         UserDto dbUserDto = UserDto.fromEntity(userRepository.findByUserEmail(inputInfo.getEmail()));
 
-        return checkPassword(inputInfo, dbUserDto);
+        return validatePassword(inputInfo, dbUserDto);
     }
 
-    private UserDto checkPassword(UserDto.Request inputInfo, UserDto dbUserDto) {
+    private UserDto validatePassword(UserDto inputInfo, UserDto dbUserDto) throws AuthenticationException {
 
         if (inputInfo.getPassword().equals(dbUserDto.getPassword())) {
             return dbUserDto;
         }
-        return null;
+        throw new AuthenticationException("Invalid password");
     }
 }

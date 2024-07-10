@@ -56,7 +56,7 @@ public class WishRepository {
         Wish wish = findOneById(id);
 
         if (wish.getUserId().equals(userId)) {
-            throw new IllegalAccessException() ;
+            throw new IllegalAccessException();
         }
 
         var sql = "delete from wishes where id = ?";

@@ -13,6 +13,10 @@ public class UserDto {
         this.password = password;
     }
 
+    public static UserDto fromEntity(User user) {
+        return new UserDto(user.getId(), user.getEmail(), user.getPassword());
+    }
+
     public Long getId() {
         return id;
     }
@@ -21,8 +25,8 @@ public class UserDto {
         return password;
     }
 
-    public static UserDto fromEntity(User user) {
-        return new UserDto(user.getId(), user.getEmail(), user.getPassword());
+    public String getEmail() {
+        return this.email;
     }
 
     public static class Request {
@@ -60,7 +64,9 @@ public class UserDto {
             this.password = password;
         }
 
-        public Long getId() { return id; }
+        public Long getId() {
+            return id;
+        }
 
         public String getEmail() {
             return email;

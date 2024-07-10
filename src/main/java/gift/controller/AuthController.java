@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.naming.AuthenticationException;
+
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
@@ -36,22 +38,16 @@ public class AuthController {
     public String save(@ModelAttribute UserDto.Request request) {
 
         String token = authService.save(request);
-
         return token;
     }
 
     @PostMapping("/user/login")
-    public String login(@ModelAttribute UserDto.Request request) {
+    public String login(@ModelAttribute UserDto.Request request) throws AuthenticationException {
 
-        UserDto loginResult = authService.login(request);
+        authService.login(new UserDto(request.getId(), request.getEmail(), request.getPassword()));
+        String token = authService.generateToken(request.getEmail(), request.getPassword());
 
-        if (loginResult != null) {
+        return token;
 
-            String token = authService.generateToken(request.getEmail(), request.getPassword());
-
-            return token;
-        }
-
-        return null;
     }
 }
