@@ -23,4 +23,11 @@ public class ProductRepositoryTest {
         assertThat(actual.get().getName()).isEqualTo("카푸치노");
     }
 
+    @Test
+    void save(){
+        Product expected = new Product("초코라떼", 3500, "example2.com");
+        Product actual = productRepository.save(expected);
+        assertThat(actual.getId()).isEqualTo(expected.getId());
+    }
+
 }
