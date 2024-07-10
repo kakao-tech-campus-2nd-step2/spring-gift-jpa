@@ -10,12 +10,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-@Entity
-@Table(name = "PRODUCT_DTO")
 public class ProductDto {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
 
   private Long id;
 
@@ -24,9 +19,7 @@ public class ProductDto {
     @Pattern(regexp = "^[가-힣a-zA-Z0-9()\\[\\]+\\-&/_]*$", message = "유효한 이름이 아닙니다"),
     @Pattern(regexp = "^(?!.*카카오).*$", message = "'카카오' 포함된 경우 담당 MD와 협의가 필요합니다.")
   })
-  @Column(nullable = false, unique = true)
   private String name;
-  @Column(nullable = false)
   private int price;
   private String imageUrl;
 
