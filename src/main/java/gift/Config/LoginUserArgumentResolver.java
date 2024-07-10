@@ -21,7 +21,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterAnnotation(gift.Config.LoginUser.class) != null;
+        return parameter.getParameterAnnotation(LoginUser.class) != null;
     }
 
     @Override
@@ -33,11 +33,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         }
 
         String token = authorizationHeader.substring(7);
-        UserEntity user = userService.getUserByToken(token);
-        if (user == null) {
-            throw new UnauthorizedException("Invalid token");
-        }
-
-        return user;
+        return userService.getUserFromToken(token)
+                .orElseThrow(() -> new UnauthorizedException("Invalid token"));
     }
 }
