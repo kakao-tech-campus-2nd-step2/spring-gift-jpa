@@ -8,6 +8,7 @@ import gift.user.service.dto.UserInfoParams;
 import gift.user.service.dto.UserSignInInfos;
 import gift.user.service.dto.UserSignupInfos;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -19,6 +20,7 @@ public class UserService {
         this.jwtProvider = jwtProvider;
     }
 
+    @Transactional
     public UserSignupInfos signUp(UserInfoParams userSignupRequest) {
         userRepository.findByUsername(userSignupRequest.username())
                 .ifPresent(u -> {
@@ -29,19 +31,12 @@ public class UserService {
                 PasswordProvider.encode(userSignupRequest.username(), userSignupRequest.password()));
         userRepository.save(newUser);
 
-        User savedUser = userRepository.findByUsername(newUser.getUsername())
-                .orElseThrow(UserNotFoundException::new);
-        if (!PasswordProvider.match
-                (userSignupRequest.username(), userSignupRequest.password(), savedUser.getPassword())
-        ) {
-            throw new UserNotFoundException();
-        }
+        String token = jwtProvider.generateToken(newUser);
 
-        String token = jwtProvider.generateToken(savedUser);
-
-        return UserSignupInfos.of(savedUser.getId(), token);
+        return UserSignupInfos.of(newUser.getId(), token);
     }
 
+    @Transactional(readOnly = true)
     public UserSignInInfos signIn(UserInfoParams userSignupRequest) {
         User savedUser = userRepository.findByUsername(userSignupRequest.username())
                 .orElseThrow(UserNotFoundException::new);
