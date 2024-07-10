@@ -64,7 +64,7 @@ public class AdminController {
 
     @PostMapping("/admin/put/submit")
     public String submitUpdateProduct(@ModelAttribute @Valid Product product, Model model) {
-        adminService.updateProduct(product.id(), product);
+        adminService.updateProduct(product.getId(), product);
         return adminGetPage(model);
     }
 

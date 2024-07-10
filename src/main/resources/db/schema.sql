@@ -14,9 +14,9 @@ CREATE TABLE users (
 
 
 CREATE TABLE wishlists (
-                        email VARCHAR(255) NOT NULL,
-                        type ENUM('1', '2') NOT NULL ,
-                        productId INT NOT NULL,
-                        FOREIGN KEY (email) REFERENCES users(email),
-                        FOREIGN KEY (productId) REFERENCES products(id)
+                           email VARCHAR(255) NOT NULL,
+                           type ENUM('1', '2') NOT NULL ,
+                           productId INT NOT NULL,
+                           FOREIGN KEY (email) REFERENCES users(email),
+                           FOREIGN KEY (productId) REFERENCES products(id)
 );

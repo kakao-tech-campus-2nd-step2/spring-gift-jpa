@@ -30,7 +30,7 @@ public class JdbcProductRepository implements ProductRepository {
     public Boolean save(@Valid Product product){
         try {
             String sql = "INSERT INTO products(id, name, price, imageUrl) VALUES (?,?,?,?)";
-            jdbcTemplate.update(sql, product.id(), product.name(), product.price(), product.imageUrl());
+            jdbcTemplate.update(sql, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
         }catch(Exception e){
             throw new DatabaseAccessException("상품 삽입 문제");
         }
@@ -79,9 +79,9 @@ public class JdbcProductRepository implements ProductRepository {
         try {
             int affectedRows = jdbcTemplate.update(
                     sql,
-                    product.name(),
-                    product.price(),
-                    product.imageUrl(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getImageUrl(),
                     id
             );
             if (affectedRows > 0) return true;
