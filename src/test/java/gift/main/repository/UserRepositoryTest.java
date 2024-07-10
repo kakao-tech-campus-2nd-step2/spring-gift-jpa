@@ -42,9 +42,6 @@ class UserRepositoryTest {
         //given
         userRepository.save(new User("name", "123@123", "123", "USER"));
 
-        //when
-        List<User> userList = userRepository.findAll();
-
         //then
         assertThrows(DataIntegrityViolationException.class, () -> {
             userRepository.save(new User("name112", "123@123", "123", "USER"));
