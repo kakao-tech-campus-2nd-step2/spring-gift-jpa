@@ -1,16 +1,10 @@
 package gift.wish.application;
 
 import gift.common.validation.LoginUser;
-import gift.product.domain.Product;
-import gift.product.exception.ProductNotFoundException;
-import gift.product.persistence.ProductRepository;
 import gift.user.domain.User;
 import gift.wish.application.dto.request.WishRequest;
 import gift.wish.application.dto.response.WishResponse;
-import gift.wish.domain.Wish;
-import gift.wish.exception.WishCanNotModifyException;
-import gift.wish.exception.WishNotFoundException;
-import gift.wish.persistence.WishRepository;
+import gift.wish.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,12 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/wishes")
 public class WishController {
-    private final ProductRepository productRepository;
-    private final WishRepository wishRepository;
+    private final WishService wishService;
 
-    public WishController(ProductRepository productRepository, WishRepository wishRepository) {
-        this.productRepository = productRepository;
-        this.wishRepository = wishRepository;
+    public WishController(WishService wishService) {
+        this.wishService = wishService;
     }
 
     @Operation(summary = "위시리스트 추가", description = "위시리스트를 추가합니다.")
@@ -50,11 +42,7 @@ public class WishController {
     public void saveWish(@RequestBody WishRequest wishRequest,
                          @LoginUser User loginUser
     ) {
-        Product product = productRepository.find(wishRequest.productId())
-                .orElseThrow(() -> ProductNotFoundException.of(wishRequest.productId()));
-
-        Wish wish = wishRequest.toModel(loginUser.getId());
-        wishRepository.save(wish);
+        wishService.saveWish(wishRequest, loginUser.getId());
     }
 
     @Operation(summary = "위시리스트 수정", description = "위시리스트를 수정합니다.")
@@ -68,15 +56,7 @@ public class WishController {
                            @RequestBody WishRequest wishRequest,
                            @LoginUser User loginUser
     ) {
-        Wish wish = wishRepository.findByIdAndUserId(loginUser.getId(), wishId)
-                .orElseThrow(() -> WishNotFoundException.of(wishId));
-
-        if (!wish.getProductId().equals(wishRequest.productId())) {
-            throw new WishCanNotModifyException();
-        }
-
-        Wish newWish = wishRequest.toModel(wishId, loginUser.getId());
-        wishRepository.save(newWish);
+        wishService.updateWish(wishId, wishRequest, loginUser.getId());
     }
 
     @Operation(summary = "위시리스트 목록 조회", description = "위시리스트 목록을 조회합니다.")
@@ -85,11 +65,7 @@ public class WishController {
     })
     @GetMapping()
     public ResponseEntity<List<WishResponse>> getWishList(@LoginUser User loginUser) {
-        List<Wish> wishes = wishRepository.findWishesByUserId(loginUser.getId());
-
-        List<WishResponse> responses = wishes.stream()
-                .map(WishResponse::fromModel)
-                .toList();
+        var responses = wishService.getWishList(loginUser.getId());
 
         return ResponseEntity.ok()
                 .body(responses);
@@ -104,11 +80,10 @@ public class WishController {
     public ResponseEntity<WishResponse> getWishDetail(@PathVariable("wishId") Long wishId,
                                                       @LoginUser User loginUser
     ) {
-        Wish wish = wishRepository.findByIdAndUserId(loginUser.getId(), wishId)
-                .orElseThrow(() -> WishNotFoundException.of(wishId));
+        var response = wishService.getWish(wishId, loginUser.getId());
 
         return ResponseEntity.ok()
-                .body(WishResponse.fromModel(wish));
+                .body(response);
     }
 
     @Operation(summary = "위시리스트 삭제", description = "위시리스트를 삭제합니다.")
@@ -121,10 +96,6 @@ public class WishController {
     public void deleteWish(@PathVariable("wishId") Long wishId,
                            @LoginUser User loginUser
     ) {
-        Wish wish = wishRepository.findByIdAndUserId(loginUser.getId(), wishId)
-                .orElseThrow(() -> WishNotFoundException.of(wishId));
-
-        wish.delete();
-        wishRepository.save(wish);
+        wishService.deleteWish(wishId, loginUser.getId());
     }
 }
