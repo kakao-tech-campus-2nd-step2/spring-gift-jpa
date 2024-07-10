@@ -39,8 +39,8 @@
 - [ ] JDBCTemplate 기반 코드 JPA로 리팩토링
   - [x] JPA 사용을 위한 dependencies 추가
   - [ ] 엔티티 클래스 작성
-    - [ ] member table
-      - [ ] id(Long, key), email(Varchar, unique), password(Varchar)
+    - [x] member table
+      - [x] id(Long, key), email(Varchar, unique), password(Varchar)
     - [ ] product
       - [ ] id(Long, key), price(Integer, 0이상), name(Varchar, not null), image_url(Varchar, not null) 
     - [ ] wish
