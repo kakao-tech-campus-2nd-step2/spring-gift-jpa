@@ -1,5 +1,7 @@
 package gift.product.dto;
 
+import gift.product.model.Product;
+
 public class ProductRequest {
     private long id;
     private String name;
@@ -38,5 +40,14 @@ public class ProductRequest {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public static ProductRequest from(Product product) {
+        ProductRequest request = new ProductRequest();
+        request.setId(product.getId());
+        request.setName(product.getName());
+        request.setPrice(product.getPrice());
+        request.setImgUrl(product.getImgUrl());
+        return request;
     }
 }

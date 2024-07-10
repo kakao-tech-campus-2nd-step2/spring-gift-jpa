@@ -2,18 +2,18 @@ package gift.wishlist.dto;
 
 public class WishResponse {
     private Long id;
-    private String productName;
+    private Long productId;
 
-    public WishResponse(Long id, String productName) {
+    public WishResponse(Long id, Long productId) {
         this.id = id;
-        this.productName = productName;
+        this.productId = productId;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getProductName() {
-        return productName;
+    public Long getProductId() {
+        return productId;
     }
 }
