@@ -1,7 +1,15 @@
 package gift.Entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class UserEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
     private String password;
@@ -10,6 +18,7 @@ public class UserEntity {
         this.email = email;
         this.password = password;
     }
+
     public UserEntity(){}
 
     public Long getId() {
