@@ -13,11 +13,11 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
-        return productRepository.getAllProducts();
+        return productRepository.findAll();
     }
 
     public void addProduct(ProductDTO productDTO) {
-        productRepository.addProduct(
+        productRepository.save(
             new Product(
                 -1,
                 productDTO.name(),
@@ -28,7 +28,10 @@ public class ProductService {
     }
 
     public void updateProduct(long id, ProductDTO productDTO) {
-        productRepository.updateProduct(
+        if (!productRepository.existsById(id)) {
+            throw new IllegalArgumentException("Product does not exist");
+        }
+        productRepository.save(
             new Product(
                 id,
                 productDTO.name(),
@@ -39,6 +42,6 @@ public class ProductService {
     }
 
     public void deleteProduct(long id) {
-        productRepository.deleteProduct(id);
+        productRepository.deleteById(id);
     }
 }

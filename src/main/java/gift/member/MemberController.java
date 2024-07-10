@@ -19,12 +19,12 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Token> register(@Valid @RequestBody Member member) {
-        return ResponseEntity.ok(new Token(memberService.register(member)));
+    public ResponseEntity<Token> register(@Valid @RequestBody MemberDTO memberDTO) {
+        return ResponseEntity.ok(new Token(memberService.register(memberDTO)));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Token> login(@Valid @RequestBody Member member) {
-        return ResponseEntity.ok(new Token(memberService.login(member)));
+    public ResponseEntity<Token> login(@Valid @RequestBody MemberDTO memberDTO) {
+        return ResponseEntity.ok(new Token(memberService.login(memberDTO)));
     }
 }

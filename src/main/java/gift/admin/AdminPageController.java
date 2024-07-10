@@ -4,7 +4,7 @@ import static gift.admin.AdminPageConfigure.MAX_PAGE_INDEX;
 import static gift.admin.AdminPageConfigure.PAGE_SIZE;
 
 import gift.product.Product;
-import gift.product.ProductRepository;
+import gift.product.ProductService;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.springframework.stereotype.Controller;
@@ -15,17 +15,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class AdminPageController {
 
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    public AdminPageController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public AdminPageController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping(path = "/admin")
     public String adminPage(Model model, @RequestParam("page") Integer currentPage) {
-        List<Product> totalProducts = productRepository.getAllProducts();
+        List<Product> totalProducts = productService.getAllProducts();
         List<Product> subProducts = totalProducts.subList((currentPage - 1) *
-                PAGE_SIZE.getValue(),
+                                                          PAGE_SIZE.getValue(),
             Math.min(currentPage * PAGE_SIZE.getValue(), totalProducts.size()));
 
         Integer totalProductsSize = totalProducts.size();
@@ -46,8 +46,8 @@ public class AdminPageController {
 
         // 내림 연산이 반드시 필요하기에, 약분을 통해 나누면 안된다.
         Integer startPage = (Math.floorDiv(page - 1, MAX_PAGE_INDEX.getValue()) + 1)
-            * MAX_PAGE_INDEX.getValue()
-            - (MAX_PAGE_INDEX.getValue() - 1);
+                            * MAX_PAGE_INDEX.getValue()
+                            - (MAX_PAGE_INDEX.getValue() - 1);
 
         return IntStream.rangeClosed(
                 startPage,

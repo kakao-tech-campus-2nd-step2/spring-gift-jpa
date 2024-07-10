@@ -10,8 +10,18 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
+@ActiveProfiles("selenium")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource(locations = "classpath:application.properties")
 public class AddPageTest {
+
+    @LocalServerPort
+    private int port;
 
     private static WebDriver driver;
     private static final Long SLEEP_TIME = 500L;
@@ -25,12 +35,12 @@ public class AddPageTest {
     @Test
     @DisplayName("add product E2E Test")
     public void addPageTest() throws InterruptedException {
-        driver.get("http://localhost:8080/admin?page=1");
+        driver.get("http://localhost:" + port + "/admin?page=1");
         for (int i = 0; i < 10; i++) {
-            addProduct("Product " + i, i + "000", "imageUrl-" + i);
+            addProduct("Product-" + i, i + "000", "imageUrl-" + i);
         }
         String currentURL = driver.getCurrentUrl();
-        assertEquals(currentURL, "http://localhost:8080/admin?page=1");
+        assertEquals(currentURL, "http://localhost:" + port + "/admin?page=1");
     }
 
     private void addProduct(String name, String price, String imageUrl)

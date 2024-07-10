@@ -93,22 +93,22 @@
         <th>Action</th>
       </tr>
 
-      <tr th:each="products : ${products}">
+      <tr th:each="product : ${products}">
         <td><input type="checkbox" th:onclick="checkboxOnClick()"/></td>
-        <td th:text="${products.id}" id="id"></td>
-        <td th:text="${products.name}"></td>
-        <td th:text="${products.price}"></td>
-        <td th:text="${products.imageUrl}"></td>
+        <td th:text="${product.getId()}" id="id"></td>
+        <td th:text="${product.getName()}"></td>
+        <td th:text="${product.getPrice()}"></td>
+        <td th:text="${product.getImageUrl()}"></td>
         <td>
           <button
               class="material-symbols-outlined content-edit"
-              th:onclick="'editProductbtnOnClick(' + ${products.id} + ',' + ${page} + ')'"
+              th:onclick="'editProductbtnOnClick(' + ${product.getId()} + ',' + ${page} + ')'"
           >
             edit
           </button>
           <button
               class="material-symbols-outlined content-delete"
-              th:onclick="'deleteProduct(' + ${products.id} + ',' + ${page} + ')'"
+              th:onclick="'deleteProduct(' + ${product.getId()} + ',' + ${page} + ')'"
           >
             delete
           </button>
