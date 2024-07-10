@@ -1,19 +1,16 @@
 package gift.dto;
 
+import gift.domain.Product;
+import gift.domain.Wish;
+
 public class WishResponseDto {
     private Long id;
-    private Long productId;
-    private String productName;
-    private int productPrice;
-    private String productImageUrl;
+    private Product product;
     private int quantity;
 
-    public WishResponseDto(Long id, Long productId, String productName, int productPrice, String productImageUrl, int quantity) {
+    public WishResponseDto(Long id, Product product, int quantity) {
         this.id = id;
-        this.productId = productId;
-        this.productName = productName;
-        this.productPrice = productPrice;
-        this.productImageUrl = productImageUrl;
+        this.product = product;
         this.quantity = quantity;
     }
 
@@ -25,36 +22,12 @@ public class WishResponseDto {
         this.id = id;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public int getProductPrice() {
-        return productPrice;
-    }
-
-    public void setProductPrice(int productPrice) {
-        this.productPrice = productPrice;
-    }
-
-    public String getProductImageUrl() {
-        return productImageUrl;
-    }
-
-    public void setProductImageUrl(String productImageUrl) {
-        this.productImageUrl = productImageUrl;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public int getQuantity() {
@@ -63,5 +36,9 @@ public class WishResponseDto {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public static WishResponseDto from(final Wish wish){
+        return new WishResponseDto(wish.getId(), wish.getProduct(), wish.getQuantity());
     }
 }

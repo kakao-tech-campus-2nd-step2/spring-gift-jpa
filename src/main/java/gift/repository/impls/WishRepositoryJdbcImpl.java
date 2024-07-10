@@ -9,20 +9,20 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class WishRepositoryImpl implements WishRepository {
+public class WishRepositoryJdbcImpl {
     private final JdbcTemplate jdbcTemplate;
 
-    public WishRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public WishRepositoryJdbcImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
+
     public void save(Wish wish) {
         var sql = "INSERT INTO WISHES (MEMBER_ID, PRODUCT_ID, QUANTITY) VALUES (?,?,?)";
-        jdbcTemplate.update(sql, wish.getMemberId(), wish.getProductId(), wish.getQuantity());
+        jdbcTemplate.update(sql, wish.getMember().getId(), wish.getProduct().getId(), wish.getQuantity());
     }
 
-    @Override
+    /*
     public Optional<List<Wish>> findByMemberId(Long memberId) {
         var sql = "SELECT * FROM WISHES WHERE MEMBER_ID = ?";
         List<Wish> wishes = jdbcTemplate.query(
@@ -41,7 +41,6 @@ public class WishRepositoryImpl implements WishRepository {
         return Optional.of(wishes);
     }
 
-    @Override
     public Optional<Wish> findByIdAndMemberId(Long id, Long memberId) {
         var sql = "SELECT * FROM WISHES WHERE ID = ? AND MEMBER_ID = ?";
         List<Wish> wishes = jdbcTemplate.query(
@@ -59,15 +58,13 @@ public class WishRepositoryImpl implements WishRepository {
             return Optional.empty();
         }
         return Optional.of(wishes.get(0));
-    }
+    }*/
 
-    @Override
     public void delete(Long id) {
         var sql = "DELETE FROM WISHES WHERE ID = ?";
         jdbcTemplate.update(sql, id);
     }
 
-    @Override
     public void updateQuantity(Long id, int quantity) {
         var sql = "UPDATE WISHES SET QUANTITY = ? WHERE ID = ?";
         jdbcTemplate.update(sql, quantity, id);

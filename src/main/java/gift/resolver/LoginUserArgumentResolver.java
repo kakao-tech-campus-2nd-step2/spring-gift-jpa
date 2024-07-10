@@ -1,6 +1,8 @@
 package gift.resolver;
 
 import gift.annotation.LoginMember;
+import gift.dto.MemberRequestDto;
+import gift.dto.MemberResponseDto;
 import gift.service.JwtUtil;
 import gift.service.MemberService;
 import org.springframework.core.MethodParameter;
@@ -27,6 +29,8 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authHeader = webRequest.getHeader("Authorization");
         String userEmail = jwtUtil.extractEmail(authHeader.substring(7));
-        return memberService.findByEmail(userEmail);
+        MemberResponseDto memberDto = memberService.findByEmail(userEmail);
+
+        return new MemberRequestDto(memberDto.getId(),memberDto.getEmail(),memberDto.getPassword());
     }
 }

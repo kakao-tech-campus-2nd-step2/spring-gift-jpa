@@ -24,14 +24,14 @@ public class MemberRestController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> registerUser(@RequestBody MemberRequestDto request){
+    public ResponseEntity<Void> registerMember(@RequestBody MemberRequestDto request){
         memberService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDto> giveAccessToken(@RequestBody MemberRequestDto request) {
-        memberService.findByEmailAndPassword(request.getEmail(),request.getPassword());
+        memberService.checkMemberExistsByIdAndPassword(request.getEmail(),request.getPassword());
         String token = jwtUtil.generateToken(request.getEmail());
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);

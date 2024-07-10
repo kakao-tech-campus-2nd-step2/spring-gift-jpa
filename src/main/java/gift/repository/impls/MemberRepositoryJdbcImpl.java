@@ -9,19 +9,18 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public class MemberRepositoryImpl implements MemberRepository {
+public class MemberRepositoryJdbcImpl {
     private final JdbcTemplate jdbcTemplate;
 
-    public MemberRepositoryImpl(JdbcTemplate jdbcTemplate) {
+    public MemberRepositoryJdbcImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
     public void save(Member member){
         var sql = "INSERT INTO members(email, password) VALUES (?,?)";
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
     }
-    @Override
+
     public Optional<Member> findByEmailAndPassword(String email, String password) {
         var sql = "SELECT * FROM members WHERE email = ? And password = ?";
         try {
@@ -41,7 +40,6 @@ public class MemberRepositoryImpl implements MemberRepository {
         }
     }
 
-    @Override
     public Optional<Member> findByEmail(String email) {
         var sql = "SELECT * FROM members WHERE email = ?";
         try {

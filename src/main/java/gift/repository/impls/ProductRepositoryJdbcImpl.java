@@ -10,14 +10,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-public class ProductRepositoryJdbcImpl implements ProductRepository {
+public class ProductRepositoryJdbcImpl {
     private final JdbcTemplate jdbcTemplate;
 
     public ProductRepositoryJdbcImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
     public Long save(Product product) {
         jdbcTemplate.update("INSERT INTO products(name, price, imageUrl) VALUES (?,?,?)",
                 product.getName(), product.getPrice(), product.getImageUrl());
@@ -25,7 +24,6 @@ public class ProductRepositoryJdbcImpl implements ProductRepository {
         return id;
     }
 
-    @Override
     public Optional<Product> findById(Long id) {
         var sql = "SELECT * FROM products WHERE id = ?";
         List<Product> products = jdbcTemplate.query(
@@ -41,7 +39,6 @@ public class ProductRepositoryJdbcImpl implements ProductRepository {
         return products.stream().findFirst();
     }
 
-    @Override
     public Optional<Product> findByName(String name) {
         var sql = "SELECT * FROM products WHERE name = ?";
         List<Product> products = jdbcTemplate.query(
@@ -57,7 +54,6 @@ public class ProductRepositoryJdbcImpl implements ProductRepository {
         return products.stream().findFirst();
     }
 
-    @Override
     public Optional<List<Product>> findByIds(List<Long> ids) {
         String sql = "SELECT * FROM products WHERE id IN (" + ids.stream()
                 .map(String::valueOf)
@@ -78,7 +74,6 @@ public class ProductRepositoryJdbcImpl implements ProductRepository {
         return Optional.of(products);
     }
 
-    @Override
     public List<Product> findAll() {
         var sql = "SELECT * FROM products";
         return jdbcTemplate.query(
@@ -92,14 +87,13 @@ public class ProductRepositoryJdbcImpl implements ProductRepository {
         );
     }
 
-    @Override
     public Long delete(Long id) {
         var sql = "DELETE FROM products WHERE id = ?";
         jdbcTemplate.update(sql, id);
         return id;
     }
 
-    @Override
+
     public Product update(Long id, Product product) {
         jdbcTemplate.update("UPDATE products SET name = ?, price = ?, imageUrl = ? WHERE id = ?",
                 product.getName(), product.getPrice(), product.getImageUrl(), id);

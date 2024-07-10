@@ -24,33 +24,31 @@ public class ProductRestController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponseDto> addProduct(@Valid @RequestBody ProductRequestDto request) {
-        ProductResponseDto createdProduct = productService.save(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+    public ResponseEntity<Void> add(@Valid @RequestBody ProductRequestDto request) {
+        productService.save(request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getProduct(@PathVariable Long id) {
+    public ResponseEntity<?> getById(@PathVariable Long id) {
         ProductResponseDto product = productService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(product);
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> getProducts() {
+    public ResponseEntity<List<ProductResponseDto>> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(productService.findAll());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         productService.deleteById(id);
-        HashMap<String, Long> response = new HashMap<>();
-        response.put("id", id);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequestDto request) {
-        ProductResponseDto updatedProduct = productService.updateById(id, request);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedProduct);
+    public ResponseEntity<Void> update(@PathVariable Long id, @Valid @RequestBody ProductRequestDto request) {
+        productService.updateById(id, request);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

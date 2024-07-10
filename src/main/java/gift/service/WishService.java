@@ -1,19 +1,16 @@
 package gift.service;
 
 import gift.constants.Messages;
+import gift.domain.Member;
+import gift.domain.Product;
 import gift.domain.Wish;
-import gift.dto.MemberResponseDto;
-import gift.dto.ProductResponseDto;
-import gift.dto.WishRequestDto;
-import gift.dto.WishResponseDto;
+import gift.dto.*;
 import gift.exception.WishNotFoundException;
 import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class WishService {
@@ -25,48 +22,38 @@ public class WishService {
         this.productService = productService;
     }
 
-    public void save(MemberResponseDto memberResponseDto, WishRequestDto request){
-        ProductResponseDto productDto = productService.findByName(request.getProductName());
-        wishRepository.save(new Wish(memberResponseDto.getId(),productDto.getId(),request.getQuantity()));
+    @Transactional
+    public void save(MemberRequestDto memberRequestDto, WishRequestDto wishRequestDto){
+        ProductResponseDto productDto = productService.findByName(wishRequestDto.getProductName());
+        Product product = new Product(productDto.getId(), productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+
+        wishRepository.save(new Wish(memberRequestDto.toEntity(),product,wishRequestDto.getQuantity()));
     }
 
-    public List<WishResponseDto> findByMemberEmail(MemberResponseDto memberResponseDto){
-        List<Wish> wishes = wishRepository.findByMemberId(memberResponseDto.getId())
-                .orElseThrow(() -> new WishNotFoundException(Messages.NOT_FOUND_WISH));
-
-        List<Long> productIds = wishes.stream()
-                .map(Wish::getProductId)
+    @Transactional(readOnly = true)
+    public List<WishResponseDto> getMemberWishListByMemberId(Long memberId){
+        return wishRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new WishNotFoundException(Messages.NOT_FOUND_WISH))
+                .stream()
+                .map(WishResponseDto::from)
                 .toList();
 
-        Map<Long, ProductResponseDto> productMap = productService.findByIds(productIds)
-                .stream()
-                .collect(Collectors.toMap(ProductResponseDto::getId, Function.identity()));
-
-        return wishes.stream()
-                .map(wish -> convertToWishResponseDto(wish,productMap.get(wish.getProductId())))
-                .collect(Collectors.toList());
     }
 
-    public void delete(MemberResponseDto memberResponseDto, Long id){
-        wishRepository.findByIdAndMemberId(id, memberResponseDto.getId())
+    @Transactional
+    public void deleteWishByMemberIdAndWishId(Long memberId, Long id){
+        wishRepository.findByIdAndMemberId(id, memberId)
                 .orElseThrow(()-> new WishNotFoundException(Messages.NOT_FOUND_WISH));
-        wishRepository.delete(id);
+        wishRepository.deleteById(id);
     }
 
-    public void updateQuantity(MemberResponseDto memberResponseDto, Long id, WishRequestDto request){
-        wishRepository.findByIdAndMemberId(id, memberResponseDto.getId())
+    @Transactional
+    public void updateQuantityByMemberIdAndWishId(Long memberId, Long id, WishRequestDto request){
+        Wish existingWish = wishRepository.findByIdAndMemberId(id, memberId)
                 .orElseThrow(()-> new WishNotFoundException(Messages.NOT_FOUND_WISH));
-        wishRepository.updateQuantity(id, request.getQuantity());
+
+        Wish updatedWish = new Wish(existingWish.getId(),existingWish.getMember(),existingWish.getProduct(),request.getQuantity());
+        wishRepository.save(updatedWish);
     }
 
-    private WishResponseDto convertToWishResponseDto(Wish wish, ProductResponseDto productResponseDto) {
-        return new WishResponseDto(
-                wish.getId(),
-                wish.getProductId(),
-                productResponseDto.getName(),
-                productResponseDto.getPrice(),
-                productResponseDto.getImageUrl(),
-                wish.getQuantity()
-        );
-    }
 }

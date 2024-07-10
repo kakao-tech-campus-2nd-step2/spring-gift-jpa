@@ -5,14 +5,12 @@ import gift.domain.Member;
 public class MemberResponseDto {
     private Long id;
     private String email;
+    private String password;
 
-    public MemberResponseDto(String email) {
-        this.email = email;
-    }
-
-    public MemberResponseDto(Long id, String email) {
+    public MemberResponseDto(Long id, String email, String password) {
         this.id = id;
         this.email = email;
+        this.password = password;
     }
 
     public Long getId() {
@@ -31,7 +29,17 @@ public class MemberResponseDto {
         this.email = email;
     }
 
-    public static MemberResponseDto from(final Member member){
-        return new MemberResponseDto(member.getId(), member.getEmail());
+    public String getPassword() {
+        return password;
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public static MemberResponseDto from(final Member member){
+        return new MemberResponseDto(member.getId(), member.getEmail(), member.getPassword());
+    }
+
+
 }
