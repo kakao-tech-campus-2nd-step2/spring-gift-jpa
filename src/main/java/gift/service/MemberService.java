@@ -70,7 +70,7 @@ public class MemberService {
      * @param wish
      */
     public void addWishlist(Wishlist wish) {
-        wishlistJpaDao.findByWishlist(wish)
+        wishlistJpaDao.findByEmailAndProductId(wish.getEmail(), wish.getProductId())
             .ifPresent(v -> {
                 throw new IllegalArgumentException(ErrorMessage.WISHLIST_ALREADY_EXISTS_MSG);
             });
@@ -83,8 +83,8 @@ public class MemberService {
      * @param wish
      */
     public void deleteWishlist(Wishlist wish) {
-        wishlistJpaDao.findByWishlist(wish)
+        wishlistJpaDao.findByEmailAndProductId(wish.getEmail(), wish.getProductId())
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.WISHLIST_NOT_EXISTS_MSG));
-        wishlistJpaDao.deleteByWishlist(wish);
+        wishlistJpaDao.deleteByEmailAndProductId(wish.getEmail(), wish.getProductId());
     }
 }
