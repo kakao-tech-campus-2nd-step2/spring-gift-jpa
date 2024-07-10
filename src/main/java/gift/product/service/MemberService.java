@@ -34,8 +34,10 @@ public class MemberService {
 
     public ResponseEntity<Map<String, String>> login(Member member) {
         Member findMember = memberValidation.loginValidation(member.getEmail());
+
         if(!findMember.getPassword().equals(certifyUtil.encodingPassword(member.getPassword())))
             throw new LoginFailedException("비밀번호가 틀립니다.");
+
         memberValidation.login(member.getEmail());
         return new ResponseEntity<>(responseToken(memberValidation.getToken(member.getEmail())), HttpStatus.OK);
     }
