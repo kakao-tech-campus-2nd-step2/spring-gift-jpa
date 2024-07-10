@@ -16,11 +16,11 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false, unique = true)
-    private String email;
-    
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false, unique = true)
+    private String email;
 
     private String role;
     
@@ -28,9 +28,9 @@ public class Member {
 
     }
 
-    public Member(String email, String password, String role) {
-        this.email = email;
+    public Member(String password, String email, String role) {
         this.password = password;
+        this.email = email;
         this.role = role;
     }
     

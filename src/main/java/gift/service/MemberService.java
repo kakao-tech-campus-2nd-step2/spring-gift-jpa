@@ -27,7 +27,8 @@ public class MemberService {
 
         if(memberRepository.findByEmail(memberDto.getEmail()).isEmpty()){
             Member member = memberDto.toEntity(memberDto);
-            memberRepository.save(member);
+            Member savedMember = memberRepository.save(member);
+            System.out.println(savedMember.getEmail());
         }else{
             throw new CustomException("Member with email " + memberDto.getEmail() + "exists", HttpStatus.CONFLICT);
         }
