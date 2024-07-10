@@ -1,6 +1,7 @@
 package gift.web.controller.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -73,12 +74,15 @@ class MemberApiControllerTest {
         Long newMemberId = response.getBody().getId();
         ReadMemberResponse findMember = memberService.readMember(newMemberId);
 
-        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertAll(
+            () -> assertTrue(response.getStatusCode().is2xxSuccessful()),
 
-        assertThat(newMemberId).isEqualTo(findMember.getId());
-        assertThat(request.getEmail()).isEqualTo(findMember.getEmail());
-        assertThat(request.getName()).isEqualTo(findMember.getName());
-        assertThat(request.getPassword()).isEqualTo(findMember.getPassword());
+            () -> assertThat(newMemberId).isEqualTo(findMember.getId()),
+            () -> assertThat(request.getEmail()).isEqualTo(findMember.getEmail()),
+            () -> assertThat(request.getName()).isEqualTo(findMember.getName()),
+            () -> assertThat(request.getPassword()).isEqualTo(findMember.getPassword())
+        );
+
     }
 
     @Test
@@ -93,8 +97,11 @@ class MemberApiControllerTest {
         ResponseEntity<LoginResponse> response = restTemplate.postForEntity(url, request, LoginResponse.class);
 
         //then
-        assertTrue(response.getStatusCode().is2xxSuccessful());
-        assertThat(response.getBody().getToken()).isNotNull();
+        assertAll(
+            () -> assertTrue(response.getStatusCode().is2xxSuccessful()),
+            () -> assertThat(response.getBody().getToken()).isNotNull()
+        );
+
     }
 
     @Test
@@ -112,8 +119,10 @@ class MemberApiControllerTest {
             HttpMethod.GET, httpEntity, ReadAllWishProductsResponse.class);
 
         //then
-        assertTrue(response.getStatusCode().is2xxSuccessful());
-        assertIterableEquals(response.getBody().getWishlist(), expectedWishProducts.getWishlist());
+        assertAll(
+            () -> assertTrue(response.getStatusCode().is2xxSuccessful()),
+            () -> assertIterableEquals(response.getBody().getWishlist(), expectedWishProducts.getWishlist())
+        );
     }
 
     @Test
@@ -133,21 +142,23 @@ class MemberApiControllerTest {
             HttpMethod.PUT, httpEntity, UpdateWishProductResponse.class);
 
         //then
-        assertTrue(response.getStatusCode().is2xxSuccessful());
-        assertThat(response.getBody().getQuantity()).isEqualTo(request.getQuantity());
+        assertAll(
+            () -> assertTrue(response.getStatusCode().is2xxSuccessful()),
+            () -> assertThat(response.getBody().getQuantity()).isEqualTo(request.getQuantity())
+        );
     }
 
     @Test
     void deleteWishProduct() {
         //given
-        String url = "http://localhost:" + port + "/api/members/wishlist/1";
+        Long wishProductId = 2L;
+        String url = "http://localhost:" + port + "/api/members/wishlist/" + wishProductId;
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setBearerAuth(token.getValue());
         HttpEntity httpEntity = new HttpEntity(httpHeaders);
 
         //when
-        ResponseEntity<Void> response = restTemplate.exchange(url,
-            HttpMethod.DELETE, httpEntity, Void.class);
+        ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, httpEntity, Void.class);
 
         //then
         assertTrue(response.getStatusCode().is2xxSuccessful());
