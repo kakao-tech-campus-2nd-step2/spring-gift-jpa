@@ -118,19 +118,6 @@ public class Member {
         return wishList.getLast();
     }
 
-    public boolean setWishQuantity(Product product, Integer value) {
-        if (value < 1) {
-            return removeWish(product);
-        }
-        for (Wish wish : wishList) {
-            if (wish.getProduct().equals(product)) {
-                wish.setQuantity(value);
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean removeWish(Product product) {
         for (Wish wish : wishList) {
             if (wish.getProduct().equals(product)) {
