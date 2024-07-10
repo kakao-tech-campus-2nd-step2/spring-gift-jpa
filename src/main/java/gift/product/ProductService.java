@@ -16,25 +16,18 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    // 모든 상품 조회
     public List<Product> getAllPrdouct() {
         return productRepository.findAll();
     }
 
-    // 아이디로 상품이 존재하는지 확인이 아니고 상품 조회
     public Optional<Product> getProductById(Long id) {
-//        Optional<Product> product = productRepository.findById(id);
-//        Product pd = product.get();
-//        return new ProductResponseDto(pd.getId(), pd.getName(), pd.getPrice(), pd.getImageUrl());
         return productRepository.findById(id);
     }
 
-    // 상품 인서트
     public Product postProduct(Product product) {
         return productRepository.saveAndFlush(product);
     }
 
-    // 상품 정보 수정
     public Product putProduct(Long id, ProductRequestDto productRequestDto) {
         Optional<Product> product = productRepository.findById(id);
         if (product.isPresent()) {
@@ -49,7 +42,6 @@ public class ProductService {
 
     }
 
-    // 상품 삭제
     public HttpEntity<String> deleteProductById(Long id) {
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()) {
