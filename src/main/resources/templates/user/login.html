@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login</title>
+</head>
+<body>
+<h1>Login</h1>
+<form id="loginForm">
+    <label for="email">Email:</label>
+    <input type="email" id="loginEmail" name="email" required>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" id="loginPassword" name="password" required>
+    <br>
+    <button type="button" onclick="login()">Login</button>
+</form>
+
+<h1>Signup</h1>
+<form id="signupForm">
+    <label for="email">Email:</label>
+    <input type="email" id="signupEmail" name="email" required>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" id="signupPassword" name="password" required>
+    <br>
+    <label for="role">Role:</label>
+    <input type="text" id="signupRole" name="role" required>
+    <br>
+    <button type="button" onclick="signup()">Signup</button>
+</form>
+
+<script>
+    function login() {
+        var email = document.getElementById('loginEmail').value;
+        var password = document.getElementById('loginPassword').value;
+
+        var data = {
+            email: email,
+            password: password
+        };
+
+        fetch('/api/v1/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Login failed');
+                }
+                return response.text();
+            })
+            .then(token => {
+                document.cookie = `token=${token}; path=/`;
+                alert('Login successful');
+                fetchAdminUserPage(token);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Login failed');
+            });
+    }
+
+    function signup() {
+        var email = document.getElementById('signupEmail').value;
+        var password = document.getElementById('signupPassword').value;
+        var role = document.getElementById('signupRole').value;
+
+        var data = {
+            email: email,
+            password: password,
+            role: role
+        };
+
+        fetch('/api/v1/user/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Signup failed');
+                }
+                return response.text();
+            })
+            .then(() => {
+                alert('Signup successful. Please login.');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Signup failed');
+            });
+    }
+
+    function fetchAdminUserPage(token) {
+        fetch('/admin/user', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch admin user page');
+                }
+                window.location.href = "/admin/user";
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to fetch admin user page');
+            });
+    }
+</script>
+</body>
+</html>
