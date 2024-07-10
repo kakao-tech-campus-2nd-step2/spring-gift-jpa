@@ -4,8 +4,10 @@ import gift.constants.ErrorMessage;
 import gift.dto.Member;
 import gift.dto.Product;
 import gift.dto.Wishlist;
+import gift.dto.WishlistRequest;
 import gift.jwt.JwtUtil;
 import gift.repository.MemberJpaDao;
+import gift.repository.ProductJpaDao;
 import gift.repository.WishlistJpaDao;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -16,12 +18,14 @@ public class MemberService {
 
     private final MemberJpaDao memberJpaDao;
     private final WishlistJpaDao wishlistJpaDao;
+    private final ProductJpaDao productJpaDao;
     private final JwtUtil jwtUtil;
 
     public MemberService(MemberJpaDao memberJpaDao, WishlistJpaDao wishlistJpaDao,
-        JwtUtil jwtUtil) {
+        ProductJpaDao productJpaDao, JwtUtil jwtUtil) {
         this.memberJpaDao = memberJpaDao;
         this.wishlistJpaDao = wishlistJpaDao;
+        this.productJpaDao = productJpaDao;
         this.jwtUtil = jwtUtil;
     }
 
@@ -61,7 +65,9 @@ public class MemberService {
      * @return
      */
     public List<Product> getAllWishlist(String email) {
-        return wishlistJpaDao.findAllWishlistByEmail(email);
+        Member member = memberJpaDao.findByEmail(email)
+            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.MEMBER_NOT_EXISTS_MSG));
+        return member.getWishlist().stream().map(Wishlist::getProduct).toList();
     }
 
     /**
@@ -69,12 +75,16 @@ public class MemberService {
      *
      * @param wish
      */
-    public void addWishlist(Wishlist wish) {
-        wishlistJpaDao.findByWishlist(wish)
+    public void addWishlist(WishlistRequest wish) {
+        Wishlist wishlist = convertWishlistRequestToWishlist(wish);
+
+        wishlist.getMember().getWishlist().add(wishlist);
+        wishlist.getProduct().getWishlist().add(wishlist);
+        wishlistJpaDao.findByWishlist(wishlist)
             .ifPresent(v -> {
                 throw new IllegalArgumentException(ErrorMessage.WISHLIST_ALREADY_EXISTS_MSG);
             });
-        wishlistJpaDao.save(wish);
+        wishlistJpaDao.save(wishlist);
     }
 
     /**
@@ -82,9 +92,22 @@ public class MemberService {
      *
      * @param wish
      */
-    public void deleteWishlist(Wishlist wish) {
-        wishlistJpaDao.findByWishlist(wish)
+    public void deleteWishlist(WishlistRequest wish) {
+        Wishlist deleteWish = convertWishlistRequestToWishlist(wish);
+
+        wishlistJpaDao.findByWishlist(deleteWish)
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.WISHLIST_NOT_EXISTS_MSG));
-        wishlistJpaDao.deleteByWishlist(wish);
+        wishlistJpaDao.deleteByWishlist(deleteWish);
+    }
+
+    /**
+     * WishlistRequest를 Wishlist Entity로 변환
+     */
+    private Wishlist convertWishlistRequestToWishlist(WishlistRequest wish) {
+        Member member = memberJpaDao.findByEmail(wish.getEmail())
+            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.MEMBER_NOT_EXISTS_MSG));
+        Product product = productJpaDao.findById(wish.getProductId())
+            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.PRODUCT_NOT_EXISTS_MSG));
+        return new Wishlist(member, product);
     }
 }

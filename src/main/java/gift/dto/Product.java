@@ -2,13 +2,17 @@ package gift.dto;
 
 import gift.constants.ErrorMessage;
 import gift.constants.RegularExpression;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -32,6 +36,9 @@ public class Product {
 
     @Column(name = "imageurl")
     String imageUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private List<Wishlist> wishlist = new ArrayList<>();
 
     public Product() {
     }
@@ -57,5 +64,9 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public List<Wishlist> getWishlist() {
+        return wishlist;
     }
 }

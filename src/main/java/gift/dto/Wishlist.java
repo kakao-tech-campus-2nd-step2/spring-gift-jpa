@@ -1,10 +1,11 @@
 package gift.dto;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Wishlist {
@@ -13,24 +14,27 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String email;
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "email")
+    private Member member;
 
-    @Column(name = "productid")
-    private long productId;
+    @ManyToOne
+    @JoinColumn(name = "productid")
+    private Product product;
 
     public Wishlist() {
     }
 
-    public Wishlist(String email, long productId) {
-        this.email = email;
-        this.productId = productId;
+    public Wishlist(Member member, Product product) {
+        this.member = member;
+        this.product = product;
     }
 
-    public String getEmail() {
-        return email;
+    public Member getMember() {
+        return member;
     }
 
-    public long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 }
