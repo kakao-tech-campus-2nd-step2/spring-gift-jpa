@@ -18,6 +18,6 @@ private Member member;
 @ManyToOne
 @JoinColumn(name = "product_id", nullable = false) // Wish 엔티티
 private Product product;
+```  
 
-```
 이렇게 연관관계를 매핑해주었다.
