@@ -1,6 +1,16 @@
 package gift.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "wishlist")
 public class WishList {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long userId;
     private Long productId;
@@ -22,7 +32,6 @@ public class WishList {
     }
 
     // getters, setters
-
     public Long getUserId() {
         return userId;
     }

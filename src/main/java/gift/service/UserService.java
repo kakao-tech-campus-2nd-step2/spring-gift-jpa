@@ -20,7 +20,7 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findAllByEmail(email);
     }
 
     public void save(User user) {

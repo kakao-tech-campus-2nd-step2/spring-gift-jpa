@@ -1,12 +1,12 @@
-package gift.domain;
+package gift.dto;
 
-public class LoginUser {
+public class LoginUserDTO {
     private Long id;
     private String name;
     private String email;
     private String role;
 
-    public LoginUser(Long id, String name, String email, String role) {
+    public LoginUserDTO(Long id, String name, String email, String role) {
         this.id = id;
         this.name = name;
         this.email = email;

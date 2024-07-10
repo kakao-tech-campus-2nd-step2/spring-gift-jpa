@@ -1,42 +1,43 @@
 package gift.service;
 
-
 import gift.domain.Product;
-import gift.repository.product.ProductH2Repository;
+import gift.repository.product.ProductRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
-
 @Service
 public class ProductService {
-//    private final ProductMemoryRepository productMemoryRepository;
-    private final ProductH2Repository productH2Repository;
+    private final ProductRepository productRepository;
 
-//    public ProductService(ProductMemoryRepository productMemoryRepository) {
-//        this.productMemoryRepository = productMemoryRepository;
-//    }
-    public ProductService(ProductH2Repository productH2Repository) {
-        this.productH2Repository = productH2Repository;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public Product getProductById(Long id) {
-        return productH2Repository.findById(id).orElse(null);
+        return productRepository.findById(id).orElse(null);
     }
 
     public List<Product> getAllProducts() {
-        return productH2Repository.findAll();
+        return productRepository.findAll();
     }
 
     public Product createProduct(Product product) {
-        Product savedproduct = productH2Repository.save(product);
+        Product savedproduct = productRepository.save(product);
         return savedproduct;
     }
 
     public void updateProduct(Long id, Product updatedProduct) {
-        productH2Repository.update(id, updatedProduct);
+        Optional<Product> existingProduct = productRepository.findById(id);
+
+        Product product = existingProduct.get();
+        product.setName(updatedProduct.getName());
+        product.setPrice(updatedProduct.getPrice());
+        product.setImageUrl(updatedProduct.getImageUrl());
+
+        productRepository.save(product);
     }
 
     public void deleteProduct(Long id) {
-        productH2Repository.deleteById(id);
-//        productH2Repository.orderId();
+        productRepository.deleteById(id);
     }
 }
