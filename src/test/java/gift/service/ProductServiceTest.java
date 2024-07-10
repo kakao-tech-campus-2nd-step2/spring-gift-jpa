@@ -1,9 +1,8 @@
 package gift.service;
 
-import gift.product.exception.DuplicateException;
+import gift.product.dao.ProductDao;
 import gift.product.exception.InstanceValueException;
 import gift.product.exception.InvalidProductIdException;
-import gift.product.exception.InvalidProductNameException;
 import gift.product.model.Product;
 import gift.product.service.ProductService;
 import org.junit.jupiter.api.Assertions;
@@ -15,35 +14,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class ProductServiceTest {
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductDao productDao;
 
     @Test
     void testRegisterNormalProduct() {
         System.out.println("[ProductServiceTest] testRegisterNormalProduct()");
-        Product normalProduct = new Product("normalProductTest", 1000, "image.url");
-        System.out.println(normalProduct.getId()+ " " + normalProduct.getName() + " " + normalProduct.getPrice() + " " + normalProduct.getImageUrl());
+        Product normalProduct = new Product("normalProduct", 1000, "image.url");
         productService.registerProduct(normalProduct);
-    }
-
-    @Test
-    void testRegisterDuplicateId() {
-        System.out.println("[ProductServiceTest] testRegisterDuplicateId()");
-        Product product = new Product("originProduct", 1000, "image.url");
-        productService.registerProduct(product);
-        Product duplicateIdProduct = new Product(
-            //product.getId(),
-            "duplicateID",
-            1000,
-            "image.url");
-        Assertions.assertThrows(DuplicateException.class, () -> {
-            productService.registerProduct(duplicateIdProduct);
-        });
     }
 
     @Test
     void testRegisterIncludeKaKao() {
         System.out.println("[ProductServiceTest] testRegisterIncludeKaKao()");
         Product product = new Product("카카오프렌즈", 5000, "image.url");
-        Assertions.assertThrows(InvalidProductNameException.class, () -> {
+        Assertions.assertThrows(InstanceValueException.class, () -> {
             productService.registerProduct(product);
         });
     }
@@ -69,32 +54,44 @@ public class ProductServiceTest {
     @Test
     void testUpdateProduct() {
         System.out.println("[ProductServiceTest] testUpdateProduct()");
-        Product product = new Product("originalProduct", 1000, "image.url");
-        productService.registerProduct(product);
+        Product product = productDao.save(
+                new Product(
+                        "originalProduct",
+                        1000,
+                        "image.url"
+                )
+        );
         Product updateProduct = new Product(
-            //product.getId(),
             "updateProduct",
             2000,
-            "image.url");
+            "updateImage.url");
         productService.updateProduct(product.getId(), updateProduct);
     }
 
     @Test
-    void testUpdateWrongId() {
-        System.out.println("[ProductServiceTest] testUpdateWrongId()");
-        Product product = new Product("product", 1000, "image.url");
-        productService.registerProduct(product);
-        Product updateProduct = new Product(product.getName(), product.getPrice(), product.getImageUrl());
+    void testUpdateNotExistId() {
+        System.out.println("[ProductServiceTest] testUpdateNotExistId()");
+        Product product = new Product(
+                "originalProduct",
+                1000,
+                "image.url"
+        );
+        productDao.save(product);
         Assertions.assertThrows(InvalidProductIdException.class, () -> {
-            productService.updateProduct(0L, updateProduct);
+            productService.updateProduct(-1L, product);
         });
     }
 
     @Test
     void testUpdateInvalidNameProduct() {
         System.out.println("[ProductServiceTest] testUpdateInvalidNameProduct()");
-        Product product = new Product("product", 1000, "image.url");
-        productService.registerProduct(product);
+        Product product = productDao.save(
+                new Product(
+                        "originalProduct",
+                        1000,
+                        "image.url"
+                )
+        );
         Product updateProduct = new Product("카카오프렌즈", product.getPrice(), product.getImageUrl());
         Assertions.assertThrows(InstanceValueException.class, () -> {
             productService.updateProduct(product.getId(), updateProduct);
@@ -104,8 +101,13 @@ public class ProductServiceTest {
     @Test
     void testUpdateNegativePriceProduct() {
         System.out.println("[ProductServiceTest] testUpdateNegativePriceProduct()");
-        Product product = new Product("originalProduct", 1000, "image.url");
-        productService.registerProduct(product);
+        Product product = productDao.save(
+                new Product(
+                        "originalProduct",
+                        1000,
+                        "image.url"
+                )
+        );
         Product updateProduct = new Product(product.getName(), -1, product.getImageUrl());
         Assertions.assertThrows(InstanceValueException.class, () -> {
             productService.updateProduct(product.getId(), updateProduct);

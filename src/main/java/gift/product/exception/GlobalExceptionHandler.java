@@ -35,12 +35,6 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorMessage", "Duplicate error: " + ex.getMessage());
     }
 
-    @ExceptionHandler(InvalidProductNameException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public void handleInvalidProductNameException(DuplicateException ex, Model model) {
-        model.addAttribute("errorMessage", "Invalid error: " + ex.getMessage());
-    }
-
     @ExceptionHandler(InstanceValueException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handleInstanceValueException(InstanceValueException ex, Model model) {

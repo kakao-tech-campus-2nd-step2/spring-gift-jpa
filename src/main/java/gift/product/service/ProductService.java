@@ -30,7 +30,7 @@ public class ProductService {
 
     public ResponseEntity<String> updateProduct(Long id, Product product) {
         productValidation.updateValidation(id, product);
-        productDao.save(product);// product에 id추가해야함
+        productDao.save(new Product(id, product.getName(), product.getPrice(), product.getImageUrl()));
         return ResponseEntity.status(HttpStatus.CREATED).body("Product update successfully");
     }
 
