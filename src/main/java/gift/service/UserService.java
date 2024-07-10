@@ -1,37 +1,39 @@
 package gift.service;
 
 import gift.PasswordEncoder;
+import gift.converter.UserConverter;
+import gift.dto.UserDTO;
 import gift.model.User;
 import gift.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import io.jsonwebtoken.security.Keys;
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final String secretKey;
 
-    @Autowired
+
     public UserService(UserRepository userRepository, @Value("${jwt.secret.key}") String secretKey) {
         this.userRepository = userRepository;
         this.secretKey = secretKey;
     }
 
-    public User register(String email, String password) {
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(PasswordEncoder.encode(password));
-        return userRepository.save(user);
+    public UserDTO register(UserDTO userDTO) {
+        User user = UserConverter.convertToEntity(userDTO);
+        user = new User(null, user.getEmail(), PasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return UserConverter.convertToDTO(user);
     }
 
     public String login(String email, String password) {
         User user = userRepository.findByEmail(email);
         if (user != null && user.matchesPassword(password)) {
             return Jwts.builder()
-                .setSubject(user.getId().toString())
+                .setSubject(email) // 여기에서 사용자 이메일을 주체로 설정
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
                 .compact();
         }

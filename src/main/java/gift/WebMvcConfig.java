@@ -10,9 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-
     private JwtInterceptor jwtInterceptor;
-    @Autowired
+
     public WebMvcConfig(JwtInterceptor jwtInterceptor){
         this.jwtInterceptor = jwtInterceptor;
     }

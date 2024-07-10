@@ -1,37 +1,67 @@
 package gift.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
 
+@Entity
+@Table(name = "wish_lists")
 public class WishList {
 
-    private Long id;
-    private User user;
-    private List<Product> products = new ArrayList<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private final Long id;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private final User user;
+
+    @ManyToMany
+    @JoinTable(
+        name = "wish_list_products",
+        joinColumns = @JoinColumn(name = "wish_list_id"),
+        inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private final List<Product> products = new ArrayList<>();
+
+    protected WishList(){
+        id = 1L;
+        user = new User();
     }
 
-    public void setId(Long id) {
+    public WishList(Long id, User user, List<Product> products) {
         this.id = id;
+        this.user = user;
+        this.products.addAll(products);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public List<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
-        this.products = products;
+    public void addProduct(Product product) {
+        this.products.add(product);
+    }
+
+    public void removeProduct(Product product) {
+        this.products.remove(product);
     }
 }

@@ -1,12 +1,10 @@
 package gift.controller;
 
-import gift.model.Product;
-import gift.model.ProductDTO;
+import gift.dto.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,23 +17,22 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
+
+
 @Controller
 @RequestMapping("/admin/products")
 public class ProductController {
 
     private final ProductService productService;
 
-    @Autowired
+
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
     @GetMapping
     public String allProducts(Model model) {
-        List<Product> products = productService.findAllProducts();
-        List<ProductDTO> productDTOs = products.stream()
-            .map(this::convertToDTO)
-            .collect(Collectors.toList());
+        List<ProductDTO> productDTOs = productService.findAllProducts();
         model.addAttribute("products", productDTOs);
         return "Products";
     }
@@ -51,26 +48,26 @@ public class ProductController {
         if (bindingResult.hasErrors()) {
             return "Add_product";
         }
-        Product product = convertToEntity(productDTO);
-        productService.addProduct(product);
+        productService.addProduct(productDTO);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/edit/{id}")
     public String editProductForm(@PathVariable Long id, Model model) {
-        Product product = productService.findProductById(id);
-        ProductDTO productDTO = convertToDTO(product);
-        model.addAttribute("product", productDTO);
+        Optional<ProductDTO> productDTO = productService.findProductById(id);
+        if (productDTO.isEmpty()) {
+            return "redirect:/admin/products";
+        }
+        model.addAttribute("product", productDTO.get());
         return "Edit_product";
     }
 
     @PutMapping("/{id}")
-    public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute("product") ProductDTO productDTO, BindingResult bindingResult, Model model) {
+    public String updateProduct(@Valid @ModelAttribute("product") ProductDTO productDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "Edit_product";
         }
-        Product product = convertToEntity(productDTO);
-        productService.updateProduct(id, product);
+        productService.updateProduct(productDTO);
         return "redirect:/admin/products";
     }
 
@@ -78,24 +75,5 @@ public class ProductController {
     public String deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return "redirect:/admin/products";
-    }
-
-    // Product to ProductDTO 변환 메서드
-    private ProductDTO convertToDTO(Product product) {
-        return new ProductDTO(
-            product.getId(),
-            product.getName(),
-            product.getPrice(),
-            product.getImageUrl());
-    }
-
-    // ProductDTO to Product 변환 메서드
-    private Product convertToEntity(ProductDTO productDTO) {
-        return new Product(
-            productDTO.getId(),
-            productDTO.getName(),
-            productDTO.getPrice(),
-            productDTO.getImageUrl() // image_url 사용
-        );
     }
 }

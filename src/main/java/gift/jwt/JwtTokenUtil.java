@@ -6,11 +6,11 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class JwtTokenUtil {
 
     private final String secretKey;
+
 
     public JwtTokenUtil(@Value("${jwt.secret.key}") String secretKey) {
         this.secretKey = secretKey;
