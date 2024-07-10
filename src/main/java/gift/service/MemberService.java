@@ -1,49 +1,54 @@
 package gift.service;
 
-import gift.domain.Member;
-import gift.domain.MemberRepository;
+import gift.entity.Member;
+import gift.repository.MemberRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
-import java.util.Objects;
 
 @Service
 public class MemberService {
-    @Autowired
     private final MemberRepository memberRepository;
 
     public MemberService(MemberRepository memberRepository){
         this.memberRepository = memberRepository;
     }
 
-    public String signUp(String email, String password) {
+    public String signUp(String str) {
         try {
+            var email = decodeToEmail(str);
+            var password = decodeToPassword(str);
             String token = getToken(email, password);
+
             var member = new Member(email, password, token);
             memberRepository.save(member);
             return token;
         }
         catch (Exception e) {
-            throw new IllegalArgumentException("Invalid username or password");
+            throw new IllegalArgumentException("Invalid email or password : " + "(Email " + decodeToEmail(str) + "), (Password " +  decodeToPassword(str) + ")");
         }
     }
 
-    public String login(String email, String password) {
+    public String login(String str) {
         try {
-            return memberRepository.searchTokenByEmailAndPassword(email, password);
-        }
+            var email = decodeToEmail(str);
+            var password = decodeToPassword(str);
+            var token = getToken(email, password);
+
+            if (memberRepository.existsByToken(token)) {
+                return token;
+            }
+            else throw new IllegalArgumentException("No such email or password"); }
         catch (Exception e) {
-            throw new IllegalArgumentException("Invalid username or password");
+            throw new IllegalArgumentException("Invalid email or password : " + "(Email " + decodeToEmail(str) + "), (Password " +  decodeToPassword(str) + ")");
         }
     }
 
     public boolean isValidToken(String token) {
         try {
-            var ftoken = memberRepository.searchTokenByToken(token);
-            return Objects.equals(ftoken, token);
+            return memberRepository.existsByToken(token);
         } catch (Exception e) {
             return false;
         }
@@ -51,9 +56,7 @@ public class MemberService {
 
     private String getToken(String email, String password){
         String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
-
         String accessToken = Jwts.builder()
-                .setSubject(email)
                 .claim("email", email)
                 .claim("password", password)
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
@@ -61,7 +64,17 @@ public class MemberService {
         return accessToken;
     }
 
-    private String stringToBase64(String str) {
-        return Base64.getEncoder().encodeToString(str.getBytes());
+    private String decodeToEmail(String str) {
+        String base64Credentials = str.substring("Basic ".length()).trim();
+        String credentials = new String(Base64.getDecoder().decode(base64Credentials));
+        String[] values = credentials.split(":", 2);
+        return values[0];
+    }
+
+    private String decodeToPassword(String str) {
+        String base64Credentials = str.substring("Basic ".length()).trim();
+        String credentials = new String(Base64.getDecoder().decode(base64Credentials));
+        String[] values = credentials.split(":", 2);
+        return values[1];
     }
 }
