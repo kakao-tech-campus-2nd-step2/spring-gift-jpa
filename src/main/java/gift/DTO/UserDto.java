@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.util.Optional;
 
 @Entity
 @Table
@@ -50,6 +51,11 @@ public class UserDto {
 
   public String getPassword() {
     return this.password;
+  }
+
+  public boolean matchLoginInfo(Optional<UserDto> userByEmail){
+    return this.email.equals(userByEmail.get().getEmail()) && this.password.equals(
+      userByEmail.get().getPassword());
   }
 
 }
