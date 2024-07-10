@@ -11,15 +11,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 class UserRepositoryTest {
-
     @Autowired
     private UserRepository userRepository;
 
     @Test
     void save() {
-        User expected = new User();
-        expected.setEmail("test@example.com");
-        expected.setPassword("password");
+        User expected = new User(null, "test@example.com", "password");
         User actual = userRepository.save(expected);
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
@@ -29,12 +26,11 @@ class UserRepositoryTest {
 
     @Test
     void findByEmail() {
-        String expected = "test@example.com";
-        User user = new User();
-        user.setEmail(expected);
-        user.setPassword("password");
-        userRepository.save(user);
-        User actual = userRepository.findByEmail(expected);
-        assertThat(actual.getEmail()).isEqualTo(expected);
+        String expectedEmail = "test@example.com";
+        User expected = new User(null, expectedEmail, "password");
+        userRepository.save(expected);
+        User actual = userRepository.findByEmail(expectedEmail);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getEmail()).isEqualTo(expectedEmail);
     }
 }
