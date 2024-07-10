@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @SpringBootTest
 class UserServiceTest {
 
@@ -30,14 +31,10 @@ class UserServiceTest {
     @Autowired
     private UserService userService;
 
-
-
-    //    @BeforeAll // 클래스에 하나
     @Test
     @Transactional
     public void 이메일로가입() {
         UserJoinRequest user = new UserJoinRequest("진서현", "jin1228@g.mail", "1234", "USER");
-
         Assertions.assertThatCode(() -> {
             userService.joinUser(user);
         }).doesNotThrowAnyException();
