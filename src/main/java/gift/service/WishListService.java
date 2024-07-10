@@ -31,7 +31,7 @@ public class WishListService {
     public List<WishListDto> findWishListById(String token) {
 
         long memberId = (long)jwtUtil.extractAllClaims(token).get("id");
-        List<WishList> wishlist = wishListRepository.findProductIdsByMemberId(memberId);
+        List<WishList> wishlist = wishListRepository.findByMemberId(memberId);
         return wishlist.stream()
         .map(WishListDto::fromEntity)
         .collect(Collectors.toList());
@@ -49,6 +49,6 @@ public class WishListService {
     @Transactional
     public void deleteWishList(String token, long productId) {
         long memberId = (long)jwtUtil.extractAllClaims(token).get("id");
-        wishListRepository.deleteById(wishListRepository.findId(memberId, productId));;
+        wishListRepository.deleteById(wishListRepository.findIdByMemberIdAndProductId(memberId, productId));;
     }
 }
