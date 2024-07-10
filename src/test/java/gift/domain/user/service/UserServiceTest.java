@@ -9,6 +9,7 @@ import static org.mockito.Mockito.mock;
 import gift.auth.jwt.JwtProvider;
 import gift.auth.jwt.Token;
 import gift.domain.user.dao.UserDao;
+import gift.domain.user.dao.UserJpaRepository;
 import gift.domain.user.dto.UserDto;
 import gift.domain.user.dto.UserLoginDto;
 import gift.domain.user.entity.Role;
@@ -30,7 +31,7 @@ class UserServiceTest {
     private UserService userService;
 
     @MockBean
-    private UserDao userDao;
+    private UserJpaRepository userJpaRepository;
     
     @MockBean
     private JwtProvider jwtProvider;
@@ -44,7 +45,7 @@ class UserServiceTest {
 
         User user = userDto.toUser();
         user.setId(1L);
-        given(userDao.insert(any(User.class))).willReturn(user);
+        given(userJpaRepository.save(any(User.class))).willReturn(user);
 
         Token expectedToken = new Token("token");
         given(jwtProvider.generateToken(any(User.class))).willReturn(expectedToken);
@@ -63,7 +64,7 @@ class UserServiceTest {
         UserLoginDto loginDto = new UserLoginDto("test@test.com", "test123");
 
         User user = new User(1L, "testUser", "test@test.com", "test123", Role.USER);
-        given(userDao.findByEmail(eq("test@test.com"))).willReturn(Optional.of(user));
+        given(userJpaRepository.findByEmail(eq("test@test.com"))).willReturn(Optional.of(user));
 
         Token expectedToken = new Token("token");
         given(jwtProvider.generateToken(any(User.class))).willReturn(expectedToken);
@@ -81,7 +82,7 @@ class UserServiceTest {
         // given
         UserLoginDto loginDto = new UserLoginDto("test@test.com", "test123");
 
-        given(userDao.findByEmail(eq("test@test.com"))).willReturn(Optional.empty());
+        given(userJpaRepository.findByEmail(eq("test@test.com"))).willReturn(Optional.empty());
 
         // when & then
         assertThatThrownBy(() -> userService.login(loginDto))
@@ -96,7 +97,7 @@ class UserServiceTest {
         UserLoginDto loginDto = new UserLoginDto("test@test.com", "test123");
 
         User user = mock(User.class);
-        given(userDao.findByEmail(eq("test@test.com"))).willReturn(Optional.of(user));
+        given(userJpaRepository.findByEmail(eq("test@test.com"))).willReturn(Optional.of(user));
         given(user.checkPassword(eq("test123"))).willReturn(false);
 
         // when & then
