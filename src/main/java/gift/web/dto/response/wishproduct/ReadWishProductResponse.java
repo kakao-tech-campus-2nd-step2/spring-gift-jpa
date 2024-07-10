@@ -2,6 +2,7 @@ package gift.web.dto.response.wishproduct;
 
 import gift.domain.Product;
 import gift.domain.WishProduct;
+import java.util.Objects;
 
 public class ReadWishProductResponse {
 
@@ -52,4 +53,23 @@ public class ReadWishProductResponse {
         return imageUrl;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ReadWishProductResponse that = (ReadWishProductResponse) o;
+        return Objects.equals(id, that.id) && Objects.equals(productId,
+            that.productId) && Objects.equals(name, that.name) && Objects.equals(
+            price, that.price) && Objects.equals(quantity, that.quantity)
+            && Objects.equals(imageUrl, that.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, productId, name, price, quantity, imageUrl);
+    }
 }
