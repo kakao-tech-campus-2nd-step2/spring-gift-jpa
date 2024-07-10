@@ -10,29 +10,31 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(nullable = false)
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     protected Wish() {
     }
 
-    public Wish(Long userId, Long productId) {
-        this.userId = userId;
-        this.productId = productId;
+    public Wish(User user, Product product) {
+        this.user = user;
+        this.product = product;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 }
