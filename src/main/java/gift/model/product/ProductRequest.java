@@ -1,14 +1,11 @@
 package gift.model.product;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class ProductDTO {
-    private Long id;
+public record ProductRequest(
+    Long id,
     @NotBlank(message = "이름은 필수 입력값입니다.")
     @Size(max = 15, message = "이름의 최대 글자수는 15입니다.")
     @Pattern(
@@ -19,47 +16,12 @@ public class ProductDTO {
         regexp = "(?!.*카카오).*",
         message = "'카카오'가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다!"
     )
-    private String name;
-    private int price;
-    private String imageUrl;
-
-    public ProductDTO(){}
-    public ProductDTO(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    String name,
+    int price,
+    String imageUrl
+) {
+    public Product toEntity() {
+        return new Product(name, price, imageUrl);
     }
 
 }
