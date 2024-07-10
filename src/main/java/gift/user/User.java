@@ -14,13 +14,13 @@ import java.util.List;
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @Column(name = "email", unique = true)
-    String email;
+    private String email;
     @Column(name = "password")
-    String password;
+    private String password;
     @Column(name = "nickname")
-    String nickname;
+    private String nickname;
     @OneToMany(cascade = CascadeType.ALL,
             mappedBy = "user", orphanRemoval = true)
     private List<WishList> wishLists = new ArrayList<>();
@@ -47,13 +47,8 @@ public class User implements Serializable {
     }
 
     public void removeWishLists() {
-        Iterator<WishList> iterator = this.wishLists.iterator();
-
-        while (iterator.hasNext()) {
-            WishList wishList = iterator.next();
-
-            wishList.setUser(null);
-            iterator.remove();
+        for (WishList wishList : wishLists) {
+            removeWishList(wishList);
         }
     }
 
