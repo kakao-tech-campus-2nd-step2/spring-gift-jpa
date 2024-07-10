@@ -51,7 +51,9 @@ public class WishListService {
 
     private void addQuantity(Long memberId, Long productId, Integer quantity) {
         try {
-            WishList findWishList = findByIdAndMemberIdOrThrow(memberId, productId);
+            WishList findWishList = wishListRepository.findByMemberIdAndProductId(memberId, productId).orElseThrow(
+                    () -> WishListNotFoundException.EXCEPTION
+            );
             findWishList.addQuantity(quantity);
         } catch (Exception e) {
             throw WishListUpdateException.EXCEPTION;
