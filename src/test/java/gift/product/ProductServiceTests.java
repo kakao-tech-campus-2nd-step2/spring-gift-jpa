@@ -12,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -54,10 +56,10 @@ public class ProductServiceTests {
         Product product = new Product(productId, "test", 100, "test.jpg");
 
         when(productRepository.exists(productId)).thenReturn(true);
-        when(productRepository.get(productId)).thenReturn(product);
+        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
         productService.get(productId);
-        verify(productRepository).get(productId);
+        verify(productRepository).findById(productId);
     }
 
     @Test

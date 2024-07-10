@@ -5,4 +5,7 @@ public record User(
         String name,
         UserAccount account
 ) {
+    public User(String name, UserAccount account) {
+        this(0L, name, account);
+    }
 }

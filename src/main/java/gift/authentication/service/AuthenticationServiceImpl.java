@@ -29,7 +29,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!userAccountRepository.existsByPrincipal(principal)) {
             throw new UserAccountNotFoundException();
         }
-        UserAccount userAccount = userAccountRepository.findByPrincipal(principal);
+        UserAccount userAccount = userAccountRepository
+                .findByPrincipal(principal)
+                .orElseThrow(UserAccountNotFoundException::new);
         if (!userAccount.credentials().equals(credentials)) {
             throw new AuthenticationFailedException();
         }

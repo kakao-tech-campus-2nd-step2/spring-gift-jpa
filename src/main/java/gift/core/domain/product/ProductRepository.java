@@ -3,16 +3,17 @@ package gift.core.domain.product;
 import jakarta.annotation.Nonnull;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository {
 
-    Product get(Long id);
+    Optional<Product> findById(Long id);
 
     boolean exists(Long id);
 
     void save(@Nonnull Product product);
 
-    int size();
+    long size();
 
     List<Product> findAll();
 
