@@ -84,7 +84,6 @@ class MemberApiControllerTest {
             () -> assertThat(request.getName()).isEqualTo(findMember.getName()),
             () -> assertThat(request.getPassword()).isEqualTo(findMember.getPassword())
         );
-
     }
 
     @Test
@@ -104,7 +103,6 @@ class MemberApiControllerTest {
             () -> assertTrue(response.getStatusCode().is2xxSuccessful()),
             () -> assertThat(response.getBody().getToken()).isNotNull()
         );
-
     }
 
     @Test
