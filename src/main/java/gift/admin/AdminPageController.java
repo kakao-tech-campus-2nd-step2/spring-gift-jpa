@@ -4,7 +4,7 @@ import static gift.admin.AdminPageConfigure.MAX_PAGE_INDEX;
 import static gift.admin.AdminPageConfigure.PAGE_SIZE;
 
 import gift.product.Product;
-import gift.product.ProductRepository;
+import gift.product.ProductService;
 import java.util.List;
 import java.util.stream.IntStream;
 import org.springframework.stereotype.Controller;
@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class AdminPageController {
 
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    public AdminPageController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public AdminPageController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping(path = "/admin")
     public String adminPage(Model model, @RequestParam("page") Integer currentPage) {
-        List<Product> totalProducts = productRepository.findAll();
+        List<Product> totalProducts = productService.getAllProducts();
         List<Product> subProducts = totalProducts.subList((currentPage - 1) *
                                                           PAGE_SIZE.getValue(),
             Math.min(currentPage * PAGE_SIZE.getValue(), totalProducts.size()));
