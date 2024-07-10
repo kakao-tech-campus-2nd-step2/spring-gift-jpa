@@ -1,5 +1,7 @@
 # spring-gift-jpa
 
+## step 0 초기 세팅
+
 # JPA - ORM : step 1
 
 JdbcTemplate 기반 코드를 JPA 적용 시키기 -> 도메인 모델 구성, 객체와 테이블 매핑
