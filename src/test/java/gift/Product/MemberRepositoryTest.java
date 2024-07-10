@@ -25,4 +25,14 @@ public class MemberRepositoryTest {
         assertThat(actual.getEmail()).isEqualTo(expected.getEmail());
     }
 
+    @Test
+    void login(){
+        String email = "test100@gmail.com";
+        String password = "test";
+        Member expected = new Member(email,password);
+        memberRepository.save(expected);
+        Optional<Member> actual = memberRepository.findByEmail(email);
+        assertThat(actual.isPresent()).isTrue();
+    }
+
 }
