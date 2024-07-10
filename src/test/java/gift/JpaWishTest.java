@@ -17,38 +17,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
-public class JpaRepositoryTest {
+public class JpaWishTest {
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private WishRepository wishRepository;
-
-    @Test
-    @DisplayName("멤버 저장 테스트")
-    void saveMember() {
-        Member member = new Member(1L, "asdfasdf@naver.com", "asdfasdf");
-        Member real = memberRepository.save(member);
-        assertAll(
-                () -> assertThat(real.getId()).isNotNull(),
-                () -> assertThat(real.getEmail()).isEqualTo(member.getEmail()),
-                () -> assertThat(real.getPassword()).isEqualTo(member.getPassword())
-        );
-    }
-
-    @Test
-    @DisplayName("상품 저장 테스트")
-    void saveProduct() {
-        Product product = new Product(1L, "name", 134, "asdf");
-        Product real = productRepository.save(product);
-        assertAll(
-                () -> assertThat(real.getId()).isNotNull(),
-                () -> assertThat(real.getName()).isEqualTo(product.getName()),
-                () -> assertThat(real.getImageUrl()).isEqualTo(product.getImageUrl()),
-                () -> assertThat(real.getPrice()).isEqualTo(product.getPrice())
-        );
-    }
 
     @Test
     @DisplayName("위시 저장 테스트")
@@ -64,16 +39,6 @@ public class JpaRepositoryTest {
                 () -> assertThat(real.getMember().getId()).isEqualTo(wish.getMember().getId()),
                 () -> assertThat(real.getProduct().getId()).isEqualTo(wish.getProduct().getId())
         );
-    }
-
-    @Test
-    @DisplayName("멤버를 이메일로 조회")
-    void memberRepoFindByEmail() {
-        String expected = "asdfasdf@naver.com";
-        Member member = new Member(1L, expected, "asdfasdf");
-        memberRepository.save(member);
-        String actual = memberRepository.findByEmail(expected).get().getEmail();
-        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
