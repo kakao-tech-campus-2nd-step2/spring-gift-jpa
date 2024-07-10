@@ -5,6 +5,7 @@ import gift.dto.ProductDto;
 import gift.repositories.ProductRepository;
 import gift.services.ProductService;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,9 +39,9 @@ public class PageController {
 
     @GetMapping("/update") // 주소 매핑
     public String updatePageGet(@RequestParam Long id, Model model) {
-        Product product = productRepository.find(id);
-        if (product == null)
-            product = new Product(null, "", 0.0, "");
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isEmpty())
+            product = Optional.of(new Product(null, "", 0.0, ""));
         model.addAttribute("product", product);
         return "update";
     }
