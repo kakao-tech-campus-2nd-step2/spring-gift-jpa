@@ -1,60 +1,78 @@
 package gift.wishlist;
 
+import gift.auth.JwtUtil;
+import gift.product.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class WishListService {
 
-    private final WishListDao wishListDao;
+    private final WishListRepository wishListRepository;
+    private final ProductService productService;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public WishListService(WishListDao wishListDao) {
-        this.wishListDao = wishListDao;
-    }
-    private static final Logger logger = LoggerFactory.getLogger(WishListService.class);
-
-    public List<WishListDTO> getAllWishLists() {
-        try {
-            return wishListDao.findAll().stream()
-                .map(WishListDTO::fromWishList)
-                .collect(Collectors.toList());
-        }catch(Exception e){
-            throw new RuntimeException("위시리스트 오류", e);
-        }
+    public WishListService(WishListRepository wishListRepository, ProductService productService,
+        JwtUtil jwtUtil) {
+        this.wishListRepository = wishListRepository;
+        this.productService = productService;
+        this.jwtUtil = jwtUtil;
     }
 
     public List<WishListDTO> getWishListsByEmail(String email) {
-        try{
-            return wishListDao.selectWishListsByEmail(email).stream()
-                .map(WishListDTO::fromWishList)
-                .collect(Collectors.toList());
-        }catch(Exception e){
-            throw new RuntimeException("위시리스트 오류", e);
+        return wishListRepository.findAllByEmail(email).stream()
+            .map(WishListDTO::fromWishList)
+            .toList();
+    }
+
+    public void extractEmailFromTokenAndValidate(HttpServletRequest request, String email) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+        }
+        String token = authHeader.substring(7);
+        String tokenEmail;
+        tokenEmail = jwtUtil.extractEmail(token);
+        if (!email.equals(tokenEmail)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "이메일이 토큰과 일치하지 않습니다.");
         }
     }
 
     public void addWishList(WishListDTO wishList) {
-        wishListDao.insertWishList(wishList.toWishList());
-    }
-
-    public void updateWishList(String email, String name, int num) {
-        wishListDao.updateWishList(email, name, num);
-    }
-
-    public WishList getWishListByEmailAndName(String email, String name){
-        return wishListDao.selectWishListByEmailAndName(email,name);
-    }
-
-    public boolean deleteWishList(String email, String name) {
-        if(getWishListByEmailAndName(email,name)==null){
-            return false;
+        if (wishListRepository.existsByEmailAndProductId(wishList.getEmail(),
+            wishList.getProductId())) {
+            throw new IllegalArgumentException(wishList.getEmail() + "의 위시리스트에 존재하는 상품입니다.");
         }
-        wishListDao.deleteWishList(email, name);
-        return true;
+        wishListRepository.save(wishList.toWishList());
+    }
+
+    public void updateWishList(String email, long productId, int num) throws NotFoundException {
+        WishList wishList = wishListRepository.findByEmailAndProductId(email, productId);
+        if (!existsByEmailAndProductId(email, productId)) {
+            throw new IllegalArgumentException(
+                email + "의 위시리스트에는 " + productService.getProductById(productId).getName()
+                    + " 상품이 존재하지 않습니다.");
+        }
+        wishList.update(email, productId, num);
+        wishListRepository.save(wishList);
+    }
+
+    public Boolean existsByEmailAndProductId(String email, long productId) {
+        return wishListRepository.existsByEmailAndProductId(email, productId);
+    }
+
+    public void deleteWishList(String email, long productId) throws NotFoundException {
+        if (!existsByEmailAndProductId(email, productId)) {
+            throw new IllegalArgumentException(
+                email + "의 위시리스트에는 " + productService.getProductById(productId).getName()
+                    + " 상품이 존재하지 않습니다.");
+        }
+        wishListRepository.deleteByEmailAndProductId(email, productId);
     }
 }

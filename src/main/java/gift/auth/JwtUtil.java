@@ -1,6 +1,7 @@
 package gift.auth;
 
 import gift.user.User;
+import gift.user.UserDTO;
 import gift.user.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -17,21 +18,15 @@ import org.springframework.web.server.ResponseStatusException;
 @Component
 public class JwtUtil {
 
-    @Autowired
-    private UserService userService;
-
     @Value("${jwt.secret}")
     private String secretKey;
 
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    public String generateToken(User user) {
-        if(!userService.getUserByEmailAndPassword(user)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
-        }
+    public String generateToken(UserDTO userDTO) {
         return Jwts.builder()
-            .setSubject(user.getEmail())
+            .setSubject(userDTO.getEmail())
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + expiration))
             .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
