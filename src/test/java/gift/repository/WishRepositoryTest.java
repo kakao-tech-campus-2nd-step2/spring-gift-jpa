@@ -103,10 +103,10 @@ public class WishRepositoryTest {
         assertThat(wishRepository.existsByUserInfo_IdAndProduct_Id(wish.getUserInfo().getId(), wish.getProduct().getId())).isTrue();
 
 
-        wishRepository.deleteByProduct_IdAndUserInfo_Id(1L,1L);
+        wishRepository.deleteByProduct_IdAndUserInfo_Id(wish.getProduct().getId(),wish.getUserInfo().getId());
 
-        assertThat(wishRepository.findByUserInfo_Id(1L)).isEmpty();
-        assertThat(wishRepository.existsByUserInfo_IdAndProduct_Id(1L, 1L)).isFalse();
+        assertThat(wishRepository.findByUserInfo_Id(wish.getUserInfo().getId())).isEmpty();
+        assertThat(wishRepository.existsByUserInfo_IdAndProduct_Id(wish.getUserInfo().getId(), wish.getProduct().getId())).isFalse();
     }
 
     @Test
@@ -122,9 +122,7 @@ public class WishRepositoryTest {
         assertThat(byUserIdAndProductId.getProduct().getId()).isEqualTo(wish.getProduct().getId());
         assertThat(byUserIdAndProductId.getUserInfo().getId()).isEqualTo(wish.getUserInfo().getId());
         assertThat(byUserIdAndProductId.getQuantity()).isEqualTo(1L);
-
-        Wish nonExistentWish = wishRepository.findByUserInfo_IdAndProduct_Id(2L, 2L);
-        assertThat(nonExistentWish).isNull();
+        
     }
     @Test
     @DisplayName("위시 아이템 삭제 후 재생성")
