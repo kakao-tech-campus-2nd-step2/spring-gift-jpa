@@ -6,11 +6,11 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-
 @Component
 public class JwtTokenUtil {
 
     private final String secretKey;
+
 
     public JwtTokenUtil(@Value("${jwt.secret.key}") String secretKey) {
         this.secretKey = secretKey;
@@ -18,10 +18,10 @@ public class JwtTokenUtil {
 
     public String getEmailFromToken(String token) {
         Claims claims = Jwts.parser()
-            .verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
+            .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
             .build()
-            .parseSignedClaims(token)
-            .getPayload();
+            .parseClaimsJws(token)
+            .getBody();
         return claims.getSubject();
     }
 }
