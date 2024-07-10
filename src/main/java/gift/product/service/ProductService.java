@@ -10,6 +10,7 @@ import gift.product.exception.ProductUpdateException;
 import gift.product.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -20,17 +21,20 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResDto> getProducts() {
         return productRepository.findAll().stream()
                 .map(ProductResDto::new)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public ProductResDto getProduct(Long productId) {
         Product findProduct = findProductByIdOrThrow(productId);
         return new ProductResDto(findProduct);
     }
 
+    @Transactional
     public ProductResDto addProduct(ProductReqDto productReqDto) {
         Product newProduct;
         try {
@@ -42,6 +46,7 @@ public class ProductService {
         return new ProductResDto(newProduct);
     }
 
+    @Transactional
     public void updateProduct(Long productId, ProductReqDto productReqDto) {
         Product findProduct = findProductByIdOrThrow(productId);
         try {
@@ -51,6 +56,7 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public void deleteProduct(Long productId) {
         Product findProduct = findProductByIdOrThrow(productId);
         try {

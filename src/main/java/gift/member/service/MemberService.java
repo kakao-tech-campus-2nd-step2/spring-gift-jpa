@@ -13,6 +13,7 @@ import gift.member.exception.MemberUpdateException;
 import gift.member.repository.MemberRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -25,22 +26,26 @@ public class MemberService {
         this.authTokenGenerator = authTokenGenerator;
     }
 
+    @Transactional(readOnly = true)
     public List<MemberResDto> getMembers() {
         return memberRepository.findAll().stream()
                 .map(MemberResDto::new)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public MemberResDto getMember(Long memberId) {
         Member findMember = findMemberByIdOrThrow(memberId);
         return new MemberResDto(findMember);
     }
 
+    @Transactional(readOnly = true)
     public String getMemberPassword(Long memberId) {
         Member findMember = findMemberByIdOrThrow(memberId);
         return findMember.getPassword();
     }
 
+    @Transactional
     public AuthToken register(MemberReqDto memberReqDto) {
         checkDuplicateEmail(memberReqDto.email());  // 중복되는 이메일이 있으면 예외 발생
 
@@ -56,6 +61,7 @@ public class MemberService {
         return authTokenGenerator.generateToken(new MemberResDto(newMember));
     }
 
+    @Transactional
     public void updateMember(Long memberId, MemberReqDto memberReqDto) {
         Member findMember = findMemberByIdOrThrow(memberId);
         try {
@@ -65,6 +71,7 @@ public class MemberService {
         }
     }
 
+    @Transactional
     public void deleteMember(Long memberId) {
         Member findMember = findMemberByIdOrThrow(memberId);
         try {

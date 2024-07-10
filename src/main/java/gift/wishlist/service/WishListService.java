@@ -11,6 +11,7 @@ import gift.wishlist.exception.WishListUpdateException;
 import gift.wishlist.repository.WishListRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishListService {
@@ -23,6 +24,7 @@ public class WishListService {
         this.productService = productService;
     }
 
+    @Transactional(readOnly = true)
     public List<WishListResDto> getWishListsByMemberId(Long id) {
 
         return wishListRepository.findAllByMemberId(id).stream()
@@ -30,6 +32,7 @@ public class WishListService {
                 .toList();
     }
 
+    @Transactional
     public void addWishList(Long memberId, WishListReqDto wishListReqDto) {
         // 이미 위시 리스트에 있는 상품이면 수량을 더한다.
         if (wishListRepository.existsByMemberIdAndProductId(memberId, wishListReqDto.productId())) {
@@ -55,6 +58,7 @@ public class WishListService {
         }
     }
 
+    @Transactional
     public void updateWishListById(Long memberId, Long wishListId, WishListReqDto wishListReqDto) {
         // 수량이 0이면 삭제
         Integer quantity = wishListReqDto.quantity();
@@ -71,6 +75,7 @@ public class WishListService {
         }
     }
 
+    @Transactional
     public void deleteWishListById(Long memberId, Long wishListId) {
         WishList findWishList = findByIdAndMemberIdOrThrow(memberId, wishListId);
         try {
