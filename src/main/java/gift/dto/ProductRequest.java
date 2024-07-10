@@ -11,5 +11,6 @@ public record ProductRequest(Long id,
                              @Pattern(regexp = "^(?!.*카카오).*$", message = "상품 이름에 '카카오' 가 포함 되어 있습니다. 담당 MD와 협의가 필요합니다.")
                              String name,
                              int price,
-                             String imageUrl) {
+                             String imageUrl
+) {
 }
