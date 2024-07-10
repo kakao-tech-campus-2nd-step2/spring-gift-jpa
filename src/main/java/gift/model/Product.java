@@ -1,9 +1,9 @@
 package gift.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "product")
 public class Product {
 
     @Id
@@ -13,6 +13,10 @@ public class Product {
     private int price;
     @Column(name = "imageurl")
     private String imageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "wishlist_id")
+    private WishList wishlist;
 
     public Product() {
     }
@@ -59,6 +63,14 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    public WishList getWishlist() {
+        return wishlist;
+    }
+
+    public void setWishlist(WishList wishlist) {
+        this.wishlist = wishlist;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -66,6 +78,7 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", price=" + price +
                 ", imageUrl='" + imageUrl + '\'' +
+                ", wishlist=" + wishlist +
                 '}';
     }
 }

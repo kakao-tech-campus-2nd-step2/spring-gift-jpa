@@ -1,7 +1,9 @@
 package gift.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "wishlist")
@@ -10,17 +12,20 @@ public class WishList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
-    @Column(name = "productid")
-    private Long productId;
-    private int count;
+
+    @OneToMany(mappedBy = "wishlist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products = new ArrayList<>();
+
+    public void addProduct(Product product) {
+        this.products.add(product);
+        product.setWishlist(this);
+    }
 
     public WishList() {
     }
 
-    public WishList(String email, Long productId, int count) {
+    public WishList(String email) {
         this.email = email;
-        this.productId = productId;
-        this.count = count;
     }
 
     public String getEmail() {
@@ -31,27 +36,15 @@ public class WishList {
         this.email = email;
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public List<Product> getProducts() {
+        return products;
     }
 }
