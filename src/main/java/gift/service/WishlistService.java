@@ -1,10 +1,9 @@
 package gift.service;
 
-import gift.domain.MemberRepository;
-import gift.domain.ProductRepository;
-import gift.domain.Wishlist;
-import gift.domain.WishlistRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
+import gift.entity.Wishlist;
+import gift.repository.WishlistRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,15 +12,14 @@ import java.util.NoSuchElementException;
 
 @Service
 public class WishlistService {
-    @Autowired
     private final WishlistRepository wishlistRepository;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private ProductRepository productRepository;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
-    public WishlistService(WishlistRepository wishlistRepository) {
+    public WishlistService(WishlistRepository wishlistRepository, MemberRepository memberRepository, ProductRepository productRepository) {
         this.wishlistRepository = wishlistRepository;
+        this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
     }
 
     public List<Wishlist> getAllWishlist(String token) {
@@ -68,7 +66,7 @@ public class WishlistService {
 
         try {
             if (isItem(member_id, product_id)) {
-                var num = wishlistRepository.searchNumByMember_idAndProduct_id(member_id, product_id);
+                var num = wishlistRepository.searchNumOfProductByMember_idAndProduct_id(member_id, product_id);
                 var wishlist = new Wishlist(member, product, num+1);
                 wishlistRepository.save(wishlist);
             } else {
@@ -82,6 +80,6 @@ public class WishlistService {
     }
 
     public boolean isItem(int member_id, int product_id) {
-        return wishlistRepository.searchNumByMember_idAndProduct_id(member_id, product_id) > 0;
+        return wishlistRepository.searchNumOfProductByMember_idAndProduct_id(member_id, product_id) > 0;
     }
 }
