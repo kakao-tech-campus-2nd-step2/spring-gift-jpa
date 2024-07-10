@@ -8,10 +8,12 @@ public enum ErrorCode {
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "필수 입력값의 누락, 또는 형식과 다른 데이터 요청입니다."),
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "지원하지 않는 요청입니다."),
     EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 이메일은 존재하지 않습니다."),
-    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
+    INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 존재하지 않거나, 유효하지 않은 토큰입니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "해당 요청에 대한 권한이 없습니다."),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저는 존재하지 않습니다.");
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저는 존재하지 않습니다."),
+    PASSWORD_MISMATCH(HttpStatus.FORBIDDEN,"비밀번호가 일치하지 않습니다."),
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST,"이미 존재하는 이메일입니다.");
 
     private final HttpStatus status;
     private final String message;

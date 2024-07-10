@@ -25,7 +25,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         Object handler) throws Exception {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith(authType)) {
-            throw new JwtException(ErrorCode.ACCESS_DENIED.getMessage());
+            throw new JwtException(ErrorCode.INVALID_TOKEN.getMessage());
         }
         String token = authHeader.substring(authType.length());
         if (!jwtProvider.validateToken(token)) {

@@ -1,13 +1,26 @@
 package gift.model.item;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.util.Objects;
 
+@Entity
 public class Item {
 
-    private final Long id;
-    private final String name;
-    private final Long price;
-    private final String imgUrl;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false)
+    private String name;
+    @Column(nullable = false)
+    private Long price;
+    private String imgUrl;
+
+    public Item() {
+    }
 
     public Item(Long id, String name, Long price, String imgUrl) {
         this.id = id;

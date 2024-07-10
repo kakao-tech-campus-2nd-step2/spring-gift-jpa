@@ -1,11 +1,31 @@
 package gift.model.wishList;
 
-public class WishItem {
-    private final Long id;
-    private final Long userId;
-    private final Long itemId;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-    public WishItem(Long id,Long userId, Long itemId) {
+@Entity
+@Table(name = "wish")
+public class WishItem {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false)
+
+    private Long userId;
+
+    @Column(nullable = false)
+
+    private Long itemId;
+
+    public WishItem() {
+    }
+
+    public WishItem(Long id, Long userId, Long itemId) {
         this.id = id;
         this.userId = userId;
         this.itemId = itemId;

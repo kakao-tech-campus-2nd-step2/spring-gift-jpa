@@ -1,5 +1,7 @@
 package gift.service;
 
+import gift.exception.CustomException.ItemNotFoundException;
+import gift.exception.ErrorCode;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -18,12 +20,13 @@ public class ItemService {
     }
 
     public void insertItem(ItemForm form) {
-        Item item = new Item(0L,form.getName(), form.getPrice(), form.getImgUrl());
-        itemRepository.insert(item);
+        Item item = new Item(0L, form.getName(), form.getPrice(), form.getImgUrl());
+        itemRepository.save(item);
     }
 
     public ItemDTO findItem(Long id) {
-        Item item = itemRepository.findById(id);
+        Item item = itemRepository.findById(id).orElseThrow(() -> new ItemNotFoundException(
+            ErrorCode.ITEM_NOT_FOUND));
         return new ItemDTO(item.getId(), item.getName(), item.getPrice(), item.getImgUrl());
     }
 
@@ -37,10 +40,10 @@ public class ItemService {
     public void updateItem(ItemDTO itemDTO) {
         Item item = new Item(itemDTO.getId(), itemDTO.getName(), itemDTO.getPrice(),
             itemDTO.getImgUrl());
-        itemRepository.update(item);
+        itemRepository.save(item);
     }
 
     public void deleteItem(Long id) {
-        itemRepository.delete(id);
+        itemRepository.deleteById(id);
     }
 }

@@ -1,11 +1,13 @@
 package gift.service;
 
-import org.springframework.stereotype.Service;
 import gift.exception.CustomException.UserNotFoundException;
+import gift.exception.ErrorCode;
 import gift.model.user.User;
 import gift.model.user.UserDTO;
 import gift.model.user.UserForm;
 import gift.repository.UserRepository;
+import org.springframework.stereotype.Service;
+
 @Service
 public class UserService {
 
@@ -16,29 +18,30 @@ public class UserService {
     }
 
     public Long insertUser(UserForm userForm) {
-        return userRepository.insert(new User(0L,userForm.getEmail(), userForm.getPassWord()));
+        userRepository.save(new User(0L, userForm.getEmail(), userForm.getPassword()));
+        return userRepository.findByEmail(userForm.getEmail())
+            .orElseThrow(() -> new UserNotFoundException(
+                ErrorCode.USER_NOT_FOUND)).getId();
     }
 
     public UserDTO findByEmail(String email) {
-        User user = userRepository.findByEmail(email);
-        return new UserDTO(user.getId(),user.getEmail(), user.getPassWord());
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
+        return new UserDTO(user.getId(), user.getEmail(), user.getPassword());
     }
 
     public boolean existsEmail(String email) {
-        try {
-            userRepository.findByEmail(email);
-        } catch (UserNotFoundException e) {
-            return false;
-        }
-        return true;
+        return userRepository.existsByEmail(email);
     }
 
-    public boolean isPassWordMatch(UserForm userForm) {
-        return userForm.getPassWord()
-            .equals(userRepository.findByEmail(userForm.getEmail()).getPassWord());
+    public boolean isPasswordMatch(UserForm userForm) {
+        return userForm.getPassword()
+            .equals(userRepository.findByEmail(userForm.getEmail())
+                .orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND))
+                .getPassword());
     }
 
-    public void deleteUser(String id) {
-        userRepository.delete(id);
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 }

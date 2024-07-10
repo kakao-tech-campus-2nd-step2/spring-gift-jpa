@@ -40,7 +40,7 @@ public class JwtProvider {
         } catch (ExpiredJwtException e) {
             throw new JwtException(ErrorCode.TOKEN_EXPIRED.getMessage());
         } catch (JwtException e) {
-            throw new JwtException(ErrorCode.ACCESS_DENIED.getMessage());
+            throw new JwtException(ErrorCode.INVALID_TOKEN.getMessage());
         }
     }
 
