@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.DTO.WishListDTO;
+import gift.aspect.CheckProductExists;
 import gift.model.wishlist.WishListRepository;
 import java.util.Collections;
 import java.util.List;
@@ -14,17 +15,14 @@ import org.springframework.stereotype.Service;
 public class WhishListService {
 
     private final WishListRepository wishListRepository;
-    private final ProductService productService;
 
     /**
      * WhishListService 생성자
      *
      * @param wishListRepository WishListDAO 객체
-     * @param productService
      */
-    public WhishListService(WishListRepository wishListRepository, ProductService productService) {
+    public WhishListService(WishListRepository wishListRepository) {
         this.wishListRepository = wishListRepository;
-        this.productService = productService;
     }
 
     /**
@@ -34,8 +32,8 @@ public class WhishListService {
      * @param userId    WishList에 추가할 사용자의 ID
      * @return 생성된 WishList 객체의 ID 리스트
      */
+    @CheckProductExists
     public List<Long> createWishList(long productId, long userId) {
-        productService.productNotFoundDetector(productId);
         WishListDTO newWishListDTO = wishListRepository.createWishList(productId, userId);
         return Collections.singletonList(newWishListDTO.getProductId());
     }
@@ -60,11 +58,7 @@ public class WhishListService {
      * @return 삭제 성공 여부
      */
     public boolean deleteWishListsByUserId(long userId) {
-        if (wishListRepository.deleteWishListsByUserId(userId)){
-            return true;
-        } else {
-            return false;
-        }
+        return wishListRepository.deleteWishListsByUserId(userId);
     }
 
     /**
@@ -74,8 +68,8 @@ public class WhishListService {
      * @param productId 삭제할 상품의 ID
      * @return 삭제 성공 여부
      */
+    @CheckProductExists
     public boolean deleteWishListByUserIdAndProductId(long userId, long productId) {
-        productService.productNotFoundDetector(productId);
         return wishListRepository.deleteWishListByUserIdAndProductId(userId, productId);
     }
 
@@ -86,8 +80,8 @@ public class WhishListService {
      * @param productId 추가할 상품의 ID
      * @return 추가 성공 여부
      */
+    @CheckProductExists
     public boolean addWishListByUserIdAndProductId(long userId, long productId) {
-        productService.productNotFoundDetector(productId);
         return wishListRepository.addWishListByUserIdAndProductId(userId, productId);
     }
 }

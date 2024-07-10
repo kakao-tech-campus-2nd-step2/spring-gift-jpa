@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.DTO.ProductDTO;
+import gift.aspect.CheckProductExists;
 import gift.model.product.ProductEntity;
 import gift.model.product.ProductRepository;
 import java.util.List;
@@ -48,8 +49,8 @@ public class ProductService {
      *
      * @param id 조회할 상품의 ID
      */
+    @CheckProductExists
     public ProductDTO getProduct(Long id) {
-        productNotFoundDetector(id);
         var productEntity = productRepository.findById(id).get();
         return toProductDTO(productEntity);
     }
@@ -67,8 +68,8 @@ public class ProductService {
      *
      * @param id 삭제할 상품의 ID
      */
+    @CheckProductExists
     public void deleteProduct(Long id) {
-        productNotFoundDetector(id);
         productRepository.deleteById(id);
     }
 
@@ -77,33 +78,12 @@ public class ProductService {
      *
      * @param productDTO 갱신할 상품 객체
      */
+    @CheckProductExists
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
-        productNotFoundDetector(id);
         var productEntity = toProductEntity(productDTO);
         productEntity.setId(id);
         productRepository.save(productEntity);
         return toProductDTO(productEntity);
-    }
-
-    /**
-     * 주어진 ID에 해당하는 상품이 존재하는지 확인함
-     *
-     * @param id 확인할 상품의 ID
-     * @return 상품이 존재하면 true, 그렇지 않으면 false
-     */
-    public boolean exists(Long id) {
-        return productRepository.existsById(id);
-    }
-
-    /**
-     * 상품이 존재하지 않을 때 예외를 발생시킴
-     *
-     * @param id 확인할 상품의 ID
-     */
-    public void productNotFoundDetector(Long id) {
-        if (!exists(id)) {
-            throw new IllegalArgumentException("상품이 존재하지 않습니다.");
-        }
     }
 
 }
