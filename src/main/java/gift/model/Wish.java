@@ -2,6 +2,8 @@ package gift.model;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 public class Wish {
     @Id
@@ -39,5 +41,18 @@ public class Wish {
 
     public long getProductId() {
         return productId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wish wish = (Wish) o;
+        return memberId == wish.memberId && productId == wish.productId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(memberId, productId);
     }
 }
