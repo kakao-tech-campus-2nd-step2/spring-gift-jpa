@@ -1,6 +1,7 @@
 package gift.auth.security;
 
-import gift.error.AuthenticationFailedException;
+import gift.auth.error.AuthenticationExpiredException;
+import gift.auth.error.AuthenticationFailedException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -44,9 +45,9 @@ public class JwtUtil {
                     .getPayload()
                     .getSubject());
         } catch (ExpiredJwtException exception) {
-            throw new AuthenticationFailedException("인증이 만료되었습니다.");
+            throw new AuthenticationExpiredException();
         } catch (JwtException exception) {
-            throw new AuthenticationFailedException("인증에 실패하였습니다.");
+            throw new AuthenticationFailedException();
         }
 
     }

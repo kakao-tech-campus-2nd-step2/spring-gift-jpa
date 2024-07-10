@@ -1,12 +1,12 @@
 package gift.auth.security;
 
-import gift.error.AuthenticationFailedException;
+import gift.auth.error.AuthenticationFailedException;
+import gift.error.ErrorCode;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -44,7 +44,7 @@ public class JwtFilter extends OncePerRequestFilter  {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authHeader == null || !authHeader.startsWith(BEAR_PREFIX)) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "인증이 유효하지 않습니다.");
+            sendErrorCodeToResponse(response, ErrorCode.AUTHENTICATION_INVALID);
             return;
         }
 
@@ -53,11 +53,21 @@ public class JwtFilter extends OncePerRequestFilter  {
         try {
             request.setAttribute(REQUEST_ATTRIBUTE_NAME, jwtUtil.extractId(token));
         } catch (AuthenticationFailedException exception) {
-            response.sendError(HttpStatus.FORBIDDEN.value(), exception.getMessage());
+            sendErrorCodeToResponse(response, exception.getCode());
             return;
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private static void sendErrorCodeToResponse(
+            HttpServletResponse response,
+            ErrorCode code) throws IOException {
+        response.sendError(
+                code.getStatus()
+                        .value(),
+                code.getMessage()
+        );
     }
 
 }

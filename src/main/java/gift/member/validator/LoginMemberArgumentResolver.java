@@ -1,8 +1,8 @@
 package gift.member.validator;
 
 import gift.auth.security.JwtFilter;
-import gift.error.AuthenticationFailedException;
-import gift.error.AuthorizationInvalidException;
+import gift.auth.error.AuthenticationFailedException;
+import gift.auth.error.AuthenticationInvalidException;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -26,11 +26,11 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         try {
             Long memberId = (Long) webRequest.getAttribute(JwtFilter.REQUEST_ATTRIBUTE_NAME, NativeWebRequest.SCOPE_REQUEST);
             if (memberId == null) {
-                throw new AuthorizationInvalidException();
+                throw new AuthenticationInvalidException();
             }
             return memberId;
         } catch (ClassCastException exception) {
-            throw new AuthenticationFailedException("인증에 실패하였습니다.");
+            throw new AuthenticationFailedException();
         }
     }
 

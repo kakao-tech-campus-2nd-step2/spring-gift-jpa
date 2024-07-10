@@ -1,6 +1,9 @@
 package gift.wishlist.application;
 
-import gift.error.WishAlreadyExistsException;
+import gift.member.error.MemberNotFoundException;
+import gift.product.error.ProductNotFoundException;
+import gift.wishlist.error.WishAlreadyExistsException;
+import gift.wishlist.error.WishNotFoundException;
 import gift.member.dao.MemberRepository;
 import gift.member.entity.Member;
 import gift.product.dao.ProductRepository;
@@ -10,7 +13,6 @@ import gift.wishlist.entity.Wish;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class WishesService {
@@ -38,14 +40,14 @@ public class WishesService {
 
     public void removeProductFromWishlist(Long memberId, Long productId) {
         Wish wish = wishesRepository.findByMember_IdAndProduct_Id(memberId, productId)
-                .orElseThrow(() -> new NoSuchElementException("해당 위시는 존재하지 않습니다."));
+                .orElseThrow(WishNotFoundException::new);
 
         wishesRepository.delete(wish);
     }
 
     public List<Product> getWishlistOfMember(Long memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("해당 회원 계정은 존재하지 않습니다."))
+                .orElseThrow(MemberNotFoundException::new)
                 .getWishList()
                 .stream()
                 .map(Wish::getProduct)
@@ -54,9 +56,9 @@ public class WishesService {
 
     private Wish createWish(Long memberId, Long productId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("해당 회원 계정은 존재하지 않습니다."));
+                .orElseThrow(MemberNotFoundException::new);
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NoSuchElementException("해당 상품은 존재하지 않습니다."));
+                .orElseThrow(ProductNotFoundException::new);
 
         return new Wish(member, product);
     }
