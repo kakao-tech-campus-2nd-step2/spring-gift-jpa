@@ -7,6 +7,7 @@ import gift.model.Product;
 import gift.model.User;
 import gift.model.Wishlist;
 
+import gift.service.WishlistService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,14 +19,17 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 class WishlistRepositoryTest {
 
-    @Autowired
     private WishlistRepository wishlistRepository;
-
-    @Autowired
     private UserRepository userRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    public WishlistRepositoryTest(WishlistRepository wishlistRepository,
+        UserRepository userRepository, ProductRepository productRepository) {
+        this.wishlistRepository = wishlistRepository;
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
+    }
 
     @BeforeEach
     public void setUp() {
