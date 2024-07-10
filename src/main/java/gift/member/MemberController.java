@@ -1,6 +1,7 @@
 package gift.member;
 
 import gift.exception.AlreadyExistMember;
+import gift.exception.NotFoundMember;
 import gift.login.JwtTokenUtil;
 import gift.login.TokenResponseDto;
 import gift.logout.LogoutTokenDao;
@@ -40,13 +41,13 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Member member) {
+    public ResponseEntity<?> login(@RequestBody Member member) throws NotFoundMember {
         Optional<Member> existMember = memberService.getMember(member);
         if (existMember.isPresent()) {
             String token = JwtTokenUtil.generateToken(member.getEmail());
             return ResponseEntity.ok(new TokenResponseDto(token));
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("회원정보가 존재하지 않습니다");
+            throw new NotFoundMember("회원정보가 존재하지 않습니다");
         }
     }
 

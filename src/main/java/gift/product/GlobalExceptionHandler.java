@@ -1,6 +1,7 @@
 package gift.product;
 
 import gift.exception.AlreadyExistMember;
+import gift.exception.NotFoundMember;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -31,5 +32,11 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<String> handleAlreadyExistMemberException(AlreadyExistMember e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(NotFoundMember.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<String> handleNotFoundMemberException(NotFoundMember e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 }
