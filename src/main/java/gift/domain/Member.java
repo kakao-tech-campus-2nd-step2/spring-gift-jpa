@@ -13,6 +13,11 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    public Member(String mail, String password) {
+        this.email = mail;
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
     }

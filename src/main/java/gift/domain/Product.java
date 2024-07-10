@@ -18,8 +18,7 @@ public class Product {
     @Column(nullable = false)
     String imageUrl;
 
-    public Product(long product_id, String name, int price, String imageUrl) {
-        this.product_id = product_id;
+    public Product(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

@@ -36,9 +36,11 @@
     )
   ```
 ## 구현할 기능 목록
-- [ ] JDBCTemplate 기반 코드 JPA로 리팩토링
+- [x] JDBCTemplate 기반 코드 JPA로 리팩토링
+
   - [x] JPA 사용을 위한 dependencies 추가
-  - [ ] 엔티티 클래스 작성
+  
+  - [x] 엔티티 클래스 작성
     - [x] member table
       - [x] id(Long, key), email(Varchar, unique), password(Varchar)
     - [x] product
@@ -55,7 +57,13 @@
     - [x] MemberRepositoryImpl 클래스 작성
     - [x] ProductRepositoryImpl 클래스 작성
     - [x] WishRepositoryImpl 클래스 작성
+    
 - [x] 동작 쿼리를 로그로 확인하도록 property 설정
+
 - [x] MySQL Dialect을 사용을 위한 property 추가
+
 - [ ] 학습 테스트 작성
   - [ ] @DataJpaTest 어노테이션을 사용하여 테스트 클래스 작성
+    - [x] MemberRepositoryTest 작성
+    - [x] ProductRepositoryTest 작성 
+    - [ ] WishRepositoryTest 작성

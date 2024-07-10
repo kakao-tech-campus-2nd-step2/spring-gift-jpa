@@ -36,8 +36,9 @@ public class WishRepositoryImpl implements WishRepository {
     }
 
     @Override
-    public void save(Wish wish) {
+    public Wish save(Wish wish) {
         entityManager.persist(wish);
+        return wish;
     }
 
     @Override

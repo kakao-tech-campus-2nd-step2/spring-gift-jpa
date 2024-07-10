@@ -29,8 +29,9 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public void save(Member member) {
+    public Member save(Member member) {
         entityManager.persist(member);
+        return member;
     }
 
     @Override

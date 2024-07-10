@@ -16,7 +16,6 @@ public class Wish {
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
-
     public Long getUserId() {
         return memberId;
     }

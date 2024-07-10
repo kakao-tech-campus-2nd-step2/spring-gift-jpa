@@ -30,9 +30,7 @@ public class MemberService {
             throw new IllegalArgumentException("이메일이 이미 존재합니다.");
         }
 
-        Member member = new Member();
-        member.setEmail(requestDto.getEmail());
-        member.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        Member member = new Member(requestDto.getEmail(), passwordEncoder.encode(requestDto.getPassword()));
         memberRepository.save(member);
 
         String token = securityService.generateJwtToken(member);

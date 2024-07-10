@@ -27,8 +27,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void save(Product product) {
+    public Product save(Product product) {
         entityManager.persist(product);
+        return product;
     }
 
     @Override
