@@ -1,12 +1,8 @@
 package gift.domain.cart;
 
-import gift.domain.cart.repository.CartItemRepository;
-import gift.domain.cart.repository.JdbcTemplateCartItemRepository;
 import gift.domain.cart.repository.JpaCartItemRepository;
-import gift.domain.product.repository.JdbcTemplateProductRepository;
 import gift.domain.product.Product;
 import gift.domain.product.repository.JpaProductRepository;
-import gift.domain.product.repository.ProductRepository;
 import gift.global.exception.BusinessException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +16,6 @@ public class CartItemService {
     private final JdbcTemplate jdbcTemplate;
     private final JpaProductRepository productRepository;
     private final JpaCartItemRepository cartItemRepository;
-
     public CartItemService(
         JdbcTemplate jdbcTemplate,
         JpaProductRepository jpaProductRepository,

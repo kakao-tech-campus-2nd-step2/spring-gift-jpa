@@ -29,17 +29,9 @@ public class CartItemRepositoryTest {
     @Autowired
     private JpaCartItemRepository cartItemRepository;
     @Autowired
-    private CartItemService cartItemService;
-    @Autowired
-    private UserService userService;
-    @Autowired
     private JpaUserRepository userRepository;
     @Autowired
     private JpaProductRepository productRepository;
-    @Autowired
-    private JwtProvider jwtProvider;
-
-    private Long userId;
 
     @Test
     @Description("장바구니 조회")
@@ -95,7 +87,7 @@ public class CartItemRepositoryTest {
         cartItemRepository.save(new CartItem(savedUser.getId(), product.getId()));
         // when
         cartItemRepository.deleteByUserIdAndProductId(savedUser.getId(), product.getId());
-        List<CartItem> cartItems = cartItemRepository.findAllByUserId(userId);
+        List<CartItem> cartItems = cartItemRepository.findAllByUserId(savedUser.getId());
         // then
         assertThat(cartItems.size()).isEqualTo(0);
 
