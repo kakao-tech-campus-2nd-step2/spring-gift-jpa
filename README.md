@@ -41,8 +41,8 @@
   - [ ] 엔티티 클래스 작성
     - [x] member table
       - [x] id(Long, key), email(Varchar, unique), password(Varchar)
-    - [ ] product
-      - [ ] id(Long, key), price(Integer, 0이상), name(Varchar, not null), image_url(Varchar, not null) 
+    - [x] product
+      - [x] id(Long, key), price(Integer, 0이상), name(Varchar, not null), image_url(Varchar, not null) 
     - [ ] wish
       - [ ] id(Long, key), member_id(Long, not null), product_id(Long, not null)
       

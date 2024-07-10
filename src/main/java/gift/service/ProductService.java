@@ -21,7 +21,7 @@ public class ProductService {
     private final AtomicLong id = new AtomicLong(1);
 
     public Product createProduct(CreateProductDto productDto) {
-        Product product = new Product(id.getAndIncrement(), productDto.getName(), productDto.getDescription(), productDto.getPrice(), productDto.getImageUrl());
+        Product product = new Product(id.getAndIncrement(), productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
         productRepository.save(product);
         return product;
     }
@@ -40,7 +40,6 @@ public class ProductService {
         Product product = productRepository.findById(productId);
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
-        product.setDescription(productDto.getDescription());
         product.setImageUrl(productDto.getImageUrl());
         productRepository.update(product);
         return product;

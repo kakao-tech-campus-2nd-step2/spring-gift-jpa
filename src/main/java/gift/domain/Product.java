@@ -1,22 +1,32 @@
 package gift.domain;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "product")
 public class Product {
-    Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long product_id;
+
+    @Column(nullable = false, length = 15)
     String name;
-    String description;
+
+    @Column(nullable = false)
     Integer price;
+
+    @Column(nullable = false)
     String imageUrl;
 
-    public Product(long id, String name, String description, int price, String imageUrl) {
-        this.id = id;
+    public Product(long product_id, String name, int price, String imageUrl) {
+        this.product_id = product_id;
         this.name = name;
-        this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
     public void setId(long andIncrement) {
-        this.id = andIncrement;
+        this.product_id = andIncrement;
     }
 
     public void setName(Object name) {
@@ -27,26 +37,19 @@ public class Product {
         this.price = (Integer) price;
     }
 
-    public void setDescription(Object description) {
-        this.description = description.toString();
-    }
-
     public void setImageUrl(Object imageUrl) {
         this.imageUrl = imageUrl.toString();
     }
 
     public Long getId() {
-        return id;
+        return product_id;
     }
 
-    public Object getName() {
+    public String getName() {
         return name;
     }
-    public Object getPrice() {
+    public Integer getPrice() {
         return price;
-    }
-    public Object getDescription() {
-        return description;
     }
     public String getImageUrl() {
         return imageUrl;
