@@ -1,4 +1,4 @@
-package gift.domain;
+package gift.entity;
 
 import jakarta.persistence.*;
 
@@ -17,14 +17,14 @@ public class Wishlist {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(name = "num", nullable = false)
-    private int num;
+    @Column(name = "numOfProduct", nullable = false)
+    private int numOfProduct;
 
     protected Wishlist() {}
 
-    public Wishlist(Member member, Product product, int num) {
+    public Wishlist(Member member, Product product, int numOfProduct) {
         this.member = member;
         this.product = product;
-        this.num = num;
+        this.numOfProduct = numOfProduct;
     }
 }

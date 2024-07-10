@@ -1,4 +1,4 @@
-package gift.domain;
+package gift.entity;
 
 import jakarta.persistence.*;
 

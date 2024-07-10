@@ -1,8 +1,7 @@
-package gift.domain;
+package gift.entity;
 
 import groovy.transform.builder.Builder;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 
 @Builder
 @Entity
