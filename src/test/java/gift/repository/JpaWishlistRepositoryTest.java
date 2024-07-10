@@ -83,7 +83,7 @@ public class JpaWishlistRepositoryTest {
     }
 
     @Test
-    public void deleteProductCascade(){
+    public void deleteProductCascade() {
         // given
         String testEmail = "test@naver.com";
         ProductDTO product1 = new ProductDTO("test1", 123, "test1.com");
