@@ -8,5 +8,4 @@ public class MemberLoginDto {
         this.email = email;
         this.password = password;
     }
-
 }
