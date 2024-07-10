@@ -1,7 +1,7 @@
 package gift.exception;
 
-public class LoginException extends RuntimeException {
-    public LoginException(String message) {
+public class AuthException extends RuntimeException {
+    public AuthException(String message) {
         super(message);
     }
 }
