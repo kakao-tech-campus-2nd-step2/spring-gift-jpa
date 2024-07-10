@@ -27,8 +27,7 @@ public class MemberService {
     }
 
     public String signin(Member member){
-        Optional<Member> memberOptional = Optional.ofNullable(memberRepository.findByEmail(member.getEmail()));
-        if (!memberOptional.isPresent()) {
+        if(!memberRepository.existsByEmail(member.getEmail())){
             memberRepository.save(member);
             return createJwtToken.createJwt(member.getId(), member.getEmail());
         }
@@ -38,10 +37,10 @@ public class MemberService {
     }
 
     public String login(Member member){
-        Optional<Member> memberOptional = Optional.ofNullable(memberRepository.findByEmail(member.getEmail()));
-        if (!memberOptional.isPresent()) {
+        if(!memberRepository.existsByEmail(member.getEmail())){
             throw new IllegalArgumentException("이메일을 확인해주세요.");
         }
+
         Member loginMember = memberRepository.findByEmail(member.getEmail());
 
         if(Objects.equals(member.getPassword(), loginMember.getPassword())){
