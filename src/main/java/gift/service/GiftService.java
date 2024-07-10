@@ -41,7 +41,8 @@ public class GiftService {
 
         Product savedProduct = productRepository.save(product);
 
-        return productDTO;
+            return new ProductDTO(savedProduct.getName(),savedProduct.getPrice(),
+                savedProduct.getImageUrl());
     }
 
     public ProductDTO putProducts(ProductDTO productDTO, Long id) {
@@ -53,10 +54,11 @@ public class GiftService {
         productById.setName(productDTO.getName());
         productById.setPrice(productDTO.getPrice());
         productById.setImageUrl(productDTO.getImageUrl());
-        Product save = productRepository.save(productById);
+        Product saveProduct = productRepository.save(productById);
 
 
-        return productDTO;
+        return new ProductDTO(saveProduct.getName(),saveProduct.getPrice(),
+            saveProduct.getImageUrl());
     }
 
     public Long deleteProducts(Long id) {

@@ -1,5 +1,6 @@
 package gift.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,17 +15,16 @@ public class Wish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private Product product;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private UserInfo userInfo;
     @Column(nullable = false)
     private Long quantity;
 
-    public Wish(Long id, Product product, UserInfo userInfo, Long quantity) {
-        this.id = id;
+    public Wish(Product product, UserInfo userInfo, Long quantity) {
         this.product = product;
         this.userInfo = userInfo;
         this.quantity = quantity;
