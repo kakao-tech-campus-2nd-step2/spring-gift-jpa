@@ -3,11 +3,10 @@ package gift.model;
 import gift.common.enums.Role;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
-public class Member {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Member extends BasicEntity {
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -21,8 +20,14 @@ public class Member {
 
     protected Member() {}
 
-    public Member(Long id, String email, String password, Role role) {
-        this.id = id;
+    public Member(String email, String password, Role role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+
+    public Member(Long id, LocalDateTime createdAt, LocalDateTime updatedAt, String email, String password, Role role) {
+        super(id, createdAt, updatedAt);
         this.email = email;
         this.password = password;
         this.role = role;
@@ -32,10 +37,6 @@ public class Member {
         this.email = email;
         this.password = password;
         this.role = role;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getPassword() {
