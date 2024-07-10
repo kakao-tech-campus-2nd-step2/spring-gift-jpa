@@ -20,6 +20,7 @@ import gift.web.dto.response.member.ReadMemberResponse;
 import gift.web.dto.response.wishproduct.ReadAllWishProductsResponse;
 import gift.web.dto.response.wishproduct.UpdateWishProductResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -63,6 +64,7 @@ class MemberApiControllerTest {
     }
 
     @Test
+    @DisplayName("회원 생성 요청에 대한 정상 응답")
     void createMember() {
         //given
         CreateMemberRequest request = new CreateMemberRequest("test@gmail.com", "test1234", "test");
@@ -87,6 +89,7 @@ class MemberApiControllerTest {
     }
 
     @Test
+    @DisplayName("로그인 요청에 대한 정상 응답")
     void login() {
         //given
         String url = "http://localhost:" + port + "/api/members/login";
@@ -106,11 +109,11 @@ class MemberApiControllerTest {
     }
 
     @Test
+    @DisplayName("위시 리스트 조회 요청에 대한 정상 응답")
     void readWishProduct() {
         //given
         String url = "http://localhost:" + port + "/api/members/wishlist";
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setBearerAuth(token.getValue());
+        HttpHeaders httpHeaders = getHttpHeaders();
         HttpEntity httpEntity = new HttpEntity(httpHeaders);
 
         ReadAllWishProductsResponse expectedWishProducts = wishProductService.readAllWishProducts(member.getId());
@@ -127,12 +130,12 @@ class MemberApiControllerTest {
     }
 
     @Test
+    @DisplayName("위시 리스트 상품 수정 요청에 대한 정상 응답")
     void updateWishProduct() {
         //given
         Long wishProductId = 1L;
         String url = "http://localhost:" + port + "/api/members/wishlist/" + wishProductId;
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setBearerAuth(token.getValue());
+        HttpHeaders httpHeaders = getHttpHeaders();
 
         UpdateWishProductRequest request = new UpdateWishProductRequest(wishProductId, 3);
 
@@ -150,12 +153,12 @@ class MemberApiControllerTest {
     }
 
     @Test
+    @DisplayName("위시 리스트 상품 삭제 요청에 대한 정상 응답")
     void deleteWishProduct() {
         //given
         Long wishProductId = 2L;
         String url = "http://localhost:" + port + "/api/members/wishlist/" + wishProductId;
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setBearerAuth(token.getValue());
+        HttpHeaders httpHeaders = getHttpHeaders();
         HttpEntity httpEntity = new HttpEntity(httpHeaders);
 
         //when
@@ -163,5 +166,11 @@ class MemberApiControllerTest {
 
         //then
         assertTrue(response.getStatusCode().is2xxSuccessful());
+    }
+
+    private HttpHeaders getHttpHeaders() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setBearerAuth(token.getValue());
+        return httpHeaders;
     }
 }
