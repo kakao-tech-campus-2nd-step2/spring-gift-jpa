@@ -52,8 +52,7 @@ public class UserService {
     }
 
     public UserResponseDto getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+        User user = getUserEntityById(id);
         return UserMapper.toUserResponseDTO(user);
     }
 
@@ -63,17 +62,14 @@ public class UserService {
     }
 
     public UserResponseDto updateUser(Long id, UserRegisterDto userRegisterDto) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-
+        User existingUser = getUserEntityById(id);
         existingUser.update(userRegisterDto.getEmail(), userRegisterDto.getPassword());
         userRepository.save(existingUser);
         return UserMapper.toUserResponseDTO(existingUser);
     }
 
     public void deleteUser(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+        User user = getUserEntityById(id);
         userRepository.delete(user);
     }
 }
