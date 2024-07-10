@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.response;
 
 public class AuthResponse {
     private String token;
