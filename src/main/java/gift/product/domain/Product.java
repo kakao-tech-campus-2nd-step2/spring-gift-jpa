@@ -1,14 +1,24 @@
 package gift.product.domain;
 
 import gift.product.exception.ProductNoConferredException;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.util.List;
 
+@Entity
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private Integer price;
     private String imgUrl;
     private Boolean isDeleted;
+
+    protected Product() {
+    }
 
     public Product(Long id, String name, Integer price, String imgUrl) {
         this(id, name, price, imgUrl, Boolean.FALSE);
