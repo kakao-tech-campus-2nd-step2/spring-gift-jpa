@@ -79,7 +79,6 @@ class MemberApiControllerTest {
 
         assertAll(
             () -> assertTrue(response.getStatusCode().is2xxSuccessful()),
-
             () -> assertThat(newMemberId).isEqualTo(findMember.getId()),
             () -> assertThat(request.getEmail()).isEqualTo(findMember.getEmail()),
             () -> assertThat(request.getName()).isEqualTo(findMember.getName()),
