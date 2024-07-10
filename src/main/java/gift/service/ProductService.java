@@ -23,7 +23,8 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        return checkProductExist(id);
+        checkProductExist(id);
+        return productRepository.findById(id).get();
     }
 
     public ProductResponse addProduct(AddProductRequest request) {
@@ -31,7 +32,7 @@ public class ProductService {
     }
 
     public ProductResponse updateProduct(Long id, UpdateProductRequest request) {
-        Product product = checkProductExist(id);
+        Product product = getProductById(id);
         ProductMapper.updateProduct(product, request);
 
         return ProductMapper.toResponse(productRepository.save(product));
@@ -42,8 +43,9 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public Product checkProductExist(Long id) {
-        return productRepository.findById(id)
-            .orElseThrow(() -> new ProductNotFoundException("해당 ID의 상품을 찾을 수 없습니다."));
+    public void checkProductExist(Long id) {
+        if(!productRepository.existsById(id)) {
+            throw new ProductNotFoundException("해당 ID의 상품을 찾을 수 없습니다.");
+        }
     }
 }
