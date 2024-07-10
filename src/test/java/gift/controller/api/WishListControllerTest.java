@@ -24,9 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class WishListControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
-    @Autowired
-    TokenService tokenService;
+    private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
 
