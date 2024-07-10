@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
+@SuppressWarnings("NonAsciiCharacters")
 class ClientProductTest {
 
     final ProductService productService;

@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
+@SuppressWarnings("NonAsciiCharacters")
 class LoginTest {
 
     final AuthService authService;

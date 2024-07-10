@@ -30,6 +30,7 @@ import org.springframework.http.RequestEntity;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestInstance(Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@SuppressWarnings("NonAsciiCharacters")
 class WishesIntegrityTest {
 
     @LocalServerPort
