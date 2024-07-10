@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class WishListRepository {
+public class WishListJdbcRepository {
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public WishListRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public WishListJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
