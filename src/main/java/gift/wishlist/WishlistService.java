@@ -1,9 +1,10 @@
 package gift.wishlist;
 
-import gift.member.MemberDTO;
 import gift.product.Product;
 import gift.product.ProductRepository;
+import gift.token.MemberTokenDTO;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,24 +21,27 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllWishlists(MemberDTO memberDTO) {
-        return wishlistRepository.findAllByMemberEmail(memberDTO.email())
+    public List<Product> getAllWishlists(MemberTokenDTO memberTokenDTO) {
+        return wishlistRepository.findAllByMemberEmail(memberTokenDTO.getEmail())
             .stream()
-            .map(e -> productRepository.findById(e.getProductId()).get())
+            .map(e -> productRepository.findById(e.getProductId()))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .toList();
     }
 
-    public void addWishlist(MemberDTO memberDTO, long productId) {
-        if (wishlistRepository.existsByMemberEmailAndProductId(memberDTO.email(), productId)) {
+    public void addWishlist(MemberTokenDTO memberTokenDTO, long productId) {
+        if (wishlistRepository.existsByMemberEmailAndProductId(memberTokenDTO.getEmail(),
+            productId)) {
             throw new IllegalArgumentException("Wishlist already exists");
         }
         hasProductByProductID(productId);
-        wishlistRepository.save(new Wishlist(productId, memberDTO.email()));
+        wishlistRepository.save(new Wishlist(productId, memberTokenDTO.getEmail()));
     }
 
-    public void deleteWishlist(MemberDTO memberDTO, long productId) {
+    public void deleteWishlist(MemberTokenDTO memberTokenDTO, long productId) {
         hasProductByProductID(productId);
-        wishlistRepository.delete(new Wishlist(productId, memberDTO.email()));
+        wishlistRepository.delete(new Wishlist(productId, memberTokenDTO.getEmail()));
     }
 
     private void hasProductByProductID(long productId) {

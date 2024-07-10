@@ -2,6 +2,7 @@ package gift.member;
 
 
 import gift.token.JwtProvider;
+import gift.token.MemberTokenDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -21,13 +22,13 @@ public class HandlerMemberArgumentResolver implements HandlerMethodArgumentResol
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterType().equals(MemberDTO.class);
+        return parameter.getParameterType().equals(MemberTokenDTO.class);
     }
 
     @Override
-    public MemberDTO resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+    public MemberTokenDTO resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-        return jwtProvider.getMemberDTOFromToken(request.getHeader("Authorization"));
+        return jwtProvider.getMemberTokenDTOFromToken(request.getHeader("Authorization"));
     }
 }

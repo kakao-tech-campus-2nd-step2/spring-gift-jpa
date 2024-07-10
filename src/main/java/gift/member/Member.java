@@ -23,6 +23,11 @@ public class Member {
         this.password = password;
     }
 
+    public Member(MemberDTO memberDTO) {
+        this.email = memberDTO.getEmail();
+        this.password = memberDTO.getPassword();
+    }
+
     public String getEmail() {
         return email;
     }
@@ -42,6 +47,10 @@ public class Member {
 
     public boolean isSamePassword(Member member) {
         return this.password.equals(member.getPassword());
+    }
+
+    public boolean isSamePassword(MemberDTO memberDTO) {
+        return this.password.equals(memberDTO.getPassword());
     }
 
     @Override

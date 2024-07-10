@@ -1,8 +1,8 @@
 package gift.wishlist;
 
-import gift.member.MemberDTO;
-import gift.member.MemberResolver;
+import gift.member.MemberTokenResolver;
 import gift.product.Product;
+import gift.token.MemberTokenDTO;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,19 +22,23 @@ public class WishlistController {
     }
 
     @GetMapping
-    public List<Product> getAllWishlists(@MemberResolver MemberDTO memberDTO) {
-        return wishlistService.getAllWishlists(memberDTO);
+    public List<Product> getAllWishlists(@MemberTokenResolver MemberTokenDTO memberTokenDTO) {
+        return wishlistService.getAllWishlists(memberTokenDTO);
     }
 
     @PostMapping("/{product_id}")
-    public void addWishlist(@MemberResolver MemberDTO memberDTO,
-        @PathVariable(name = "product_id") long productId) {
-        wishlistService.addWishlist(memberDTO, productId);
+    public void addWishlist(
+        @MemberTokenResolver MemberTokenDTO memberTokenDTO,
+        @PathVariable(name = "product_id") long productId
+    ) {
+        wishlistService.addWishlist(memberTokenDTO, productId);
     }
 
     @DeleteMapping("/{product_id}")
-    public void deleteWishlist(@MemberResolver MemberDTO memberDTO,
-        @PathVariable(name = "product_id") long productId) {
-        wishlistService.deleteWishlist(memberDTO, productId);
+    public void deleteWishlist(
+        @MemberTokenResolver MemberTokenDTO memberTokenDTO,
+        @PathVariable(name = "product_id") long productId
+    ) {
+        wishlistService.deleteWishlist(memberTokenDTO, productId);
     }
 }
