@@ -8,16 +8,16 @@
 
 ### 구현할 기능 목록
 엔티티 맵핑
-- [ ] product
-- [ ] member
-- [ ] wish
+- [X] product
+- [X] member
+- [X] wish
 
 JPA repository로 수정
-- [ ] ProductRepository
-- [ ] MemberRepository
-- [ ] WishRepository
+- [X] ProductRepository
+- [X] MemberRepository
+- [X] WishRepository
 
 JPA 테스트
-- [ ] ProductRepository
-- [ ] MemberRepository
-- [ ] WishRepository
+- [X] ProductRepository
+- [X] MemberRepository
+- [X] WishRepository
