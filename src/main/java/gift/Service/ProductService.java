@@ -47,6 +47,7 @@ public class ProductService {
       throw new EmptyResultDataAccessException("해당 데이터가 없습니다", 1);
     }
     productDao.deleteById(id);
+
     return existingProductDto;
   }
 

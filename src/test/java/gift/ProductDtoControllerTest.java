@@ -124,7 +124,8 @@ public class ProductDtoControllerTest {
     productController.addProduct(existingProductDto);
 
     // 업데이트할 제품 정보 - 유효한 이름으로 수정
-    ProductDto updatedProductDto = new ProductDto(1L, "Hot_Coffee", 4000, // Adjusted name to pass validation
+    ProductDto updatedProductDto = new ProductDto(1L, "Hot_Coffee", 4000,
+      // Adjusted name to pass validation
       "https://example.com/coffee.jpg");
 
     // 유효성 검사를 통과하도록 수정된 제품 업데이트 요청
@@ -156,6 +157,7 @@ public class ProductDtoControllerTest {
   }
 
   @DirtiesContext
+
   @Test
   public void testValidate() {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();

@@ -14,4 +14,5 @@ public interface WishListDao extends JpaRepository<WishListDto, Long> {
   List<WishListDto> findAll();
 
   void deleteById(Long id);
+
 }

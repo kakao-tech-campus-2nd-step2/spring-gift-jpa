@@ -26,5 +26,6 @@ public class WishListService {
 
   public void deleteProductToWishList(Long id) {
     wishListDao.deleteById(id);
+
   }
 }

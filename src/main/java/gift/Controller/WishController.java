@@ -36,6 +36,7 @@ public class WishController {
   public ResponseEntity<WishListDto> addProductToWishList(@RequestBody WishListDto wishProduct,
     @LoginUser Optional<UserDto> user) {
     WishListDto addedWishProduct = wishListService.addProductToWishList(wishProduct);
+
     // 생성된 리소스의 URI를 빌드
     var location = ServletUriComponentsBuilder.fromCurrentRequest()
       .path("/{id}")
@@ -49,6 +50,7 @@ public class WishController {
   public ResponseEntity<Void> deleteProductToWishList(@PathVariable Long id) {
     wishListService.deleteProductToWishList(id);
     return ResponseEntity.noContent().build();
+
   }
 
 }
