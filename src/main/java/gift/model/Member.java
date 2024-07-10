@@ -7,27 +7,34 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "member")
+@Table(name = "MEMBER_TABLE")
 public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="MEMBER_ID")
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name="MEMBER_EMAIL",unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name="MEMBER_PASSWORD",nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(name="MEMBER_ROLE",nullable = false)
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
     private String token;
+
+    @OneToMany(mappedBy = "member")
+    private List<Wish> wishList = new ArrayList<>();
 
     public Member(Long id, String email, String password, MemberRole role) {
         this.id = id;
@@ -61,6 +68,10 @@ public class Member {
 
     public String getToken() {
         return token;
+    }
+
+    public void addWish(Wish wish) {
+        wishList.add(wish);
     }
 
 }
