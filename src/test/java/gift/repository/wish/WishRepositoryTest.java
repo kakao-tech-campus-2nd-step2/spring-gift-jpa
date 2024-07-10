@@ -86,6 +86,7 @@ class WishRepositoryTest {
         entityManager.flush();
 
         Wish savedWish = wishRepository.save(wish);
+        entityManager.clear();
 
         //when
         Wish findWish = wishRepository.findById(savedWish.getId()).get();
@@ -140,6 +141,8 @@ class WishRepositoryTest {
 
         wishRepository.save(wish1);
         wishRepository.save(wish2);
+        entityManager.flush();
+        entityManager.clear();
 
         //when
         List<Wish> findWishes = wishRepository.findWishByByMemberEmail(member.getEmail());
@@ -175,6 +178,8 @@ class WishRepositoryTest {
         entityManager.flush();
 
         Wish savedWish = wishRepository.save(wish);
+        entityManager.flush();
+        entityManager.clear();
 
         //when
         Wish findWish = wishRepository.findWishByIdAndMemberEmail(savedWish.getId(), member.getEmail()).get();
