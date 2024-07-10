@@ -1,30 +1,32 @@
 package gift.domain;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "wish")
 public class Wish {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
+
+    @Column(name = "member_id", nullable = false)
+    private Long memberId;
+
+    @Column(name = "product_id", nullable = false)
     private Long productId;
-    private LocalDateTime createdAt;
 
 
     public Long getUserId() {
-        return userId;
+        return memberId;
     }
 
     public void setUserId(Long userId) {
-        this.userId = userId;
+        this.memberId = userId;
     }
 
     public Long getProductId() {
         return productId;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
     }
 
     public void setId(long id) {
@@ -35,7 +37,4 @@ public class Wish {
         this.productId = productId;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt == null ? null : createdAt;
-    }
 }

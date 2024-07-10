@@ -43,8 +43,8 @@
       - [x] id(Long, key), email(Varchar, unique), password(Varchar)
     - [x] product
       - [x] id(Long, key), price(Integer, 0이상), name(Varchar, not null), image_url(Varchar, not null) 
-    - [ ] wish
-      - [ ] id(Long, key), member_id(Long, not null), product_id(Long, not null)
+    - [x] wish
+      - [x] id(Long, key), member_id(Long, not null), product_id(Long, not null)
       
   - [ ] 리포지토리 인터페이스 작성
     - [ ] MemberRepository 인터페이스 작성
