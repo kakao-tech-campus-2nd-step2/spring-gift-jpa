@@ -42,6 +42,7 @@ public class User {
     }
 
 
+
     public User(long id, String name, String email, String password, String role) {
         this.id = id;
         this.name = name;
@@ -63,6 +64,7 @@ public class User {
         this.password = password;
         this.role = Role.valueOf(role.toUpperCase());
     }
+
 
     public long getId() {
         return id;
