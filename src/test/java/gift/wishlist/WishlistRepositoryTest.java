@@ -33,11 +33,11 @@ class WishlistRepositoryTest {
 
     @BeforeEach
     void setupMemberAndProduct() {
-        jdbcTemplate.execute("DELETE FROM product");
-        jdbcTemplate.execute("ALTER TABLE product ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.execute("DELETE FROM member");
-        jdbcTemplate.execute("DELETE FROM wishlist ");
-        jdbcTemplate.execute("ALTER TABLE wishlist ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.execute("TRUNCATE TABLE product RESTART IDENTITY");
+        jdbcTemplate.execute("TRUNCATE TABLE member");
+        jdbcTemplate.execute("TRUNCATE TABLE wishlist RESTART IDENTITY");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
 
         memberRepository.save(new Member("aaa@email.com", "password"));
         memberRepository.save(new Member("bbb@email.com", "password"));

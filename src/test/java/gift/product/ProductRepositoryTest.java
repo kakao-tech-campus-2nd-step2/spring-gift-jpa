@@ -23,8 +23,9 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void setup() {
-        jdbcTemplate.execute("DELETE FROM product");
-        jdbcTemplate.execute("ALTER TABLE product ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.execute("TRUNCATE TABLE product RESTART IDENTITY");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
     }
 
     @Test
