@@ -82,7 +82,7 @@ class ProductRepositoryTest {
     @DisplayName("Delete By Id Test")
     void deleteById() {
         // given
-        Product savedProduct = productRepository.save(new Product());
+        Product savedProduct = productRepository.save(new Product("test",100,"url"));
         Long expectedId = savedProduct.getId();
         // when
         productRepository.deleteById(savedProduct.getId());
