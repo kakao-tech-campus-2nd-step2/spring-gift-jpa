@@ -27,7 +27,7 @@ class WishRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(null, email, password, role));
+        Member member = memberRepository.save(new Member(email, password, role));
         String[] names = {"test1", "test2"};
         int[] prices = {10, 20};
         String[] imageUrls = {"test1", "test2"};
@@ -67,7 +67,7 @@ class WishRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(null, email, password, role));
+        Member member = memberRepository.save(new Member(email, password, role));
         String[] names = {"test1", "test2"};
         int[] prices = {10, 20};
         String[] imageUrls = {"test1", "test2"};
@@ -111,7 +111,7 @@ class WishRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(null, email, password, role));
+        Member member = memberRepository.save(new Member(email, password, role));
         String name = "product1";
         int price = 1000;
         String imageUrl = "imageUrl";
@@ -133,7 +133,7 @@ class WishRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(null, email, password, role));
+        Member member = memberRepository.save(new Member(email, password, role));
         String name = "product1";
         int price = 1000;
         String imageUrl = "imageUrl";
@@ -154,7 +154,7 @@ class WishRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(null, email, password, role));
+        Member member = memberRepository.save(new Member(email, password, role));
         String name = "product1";
         int price = 1000;
         String imageUrl = "imageUrl";
