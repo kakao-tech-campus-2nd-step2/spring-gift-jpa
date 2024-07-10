@@ -1,11 +1,25 @@
 package gift.model;
 
-import gift.form.ProductUpdateForm;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "products")
 public class Product {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="product_id")
     private Long id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private Integer price;
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
     public Product(Long id, String name, Integer price, String imageUrl) {
@@ -21,7 +35,7 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Product() {
+    protected Product() {
 
     }
 
@@ -41,15 +55,9 @@ public class Product {
         return imageUrl;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void updateProduct(String newName, Integer newPrice, String newImageUrl) {
+        this.name = newName;
+        this.price = newPrice;
+        this.imageUrl = newImageUrl;
     }
 }

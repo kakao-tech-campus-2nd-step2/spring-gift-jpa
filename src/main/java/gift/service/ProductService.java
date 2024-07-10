@@ -1,38 +1,53 @@
 package gift.service;
 
+import gift.exception.ProductException;
 import gift.model.Product;
-import gift.repository.ProductDao;
+import gift.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Product> getAllProducts() {
-        return productDao.findAll();
+        return productRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Product getProduct(Long id) {
-        return productDao.findProductById(id);
+        return productRepository.findById(id)
+            .orElseThrow(() -> new ProductException("상품이 존재하지 않습니다."));
     }
 
-    public void insertProduct(String name, Integer price, String imageUrl) {
+    public void addProduct(String name, Integer price, String imageUrl) {
         Product product = new Product(name, price, imageUrl);
-        productDao.insert(product);
+        productRepository.save(product);
     }
 
-    public void updateProduct(Long id, String name, Integer price, String imageUrl) {
-        Product product = new Product(id, name, price, imageUrl);
-        productDao.update(product);
+    public void editProduct(Long id, String name, Integer price, String imageUrl) {
+        productRepository.findById(id)
+            .ifPresentOrElse( p -> p.updateProduct(name, price, imageUrl) ,
+                () -> {
+                    throw new ProductException("상품이 존재하지 않습니다.");
+                }
+            );
     }
 
-    public void deleteProduct(Long id) {
-        productDao.delete(id);
+    public void removeProduct(Long id) {
+        productRepository.findById(id)
+            .ifPresentOrElse(productRepository::delete
+                , () -> {
+                    throw new ProductException("상품이 존재하지 않습니다.");
+                }
+            );
     }
 }

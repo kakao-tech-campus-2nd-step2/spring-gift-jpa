@@ -9,6 +9,7 @@ import gift.exception.InputException;
 import gift.model.Product;
 import gift.model.WishProduct;
 import gift.repository.WishProductDao;
+import gift.service.WishProductService;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WishListApiController {
 
-    private final WishProductDao wishProductDao;
+    private final WishProductService wishProductService;
 
-    public WishListApiController(WishProductDao wishProductDao) {
-        this.wishProductDao = wishProductDao;
+    public WishListApiController(WishProductService wishProductService) {
+        this.wishProductService = wishProductService;
     }
 
     @CheckRole("ROLE_USER")
@@ -35,7 +36,7 @@ public class WishListApiController {
     public ResponseEntity<List<ProductResponse>> getWishList(
         @LoginMember LoginMemberDto memberDto) {
         List<ProductResponse> dtoList;
-        List<Product> wishlist = wishProductDao.findAll(memberDto.id());
+        List<Product> wishlist = wishProductService.getMyWishList(memberDto.id());
 
         dtoList = wishlist.stream()
             .map(ProductResponse::new)
@@ -51,8 +52,7 @@ public class WishListApiController {
             throw new InputException(bindingResult.getAllErrors());
         }
 
-        WishProduct wishProduct = new WishProduct(memberDto.id(), dto.productId());
-        wishProductDao.insert(wishProduct);
+        wishProductService.addMyWish(memberDto.id(), dto.productId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -65,8 +65,7 @@ public class WishListApiController {
             throw new InputException(bindingResult.getAllErrors());
         }
 
-        WishProduct wishProduct = new WishProduct(memberDto.id(), dto.productId());
-        wishProductDao.delete(wishProduct);
+        wishProductService.removeMyWish(memberDto.id(), dto.productId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
