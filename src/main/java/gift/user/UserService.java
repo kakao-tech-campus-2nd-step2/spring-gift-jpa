@@ -1,5 +1,8 @@
 package gift.user;
 
+
+import gift.model.SiteUser;
+import gift.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

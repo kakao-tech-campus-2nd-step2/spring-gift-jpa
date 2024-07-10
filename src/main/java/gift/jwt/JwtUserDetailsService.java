@@ -1,7 +1,7 @@
 package gift.jwt;
 
-import gift.user.SiteUser;
-import gift.user.UserRepository;
+import gift.model.SiteUser;
+import gift.repository.UserRepository;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
@@ -18,7 +18,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SiteUser siteUser = userRepository.findByusername(username)
+        SiteUser siteUser = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
         return new User(siteUser.getUsername(), siteUser.getPassword(), new ArrayList<>());
     }

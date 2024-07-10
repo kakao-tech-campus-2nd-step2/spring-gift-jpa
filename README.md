@@ -1,29 +1,12 @@
-# spring-gift-wishlist
-
-# step2 이후로 추가한 파일
-
-1.  WishlistController - 위시리스트관련 웹 요청 , 조회 , 제품 추가,
-수량변경 , 삭제등등 모든 기능을 담당
-2. WishlistDTO - 위시리스트 정보 전송을 위해 제품의 수량과 정보 포함
-3. Wishlist - 위시리스트 엔티티
-4. WishlistRepository- 위시리스트 정보를 관리하는 리포지토리
-5. WishlistService - 위시리스트 관련 서비스 인터페이스
-6. WishlistServiceImpl - 위시리스트 관련 서비스 구현체
-7. CustomUserPrincipal - 사용자 인증 및 권한 부여와 관련된 정보를 관리
+# spring-gift-jpa
 
 
-
-# 후기
-step2보다는 훨씬 간단했던 만큼 어떤 방향으로 코드를 작성할지 고민이 있었습니다.
-개인적으로 몇가지 방향성에 대해서 생각해봤습니다.<br>
-1. 기존 유저 DB테이블에서 찜한 상품의 id와 상품의 개수를 추가하는 방식<br>
-이용자가 상품을 찜하고 해제하는 과정에서 유저 DB에 최신화가 많이 될텐데
-보안상 좋지 않을것 같아서 시도 하지 않았습니다.
-2. 위시리스트 DB를 따로 만들어서 찜 하는 방식<br>
-토큰을 받지 않은 사람도 찜 할수도 있고 , 이걸 방지하기 위해서 
-처리해야하는 작업이 부담스러워서 시도하지 않았습니다.
-3.  기존의 코드를 이용해서 토큰을 받은 사람만 찜 할수 있는 방식 (확정) <br>
-굳이 DB도 만들지 않았고 , js를 이용해서 코드를 작성했습니다.
-토큰으로 이미 인증을 받았기 때문에 , 보안관련해서는 섬세하게 다루지 않았습니다.
-
-
+# step1 과제
+1. 디렉토리 변경 <br>
+UserRepository  : user -> repository <br>
+SiteUser : user -> model<br>
+Securityconfig : gift -> gift/config (새로 생성)<br>
+2. jpa 형식에 맞게 model에 있는 엔티티 수정
+3.  test 패키지 생성후 test 코드 작성
+4.  data.sql , schema.sql , login.sql 삭제
+5. 기존의 sql에 있던 데이터를 주입하기 위해서 DatabaseLoarder 생성

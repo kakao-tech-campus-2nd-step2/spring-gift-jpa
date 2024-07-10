@@ -36,7 +36,9 @@ public class LoginController {
             response.put("token", token);
             return response;
         } catch (AuthenticationException e) {
-            throw new RuntimeException("Invalid login credentials");
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Invalid login credentials");
+            return response;
         }
     }
 }

@@ -1,4 +1,4 @@
-package gift.user;
+package gift.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,11 +18,10 @@ public class SiteUser {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(unique = true)
+	@Column(unique = true , nullable = false)
 	private String username;
-
+	@Column(nullable = false)
 	private String password;
-
-	@Column(unique = true)
+	@Column(unique = true , nullable = false)
 	private String email;
 }
