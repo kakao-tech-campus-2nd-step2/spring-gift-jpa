@@ -26,6 +26,7 @@ public class WishListRepositoryTest {
         WishList actual = wishListRepository.save(wishList);
 
         //Then
+        assertThat(actual.getId()).isNotNull();
         assertThat(actual.getEmail()).isEqualTo("admin@email.com");
         assertThat(actual.getProductId()).isEqualTo(1L);
         assertThat(actual.getNum()).isEqualTo(3);
@@ -42,6 +43,8 @@ public class WishListRepositoryTest {
         List<WishList> actual = wishListRepository.findAllByEmail("admin@email.com");
 
         //Then
+        assertThat(actual).hasSize(2);
+        assertThat(actual.getFirst().getId()).isNotNull();
         assertThat(actual.get(1).getId()).isNotNull();
         assertThat(actual.getFirst().getProductId()).isEqualTo(1L);
         assertThat(actual.getFirst().getNum()).isEqualTo(3);

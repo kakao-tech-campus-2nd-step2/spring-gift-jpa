@@ -26,6 +26,7 @@ public class ProductRepositoryTest {
         Product actual = productRepository.save(product);
 
         //Then
+        assertThat(actual.getId()).isNotNull();
         assertThat(actual.getName()).isEqualTo("라이언");
         assertThat(actual.getPrice()).isEqualTo(1000);
         assertThat(actual.getImageUrl()).isEqualTo("image.jpg");
@@ -52,13 +53,15 @@ public class ProductRepositoryTest {
         //Given
         Product product = new Product(1000,"라이언","image.jpg");
         productRepository.save(product);
-        product = new Product(3000,"이춘식","example.jpg");
-        productRepository.save(product);
+        Product product2 = new Product(3000,"이춘식","example.jpg");
+        productRepository.save(product2);
 
         //When
         List<Product> actual = productRepository.findAll();
 
         //Then
+        assertThat(actual).hasSize(2);
+        assertThat(actual.getFirst().getId()).isNotNull();
         assertThat(actual.get(1).getId()).isNotNull();
         assertThat(actual.getFirst().getPrice()).isEqualTo(1000);
         assertThat(actual.getFirst().getName()).isEqualTo("라이언");
