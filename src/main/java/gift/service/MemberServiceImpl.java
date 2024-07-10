@@ -1,11 +1,11 @@
 package gift.service;
 
-import gift.database.JdbcMemeberRepository;
+import gift.database.JpaMemberRepository;
 import gift.dto.LoginMemberToken;
 import gift.dto.MemberDTO;
 import gift.exceptionAdvisor.MemberServiceException;
 import gift.model.Member;
-import gift.model.MemberRole;
+import java.util.NoSuchElementException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberServiceImpl implements MemberService {
 
-    private JdbcMemeberRepository jdbcMemeberRepository;
+    private JpaMemberRepository jpaMemberRepository;
 
     private AuthenticationTool authenticationTool;
 
-    public MemberServiceImpl(JdbcMemeberRepository jdbcMemeberRepository,
+    public MemberServiceImpl(JpaMemberRepository jpaMemberRepository,
         AuthenticationTool authenticationTool) {
-        this.jdbcMemeberRepository = jdbcMemeberRepository;
+        this.jpaMemberRepository = jpaMemberRepository;
         this.authenticationTool = authenticationTool;
     }
 
@@ -28,9 +28,8 @@ public class MemberServiceImpl implements MemberService {
         if (checkEmailDuplication(memberDTO.getEmail())) {
             throw new MemberServiceException("이메일이 중복됩니다", HttpStatus.FORBIDDEN);
         }
-
-        jdbcMemeberRepository.create(memberDTO.getEmail(), memberDTO.getPassword(),
-            MemberRole.COMMON_MEMBER.toString());
+        Member member = new Member(null, memberDTO.getEmail(), memberDTO.getPassword(), memberDTO.getRole());
+        jpaMemberRepository.save(member);
     }
 
     @Override
@@ -53,24 +52,26 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO getLoginUser(String token) {
         long id = authenticationTool.parseToken(token);
-        Member member = jdbcMemeberRepository.findById(id);
+        Member member = jpaMemberRepository.findById(id).orElseThrow(()->
+            new MemberServiceException("잘못된 로그인 시도입니다",HttpStatus.FORBIDDEN));
+
         return new MemberDTO(member.getEmail(), member.getPassword(), member.getRole());
     }
 
 
     private boolean checkEmailDuplication(String email) {
         try {
-            jdbcMemeberRepository.findByEmail(email);
+            jpaMemberRepository.findByEmail(email).orElseThrow(NoSuchElementException::new);
             return true;
-        } catch (EmptyResultDataAccessException e) {
+        } catch (NoSuchElementException e) {
             return false;
         }
     }
 
     private Member findByEmail(String email) {
         try {
-            return jdbcMemeberRepository.findByEmail(email);
-        } catch (EmptyResultDataAccessException e) {
+            return jpaMemberRepository.findByEmail(email).orElseThrow();
+        } catch (NoSuchElementException e) {
             throw new MemberServiceException("잘못된 로그인 시도입니다.", HttpStatus.FORBIDDEN);
         }
     }
