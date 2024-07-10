@@ -7,13 +7,7 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends BaseRepository<Member, Long> {
-    Member save(Member member);
-
     Optional<Member> findByEmail(String email);
 
-    boolean existsById(Long id);
-
     boolean existsByEmail(String email);
-
-    void deleteById(Long id);
 }
