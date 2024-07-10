@@ -67,4 +67,5 @@ public class Menu {
     public static MenuResponse MapMenuToMenuResponse(Menu menu){
         return new MenuResponse(menu.getId(),menu.getName(),menu.getPrice(),menu.getImageUrl());
     }
+
 }

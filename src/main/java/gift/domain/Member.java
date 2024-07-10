@@ -15,7 +15,6 @@ public class Member {
     private String password;
 
     public Member(){}
-
     public Member(String id, String password) {
         this.id = id;
         this.password = password;
@@ -24,5 +23,4 @@ public class Member {
     public String getPassword() {
         return password;
     }
-
 }
