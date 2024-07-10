@@ -76,7 +76,7 @@ public class WishListService {
      * @return 삭제 성공 여부
      */
     public boolean deleteWishListsByUserId(long userId) {
-        return wishListRepository.deleteWishListsByUserId(userId);
+        return wishListRepository.deleteWishListsByUserId(userId) > 0;
     }
 
     /**
@@ -88,7 +88,7 @@ public class WishListService {
      */
     @CheckProductExists
     public boolean deleteWishListByUserIdAndProductId(long userId, long productId) {
-        return wishListRepository.deleteWishListByUserIdAndProductId(userId, productId);
+        return wishListRepository.deleteWishListByUserIdAndProductId(userId, productId) > 0;
     }
 
     /**

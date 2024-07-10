@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface WishListRepository extends JpaRepository<WishListEntity, Long>{
     List<WishListEntity> findAllByUserId(Long userId);
 
-    boolean deleteWishListsByUserId(Long userId);
+    int deleteWishListsByUserId(Long userId);
 
-    boolean deleteWishListByUserIdAndProductId(Long userId, Long productId);
+    int deleteWishListByUserIdAndProductId(Long userId, Long productId);
 }
