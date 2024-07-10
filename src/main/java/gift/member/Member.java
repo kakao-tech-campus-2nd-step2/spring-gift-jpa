@@ -35,9 +35,13 @@ public class Member {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Member member) {
-            return this.email.equals(member.email)
-                   && this.password.equals(member.password);
+            return this.email.equals(member.email);
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.email.hashCode();
     }
 }

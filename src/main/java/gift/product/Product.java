@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.hibernate.validator.constraints.Length;
 
 @Entity
 public class Product {
@@ -14,8 +13,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
-    @Length(min = 1, max = 15)
+    @Column(nullable = false, length = 15)
     private String name;
 
     @Column(nullable = false)
@@ -36,13 +34,14 @@ public class Product {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Product) {
-            Product product = (Product) obj;
-            return this.id == product.id
-                   && this.name.equals(product.name)
-                   && this.price == product.price
-                   && this.imageUrl.equals(product.imageUrl);
+        if (obj instanceof Product product) {
+            return this.id == product.id;
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) this.id;
     }
 }

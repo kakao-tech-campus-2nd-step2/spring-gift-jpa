@@ -38,10 +38,13 @@ public class Wishlist {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Wishlist wishlist) {
-            return id == wishlist.id
-                   && productId == wishlist.productId
-                   && memberEmail.equals(wishlist.memberEmail);
+            return id == wishlist.id;
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) this.id;
     }
 }
