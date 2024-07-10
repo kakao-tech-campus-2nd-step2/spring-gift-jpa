@@ -1,11 +1,10 @@
 package gift.Service;
 
 import gift.Exception.AuthorizedException;
-import gift.Exception.LoginException;
 import gift.Model.*;
 import gift.Repository.ProductRepository;
 import gift.Repository.MemberRepository;
-import gift.Repository.WishlistRepository;
+import gift.Repository.WishRepository;
 import gift.Token.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +14,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class WishlistService {
+public class WishService {
     @Autowired
-    private WishlistRepository wishlistRepository;
+    private WishRepository wishRepository;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -35,7 +34,7 @@ public class WishlistService {
         if(!member.getRole().equals(Role.ADMIN) && !member.getRole().equals(Role.CONSUMER))
             throw new AuthorizedException();
 
-        wishlistRepository.save(new Wishlist(member.getId(), product.getId()));
+        wishRepository.save(new Wish(member.getId(), product.getId()));
     }
 
     public void delete(String token, String name){
@@ -49,7 +48,7 @@ public class WishlistService {
         if(!member.getRole().equals(Role.ADMIN) && !member.getRole().equals(Role.CONSUMER))
             throw new AuthorizedException();
 
-        wishlistRepository.delete(wishlistRepository.findByMemberIdAndProductId(member.getId(), product.getId()));
+        wishRepository.delete(wishRepository.findByMemberIdAndProductId(member.getId(), product.getId()));
     }
 
     public List<String> viewAll(String token){
@@ -63,9 +62,9 @@ public class WishlistService {
         if(!member.getRole().equals(Role.ADMIN) && !member.getRole().equals(Role.CONSUMER))
             throw new AuthorizedException();
 
-        List<Wishlist> wishlists = wishlistRepository.findByMemberId(member.getId());
+        List<Wish> wishes = wishRepository.findByMemberId(member.getId());
         List<String> productNames = new ArrayList<>();
-        for(Wishlist w : wishlists){
+        for(Wish w : wishes){
             productNames.add(productRepository.findById(w.getProductId()).get().getName());
         }
         return productNames;
