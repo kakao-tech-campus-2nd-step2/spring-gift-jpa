@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.domain.Product;
+import gift.dto.request.UpdateProductRequest;
 import gift.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +39,7 @@ public class ProductManageController {
     }
 
     @PostMapping("/update/{productId}")
-    public String updateProduct(@PathVariable("productId") Long productId, @ModelAttribute("product") Product updatedProduct) {
+    public String updateProduct(@PathVariable("productId") Long productId, @ModelAttribute("product") UpdateProductRequest updatedProduct) {
         productService.updateProduct(productId, updatedProduct);
         return redirect(MANAGE_PRODUCT);
     }

@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.domain.Product;
+import gift.dto.request.UpdateProductRequest;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<String> updateProduct(@PathVariable("productId") Long productId, @Valid @RequestBody Product product) {
+    public ResponseEntity<String> updateProduct(@PathVariable("productId") Long productId, @Valid @RequestBody UpdateProductRequest product) {
         return ResponseEntity.ok(productService.updateProduct(productId, product));
     }
 
