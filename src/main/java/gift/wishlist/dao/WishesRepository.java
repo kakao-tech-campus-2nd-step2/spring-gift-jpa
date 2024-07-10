@@ -4,11 +4,12 @@ import gift.wishlist.entity.Wish;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WishesRepository extends JpaRepository<Wish, Long> {
 
-    boolean existsByMemberIdAndProductId(Long memberId, Long productId);
+    List<Wish> findByMember_Id(Long memberId);
 
-    List<Wish> findByMemberId(Long memberId);
+    Optional<Wish> findByMember_IdAndProduct_Id(Long memberId, Long productId);
 
 }

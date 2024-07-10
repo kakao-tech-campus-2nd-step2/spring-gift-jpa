@@ -1,10 +1,10 @@
 package gift.member.application;
 
-import gift.error.MemberAlreadyExistsException;
+import gift.member.error.MemberAlreadyExistsException;
 import gift.member.dao.MemberRepository;
 import gift.member.entity.Member;
 import gift.member.dto.MemberDto;
-import gift.error.AuthenticationFailedException;
+import gift.auth.error.AuthenticationFailedException;
 import gift.auth.security.JwtUtil;
 import gift.member.util.MemberMapper;
 import org.springframework.stereotype.Service;
@@ -35,11 +35,11 @@ public class MemberService {
 
     public String authenticate(MemberDto memberDto) {
         Member member = memberRepository.findByEmail(memberDto.email())
-                .orElseThrow(() -> new AuthenticationFailedException("해당 계정은 존재하지 않습니다."));
+                .orElseThrow(AuthenticationFailedException::new);
 
         if (!member.getPassword()
-                .equals(memberDto.password())) {
-            throw new AuthenticationFailedException("비밀번호가 틀렸습니다.");
+                   .equals(memberDto.password())) {
+            throw new AuthenticationFailedException();
         }
         
         return jwtUtil.generateToken(member.getId());

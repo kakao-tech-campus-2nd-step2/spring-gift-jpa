@@ -1,5 +1,9 @@
 package gift.dao;
 
+import gift.member.dao.MemberRepository;
+import gift.member.entity.Member;
+import gift.product.dao.ProductRepository;
+import gift.product.entity.Product;
 import gift.wishlist.dao.WishesRepository;
 import gift.wishlist.entity.Wish;
 import org.junit.jupiter.api.DisplayName;
@@ -19,25 +23,43 @@ class WishesRepositoryTest {
     @Autowired
     private WishesRepository wishesRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
     @Test
     @DisplayName("위시 추가 및 ID 조회 테스트")
     void saveAndFindById() {
-        Wish wish = new Wish(1L, 1L);
+        Member member = new Member("test@email.com", "test");
+        member = memberRepository.save(member);
+
+        Product product = new Product("test", 1000, "test.jpg");
+        product = productRepository.save(product);
+
+        Wish wish = new Wish(member, product);
         Wish savedWish = wishesRepository.save(wish);
 
         Wish foundWish = wishesRepository.findById(savedWish.getId())
                 .orElse(null);
 
         assertThat(foundWish).isNotNull();
-        assertThat(foundWish.getMemberId()).isEqualTo(savedWish.getMemberId());
-        assertThat(foundWish.getProductId()).isEqualTo(savedWish.getProductId());
+        assertThat(foundWish.getMember()).isEqualTo(savedWish.getMember());
+        assertThat(foundWish.getProduct()).isEqualTo(savedWish.getProduct());
     }
 
     @Test
     @DisplayName("위시 ID 조회 실패 테스트")
     void findByIdFailed() {
-        Wish wish = new Wish(1L, 100L);
-        Wish savedWish = wishesRepository.save(wish);
+        Member member = new Member("test@email.com", "test");
+        member = memberRepository.save(member);
+
+        Product product = new Product("test", 1000, "test.jpg");
+        product = productRepository.save(product);
+
+        Wish wish = new Wish(member, product);
+        wishesRepository.save(wish);
 
         Wish foundWish = wishesRepository.findById(123456789L)
                 .orElse(null);
@@ -48,14 +70,27 @@ class WishesRepositoryTest {
     @Test
     @DisplayName("위시 회원 ID 조회 테스트")
     void findByMemberId() {
-        Wish wish1L = new Wish(1L, 2L);
-        Wish wish2L = new Wish(2L, 4L);
-        Wish wish1L2 = new Wish(1L, 6L);
-        wishesRepository.save(wish1L);
-        wishesRepository.save(wish2L);
-        wishesRepository.save(wish1L2);
+        Member member1 = new Member("test1@email.com", "test1");
+        member1 = memberRepository.save(member1);
 
-        List<Wish> wishList = wishesRepository.findByMemberId(wish1L.getMemberId());
+        Member member2 = new Member("test2@email.com", "test2");
+        member2 = memberRepository.save(member2);
+
+        Product product1 = new Product("product1", 1000, "test1.jpg");
+        product1 = productRepository.save(product1);
+
+        Product product2 = new Product("product2", 2000, "test2.jpg");
+        product2 = productRepository.save(product2);
+
+        Wish wish1 = new Wish(member1, product1);
+        Wish wish2 = new Wish(member2, product2);
+        Wish wish3 = new Wish(member1, product2);
+
+        wishesRepository.save(wish1);
+        wishesRepository.save(wish2);
+        wishesRepository.save(wish3);
+
+        List<Wish> wishList = wishesRepository.findByMember_Id(member1.getId());
 
         assertThat(wishList.size()).isEqualTo(2);
     }
@@ -63,22 +98,41 @@ class WishesRepositoryTest {
     @Test
     @DisplayName("위시 회원 ID 조회 실패 테스트")
     void findByMemberIdFailed() {
-        Wish wish1L = new Wish(1L, 2L);
-        Wish wish2L = new Wish(2L, 4L);
-        Wish wish1L2 = new Wish(1L, 6L);
-        wishesRepository.save(wish1L);
-        wishesRepository.save(wish2L);
-        wishesRepository.save(wish1L2);
+        Member member1 = new Member("test1@email.com", "test1");
+        member1 = memberRepository.save(member1);
 
-        List<Wish> wishList = wishesRepository.findByMemberId(4L);
+        Member member2 = new Member("test2@email.com", "test2");
+        member2 = memberRepository.save(member2);
 
-        assertThat(wishList).isEmpty();
+        Product product1 = new Product("product1", 1000, "test1.jpg");
+        product1 = productRepository.save(product1);
+
+        Product product2 = new Product("product2", 2000, "test2.jpg");
+        product2 = productRepository.save(product2);
+
+        Wish wish1 = new Wish(member1, product1);
+        Wish wish2 = new Wish(member2, product2);
+        Wish wish3 = new Wish(member1, product2);
+
+        wishesRepository.save(wish1);
+        wishesRepository.save(wish2);
+        wishesRepository.save(wish3);
+
+        List<Wish> productIdList = wishesRepository.findByMember_Id(987654321L);
+
+        assertThat(productIdList).isEmpty();
     }
 
     @Test
     @DisplayName("위시 삭제 테스트")
     void deleteWish() {
-        Wish wish = new Wish(1L, 1L);
+        Member member = new Member("test@email.com", "test");
+        member = memberRepository.save(member);
+
+        Product product = new Product("test", 1000, "test.jpg");
+        product = productRepository.save(product);
+
+        Wish wish = new Wish(member, product);
         Wish savedWish = wishesRepository.save(wish);
 
         wishesRepository.deleteById(savedWish.getId());
@@ -88,27 +142,40 @@ class WishesRepositoryTest {
     }
 
     @Test
-    @DisplayName("회원 ID 및 상품 ID로 위시 존재 여부 확인 테스트")
-    void existsByMemberIdAndProductId() {
-        Wish wish = new Wish(1L, 1L);
-        wishesRepository.save(wish);
-        wishesRepository.save(new Wish(2L, 3L));
-        wishesRepository.save(new Wish(3L, 1L));
+    @DisplayName("회원 ID 및 상품 ID로 위시 조회 테스트")
+    void findByMember_IdAndProduct_Id() {
+        Member member = new Member("test@email.com", "test");
+        member = memberRepository.save(member);
 
-        boolean exists = wishesRepository.existsByMemberIdAndProductId(wish.getMemberId(), wish.getProductId());
-        assertThat(exists).isTrue();
+        Product product = new Product("test", 1000, "test.jpg");
+        product = productRepository.save(product);
+
+        Wish wish = new Wish(member, product);
+        wishesRepository.save(wish);
+
+        Wish foundWish = wishesRepository.findByMember_IdAndProduct_Id(member.getId(), product.getId())
+                .orElse(null);
+        assertThat(foundWish).isNotNull();
+        assertThat(foundWish.getMember()
+                .getEmail()).isEqualTo(member.getEmail());
+        assertThat(foundWish.getProduct()
+                .getName()).isEqualTo(product.getName());
     }
 
     @Test
     @DisplayName("회원 ID 및 상품 ID로 위시 존재 여부 실패 확인 테스트")
-    void existsByMemberIdAndProductIdFailed() {
-        Wish wish = new Wish(1L, 1L);
+    void findByMember_IdAndProduct_IdFailed() {
+        Member member = new Member("test@email.com", "test");
+        member = memberRepository.save(member);
+
+        Product product = new Product("test", 1000, "test.jpg");
+        product = productRepository.save(product);
+
+        Wish wish = new Wish(member, product);
         wishesRepository.save(wish);
-        wishesRepository.save(new Wish(2L, 3L));
-        wishesRepository.save(new Wish(3L, 1L));
 
-        boolean exists = wishesRepository.existsByMemberIdAndProductId(wish.getMemberId(), 3L);
-        assertThat(exists).isFalse();
+        Wish foundWish = wishesRepository.findByMember_IdAndProduct_Id(12345L, 67890L)
+                .orElse(null);
+        assertThat(foundWish).isNull();
     }
-
 }

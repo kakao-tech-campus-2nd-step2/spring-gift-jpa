@@ -1,11 +1,16 @@
 package gift.member.entity;
 
 import gift.member.dto.MemberDto;
+import gift.wishlist.entity.Wish;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Member {
@@ -17,6 +22,9 @@ public class Member {
     private String email;
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "member")
+    private final List<Wish> wishList = new ArrayList<>();
 
     protected Member() {
     }
@@ -36,6 +44,10 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public List<Wish> getWishList() {
+        return wishList;
     }
 
     public void update(MemberDto memberDto) {

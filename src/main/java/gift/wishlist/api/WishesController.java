@@ -1,13 +1,18 @@
 package gift.wishlist.api;
 
 import gift.member.validator.LoginMember;
-import gift.wishlist.application.WishesService;
 import gift.product.dto.ProductResponse;
-import gift.wishlist.dto.WishRequest;
 import gift.product.util.ProductMapper;
-import gift.wishlist.entity.Wish;
+import gift.wishlist.application.WishesService;
+import gift.wishlist.dto.WishRequest;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -32,13 +37,13 @@ public class WishesController {
     @PostMapping
     public void addWish(@LoginMember Long memberId,
                         @RequestBody @Valid WishRequest request) {
-        wishesService.addProductToWishlist(new Wish(memberId, request.productId()));
+        wishesService.addProductToWishlist(memberId, request.productId());
     }
 
     @DeleteMapping("/{productId}")
     public void removeWish(@LoginMember Long memberId,
                            @PathVariable("productId") Long productId) {
-        wishesService.removeProductFromWishlist(new Wish(memberId, productId));
+        wishesService.removeProductFromWishlist(memberId, productId);
     }
 
 }
