@@ -4,39 +4,45 @@ import gift.config.JwtConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
 import java.util.Date;
 import java.util.function.Function;
+import javax.crypto.SecretKey;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
     private final JwtConfig jwtConfig;
-    private final Key key;
+    private final SecretKey key;
 
     public JwtUtil(JwtConfig jwtConfig) {
         this.jwtConfig = jwtConfig;
         this.key = Keys.hmacShaKeyFor(jwtConfig.getSecretKey().getBytes());
     }
 
-    public String generateToken(String email) {
+    public String generateToken(Long userId, String email) {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         return Jwts.builder()
-            .subject(email)
+            .claim("email", email)
+            .claim("user_id", userId)
             .issuedAt(now)
             .expiration(new Date(nowMillis + jwtConfig.getExpiration()))
             .signWith(key)
             .compact();
     }
 
-    public Boolean validateToken(String token, String subject) {
-        final String extractedSubject = extractSubject(token);
-        return (extractedSubject.equals(subject) && !isTokenExpired(token));
+    public Boolean validateToken(String token, Long userId, String email) {
+        final Long extractedUserId = extractUserId(token);
+        final String extractedEmail = extractEmail(token);
+        return (extractedUserId.equals(userId) && extractedEmail.equals(email) && !isTokenExpired(token));
     }
 
-    public String extractSubject(String token) {
-        return extractClaim(token, Claims::getSubject);
+    public Long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("user_id", Long.class));
+    }
+
+    public String extractEmail(String token) {
+        return extractClaim(token, claims -> claims.get("email", String.class));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -46,9 +52,9 @@ public class JwtUtil {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-            .setSigningKey(key)
+            .verifyWith(key)
             .build()
-            .parseUnsecuredClaims(token)
+            .parseSignedClaims(token)
             .getPayload();
     }
 
