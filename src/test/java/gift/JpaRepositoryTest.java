@@ -53,14 +53,16 @@ public class JpaRepositoryTest {
     @Test
     @DisplayName("위시 저장 테스트")
     void saveWish() {
-        Product product = new Product(1L, "name", 134, "asdf");
-        Member member = new Member(1L, "asdfasdf@naver.com", "asdfasdf");
-        Wish wish = new Wish(1L, 1L, 1L);
+        Product product = new Product("name", 134, "asdf");
+        Member member = new Member("asdfasdf@naver.com", "asdfasdf");
+        Wish wish = new Wish(1L, product, member);
+        memberRepository.save(member);
+        productRepository.save(product);
         Wish real = wishRepository.save(wish);
         assertAll(
                 () -> assertThat(real.getId()).isNotNull(),
-                () -> assertThat(real.getmemberId()).isEqualTo(wish.getmemberId()),
-                () -> assertThat(real.getProductId()).isEqualTo(wish.getProductId())
+                () -> assertThat(real.getMember().getId()).isEqualTo(wish.getMember().getId()),
+                () -> assertThat(real.getProduct().getId()).isEqualTo(wish.getProduct().getId())
         );
     }
 
@@ -81,8 +83,8 @@ public class JpaRepositoryTest {
         Member member = new Member(1L, "asdfasdf@naver.com", "asdfasdf");
         Product product1 = new Product(1L, "Product 1", 100, "image1.jpg");
         Product product2 = new Product(2L, "Product 2", 200, "image2.jpg");
-        Wish wish1 = new Wish(1L, 1L);
-        Wish wish2 = new Wish(2L, 1L);
+        Wish wish1 = new Wish(product1, member);
+        Wish wish2 = new Wish(product2, member);
 
         memberRepository.save(member);
         productRepository.save(product1);

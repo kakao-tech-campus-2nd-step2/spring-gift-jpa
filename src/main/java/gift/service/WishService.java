@@ -24,9 +24,9 @@ public class WishService {
     }
 
     public Wish makeWish(WishRequest request, Member member) {
-        productRepository.findById(request.productId())
+        Product product = productRepository.findById(request.productId())
                 .orElseThrow(() -> new ProductNotFoundException("해당 productId의 상품을 찾을 수 없습니다."));
-        Wish wish = new Wish(request.productId(), member.getId());
+        Wish wish = new Wish(product, member);
         wishRepository.save(wish);
         return wish;
     }
@@ -37,9 +37,8 @@ public class WishService {
 
     @Transactional
     public void deleteWish(Long productId, Member member) {
-        if (getAllWishProductsByMember(member).isEmpty()) {
-            throw new ProductNotFoundException("해당 productId의 상품이 위시리스트에 존재하지 않습니다.");
-        }
-        wishRepository.deleteByProductIdAndMemberId(productId, member.getId());
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("해당 productId의 상품을 찾을 수 없습니다."));
+        wishRepository.deleteByProductAndMember(product, member);
     }
 }
