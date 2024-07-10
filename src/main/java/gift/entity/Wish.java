@@ -21,7 +21,7 @@ public class Wish {
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "item_id", nullable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @Column(nullable = false)
