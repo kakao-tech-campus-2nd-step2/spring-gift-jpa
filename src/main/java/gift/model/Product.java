@@ -1,26 +1,40 @@
 package gift.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+
 import java.time.LocalDateTime;
 
-public class Product {
-    private Long id;
+@Entity
+public class Product extends BasicEntity{
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private int price;
+
+    @Column(nullable = false, length = 1000)
     private String imageUrl;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+
+    protected Product() {}
 
     public Product(Long id, String name, int price, String imageUrl, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
+        super(id, createdAt, updatedAt);
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
-    public Long getId() {
-        return id;
+    public Product(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    public void updateProduct(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
@@ -33,13 +47,5 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
 }

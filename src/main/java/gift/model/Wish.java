@@ -1,26 +1,48 @@
 package gift.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
-public class Wish {
-    private Long id;
-    private Long memberId;
-    private int productCount;
-    private Product product;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+@Entity
+@Table(indexes = @Index(name = "idx_member_id", columnList = "member_id"))
+public class Wish extends BasicEntity{
 
-    public Wish(Long id, Long memberId, int productCount, Product product, LocalDateTime createdAt, LocalDateTime updateAt) {
-        this.id = id;
-        this.memberId = memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    @Column(nullable = false)
+    private int productCount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    protected Wish() {}
+
+    public Wish(Long id, Member member, int productCount, Product product, LocalDateTime createdAt, LocalDateTime updateAt) {
+        super(id, createdAt, updateAt);
+        this.member = member;
         this.productCount = productCount;
         this.product = product;
-        this.createdAt = createdAt;
-        this.updatedAt = updateAt;
     }
 
-    public Long getId() {
-        return id;
+    public Wish(Member member, int productCount, Product product) {
+        super();
+        this.member = member;
+        this.productCount = productCount;
+        this.product = product;
+    }
+
+    public void updateWish(Member member, int productCount, Product product) {
+        this.member = member;
+        this.productCount = productCount;
+        this.product = product;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     public int getProductCount() {
@@ -29,13 +51,5 @@ public class Wish {
 
     public Product getProduct() {
         return product;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
 }

@@ -41,7 +41,7 @@ public class AdminMemberController {
 
     @PostMapping("")
     public String newMember(@ModelAttribute MemberRequest request) {
-        memberService.save(request);
+        memberService.signUp(request.email(), request.password(), request.role());
         return "redirect:/admin/member";
     }
 

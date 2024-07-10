@@ -1,4 +1,4 @@
-package gift.repository;
+package gift.repository.dao;
 
 import gift.common.enums.Role;
 import gift.controller.dto.request.MemberRequest;

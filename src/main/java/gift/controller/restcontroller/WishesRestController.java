@@ -33,7 +33,7 @@ public class WishesRestController {
     @SecurityRequirement(name = "Authorization")
     public ResponseEntity<Void> insertWish(@Valid @RequestBody WishInsertRequest request,
                @Parameter(hidden = true) @NotNull @LoginMember Long memberId) {
-        wishService.save(request, memberId);
+        wishService.save(request, 1, memberId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
