@@ -4,9 +4,11 @@ import gift.product.Product;
 import gift.user.User;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "WISHLISTS")
-public class WishList {
+public class WishList implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -19,15 +21,20 @@ public class WishList {
     @Column(name = "count")
     long count;
 
-    public WishList(User user, Product product, long count) {
-        this.user = user;
-        this.product = product;
+    public WishList(long count) {
         this.count = count;
     }
 
 
     public WishList() {
 
+    }
+
+    public WishList(long id, User user, Product product, long count) {
+        this.id = id;
+        this.user = user;
+        this.product = product;
+        this.count = count;
     }
 
     public long getId() {
@@ -42,7 +49,7 @@ public class WishList {
         return user;
     }
 
-    public void setUserID(User user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
