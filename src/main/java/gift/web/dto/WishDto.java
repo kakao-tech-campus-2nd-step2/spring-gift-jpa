@@ -8,7 +8,7 @@ public record WishDto(
     ) {
 
     public static WishDto from(Wish wish) {
-        return new WishDto(wish.productId(), wish.count());
+        return new WishDto(wish.getProductId(), wish.getCount());
     }
 
     public static Wish toEntity(WishDto dto) {
