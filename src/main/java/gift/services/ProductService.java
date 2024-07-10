@@ -5,6 +5,7 @@ import gift.repositories.ProductRepository;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +35,12 @@ public class ProductService {
 
     // 특정 제품 조회
     public ProductDto getProductById(Long id) {
-        Product product = productRepository.find(id);
-        if (product == null) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isEmpty()) {
             throw new NoSuchElementException("Product not found with id " + id);
         }
-        ProductDto productDto = new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        ProductDto productDto = new ProductDto(product.get().getId(), product.get().getName(), product.get()
+            .getPrice(), product.get().getImageUrl());
         return productDto;
     }
 
@@ -55,7 +57,7 @@ public class ProductService {
         if (product.getId() == null) {
             product.setId(currentId++);
         }
-        productRepository.insert(product);
+        productRepository.save(product);
 
         ProductDto savedProductDto = new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
 
@@ -64,6 +66,11 @@ public class ProductService {
 
     // 제품 수정
     public ProductDto updateProduct(@Valid ProductDto productDto) {
+        Optional<Product> existingProduct = productRepository.findById(productDto.getId());
+        if (existingProduct.isEmpty()) {
+            throw new NoSuchElementException("Product not found with id " + productDto.getId());
+        }
+
         Product product = new Product(
             productDto.getId(),
             productDto.getName(),
@@ -71,7 +78,7 @@ public class ProductService {
             productDto.getImageUrl()
         );
 
-        productRepository.update(product);
+        productRepository.save(product);
         ProductDto updatedProductDto = new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
 
         return updatedProductDto;
@@ -79,6 +86,11 @@ public class ProductService {
 
     // 제품 삭제
     public void deleteProduct(Long id) {
-        productRepository.remove(id);
+        Optional<Product> existingProduct = productRepository.findById(id);
+        if (existingProduct.isEmpty()) {
+            throw new NoSuchElementException("Product not found with id " + id);
+        }
+
+        productRepository.deleteById(id);
     }
 }
