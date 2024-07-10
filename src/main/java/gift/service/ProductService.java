@@ -49,7 +49,7 @@ public class ProductService {
         parameterValidator.validateParameter(id, productDTO);
         Optional<Product> productInDb = productRepository.findById(id);
 
-        if(!productInDb.isPresent())
+        if(productInDb.isEmpty())
             throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
 
         Product productInDB = productInDb.get();
