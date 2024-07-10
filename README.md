@@ -71,3 +71,7 @@ create table wish
 - Wish 엔티티 필드 FK 추가 
   - memberId <- Member (id) 
   - productId <- Product (id)
+
+
+- Member 엔티티 wishList 필드 추가
+  - Wish 엔티티 연관 관계를 통해 저장
