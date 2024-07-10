@@ -3,6 +3,8 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import gift.model.Product;
+import gift.model.User;
 import gift.model.WishlistItem;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -15,44 +17,59 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 class WishlistRepositoryTest {
 
     @Autowired
-    private WishlistRepository wishlistRepository;
+    private UserRepository userRepository;
 
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private WishlistRepository wishlistRepository;
     @BeforeEach
     public void setUp() {
-        // 테스트 데이터를 초기화합니다.
+        //clear
+        userRepository.deleteAll();
+        productRepository.deleteAll();
         wishlistRepository.deleteAll();
 
-        WishlistItem item1 = new WishlistItem();
-        item1.setUserId(1L);
-        item1.setProductId(500L);
-        item1.setProductName("Item 1");
-        item1.setAmount(1);
+        //User
+        User user1 = new User(1L, "abc", "123");
+        User user2 = new User(2L, "qwer", "5678");
+        userRepository.save(user1);
+        userRepository.save(user2);
 
-        WishlistItem item2 = new WishlistItem();
-        item2.setUserId(1L);
-        item2.setProductId(100L);
-        item2.setProductName("Item 2");
-        item2.setAmount(2);
+        //Product
+        Product product1 = new Product(1L, "water", 1000L, "www.naver.com");
+        Product product2 = new Product(2L, "cola", 3000L, "www.coke.com");
+        productRepository.save(product1);
+        productRepository.save(product2);
 
-        WishlistItem item3 = new WishlistItem();
-        item3.setUserId(2L);
-        item3.setProductId(100L);
-        item3.setProductName("Item 2");
-        item3.setAmount(5);
+        //Wishlist
+        WishlistItem wishlistItem1 = new WishlistItem();
+        wishlistItem1.setUser(user1);
+        wishlistItem1.setProduct(product1);
+        wishlistItem1.setAmount(1);
 
+        WishlistItem wishlistItem2 = new WishlistItem();
+        wishlistItem2.setUser(user1);
+        wishlistItem2.setProduct(product2);
+        wishlistItem2.setAmount(2);
 
-        wishlistRepository.save(item1);
-        wishlistRepository.save(item2);
-        wishlistRepository.save(item3);
+        WishlistItem wishlistItem3 = new WishlistItem();
+        wishlistItem3.setUser(user2);
+        wishlistItem3.setProduct(product1);
+        wishlistItem3.setAmount(5);
+
+        wishlistRepository.save(wishlistItem1);
+        wishlistRepository.save(wishlistItem2);
+        wishlistRepository.save(wishlistItem3);
     }
 
     @Test
     public void testFindListByUserId() {
-        // userId가 1인 사용자의 위시리스트를 조회합니다.
+        // then
         List<WishlistItem> user1Wishlist = wishlistRepository.findListByUserId(1L);
         assertThat(user1Wishlist).hasSize(2);
 
-        // userId가 2인 사용자의 위시리스트를 조회합니다.
         List<WishlistItem> user2Wishlist = wishlistRepository.findListByUserId(2L);
         assertThat(user2Wishlist).hasSize(1);
     }
