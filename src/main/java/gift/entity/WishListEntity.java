@@ -26,8 +26,7 @@ public class WishListEntity {
     @JoinColumn(name = "product_id")
     private ProductEntity productEntity;
 
-    public WishListEntity(Optional<MemberEntity> memberEntity,
-        Optional<ProductEntity> productEntity) {
+    public WishListEntity() {
 
     }
 

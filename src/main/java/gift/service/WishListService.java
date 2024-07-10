@@ -5,6 +5,7 @@ import gift.domain.WishList;
 import gift.entity.MemberEntity;
 import gift.entity.ProductEntity;
 import gift.entity.WishListEntity;
+import gift.error.NotFoundException;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishListRepository;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WishListService {
-
 
     private final WishListRepository wishListRepository;
     private final MemberRepository memberRepository;
@@ -49,8 +49,10 @@ public class WishListService {
     }
 
     private WishListEntity dtoToEntity(WishList wishList) {
-        Optional<MemberEntity> memberEntity = memberRepository.findById(wishList.getMemberId());
-        Optional<ProductEntity> productEntity = productRepository.findById(wishList.getProductId());
+        MemberEntity memberEntity = memberRepository.findById(wishList.getMemberId())
+                .orElseThrow(() -> new NotFoundException("멤버가 존재하지 않습니다."));
+        ProductEntity productEntity = productRepository.findById(wishList.getProductId())
+                .orElseThrow(() -> new NotFoundException("상품이 존재하지 않습니다."));
         return new WishListEntity(memberEntity, productEntity);
     }
 
