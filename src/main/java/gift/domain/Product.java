@@ -1,24 +1,36 @@
 package gift.domain;
 
 import gift.util.ProductNameValidationUtil;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+
+import java.util.List;
 
 import static gift.constant.Message.*;
 
+@Entity
+@Table(name = "product")
 public class Product {
 
-    @NotNull(message = REQUIRED_FIELD_MSG)
-    @Positive(message = POSITIVE_NUMBER_REQUIRED_MSG)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = REQUIRED_FIELD_MSG)
+    @NotBlank(message = REQUIRED_FIELD_MSG)
     @Size(max = 15, message = LENGTH_ERROR_MSG)
+    @Column(nullable = false)
     private String name;
 
     @NotNull(message = REQUIRED_FIELD_MSG)
     @Positive(message = POSITIVE_NUMBER_REQUIRED_MSG)
+    @Column(nullable = false)
     private int price;
+
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wish> wishes;
 
     public Product() {}
 
