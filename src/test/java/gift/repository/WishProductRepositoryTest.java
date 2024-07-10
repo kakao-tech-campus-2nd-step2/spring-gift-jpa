@@ -37,7 +37,7 @@ class WishProductRepositoryTest {
     void setUp() {
         member = memberRepository.save(new Member("aaa123@a.com", "1234"));
         product = productRepository.save(new Product("productA", 1000, "https://a.com"));
-        wishProduct = new WishProduct(member.getId(), product.getId());
+        wishProduct = new WishProduct(member, product);
     }
 
     @Test
@@ -74,7 +74,7 @@ class WishProductRepositoryTest {
         products.forEach(
             product -> {
                 Product saved = productRepository.save(product);
-                WishProduct wishProduct = new WishProduct(member.getId(), product.getId());
+                WishProduct wishProduct = new WishProduct(member, product);
                 wishProductRepository.save(wishProduct);
             }
         );
@@ -86,7 +86,7 @@ class WishProductRepositoryTest {
                 .forEach(i -> {
                     WishProduct w = findWishes.get(i);
                     assertThat(w.getId()).isNotNull();
-                    assertThat(w.getProductId()).isEqualTo(products.get(i).getId());
+                    assertThat(w.getProduct().getId()).isEqualTo(products.get(i).getId());
                 });
 
     }

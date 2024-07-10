@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
-import gift.exception.member.LoginErrorException;
+import gift.exception.member.NotFoundMemberException;
 import gift.exception.member.DuplicateEmailException;
 import gift.model.Member;
 import org.assertj.core.api.Assertions;
@@ -52,14 +52,14 @@ class MemberServiceTest {
 
         assertThatThrownBy(
             () -> memberService.login("wrong email", joinedMember.getPassword())
-        ).isInstanceOf(LoginErrorException.class);
+        ).isInstanceOf(NotFoundMemberException.class);
 
         assertThatThrownBy(
             () -> memberService.login(joinedMember.getEmail(), "wrong password")
-        ).isInstanceOf(LoginErrorException.class);
+        ).isInstanceOf(NotFoundMemberException.class);
         assertThatThrownBy(
             () -> memberService.login("wrong email", "wrong password")
-        ).isInstanceOf(LoginErrorException.class);
+        ).isInstanceOf(NotFoundMemberException.class);
     }
 
 
