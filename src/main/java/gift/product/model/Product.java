@@ -1,5 +1,6 @@
 package gift.product.model;
 
+import gift.product.dto.ProductRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -65,5 +66,14 @@ public class Product {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public static Product from(ProductRequest request) {
+        Product product = new Product();
+        product.setId(request.getId());
+        product.setName(request.getName());
+        product.setPrice(request.getPrice());
+        product.setImgUrl(request.getImgUrl());
+        return product;
     }
 }
