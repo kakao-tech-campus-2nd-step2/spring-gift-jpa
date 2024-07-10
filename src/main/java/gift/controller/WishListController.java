@@ -34,8 +34,7 @@ public class WishListController {
     @GetMapping("/{memberId}")
     public ResponseEntity<?> getWishList(@PathVariable long memberId,
         AuthInfo authInfo) {
-        long tokenId = Long.parseLong(authInfo.id());
-        if (tokenId == memberId) {
+        if (authInfo.id() == memberId) {
             List<WishListDTO> wishLists = wishListService.getWishListById(memberId);
             return ResponseEntity.ok(wishLists);
         }
@@ -43,9 +42,9 @@ public class WishListController {
     }
 
     @PostMapping("/{memberId}/product")
-    public ResponseEntity<?> createWishList(@PathVariable String memberId,
+    public ResponseEntity<?> createWishList(@PathVariable long memberId,
         @RequestBody WishListDTO wishListDTO, AuthInfo authInfo) {
-        if (authInfo.id().equals(memberId)) {
+        if (authInfo.id() == memberId) {
             wishListService.createWishList(wishListDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(wishListDTO);
         }
@@ -53,9 +52,9 @@ public class WishListController {
     }
 
     @PutMapping("/{memberId}")
-    public ResponseEntity<?> updateWishListQuantity(@PathVariable String memberId,
+    public ResponseEntity<?> updateWishListQuantity(@PathVariable long memberId,
         @RequestBody WishListDTO wishListDTO, AuthInfo authInfo) {
-        if (authInfo.id().equals(memberId)) {
+        if (authInfo.id() == memberId) {
             wishListService.updateWishListQuantity(wishListDTO);
             return ResponseEntity.noContent().build();
         }
@@ -66,7 +65,7 @@ public class WishListController {
     public ResponseEntity<?> deleteWishList(@PathVariable long memberId,
         @PathVariable String productName,
         AuthInfo authInfo) {
-        if (authInfo.id().equals(Long.toString(memberId))) {
+        if (authInfo.id() == memberId) {
             wishListService.deleteWishList(memberId, productName);
             return ResponseEntity.noContent().build();
         }
