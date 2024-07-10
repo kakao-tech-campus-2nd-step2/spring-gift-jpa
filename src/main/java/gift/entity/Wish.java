@@ -16,6 +16,7 @@ public class Wish {
     @NotNull
     Integer amount;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "productId")
     Product product;
