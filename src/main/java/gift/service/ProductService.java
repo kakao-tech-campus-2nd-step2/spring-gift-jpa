@@ -8,6 +8,7 @@ import gift.exception.product.ProductNotFoundException;
 import gift.repository.ProductRepository;
 import gift.util.mapper.ProductMapper;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +19,11 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponse> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+            .map(ProductMapper::toResponse)
+            .collect(Collectors.toList());
     }
 
     public Product getProductById(Long id) {
@@ -27,15 +31,14 @@ public class ProductService {
         return productRepository.findById(id).get();
     }
 
-    public ProductResponse addProduct(AddProductRequest request) {
-        return ProductMapper.toResponse(productRepository.save(ProductMapper.toProduct(request)));
+    public Long addProduct(AddProductRequest request) {
+        return productRepository.save(ProductMapper.toProduct(request)).getId();
     }
 
-    public ProductResponse updateProduct(Long id, UpdateProductRequest request) {
+    public void updateProduct(Long id, UpdateProductRequest request) {
         Product product = getProductById(id);
         ProductMapper.updateProduct(product, request);
-
-        return ProductMapper.toResponse(productRepository.save(product));
+        productRepository.save(product);
     }
 
     public void deleteProduct(Long id) {

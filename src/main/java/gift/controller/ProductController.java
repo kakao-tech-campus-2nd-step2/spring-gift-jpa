@@ -31,9 +31,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
         try {
-            List<Product> products = productService.getAllProducts();
+            List<ProductResponse> products = productService.getAllProducts();
             return ResponseEntity.ok(products);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -47,21 +47,21 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponse> addProduct(@RequestBody @Valid AddProductRequest request) {
-        ProductResponse response = productService.addProduct(request);
-        return new ResponseEntity<>(response, getProductLocationHeader(response.id()),
+    public ResponseEntity<Long> addProduct(@RequestBody @Valid AddProductRequest request) {
+        Long productId = productService.addProduct(request);
+        return new ResponseEntity<>(productId, getProductLocationHeader(productId),
             HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id, @RequestBody @Valid
+    public ResponseEntity updateProduct(@PathVariable Long id, @RequestBody @Valid
         UpdateProductRequest request) {
-        ProductResponse response = productService.updateProduct(id, request);
-        return new ResponseEntity<>(response, getProductLocationHeader(response.id()), HttpStatus.OK);
+        productService.updateProduct(id, request);
+        return ResponseEntity.ok(null);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok(null);
     }

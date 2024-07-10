@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 
+import gift.dto.product.ProductResponse;
 import gift.dto.product.UpdateProductRequest;
 import gift.exception.product.ProductNotFoundException;
 import gift.entity.Product;
@@ -60,10 +61,10 @@ class ProductServiceTest {
     @DisplayName("getAllProducts empty test")
     @Transactional
     void getAllProductsEmptyTest() {
-        productService.getAllProducts().forEach(product -> productService.deleteProduct(product.getId()));
+        productService.getAllProducts().forEach(product -> productService.deleteProduct(product.id()));
 
         //when
-        List<Product> products = productService.getAllProducts();
+        List<ProductResponse> products = productService.getAllProducts();
 
         //then
         assertThat(products).isEmpty();
@@ -74,7 +75,7 @@ class ProductServiceTest {
     @Transactional
     void getAllProductsTest() {
         //when
-        List<Product> products = productService.getAllProducts();
+        List<ProductResponse> products = productService.getAllProducts();
 
         //then
         assertThat(products).isNotNull();
@@ -149,11 +150,11 @@ class ProductServiceTest {
 
         //when
         productService.deleteProduct(1L);
-        List<Product> actual = productService.getAllProducts();
+        List<ProductResponse> actual = productService.getAllProducts();
 
         //then
         assertThat(actual).hasSize(4);
-        assertThat(actual).extracting(Product::getId)
+        assertThat(actual).extracting(ProductResponse::id)
             .doesNotContain(product1.getId());
     }
 

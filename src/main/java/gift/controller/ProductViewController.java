@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.product.ProductResponse;
 import gift.entity.Product;
 import gift.service.ProductService;
 import java.util.List;
@@ -20,7 +21,7 @@ public class ProductViewController {
 
     @GetMapping
     public String products(Model model) {
-        List<Product> products = productService.getAllProducts();
+        List<ProductResponse> products = productService.getAllProducts();
 
         model.addAttribute("products", products);
         return "product_list";
