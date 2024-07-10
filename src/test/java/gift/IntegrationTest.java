@@ -1,4 +1,5 @@
 package gift;
+
 import gift.model.UserRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,10 @@ public class IntegrationTest {
     private RestTemplate restTemplate;
     private String baseUrl;
 
+    private static final String REGISTER_URL = "/auth/register";
+    private static final String LOGIN_URL = "/auth/login";
+    private static final String ADD_GIFT_URL = "/wish/";
+
     @BeforeEach
     void setUp() {
         restTemplate = new RestTemplate();
@@ -37,19 +42,31 @@ public class IntegrationTest {
 
     @Test
     void testAddGiftToCart() {
+        String email = "abcd@naver.com";
+        String password = "1234";
+
         // 회원가입
-        String registerUrl = baseUrl + "/auth/register";
-        UserRequest registerRequest = new UserRequest("testuser@example.com", "password");
+        registerUser(email, password);
+        // 로그인
+        String token = loginAndGetToken(email, password);
+        // 위시리스트에 상품 추가
+        addGiftToWish(token, 1, 2);
+    }
+
+    public void registerUser(String email, String password) {
+        String registerUrl = baseUrl + REGISTER_URL;
+        UserRequest registerRequest = new UserRequest(email, password);
 
         HttpEntity<UserRequest> registerRequestEntity = new HttpEntity<>(registerRequest);
         ResponseEntity<String> registerResponse = restTemplate.postForEntity(registerUrl, registerRequestEntity, String.class);
 
         assertThat(registerResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(registerResponse.getBody()).isEqualTo("회원가입이 정상적으로 완료되었습니다.");
+    }
 
-        // 로그인
-        String loginUrl = baseUrl + "/auth/login";
-        UserRequest loginRequest = new UserRequest("testuser@example.com", "password");
+    public String loginAndGetToken(String email, String password) {
+        String loginUrl = baseUrl + LOGIN_URL;
+        UserRequest loginRequest = new UserRequest(email, password);
 
         HttpEntity<UserRequest> loginRequestEntity = new HttpEntity<>(loginRequest);
         ResponseEntity<Map> loginResponse = restTemplate.postForEntity(loginUrl, loginRequestEntity, Map.class);
@@ -59,9 +76,11 @@ public class IntegrationTest {
 
         String token = (String) loginResponse.getBody().get("accessToken");
 
-        // 위시리스트에 상품 추가
-        String giftId = "1";
-        String addGiftUrl = baseUrl + "/wish/" + giftId + "?quantity=1";
+        return token;
+    }
+
+    public void addGiftToWish(String token, int giftId, int quantity) {
+        String addGiftUrl = baseUrl + ADD_GIFT_URL + giftId + "?quantity=" + quantity;
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
