@@ -1,8 +1,8 @@
-package gift;
+package gift.repository;
 
 import gift.model.Product;
-import gift.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.shouldHaveThrown;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
 public class ProductRepositoryTest {
@@ -28,6 +26,7 @@ public class ProductRepositoryTest {
         products.save(new Product("Product3", 15000, "3.img"));
     }
 
+    @DisplayName("새로운 상품 저장")
     @Test
     void save(){
         Product expected = new Product("newProduct", 1000, "newimg.img");
@@ -35,6 +34,7 @@ public class ProductRepositoryTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("모든 상품 리스트 반환")
     @Test
     void getAllProduct(){
         List<Product> actual = products.findAll();
@@ -44,6 +44,7 @@ public class ProductRepositoryTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("이름(unique하다고가정)으로 해당하는 객체 반환")
     @Test
     void getProductbyName(){
         Product expected = new Product("Product1", 1000, "1.img");
@@ -51,6 +52,7 @@ public class ProductRepositoryTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("ID로 상품 반환")
     @Test
     void getProductbyID(){
         Product expected = products.findByName("Product1");
@@ -62,6 +64,7 @@ public class ProductRepositoryTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    @DisplayName("ID로 상품 삭제")
     @Test
     void deleteByID(){
         Product product = products.findByName("Product1");
