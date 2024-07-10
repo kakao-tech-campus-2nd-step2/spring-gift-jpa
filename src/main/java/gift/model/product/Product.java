@@ -33,6 +33,7 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    // getters, setters
     public Long getId() {
         return id;
     }
@@ -63,5 +64,12 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    // update
+    public void update(ProductRequest productRequest) {
+        this.name = productRequest.name();
+        this.price = productRequest.price();
+        this.imageUrl = productRequest.imageUrl();
     }
 }
