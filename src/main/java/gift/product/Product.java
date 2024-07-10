@@ -10,17 +10,12 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 public class Product {
-
-    @NotNull(message = "id는 필수 값 입니다.")
     @Id
     private Long id;
 
-    @NotNull(message = "상품 명은 필수 값 입니다.")
-    @Size(min = 1, max = 15, message = "상품 명의 길이는 1~15자 입니다.")
-    @Pattern(regexp = "^[A-Za-z가-힣0-9()\\[\\]\\-&/_+\\s]*$", message = "( ), [ ], +, -, &, /, _ 를 제외한 특수문자는 사용할 수 없습니다.")
+    @Kakao
     private String name;
 
-    @NotNull(message = "가격은 필수 값 입니다.")
     private int price;
 
     private String imageUrl;

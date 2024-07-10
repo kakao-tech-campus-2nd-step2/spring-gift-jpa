@@ -1,20 +1,24 @@
 package gift.product;
 
+import gift.Exception.ErrorResponse;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
 
 @Service
 public class ProductService {
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository){
         this.productRepository = productRepository;
     }
 
-    public HttpStatus createProduct(Product newProduct) throws IllegalArgumentException{
-        if(!newProduct.getName().matches("^((?!카카오).)*$")){
-            throw new IllegalArgumentException("\"카카오\"가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.");
-        }
+    public HttpStatus createProduct(@Valid Product newProduct) throws IllegalArgumentException{
         productRepository.save(newProduct);
         return HttpStatus.CREATED;
     }
