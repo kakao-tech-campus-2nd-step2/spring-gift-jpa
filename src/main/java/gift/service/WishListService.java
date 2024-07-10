@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.DTO.WishListDTO;
+import gift.model.wishlist.WishListEntity;
 import gift.aspect.CheckProductExists;
 import gift.model.wishlist.WishListRepository;
 import java.util.Collections;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
  * WhishListService 클래스는 WishList 관련 비즈니스 로직을 처리하는 서비스 클래스입니다
  */
 @Service
-public class WhishListService {
+public class WishListService {
 
     private final WishListRepository wishListRepository;
 
@@ -21,8 +22,22 @@ public class WhishListService {
      *
      * @param wishListRepository WishListDAO 객체
      */
-    public WhishListService(WishListRepository wishListRepository) {
+    public WishListService(WishListRepository wishListRepository) {
         this.wishListRepository = wishListRepository;
+    }
+
+    private WishListDTO toWishListDTO(WishListEntity wishListEntity) {
+        return new WishListDTO(
+            wishListEntity.getUserId(),
+            wishListEntity.getProductId()
+        );
+    }
+
+    private WishListEntity toWishListEntity(WishListDTO wishListDTO) {
+        var wishListEntity = new WishListEntity();
+        wishListEntity.setUserId(wishListDTO.getUserId());
+        wishListEntity.setProductId(wishListDTO.getProductId());
+        return wishListEntity;
     }
 
     /**
@@ -34,8 +49,11 @@ public class WhishListService {
      */
     @CheckProductExists
     public List<Long> createWishList(long productId, long userId) {
-        WishListDTO newWishListDTO = wishListRepository.createWishList(productId, userId);
-        return Collections.singletonList(newWishListDTO.getProductId());
+        var wishListEntity = new WishListEntity();
+        wishListEntity.setProductId(productId);
+        wishListEntity.setUserId(userId);
+        wishListRepository.save(wishListEntity);
+        return Collections.singletonList(wishListEntity.getId());
     }
 
     /**
@@ -45,10 +63,10 @@ public class WhishListService {
      * @return 지정된 사용자의 모든 WishList 객체의 productId 리스트
      */
     public List<Long> getWishListsByUserId(long userId) {
-        List<WishListDTO> wishListDTOS = wishListRepository.getWishListsByUserId(userId);
-        return wishListDTOS.stream()
-                        .map(WishListDTO::getProductId)
-                        .collect(Collectors.toList());
+        var wishListEntities = wishListRepository.findAllByUserId(userId);
+        return wishListEntities.stream()
+            .map(WishListEntity::getProductId)
+            .collect(Collectors.toList());
     }
 
     /**

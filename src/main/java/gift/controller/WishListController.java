@@ -2,7 +2,7 @@ package gift.controller;
 
 import gift.auth.DTO.MemberDTO;
 import gift.auth.LoginMember;
-import gift.service.WhishListService;
+import gift.service.WishListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +16,10 @@ import java.util.List;
 @RequestMapping("/api/wishlist")
 public class WishListController {
 
-    private final WhishListService wishListService;
+    private final WishListService wishListService;
 
     @Autowired
-    public WishListController(WhishListService wishListService) {
+    public WishListController(WishListService wishListService) {
         this.wishListService = wishListService;
     }
 
