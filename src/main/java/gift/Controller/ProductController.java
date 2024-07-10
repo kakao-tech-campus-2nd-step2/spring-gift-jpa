@@ -2,7 +2,6 @@ package gift.Controller;
 
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import gift.Model.Product;
 import gift.Model.RequestProduct;
