@@ -8,15 +8,15 @@
 ### DB 설계
 ![img.png](erd.png)
 ```java
-@OneToMany(mappedBy = "member")
+@OneToMany(mappedBy = "member") //Product 엔티티
 private List<Wish> wishList;
 
 @ManyToOne
-@JoinColumn(name = "member_id", nullable = false)
+@JoinColumn(name = "member_id", nullable = false) // Wish 엔티티
 private Member member;
 
 @ManyToOne
-@JoinColumn(name = "product_id", nullable = false)
+@JoinColumn(name = "product_id", nullable = false) // Wish 엔티티
 private Product product;
 
 ```
