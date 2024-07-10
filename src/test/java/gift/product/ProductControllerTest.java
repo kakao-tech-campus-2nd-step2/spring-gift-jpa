@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,15 +57,8 @@ class ProductControllerTest {
         //then
         mockMvc.perform(get(apiUrl))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.size()").value(products.size()))
-            .andExpect(jsonPath("$[0].id").value(product1.getId()))
-            .andExpect(jsonPath("$[0].name").value(product1.getName()))
-            .andExpect(jsonPath("$[0].price").value(product1.getPrice()))
-            .andExpect(jsonPath("$[0].imageUrl").value(product1.getImageUrl()))
-            .andExpect(jsonPath("$[1].id").value(product2.getId()))
-            .andExpect(jsonPath("$[1].name").value(product2.getName()))
-            .andExpect(jsonPath("$[1].price").value(product2.getPrice()))
-            .andExpect(jsonPath("$[1].imageUrl").value(product2.getImageUrl()));
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(objectMapper.writeValueAsString(products)));
     }
 
     @ParameterizedTest

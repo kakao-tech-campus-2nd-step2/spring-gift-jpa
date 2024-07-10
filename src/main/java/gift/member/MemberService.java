@@ -38,7 +38,7 @@ public class MemberService {
         if (findMember.isEmpty()) {
             throw new FailedLoginException("Member does not exist");
         }
-        if (!findMember.get().isSamePassword(memberDTO)) {
+        if (!findMember.get().isSamePassword(new Member(memberDTO))) {
             throw new FailedLoginException("Wrong password");
         }
     }

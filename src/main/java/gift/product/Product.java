@@ -12,17 +12,17 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id;
 
     @Column(nullable = false)
     @Length(min = 1, max = 15)
-    String name;
+    private String name;
 
     @Column(nullable = false)
-    int price;
+    private int price;
 
     @Column(nullable = false)
-    String imageUrl;
+    private String imageUrl;
 
     public Product() {
     }
@@ -31,38 +31,6 @@ public class Product {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public @Length(min = 1, max = 15) String getName() {
-        return name;
-    }
-
-    public void setName(@Length(min = 1, max = 15) String name) {
-        this.name = name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 

@@ -103,7 +103,8 @@ class WishlistRepositoryTest {
 
         //when
         wishlistRepository.delete(expect);
-        Optional<Wishlist> actual = wishlistRepository.findById(expect.getId());
+//        Optional<Wishlist> actual = wishlistRepository.findById(expect.getId());
+        Optional<Wishlist> actual = wishlistRepository.findById(1L);
 
         //then
         assertThat(actual).isEmpty();
@@ -119,7 +120,10 @@ class WishlistRepositoryTest {
         //when
         Boolean trueCase = wishlistRepository.existsByMemberEmailAndProductId(
             expect.getMemberEmail(), expect.getProductId());
-        Boolean falseCase = wishlistRepository.existsByMemberEmailAndProductId("aaa@email.com", 2L);
+
+        Boolean falseCase = wishlistRepository.existsByMemberEmailAndProductId(
+            "aaa@email.com", 2L
+        );
 
         //then
         assertAll(

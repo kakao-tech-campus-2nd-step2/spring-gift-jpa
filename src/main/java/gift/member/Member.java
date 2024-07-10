@@ -10,10 +10,10 @@ public class Member {
 
     @Id
     @Email(message = "This is not an email format")
-    String email;
+    private String email;
 
     @Column(nullable = false)
-    String password;
+    private String password;
 
     public Member() {
     }
@@ -28,36 +28,15 @@ public class Member {
         this.password = memberDTO.getPassword();
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(
-        @Email(message = "This is not an email format") String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public boolean isSamePassword(Member member) {
-        return this.password.equals(member.getPassword());
-    }
-
-    public boolean isSamePassword(MemberDTO memberDTO) {
-        return this.password.equals(memberDTO.getPassword());
+        return this.password.equals(member.password);
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Member member) {
-            return this.email.equals(member.getEmail())
-                   && this.password.equals(member.getPassword());
+            return this.email.equals(member.email)
+                   && this.password.equals(member.password);
         }
         return false;
     }

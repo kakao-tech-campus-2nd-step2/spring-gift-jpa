@@ -38,19 +38,14 @@ class ProductRepositoryTest {
     @DisplayName("[Unit] addProduct test")
     void addProduct() {
         // given
-        Product expected = new Product(-1L, "product-1", 100, "product-image-url-1");
+        Product expected = new Product(1L, "product-1", 100, "product-image-url-1");
 
         //when
         productRepository.save(expected);
         Product actual = productRepository.findById(1L).get();
 
         //then
-        assertAll(
-            () -> assertThat(actual.getId()).isEqualTo(1L),
-            () -> assertThat(actual.getName()).isEqualTo(expected.getName()),
-            () -> assertThat(actual.getPrice()).isEqualTo(expected.getPrice()),
-            () -> assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl())
-        );
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test

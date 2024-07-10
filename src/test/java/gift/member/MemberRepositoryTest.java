@@ -41,7 +41,7 @@ class MemberRepositoryTest {
 
         //when
         memberRepository.save(expect);
-        Member actual = memberRepository.findById(expect.getEmail()).get();
+        Member actual = memberRepository.findById("aaa@email.com").get();
 
         //then
         assertThat(actual).isEqualTo(expect);

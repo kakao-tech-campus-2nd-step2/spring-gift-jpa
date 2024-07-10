@@ -27,28 +27,12 @@ public class Wishlist {
         this.memberEmail = memberEmail;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getMemberEmail() {
         return memberEmail;
     }
 
-    public void setMemberEmail(String memberEmail) {
-        this.memberEmail = memberEmail;
-    }
-
     public long getProductId() {
         return productId;
-    }
-
-    public void setProductId(long productId) {
-        this.productId = productId;
     }
 
     @Override
