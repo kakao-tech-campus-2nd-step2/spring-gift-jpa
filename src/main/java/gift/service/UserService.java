@@ -57,6 +57,11 @@ public class UserService {
         return UserMapper.toUserResponseDTO(user);
     }
 
+    public User getUserEntityById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+    }
+
     public UserResponseDto updateUser(Long id, UserRegisterDto userRegisterDto) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));

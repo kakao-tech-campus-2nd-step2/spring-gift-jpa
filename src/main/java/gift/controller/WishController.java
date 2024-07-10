@@ -23,15 +23,15 @@ public class WishController {
 
     @PostMapping
     @Operation(summary = "위시리스트 추가", description = "위시리스트에 새로운 상품을 추가합니다.")
-    public ResponseEntity<WishResponseDto> addWish(@RequestBody WishRequestDto wishRequestDto) {
-        WishResponseDto createdWish = wishService.addWish(1L, wishRequestDto); // 실제로는 사용자 ID를 동적으로 받아야 합니다.
+    public ResponseEntity<WishResponseDto> addWish(@RequestHeader("userId") Long userId, @RequestBody WishRequestDto wishRequestDto) {
+        WishResponseDto createdWish = wishService.addWish(userId, wishRequestDto);
         return new ResponseEntity<>(createdWish, HttpStatus.CREATED);
     }
 
     @GetMapping
     @Operation(summary = "위시리스트 조회", description = "사용자의 모든 위시리스트 항목을 조회합니다.")
-    public ResponseEntity<List<WishResponseDto>> getWishesByUserId() {
-        List<WishResponseDto> wishList = wishService.getWishesByUserId(1L); // 실제로는 사용자 ID를 동적으로 받아야 합니다.
+    public ResponseEntity<List<WishResponseDto>> getWishesByUserId(@RequestHeader("userId") Long userId) {
+        List<WishResponseDto> wishList = wishService.getWishesByUserId(userId);
         return new ResponseEntity<>(wishList, HttpStatus.OK);
     }
 

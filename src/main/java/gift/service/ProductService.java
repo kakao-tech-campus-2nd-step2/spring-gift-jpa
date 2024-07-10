@@ -50,6 +50,11 @@ public class ProductService {
         return ProductMapper.toProductResponseDTO(product);
     }
 
+    public Product getProductEntityById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "ID: " + id));
+    }
+
     public boolean deleteProduct(Long id) {
         if (!productRepository.existsById(id)) {
             throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "ID: " + id);
@@ -64,5 +69,4 @@ public class ProductService {
                 .map(ProductMapper::toProductResponseDTO)
                 .collect(Collectors.toList());
     }
-
 }
