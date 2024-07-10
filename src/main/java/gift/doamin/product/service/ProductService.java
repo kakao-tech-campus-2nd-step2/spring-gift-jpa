@@ -1,5 +1,6 @@
 package gift.doamin.product.service;
 
+import gift.doamin.product.dto.ProductParam;
 import gift.doamin.product.entity.Product;
 import gift.doamin.product.repository.JpaProductRepository;
 import java.util.List;
@@ -15,13 +16,13 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Product create(Product product) {
-        if (product.getName().contains("카카오")) {
+    public Product create(ProductParam productParam) {
+        if (productParam.getName().contains("카카오")) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                 "'카카오'가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.");
         }
 
-        return productRepository.save(product);
+        return productRepository.save(productParam.toProduct());
     }
 
     public List<Product> readAll() {
@@ -33,21 +34,19 @@ public class ProductService {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    public Product update(Long userId, Product product, boolean isSeller) {
-        Long id = product.getId();
+    public Product update(Long userId, ProductParam productParam, boolean isSeller) {
+        Long id = productParam.getId();
 
         Product target = productRepository.findById(id)
             .orElseThrow(() -> {
-                create(product);
+                create(productParam);
                 return new ResponseStatusException(HttpStatus.CREATED);
             });
 
         checkAuthority(userId, target, isSeller);
 
-
-        product.setUserId(target.getUserId());
-        System.out.println("userId: " + product.getUserId());
-        return productRepository.save(product);
+        productParam.setUserId(target.getUserId());
+        return productRepository.save(productParam.toProduct());
     }
 
     public void delete(Long userId, Long id, boolean isSeller) {

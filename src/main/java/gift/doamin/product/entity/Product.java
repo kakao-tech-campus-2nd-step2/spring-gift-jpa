@@ -18,22 +18,25 @@ public class Product {
     @Column(nullable = false)
     private Long userId;
 
-    @Pattern(regexp = "^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9 ()\\[\\]+\\-&/_]{1,15}$", message = "영문, 한글, 숫자, 공백, 특수문자 ()[]+-&/_ 1자 이상 15자 미만으로 입력해야 합니다.")
     @Column(nullable = false)
     private String name;
 
-    @NotNull
-    @PositiveOrZero
     @Column(nullable = false)
     private Integer price;
 
     @Column(nullable = false)
     private String imageUrl;
 
-    public Product(String name, Integer price, String imageUrl) {
+    public Product(Long userId, String name, Integer price, String imageUrl) {
+        this.userId = userId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public Product(Long id, Long userId, String name, Integer price, String imageUrl) {
+        this(userId, name, price, imageUrl);
+        this.id = id;
     }
 
     protected Product() {
@@ -58,13 +61,5 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 }

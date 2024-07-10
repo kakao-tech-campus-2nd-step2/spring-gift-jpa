@@ -1,5 +1,6 @@
 package gift.doamin.product.controller;
 
+import gift.doamin.product.dto.ProductParam;
 import gift.doamin.product.entity.Product;
 import gift.doamin.product.service.ProductService;
 import gift.doamin.user.entity.UserRole;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/products")
 public class ProductsController {
+
     private final ProductService productService;
 
     public ProductsController(ProductService productService) {
@@ -30,10 +32,11 @@ public class ProductsController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Product addNewProduct(@Valid @RequestBody Product product, Principal principal) {
+    public Product addNewProduct(@Valid @RequestBody ProductParam productParam,
+        Principal principal) {
         Long userId = Long.valueOf(principal.getName());
-        product.setUserId(userId);
-        return productService.create(product);
+        productParam.setUserId(userId);
+        return productService.create(productParam);
     }
 
     @GetMapping
@@ -47,14 +50,14 @@ public class ProductsController {
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product,
+    public Product updateProduct(@PathVariable Long id, @RequestBody ProductParam productParam,
         Authentication authentication) {
         Long userId = Long.valueOf(authentication.getName());
         boolean isSeller = authentication.getAuthorities()
             .contains(new SimpleGrantedAuthority(UserRole.SELLER.getValue()));
-        product.setId(id);
+        productParam.setId(id);
 
-        return productService.update(userId, product, isSeller);
+        return productService.update(userId, productParam, isSeller);
     }
 
     @DeleteMapping("/{id}")
