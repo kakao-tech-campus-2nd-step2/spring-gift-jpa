@@ -62,7 +62,7 @@ public class ProductDTO {
     }
 
     public Product toProduct() {
-        return new Product(price, name, imageUrl);
+        return new Product(id, name, price, imageUrl);
     }
 
     public static ProductDTO fromProduct(Product product) {

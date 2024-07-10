@@ -20,7 +20,7 @@ public class ProductRepositoryTest {
     @DisplayName("상품 추가 테스트")
     void save(){
         //Given
-        Product product = new Product(1000,"라이언","image.jpg");
+        Product product = new Product("라이언",1000, "image.jpg");
 
         //When
         Product actual = productRepository.save(product);
@@ -36,7 +36,7 @@ public class ProductRepositoryTest {
     @DisplayName("상품 아이디로 찾기 테스트")
     void findById() {
         //Given
-        Product product = new Product(1000,"라이언","image.jpg");
+        Product product = new Product("라이언", 1000,"image.jpg");
         productRepository.save(product);
 
         //When
@@ -45,15 +45,17 @@ public class ProductRepositoryTest {
 
         //Then
         assertThat(actual.get().getName()).isEqualTo("라이언");
+        assertThat(actual.get().getPrice()).isEqualTo(1000);
+        assertThat(actual.get().getImageUrl()).isEqualTo("image.jpg");
     }
 
     @Test
     @DisplayName("전체 상품 찾기 테스트")
     void findAll(){
         //Given
-        Product product = new Product(1000,"라이언","image.jpg");
+        Product product = new Product("라이언", 1000,"image.jpg");
         productRepository.save(product);
-        Product product2 = new Product(3000,"이춘식","example.jpg");
+        Product product2 = new Product("이춘식", 3000,"example.jpg");
         productRepository.save(product2);
 
         //When
@@ -75,7 +77,7 @@ public class ProductRepositoryTest {
     @DisplayName("상품 삭제 테스트")
     void deleteById() {
         //Given
-        Product product = new Product(1000,"라이언","image.jpg");
+        Product product = new Product("라이언", 1000,"image.jpg");
         productRepository.save(product);
 
         //When

@@ -1,15 +1,16 @@
 package gift.user;
 
 import gift.auth.JwtUtil;
+import jakarta.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UserService {
-
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
 
@@ -18,9 +19,14 @@ public class UserService {
         this.jwtUtil = jwtUtil;
     }
 
+    public UserDTO findUserById(long id) throws NotFoundException {
+        return UserDTO.fromUser(userRepository.findById(id).orElseThrow(NotFoundException::new));
+    }
+
+    @Transactional
     public boolean register(UserDTO user){
-        String password = user.getPassword();
-        String email = user.getEmail();
+        String password = user.password();
+        String email = user.email();
         if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이메일과 비밀번호는 비어있으면 안됩니다.");
         }
@@ -31,8 +37,8 @@ public class UserService {
     }
 
     public String login(UserDTO user){
-        String email = user.getEmail();
-        String password = user.getPassword();
+        String email = user.email();
+        String password = user.password();
         Map<String, String> map = new HashMap<>();
         if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이메일과 비밀번호는 빈칸이면 안됩니다.");
@@ -42,8 +48,7 @@ public class UserService {
         }
         String token = jwtUtil.generateToken(user);
         if (token != null) {
-            String response = "access-token: " + token;
-            return response;
+            return "access-token: " + token;
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰 생성 실패");
     }
@@ -55,6 +60,14 @@ public class UserService {
         }
         userRepository.save(user);
         return true;
+    }
+
+    public UserDTO findById(long id) throws NotFoundException {
+        return UserDTO.fromUser(userRepository.findById(id).orElseThrow(NotFoundException::new));
+    }
+
+    public UserDTO findUserByEmail(String email){
+        return UserDTO.fromUser(userRepository.findByEmail(email));
     }
 
     public Boolean getUserByEmailAndPassword(UserDTO userDTO) {

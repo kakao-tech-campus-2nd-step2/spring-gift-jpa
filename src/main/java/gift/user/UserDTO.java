@@ -9,18 +9,8 @@ public record UserDTO(Long id,
                       @NotNull(message = "비밀번호를 입력하지 않았습니다.")
                       String password) {
 
-    public long getId() {return id;}
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     public User toUser() {
-        return new User(email, password);
+        return new User(id, email, password);
     }
 
     public static UserDTO fromUser(User user) {

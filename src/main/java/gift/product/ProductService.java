@@ -43,7 +43,7 @@ public class ProductService {
         if (productRepository.existsByName(productDTO.getName())) {
             throw new IllegalArgumentException("존재하는 이름입니다.");
         }
-        product.update(productDTO.getPrice(), productDTO.getName(), productDTO.getImageUrl());
+        product.update(productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
         productRepository.save(product);
     }
 

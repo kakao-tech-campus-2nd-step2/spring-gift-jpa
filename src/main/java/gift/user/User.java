@@ -1,6 +1,8 @@
 package gift.user;
 
+import gift.wishlist.WishList;
 import jakarta.persistence.*;
+import java.util.List;
 
 @Table(name = "users")
 @Entity
@@ -13,11 +15,19 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
+    @OneToMany(mappedBy = "user")
+    private List<WishList> wishes;
 
     public User() {
     }
 
     public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public User(Long id, String email, String password) {
+        this.id = id;
         this.email = email;
         this.password = password;
     }
@@ -33,4 +43,6 @@ public class User {
     public String getPassword() {
         return password;
     }
+
+    public List<WishList> getWishes(){return wishes;}
 }

@@ -5,11 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WishListRepository extends JpaRepository<WishList, Long> {
 
-    List<WishList> findAllByEmail(String email);
+    List<WishList> findAllByUserId(long id);
 
-    WishList findByEmailAndProductId(String email, long productId);
+    WishList findByUserIdAndProductId(long userId, long productId);
 
-    Boolean existsByEmailAndProductId(String email, long productId);
+    Boolean existsByUserIdAndProductId(long userId, long productId);
 
-    void deleteByEmailAndProductId(String email, long productId);
+    void deleteByUserIdAndProductId(long userId, long productId);
 }

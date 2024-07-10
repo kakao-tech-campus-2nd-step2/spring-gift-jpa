@@ -1,6 +1,8 @@
 package gift.product;
 
+import gift.wishlist.WishList;
 import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -14,17 +16,26 @@ public class Product {
     private String name;
     @Column(nullable = false)
     private String imageUrl;
+    @OneToMany(mappedBy = "product")
+    private List<WishList> wishes;
 
     public Product() {
     }
 
-    public Product(int price, String name, String imageUrl) {
+    public Product(String name, int price, String imageUrl) {
         this.price = price;
         this.name = name;
         this.imageUrl = imageUrl;
     }
 
-    public void update(int price, String name, String imageUrl) {
+    public Product(long id, String name, int price, String imageUrl) {
+        this.id = id;
+        this.price = price;
+        this.name = name;
+        this.imageUrl = imageUrl;
+    }
+
+    public void update(String name, int price, String imageUrl) {
         this.price = price;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -45,4 +56,6 @@ public class Product {
     public String getImageUrl() {
         return imageUrl;
     }
+
+    public List<WishList> getWishes(){return wishes;}
 }

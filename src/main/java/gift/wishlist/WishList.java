@@ -1,7 +1,8 @@
 package gift.wishlist;
 
+import gift.product.Product;
+import gift.user.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 @Table(name = "wishlist")
@@ -11,10 +12,12 @@ public class WishList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    @Column(nullable = false)
-    private String email;
-    @Column(nullable = false, unique = true, length = 15)
-    private long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false, unique = true)
+    private Product product;
     @Column(nullable = false)
     @Min(value = 1)
     private int num;
@@ -22,15 +25,13 @@ public class WishList {
     public WishList() {
     }
 
-    public WishList(String email, long productId, int num) {
-        this.email = email;
-        this.productId = productId;
+    public WishList(User user, Product product, int num) {
+        this.user = user;
+        this.product = product;
         this.num = num;
     }
 
-    public void update(String email, long productId, int num) {
-        this.email = email;
-        this.productId = productId;
+    public void update(int num) {
         this.num = num;
     }
 
@@ -38,12 +39,12 @@ public class WishList {
         return id;
     }
 
-    public String getEmail() {
-        return email;
+    public User getUser() {
+        return user;
     }
 
-    public long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
     public int getNum() {
