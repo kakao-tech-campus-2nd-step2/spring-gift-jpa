@@ -30,7 +30,9 @@ public class WishListService {
 
 
     public List<WishList> getWishListItems(Long memberId) {
-        List<WishListEntity> wishListEntities =  wishListRepository.findByMemberId(memberId);
+        MemberEntity memberEntity = memberRepository.findById(memberId)
+                .orElseThrow(()->new NotFoundException("멤버가 존재하지 않습니다."));
+        List<WishListEntity> wishListEntities =  wishListRepository.findByMemberEntity(memberEntity);
         return wishListEntities.stream()
             .map(this::entityToDto)
             .collect(Collectors.toList());
