@@ -1,10 +1,14 @@
 package gift.domain.wishlist.entity;
 
-import jakarta.persistence.Column;
+import gift.domain.product.entity.Product;
+import gift.domain.user.entity.User;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -19,25 +23,34 @@ public class WishItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false)
+    User user;
 
-    @Column(nullable = false)
-    Long userId;
-
-    @Column(nullable = false)
-    Long productId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id", nullable = false)
+    Product product;
 
     public WishItem() {
 
     }
 
-    public WishItem(Long id, Long userId, Long productId) {
+    public WishItem(Long id, User user, Product product) {
         this.id = id;
-        this.userId = userId;
-        this.productId = productId;
+        this.user = user;
+        this.product = product;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Product getProduct() {
+        return product;
     }
 
     public void setId(Long id) {
@@ -45,10 +58,10 @@ public class WishItem {
     }
 
     public Long getUserId() {
-        return userId;
+        return user.getId();
     }
 
     public Long getProductId() {
-        return productId;
+        return product.getId();
     }
 }

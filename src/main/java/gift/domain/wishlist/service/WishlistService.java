@@ -9,8 +9,10 @@ import gift.domain.wishlist.entity.WishItem;
 import gift.exception.InvalidProductInfoException;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class WishlistService {
 
     private final WishlistJpaRepository wishlistJpaRepository;
@@ -25,7 +27,7 @@ public class WishlistService {
         Product product = productJpaRepository.findById(wishItemDto.productId())
             .orElseThrow(() -> new InvalidProductInfoException("error.invalid.product.id"));
 
-        WishItem wishItem = wishItemDto.toWishItem(product.getId());
+        WishItem wishItem = wishItemDto.toWishItem(user, product);
 
         return wishlistJpaRepository.save(wishItem);
     }
