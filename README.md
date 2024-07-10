@@ -37,6 +37,7 @@
   ```
 ## 구현할 기능 목록
 - [ ] JDBCTemplate 기반 코드 JPA로 리팩토링
+  - [x] JPA 사용을 위한 dependencies 추가
   - [ ] 엔티티 클래스 작성
     - [ ] member table
       - [ ] id(Long, key), email(Varchar, unique), password(Varchar)
