@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.naming.AuthenticationException;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class MemberService {
@@ -26,7 +27,7 @@ public class MemberService {
     }
 
     public String signin(Member member){
-        if(memberRepository.existsByEmail(member.getEmail())){
+        if(!memberRepository.existsByEmail(member.getEmail())){
             memberRepository.save(member);
             return createJwtToken.createJwt(member.getId(), member.getEmail());
         }
@@ -36,7 +37,7 @@ public class MemberService {
     }
 
     public String login(Member member){
-        if(memberRepository.existsByEmail(member.getEmail())){
+        if(!memberRepository.existsByEmail(member.getEmail())){
             throw new IllegalArgumentException("이메일을 확인해주세요.");
         }
 
