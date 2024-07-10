@@ -1,7 +1,7 @@
 package gift.annotation;
 
-import gift.Model.User;
-import gift.Service.UserService;
+import gift.Model.Member;
+import gift.Service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -13,22 +13,22 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class ValidUserArgumnetResolver implements HandlerMethodArgumentResolver {
 
-    private final UserService userService;
+    private final MemberService memberService;
 
     @Autowired
-    public ValidUserArgumnetResolver (UserService userService){
-        this.userService = userService;
+    public ValidUserArgumnetResolver (MemberService memberService){
+        this.memberService = memberService;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter){
-        return methodParameter.getParameterType().equals(User.class) &&
+        return methodParameter.getParameterType().equals(Member.class) &&
                 methodParameter.hasParameterAnnotation(ValidUser.class);
     }
 
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
         String token = nativeWebRequest.getHeader("Authorization");
-        return userService.getUserByToken(token);
+        return memberService.getUserByToken(token);
     }
 }

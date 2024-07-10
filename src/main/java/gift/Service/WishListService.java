@@ -2,9 +2,8 @@ package gift.Service;
 
 import gift.Model.RequestWishListDTO;
 import gift.Model.ResponseWishListDTO;
-import gift.Model.User;
+import gift.Model.Member;
 import gift.Repository.WishListRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -18,19 +17,19 @@ public class WishListService {
         this.wishListRepository = wishListRepository;
     }
 
-    public void addWishList(User user, RequestWishListDTO requestWishListDTO) {
-        wishListRepository.insertWishList(user.getEmail(), requestWishListDTO);
+    public void addWishList(Member member, RequestWishListDTO requestWishListDTO) {
+        wishListRepository.insertWishList(member.getEmail(), requestWishListDTO);
     }
 
-    public List<ResponseWishListDTO> getWishList(User user) {
-        return wishListRepository.selectWishList(user.getEmail());
+    public List<ResponseWishListDTO> getWishList(Member member) {
+        return wishListRepository.selectWishList(member.getEmail());
     }
 
-    public List<ResponseWishListDTO> editWishList(User user, RequestWishListDTO requestWishListDTO) {
-        return wishListRepository.updateWishList(user.getEmail(), requestWishListDTO);
+    public List<ResponseWishListDTO> editWishList(Member member, RequestWishListDTO requestWishListDTO) {
+        return wishListRepository.updateWishList(member.getEmail(), requestWishListDTO);
     }
 
-    public List<ResponseWishListDTO> deleteWishList(User user, RequestWishListDTO requestWishListDTO) {
-        return wishListRepository.deleteWishList(user.getEmail(), requestWishListDTO);
+    public List<ResponseWishListDTO> deleteWishList(Member member, RequestWishListDTO requestWishListDTO) {
+        return wishListRepository.deleteWishList(member.getEmail(), requestWishListDTO);
     }
 }
