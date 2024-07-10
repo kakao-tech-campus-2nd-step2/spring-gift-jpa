@@ -2,7 +2,10 @@ package gift.web.dto.response.member;
 
 public class CreateMemberResponse {
 
-    private final Long id;
+    private Long id;
+
+    private CreateMemberResponse() {
+    }
 
     public CreateMemberResponse(Long id) {
         this.id = id;
