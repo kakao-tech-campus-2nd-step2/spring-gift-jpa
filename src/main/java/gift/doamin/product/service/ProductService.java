@@ -1,27 +1,29 @@
 package gift.doamin.product.service;
 
+import gift.doamin.product.dto.ProductParam;
 import gift.doamin.product.entity.Product;
-import gift.doamin.product.repository.ProductRepository;
+import gift.doamin.product.exception.NotEnoughAutorityException;
+import gift.doamin.product.exception.ProductNotFoundException;
+import gift.doamin.product.repository.JpaProductRepository;
 import java.util.List;
-import org.springframework.http.HttpStatus;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class ProductService {
-    private final ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    private final JpaProductRepository productRepository;
+
+    public ProductService(JpaProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    public Product create(Product product) {
-        if (product.getName().contains("카카오")) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                "'카카오'가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.");
+    public Product create(ProductParam productParam) {
+        if (productParam.getName().contains("카카오")) {
+            throw new NotEnoughAutorityException("'카카오'가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.");
         }
 
-        return productRepository.insert(product);
+        return productRepository.save(productParam.toProduct());
     }
 
     public List<Product> readAll() {
@@ -29,34 +31,25 @@ public class ProductService {
     }
 
     public Product readOne(Long id) {
-        Product product = productRepository.findById(id);
-
-        if (product == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        return product;
+        return productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
     }
 
-    public Product update(Long userId, Product product, boolean isSeller) {
-        Long id = product.getId();
+    public Product update(Long userId, ProductParam productParam, boolean isSeller) {
+        Long id = productParam.getId();
 
-        if (!productRepository.existsById(id)) {
-            create(product);
-            throw new ResponseStatusException(HttpStatus.CREATED);
+        Optional<Product> target = productRepository.findById(id);
+        if (target.isEmpty()) {
+            return create(productParam);
         }
-        Product target = productRepository.findById(id);
 
-        checkAuthority(userId, target, isSeller);
+        checkAuthority(userId, target.get(), isSeller);
 
-        product.setUserId(target.getUserId());
-        return productRepository.update(product);
+        productParam.setUserId(target.get().getUserId());
+        return productRepository.save(productParam.toProduct());
     }
 
     public void delete(Long userId, Long id, boolean isSeller) {
-        if (!productRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        Product target = productRepository.findById(id);
+        Product target = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         checkAuthority(userId, target, isSeller);
 
@@ -65,7 +58,7 @@ public class ProductService {
 
     private void checkAuthority(Long userId, Product target, boolean isSeller) {
         if (isSeller && !target.getUserId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            throw new NotEnoughAutorityException();
         }
 
     }

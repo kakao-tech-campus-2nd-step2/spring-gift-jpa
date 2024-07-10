@@ -17,4 +17,8 @@ public class WishListForm {
     public Integer getQuantity() {
         return quantity;
     }
+
+    public boolean isZeroQuantity() {
+        return quantity == null || quantity.equals(0);
+    }
 }
