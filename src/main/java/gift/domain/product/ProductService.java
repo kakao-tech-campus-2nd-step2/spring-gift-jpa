@@ -90,7 +90,7 @@ public class ProductService {
     /**
      * 비즈니스 제약 사항 검사
      */
-    private void validateProduct(Product product) {
+     public void validateProduct(Product product) {
         Set<ConstraintViolation<Product>> violations = validator.validate(product);
         if (!violations.isEmpty()) {
             String message = violations.stream()

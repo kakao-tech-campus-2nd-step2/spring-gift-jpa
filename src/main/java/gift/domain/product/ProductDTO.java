@@ -48,4 +48,11 @@ public class ProductDTO {
         return imageUrl;
     }
 
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
