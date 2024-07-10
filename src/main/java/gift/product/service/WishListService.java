@@ -24,7 +24,6 @@ public class WishListService {
     private final WishListDao wishListDao;
     private final CertifyUtil certifyUtil;
     private final WishListValidation wishListValidation;
-    private final AtomicLong idCounter = new AtomicLong();
     private final MemberDao memberDao;
     private final ProductDao productDao;
 
@@ -39,7 +38,7 @@ public class WishListService {
 
     public Collection<WishProduct> getAllProducts(HttpServletRequest request) {
         String token = certifyUtil.checkAuthorization(request.getHeader("Authorization"));
-        Collection<Wish> wishList = wishListDao.findAllByMemberId(memberDao.findIdByEmail(certifyUtil.getEmailByToken(token)));
+        Collection<Wish> wishList = wishListDao.findAllByMember(memberDao.findMEmberByEmailLike(certifyUtil.getEmailByToken(token)));
         Collection<WishProduct> wishList2 = new ArrayList<>();
         for(Wish wish : wishList) {
             Product product = productDao.findById(wish.getProductId()).orElse(null);
@@ -59,7 +58,7 @@ public class WishListService {
         String token = certifyUtil.checkAuthorization(request.getHeader("Authorization"));
         if(token == null)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid");
-        Wish wish = new Wish(requestBody.get("memberId"), requestBody.get("productId"));
+        Wish wish = new Wish(memberDao.findById(requestBody.get("memberId")).get(), requestBody.get("productId"));
         wishListValidation.registerWishProduct(wish.getProductId());
         wishListDao.save(wish);
         return ResponseEntity.status(HttpStatus.CREATED).body("WishProduct registered successfully");

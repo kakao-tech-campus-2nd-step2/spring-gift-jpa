@@ -1,10 +1,6 @@
 package gift.product.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -15,9 +11,10 @@ public class Wish {
     //@NotNull(message = "ID 속성이 누락되었습니다.")
     private Long id;
 
-    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name="member_id", nullable = false, foreignKey = @ForeignKey(name = "fk_wish_member_id_ref_member_id"))
     @NotNull(message = "희망하는 사람의 정보가 누락되었습니다.")
-    private Long memberId;
+    private Member member;
 
     @Column(nullable = false)
     @NotNull(message = "희망하는 상품의 정보가 누락되었습니다.")
@@ -27,16 +24,16 @@ public class Wish {
 
     }
 
-    public Wish(Long memberId, Long productId) {
-        this.memberId = memberId;
+    public Wish(Member member, Long productId) {
+        this.member = member;
         this.productId = productId;
     }
 
     public Long getId() {
         return id;
     }
-    public Long getMemberId() {
-        return memberId;
+    public Member getMemberId() {
+        return member;
     }
     public Long getProductId() {
         return productId;
