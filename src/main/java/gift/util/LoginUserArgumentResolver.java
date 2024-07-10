@@ -2,6 +2,7 @@ package gift.util;
 
 import gift.auth.jwt.JwtProvider;
 import gift.domain.user.dao.UserDao;
+import gift.domain.user.dao.UserJpaRepository;
 import gift.domain.user.entity.User;
 import gift.exception.InvalidAuthException;
 import io.jsonwebtoken.Claims;
@@ -19,11 +20,11 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     public static final String HEADER_TYPE = "Bearer";
 
     private final JwtProvider jwtProvider;
-    private final UserDao userDao;
+    private final UserJpaRepository userJpaRepository;
 
-    public LoginUserArgumentResolver(JwtProvider jwtProvider, UserDao userDao) {
+    public LoginUserArgumentResolver(JwtProvider jwtProvider, UserJpaRepository userJpaRepository) {
         this.jwtProvider = jwtProvider;
-        this.userDao = userDao;
+        this.userJpaRepository = userJpaRepository;
     }
 
     @Override
@@ -48,7 +49,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         }
 
         Claims claims = jwtProvider.getAuthentication(splitField[1]);
-        return userDao.findById(Long.parseLong(claims.getSubject()))
+        return userJpaRepository.findById(Long.parseLong(claims.getSubject()))
             .orElseThrow(() -> new InvalidAuthException("error.invalid.token"));
     }
 }
