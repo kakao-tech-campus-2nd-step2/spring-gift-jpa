@@ -4,42 +4,46 @@ import gift.model.Wish;
 import gift.model.dto.LoginMemberDto;
 import gift.model.dto.WishRequestDto;
 import gift.model.dto.WishResponseDto;
-import gift.repository.WishDao;
+import gift.repository.WishRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public class WishService {
 
-    private final WishDao wishDao;
+    private final WishRepository wishRepository;
 
-    public WishService(WishDao wishDao) {
-        this.wishDao = wishDao;
+    public WishService(WishRepository wishRepository) {
+        this.wishRepository = wishRepository;
     }
 
     public List<WishResponseDto> getWishList(LoginMemberDto loginMemberDto) {
-        return wishDao.selectAllWishesByMemberId(loginMemberDto.getId())
+        return wishRepository.findAllByMemberId(loginMemberDto.getId())
             .stream()
             .map(WishResponseDto::from)
             .toList();
     }
 
     public void addProductToWishList(WishRequestDto wishRequestDto, LoginMemberDto loginMemberDto) {
-        wishDao.insertWish(wishRequestDto.toEntity(loginMemberDto.getId()));
+        wishRepository.save(wishRequestDto.toEntity(loginMemberDto.getId()));
     }
 
     public void updateProductInWishList(WishRequestDto wishRequestDto,
         LoginMemberDto loginMemberDto) {
-        Wish wish = wishRequestDto.toEntity(loginMemberDto.getId());
-        if (wish.getCount() == 0) {
-            wishDao.deleteWish(wish);
+        if (wishRequestDto.getCount() == 0) {
+            wishRepository.deleteByMemberIdAndProductId(loginMemberDto.getId(),
+                wishRequestDto.getProductId());
             return;
         }
-        wishDao.updateWish(wish);
+        Wish wish = wishRepository.findByMemberIdAndProductId(loginMemberDto.getId(),
+            wishRequestDto.getProductId());
+        wish.setCount(wishRequestDto.getCount());
+        wishRepository.save(wish);
     }
 
     public void deleteProductInWishList(WishRequestDto wishRequestDto,
         LoginMemberDto loginMemberDto) {
-        wishDao.deleteWish(wishRequestDto.toEntity(loginMemberDto.getId()));
+        wishRepository.deleteByMemberIdAndProductId(loginMemberDto.getId(),
+            wishRequestDto.getProductId());
     }
 }

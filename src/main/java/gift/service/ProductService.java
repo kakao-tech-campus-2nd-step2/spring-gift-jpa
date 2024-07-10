@@ -1,40 +1,42 @@
 package gift.service;
 
+import gift.exception.ProductException;
 import gift.model.dto.ProductRequestDto;
 import gift.model.dto.ProductResponseDto;
-import gift.repository.ProductDao;
+import gift.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public List<ProductResponseDto> getAllProducts() {
-        return productDao.selectAllProduct()
+        return productRepository.findAll()
             .stream()
             .map(ProductResponseDto::from)
             .toList();
     }
 
     public ProductResponseDto getProductById(Long id) {
-        return ProductResponseDto.from(productDao.selectProductById(id));
+        return ProductResponseDto.from(productRepository.findById(id).get());
     }
 
-    public void insertProduct(ProductRequestDto productRequestDto) {
-        productDao.insertProduct(productRequestDto.toEntity());
+    public void insertProduct(ProductRequestDto productRequestDto) throws ProductException {
+        productRepository.save(productRequestDto.toEntity(null));
     }
 
-    public void updateProductById(Long id, ProductRequestDto productRequestDto) {
-        productDao.updateProductById(id, productRequestDto.toEntity());
+    public void updateProductById(Long id, ProductRequestDto productRequestDto)
+        throws ProductException {
+        productRepository.save(productRequestDto.toEntity(id));
     }
 
     public void deleteProductById(Long id) {
-        productDao.deleteProductById(id);
+        productRepository.deleteById(id);
     }
 }
