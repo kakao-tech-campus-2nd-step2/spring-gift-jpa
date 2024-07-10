@@ -5,7 +5,7 @@ import gift.product.dao.ProductDao;
 import gift.product.dao.WishListDao;
 import gift.product.model.Member;
 import gift.product.model.Product;
-import gift.product.model.WishProduct;
+import gift.product.model.Wish;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +34,14 @@ public class WishListRepositoryTest {
 
     @Test
     void testRegisterWishList() {
-        WishProduct product = new WishProduct(originProduct.getId(), originMember.getId());
+        Wish product = new Wish(originProduct.getId(), originMember.getId());
         wishListDao.save(product);
     }
 
     @Test
     void testDeleteWishList() {
-        WishProduct wishProduct = wishListDao.save(new WishProduct(originProduct.getId(), originMember.getId()));
-        wishListDao.deleteById(wishProduct.getId());
+        Wish wish = wishListDao.save(new Wish(originProduct.getId(), originMember.getId()));
+        wishListDao.deleteById(wish.getId());
     }
 
 }

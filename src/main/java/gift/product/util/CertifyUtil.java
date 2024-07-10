@@ -1,6 +1,7 @@
 package gift.product.util;
 
 import gift.product.dao.MemberDao;
+import gift.product.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -65,14 +66,12 @@ public class CertifyUtil {
     public String checkAuthorization(String authorizationHeader) {
         System.out.println("[TokenService] checkAuthorization()");
 
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return null;
-        }
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))
+            throw new UnauthorizedException("인증에 필요한 정보가 HTTP 헤더에 존재하지 않습니다.");
 
         String token = authorizationHeader.substring(7);
-        if (!isValidToken(token)) {
-            return null;
-        }
+        if (!isValidToken(token))
+            throw new UnauthorizedException("인증 토큰에 대한 정보가 존재하지 않습니다.");
 
         return token;
     }
