@@ -1,10 +1,11 @@
 package gift.controller;
 
 import gift.annotation.LoginMember;
+import gift.dto.WishRequest;
+import gift.dto.WishResponse;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
-import gift.dto.WishRequest;
 import gift.service.ProductService;
 import gift.service.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,12 @@ public class WishController {
     private ProductService productService;
 
     @GetMapping
-    public List<Wish> getWishes(@LoginMember Member member) {
+    public List<WishResponse> getWishes(@LoginMember Member member) {
         return wishService.getWishesByMemberId(member.getId());
     }
 
     @PostMapping
     public Wish addWish(@RequestBody WishRequest wishRequest, @LoginMember Member member) {
-        // Add logic to find product by productId
         Product product = productService.findById(wishRequest.getProductId());
         return wishService.addWish(member, product);
     }

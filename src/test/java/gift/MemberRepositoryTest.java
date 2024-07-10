@@ -16,9 +16,10 @@ class MemberRepositoryTest {
 
     @Test
     void save() {
-        Member member = new Member();
-        member.setEmail("test@example.com");
-        member.setPassword("password123");
+        Member member = Member.builder()
+                .email("test@example.com")
+                .password("password123")
+                .build();
 
         Member savedMember = memberRepository.save(member);
 
@@ -29,9 +30,10 @@ class MemberRepositoryTest {
     @Test
     void findByEmail() {
         String email = "test@example.com";
-        Member member = new Member();
-        member.setEmail(email);
-        member.setPassword("password123");
+        Member member = Member.builder()
+                .email(email)
+                .password("password123")
+                .build();
 
         memberRepository.save(member);
 

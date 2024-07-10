@@ -28,20 +28,23 @@ class WishRepositoryTest {
 
     @Test
     void save() {
-        Member member = new Member();
-        member.setEmail("test@example.com");
-        member.setPassword("password123");
+        Member member = Member.builder()
+                .email("test@example.com")
+                .password("password123")
+                .build();
         memberRepository.save(member);
 
-        Product product = new Product();
-        product.setName("열라면");
-        product.setPrice(1600);
-        product.setImageurl("https://i.namu.wiki/i/fuvd7qkb8P6PA_sD5ufjgpKUhRgxxTrIWnkPIg5H_UAPMUaArn1U1DweD7T_f_8RVxTDjqaiFwKr-quURwc_eQ.webp");
+        Product product = Product.builder()
+                .name("열라면")
+                .price(1600)
+                .imageurl("https://i.namu.wiki/i/fuvd7qkb8P6PA_sD5ufjgpKUhRgxxTrIWnkPIg5H_UAPMUaArn1U1DweD7T_f_8RVxTDjqaiFwKr-quURwc_eQ.webp")
+                .build();
         productRepository.save(product);
 
-        Wish wish = new Wish();
-        wish.setMember(member);
-        wish.setProduct(product);
+        Wish wish = Wish.builder()
+                .member(member)
+                .product(product)
+                .build();
 
         Wish savedWish = wishRepository.save(wish);
 
@@ -51,20 +54,23 @@ class WishRepositoryTest {
 
     @Test
     void findByMemberId() {
-        Member member = new Member();
-        member.setEmail("test@example.com");
-        member.setPassword("password123");
+        Member member = Member.builder()
+                .email("test@example.com")
+                .password("password123")
+                .build();
         Member savedMember = memberRepository.save(member);
 
-        Product product = new Product();
-        product.setName("열라면");
-        product.setPrice(1600);
-        product.setImageurl("https://i.namu.wiki/i/fuvd7qkb8P6PA_sD5ufjgpKUhRgxxTrIWnkPIg5H_UAPMUaArn1U1DweD7T_f_8RVxTDjqaiFwKr-quURwc_eQ.webp");
+        Product product = Product.builder()
+                .name("열라면")
+                .price(1600)
+                .imageurl("https://i.namu.wiki/i/fuvd7qkb8P6PA_sD5ufjgpKUhRgxxTrIWnkPIg5H_UAPMUaArn1U1DweD7T_f_8RVxTDjqaiFwKr-quURwc_eQ.webp")
+                .build();
         productRepository.save(product);
 
-        Wish wish = new Wish();
-        wish.setMember(savedMember);
-        wish.setProduct(product);
+        Wish wish = Wish.builder()
+                .member(savedMember)
+                .product(product)
+                .build();
         wishRepository.save(wish);
 
         List<Wish> wishes = wishRepository.findByMemberId(savedMember.getId());

@@ -73,10 +73,10 @@
                 wishes.forEach(wish => {
                     const wishRow = document.createElement('tr');
                     wishRow.innerHTML = `
-                <td class="font-weight-bold">${wish.product.name}</td>
-                <td>${wish.product.price}</td>
+                <td class="font-weight-bold">${wish.productName}</td>
+                <td>${wish.productPrice}</td>
                 <td>
-                    <img src="${wish.product.imageurl}" alt="Product Image" style="max-width: 100px; height: auto;">
+                    <img src="${wish.productImageurl}" alt="Product Image" style="max-width: 100px; height: auto;">
                 </td>
                 <td>
                     <button class="btn btn-danger btn-sm" onclick="removeFromWishList(${wish.id})">Remove from Wish List</button>
