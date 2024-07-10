@@ -13,13 +13,13 @@ import java.util.List;
 public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @Column(name = "name")
-    String name;
+    private String name;
     @Column(name = "price")
-    Long price;
+    private Long price;
     @Column(name = "imageUrl")
-    String imageUrl;
+    private String imageUrl;
     @OneToMany(cascade = CascadeType.ALL,
             mappedBy = "product", orphanRemoval = true)
     private List<WishList> wishLists = new ArrayList<>();
@@ -35,13 +35,8 @@ public class Product implements Serializable {
     }
 
     public void removeWishLists() {
-        Iterator<WishList> iterator = this.wishLists.iterator();
-
-        while (iterator.hasNext()) {
-            WishList wishList = iterator.next();
-
-            wishList.setProduct(null);
-            iterator.remove();
+        for (WishList wishList : wishLists) {
+            removeWishList(wishList);
         }
     }
 
