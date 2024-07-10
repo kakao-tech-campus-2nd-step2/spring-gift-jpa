@@ -1,7 +1,7 @@
 package gift.resolver;
 
 import gift.annotation.LoginMember;
-import gift.domain.LoginUser;
+import gift.dto.LoginUserDTO;
 import gift.domain.User;
 import gift.service.UserService;
 import gift.utils.JwtUtil;
@@ -34,7 +34,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         String token = webRequest.getHeader("Authorization").substring(7);
         String email = jwtUtil.extractUsername(token);
         User user = userService.findByEmail(email);
-        return new LoginUser(user.getId(), user.getName(), user.getEmail(), user.getRole());
+        return new LoginUserDTO(user.getId(), user.getName(), user.getEmail(), user.getRole());
 
     }
 }

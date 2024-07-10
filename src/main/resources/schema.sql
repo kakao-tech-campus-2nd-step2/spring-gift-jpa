@@ -5,17 +5,18 @@ CREATE TABLE product (
     id LONG AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
     price INT,
-    imageUrl VARCHAR(255)
+    image_Url VARCHAR(255)
 );
 CREATE TABLE users (
+    id LONG AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255),
-    email VARCHAR(255) PRIMARY KEY ,
+    email VARCHAR(255) ,
     password VARCHAR(255),
     role VARCHAR(255)
 );
 CREATE TABLE wishlist (
     id LONG AUTO_INCREMENT PRIMARY KEY,
-    userId LONG NOT NULL,
-    productId LONG NOT NULL,
+    user_Id LONG NOT NULL,
+    product_Id LONG NOT NULL,
     quantity INT
 );
