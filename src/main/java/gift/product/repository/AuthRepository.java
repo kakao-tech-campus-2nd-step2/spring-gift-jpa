@@ -1,14 +1,11 @@
 package gift.product.repository;
 
 import gift.product.model.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AuthRepository {
+public interface AuthRepository extends JpaRepository<Member, Long> {
 
-    public boolean existsByEmail(String email);
+    boolean existsByEmail(String email);
 
-    public boolean existsById(Long id);
-
-    public Member save(Member member);
-
-    public Member findByEmail(String email);
+    Member findByEmail(String email);
 }
