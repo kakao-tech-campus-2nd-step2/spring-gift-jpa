@@ -53,7 +53,6 @@ public class WishListRepositoryTest {
     }
 
     @Test
-    @Transactional
     @DisplayName("위시리스트의 상품 수량 변경 테스트")
     void updateCount() {
         WishList wish = wishListRepository.save(new WishList(1, 1, 10));

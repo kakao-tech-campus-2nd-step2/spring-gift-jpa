@@ -57,7 +57,6 @@ public class ProductRepositoryTest {
 
     @Test
     @DisplayName("상품 수정 테스트")
-    @Transactional
     void update() {
         Product expected = new Product("상품1", 10000L, "상품1.jpg");
         productRepository.save(expected);
