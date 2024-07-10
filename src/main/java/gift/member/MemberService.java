@@ -32,11 +32,11 @@ public class MemberService {
 //        return  memberRepository.findByEmailAndPassword(member.getEmail(), member.getPassword());
 //    }
 //
-//    // 회원이메일로 회원조회 토큰 관련된거겠지?
-//    public Member getMemberByEmail(String userEmail) {
-////        return memberDao.findMemberById(userEmail);
-//        return memberRepository.findByEmail(userEmail);
-//    }
+    // 회원이메일로 회원조회 토큰 관련된거겠지?
+    public Member getMemberByEmail(String userEmail) {
+//        return memberDao.findMemberById(userEmail);
+        return memberRepository.findByEmail(userEmail);
+    }
 
 
 
