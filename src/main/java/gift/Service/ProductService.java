@@ -3,10 +3,11 @@ package gift.Service;
 import gift.Model.Product;
 import gift.Model.RequestProduct;
 import gift.Repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -19,27 +20,31 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
-        List<Product> list = productRepository.selectProduct();
+        List<Product> list = productRepository.findAll();
         return list;
     }
 
     public void addProduct(RequestProduct requestProduct) {
         Product product = new Product(requestProduct.name(), requestProduct.price(), requestProduct.imageUrl());
-        productRepository.insertProduct(product);
+        productRepository.save(product);
     }
 
-    public Product selectProduct(long id) {
-        Product product = productRepository.selectProductById(id);
+    public Optional<Product> selectProduct(long id) {
+        Optional<Product> product = productRepository.findById(id);
         return product;
     }
 
+    @Transactional
     public void editProduct(long id, RequestProduct requestProduct) {
-        Product product = new Product(id, requestProduct.name(), requestProduct.price(), requestProduct.imageUrl());
-        productRepository.updateProduct(id, product);
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        Product product = optionalProduct.get();
+        product.setName(requestProduct.name());
+        product.setPrice(requestProduct.price());
+        product.setImageUrl(requestProduct.imageUrl());
     }
 
     public void deleteProduct(long id) {
-        productRepository.deleteProduct(id);
+        productRepository.deleteById(id);
     }
 
 
