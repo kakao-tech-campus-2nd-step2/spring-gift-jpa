@@ -1,6 +1,8 @@
 package gift.controller;
 
+import gift.model.Member;
 import gift.model.MemberDTO;
+import gift.security.JwtUtil;
 import gift.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final MemberService memberService;
+    private final JwtUtil jwtUtil;
 
-    public AuthController(MemberService memberService) {
+    public AuthController(MemberService memberService, JwtUtil jwtUtil) {
         this.memberService = memberService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping
@@ -27,8 +31,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginMember(@RequestBody MemberDTO memberDTO) {
-        String token = memberService.getMemberByEmailAndPassword(memberDTO.email(),
+        Member member = memberService.findMemberByCredentials(memberDTO.email(),
             memberDTO.password());
-        return ResponseEntity.ok(token);
+        String token = jwtUtil.generateToken(member.getId());
+        return ResponseEntity.ok("Bearer " + token);
     }
 }
