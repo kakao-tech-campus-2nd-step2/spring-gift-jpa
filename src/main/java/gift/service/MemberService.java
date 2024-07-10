@@ -22,7 +22,7 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public boolean findByEmailAndPassword(String email, String password) {
+    public boolean checkMemberExistsByIdAndPassword(String email, String password) {
         memberRepository.findByEmailAndPassword(email, password)
                 .orElseThrow(() -> new MemberNotFoundException("해당 정보를 가진 유저가 존재하지 않습니다."));
         return true;
