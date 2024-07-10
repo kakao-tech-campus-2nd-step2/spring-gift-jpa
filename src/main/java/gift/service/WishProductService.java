@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class WishProductService {
 
     private final WishProductRepository wishProductRepository;
@@ -29,11 +29,11 @@ public class WishProductService {
         this.memberRepository = memberRepository;
     }
 
-    @Transactional(readOnly = true)
     public List<Product> getMyWishList(Long memberId) {
         return wishProductRepository.findAllByMemberId(memberId);
     }
 
+    @Transactional
     public void addMyWish(Long memberId, Long productId) {
 
         Member member = memberRepository.findById(memberId)
@@ -49,6 +49,7 @@ public class WishProductService {
         }
     }
 
+    @Transactional
     public void removeMyWish(Long memberId, Long productId) {
         wishProductRepository.findByMemberIdAndProductId(memberId, productId)
             .ifPresentOrElse(wishProductRepository::delete
