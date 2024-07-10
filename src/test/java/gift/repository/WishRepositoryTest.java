@@ -2,13 +2,13 @@ package gift.repository;
 
 import gift.entity.Product;
 import gift.entity.ProductName;
+import gift.entity.User;
 import gift.entity.Wish;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,17 +21,23 @@ public class WishRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Test
     public void 위시리스트_저장_조회() {
         Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
         productRepository.save(product);
 
-        Wish wish = new Wish(1L, product.getId());
+        User user = new User("test@example.com", "password");
+        userRepository.save(user);
+
+        Wish wish = new Wish(user, product);
         wishRepository.save(wish);
 
-        List<Wish> wishes = wishRepository.findByUserId(1L);
+        List<Wish> wishes = wishRepository.findByUser(user);
         assertEquals(1, wishes.size());
-        assertEquals(product.getId(), wishes.get(0).getProductId());
+        assertEquals(product.getId(), wishes.get(0).getProduct().getId());
     }
 
     @Test
@@ -39,12 +45,15 @@ public class WishRepositoryTest {
         Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
         productRepository.save(product);
 
-        Wish wish = new Wish(1L, product.getId());
+        User user = new User("test@example.com", "password");
+        userRepository.save(user);
+
+        Wish wish = new Wish(user, product);
         wishRepository.save(wish);
 
         wishRepository.delete(wish);
 
-        List<Wish> wishes = wishRepository.findByUserId(1L);
+        List<Wish> wishes = wishRepository.findByUser(user);
         assertTrue(wishes.isEmpty());
     }
 }

@@ -28,8 +28,7 @@ public class ProductService {
     }
 
     public ProductResponseDto updateProduct(Long id, ProductRequestDto productRequestDTO) {
-        Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "ID: " + id));
+        Product existingProduct = getProductEntityById(id);
         existingProduct.update(
                 new ProductName(productRequestDTO.getName()),
                 productRequestDTO.getPrice(),
@@ -45,9 +44,13 @@ public class ProductService {
     }
 
     public ProductResponseDto getProductById(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "ID: " + id));
+        Product product = getProductEntityById(id);
         return ProductMapper.toProductResponseDTO(product);
+    }
+
+    public Product getProductEntityById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "ID: " + id));
     }
 
     public boolean deleteProduct(Long id) {
@@ -56,5 +59,12 @@ public class ProductService {
         }
         productRepository.deleteById(id);
         return true;
+    }
+
+    public List<ProductResponseDto> getProductsByIds(List<Long> ids) {
+        List<Product> products = productRepository.findAllById(ids);
+        return products.stream()
+                .map(ProductMapper::toProductResponseDTO)
+                .collect(Collectors.toList());
     }
 }

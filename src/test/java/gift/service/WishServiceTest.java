@@ -5,16 +5,16 @@ import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
 import gift.entity.Product;
 import gift.entity.ProductName;
+import gift.entity.User;
 import gift.entity.Wish;
 import gift.exception.BusinessException;
 import gift.repository.ProductRepository;
+import gift.repository.UserRepository;
 import gift.repository.WishRepository;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,6 +30,9 @@ public class WishServiceTest {
     private ProductRepository productRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ProductService productService;
 
     @Autowired
@@ -39,17 +42,21 @@ public class WishServiceTest {
     public void 데이터_정리() {
         wishRepository.deleteAll();
         productRepository.deleteAll();
+        userRepository.deleteAll();
     }
-
 
     @Test
     public void 위시리스트_추가() {
         Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
         productRepository.save(product);
+
+        User user = new User("test@example.com", "password");
+        userRepository.save(user);
+
         ProductResponseDto productResponseDto = productService.getProductById(product.getId());
 
         WishRequestDto requestDto = new WishRequestDto(productResponseDto.getId());
-        WishResponseDto createdWish = wishService.addWish(1L, requestDto);
+        WishResponseDto createdWish = wishService.addWish(user.getId(), requestDto);
 
         assertNotNull(createdWish);
         assertNotNull(createdWish.getId());
@@ -64,10 +71,13 @@ public class WishServiceTest {
         Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
         productRepository.save(product);
 
-        Wish wish = new Wish(1L, product.getId());
+        User user = new User("test@example.com", "password");
+        userRepository.save(user);
+
+        Wish wish = new Wish(user, product);
         wishRepository.save(wish);
 
-        List<WishResponseDto> wishList = wishService.getWishesByUserId(1L);
+        List<WishResponseDto> wishList = wishService.getWishesByUserId(user.getId());
 
         assertNotNull(wishList);
         assertEquals(1, wishList.size());
@@ -83,12 +93,15 @@ public class WishServiceTest {
         Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
         productRepository.save(product);
 
-        Wish wish = new Wish(1L, product.getId());
+        User user = new User("test@example.com", "password");
+        userRepository.save(user);
+
+        Wish wish = new Wish(user, product);
         wishRepository.save(wish);
 
         wishService.deleteWish(wish.getId());
 
-        List<WishResponseDto> wishList = wishService.getWishesByUserId(1L);
+        List<WishResponseDto> wishList = wishService.getWishesByUserId(user.getId());
         assertTrue(wishList.isEmpty());
     }
 
