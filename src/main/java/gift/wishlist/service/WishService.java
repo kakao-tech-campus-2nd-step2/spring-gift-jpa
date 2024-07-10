@@ -37,7 +37,7 @@ public class WishService {
         if(wishes.isEmpty()) {
             throw new WishNotFoundException("Wishlist에 Product ID: " + productId + "인 상품은 존재하지 않습니다.");
         }
-        wishRepository.deleteByMemberIdAndProductId(memberId, productId);
+        wishRepository.delete(wishes.get(0));
     }
 
     @Transactional
