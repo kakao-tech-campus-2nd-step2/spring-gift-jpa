@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class UserInfo {
@@ -51,4 +52,23 @@ public class UserInfo {
     public void setId(Long id) { this.id = id; }
 
     public void setEmail(String email) { this.email = email; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        UserInfo userInfo = (UserInfo) o;
+        return Objects.equals(id, userInfo.id) && Objects.equals(email,
+            userInfo.email) && Objects.equals(password, userInfo.password)
+            && Objects.equals(wishs, userInfo.wishs);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, password);
+    }
 }
