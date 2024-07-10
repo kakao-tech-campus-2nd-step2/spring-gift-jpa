@@ -74,4 +74,12 @@ public class Member {
         wishList.add(wish);
     }
 
+    public void delWish(Wish wish) {
+        wishList.remove(wish);
+    }
+
+    public List<Wish> getWishList() {
+        return wishList;
+    }
+
 }
