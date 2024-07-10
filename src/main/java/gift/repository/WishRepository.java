@@ -10,10 +10,15 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
-    @Query("SELECT new gift.model.Product(p.id, p.name, p.price, p.imageUrl) " +
-            "FROM products p " +
-            "JOIN wishes w ON p.id = w.product.id " +
-            "WHERE w.member.id = :memberId")
+    String findAllByMemberIdQuery = """
+                  SELECT new gift.model.Product(p.id, p.name, p.price, p.imageUrl)
+                  FROM products p
+                  JOIN wishes w ON p.id = w.product.id
+                  WHERE w.member.id = :memberId
+            """;
+
+    @Query(findAllByMemberIdQuery)
     List<Product> findAllByMemberId(@Param("memberId") Long memberId);
+
     void deleteByProductAndMember(Product product, Member member);
 }
