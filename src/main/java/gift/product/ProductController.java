@@ -38,13 +38,13 @@ public class ProductController {
     }
 
     @PostMapping("/post")
-    public ResponseEntity<HttpStatus> createProduct(@Valid @ModelAttribute Product newProduct) {
-        return ResponseEntity.ok(productService.createProduct(newProduct));
+    public ResponseEntity<HttpStatus> createProduct(@Valid @ModelAttribute ProductRequest newProduct) {
+        return ResponseEntity.ok(productService.createProduct(newProduct.toEntity()));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<HttpStatus> updateProduct(@Valid @ModelAttribute Product changeProduct) {
-        return ResponseEntity.ok(productService.updateProduct(changeProduct));
+    public ResponseEntity<HttpStatus> updateProduct(@Valid @ModelAttribute ProductRequest changeProduct) {
+        return ResponseEntity.ok(productService.updateProduct(changeProduct.toEntity()));
     }
 
     @DeleteMapping("/delete/{id}")
