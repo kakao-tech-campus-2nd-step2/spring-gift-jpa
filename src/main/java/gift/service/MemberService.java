@@ -5,6 +5,7 @@ import gift.exception.EmailDuplicateException;
 import gift.exception.MemberNotFoundException;
 import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     public Long registerMember(String email, String password) {
         Optional<Member> existingMember = memberRepository.findByEmail(email);
 

@@ -6,6 +6,7 @@ import gift.entity.Product;
 import gift.exception.ProductNotFoundException;
 import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public AddedProductIdResponse addProduct(String name, int price, String imageUrl) {
         Long addedProductId = productRepository.save(new Product(name, price, imageUrl)).getId();
         return new AddedProductIdResponse(addedProductId);
@@ -36,6 +38,7 @@ public class ProductService {
                 .toList();
     }
 
+    @Transactional
     public void updateProduct(Long id, String name, int price, String imageUrl) {
         Product product = productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
@@ -43,16 +46,16 @@ public class ProductService {
         product.setName(name);
         product.setPrice(price);
         product.setImageUrl(imageUrl);
-
-        productRepository.save(product);
     }
 
+    @Transactional
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
         productRepository.delete(product);
     }
 
+    @Transactional
     public void deleteProducts(List<Long> ids) {
         productRepository.deleteAllById(ids);
     }
