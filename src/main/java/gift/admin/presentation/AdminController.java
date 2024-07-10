@@ -65,8 +65,7 @@ public class AdminController {
         Product findedProduct = productRepository.findById(id)
                 .orElseThrow(() -> ProductNotFoundException.of(id));
 
-        findedProduct.delete();
-        productRepository.save(findedProduct);
+        productRepository.delete(findedProduct);
 
         return "admin/list";
     }

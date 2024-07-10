@@ -26,7 +26,6 @@ class ProductTest {
         assertThat(product.getName()).isEqualTo(name);
         assertThat(product.getPrice()).isEqualTo(price);
         assertThat(product.getImgUrl()).isEqualTo(imgUrl);
-        assertThat(product.isDeleted()).isFalse();
     }
 
     @Test

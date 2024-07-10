@@ -7,8 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import org.hibernate.annotations.SoftDelete;
 
 @Entity
+@SoftDelete
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,22 +25,15 @@ public class Product {
     @NotNull
     private String imgUrl;
 
-    private Boolean isDeleted;
-
     protected Product() {
     }
 
     public Product(Long id, String name, Integer price, String imgUrl) {
-        this(id, name, price, imgUrl, Boolean.FALSE);
-    }
-
-    public Product(Long id, String name, Integer price, String imgUrl, Boolean isDeleted) {
         checkName(name);
         this.id = id;
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;
-        this.isDeleted = isDeleted;
     }
 
     public Long getId() {
@@ -57,18 +52,10 @@ public class Product {
         return imgUrl;
     }
 
-    public Boolean isDeleted() {
-        return isDeleted;
-    }
-
     public void setId(Long id) {
         if (this.id == null) {
             this.id = id;
         }
-    }
-
-    public void delete() {
-        this.isDeleted = Boolean.TRUE;
     }
 
     public boolean isNew() {
