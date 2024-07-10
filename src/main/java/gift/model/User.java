@@ -5,8 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
@@ -20,6 +22,9 @@ public class User {
     private String email;
     @NotNull
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<WishlistItem> wishlistItemList;
 
     public User() {
     }
@@ -52,5 +57,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<WishlistItem> getWishlistItemList() {
+        return wishlistItemList;
+    }
+
+    public void setWishlistItemList(List<WishlistItem> wishlistItemList) {
+        this.wishlistItemList = wishlistItemList;
     }
 }
