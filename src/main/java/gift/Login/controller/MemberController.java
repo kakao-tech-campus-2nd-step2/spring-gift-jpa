@@ -15,6 +15,7 @@ public class MemberController {
         this.memberService = memberService;
     }
 
+    // 회원가입
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody Map<String, String> request) {
         String email = request.get("email");
@@ -24,6 +25,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.login(email, password));
     }
 
+    // 로그인
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Map<String, String> request) {
         String email = request.get("email");

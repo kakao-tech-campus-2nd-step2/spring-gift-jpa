@@ -14,7 +14,6 @@ import java.util.Optional;
 
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
-
     private final JwtUtil jwtUtil;
     private final MemberRepository memberRepository;
 
