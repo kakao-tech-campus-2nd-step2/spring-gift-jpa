@@ -23,7 +23,8 @@ public class Wish {
     private Long productId;
 
     // 기본 생성자
-    protected Wish() {}
+    protected Wish() {
+    }
 
     // 생성자
     public Wish(Long userId, Long productId) {
@@ -39,15 +40,7 @@ public class Wish {
         return userId;
     }
 
-    public void setUserId(Long user_id) {
-        this.userId = user_id;
-    }
-
     public Long getProductId() {
         return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
     }
 }

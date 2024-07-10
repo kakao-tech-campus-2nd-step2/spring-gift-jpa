@@ -18,7 +18,7 @@ public class Product {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price", length = 15, nullable = false)
     private Long price;
 
     @Column(name = "image_url", nullable = false)
@@ -31,6 +31,14 @@ public class Product {
         this.price = price;
         this.imageUrl = imageUrl;
     }
+
+    public Product(Long id, String name, Long price, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
 
     public Long getId() {
         return id;
