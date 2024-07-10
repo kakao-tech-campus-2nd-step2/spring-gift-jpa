@@ -1,7 +1,7 @@
 package gift;
 
-import gift.domain.Product;
-import gift.domain.ProductRepository;
+import gift.entity.Product;
+import gift.repository.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

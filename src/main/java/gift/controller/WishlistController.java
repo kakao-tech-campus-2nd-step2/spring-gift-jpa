@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.domain.Wishlist;
+import gift.entity.Wishlist;
 import gift.service.WishlistService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
