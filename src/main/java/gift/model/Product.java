@@ -22,15 +22,41 @@ public class Product {
 
     public Product(long id, String name, int price, String imageUrl) {
         this.id = id;
-        this.name = name;
+        this.setName(name);
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
     public Product(String name, int price, String imageUrl) {
-        this.name = name;
+        this.setName(name);
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
+
+    public Product update(String name, Integer price, String imageUrl){
+        System.out.println(this.toString());
+        if(!name.isEmpty()){
+            this.setName(name);
+        }
+        if(price != null){
+            this.price = price;
+        }
+        if(!imageUrl.isEmpty()){
+            this.imageUrl = imageUrl;
+        }
+
+        System.out.println(this.toString());
+        return this;
     }
 
     public Product() {
@@ -52,12 +78,13 @@ public class Product {
         this.price = price;
     }
 
-    public String getName() {
-        return name;
+    public String getName(){
+        return this.name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        ProductName productName = new ProductName(name);
+        this.name = productName.getName();
     }
 
     public long getId() {
