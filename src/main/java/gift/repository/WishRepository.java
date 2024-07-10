@@ -7,11 +7,11 @@ import org.springframework.stereotype.Repository;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
-    void deleteByProduct_IdAndUserInfo_Id(Long productId, Long userId);
+    void deleteByProductIdAndUserInfoId(Long productId, Long userId);
 
-    List<Wish> findByUserInfo_Id(Long userId);
+    List<Wish> findByUserInfoId(Long userId);
 
-    boolean existsByUserInfo_IdAndProduct_Id(Long userId, Long productId);
+    boolean existsByUserInfoIdAndProductId(Long userId, Long productId);
 
-    Wish findByUserInfo_IdAndProduct_Id(Long userId, Long productId);
+    Wish findByUserInfoIdAndProductId(Long userId, Long productId);
 }

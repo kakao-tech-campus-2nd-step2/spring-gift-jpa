@@ -18,16 +18,23 @@ public class WishRepositoryTest {
 
     @Autowired
     private WishRepository wishRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
     @Test
     @DisplayName("userId로 Wish 찾기 테스트")
     void findByUserId() {
-        Wish wish = new Wish(new Product("original", 1000, "img"),
-            new UserInfo("kakaocampus@gmail.com", "kakao2024"), 1L);
+        Product product = new Product("original", 1000, "img");
+        UserInfo userInfo = new UserInfo("kakaocampus@gmail.com", "kakao2024");
+        productRepository.save(product);
+        userInfoRepository.save(userInfo);
 
+        Wish wish = new Wish(product, userInfo, 1L);
         wishRepository.save(wish);
 
-        List<Wish> byUserId = wishRepository.findByUserInfo_Id(wish.getId());
+        List<Wish> byUserId = wishRepository.findByUserInfoId(wish.getUserInfo().getId());
 
         assertThat(byUserId).isNotEmpty();
         assertThat(byUserId.getFirst().getUserInfo()).isEqualTo(wish.getUserInfo());
@@ -39,21 +46,24 @@ public class WishRepositoryTest {
     void updateWishQuantity() {
         Product product = new Product("pak", 1000, "jpg");
         UserInfo userInfo = new UserInfo("kakaocampus@gmail.com", "kakao2024");
+        productRepository.save(product);
+        userInfoRepository.save(userInfo);
         Wish wish = new Wish(product, userInfo, 1L);
         Wish savedWish = wishRepository.save(wish);
 
         savedWish.setQuantity(5L);
         wishRepository.save(savedWish);
 
-        Wish updatedWish = wishRepository.findByUserInfo_IdAndProduct_Id(wish.getUserInfo().getId(),
+        Wish updatedWish = wishRepository.findByUserInfoIdAndProductId(wish.getUserInfo().getId(),
             wish.getProduct().getId());
+
         assertThat(updatedWish.getQuantity()).isEqualTo(5L);
     }
 
     @Test
     @DisplayName("존재하지 않는 위시 아이템 조회")
     void findNonExistentWish() {
-        Wish wish = wishRepository.findByUserInfo_IdAndProduct_Id(999L, 999L);
+        Wish wish = wishRepository.findByUserInfoIdAndProductId(999L, 999L);
         assertThat(wish).isNull();
     }
 
@@ -61,19 +71,25 @@ public class WishRepositoryTest {
     @DisplayName("여러 사용자의 위시 리스트 테스트")
     void multipleUserWishLists() {
         // Given
-        Wish wish1 = new Wish(new Product("pak", 1000, "jpg"),
-            new UserInfo("kakaocampus@gmail.com", "kakao2024"), 1L);
-        Wish wish2 = new Wish(new Product("jeong", 2000, "png"),
-            new UserInfo("kakao@gmail.com", "kakao"), 2L);
-        Wish wish3 = new Wish(new Product("woo", 3000, "gif"),
-            new UserInfo("campus@gmail.com", "2024"), 3L);
+        Product product1 = new Product("pak", 1000, "jpg");
+        Product product2 = new Product("jeong", 2000, "png");
+        Product product3 = new Product("woo", 3000, "gif");
+        UserInfo userInfo1 = new UserInfo("kakaocampus@gmail.com", "kakao2024");
+        UserInfo userInfo2 = new UserInfo("kakao@gmail.com", "kakao");
+        UserInfo userInfo3 = new UserInfo("campus@gmail.com", "2024");
+
+        productRepository.saveAll(Arrays.asList(product1, product2, product3));
+        userInfoRepository.saveAll(Arrays.asList(userInfo1, userInfo2, userInfo3));
+        Wish wish1 = new Wish(product1, userInfo1, 1L);
+        Wish wish2 = new Wish(product2, userInfo2, 2L);
+        Wish wish3 = new Wish(product3, userInfo3, 3L);
 
         wishRepository.saveAll(Arrays.asList(wish1, wish2, wish3));
 
         // When
-        List<Wish> wishesForUser1 = wishRepository.findByUserInfo_Id(wish1.getUserInfo().getId());
-        List<Wish> wishesForUser2 = wishRepository.findByUserInfo_Id(wish2.getUserInfo().getId());
-        List<Wish> wishesForUser3 = wishRepository.findByUserInfo_Id(wish3.getUserInfo().getId());
+        List<Wish> wishesForUser1 = wishRepository.findByUserInfoId(wish1.getUserInfo().getId());
+        List<Wish> wishesForUser2 = wishRepository.findByUserInfoId(wish2.getUserInfo().getId());
+        List<Wish> wishesForUser3 = wishRepository.findByUserInfoId(wish3.getUserInfo().getId());
 
         // Then
         assertThat(wishesForUser1).hasSize(1);
@@ -98,31 +114,37 @@ public class WishRepositoryTest {
     @Test
     @DisplayName("유저아이디와 제품아이디로 위시리스트 삭제하기,존재하는지 확인하기")
     void deleteByProductIdAndUserId() {
-        Wish wish = new Wish(new Product("original", 1000, "img"),
-            new UserInfo("kakaocampus@gmail.com", "kakao2024"), 1L);
+        Product product = new Product("original", 1000, "img");
+        UserInfo userInfo = new UserInfo("kakaocampus@gmail.com", "kakao2024");
+        productRepository.save(product);
+        userInfoRepository.save(userInfo);
+        Wish wish = new Wish(product, userInfo, 1L);
         wishRepository.save(wish);
-        List<Wish> byUserId = wishRepository.findByUserInfo_Id(wish.getUserInfo().getId());
+        List<Wish> byUserId = wishRepository.findByUserInfoId(wish.getUserInfo().getId());
 
         assertThat(byUserId).isNotNull();
-        assertThat(wishRepository.existsByUserInfo_IdAndProduct_Id(wish.getUserInfo().getId(),
+        assertThat(wishRepository.existsByUserInfoIdAndProductId(wish.getUserInfo().getId(),
             wish.getProduct().getId())).isTrue();
 
-        wishRepository.deleteByProduct_IdAndUserInfo_Id(wish.getProduct().getId(),
+        wishRepository.deleteByProductIdAndUserInfoId(wish.getProduct().getId(),
             wish.getUserInfo().getId());
 
-        assertThat(wishRepository.findByUserInfo_Id(wish.getUserInfo().getId())).isEmpty();
-        assertThat(wishRepository.existsByUserInfo_IdAndProduct_Id(wish.getUserInfo().getId(),
+        assertThat(wishRepository.findByUserInfoId(wish.getUserInfo().getId())).isEmpty();
+        assertThat(wishRepository.existsByUserInfoIdAndProductId(wish.getUserInfo().getId(),
             wish.getProduct().getId())).isFalse();
     }
 
     @Test
     @DisplayName("유저아이디와 제품아이디로 위시리스트 찾기")
     void findByUserIdAndProductId() {
-        Wish wish = new Wish(new Product("original", 1000, "img"),
-            new UserInfo("kakaocampus@gmail.com", "kakao2024"), 1L);
+        Product product = new Product("original", 1000, "img");
+        UserInfo userInfo = new UserInfo("kakaocampus@gmail.com", "kakao2024");
+        productRepository.save(product);
+        userInfoRepository.save(userInfo);
+        Wish wish = new Wish(product, userInfo, 1L);
         wishRepository.save(wish);
 
-        Wish byUserIdAndProductId = wishRepository.findByUserInfo_IdAndProduct_Id(
+        Wish byUserIdAndProductId = wishRepository.findByUserInfoIdAndProductId(
             wish.getUserInfo().getId(), wish.getProduct().getId());
 
         assertThat(byUserIdAndProductId).isNotNull();
@@ -137,11 +159,16 @@ public class WishRepositoryTest {
     @DisplayName("위시 아이템 삭제")
     void deleteAndRecreateWish() {
         Product product = new Product("original", 1000, "img");
-        Wish wish = new Wish(product, new UserInfo("kakaocampus@gmail.com", "kakao2024"), 1L);
+        UserInfo userInfo = new UserInfo("kakaocampus@gmail.com", "kakao2024");
+        productRepository.save(product);
+        userInfoRepository.save(userInfo);
+
+        Wish wish = new Wish(product, userInfo, 1L);
         wishRepository.save(wish);
 
-        wishRepository.deleteByProduct_IdAndUserInfo_Id(1L, 1L);
-        assertThat(wishRepository.findByUserInfo_IdAndProduct_Id(1L, 1L)).isNull();
+        wishRepository.deleteByProductIdAndUserInfoId(product.getId(), userInfo.getId());
+        assertThat(wishRepository.findByUserInfoIdAndProductId(product.getId(),
+            userInfo.getId())).isNull();
 
     }
 

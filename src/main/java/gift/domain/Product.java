@@ -91,4 +91,14 @@ public class Product {
     public int hashCode() {
         return Objects.hash(id, name, price, imageUrl);
     }
+
+    public void addWish(Wish wish) {
+        wishes.add(wish);
+        wish.setProduct(this);
+    }
+
+    public void removeWish(Wish wish) {
+        wishes.remove(wish);
+        wish.setProduct(null);
+    }
 }

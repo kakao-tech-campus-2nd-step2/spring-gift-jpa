@@ -25,7 +25,7 @@ public class UserInfo {
     private String password;
 
     @OneToMany(mappedBy = "userInfo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Wish> wishs = new ArrayList<>();
+    private List<Wish> wishes = new ArrayList<>();
 
     public UserInfo() {
     }
@@ -71,11 +71,21 @@ public class UserInfo {
         UserInfo userInfo = (UserInfo) o;
         return Objects.equals(id, userInfo.id) && Objects.equals(email,
             userInfo.email) && Objects.equals(password, userInfo.password)
-            && Objects.equals(wishs, userInfo.wishs);
+            && Objects.equals(wishes, userInfo.wishes);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, email, password);
+    }
+
+    public void addWish(Wish wish) {
+        wishes.add(wish);
+        wish.setUserInfo(this);
+    }
+
+    public void removeWish(Wish wish) {
+        wishes.remove(wish);
+        wish.setUserInfo(null);
     }
 }
