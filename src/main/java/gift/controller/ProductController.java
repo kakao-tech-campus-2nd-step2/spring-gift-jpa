@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/products")
 public class ProductController {
-
     private final ProductService productService;
 
     public ProductController(ProductService productService) {

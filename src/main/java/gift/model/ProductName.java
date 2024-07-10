@@ -1,5 +1,9 @@
 package gift.model;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 public class ProductName {
     private final String name;
 
@@ -34,5 +38,11 @@ public class ProductName {
 
     public boolean isContainsKakao(String name){
         return name.contains("카카오");
+    }
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String handleIllegalArgumentException(IllegalArgumentException e) {
+        return e.getMessage();
     }
 }
