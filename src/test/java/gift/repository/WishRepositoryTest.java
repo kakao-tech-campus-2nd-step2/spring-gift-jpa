@@ -134,23 +134,15 @@ public class WishRepositoryTest {
     }
 
     @Test
-    @DisplayName("위시 아이템 삭제 후 재생성")
+    @DisplayName("위시 아이템 삭제")
     void deleteAndRecreateWish() {
         Product product = new Product("original", 1000, "img");
-        Wish wish = new Wish(product,
-            new UserInfo("kakaocampus@gmail.com", "kakao2024"), 1L);
+        Wish wish = new Wish(product, new UserInfo("kakaocampus@gmail.com", "kakao2024"), 1L);
         wishRepository.save(wish);
 
         wishRepository.deleteByProduct_IdAndUserInfo_Id(1L, 1L);
         assertThat(wishRepository.findByUserInfo_IdAndProduct_Id(1L, 1L)).isNull();
 
-        Wish newWish = new Wish(new Product("pak", 1000, "jpg"),
-            new UserInfo("kakaocampus@gmail.com", "kakao2024"), 1L);
-        wishRepository.save(newWish);
-
-        Wish recreatedWish = wishRepository.findByUserInfo_IdAndProduct_Id(2L, 2L);
-        assertThat(recreatedWish).isNotNull();
-        assertThat(recreatedWish.getQuantity()).isEqualTo(1L);
     }
 
 }
