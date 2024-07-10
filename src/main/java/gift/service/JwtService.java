@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.crypto.SecretKey;
+import java.util.Date;
 
 @Service
 public class JwtService {
@@ -18,6 +19,8 @@ public class JwtService {
         return Jwts.builder()
                 .claim("id",id)
                 .signWith(key)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+60*10000))
                 .compact();
     }
 

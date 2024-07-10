@@ -2,6 +2,7 @@ package gift;
 
 
 import gift.domain.Member;
+import gift.domain.Menu;
 import gift.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,6 @@ class MemberTest {
                 () -> assertThat(actual).isEqualTo(expected)
         );
     }
+
 
 }
