@@ -1,12 +1,17 @@
-package gift.domain;
+package gift.model.user;
 
+import gift.model.wishlist.WishList;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -21,6 +26,8 @@ public class User {
     @NotBlank(message = "비밀번호는 필수로 입력하셔야 합니다.")
     private String password;
     private String role;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    private List<WishList> wishList = new ArrayList<>();
     public User() {}
 
     public User(String name, String email, String password, String role) {
@@ -76,4 +83,10 @@ public class User {
     public boolean validatePassword(String rawPassword) {
         return this.password.equals(rawPassword);
     }
+
+    // get
+    public List<WishList> getWishList() {
+        return wishList;
+    }
+
 }

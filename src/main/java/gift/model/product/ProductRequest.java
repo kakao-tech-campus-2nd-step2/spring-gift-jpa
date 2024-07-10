@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.model.product;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

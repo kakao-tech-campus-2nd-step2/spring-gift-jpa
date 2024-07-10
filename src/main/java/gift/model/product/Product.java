@@ -1,14 +1,16 @@
-package gift.domain;
+package gift.model.product;
 
+import gift.model.wishlist.WishList;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -21,6 +23,8 @@ public class Product {
     private String name;
     private int price;
     private String imageUrl;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
+    private List<WishList> wishList = new ArrayList<>();
 
     public Product(){}
     public Product(String name, int price, String imageUrl) {

@@ -1,9 +1,14 @@
-package gift.domain;
+package gift.model.wishlist;
 
+import gift.model.product.Product;
+import gift.model.user.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -12,17 +17,22 @@ public class WishList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
     private int quantity;
 
 
     public WishList() {}
 
-    public WishList(Long userId, Long productId, int quantity) {
-        this.userId = userId;
-        this.productId = productId;
-        this.quantity = quantity;
+    public WishList(User user, Product product) {
+        this.user = user;
+        this.product = product;
     }
 
     // getters, setters
