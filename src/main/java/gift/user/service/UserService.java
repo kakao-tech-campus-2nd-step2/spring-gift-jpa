@@ -31,7 +31,7 @@ public class UserService {
                 PasswordProvider.encode(userSignupRequest.username(), userSignupRequest.password()));
         userRepository.save(newUser);
 
-        String token = jwtProvider.generateToken(newUser);
+        String token = jwtProvider.generateToken(newUser.getUsername(), newUser.getPassword());
 
         return UserSignupInfos.of(newUser.getId(), token);
     }
@@ -45,7 +45,7 @@ public class UserService {
             throw new UserNotFoundException();
         }
 
-        String token = jwtProvider.generateToken(savedUser);
+        String token = jwtProvider.generateToken(savedUser.getUsername(), savedUser.getPassword());
 
         return UserSignInInfos.of(token);
     }

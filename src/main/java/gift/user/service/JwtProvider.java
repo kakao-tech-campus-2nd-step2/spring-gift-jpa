@@ -1,6 +1,5 @@
 package gift.user.service;
 
-import gift.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -11,10 +10,10 @@ public class JwtProvider {
     @Value("${jwt.key}")
     private String secretKey;
 
-    public String generateToken(User user) {
+    public String generateToken(final String username, final String password) {
         return Jwts.builder()
-                .claim("username", user.getUsername())
-                .claim("role", user.getRole())
+                .claim("username", username)
+                .claim("role", password)
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
                 .compact();
     }
