@@ -17,11 +17,11 @@ public class WishDao {
     }
 
     public void insert(WishRequest wishRequest, Long memberId) {
-        wishRepository.save(new Wish(memberId, wishRequest));
+        wishRepository.save(new Wish(memberId, wishRequest.productId(), wishRequest.quantity()));
     }
 
     public void update(WishRequest wishRequest, Long memberId) {
-        wishRepository.save(new Wish(memberId, wishRequest));
+        wishRepository.save(new Wish(memberId, wishRequest.productId(), wishRequest.quantity()));
     }
 
     public void delete(WishRequest wishRequest, Long memberId) {

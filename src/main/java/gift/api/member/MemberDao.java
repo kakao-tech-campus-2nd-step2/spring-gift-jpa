@@ -1,10 +1,6 @@
 package gift.api.member;
 
-import java.sql.Types;
 import java.util.Optional;
-import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -30,6 +26,7 @@ public class MemberDao {
     }
 
     public Long insert(MemberRequest memberRequest) {
-        return memberRepository.save(new Member(memberRequest)).getId();
+        return memberRepository.save(new Member(
+            memberRequest.email(), memberRequest.password(), memberRequest.role())).getId();
     }
 }

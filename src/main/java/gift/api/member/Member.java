@@ -23,10 +23,10 @@ public class Member {
     protected Member() {
     }
 
-    public Member(MemberRequest memberRequest) {
-        this.email = memberRequest.email();
-        this.password = memberRequest.password();
-        this.role = memberRequest.role();
+    public Member(String email, String password, Role role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 
     public Long getId() {

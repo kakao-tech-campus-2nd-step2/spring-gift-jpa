@@ -21,17 +21,10 @@ public class Product {
     protected Product() {
     }
 
-    public Product(ProductRequest productRequest) {
-        this.name = productRequest.getName();
-        this.price = productRequest.getPrice();
-        this.imageUrl = productRequest.getImageUrl();
-    }
-
-    public Product(Long id, ProductRequest productRequest) {
-        this.id = id;
-        this.name = productRequest.getName();
-        this.price = productRequest.getPrice();
-        this.imageUrl = productRequest.getImageUrl();
+    public Product(String name, Integer price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public Product(Long id, String name, Integer price, String imageUrl) {

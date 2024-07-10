@@ -15,7 +15,7 @@ class ProductRepositoryTest {
 
     @Test
     void save() {
-        Product expected = new Product(new ProductRequest("americano", 4500, "/image/americano"));
+        Product expected = new Product("americano", 4500, "/image/americano");
         Product actual = productRepository.save(expected);
 
         assertAll(

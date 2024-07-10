@@ -17,8 +17,7 @@ class MemberRepositoryTest {
 
     @Test
     void save() {
-        MemberRequest memberRequest = new MemberRequest(EMAIL, PASSWORD, ROLE);
-        Member expected = new Member(memberRequest);
+        Member expected = new Member(EMAIL, PASSWORD, ROLE);
         Member actual = memberRepository.save(expected);
 
         assertAll(
@@ -30,7 +29,7 @@ class MemberRepositoryTest {
     @Test
     void existsByEmail() {
         boolean expected = true;
-        memberRepository.save(new Member(new MemberRequest(EMAIL, PASSWORD, ROLE)));
+        memberRepository.save(new Member(EMAIL, PASSWORD, ROLE));
         boolean actual = memberRepository.existsByEmail(EMAIL);
         assertThat(actual).isEqualTo(expected);
     }
@@ -38,7 +37,7 @@ class MemberRepositoryTest {
     @Test
     void existsByEmailAndPassword() {
         boolean expected = true;
-        memberRepository.save(new Member(new MemberRequest(EMAIL, PASSWORD, ROLE)));
+        memberRepository.save(new Member(EMAIL, PASSWORD, ROLE));
         boolean actual = memberRepository.existsByEmailAndPassword(EMAIL, PASSWORD);
         assertThat(actual).isEqualTo(expected);
     }
@@ -46,7 +45,7 @@ class MemberRepositoryTest {
     @Test
     void findByEmail() {
         String expected = EMAIL;
-        memberRepository.save(new Member(new MemberRequest(expected, PASSWORD, ROLE)));
+        memberRepository.save(new Member(expected, PASSWORD, ROLE));
         String actual = memberRepository.findByEmail(expected).get().getEmail();
         assertThat(actual).isEqualTo(expected);
     }

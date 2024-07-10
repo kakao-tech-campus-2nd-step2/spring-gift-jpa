@@ -16,7 +16,7 @@ class WishRepositoryTest {
     void deleteByMemberIdAndProductId() {
         Long memberId = 1L;
         Long productId = 1L;
-        Wish wish = new Wish(memberId, new WishRequest(productId, 5));
+        Wish wish = new Wish(memberId, productId, 5);
         wishRepository.save(wish);
         wishRepository.deleteByMemberIdAndProductId(memberId, productId);
 

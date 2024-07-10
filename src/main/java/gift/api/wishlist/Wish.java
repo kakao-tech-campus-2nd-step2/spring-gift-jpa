@@ -18,10 +18,10 @@ public class Wish {
     protected Wish() {
     }
 
-    public Wish(Long memberId, WishRequest wishRequest) {
+    public Wish(Long memberId, Long productId, Integer quantity) {
         this.memberId = memberId;
-        this.productId = wishRequest.productId();
-        this.quantity = wishRequest.quantity();
+        this.productId = productId;
+        this.quantity = quantity;
     }
 
     public Long getMemberId() {
