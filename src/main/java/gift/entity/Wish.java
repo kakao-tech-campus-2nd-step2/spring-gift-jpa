@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -15,22 +17,17 @@ public class Wish {
     @Id
     private Long id;
     @NotNull
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
     @NotNull
-    private Long productId;
-    @NotNull
-    private String productName;
+    @ManyToOne
+    @JoinColumn(name = "productId")
+    private Product product;
     @NotNull
     private int number;
 
     public Wish() {
-    }
-
-    public Wish(Long userId, Long productId, String productName, int number) {
-        this.userId = userId;
-        this.productId = productId;
-        this.productName = productName;
-        this.number = number;
     }
 
     public int getNumber() {
@@ -47,29 +44,5 @@ public class Wish {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
     }
 }

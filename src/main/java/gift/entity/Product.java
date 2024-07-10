@@ -5,10 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -25,6 +27,8 @@ public class Product {
     @NotNull
     private int price;
     private String img;
+    @OneToMany(mappedBy = "product")
+    private List<Wish> wishes;
 
     public Product() {
     }
