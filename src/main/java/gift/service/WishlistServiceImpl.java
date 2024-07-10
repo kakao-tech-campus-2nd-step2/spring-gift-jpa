@@ -1,24 +1,30 @@
 package gift.service;
 
-import gift.dto.ProductDTO;
 import gift.dto.WishlistDTO;
+import gift.model.Product;
+import gift.model.SiteUser;
 import gift.model.Wishlist;
+import gift.repository.ProductRepository;
+import gift.repository.UserRepository;
 import gift.repository.WishlistRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WishlistServiceImpl implements WishlistService {
 
     private final WishlistRepository wishlistRepository;
-    private final ProductService productService;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public WishlistServiceImpl(WishlistRepository wishlistRepository, ProductService productService) {
+    public WishlistServiceImpl(WishlistRepository wishlistRepository, UserRepository userRepository, ProductRepository productRepository) {
         this.wishlistRepository = wishlistRepository;
-        this.productService = productService;
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -31,9 +37,12 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public void addToWishlist(String username, Long productId, int quantity) {
+        SiteUser user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Invalid username: " + username));
+        Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Invalid product ID: " + productId));
+
         Wishlist wishlist = new Wishlist();
-        wishlist.setUsername(username);
-        wishlist.setProductId(productId);
+        wishlist.setUser(user);
+        wishlist.setProduct(product);
         wishlist.setQuantity(quantity);
         wishlistRepository.save(wishlist);
     }
@@ -45,22 +54,20 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public void updateQuantity(Long id, int quantity) {
-        Wishlist wishlist = wishlistRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid wishlist Id:" + id));
+        Wishlist wishlist = wishlistRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid wishlist ID: " + id));
         wishlist.setQuantity(quantity);
         wishlistRepository.save(wishlist);
     }
 
     private WishlistDTO convertToDTO(Wishlist wishlist) {
-        ProductDTO product = productService.getProductById(wishlist.getProductId());
         return new WishlistDTO(
             wishlist.getId(),
-            wishlist.getProductId(),
-            wishlist.getUsername(),
+            wishlist.getProduct().getId(),
+            wishlist.getUser().getUsername(),
             wishlist.getQuantity(),
-            product.getName(),   // 제품 이름 추가
-            product.getPrice(),  // 제품 가격 추가
-            product.getImageUrl() // 제품 이미지 URL 추가
+            wishlist.getProduct().getName(),
+            wishlist.getProduct().getPrice(),
+            wishlist.getProduct().getImageUrl()
         );
     }
 }
-
