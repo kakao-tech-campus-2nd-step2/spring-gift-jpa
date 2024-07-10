@@ -10,17 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequestMapping
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final JwtUtil jwtUtil;
 
 
-    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil) {
+    public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        this.jwtUtil = jwtUtil;
     }
-
     public Member registerMember(Member member) {
         member.setPassword(PasswordUtil.hashPassword(member.getPassword()));
         return memberRepository.save(member);
