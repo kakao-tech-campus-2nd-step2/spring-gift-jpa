@@ -8,8 +8,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
+@Transactional
 public class MemberRepositoryTest {
 
     @Autowired
@@ -29,6 +31,8 @@ public class MemberRepositoryTest {
     @Test
     @DisplayName("모든 회원 조회")
     public void testFindAll() {
+        long initialCount = memberRepository.count();
+
         Member member1 = new Member(null, "user1@example.com", "password1");
         Member member2 = new Member(null, "user2@example.com", "password2");
 
@@ -36,7 +40,7 @@ public class MemberRepositoryTest {
         memberRepository.save(member2);
 
         Iterable<Member> members = memberRepository.findAll();
-        assertThat(members).hasSize(2);
+        assertThat(members).hasSize((int) initialCount + 2);
     }
 
     @Test

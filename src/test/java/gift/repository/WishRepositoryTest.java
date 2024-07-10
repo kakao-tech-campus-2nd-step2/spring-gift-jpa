@@ -8,8 +8,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
+@Transactional
 public class WishRepositoryTest {
 
     @Autowired
@@ -30,13 +32,15 @@ public class WishRepositoryTest {
     @Test
     @DisplayName("모든 위시리스트 항목 조회")
     public void testFindAllByMemberId() {
+        long initialCount = wishRepository.count();
+
         Wish wish1 = new Wish(null, 1L, 1L);
         Wish wish2 = new Wish(null, 1L, 2L);
 
         wishRepository.save(wish1);
         wishRepository.save(wish2);
 
-        assertThat(wishRepository.findAllByMemberId(1L)).hasSize(2);
+        assertThat(wishRepository.findAllByMemberId(1L)).hasSize((int) initialCount + 2);
     }
 
     @Test

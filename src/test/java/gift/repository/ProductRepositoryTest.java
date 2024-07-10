@@ -8,8 +8,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
+@Transactional
 public class ProductRepositoryTest {
 
     @Autowired
@@ -29,6 +31,8 @@ public class ProductRepositoryTest {
     @Test
     @DisplayName("모든 상품 조회")
     public void testFindAll() {
+        long initialCount = productRepository.count();
+
         Product product1 = new Product(null, "Product 1", 100, "prod1.jpg");
         Product product2 = new Product(null, "Product 2", 200, "prod2.jpg");
 
@@ -36,7 +40,7 @@ public class ProductRepositoryTest {
         productRepository.save(product2);
 
         Iterable<Product> products = productRepository.findAll();
-        assertThat(products).hasSize(2);
+        assertThat(products).hasSize((int) initialCount + 2);
     }
 
     @Test
