@@ -1,5 +1,6 @@
 package gift.global;
 
+import gift.global.exception.UnauthorizedMemberException;
 import gift.global.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;

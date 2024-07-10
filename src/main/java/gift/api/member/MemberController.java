@@ -3,7 +3,6 @@ package gift.api.member;
 import gift.global.utils.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,35 +14,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/members")
 public class MemberController {
 
-    private final MemberDao memberDao;
+    private final MemberService memberService;
 
-    public MemberController(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody @Valid MemberRequest memberRequest) {
-        if (memberDao.hasMemberByEmail(memberRequest.email())) {
-            throw new EmailAlreadyExistsException();
-        }
-        Long id = memberDao.insert(memberRequest);
-
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Authorization", JwtUtil.generateHeaderValue(
-                JwtUtil.generateAccessToken(id, memberRequest.email(), memberRequest.role())));
+        var accessToken = JwtUtil.generateAccessToken(memberService.register(memberRequest), memberRequest.email(), memberRequest.role());
+        responseHeaders.set("Authorization", JwtUtil.generateHeaderValue(accessToken));
         return ResponseEntity.ok().headers(responseHeaders).build();
     }
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody MemberRequest memberRequest, @RequestHeader("Authorization") String token) {
-        if (memberDao.hasMemberByEmailAndPassword(memberRequest)) {
-            var id = memberDao.getMemberByEmail(memberRequest.email()).get().getId();
-            if (token.split(" ")[1].equals(
-                JwtUtil.generateAccessToken(id, memberRequest.email(), memberRequest.role()))) {
-                return ResponseEntity.ok().build();
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        memberService.login(memberRequest, token.split(" ")[1]);
+        return ResponseEntity.ok().build();
     }
 }

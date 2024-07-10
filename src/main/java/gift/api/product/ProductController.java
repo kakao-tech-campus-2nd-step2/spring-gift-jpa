@@ -17,32 +17,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductDao productDao;
+    private final ProductService productService;
 
-    public ProductController(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductController(ProductService productService) {
+        this. productService = productService;
     }
 
     @GetMapping()
     public ResponseEntity<List<Product>> getProducts() {
-        return ResponseEntity.ok().body(productDao.getAllProducts());
+        return ResponseEntity.ok().body(productService.getProducts());
     }
 
     @PostMapping()
     public ResponseEntity<Void> add(@Valid @RequestBody ProductRequest productRequest) {
-        return ResponseEntity.created(URI.create("/api/products/" + productDao.insert(
-            productRequest))).build();
+        return ResponseEntity.created(
+            URI.create("/api/products/" + productService.add(productRequest))).build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable("id") long id, @Valid @RequestBody ProductRequest productRequest) {
-        productDao.update(id, productRequest);
+        productService.update(id, productRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
-        productDao.delete(id);
+        productService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,6 +1,6 @@
 package gift.api.wishlist;
 
-public record WishListRequest(
+public record WishRequest(
     Long productId,
     Integer quantity
 ) {}

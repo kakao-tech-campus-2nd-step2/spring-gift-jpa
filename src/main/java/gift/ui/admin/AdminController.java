@@ -1,6 +1,7 @@
 package gift.ui.admin;
 
-import gift.api.product.ProductDao;
+import gift.api.product.Product;
+import gift.api.product.ProductRepository;
 import gift.api.product.ProductRequest;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -17,34 +18,36 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public AdminController(ProductDao productDao) {
-        this.productDao = productDao;
+    public AdminController(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @GetMapping()
     public String view(Model model) {
-        model.addAttribute("products", productDao.getAllProducts());
+        model.addAttribute("products", productRepository.findAll());
         model.addAttribute("productDto", new ProductRequest());
         return "administrator";
     }
 
     @PostMapping("/add")
     public RedirectView add(@Valid ProductRequest productRequest) {
-        productDao.insert(productRequest);
+        productRepository.save(new Product(
+            productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl()));
         return new RedirectView("/api/products");
     }
 
     @PutMapping("/update/{id}")
     public RedirectView update(@PathVariable("id") long id, @Valid ProductRequest productRequest) {
-        productDao.update(id, productRequest);
+        productRepository.save(new Product(
+            id, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl()));
         return new RedirectView("/api/products");
     }
 
     @DeleteMapping("/delete/{id}")
     public RedirectView delete(@PathVariable("id") long id) {
-        productDao.delete(id);
+        productRepository.deleteById(id);
         return new RedirectView("/api/products");
     }
 }
