@@ -14,6 +14,7 @@ import io.jsonwebtoken.security.SignatureException;
 import jakarta.validation.constraints.Email;
 import java.util.Date;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -93,5 +94,4 @@ public class JwtProvider {
 
         return claimsBody.get("email").toString();
     }
-
 }

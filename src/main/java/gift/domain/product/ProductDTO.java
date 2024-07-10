@@ -43,7 +43,7 @@ public class ProductDTO {
     public Integer getPrice() {
         return price;
     }
-
+  
     public String getImageUrl() {
         return imageUrl;
     }

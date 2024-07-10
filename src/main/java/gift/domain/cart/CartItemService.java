@@ -3,6 +3,7 @@ package gift.domain.cart;
 import gift.domain.cart.repository.JpaCartItemRepository;
 import gift.domain.product.Product;
 import gift.domain.product.repository.JpaProductRepository;
+
 import gift.global.exception.BusinessException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,7 +50,6 @@ public class CartItemService {
 
         System.out.println("userId = " + userId);
         List<Product> products = productRepository.findAllById(productIds);
-
         return products;
     }
 

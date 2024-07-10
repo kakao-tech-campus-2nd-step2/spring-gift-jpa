@@ -2,6 +2,7 @@ package gift.domain.user;
 
 import gift.domain.user.dto.UserDTO;
 import gift.domain.user.repository.JpaUserRepository;
+
 import gift.global.jwt.JwtProvider;
 import gift.global.exception.BusinessException;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class UserService {
 
         User user = userDTO.toUser();
         userRepository.save(user);
+
     }
 
 
@@ -34,6 +36,7 @@ public class UserService {
     public String login(UserDTO userDTO) {
         User user = userRepository.findByEmailAndPassword(userDTO.getEmail(), userDTO.getPassword())
             .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, "입력 정보가 올바르지 않습니다."));
+
 
         // jwt 토큰 생성
         String jwt = JwtProvider.generateToken(user);

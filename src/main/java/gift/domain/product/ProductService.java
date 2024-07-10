@@ -7,6 +7,7 @@ import jakarta.validation.Validator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,6 +49,7 @@ public class ProductService {
     public List<Product> getProducts() {
         List<Product> products = productRepository.findAll();
         System.out.println("products = " + products);
+        
         return products;
     }
 

@@ -28,16 +28,13 @@ public class CartItem {
         return id;
     }
 
-
     public Long getUserId() {
         return userId;
     }
 
-
     public Long getProductId() {
         return productId;
     }
-
 
     @Override
     public String toString() {
