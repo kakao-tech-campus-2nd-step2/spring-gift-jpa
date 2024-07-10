@@ -13,9 +13,10 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "productid")
+    @Column(name = "productid", nullable = false)
     private long productId;
 
     public Wishlist() {

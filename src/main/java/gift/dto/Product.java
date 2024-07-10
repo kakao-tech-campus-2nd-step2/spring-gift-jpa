@@ -17,6 +17,7 @@ public class Product {
     @NotNull
     long id;
 
+    @Column(name = "name", nullable = false)
     @NotBlank(message = ErrorMessage.PRODUCT_NAME_VALID_NOT_BLANK_MSG)
     @Size(min = 1, max = 15, message = ErrorMessage.PRODUCT_NAME_VALID_SIZE_MSG)
     @Pattern(
@@ -27,6 +28,7 @@ public class Product {
         message = ErrorMessage.PRODUCT_NAME_VALID_KAKAO_MSG)
     String name;
 
+    @Column(name = "price")
     @NotNull
     long price;
 
