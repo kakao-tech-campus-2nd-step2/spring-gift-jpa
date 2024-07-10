@@ -3,5 +3,5 @@
   - [x] product pakage 리팩터링
   - [x] user pakage 리팩터링
 - [ ]@DataJpaTest를 사용하여 학습 테스트를 해 본다.
-  - [ ] ProductRepositoryTest 작성
+  - [x] ProductRepositoryTest 작성
   - [ ] MemberRepositoryTest 작성
