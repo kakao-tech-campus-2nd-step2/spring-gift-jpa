@@ -19,9 +19,6 @@ public class Gift {
     @NotNull
     private String imageUrl;
 
-    @OneToMany(mappedBy = "gift", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Wish> wishes;
-
     public Gift() {
     }
 
