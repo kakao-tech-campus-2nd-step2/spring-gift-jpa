@@ -4,13 +4,13 @@ import gift.doamin.user.dto.LoginForm;
 import gift.doamin.user.dto.SignUpForm;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.entity.UserRole;
+import gift.doamin.user.exception.InvalidSignUpFormException;
+import gift.doamin.user.exception.UserNotFoundException;
 import gift.doamin.user.repository.JpaUserRepository;
 import gift.global.JwtProvider;
 import java.util.Optional;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AuthService {
@@ -29,13 +29,13 @@ public class AuthService {
     public void signUp(SignUpForm signUpForm) {
         String email = signUpForm.getEmail();
         if (userRepository.existsByEmail(email)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "중복된 이메일은 사용할 수 없습니다");
+            throw new InvalidSignUpFormException("중복된 이메일은 사용할 수 없습니다");
         }
 
 
         UserRole role = signUpForm.getRole();
         if (UserRole.ADMIN == role) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ADMIN으로 가입하실 수 없습니다.");
+            throw new InvalidSignUpFormException("ADMIN으로 가입하실 수 없습니다.");
         }
 
         String password = passwordEncoder.encode(signUpForm.getPassword());
@@ -51,7 +51,7 @@ public class AuthService {
 
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isEmpty() || !passwordEncoder.matches(password, user.get().getPassword())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "일치하는 계정이 없습니다.");
+            throw new UserNotFoundException();
         }
 
         return jwtProvider.generateToken(user.get().getId(), user.get().getRole());
