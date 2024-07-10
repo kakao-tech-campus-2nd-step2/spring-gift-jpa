@@ -22,7 +22,6 @@ public class MemberService {
   public String register(Member member) {
     Member savedMember = memberRepository.save(member);
     return jwtUtil.generateToken(savedMember.getId(), savedMember.getEmail());
-
   }
 
   public String login(String email, String password) {
@@ -31,6 +30,7 @@ public class MemberService {
             .map(member -> jwtUtil.generateToken(member.getId(), member.getEmail()))
             .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
   }
+
   public Optional<Member> findById(Long id) {
     return memberRepository.findById(id);
   }

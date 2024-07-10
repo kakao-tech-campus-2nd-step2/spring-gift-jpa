@@ -2,12 +2,16 @@ package gift;
 
 import gift.model.Wishlist;
 import gift.model.Member;
+import gift.model.Product;
 import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -18,45 +22,68 @@ public class WishlistRepositoryTest {
   private WishlistRepository wishlistRepository;
   @Autowired
   private MemberRepository memberRepository;
+  @Autowired
+  private ProductRepository productRepository;
+
   private Member member;
+  private Product product;
 
   @Test
   @Transactional
-  void save(){
+  void save() {
     member = new Member();
     member.setEmail("test@example.com");
     member.setPassword("password");
     Member savedMember = memberRepository.save(member);
 
+    product = new Product();
+    product.setName("Product A");
+    product.setPrice(100);
+    product.setImageUrl("http://example.com/product-a");
+    Product savedProduct = productRepository.save(product);
+
     Wishlist wishlist = new Wishlist();
-    wishlist.setMemberId(savedMember.getId());
-    wishlist.setProductName("Product A");
-    wishlist.setProductUrl("http://example.com/product-a");
+    wishlist.setMember(savedMember);
+    wishlist.setProduct(savedProduct);
 
     Wishlist savedWishlist = wishlistRepository.save(wishlist);
+
     assertAll(
-            ()-> assertThat(savedWishlist.getId()).isNotNull(),
-            ()-> assertThat(savedWishlist.getMemberId()).isEqualTo(wishlist.getMemberId()),
-            ()-> assertThat(savedWishlist.getProductName()).isEqualTo(wishlist.getProductName()),
-            ()-> assertThat(savedWishlist.getProductUrl()).isEqualTo(wishlist.getProductUrl())
+            () -> assertThat(savedWishlist.getId()).isNotNull(),
+            () -> assertThat(savedWishlist.getMember().getId()).isEqualTo(savedMember.getId()),
+            () -> assertThat(savedWishlist.getProduct().getName()).isEqualTo(savedProduct.getName()),
+            () -> assertThat(savedWishlist.getProduct().getImageUrl()).isEqualTo(savedProduct.getImageUrl())
     );
   }
+
   @Test
-  void findByMemberId(){
+  void findByMemberId() {
     member = new Member();
     member.setEmail("test@example.com");
     member.setPassword("password");
     Member savedMember = memberRepository.save(member);
 
+    product = new Product();
+    product.setName("Product A");
+    product.setPrice(100);
+    product.setImageUrl("http://example.com/product-a");
+    Product savedProduct = productRepository.save(product);
+
     Wishlist wishlist = new Wishlist();
-    wishlist.setMemberId(savedMember.getId());
-    wishlist.setProductName("Product A");
-    wishlist.setProductUrl("http://example.com/product-a");
+    wishlist.setMember(savedMember);
+    wishlist.setProduct(savedProduct);
 
-    Wishlist savedWishlist = wishlistRepository.save(wishlist);
+    wishlistRepository.save(wishlist);
 
-    String expected = "Product A";
-    String actual = savedWishlist.getProductName();
-    assertThat(actual).isEqualTo(expected);
+    List<Wishlist> wishlists = wishlistRepository.findByMemberId(savedMember.getId());
+
+    assertThat(wishlists).hasSize(1);
+    Wishlist foundWishlist = wishlists.get(0);
+
+    assertAll(
+            () -> assertThat(foundWishlist.getMember().getId()).isEqualTo(savedMember.getId()),
+            () -> assertThat(foundWishlist.getProduct().getName()).isEqualTo(savedProduct.getName()),
+            () -> assertThat(foundWishlist.getProduct().getImageUrl()).isEqualTo(savedProduct.getImageUrl())
+    );
   }
 }

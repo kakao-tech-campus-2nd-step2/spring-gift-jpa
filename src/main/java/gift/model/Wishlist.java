@@ -8,9 +8,14 @@ public class Wishlist {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private Long memberId;
-  private String productName;
-  private String productUrl;
+
+  @ManyToOne
+  @JoinColumn(name = "member_id", nullable = false)
+  private Member member;
+
+  @ManyToOne
+  @JoinColumn(name = "product_id", nullable = false)
+  private Product product;
 
   public Long getId() {
     return id;
@@ -20,27 +25,19 @@ public class Wishlist {
     this.id = id;
   }
 
-  public Long getMemberId() {
-    return memberId;
+  public Member getMember() {
+    return member;
   }
 
-  public void setMemberId(Long memberId) {
-    this.memberId = memberId;
+  public void setMember(Member member) {
+    this.member = member;
   }
 
-  public String getProductName() {
-    return productName;
+  public Product getProduct() {
+    return product;
   }
 
-  public void setProductName(String productName) {
-    this.productName = productName;
-  }
-
-  public String getProductUrl() {
-    return productUrl;
-  }
-
-  public void setProductUrl(String productUrl) {
-    this.productUrl = productUrl;
+  public void setProduct(Product product) {
+    this.product = product;
   }
 }
