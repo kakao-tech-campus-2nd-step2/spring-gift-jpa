@@ -16,6 +16,7 @@ public class ProductDto {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+
   private Long id;
 
   @Size(min = 1, max = 15, message = "가능한 글자 수는 1~15입니다.")
@@ -26,7 +27,6 @@ public class ProductDto {
   @Column(nullable = false, unique = true)
   private String name;
   @Column(nullable = false)
-
   private int price;
   private String imageUrl;
 

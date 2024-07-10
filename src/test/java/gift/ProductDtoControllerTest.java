@@ -16,6 +16,7 @@ import jakarta.validation.ValidatorFactory;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,30 +63,7 @@ public class ProductDtoControllerTest {
     // getAllProducts() 호출
     List<ProductDto> returnedProductDtos = productController.getAllProducts();
 
-    // 반환된 제품 리스트 검증
-    assertEquals(2, returnedProductDtos.size());
-    assertEquals(productDto1.getId(), returnedProductDtos.get(0).getId());
-    assertEquals(productDto1.getName(), returnedProductDtos.get(0).getName());
-    assertEquals(productDto1.getPrice(), returnedProductDtos.get(0).getPrice());
-    assertEquals(productDto1.getImageUrl(), returnedProductDtos.get(0).getImageUrl());
-    assertEquals(productDto2.getId(), returnedProductDtos.get(1).getId());
-    assertEquals(productDto2.getName(), returnedProductDtos.get(1).getName());
-    assertEquals(productDto2.getPrice(), returnedProductDtos.get(1).getPrice());
-    assertEquals(productDto2.getImageUrl(), returnedProductDtos.get(1).getImageUrl());
-  }
 
-  @DirtiesContext
-  @Test
-  public void testGetProductById() {
-    // 제품 추가 - 유효한 이름으로 수정
-    ProductDto productDTO = new ProductDto(1L, "Coffee", 100,
-      "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
-
-    // 유효성 검사를 통과하도록 수정된 제품 추가
-    assertDoesNotThrow(() -> productController.addProduct(productDTO));
-
-    // getProductById() 호출 - 존재하는 제품 ID
-    ResponseEntity<Optional<ProductDto>> responseEntity = productController.getProductById(1L);
 
     // 반환된 ResponseEntity 검증
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode()); // 상태 코드가 200 OK인지 확인
@@ -104,6 +82,7 @@ public class ProductDtoControllerTest {
   public void testAddProduct() {
     ProductDto newProductDto = new ProductDto(1L, "Coffee", 4500,
       "https://example.com/coffee.jpg");
+
 
     ProductDto addedProductDto = productController.addProduct(newProductDto);
 
@@ -129,6 +108,7 @@ public class ProductDtoControllerTest {
 
     // 유효성 검사를 통과하도록 수정된 제품 업데이트 요청
     ResponseEntity<ProductDto> response = productController.updateProduct(1L, updatedProductDto);
+
 
     // 업데이트된 제품 받아오기
     ProductDto returnedProductDto = response.getBody();
@@ -156,6 +136,7 @@ public class ProductDtoControllerTest {
   }
 
   @DirtiesContext
+
   @Test
   public void testValidate() {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();

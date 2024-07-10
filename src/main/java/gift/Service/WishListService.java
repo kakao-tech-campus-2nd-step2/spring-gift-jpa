@@ -1,5 +1,6 @@
 package gift.Service;
 
+import gift.DTO.ProductDto;
 import gift.DTO.UserDto;
 import gift.DTO.WishListDto;
 import gift.Repository.WishListDao;
@@ -26,5 +27,6 @@ public class WishListService {
 
   public void deleteProductToWishList(Long id) {
     wishListDao.deleteById(id);
+
   }
 }

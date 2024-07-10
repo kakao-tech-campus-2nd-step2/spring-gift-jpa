@@ -43,7 +43,6 @@ public class UserDto {
   public Long getId() {
     return this.id;
   }
-
   public String getEmail() {
     return this.email;
   }

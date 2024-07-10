@@ -9,4 +9,5 @@ public interface UserDao extends JpaRepository<UserDto, Long> {
   UserDto save(UserDto entity);
 
   Optional<UserDto> findByEmail(String email);
+
 }
