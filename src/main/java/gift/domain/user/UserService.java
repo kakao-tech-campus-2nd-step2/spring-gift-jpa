@@ -37,7 +37,6 @@ public class UserService {
         User user = userRepository.findByEmailAndPassword(userDTO.getEmail(), userDTO.getPassword())
             .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, "입력 정보가 올바르지 않습니다."));
 
-
         // jwt 토큰 생성
         String jwt = JwtProvider.generateToken(user);
         
