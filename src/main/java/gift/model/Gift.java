@@ -60,7 +60,7 @@ public class Gift {
         return name != null && !name.contains("카카오");
     }
 
-    public void modifyGift(String name, int price, String imageUrl) {
+    public void modify(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
