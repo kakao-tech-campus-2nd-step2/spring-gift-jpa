@@ -56,7 +56,7 @@ class ProductRepositoryTest {
     void findProduct() {
         //given
         Product product = new Product("상품5", 5000, "speaker.png");
-        Product savedProduct = productRepository.save(product);
+        productRepository.save(product);
 
         //when
         List<Product> products = productRepository.findAll();
@@ -86,7 +86,8 @@ class ProductRepositoryTest {
         savedProduct.setPrice(7000);
         savedProduct.setImageUrl("camera.png");
 
-        Product updatedProduct = productRepository.save(savedProduct);
+        Product updatedProduct = productRepository.findById(savedProduct.getId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
 
         //then
         assertAll(
