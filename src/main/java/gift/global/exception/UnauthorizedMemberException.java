@@ -1,4 +1,4 @@
-package gift.global;
+package gift.global.exception;
 
 public class UnauthorizedMemberException extends RuntimeException {
 

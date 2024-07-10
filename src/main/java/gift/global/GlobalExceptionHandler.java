@@ -1,6 +1,8 @@
 package gift.global;
 
 import gift.api.member.EmailAlreadyExistsException;
+import gift.global.exception.ForbiddenMemberException;
+import gift.global.exception.UnauthorizedMemberException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,6 +27,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedMemberException.class)
     public ResponseEntity<String> handleUnauthorizationException(UnauthorizedMemberException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ForbiddenMemberException.class)
+    public ResponseEntity<String> handleForbiddenMemberException(ForbiddenMemberException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(UnsupportedOperationException.class)
