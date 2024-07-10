@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>위시 리스트에 상품 추가</title>
-<!--  <link rel="stylesheet" th:href="@{/Add_Edit_product.css}">-->
 
 </head>
 <body>
@@ -44,7 +43,9 @@
           }
         })
         .then(html => {
-          document.body.innerHTML = html;
+          document.open();
+          document.write(html);
+          document.close();
         })
         .catch(error => {
           alert(error.message);

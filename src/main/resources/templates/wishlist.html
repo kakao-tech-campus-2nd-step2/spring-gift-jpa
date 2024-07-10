@@ -31,9 +31,28 @@
           }
         })
         .then(html => {
-          document.body.innerHTML = html;
+          document.open();
+          document.write(html);
+          document.close();
         })
         .catch(error => alert(error.message));
+      });
+
+      // 삭제 버튼 클릭 이벤트
+      document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function(event) {
+          event.preventDefault();
+          const action = form.getAttribute('action');
+
+          fetch(action, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            }
+          })
+
+        });
       });
     });
   </script>

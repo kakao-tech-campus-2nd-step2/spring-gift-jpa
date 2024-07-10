@@ -16,6 +16,8 @@
           if (data.token) {
             localStorage.setItem('jwtToken', data.token);
             alert('토큰이 저장되었습니다.');
+
+
             fetch('/wishlist', {
               method: 'GET',
               headers: {
