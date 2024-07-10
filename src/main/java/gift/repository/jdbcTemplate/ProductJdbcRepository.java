@@ -1,4 +1,4 @@
-package gift.repository;
+package gift.repository.jdbcTemplate;
 
 import gift.domain.Product;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
