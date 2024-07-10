@@ -3,7 +3,13 @@ package gift.view;
 import gift.controller.ProductController;
 import gift.controller.WishlistController;
 import gift.model.Product;
+import gift.model.WishlistDTO;
 import gift.model.WishlistItem;
+import gift.repository.UserRepository;
+import gift.service.ProductService;
+import gift.service.UserService;
+import gift.service.WishlistService;
+import java.util.ArrayList;
 import javax.print.attribute.standard.PrinterURI;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,10 +27,18 @@ import java.util.List;
 public class WishlistViewController {
     private WishlistController wishlistController;
     private ProductController productController;
+    private UserService userService;
+    private ProductService productService;
+    private WishlistService wishlistService;
 
-    public WishlistViewController(WishlistController wishlistController, ProductController productController) {
+    public WishlistViewController(WishlistController wishlistController,
+        ProductController productController, UserService userService, ProductService productService,
+        WishlistService wishlistService) {
         this.wishlistController = wishlistController;
         this.productController = productController;
+        this.userService = userService;
+        this.productService = productService;
+        this.wishlistService = wishlistService;
     }
 
     @GetMapping("{id}")
@@ -43,8 +57,21 @@ public class WishlistViewController {
         return "add_wishlist";
     }
     @PostMapping("{id}/save")
-    public String saveWishlist(@PathVariable Long id, @RequestBody List<WishlistItem> wishlistItems) {
-        wishlistController.createWishlist(wishlistItems);
+    public String saveWishlist(@PathVariable Long id, @RequestBody List<WishlistDTO> wishlistDTOList) {
+        List<WishlistItem> wishlistItemList = new ArrayList<>();
+        for(WishlistDTO wishlistDTO : wishlistDTOList){
+            WishlistItem wishlistItem = new WishlistItem();
+            Long userId = wishlistDTO.getUserId();
+            wishlistItem.setUser(userService.findById(userId).get());
+
+            Long productId = wishlistDTO.getProductId();
+            wishlistItem.setProduct(productService.getProductById(productId).get());
+
+            wishlistItem.setAmount(wishlistDTO.getAmount());
+
+            wishlistItemList.add(wishlistItem);
+        }
+        wishlistService.saveWishlistItems(wishlistItemList);
         return "redirect:/wishlist/" + id;
     }
 }
