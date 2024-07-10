@@ -1,10 +1,18 @@
 package gift.model;
 
-import org.springframework.stereotype.Component;
+import jakarta.persistence.*;
 
+@Entity
 public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
+
+    @Column(name = "EMAIL", unique = true)
     private String email;
+
+    @Column(name = "PASSWORD")
     private String password;
 
     public Member(Long id, String email, String password){

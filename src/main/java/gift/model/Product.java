@@ -1,9 +1,21 @@
 package gift.model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private long id;
+
+    @Column(name = "NAME")
     private String name;
+
+    @Column(name = "PRICE")
     private Integer price;
+
+    @Column(name = "IMAGE_URL")
     private String imageUrl;
 
     public Product(long id, String name, int price, String imageUrl) {
