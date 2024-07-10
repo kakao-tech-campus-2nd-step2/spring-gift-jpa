@@ -1,7 +1,7 @@
 package gift.Service;
 
-import gift.DTO.UserDto;
-import gift.DTO.WishListDto;
+import gift.DTO.UserEntity;
+import gift.DTO.WishListEntity;
 import gift.Repository.WishListDao;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -15,12 +15,12 @@ public class WishListService {
     this.wishListDao = wishListDao;
   }
 
-  public WishListDto addProductToWishList(WishListDto wishListDto) {
-    wishListDao.save(wishListDto);
-    return wishListDto;
+  public WishListEntity addProductToWishList(WishListEntity wishListEntity) {
+    wishListDao.save(wishListEntity);
+    return wishListEntity;
   }
 
-  public List<WishListDto> getWishList(UserDto user) {
+  public List<WishListEntity> getWishList(UserEntity user) {
     return wishListDao.findAll();
   }
 

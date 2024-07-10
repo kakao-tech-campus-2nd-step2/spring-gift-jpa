@@ -1,7 +1,7 @@
 package gift.Controller;
 
-import gift.DTO.UserDto;
-import gift.DTO.WishListDto;
+import gift.DTO.UserEntity;
+import gift.DTO.WishListEntity;
 import gift.LoginUser;
 import gift.Service.WishListService;
 import java.util.List;
@@ -27,15 +27,15 @@ public class WishController {
   }
 
   @GetMapping
-  public ResponseEntity<List<WishListDto>> getWishList(@LoginUser UserDto user) {
-    List<WishListDto> wishList = wishListService.getWishList(user);
+  public ResponseEntity<List<WishListEntity>> getWishList(@LoginUser UserEntity user) {
+    List<WishListEntity> wishList = wishListService.getWishList(user);
     return ResponseEntity.ok(wishList);
   }
 
   @PostMapping
-  public ResponseEntity<WishListDto> addProductToWishList(@RequestBody WishListDto wishProduct,
-    @LoginUser Optional<UserDto> user) {
-    WishListDto addedWishProduct = wishListService.addProductToWishList(wishProduct);
+  public ResponseEntity<WishListEntity> addProductToWishList(@RequestBody WishListEntity wishProduct,
+    @LoginUser Optional<UserEntity> user) {
+    WishListEntity addedWishProduct = wishListService.addProductToWishList(wishProduct);
 
     // 생성된 리소스의 URI를 빌드
     var location = ServletUriComponentsBuilder.fromCurrentRequest()

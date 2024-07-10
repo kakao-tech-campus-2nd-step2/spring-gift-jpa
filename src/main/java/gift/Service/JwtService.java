@@ -1,7 +1,7 @@
 package gift.Service;
 
 import gift.DTO.JwtToken;
-import gift.DTO.UserDto;
+import gift.DTO.UserEntity;
 import gift.Repository.UserDao;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -29,7 +29,7 @@ public class JwtService {
   @Value("${jwt.secret}")
   private String key;
 
-  public JwtToken createAccessToken(Optional<UserDto> userDto) {
+  public JwtToken createAccessToken(Optional<UserEntity> userDto) {
     Instant now = Instant.now();
     Instant expiresAt = now.plus(1, ChronoUnit.DAYS); // 현재 시각에서 1일 뒤로 만료 설정
     String accessToken = Jwts.builder()
@@ -55,7 +55,7 @@ public class JwtService {
     }
   }
 
-  public Optional<UserDto> getUserEmailFromToken(String token) {
+  public Optional<UserEntity> getUserEmailFromToken(String token) {
     JwtParser jwtParser = Jwts.parser()
       .setSigningKey(Keys.hmacShaKeyFor(key.getBytes()))
       .build();

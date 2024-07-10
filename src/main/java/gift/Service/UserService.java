@@ -1,7 +1,7 @@
 package gift.Service;
 
 import gift.DTO.JwtToken;
-import gift.DTO.UserDto;
+import gift.DTO.UserEntity;
 import gift.Exception.ForbiddenException;
 import gift.Exception.UnauthorizedException;
 import gift.Repository.UserDao;
@@ -20,15 +20,15 @@ public class UserService {
     this.jwtService = jwtService;
   }
 
-  public UserDto userSignUp(UserDto userInfo) {
+  public UserEntity userSignUp(UserEntity userInfo) {
     userDao.save(userInfo);
     return userInfo;
   }
 
-  public JwtToken userLogin(UserDto userInfo) {
+  public JwtToken userLogin(UserEntity userInfo) {
     String email = userInfo.getEmail();
     String password = userInfo.getPassword();
-    Optional<UserDto> userByEmail = userDao.findByEmail(email);
+    Optional<UserEntity> userByEmail = userDao.findByEmail(email);
 
     if (userByEmail == null) {
       throw new EmptyResultDataAccessException("해당 유저가 없습니다.", 1);

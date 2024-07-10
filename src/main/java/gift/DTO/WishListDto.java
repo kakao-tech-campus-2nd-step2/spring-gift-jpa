@@ -9,7 +9,6 @@ import jakarta.persistence.Table;
 
 public class WishListDto {
   private Long id;
-
   private Long userId;
   private Long productId;
 

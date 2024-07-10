@@ -1,10 +1,9 @@
 package gift.Controller;
 
-import gift.DTO.ProductDto;
+import gift.DTO.ProductEntity;
 import gift.Exception.ProductNotFoundException;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
-import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,27 +30,27 @@ public class ProductAdminController {
 
   @GetMapping("/new")
   public String newProductForm(Model model) {
-    model.addAttribute("product", new ProductDto());
+    model.addAttribute("product", new ProductEntity());
     return "product-form";
   }
 
   @PostMapping("/add")
-  public String addProduct(@Valid @ModelAttribute ProductDto productDTO) {
-    productService.addProduct(productDTO);
+  public String addProduct(@Valid @ModelAttribute ProductEntity productEntity) {
+    productService.addProduct(productEntity);
     return "redirect:/admin/products";
   }
 
   @GetMapping("product/{id}")
   public String editProductForm(@PathVariable Long id, Model model) {
-    ProductDto product = productService.getProductById(id)
+    ProductEntity product = productService.getProductById(id)
       .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
     model.addAttribute("product", product);
     return "product-form";
   }
 
   @PostMapping("product/{id}")
-  public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute ProductDto productDTO) {
-    productService.updateProduct(id, productDTO);
+  public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute ProductEntity productEntity) {
+    productService.updateProduct(id, productEntity);
     return "redirect:/admin/products";
   }
 

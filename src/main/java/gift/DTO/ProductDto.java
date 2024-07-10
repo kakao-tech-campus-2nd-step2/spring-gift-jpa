@@ -11,7 +11,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class ProductDto {
-
   private Long id;
 
   @Size(min = 1, max = 15, message = "가능한 글자 수는 1~15입니다.")

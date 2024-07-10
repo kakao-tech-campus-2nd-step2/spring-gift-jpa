@@ -42,7 +42,7 @@ public class UserDto {
     return this.password;
   }
 
-  public boolean matchLoginInfo(Optional<UserDto> userByEmail) {
+  public boolean matchLoginInfo(Optional<UserEntity> userByEmail) {
     return this.email.equals(userByEmail.get().getEmail()) && this.password.equals(
       userByEmail.get().getPassword());
   }
