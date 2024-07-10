@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/products")
 public class ProductController {
@@ -24,14 +26,14 @@ public class ProductController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Product getProductById(@PathVariable Long id) {
+    public Optional<Product> getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
     @PostMapping
     public String postProduct(@ModelAttribute Product product, Model model) {
         try{
-            productService.postProduct(product);
+            productService.saveProduct(product);
             return "redirect:/products";
         } catch (IllegalArgumentException e) {
         model.addAttribute("error", e.getMessage());

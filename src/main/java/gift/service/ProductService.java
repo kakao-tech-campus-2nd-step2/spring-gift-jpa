@@ -1,61 +1,69 @@
 package gift.service;
 
-import gift.dao.ProductDao;
 import gift.model.Product;
+import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts() {
-        return productDao.selectAllProduct();
+    //전체 조회
+    public List<Product> getAllProducts(){
+        return productRepository.findAll();
     }
 
-    public Product getProductById(Long id) {
-        return productDao.selectProduct(id);
+    //하나 조회
+    public Optional<Product> getProductById(Long id) {
+        return productRepository.findById(id);
     }
 
-    public void postProduct(Product product) {
+    //저장
+    public void saveProduct(Product product) {
         validateProduct(product);
-        productDao.insertProduct(product);
+        productRepository.save(product);
     }
 
+    //삭제
     public void deleteProduct(Long id) {
-        productDao.deleteProduct(id);
+        productRepository.deleteById(id);
     }
 
     public void updateProduct(Long id, Product newProduct) {
-        Product oldProduct = productDao.selectProduct(id);
-        String name = oldProduct.getName();
-        int price = oldProduct.getPrice();
-        String imageUrl = oldProduct.getImageUrl();
+        Optional<Product> getProduct = productRepository.findById(id);
+        if (getProduct.isPresent()){
+            Product oldProduct = getProduct.get();
 
-        String newName = newProduct.getName();
-        String newImageUrl = newProduct.getImageUrl();
+            String name = oldProduct.getName();
+            int price = oldProduct.getPrice();
+            String imageUrl = oldProduct.getImageUrl();
 
-        if (newName != null && !newName.isEmpty()) {
-            validateProduct(newProduct);
-            name = newName;
+            String newName = newProduct.getName();
+            String newImageUrl = newProduct.getImageUrl();
+
+            if (newName != null && !newName.isEmpty()) {
+                validateProduct(newProduct);
+                name = newName;
+            }
+            if (newProduct.getPrice() != null) {
+                price = newProduct.getPrice();
+            }
+
+            if (newImageUrl != null && !newImageUrl.isEmpty()) {
+                imageUrl = newImageUrl;
+            }
+
+            Product updatedProduct = new Product(oldProduct.getId(), name, price, imageUrl);
+            productRepository.save(updatedProduct);
         }
-        if (newProduct.getPrice() != null) {
-            price = newProduct.getPrice();
-        }
-
-        if (newImageUrl != null && !newImageUrl.isEmpty()) {
-            imageUrl = newImageUrl;
-        }
-
-        Product updatedProduct = new Product(oldProduct.getId(), name, price, imageUrl);
-
-        productDao.updateProduct(updatedProduct);
     }
 
     private void validateProduct(Product product) {
