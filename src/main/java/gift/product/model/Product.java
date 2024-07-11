@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "product")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -23,12 +24,13 @@ public class Product {
     @Column(nullable = false)
     private String imgUrl;
 
-    public Product() {}
+    public Product() {
+    }
 
     public Product(String name, int price, String imgUrl) {
-        this.name=name;
-        this.price=price;
-        this.imgUrl=imgUrl;
+        this.name = name;
+        this.price = price;
+        this.imgUrl = imgUrl;
     }
 
     public long getId() {
@@ -64,11 +66,6 @@ public class Product {
     }
 
     public static Product from(ProductRequest request) {
-        Product product = new Product();
-        product.setId(request.getId());
-        product.setName(request.getName());
-        product.setPrice(request.getPrice());
-        product.setImgUrl(request.getImgUrl());
-        return product;
+        return new Product(request.getName(), request.getPrice(), request.getImgUrl());
     }
 }
