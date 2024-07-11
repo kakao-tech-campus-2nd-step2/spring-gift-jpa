@@ -49,35 +49,16 @@ public class Product {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public @NotBlank(message = "상품 이름은 최소 1자 이상이어야 합니다.") @Size(max = 15, message = "상품 이름은 공백 포함 최대 15자까지 입력할 수 있습니다.") @Pattern(regexp = "^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s\\(\\)\\[\\]\\+\\-\\&\\/\\_]*$", message = "상품 이름에 (), [], +, -, &, /, _ 외 특수 문자는 사용할 수 없습니다.") @Pattern(regexp = "^(?!.*카카오).*$", message = "'카카오'가 포함된 문구는 담당 MD와 협의 후 사용 바랍니다.") String getName() {
         return name;
-    }
-
-    public void setName(
-        @NotBlank(message = "상품 이름은 최소 1자 이상이어야 합니다.") @Size(max = 15, message = "상품 이름은 공백 포함 최대 15자까지 입력할 수 있습니다.") @Pattern(regexp = "^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s\\(\\)\\[\\]\\+\\-\\&\\/\\_]*$", message = "상품 이름에 (), [], +, -, &, /, _ 외 특수 문자는 사용할 수 없습니다.") @Pattern(regexp = "^(?!.*카카오).*$", message = "'카카오'가 포함된 문구는 담당 MD와 협의 후 사용 바랍니다.") String name) {
-        this.name = name;
     }
 
     public @NotBlank(message = "가격을 입력해야 합니다.") @Pattern(regexp = "^\\d+$", message = "가격은 0이상의 숫자만 입력 가능합니다.") String getPrice() {
         return price;
     }
 
-    public void setPrice(
-        @NotBlank(message = "가격을 입력해야 합니다.") @Pattern(regexp = "^\\d+$", message = "가격은 0이상의 숫자만 입력 가능합니다.") String price) {
-        this.price = price;
-    }
-
     public @NotBlank(message = "이미지 URL을 입력해야 합니다.") @Pattern(regexp = "^(http|https)://.*$", message = "유효한 이미지 URL을 입력해야 합니다.") String getImageUrl() {
         return imageUrl;
-    }
-
-    public void setImageUrl(
-        @NotBlank(message = "이미지 URL을 입력해야 합니다.") @Pattern(regexp = "^(http|https)://.*$", message = "유효한 이미지 URL을 입력해야 합니다.") String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     @Override

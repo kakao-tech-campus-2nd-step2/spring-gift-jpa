@@ -34,24 +34,12 @@ public class Wishlist {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getMemberEmail() {
         return memberEmail;
     }
 
-    public void setMemberEmail(String memberEmail) {
-        this.memberEmail = memberEmail;
-    }
-
     public Long getProductId() {
         return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
     }
 
     @Override
