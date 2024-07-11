@@ -48,11 +48,12 @@ public class AdminController {
         return mav;
     }
 
-
-
     @GetMapping("/update/{id}")
     public String editProductForm(@PathVariable Long id, Model model) {
         Product product = productService.getProduct(id);
+        if (product == null) {
+            return "redirect:/admin/products";
+        }
         model.addAttribute("product", product);
         return "update";
     }
@@ -70,14 +71,16 @@ public class AdminController {
 
         ModelAndView mav = new ModelAndView("update");
         mav.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-        mav.addObject("error", "상품 추가 실패");
+        mav.addObject("error", "상품 수정 실패");
         return mav;
-
     }
 
     @PostMapping("/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id); // 상품 삭제 메소드 호출
-        return "redirect:/admin/products"; // 상품 삭제 후 목록 페이지로 리다이렉트
+        ProductServiceStatus response = productService.deleteProduct(id);
+        if (response == ProductServiceStatus.SUCCESS) {
+            return "redirect:/admin/products"; // 성공적으로 삭제 후 목록 페이지로 리다이렉트
+        }
+        return "error"; // 실패 시 에러 페이지로 리다이렉트
     }
 }
