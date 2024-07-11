@@ -8,10 +8,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import security.SHA256Util;
 
 @Entity
 @Table(name = "app_user")
-public class User {
+public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,10 +33,10 @@ public class User {
     @Column(length = 255)
     private String salt;
 
-    public User() {
+    public AppUser() {
     }
 
-    public User(String email, String password, Role role, String salt) {
+    public AppUser(String email, String password, Role role, String salt) {
         this.email = email;
         this.password = password;
         this.role = role;
@@ -88,5 +89,10 @@ public class User {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public boolean isPasswordCorrect(String inputPassword) {
+        String hashedInputPassword = SHA256Util.encodePassword(inputPassword, this.salt);
+        return this.password.equals(hashedInputPassword);
     }
 }

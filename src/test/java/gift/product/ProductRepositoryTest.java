@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gift.product.model.ProductRepository;
 import gift.product.model.dto.Product;
+import gift.user.model.dto.AppUser;
 import gift.user.model.dto.Role;
-import gift.user.model.dto.User;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -26,13 +26,13 @@ import org.springframework.test.context.ActiveProfiles;
 public class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
-    private User user;
+    private AppUser appUser;
     private Product product;
 
     @BeforeEach
     public void setUp() {
-        user = new User("aabb@kakao.com", "1234", Role.USER, "aaaa");
-        product = new Product("Test", 1000, "url", user);
+        appUser = new AppUser("aabb@kakao.com", "1234", Role.USER, "aaaa");
+        product = new Product("Test", 1000, "url", appUser);
     }
 
     @Test

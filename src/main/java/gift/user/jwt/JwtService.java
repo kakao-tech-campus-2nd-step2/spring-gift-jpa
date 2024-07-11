@@ -6,20 +6,19 @@ import static gift.user.jwt.JwtUtil.TOKEN_BEGIN_INDEX;
 import static gift.user.jwt.JwtUtil.TOKEN_PREFIX;
 import static gift.user.jwt.JwtUtil.expirationSeconds;
 
-import gift.user.model.UserRepository;
-import gift.user.model.dto.User;
+import gift.user.model.dto.AppUser;
+import gift.user.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.Date;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JwtService {
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public JwtService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public JwtService(UserService userService) {
+        this.userService = userService;
     }
 
     public String createToken(Long id) {
@@ -32,9 +31,9 @@ public class JwtService {
                 .compact();
     }
 
-    public User getLoginUser(String token) {
+    public AppUser getLoginUser(String token) {
         Long id = getIdFromToken(token);
-        return userRepository.findByIdAndIsActiveTrue(id).orElseThrow(() -> new EntityNotFoundException("User"));
+        return userService.findUser(id);
     }
 
     private Long getIdFromToken(String token) {

@@ -1,11 +1,12 @@
 package gift.user.controller;
 
 import gift.user.exception.ForbiddenException;
+import gift.user.model.dto.AppUser;
 import gift.user.model.dto.LoginRequest;
 import gift.user.model.dto.SignUpRequest;
 import gift.user.model.dto.UpdatePasswordRequest;
-import gift.user.model.dto.User;
 import gift.user.resolver.LoginUser;
+import gift.user.service.JwtUserService;
 import gift.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,20 +23,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    private final JwtUserService jwtUserService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtUserService jwtUserService) {
         this.userService = userService;
+        this.jwtUserService = jwtUserService;
     }
 
     @PostMapping
     public ResponseEntity<String> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
-        userService.signUp(signUpRequest);
+        jwtUserService.signUp(signUpRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest) {
-        String token = userService.login(loginRequest);
+        String token = jwtUserService.login(loginRequest);
         return ResponseEntity.ok()
                 .header("Authorization", token)
                 .body("로그인 성공");
@@ -43,15 +46,15 @@ public class UserController {
 
     @PatchMapping("/password")
     public ResponseEntity<String> updatePassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest,
-                                                 @LoginUser User loginUser) {
-        userService.updatePassword(updatePasswordRequest, loginUser);
+                                                 @LoginUser AppUser loginAppUser) {
+        userService.updatePassword(updatePasswordRequest, loginAppUser);
         return ResponseEntity.ok().body("ok");
     }
 
     @GetMapping("/email")
     public ResponseEntity<String> findEmail(@Valid @RequestParam Long id,
-                                            @LoginUser User loginUser) {
-        if (loginUser.getId().equals(id)) {
+                                            @LoginUser AppUser loginAppUser) {
+        if (loginAppUser.getId().equals(id)) {
             String password = userService.findEmail(id);
             return ResponseEntity.ok().body(password);
         }
@@ -60,8 +63,8 @@ public class UserController {
 
     @GetMapping("/admin/email")
     public ResponseEntity<String> findEmailForAdmin(@Valid @RequestParam Long id,
-                                                    @LoginUser User loginUser) {
-        userService.verifyAdminAccess(loginUser);
+                                                    @LoginUser AppUser loginAppUser) {
+        userService.verifyAdminAccess(loginAppUser);
         String password = userService.findEmail(id);
         return ResponseEntity.ok().body(password);
     }

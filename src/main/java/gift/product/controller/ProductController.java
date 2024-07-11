@@ -6,7 +6,7 @@ import gift.product.model.dto.Product;
 import gift.product.model.dto.ProductResponse;
 import gift.product.model.dto.UpdateProductRequest;
 import gift.product.service.ProductService;
-import gift.user.model.dto.User;
+import gift.user.model.dto.AppUser;
 import gift.user.resolver.LoginUser;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -46,32 +46,32 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addProduct(@LoginUser User loginUser,
+    public ResponseEntity<String> addProduct(@LoginUser AppUser loginAppUser,
                                              @Valid @RequestBody CreateProductRequest createProductRequest) {
-        productService.addProduct(loginUser, createProductRequest);
+        productService.addProduct(loginAppUser, createProductRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
     @PostMapping("/admin")
-    public ResponseEntity<String> addProductForAdmin(@LoginUser User loginUser,
+    public ResponseEntity<String> addProductForAdmin(@LoginUser AppUser loginAppUser,
                                                      @Valid @RequestBody CreateProductAdminRequest createProductRequest) {
         CreateProductRequest req = new CreateProductRequest(createProductRequest.name(), createProductRequest.price(),
                 createProductRequest.imageUrl());
-        productService.addProduct(loginUser, req);
+        productService.addProduct(loginAppUser, req);
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateProduct(@LoginUser User loginUser, @PathVariable Long id,
+    public ResponseEntity<String> updateProduct(@LoginUser AppUser loginAppUser, @PathVariable Long id,
                                                 @Valid @RequestBody UpdateProductRequest updateProductRequest) {
-        productService.updateProduct(loginUser, id, updateProductRequest);
+        productService.updateProduct(loginAppUser, id, updateProductRequest);
         return ResponseEntity.ok().body("ok");
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProductById(@LoginUser User loginUser, @PathVariable Long id) {
-        productService.deleteProduct(loginUser, id);
+    public ResponseEntity<String> deleteProductById(@LoginUser AppUser loginAppUser, @PathVariable Long id) {
+        productService.deleteProduct(loginAppUser, id);
         return ResponseEntity.ok().body("ok");
     }
 }
