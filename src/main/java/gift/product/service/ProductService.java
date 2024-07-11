@@ -22,12 +22,12 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    @Transactional
     public void modifyProduct(final Long id, ProductParams productRequest) {
-        productRepository.findById(id)
+        var product = productRepository.findById(id)
                 .orElseThrow(() -> ProductNotFoundException.of(id));
 
-        Product newProduct = productRequest.toEntity(id);
-        productRepository.save(newProduct);
+        product.modify(productRequest.name(), productRequest.price(), productRequest.imgUrl());
     }
 
     @Transactional(readOnly = true)

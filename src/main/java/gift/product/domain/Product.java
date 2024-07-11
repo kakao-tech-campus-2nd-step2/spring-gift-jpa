@@ -56,6 +56,13 @@ public class Product {
         return imgUrl;
     }
 
+    public void modify(String name, Integer price, String imgUrl) {
+        checkName(name);
+        this.name = name;
+        this.price = price;
+        this.imgUrl = imgUrl;
+    }
+
     private void checkName(String name) {
         if (name.contains("카카오")) {
             throw new ProductNoConferredException(List.of("카카오"));
