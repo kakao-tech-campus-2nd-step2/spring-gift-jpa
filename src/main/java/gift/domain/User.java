@@ -39,7 +39,7 @@ public class User {
     }
 
     public User(String email, String password, String accessToken) {
-        this.id = -1;
+        this.id = 0;
         this.email = email;
         this.password = password;
         this.accessToken = accessToken;

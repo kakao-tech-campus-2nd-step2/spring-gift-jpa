@@ -9,6 +9,7 @@ import gift.dto.Wishlist.Response;
 import gift.exception.ProductException;
 import gift.exception.UserErrorCode;
 import gift.exception.UserException;
+import gift.exception.UserException.BadRequest;
 import gift.exception.UserException.BadToken;
 import gift.exception.WishErrorCode;
 import gift.exception.WishException;
@@ -51,7 +52,9 @@ public class WishlistService {
     }
 
     public List<Wishlist.Response> getAllWishlistItems(long userId) {
-        List<Wish> wishList = wishlistRepository.findByUser(userId);
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new BadRequest(UserErrorCode.ID_NOT_EXISTS));
+        List<Wish> wishList = wishlistRepository.findByUser(user);
 
         return wishList.stream()
             .map(wish -> new Wishlist.Response(wish.getProductName(), wish.getQuantity()))
