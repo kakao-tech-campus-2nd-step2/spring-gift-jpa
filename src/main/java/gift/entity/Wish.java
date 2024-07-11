@@ -15,10 +15,10 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
+    @Column(nullable = false)
     private Long memberId;
 
-    @Column(name = "product_id", nullable = false)
+    @Column(nullable = false)
     private Long productId;
 
     @Column(nullable = false)

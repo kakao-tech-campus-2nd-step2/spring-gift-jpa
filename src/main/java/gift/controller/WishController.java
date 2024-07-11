@@ -34,7 +34,6 @@ public class WishController {
 
     @PostMapping
     public ResponseEntity<String> addWishlist(@LoginMember Long memberId, @RequestBody WishlistRequestDto wishlistRequestDto) {
-        System.out.println(memberId);
         wishService.addWishlist(new Wish(memberId, wishlistRequestDto.getProductId(), wishlistRequestDto.getQuantity()));
         return new ResponseEntity<>(HttpStatus.OK);
     }

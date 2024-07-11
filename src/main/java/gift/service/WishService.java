@@ -24,8 +24,10 @@ public class WishService {
 
     public Wish addWishlist(Wish wish) {
         Optional<Wish> wishlists = wishRepository.findByMemberIdAndProductId(wish.getMemberId(), wish.getProductId());
-        if (wishlists.isEmpty()) {
-            throw new BusinessException("요청한 Id에 해당하는 사용자를 찾을 수 없습니다.");
+        if (wishlists.isPresent()) {
+            Wish existingWish = wishlists.get();
+            existingWish.setQuantity(wish.getQuantity());
+            return wishRepository.save(existingWish);
         }
         return wishRepository.save(wish);
     }
