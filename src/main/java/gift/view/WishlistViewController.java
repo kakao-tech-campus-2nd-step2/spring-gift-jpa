@@ -11,6 +11,7 @@ import gift.service.UserService;
 import gift.service.WishlistService;
 import java.util.ArrayList;
 import javax.print.attribute.standard.PrinterURI;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/wishlist")
@@ -50,10 +52,13 @@ public class WishlistViewController {
     }
 
     @GetMapping("{id}/new")
-    public String showAddProduct(@PathVariable("id") Long userId, Model model) {
-        List<Product> products = productController.getAllProducts().getBody();
+    public String showAddProduct(@PathVariable("id") Long userId, Model model,
+                                @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size) {
+        Page<Product> products = productController.getAllProducts(page, size).getBody();
         model.addAttribute("products", products);
         model.addAttribute("userId", userId);
+        System.out.println("return add_wishlist");
         return "add_wishlist";
     }
     @PostMapping("{id}/save")
