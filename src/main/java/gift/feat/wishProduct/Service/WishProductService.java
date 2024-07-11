@@ -38,13 +38,12 @@ public class WishProductService {
 			.map(WishProductResponseDto::from)
 			.toList();
 	}
-	//페이징 해서 조회
+
 	@Transactional(readOnly = true)
 	public Page<WishProductResponseDto> getByUserId(Long userId, Pageable pageable) {
 		return wishProductJpaRepository.findByUserId(userId, pageable)
 			.map(WishProductResponseDto::from);
 	}
-
 
 	@Transactional
 	public WishProduct save(Long productId, Long userId) {
