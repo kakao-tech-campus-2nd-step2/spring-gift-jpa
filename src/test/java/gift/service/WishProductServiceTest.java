@@ -142,21 +142,6 @@ class WishProductServiceTest {
     }
 
     @Test
-    @DisplayName("추가된 위시리스트 상품을 상품 객체에서 조회할 수 있다.")
-    void addWishProductAndFindFromProductEntity() {
-        //given
-        var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
-        var managerWishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
-        //when
-        var wishProducts = productRepository.findById(product1Id)
-                .orElseThrow(() -> new NotFoundElementException(product1Id + "를 가진 상품이 존재하지 않습니다.")).getWishes();
-        //then
-        Assertions.assertThat(wishProducts.size()).isEqualTo(1);
-
-        wishProductService.deleteWishProduct(managerWishProduct.id());
-    }
-
-    @Test
     @DisplayName("존재하지 않는 상품 ID 로 위시 리스트 상품 추가 요청시 예외 발생")
     void addWishProductFailWithInvalidProductId() {
         //given

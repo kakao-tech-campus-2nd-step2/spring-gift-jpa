@@ -49,7 +49,6 @@ public class WishProduct extends BaseEntity {
     }
 
     public void addProduct(Product product) {
-        product.getWishes().add(this);
         this.product = product;
     }
 
@@ -59,8 +58,6 @@ public class WishProduct extends BaseEntity {
     }
 
     public void removeWishProduct() {
-        product.getWishes().remove(this);
-        member.getWishes().remove(this);
         this.product = null;
         this.member = null;
     }
