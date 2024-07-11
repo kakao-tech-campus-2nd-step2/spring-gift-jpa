@@ -2,15 +2,19 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.spy;
 
 import gift.domain.Product;
 import gift.dto.ProductRequest;
+import gift.entity.ProductEntity;
 import gift.repository.ProductRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,83 +32,102 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("Id로 Product 조회 테스트")
-    void findTest(){
+    void find(){
         // given
         Long id = 1L;
-        Product product = new Product(1L, "test", 1000, "test.jpg");
-        doReturn(product).when(productRepository).findById(id);
+        ProductEntity productEntity = new ProductEntity("test", 1000, "test.jpg");
+        ProductEntity spyProductEntity = spy(productEntity);
+
+        Product expected = spyProductEntity.toProduct();
+
+        doReturn(Optional.of(spyProductEntity)).when(productRepository).findById(id);
+        doReturn(expected).when(spyProductEntity).toProduct();
 
         // when
-        Product actualProduct = productService.find(id);
+        Product actual = productService.find(id);
 
         // then
-        assertThat(actualProduct).isEqualTo(product);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("모든 Product 조회 테스트")
-    void findAllTest() {
+    void findAll() {
         // given
-        Product product1 = new Product(1L, "test1", 1000, "test1.jpg");
-        Product product2 = new Product(2L, "test2", 2000, "test2.jpg");
-        List<Product> productList = Arrays.asList(product1, product2);
+        ProductEntity product1 = new ProductEntity("test1", 1000, "test1.jpg");
+        ProductEntity product2 = new ProductEntity("test2", 2000, "test2.jpg");
+
+        ProductEntity spyProduct1 = spy(product1);
+        ProductEntity spyProduct2 = spy(product2);
+
+        List<ProductEntity> productList = Arrays.asList(spyProduct1, spyProduct2);
+        List<Product> expected = productList.stream().map(ProductEntity::toProduct).toList();
 
         doReturn(productList).when(productRepository).findAll();
+        doReturn(expected.get(0)).when(spyProduct1).toProduct();
+        doReturn(expected.get(1)).when(spyProduct2).toProduct();
 
         // when
-        List<Product> actualProduct = productService.findAll();
+        List<Product> actual = productService.findAll();
 
         // then
-        assertThat(actualProduct).isEqualTo(productList);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("product 저장 테스트")
-    void createTest() {
+    void create() {
         // given
         ProductRequest productRequest = new ProductRequest("test", 1000, "test.jpg");
-        Product savedProduct = new Product(1L, productRequest.getName(), productRequest.getPrice(),
+        ProductEntity savedProduct = new ProductEntity(productRequest.getName(), productRequest.getPrice(),
             productRequest.getImageUrl());
+        ProductEntity spySavedProduct = spy(savedProduct);
+        Product expected = spySavedProduct.toProduct();
 
-        doReturn(savedProduct).when(productRepository).save(productRequest);
+        doReturn(spySavedProduct).when(productRepository).save(any(ProductEntity.class));
+        doReturn(expected).when(spySavedProduct).toProduct();
 
         // when
-        Product actualProduct = productService.createProduct(productRequest);
+        Product actual = productService.createProduct(productRequest);
 
         // then
-        assertThat(actualProduct).isEqualTo(savedProduct);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("product 업데이트 테스트")
-    void updateTest() {
+    void update() {
         // given
         Long id = 1L;
         ProductRequest productRequest = new ProductRequest("test", 1000, "test.jpg");
-        Product preProduct = new Product(id, "preTest", 2000, "preTest.jpg");
-        Product updatedProduct = new Product(id, productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        ProductEntity savedProductEntity = new ProductEntity("preTest", 2000, "preTest.jpg");
+        ProductEntity spySavedProductEntity = spy(savedProductEntity);
+        Product expect = spySavedProductEntity.toProduct();
 
-        doReturn(preProduct).when(productRepository).findById(id);
-        doReturn(updatedProduct).when(productRepository).update(any(Product.class));
-
+        doReturn(Optional.of(spySavedProductEntity)).when(productRepository).findById(id);
+        doNothing().when(spySavedProductEntity).updateProductEntity(any(ProductRequest.class));
+        doReturn(spySavedProductEntity).when(productRepository).save(any(ProductEntity.class));
+        doReturn(expect).when(spySavedProductEntity).toProduct();
         // when
-        Product actualProduct = productService.updateProduct(id, productRequest);
+        Product actual = productService.updateProduct(id, productRequest);
 
         // then
-        assertThat(actualProduct).isEqualTo(updatedProduct);
+        assertThat(actual).isEqualTo(expect);
     }
 
     @Test
     @DisplayName("product 삭제 테스트")
-    void deleteTest() {
+    void delete() {
         // given
         Long id = 1L;
+        ProductEntity savedProduct = new ProductEntity("test", 1000, "test.jpg");
+
+        doReturn(Optional.of(savedProduct)).when(productRepository).findById(id);
 
         // when
         productService.deleteProduct(id);
 
         // then
-        verify(productRepository, times(1)).delete(id);
-
+        verify(productRepository, times(1)).delete(savedProduct);
     }
 }
