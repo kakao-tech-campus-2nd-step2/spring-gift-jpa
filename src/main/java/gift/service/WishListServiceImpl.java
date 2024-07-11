@@ -13,6 +13,7 @@ import gift.model.Wish;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,17 +34,14 @@ public class WishListServiceImpl implements WishListService {
     public void addProduct(long memberId, long productId) {
         Member member = jpaMemberRepository.findById(memberId).orElseThrow(MemberNoSuchException::new);
         Product product = jpaProductRepository.findById(productId).orElseThrow();
-        Wish wish = new Wish(member, product);
-        member.addWish(wish);
-        jpaWishRepository.save(wish);
+        member.addProduct(product);
     }
 
     @Override
     public void deleteProduct(long memberId, long productId) {
         Member member = jpaMemberRepository.findById(memberId).orElseThrow(MemberNoSuchException::new);
-        Wish wish = jpaWishRepository.findByMemberIdAndProductId(memberId,productId).orElseThrow();
-        member.delWish(wish);
-        jpaWishRepository.delete(wish);
+        Product product = jpaProductRepository.findById(productId).orElseThrow();
+        member.delProduct(product);
     }
 
     @Override
@@ -55,12 +53,10 @@ public class WishListServiceImpl implements WishListService {
     }
 
     @Override
-    public List<WishListDTO> getWishList(long memberId) {
+    public WishListDTO getWishList(long memberId) {
        Member member = jpaMemberRepository.findById(memberId).orElseThrow();
-       member.getWishList().stream().map(wish-> new WishListDTO(wish.getMember().getId(),new HashMap<>())
+       Map<String,Integer> wishList = member.getWishList().stream().collect(Collectors.toMap(Wish::getProductName,Wish::getProductCount));
+       return new WishListDTO(member.getId(),wishList);
     }
 
-    private Map<String,Integer> toMap(List<Wish> wishList) {
-
-    }
 }

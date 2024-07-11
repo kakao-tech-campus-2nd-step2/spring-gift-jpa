@@ -13,9 +13,9 @@ public class WishListDTO {
     public WishListDTO() {
     }
 
-    public WishListDTO(Wish wish){
+    public WishListDTO(Wish wish,Map<String,Integer> wishList){
         this.memberId = wish.getMember().getId();
-        this.wishList = new HashMap<>();
+        this.wishList = wishList;
     }
 
     public WishListDTO(Long memberId, Map<String, Integer> wishList) {
@@ -29,10 +29,6 @@ public class WishListDTO {
 
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
-    }
-
-    public void addProduct(String, Integer value) {
-        this.wishList.put(productId.toString(), value);
     }
 
     public Map<String, Integer> getWishList() {
