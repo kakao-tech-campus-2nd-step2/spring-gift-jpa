@@ -1,19 +1,22 @@
 package gift.wishlist.dto;
 
-public class WishResponse {
-    private Long id;
-    private Long productId;
+import gift.product.model.Product;
 
-    public WishResponse(Long id, Long productId) {
+public class WishResponse {
+
+    private Long id;
+    private Product product;
+
+    public WishResponse(Long id, Product product) {
         this.id = id;
-        this.productId = productId;
+        this.product = product;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 }

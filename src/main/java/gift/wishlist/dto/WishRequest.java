@@ -1,10 +1,17 @@
 package gift.wishlist.dto;
 
-public class WishRequest {
-    private Long productId;
+import gift.product.model.Product;
 
-    public Long getProductId() {
-        return productId;
+public class WishRequest {
+
+    private Product product;
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
 }
