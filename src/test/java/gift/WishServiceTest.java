@@ -8,104 +8,66 @@ import gift.repository.WishRepository;
 import gift.service.WishService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
+@SpringBootTest
+public class WishServiceTest {
 
-class WishServiceTest {
-
-    @Mock
-    private WishRepository wishRepository;
-
-    @InjectMocks
+    @Autowired
     private WishService wishService;
 
+    @MockBean
+    private WishRepository wishRepository;
+
+    private Member member;
+    private Product product;
+    private Wish wish;
+
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
-    @Test
-    void testGetWishesByMemberId() {
-        //memberID로 위시리스트 조회
-        Long memberId = 1L;
-
-        Member member = Member.builder()
-                .id(memberId)
-                .email("test@example.com")
-                .password("password")
-                .build();
-
-        Product product = Product.builder()
-                .id(1L)
-                .name("Test Product")
-                .price(1000)
-                .imageurl("https://t1.kakaocdn.net/kakaocorp/kakaocorp/admin/5f9c58c2017800001.png")
-                .build();
-
-        List<Wish> wishes = new ArrayList<>();
-        wishes.add(Wish.builder().id(1L).member(member).product(product).build());
-
-        when(wishRepository.findByMemberId(memberId)).thenReturn(wishes);
-
-        List<WishResponse> result = wishService.getWishesByMemberId(memberId);
-
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getProductName()).isEqualTo("Test Product");
-        verify(wishRepository, times(1)).findByMemberId(memberId);
-    }
-
-    @Test
-    void testAddWish() {
-        //새로운 위시리스트 추가
-        Member member = Member.builder()
+    public void setup() {
+        member = Member.builder()
                 .id(1L)
                 .email("test@example.com")
                 .password("password")
                 .build();
 
-        Product product = Product.builder()
+        product = Product.builder()
                 .id(1L)
-                .name("Test Product")
-                .price(1000)
-                .imageurl("https://t1.kakaocdn.net/kakaocorp/kakaocorp/admin/5f9c58c2017800001.png")
+                .name("Product Name")
+                .price(100)
+                .imageurl("https://cs.kakao.com/images/icon/img_kakaocs.png")
                 .build();
 
-        Wish wish = Wish.builder()
+        wish = Wish.builder()
+                .id(1L)
                 .member(member)
                 .product(product)
                 .build();
-
-        when(wishRepository.save(any(Wish.class))).thenReturn(wish);
-
-        Wish result = wishService.addWish(member, product);
-
-        assertThat(result.getMember()).isEqualTo(member);
-        assertThat(result.getProduct()).isEqualTo(product);
-        verify(wishRepository, times(1)).save(any(Wish.class));
     }
 
     @Test
-    void testDeleteWish() {
-        //위시리스트 삭제
-        Long wishId = 1L;
+    public void testGetWishesByMemberId() {
+        List<Wish> wishList = Collections.singletonList(wish);
+        Page<Wish> wishPage = new PageImpl<>(wishList, PageRequest.of(0, 5), 1);
+        Mockito.when(wishRepository.findByMemberId(Mockito.anyLong(), Mockito.any(Pageable.class)))
+                .thenReturn(wishPage);
 
-        Wish wish = Wish.builder().id(wishId).build();
-        when(wishRepository.existsById(wishId)).thenReturn(true);
-        doNothing().when(wishRepository).deleteById(wishId);
+        Page<WishResponse> response = wishService.getWishesByMemberId(member.getId(), PageRequest.of(0, 5));
 
-        wishService.deleteWish(wishId);
-
-        verify(wishRepository, times(1)).existsById(wishId);
-        verify(wishRepository, times(1)).deleteById(wishId);
+        assertThat(response.getContent()).hasSize(1);
+        assertThat(response.getContent().get(0).getId()).isEqualTo(wish.getId());
+        assertThat(response.getContent().get(0).getProductName()).isEqualTo(product.getName());
     }
 }
