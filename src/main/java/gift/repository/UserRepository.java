@@ -1,12 +1,10 @@
 package gift.repository;
 
 import gift.model.User;
-import gift.model.UserDTO;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserRepository {
-    User save(UserDTO user);
-
+public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 }
