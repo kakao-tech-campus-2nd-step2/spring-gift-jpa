@@ -3,6 +3,7 @@ package gift.repository;
 import gift.compositeKey.WishListId;
 import gift.dto.ProductDTO;
 import gift.dto.WishDTO;
+import gift.entity.Product;
 import gift.entity.WishList;
 import gift.exception.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,9 @@ import java.util.List;
 
 @Repository
 public interface WishListRepository extends JpaRepository<WishList, WishListId> {
-    @Query("SELECT p.name, p.price, p.imageUrl " +
-            "FROM Product p, WishList w where p.id = w.id.product_id and w.id.user_id = :userId")
-    List<Object[]> findByUserId(@Param("userId") int tokenUserId);
+    @Query("SELECT new Product(p.id, p.name, p.price, p.imageUrl) " +
+            "FROM Product p JOIN WishList w on p.id = w.id.product_id WHERE w.id.user_id = :userId")
+    List<Product> findByUserId(@Param("userId") int tokenUserId);
 
 
 }

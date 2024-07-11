@@ -22,7 +22,7 @@ public class UserService {
     UserRepository userRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    JWTUtil jwtUtil;
 
     public void signUp(UserDTO.SignUpDTO dto) {
         if (userRepository.findByEmail(dto.getEmail()).isPresent())
@@ -38,7 +38,7 @@ public class UserService {
         if (!user1.getPassword().equals(loginDTO.getPassword()))
             throw new BadRequestException("비밀번호가 일치하지 않습니다.");
 
-        return new UserDTO.Token(JWTUtil.generateToken(user1));
+        return new UserDTO.Token(jwtUtil.generateToken(user1));
 
     }
 }

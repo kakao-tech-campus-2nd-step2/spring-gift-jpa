@@ -8,7 +8,6 @@ import java.util.List;
 @Entity
 @Table(name = "user_tb")
 public class User {
-    static int id_cnt = 1;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

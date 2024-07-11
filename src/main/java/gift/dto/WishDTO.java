@@ -1,5 +1,7 @@
 package gift.dto;
 
+import gift.entity.Product;
+
 public class WishDTO {
     public static class wishListProduct {
         String name;
@@ -22,6 +24,12 @@ public class WishDTO {
             this.name = name;
             this.price = price;
             this.imageUrl = imageUrl;
+        }
+
+        public wishListProduct(Product product) {
+            this.name = product.getName();
+            this.price = product.getPrice();
+            this.imageUrl = product.getImageUrl();
         }
     }
 }

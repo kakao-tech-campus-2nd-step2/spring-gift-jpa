@@ -30,8 +30,10 @@ public class ProductService {
     @Autowired
     private OptionRepository optionRepository;
     ObjectMapper objectMapper = new ObjectMapper();
+
     public List<ProductDTO.WithOptionDTO> getAllProducts() {
-        return optionRepository.findAllWithOption().stream()
+        return optionRepository.findAllWithOption()
+                .stream()
                 .map(array -> new ProductDTO.WithOptionDTO(
                         (Integer) array[0],
                         (String) array[1],

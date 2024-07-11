@@ -1,79 +1,57 @@
 package gift.Util;
 
 import gift.entity.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import gift.exception.exception.UnAuthException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.security.Key;
+import java.util.Map;
 
+
+
+@Component
 public class JWTUtil {
 
-    private static final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final SecretKey key;
+    private final int expirationMs;
 
-    /**
-     * 토큰 생성
-     */
-    public static String generateToken(User user) {
-        Claims claims = Jwts.claims();
-        claims.put("user_id", user.getId());
-        return createToken(claims, user.getId());
+    public JWTUtil(@Value("${jwt.secretKey}") String jwtSecret,
+                       @Value("${jwt.expiredMs}") int jwtExpirationMs) {
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        this.expirationMs = jwtExpirationMs;
     }
 
-    private static String createToken(Claims claims, int subject) {
-        Date now = new Date(System.currentTimeMillis());
-        Date expirationTime = new Date(now.getTime() + 1000 * 60 * 60);
-
+    public String generateToken(User user) {
+        Date date = new Date();
+        Date expire = new Date(date.getTime()+expirationMs);
         return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(expirationTime)
-                .signWith(SignatureAlgorithm.HS256, key)
+                .subject(Integer.toString(user.getId()))
+                .issuedAt(date)
+                .expiration(expire)
+                .signWith(key)
                 .compact();
     }
 
-    /**
-     * 토큰 유효여부 확인
-     */
-    public static Boolean isValidToken(String token) {
-        //log.info("isValidToken token = {}", token);
-        return !isTokenExpired(token);
+    public boolean validateToken(String token) throws JwtException {
+        try {
+            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
+        } catch (JwtException e) {
+            return false;
+        }
+        return true;
     }
 
-    /**
-     * 토큰의 Claim 디코딩
-     */
-    private static Claims getAllClaims(String token) {
-        //log.info("getAllClaims token = {}", token);
-        return Jwts.parser()
-                .setSigningKey(key)
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    /**
-     * Claim 에서 username 가져오기
-     */
-    public static int getIdFromToken(String token) {
-        return (int) getAllClaims(token).get("user_id");
-        //log.info("getUsernameFormToken subject = {}", username);
-    }
-
-    /**
-     * 토큰 만료기한 가져오기
-     */
-    public static Date getExpirationDate(String token) {
-        Claims claims = getAllClaims(token);
-        return claims.getExpiration();
-    }
-
-    /**
-     * 토큰이 만료되었는지
-     */
-    private static boolean isTokenExpired(String token) {
-        return getExpirationDate(token).before(new Date());
+    public Integer getUserIdFromToken(String token) {
+        return Integer.parseInt(Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject());
     }
 }

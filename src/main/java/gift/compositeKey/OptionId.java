@@ -26,5 +26,4 @@ public class OptionId implements Serializable {
     public OptionId() {
     }
 
-
 }

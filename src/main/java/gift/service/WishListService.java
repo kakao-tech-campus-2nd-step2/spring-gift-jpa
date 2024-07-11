@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.Util.JWTUtil;
 import gift.compositeKey.WishListId;
 import gift.dto.WishDTO;
+import gift.entity.Product;
 import gift.entity.WishList;
 import gift.exception.exception.BadRequestException;
 import gift.exception.exception.NotFoundException;
@@ -17,18 +18,22 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static gift.dto.WishDTO.*;
+
 @Service
 public class WishListService {
     @Autowired
     WishListRepository wishListRepository;
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    JWTUtil jwtUtil;
 
-    ObjectMapper objectMapper= new ObjectMapper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     public void add(String token, int productId) {
-        int tokenUserId = getIdFromToken(token);
-        if (!JWTUtil.isValidToken(token))
+        int tokenUserId = getTokenId(token);
+        if (!jwtUtil.validateToken(token))
             throw new UnAuthException("로그인 만료");
         WishListId wishListId = new WishListId(tokenUserId, productId);
         if (productRepository.findById(productId).isEmpty())
@@ -39,27 +44,24 @@ public class WishListService {
     }
 
     public String getWishList(String token) throws JsonProcessingException {
-        int tokenUserId = getIdFromToken(token);
-        if (!JWTUtil.isValidToken(token))
+        int tokenUserId = getTokenId(token);
+        if (!jwtUtil.validateToken(token))
             throw new UnAuthException("로그인 만료");
-        List<WishDTO.wishListProduct> wishlist = wishListRepository.findByUserId(tokenUserId).stream()
-                .map(array -> new WishDTO.wishListProduct(
-                        (String) array[0],
-                        (Integer) array[1],
-                        (String) array[2]
-                )).collect(Collectors.toList());
+        List<wishListProduct> wishlist = wishListRepository.findByUserId(tokenUserId)
+                .stream()
+                .map(wishListProduct::new).collect(Collectors.toList());
         return objectMapper.writeValueAsString(wishlist);
     }
 
     public void deleteWishList(String token, int productId) {
-        if (!JWTUtil.isValidToken(token))
+        if (!jwtUtil.validateToken(token))
             throw new UnAuthException("로그인 만료");
-        int tokenUserId = JWTUtil.getIdFromToken(token);
+        int tokenUserId = getTokenId(token);
         WishListId wishListId = new WishListId(tokenUserId, productId);
         wishListRepository.deleteById(wishListId);
     }
 
-    public int getIdFromToken(String token) {
-        return JWTUtil.getIdFromToken(token);
+    public int getTokenId(String token) {
+        return jwtUtil.getUserIdFromToken(token);
     }
 }
