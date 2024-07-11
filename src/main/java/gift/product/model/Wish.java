@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 public class Wish {
@@ -21,6 +23,7 @@ public class Wish {
 
     @ManyToOne
     @JoinColumn(nullable = false)
+    @OnDelete(action= OnDeleteAction.CASCADE)
     private final Product product;
 
     protected Wish() {
