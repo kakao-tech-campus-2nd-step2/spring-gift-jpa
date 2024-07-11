@@ -1,12 +1,16 @@
 package gift.repository;
 
 import gift.domain.Member;
+import gift.domain.Product;
+import gift.domain.Wish;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,26 +24,31 @@ class MemberRepositoryTest {
 
     private String expectedEmail;
     private String expectedPassword;
-    private Member expected;
+    private Member expectedMember;
+    private Product expectedProduct;
+    private Wish expectedWish;
 
     @BeforeEach
     void setupMember() {
         expectedEmail = "a@a.com";
         expectedPassword = "1234";
-        expected = new Member(expectedEmail,expectedPassword);
+
+        expectedMember = new Member(expectedEmail,expectedPassword);
+        expectedProduct = new Product("아메리카노", 2000, "http://example.com/americano");
+        expectedWish = new Wish(expectedMember, expectedProduct, 1);
     }
 
     @Test
     @DisplayName("멤버 저장 테스트")
     void save() {
         // when
-        Member actual = members.save(expected);
+        Member actual = members.save(expectedMember);
 
         // then
         assertAll(
                 ()->assertThat(actual.getId()).isNotNull(),
-                ()->assertThat(actual.getEmail()).isEqualTo(expected.getEmail()),
-                ()->assertThat(actual.getPassword()).isEqualTo(expected.getPassword())
+                ()->assertThat(actual.getEmail()).isEqualTo(expectedMember.getEmail()),
+                ()->assertThat(actual.getPassword()).isEqualTo(expectedMember.getPassword())
         );
     }
 
@@ -47,7 +56,7 @@ class MemberRepositoryTest {
     @DisplayName("멤버 이메일, 비밀번호로 조회 테스트")
     void findByEmailAndPassword() {
         // given
-        Member savedMember = members.save(expected);
+        Member savedMember = members.save(expectedMember);
         entityManager.flush();
         entityManager.clear();
 
@@ -66,7 +75,7 @@ class MemberRepositoryTest {
     @DisplayName("멤버 이메일 조회 테스트")
     void findByEmail() {
         // given
-        Member savedMember = members.save(expected);
+        Member savedMember = members.save(expectedMember);
         entityManager.flush();
         entityManager.clear();
 
@@ -78,6 +87,27 @@ class MemberRepositoryTest {
                 () -> assertThat(findMember.getId()).isNotNull(),
                 () -> assertThat(findMember.getEmail()).isEqualTo(expectedEmail),
                 ()->assertThat(findMember.getPassword()).isEqualTo(expectedPassword)
+        );
+    }
+
+    @Test
+    @DisplayName("멤버->위시 영속 전파 테스트")
+    void testCascadePersist(){
+        // given
+        entityManager.persist(expectedProduct);
+
+        // when
+        expectedProduct.addWish(expectedWish);
+        Member savedMember = members.save(expectedMember);
+        entityManager.flush();
+        entityManager.clear();
+
+        // then
+        Member foundMember = members.findById(savedMember.getId()).get();
+        assertAll(
+                () -> assertThat(foundMember).isEqualTo(savedMember),
+                () -> assertThat(foundMember.getWishes().size()).isEqualTo(1),
+                () -> assertThat(foundMember.getWishes().get(0)).isEqualTo(expectedWish)
         );
     }
 }
