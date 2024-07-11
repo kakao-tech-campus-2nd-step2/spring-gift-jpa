@@ -26,11 +26,13 @@ public class WishRequestDto {
         return count;
     }
 
-    public Wish toEntity(Long memberId) {
+    public Wish toEntity() {
         return new Wish(
-            memberId,
-            productId,
             count
         );
+    }
+
+    public boolean isCountZero() {
+        return count == 0;
     }
 }

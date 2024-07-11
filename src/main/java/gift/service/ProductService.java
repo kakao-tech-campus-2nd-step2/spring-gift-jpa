@@ -1,11 +1,13 @@
 package gift.service;
 
 import gift.exception.ProductException;
+import gift.model.Product;
 import gift.model.dto.ProductRequestDto;
 import gift.model.dto.ProductResponseDto;
 import gift.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -16,6 +18,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> getAllProducts() {
         return productRepository.findAll()
             .stream()
@@ -23,17 +26,23 @@ public class ProductService {
             .toList();
     }
 
-    public ProductResponseDto getProductById(Long id) {
-        return ProductResponseDto.from(productRepository.findById(id).get());
+    @Transactional(readOnly = true)
+    public ProductResponseDto getProductById(Long id) throws IllegalArgumentException {
+        return ProductResponseDto.from(productRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Product Not Found")));
     }
 
+    @Transactional
     public void insertProduct(ProductRequestDto productRequestDto) throws ProductException {
-        productRepository.save(productRequestDto.toEntity(null));
+        productRepository.save(productRequestDto.toEntity());
     }
 
+    @Transactional
     public void updateProductById(Long id, ProductRequestDto productRequestDto)
-        throws ProductException {
-        productRepository.save(productRequestDto.toEntity(id));
+        throws ProductException, IllegalArgumentException {
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Product Not Found"));
+        product.updateInfo(productRequestDto.toEntity());
     }
 
     public void deleteProductById(Long id) {

@@ -9,4 +9,11 @@
     - [x] validate를 Product로 옮김.
   - [x] MemberDao에서 MemberRepository로 변경
   - [x] WishDao에서 WishRepository로 변경
+
 @DataJpaTest를 사용하여 학습 테스트를 해 본다.
+
+### 2단계 기능 요구 사항
+객체의 참조와 테이블의 외래 키를 매핑해서 객체에서는 참조를 사용하고 테이블에서는 외래 키를 사용할 수 있도록 한다.
+- [ ] Wish Entity 수정
+- [ ] WishRepository 수정
+- [ ] Test 코드 수정

@@ -31,7 +31,18 @@ class ProductControllerTest {
 
     @Test
     void getAllProducts() throws JsonProcessingException {
-        // token 가져오기
+        var headers = getToken();
+        var url = "http://localhost:" + port + "/api/products";
+        var expected1 = addProduct("gamza", 500, "gamza.jpg", url, headers);
+        var expected2 = addProduct("goguma", 1000, "goguma.jpg", url, headers);
+
+        var requestEntity = new RequestEntity<>(headers, HttpMethod.GET, URI.create(url));
+        var actual = restTemplate.exchange(requestEntity, String.class);
+        assertThat(actual.getBody()).isEqualTo(
+            "[{\"id\":1,\"name\":\"gamza\",\"price\":500,\"imageUrl\":\"gamza.jpg\"},{\"id\":2,\"name\":\"goguma\",\"price\":1000,\"imageUrl\":\"goguma.jpg\"}]");
+    }
+
+    private HttpHeaders getToken() throws JsonProcessingException {
         var tokenUrl = "http://localhost:" + port + "/api/members/register";
         var tokenRequest = new MemberRequestDto("member1@example.com", "password", "member1",
             "user");
@@ -40,23 +51,16 @@ class ProductControllerTest {
         var tokenResponseEntity = restTemplate.exchange(tokenRequestEntity, String.class);
         var token = objectMapper.readTree(tokenResponseEntity.getBody()).get("accessToken")
             .asText();
-        System.out.println(token);
-        //products add
-        var url = "http://localhost:" + port + "/api/products";
         var headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
-        var expected1 = new ProductRequestDto("gamza", 500, "gamza.jpg");
-        var expected1RequestEntity = new RequestEntity<>(expected1, headers, HttpMethod.POST,
+        return headers;
+    }
+
+    private ProductRequestDto addProduct(String name, Integer price, String imageUrl, String url, HttpHeaders headers) {
+        var expected = new ProductRequestDto(name, price, imageUrl);
+        var expected1RequestEntity = new RequestEntity<>(expected, headers, HttpMethod.POST,
             URI.create(url));
         restTemplate.exchange(expected1RequestEntity, String.class);
-        var expected2 = new ProductRequestDto("goguma", 1000, "goguma.jpg");
-        var expected2RequestEntity = new RequestEntity<>(expected2, headers, HttpMethod.POST,
-            URI.create(url));
-        restTemplate.exchange(expected2RequestEntity, String.class);
-
-        var requestEntity = new RequestEntity<>(headers, HttpMethod.GET, URI.create(url));
-        var actual = restTemplate.exchange(requestEntity, String.class);
-        assertThat(actual.getBody()).isEqualTo(
-            "[{\"id\":1,\"name\":\"gamza\",\"price\":500,\"imageUrl\":\"gamza.jpg\"},{\"id\":2,\"name\":\"goguma\",\"price\":1000,\"imageUrl\":\"goguma.jpg\"}]");
+        return expected;
     }
 }

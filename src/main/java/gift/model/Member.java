@@ -5,10 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "member")
 public class Member {
 
     @Id
@@ -18,7 +16,7 @@ public class Member {
     private String email;
     @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "name")
+    @Column(name = "name", length = 15)
     private String name;
     @Column(name = "role")
     private String role;
@@ -34,10 +32,9 @@ public class Member {
         this.role = role;
     }
 
-    public Member(Long id, String email, String password, String name, String role) {
+    public Member(Long id, String email, String name, String role) {
         this.id = id;
         this.email = email;
-        this.password = password;
         this.name = name;
         this.role = role;
     }
