@@ -37,11 +37,13 @@ class WishlistRepositoryTest {
     }
 
     @Test
-    void findById() {
-        WishList expected = new WishList(100L, 100L);
+    void findWishlistByMember() {
+        Member member = new Member("example100@example.com","password");
+        memberRepository.save(member);
+        WishList expected = new WishList(member, 100L);
         WishList actual = wishlistRepository.save(expected);
-
-        assertThat(actual.getMemberId()).isEqualTo(100L);
+        List<WishList> products = wishlistRepository.findByMember(member);
+        assertThat(products.contains(actual)).isTrue();
     }
 
     @Test
