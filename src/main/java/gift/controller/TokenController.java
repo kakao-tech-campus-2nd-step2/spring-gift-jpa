@@ -14,7 +14,7 @@ public class TokenController {
 
     @GetMapping("/{userId}")
     public String makeTokenFrom(@RequestParam("userId") Long userId) {
-        return tokenService.makeTokenFrom(userId);
+        return tokenService.makeTokenFrom(userId).getTokenValue();
     }
 
     @DeleteMapping("/{userId}")

@@ -1,34 +1,45 @@
 package gift.service;
 
+import gift.dto.TokenDto;
 import gift.entity.Token;
-import gift.repository.TokenRepository;
+import gift.repository.TokenRepositoryInterface;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
 
 @Service
 public class TokenService {
-    private TokenRepository tokenRepository;
+    private TokenRepositoryInterface tokenRepositoryInterface;
 
-    public TokenService(TokenRepository tokenRepository) {
-        this.tokenRepository = tokenRepository;
+    public TokenService(TokenRepositoryInterface tokenRepositoryInterface) {
+        this.tokenRepositoryInterface = tokenRepositoryInterface;
+    }
+
+    public Token saveToken(Long userId) {
+        Token newToken = makeTokenFrom(userId);
+        return tokenRepositoryInterface.save(newToken);
     }
 
     public Token makeTokenFrom(Long userId) {
 
         String stringUserId = userId.toString();
-        String tokenValue =  Base64.getEncoder().encodeToString(stringUserId.getBytes());
-        Token newToken = new Token(tokenValue);
+        String tokenValue = "Basic " + Base64.getEncoder().encodeToString(stringUserId.getBytes());
 
-        Long newId = tokenRepository.save(newToken);
+        return new Token(tokenValue);
+    }
 
-        return new Token(newId,tokenValue);
+    public String decodeTokenValue(String tokenValue) {
+        byte[] decodedBytes = Base64.getDecoder().decode(tokenValue);
+        return new String(decodedBytes);
+    }
+
+    public TokenDto getTokenDtoFrom(Long userId) {
+        return TokenDto.fromEntity(tokenRepositoryInterface.getById(userId));
     }
 
     public void deleteTokenOf(Long userId) {
-
         Token newToken = makeTokenFrom(userId);
-        tokenRepository.delete(newToken);
+        tokenRepositoryInterface.delete(newToken);
     }
 
 }
