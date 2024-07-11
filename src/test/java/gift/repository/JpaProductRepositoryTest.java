@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.domain.Product;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -16,14 +17,20 @@ class JpaProductRepositoryTest {
     @Autowired
     private JpaProductRepository jpaProductRepository;
 
+    private Product product;
+
     private Long insertProduct(Product product){
         return jpaProductRepository.save(product).getId(); 
+    }
+    @BeforeEach
+    void setProduct(){
+        product = new Product("사과", 12000, "www.naver.com");
     }
 
     @Test
     void 상품_저장(){
         //given
-        Product product = new Product("사과", 12000, "www.naver.com");
+        setProduct();
         //when
         Long insertProductId = insertProduct(product);
         //then
@@ -36,7 +43,7 @@ class JpaProductRepositoryTest {
     @Test
     void 상품_단일_조회(){
         //given
-        Product product = new Product("사과", 12000, "www.naver.com");
+        setProduct();
         Long insertProductId = insertProduct(product);
         //when
         Product findProduct = jpaProductRepository.findById(insertProductId).get();
@@ -68,7 +75,7 @@ class JpaProductRepositoryTest {
     @Test
     void 상품_수정(){
         //given
-        Product product = new Product("사과", 12000, "www.naver.com");
+        setProduct();
         insertProduct(product);
         //when
         product.update("바나나", 15000,"www.daum.net");
@@ -83,7 +90,7 @@ class JpaProductRepositoryTest {
     @Test
     void 상품_삭제(){
         //given
-        Product product = new Product("사과", 12000, "www.naver.com");
+        setProduct();
         Long insertProductId = insertProduct(product);
         //when
         Product findProduct = jpaProductRepository.findById(insertProductId).get();

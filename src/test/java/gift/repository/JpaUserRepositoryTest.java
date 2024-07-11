@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.domain.User;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -16,13 +17,20 @@ class JpaUserRepositoryTest {
     @Autowired
     private JpaUserRepository jpaUserRepository;
 
+    private User user;
     private Long insertUser(User user){
         return jpaUserRepository.save(user).getId();
     }
+
+    @BeforeEach
+    void setUser(){
+        user = new User("www.naver.com", "1234", "일반");
+    }
+
     @Test
     void 회원_가입() {
         //given
-        User user = new User("www.naver.com", "1234", "일반");
+        setUser();
         //when
         Long insertUserId = insertUser(user);
         //then
@@ -34,7 +42,7 @@ class JpaUserRepositoryTest {
     @Test
     void 회원_조회(){
         //given
-        User user = new User("www.naver.com", "1234", "일반");
+        setUser();
         Long insertUserId = insertUser(user);
         //when
         User findUser = jpaUserRepository.findById(insertUserId).get();
@@ -51,7 +59,7 @@ class JpaUserRepositoryTest {
     @Test
     void 이메일_회원_조회(){
         //given
-        User user = new User("www.naver.com", "1234", "일반");
+        setUser();
         Long insertUserId = insertUser(user);
         //when
         User findUserByEmail = jpaUserRepository.findByEmail("www.naver.com").get();

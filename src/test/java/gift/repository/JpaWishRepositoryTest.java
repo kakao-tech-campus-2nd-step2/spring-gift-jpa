@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.domain.Wish;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -16,15 +17,20 @@ class JpaWishRepositoryTest {
     //TODO: id잘못됐을 때 에러
     @Autowired
     private JpaWishRepository jpaWishRepository;
+    private Wish wish;
 
     private Long insertWish(Wish wish){
         return  jpaWishRepository.save(wish).getId();
     }
 
+    @BeforeEach
+    void setWish(){
+        wish = new Wish(1L, 1L, 10);
+    }
     @Test
     void 위시_추가(){
         //given
-        Wish wish = new Wish(1L, 1L, 10);
+        setWish();
         //when
         Long insertWishId = insertWish(wish);
         //then
@@ -37,7 +43,7 @@ class JpaWishRepositoryTest {
     @Test
     void 위시_조회(){
         //given
-        Wish wish = new Wish(1L, 1L, 10);
+        setWish();
         Long insertWishId = insertWish(wish);
         //when
         Wish findWish = jpaWishRepository.findById(insertWishId).get();
@@ -80,7 +86,7 @@ class JpaWishRepositoryTest {
     @Test
     void 위시_삭제(){
         //given
-        Wish wish = new Wish(1L, 1L, 10);
+        setWish();
         Long insertWishId = insertWish(wish);
         //when
         Wish findWish = jpaWishRepository.findById(insertWishId).get();
@@ -95,7 +101,7 @@ class JpaWishRepositoryTest {
     @Test
     void 상품_삭제(){
         //given
-        Wish wish = new Wish(1L, 1L, 10);
+        setWish();
         Long insertWishId = insertWish(wish);
         //when
         Wish findWish = jpaWishRepository.findById(insertWishId).get();
