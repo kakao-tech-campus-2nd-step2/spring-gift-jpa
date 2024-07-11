@@ -28,7 +28,6 @@ class WishRepositoryTest {
 
     private Member testMember;
     private Product testProduct1;
-    private Product testProduct2;
     private Wish testWish1;
     private Wish testWish2;
 
@@ -38,7 +37,7 @@ class WishRepositoryTest {
         memberRepository.save(testMember);
 
         testProduct1 = new Product("almond", 500, "almond.jpg");
-        testProduct2 = new Product("ice", 9000, "ice.jpg");
+        Product testProduct2 = new Product("ice", 9000, "ice.jpg");
         productRepository.save(testProduct1);
         productRepository.save(testProduct2);
 
