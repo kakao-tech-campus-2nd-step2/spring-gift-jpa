@@ -29,6 +29,13 @@ public class Member {
         this.activeToken = activeToken;
     }
 
+    public Member(Member member, String activeToken) {
+        this.id = member.id;
+        this.email = member.email;
+        this.password = member.password;
+        this.activeToken = activeToken;
+    }
+
     public Long getId() {
         return id;
     }
@@ -43,9 +50,5 @@ public class Member {
 
     public String getActiveToken() {
         return activeToken;
-    }
-
-    public void setActiveToken(String activeToken) {
-        this.activeToken = activeToken;
     }
 }
