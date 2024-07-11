@@ -5,9 +5,12 @@ import gift.domain.Product;
 import gift.domain.Wish;
 import gift.service.WishService;
 import gift.utils.JwtTokenProvider;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -51,8 +55,25 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Wish>> getWishlist(@RequestHeader("Authorization") String token,
-        @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+    public ResponseEntity<Page<Wish>> getWishlist(
+        @RequestHeader("Authorization") String token,
+        @RequestParam(defaultValue = "id") String sortBy,
+        @RequestParam(defaultValue = "desc") String sortDirection,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "0") int page) {
+
+        final int MAX_SIZE = 20;
+        size = Math.min(size, MAX_SIZE);
+
+        Sort.Direction direction = sortDirection.equalsIgnoreCase("asc")
+            ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        List<String> validSortFields = Arrays.asList("id", "quantity");
+        if (!validSortFields.contains(sortBy)) {
+            sortBy = "id";
+        }
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+
         String email = jwtTokenProvider.getEmailFromToken(token.substring(7));
         Page<Wish> wishlistProducts = wishlistService.getWishlistProducts(email, pageable);
         return ResponseEntity.ok(wishlistProducts);

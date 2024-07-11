@@ -4,9 +4,12 @@ import gift.controller.dto.ProductDTO;
 import gift.domain.Product;
 import gift.service.GiftService;
 import jakarta.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +29,24 @@ public class GiftController {
 
 
     @GetMapping
-    public ResponseEntity<Page<Product>> getAllProducts(@PageableDefault(size = 10, sort = "id")
-    Pageable pageable) {
+    public ResponseEntity<Page<Product>> getAllProducts(
+        @RequestHeader("Authorization") String token,
+        @RequestParam(defaultValue = "id") String sortBy,
+        @RequestParam(defaultValue = "desc") String sortDirection,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "0") int page) {
+
+        final int MAX_SIZE = 20;
+        size = Math.min(size, MAX_SIZE);
+
+        Sort.Direction direction = sortDirection.equalsIgnoreCase("asc")
+            ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        List<String> validSortFields = Arrays.asList("id", "name", "price", "imageUrl");
+        if (!validSortFields.contains(sortBy)) {
+            sortBy = "id";
+        }
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         Page<Product> allProducts = giftService.getAllProduct(pageable);
         return ResponseEntity.ok(allProducts);
     }

@@ -34,13 +34,19 @@ public class WishRepositoryTest {
 
         Wish wish = new Wish(product, userInfo, 1L);
         wishRepository.save(wish);
-        Pageable pageable = PageRequest.of(0, 10);
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(0, pageSize);
 
         Page<Wish> byUserId = wishRepository.findByUserInfoId(wish.getUserInfo().getId(), pageable);
 
         assertThat(byUserId).isNotEmpty();
         assertThat(byUserId.getContent().getFirst().getUserInfo()).isEqualTo(wish.getUserInfo());
         assertThat(byUserId.getContent().getFirst().getProduct()).isEqualTo(wish.getProduct());
+
+        assertThat(byUserId.getSize()).isEqualTo(pageSize);
+        assertThat(byUserId.getTotalElements()).isEqualTo(1);
+        assertThat(byUserId.getTotalPages()).isEqualTo(1);
+        assertThat(byUserId.getNumber()).isZero();
     }
 
     @Test
