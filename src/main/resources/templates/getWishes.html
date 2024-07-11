@@ -45,7 +45,10 @@
       <a id="priceDesc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.wishPage().number} + '&sort=product.price,desc\')'">▼</a>
     </th>
     <th>ImageUrl</th>
-    <th>수량</th>
+    <th>수량
+      <a id="quantityAsc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.wishPage().number} + '&sort=quantity,asc\')'">▲</a>
+      <a id="quantityDesc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.wishPage().number} + '&sort=quantity,desc\')'">▼</a>
+    </th>
     <th>편집</th>
     <th>삭제</th>
   </tr>
