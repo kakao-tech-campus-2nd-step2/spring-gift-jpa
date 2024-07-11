@@ -32,24 +32,24 @@ public class WishlistController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Wishlist>> getWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+    public ResponseEntity<List<Wishlist>> getWishlist(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         String email = JwtUtility.extractEmail(authHeader, memberService);
-        List<Wishlist> wishList = wishlistService.getWishList(email);
-        return ResponseEntity.ok(wishList);
+        List<Wishlist> wishlist = wishlistService.getWishList(email);
+        return ResponseEntity.ok(wishlist);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addProductToWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody @Valid Product product) {
+    public ResponseEntity<Void> addProductToWishlist(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody @Valid Product product) {
         String email = JwtUtility.extractEmail(authHeader, memberService);
-        wishlistService.addProductToWishList(email, product.getId());
+        wishlistService.addProductToWishlist(email, product.getId());
         URI location = URI.create("/api/wishlist/" + product.getId());
         return ResponseEntity.created(location).build();
-    }//DTO클래스 사용하도록 나중에 리팩터링할 것!!
+    }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> removeProductFromWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @PathVariable Long productId) {
+    public ResponseEntity<Void> removeProductFromWishlist(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @PathVariable Long productId) {
         String email = JwtUtility.extractEmail(authHeader, memberService);
-        wishlistService.removeProductFromWishList(email, productId);
+        wishlistService.removeProductFromWishlist(email, productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

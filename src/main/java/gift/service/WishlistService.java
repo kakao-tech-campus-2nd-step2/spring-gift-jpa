@@ -29,7 +29,7 @@ public class WishlistService {
         return wishlistRepository.findByMemberId(member.getId());
     }
 
-    public void addProductToWishList(String email, Long productId) {
+    public void addProductToWishlist(String email, Long productId) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
         Product product = productRepository.findById(productId)
@@ -39,7 +39,7 @@ public class WishlistService {
     }
 
     @Transactional
-    public void removeProductFromWishList(String email, Long productId) {
+    public void removeProductFromWishlist(String email, Long productId) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
         wishlistRepository.deleteByMemberIdAndProductId(member.getId(), productId);
