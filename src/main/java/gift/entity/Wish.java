@@ -58,6 +58,10 @@ public class Wish {
         this.quantity = quantity;
     }
 
+    public boolean isQuantityZero() {
+        return quantity <= 0;
+    }
+
     public static class Builder {
         private Long id;
         private Integer quantity;
