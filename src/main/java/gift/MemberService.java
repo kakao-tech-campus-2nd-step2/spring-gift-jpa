@@ -12,10 +12,6 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    /*public List<Member> getAllMembers() {
-        return memberRepository.findAll();
-    }*/
-
     public Member createMember(Member member) {
         return memberRepository.save(member);
     }
@@ -24,7 +20,4 @@ public class MemberService {
         Optional<Member> member = memberRepository.findByEmail(email);
         return member;
     }
-    /*public void deleteMember(String email) {
-        memberRepository.deleteByEmail(email);
-    }*/
 }
