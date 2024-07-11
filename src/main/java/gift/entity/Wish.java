@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "wishes")
 public class Wish {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -63,6 +64,7 @@ public class Wish {
     }
 
     public static class Builder {
+
         private Long id;
         private Integer quantity;
         private User user;
@@ -94,6 +96,7 @@ public class Wish {
 
     }
 
-    protected Wish() {}
+    protected Wish() {
+    }
 
 }

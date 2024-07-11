@@ -24,6 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
+
     private final ProductService productService;
 
     public ProductController(ProductService productService) {
@@ -55,7 +56,7 @@ public class ProductController {
 
     @PutMapping("{id}")
     public ResponseEntity updateProduct(@PathVariable Long id, @RequestBody @Valid
-        UpdateProductRequest request) {
+    UpdateProductRequest request) {
         productService.updateProduct(id, request);
         return ResponseEntity.ok(null);
     }

@@ -6,6 +6,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 
 public class RestrictedKeywordValidator implements ConstraintValidator<RestrictedKeyword, String> {
+
     private String[] keywords;
 
     @Override

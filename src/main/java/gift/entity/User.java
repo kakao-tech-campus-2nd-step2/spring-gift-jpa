@@ -13,6 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -50,6 +51,7 @@ public class User {
     }
 
     public static class Builder {
+
         private Long id;
         private String email;
         private String password;
@@ -80,5 +82,6 @@ public class User {
         }
     }
 
-    protected User() {}
+    protected User() {
+    }
 }

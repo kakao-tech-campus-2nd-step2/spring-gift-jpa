@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "products")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -63,6 +64,7 @@ public class Product {
     }
 
     public static class Builder {
+
         private Long id;
         private String name;
         private Integer price;
@@ -93,6 +95,7 @@ public class Product {
         }
     }
 
-    protected Product() {}
+    protected Product() {
+    }
 
 }

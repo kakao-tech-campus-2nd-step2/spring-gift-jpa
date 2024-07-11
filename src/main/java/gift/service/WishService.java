@@ -14,11 +14,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WishService {
+
     private final WishRepository wishRepository;
     private final ProductService productService;
     private final UserService userService;
 
-    public WishService(WishRepository wishRepository, ProductService productService, UserService userService) {
+    public WishService(WishRepository wishRepository, ProductService productService,
+        UserService userService) {
         this.wishRepository = wishRepository;
         this.productService = productService;
         this.userService = userService;
@@ -27,7 +29,7 @@ public class WishService {
     public List<WishResponse> getWishes(Long userId) {
         List<Wish> wishes = wishRepository.findByUserId(userId);
 
-        if(wishes == null || wishes.isEmpty()) {
+        if (wishes == null || wishes.isEmpty()) {
             throw new WishNotFoundException("위시리스트가 존재하지 않습니다.");
         }
 

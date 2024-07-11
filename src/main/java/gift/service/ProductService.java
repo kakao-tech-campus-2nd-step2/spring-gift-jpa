@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
+
     private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
@@ -46,7 +47,7 @@ public class ProductService {
     }
 
     public void checkProductExist(Long id) {
-        if(!productRepository.existsById(id)) {
+        if (!productRepository.existsById(id)) {
             throw new ProductNotFoundException("해당 ID의 상품을 찾을 수 없습니다.");
         }
     }

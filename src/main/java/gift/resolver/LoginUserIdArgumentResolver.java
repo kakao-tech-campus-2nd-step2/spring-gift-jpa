@@ -12,6 +12,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 public class LoginUserIdArgumentResolver implements HandlerMethodArgumentResolver {
+
     private final JwtUtil jwtUtil;
     private final UserService userService;
 
@@ -31,7 +32,7 @@ public class LoginUserIdArgumentResolver implements HandlerMethodArgumentResolve
         String token = getToken(webRequest.getHeader("Authorization"));
         Long userId = userService.getUserIdByToken(token);
 
-        if(jwtUtil.validateToken(token, userId)) {
+        if (jwtUtil.validateToken(token, userId)) {
             return jwtUtil.extractUserId(token);
         }
 
@@ -39,7 +40,7 @@ public class LoginUserIdArgumentResolver implements HandlerMethodArgumentResolve
     }
 
     private String getToken(String authorizationHeader) {
-        if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return authorizationHeader.substring(7);
         }
         return null;

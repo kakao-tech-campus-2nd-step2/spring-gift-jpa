@@ -15,37 +15,37 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ProblemDetail handleMethodArgumentNotValidException (MethodArgumentNotValidException ex) {
+    public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult()
-                            .getAllErrors()
-                            .getFirst()
-                            .getDefaultMessage();
+            .getAllErrors()
+            .getFirst()
+            .getDefaultMessage();
 
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, message);
     }
 
     @ExceptionHandler(value = ProductNotFoundException.class)
-    public ProblemDetail handleProductNotFoundException (ProductNotFoundException ex) {
+    public ProblemDetail handleProductNotFoundException(ProductNotFoundException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(value = UserAlreadyExistException.class)
-    public ProblemDetail handleUserAlreadyExistException (UserAlreadyExistException ex) {
+    public ProblemDetail handleUserAlreadyExistException(UserAlreadyExistException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     @ExceptionHandler(value = UserNotFoundException.class)
-    public ProblemDetail handleUserNotFoundException (UserNotFoundException ex) {
+    public ProblemDetail handleUserNotFoundException(UserNotFoundException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(value = UserUnauthorizedException.class)
-    public ProblemDetail handleUserUnauthorizedException (UserUnauthorizedException ex) {
+    public ProblemDetail handleUserUnauthorizedException(UserUnauthorizedException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     @ExceptionHandler(value = WishNotFoundException.class)
-    public ProblemDetail handleWishNotFoundException (WishNotFoundException ex) {
+    public ProblemDetail handleWishNotFoundException(WishNotFoundException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 }

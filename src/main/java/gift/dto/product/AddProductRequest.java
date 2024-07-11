@@ -17,4 +17,6 @@ public record AddProductRequest(
     @Positive Integer price,
 
     String imageUrl
-) {}
+) {
+
+}
