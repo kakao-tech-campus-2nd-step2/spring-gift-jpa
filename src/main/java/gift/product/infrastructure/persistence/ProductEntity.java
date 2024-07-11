@@ -8,10 +8,10 @@ import jakarta.persistence.*;
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "`id`")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "`name`", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "price", nullable = false)
