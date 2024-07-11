@@ -44,7 +44,7 @@ public class JwtFilterTest {
         String password = "test";
         User user = new User(email, password);
 
-        String token = userUtility.makeAccessToken(user) + "abcde";
+        String token = "invalid_token";
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wishlist")
                         .header("Authorization", tokenPrefix + token))
@@ -63,5 +63,6 @@ public class JwtFilterTest {
                 .andExpect(status().isOk());
     }
 }
+
 
 
