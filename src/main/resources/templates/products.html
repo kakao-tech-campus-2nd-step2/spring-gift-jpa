@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Product List</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" th:src="@{/authSetup.js}"></script>
 </head>
 <body>
 <h1>Product List</h1>
-<table border="1">
+<table border="1" id="product-table">
     <tr>
         <th>ID</th>
         <th>Name</th>
@@ -14,25 +17,36 @@
         <th>Image</th>
         <th>Actions</th>
     </tr>
-    <tr th:each="product : ${products}">
-        <td th:text="${product.id}"></td>
-        <td th:text="${product.name}"></td>
-        <td th:text="${product.price}"></td>
-        <td>
-            <img th:src="${product.imageUrl}" style="max-width: 100px; max-height: 100px;">
-        </td>
-        <td>
-            <a th:href="@{/admin/products/edit/{id}(id=${product.id})}">Edit</a>
-            <a th:href="@{/admin/products/delete/{id}(id=${product.id})}">Delete</a>
-        </td>
-    </tr>
 </table>
+<script>
+    const getProducts = {
+        init: function () {
+            authSetup.setAuthorizationHeader();
+            $.ajax({
+                type: "GET",
+                url: '/api/admin/products',
+                dataType: 'json',
+                contentType: 'application/json; charset=UTF-8',
+            }).done(function (response) {
+                $.each(response, function (index, product) {
+                    let row = $('<tr>');
+                    row.append($('<td>').text(product.id));
+                    row.append($('<td>').text(product.name));
+                    row.append($('<td>').text(product.price));
+                    row.append($('<td>').append($('<img>').attr('src', product.imageUrl).css({'max-width': '100px', 'max-height': '100px'})));
+                    row.append($('<td>').html('<a href="/admin/products/edit/' + product.id + '">Edit</a> | <a href="/admin/products/delete/' + product.id + '">Delete</a>'));
+
+                    // tbody에 행 추가
+                    $('#product-table tbody').append(row);
+                });
+            }).fail(function () {
+                alert('이동 불가');
+            });
+        }
+    };
+    getProducts.init();
+</script>
 <br>
 <a href="/admin/products/add">Add Product</a>
-
-<script>
-       const token = localStorage.getItem("token");
-       request.setHeader("Authorization","Bearer "+ token);
-</script>
 </body>
 </html>

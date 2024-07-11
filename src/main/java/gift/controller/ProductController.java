@@ -3,6 +3,7 @@ package gift.controller;
 import gift.service.ProductService;
 import gift.model.Product;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/products")
+@RequestMapping("/api/admin/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -21,10 +22,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public String listProducts(Model model) {
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
-        return "products";
+    public ResponseEntity<List<Product>> listProducts() {
+        return ResponseEntity.ok().body(productService.getAllProducts());
     }
 
     @GetMapping("/add")
