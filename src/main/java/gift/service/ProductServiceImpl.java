@@ -5,6 +5,8 @@ import gift.model.Product;
 import gift.repository.ProductRepository;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -72,6 +74,12 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(productDTO.getPrice());
         product.setImageUrl(productDTO.getImageUrl());
         return product;
+    }
+
+    @Override
+    public Page<ProductDTO> getProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
+            .map(this::convertToDTO);
     }
 
 }
