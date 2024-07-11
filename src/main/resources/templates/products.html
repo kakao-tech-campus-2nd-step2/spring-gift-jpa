@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+</head>
+<body>
+<h1>Product List</h1>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}"></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price}"></td>
+        <td>
+            <img th:src="${product.imageUrl}" style="max-width: 100px; max-height: 100px;">
+        </td>
+        <td>
+            <a th:href="@{/admin/products/edit/{id}(id=${product.id})}">Edit</a>
+            <a th:href="@{/admin/products/delete/{id}(id=${product.id})}">Delete</a>
+        </td>
+    </tr>
+</table>
+<br>
+<a href="/admin/products/add">Add Product</a>
+
+<script>
+       const token = localStorage.getItem("token");
+       request.setHeader("Authorization", token);
+</script>
+</body>
+</html>
