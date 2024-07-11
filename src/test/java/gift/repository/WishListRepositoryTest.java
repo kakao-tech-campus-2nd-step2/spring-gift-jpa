@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import gift.entity.Member;
+import gift.entity.Product;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -19,14 +22,34 @@ public class WishListRepositoryTest {
     
     @Autowired
     private WishListRepository wishListRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
     private WishList expected;
+    private WishList expected2;
     private WishList actual;
+
+    private Member member;
+    private Product product1;
+    private Product product2;
+
     private long notExistMemberId;
 
     @BeforeEach
     void setUp(){
-        expected = new WishList(1L, 1L);
+
+        member = new Member("testPassword", "testEmail", "testRole");
+        memberRepository.save(member);
+        product1 = new Product("testName", 0, "testUrl");
+        product2 = new Product("testName2", 0, "testUrl");
+        productRepository.save(product1);
+        productRepository.save(product2);
+
+
+        expected = new WishList(member, product1);
+        expected2 = new WishList(member, product2);
         actual = wishListRepository.save(expected);
         notExistMemberId = 2L;
     }
@@ -36,7 +59,7 @@ public class WishListRepositoryTest {
         
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
-            () -> assertThat(actual.getMemberId()).isEqualTo(expected.getMemberId())
+            () -> assertThat(actual.getMember()).isEqualTo(member)
         );
     }
 
@@ -44,17 +67,17 @@ public class WishListRepositoryTest {
     void findWishListById(){
 
         List<WishList> expectedList = new ArrayList<>();
-        expectedList.add(new WishList(1L, 1L));
-        expectedList.add(new WishList(1L, 2L));
+        expectedList.add(expected);
+        expectedList.add(expected2);
 
-        wishListRepository.save(new WishList(1L, 2L));
-        List<WishList> actual = wishListRepository.findByMemberId(1L);
+        wishListRepository.save(expected2);
+        List<WishList> actual = wishListRepository.findByMemberId(member.getId());
 
         assertThat(actual.size()).isEqualTo(expectedList.size());
         assertThat(wishListRepository.findByMemberId(notExistMemberId)).isEmpty();
 
         for (int i = 0; i < expectedList.size(); i++) {
-            assertThat(actual.get(i).getProductId()).isEqualTo(expectedList.get(i).getProductId());
+            assertThat(actual.get(i).getProduct()).isEqualTo(expectedList.get(i).getProduct());
         }
     }
 

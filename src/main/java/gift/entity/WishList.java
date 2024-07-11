@@ -22,14 +22,15 @@ public class WishList {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     public WishList() {}
 
-    public WishList(Member member, Long productId){
-        this.member =member;
-        this.productId = productId; 
+    public WishList(Member member, Product product){
+        this.member = member;
+        this.product = product; 
     }
 
     public Long getId() {
@@ -40,12 +41,12 @@ public class WishList {
         return member;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
     public WishListDto toDto(){
-        return new WishListDto(this.member.getId(), this.productId);
+        return new WishListDto(this.member.getId(), this.product.getId());
     }
 
 }

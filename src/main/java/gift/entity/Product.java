@@ -5,7 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -20,6 +23,9 @@ public class Product{
     private int price;
 
     private String imageUrl;
+
+    @OneToMany(mappedBy = "product")
+    private List<WishList> wishList;
 
     public Product() {
     }
@@ -46,8 +52,8 @@ public class Product{
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public List<WishList> getWishList(){
+        return wishList;
     }
 
     public ProductDto toDto(){
