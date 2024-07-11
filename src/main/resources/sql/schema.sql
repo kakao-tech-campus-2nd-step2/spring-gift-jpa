@@ -22,5 +22,5 @@ create table product
     price       int,
     imageUrl    varchar(255),
     wishlist_id BIGINT,
-    FOREIGN KEY (wishlist_id) REFERENCES wishlist (id) ON DELETE SET NULl
+    FOREIGN KEY (wishlist_id) REFERENCES wishlist (id) ON DELETE SET NULL
 );
