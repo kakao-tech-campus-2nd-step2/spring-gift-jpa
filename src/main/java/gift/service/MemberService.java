@@ -7,8 +7,6 @@ import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 public class MemberService {
 
@@ -20,13 +18,12 @@ public class MemberService {
 
     @Transactional
     public Long registerMember(String email, String password) {
-        Optional<Member> existingMember = memberRepository.findByEmail(email);
-
-        if (existingMember.isPresent()) {
-            throw new EmailDuplicateException(existingMember.get());
-        }
-
-        return memberRepository.save(new Member(email, password)).getId();
+        memberRepository.findByEmail(email)
+                .ifPresent(member -> {
+                    throw new EmailDuplicateException(member);
+                });
+        Member member = new Member(email, password);
+        return memberRepository.save(member).getId();
     }
 
 
