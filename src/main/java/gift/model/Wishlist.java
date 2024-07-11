@@ -7,13 +7,13 @@ import java.util.Set;
 
 @Entity
 @Table(name = "wishlist")
-public class WishList {
+public class Wishlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
 
-    @OneToMany(mappedBy = "wishlist", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "wishlist", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<Product> products = new HashSet<>();
 
     public void addProduct(Product product) {
@@ -26,10 +26,10 @@ public class WishList {
         product.setWishlist(null);
     }
 
-    public WishList() {
+    public Wishlist() {
     }
 
-    public WishList(String email) {
+    public Wishlist(String email) {
         this.email = email;
     }
 
