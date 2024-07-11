@@ -28,7 +28,7 @@ public class MemberService {
         Member member = new Member(null, memberDTO.getEmail(), memberDTO.getPassword(), null);
         Member savedMember = memberRepository.save(member);
         String token = JwtUtil.generateToken(savedMember.getEmail());
-        savedMember.setActiveToken(token);
+        savedMember.setActiveToken(token);//setter 없애기
         memberRepository.save(savedMember);
         return token;
     }
@@ -40,7 +40,7 @@ public class MemberService {
             throw new NoSuchElementException("존재하지 않는 이메일 또는 잘못된 비밀번호입니다.");
         }
         String token = JwtUtil.generateToken(existingMember.getEmail());
-        existingMember.setActiveToken(token);
+        existingMember.setActiveToken(token);//setter 없애기
         memberRepository.save(existingMember);
         return token;
     }
@@ -49,7 +49,7 @@ public class MemberService {
         Member member = memberRepository.findByActiveToken(token)
                 .orElseThrow(() -> new NoSuchElementException("유효하지 않은 토큰입니다."));
         member.setActiveToken(null);
-        memberRepository.save(member);
+        memberRepository.save(member);//setter 없애기
         tokenBlacklist.add(token);
     }
 

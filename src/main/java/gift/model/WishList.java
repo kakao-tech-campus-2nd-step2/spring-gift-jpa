@@ -40,16 +40,4 @@ public class WishList {
     public Long getProductId() {
         return productId;
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
 }

@@ -4,7 +4,6 @@ import gift.dto.ProductDTO;
 import gift.model.Product;
 import gift.model.ProductRepository;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,6 @@ import java.util.NoSuchElementException;
 public class ProductController {
     private final ProductRepository productRepository;
 
-    @Autowired
     public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }

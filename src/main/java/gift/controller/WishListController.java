@@ -7,7 +7,6 @@ import gift.service.MemberService;
 import gift.service.WishListService;
 import gift.util.JwtUtil;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,6 @@ public class WishListController {
     private final WishListService wishListService;
     private final MemberService memberService;
 
-    @Autowired
     public WishListController(WishListService wishListService, MemberService memberService) {
         this.wishListService = wishListService;
         this.memberService = memberService;
