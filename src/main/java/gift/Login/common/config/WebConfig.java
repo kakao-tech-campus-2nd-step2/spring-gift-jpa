@@ -1,7 +1,7 @@
-package gift.Login.config;
+package gift.Login.common.config;
 
-import gift.Login.auth.JwtUtil;
-import gift.Login.auth.LoginMemberArgumentResolver;
+import gift.Login.common.auth.JwtUtil;
+import gift.Login.common.auth.LoginMemberArgumentResolver;
 import gift.Login.repository.MemberRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

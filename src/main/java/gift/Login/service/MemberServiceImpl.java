@@ -25,8 +25,9 @@ public class MemberServiceImpl implements MemberService {
 
     public void registerMember(String email, String password) {
         Member member = new Member(email, password);
-        // validation
         Optional<Member> existingMember = memberRepository.findByEmail(email);
+
+        // validation
         if (existingMember.isPresent()) {
             throw new IllegalArgumentException("Email already exists: " + email);
         }
@@ -48,9 +49,11 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByEmail(email).orElseThrow(
                 () -> new IllegalArgumentException("No such member: ")
         );
+
         if (!member.getPassword().equals(password)) {
             return null;
         }
+
         return generateToken(member);
     }
 }

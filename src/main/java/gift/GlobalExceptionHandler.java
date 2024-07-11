@@ -1,6 +1,6 @@
 package gift;
 
-import gift.Login.exception.UserNotFoundException;
+import gift.Login.common.exception.UserNotFoundException;
 import gift.product.exception.ProductAlreadyExistsException;
 import gift.product.exception.ProductNotFoundException;
 import jakarta.validation.ConstraintViolationException;

@@ -1,4 +1,4 @@
-package gift.Login.auth;
+package gift.Login.common.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

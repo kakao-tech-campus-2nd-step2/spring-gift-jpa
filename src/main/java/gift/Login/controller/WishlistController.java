@@ -1,6 +1,6 @@
 package gift.Login.controller;
 
-import gift.Login.auth.LoginMember;
+import gift.Login.common.auth.LoginMember;
 import gift.Login.model.Member;
 import gift.Login.model.Product;
 import gift.Login.model.Wish;

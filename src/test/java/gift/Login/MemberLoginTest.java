@@ -1,6 +1,6 @@
 package gift.Login;
 
-import gift.Login.auth.JwtUtil;
+import gift.Login.common.auth.JwtUtil;
 import gift.Login.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

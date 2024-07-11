@@ -1,6 +1,6 @@
-package gift.Login.auth;
+package gift.Login.common.auth;
 
-import gift.Login.exception.UserNotFoundException;
+import gift.Login.common.exception.UserNotFoundException;
 import gift.Login.model.Member;
 import gift.Login.repository.MemberRepository;
 import org.springframework.core.MethodParameter;
