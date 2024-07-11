@@ -13,6 +13,39 @@ import jakarta.persistence.Table;
 @Table(name = "wishes")
 public class Wish {
 
+    public static class Builder {
+
+        private Long id;
+        private Integer quantity;
+        private User user;
+        private Product product;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder quantity(Integer quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
+        public Builder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Builder product(Product product) {
+            this.product = product;
+            return this;
+        }
+
+        public Wish build() {
+            return new Wish(this);
+        }
+
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,6 +60,9 @@ public class Wish {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    protected Wish() {
+    }
 
     private Wish(Builder builder) {
         this.id = builder.id;
@@ -63,40 +99,5 @@ public class Wish {
         return quantity <= 0;
     }
 
-    public static class Builder {
-
-        private Long id;
-        private Integer quantity;
-        private User user;
-        private Product product;
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder quantity(Integer quantity) {
-            this.quantity = quantity;
-            return this;
-        }
-
-        public Builder user(User user) {
-            this.user = user;
-            return this;
-        }
-
-        public Builder product(Product product) {
-            this.product = product;
-            return this;
-        }
-
-        public Wish build() {
-            return new Wish(this);
-        }
-
-    }
-
-    protected Wish() {
-    }
 
 }
