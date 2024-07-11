@@ -77,7 +77,8 @@ public class ProductWebController {
 
     // 규칙 3가지
     private void validateProductName(String name) {
-        if (name.length() > 15) {
+        if (name.length() > 20) {
+
             throw new InvalidProductNameException(ErrorCode.INVALID_NAME_LENGTH);
         }
         if (!Pattern.matches("[a-zA-Z0-9가-힣()\\[\\]+\\-&/_ ]*", name)) {

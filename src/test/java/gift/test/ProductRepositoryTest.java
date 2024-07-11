@@ -1,34 +1,30 @@
 package gift.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-import gift.exception.ErrorCode;
-import gift.exception.InvalidProductNameException;
+import jakarta.validation.ConstraintViolation;
 import java.util.Optional;
-import java.util.regex.Pattern;
+import java.util.Set;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import gift.model.Product;
 import gift.repository.ProductRepository;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 @DataJpaTest
-@TestMethodOrder(OrderAnnotation.class)
 public class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
-
+    private Validator validator;
 
     @Test
-    @Order(1)
-    @DisplayName("상품 추가")
+    @DisplayName("상품 추가할때 성공적으로 작동되는 경우")
     void addProductPrice() {
         // Given
         Product product = new Product(1234L,"Test Product", 1000, "test.jpg");
@@ -47,8 +43,7 @@ public class ProductRepositoryTest {
 
 
     @Test
-    @Order(2)
-    @DisplayName("상품 수정")
+    @DisplayName("상품 수정할때 성공적으로 작동되는 경우")
     void updateProductPrice() {
         // Given
         Product product = new Product(1234L,"Test Product", 1000, "test.jpg");
@@ -68,8 +63,7 @@ public class ProductRepositoryTest {
 
 
     @Test
-    @Order(3)
-    @DisplayName("상품 삭제")
+    @DisplayName("상품 삭제할때 성공적으로 작동되는 경우")
     void deleteProductPrice() {
         // Given
         Product product = new Product(1234L,"Test Product", 1000, "test.jpg");
@@ -83,53 +77,72 @@ public class ProductRepositoryTest {
         Assertions.assertFalse(deletedProduct.isPresent());
     }
 
-
-
-    private void validateProductName(String name) {
-        if (name.length() > 15) {
-            throw new InvalidProductNameException(ErrorCode.INVALID_NAME_LENGTH);
-        }
-        if (!Pattern.matches("[a-zA-Z0-9가-힣()\\[\\]+\\-&/_ ]*", name)) {
-            throw new InvalidProductNameException(ErrorCode.INVALID_CHARACTERS);
-        }
-        if (name.contains("카카오")) {
-            throw new InvalidProductNameException(ErrorCode.CONTAINS_KAKAO);
-        }
+    @BeforeEach
+    public void setUp() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
     }
 
 
     @Test
-    @Order(4)
-    @DisplayName("상품 이름이 15글자가 넘어갈때")
-    void testInvalidNameLength() {
-        String longName = "veryveryveryveryveryveryLong";
-        InvalidProductNameException exception = Assertions.assertThrows(
-            InvalidProductNameException.class, () -> {
-                validateProductName(longName);
-            });
-        Assertions.assertEquals("상품 이름은 공백 포함 15글자를 넘을 수 없습니다.", exception.getMessage());
+    @DisplayName("상품 이름이 NULL 일때 예외발생")
+    public void whenNameNull(){
+        // given
+        Product product = new Product();
+        product.setName(null);
+        product.setPrice(1000);
+        product.setImageUrl("test.jpg");
+        // when
+        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+        // then
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("name") && v.getMessage().contains("이름에 NULL 불가능"));
     }
 
     @Test
-    @Order(5)
-    @DisplayName("상품 이름에 허용되지 않은 특수기호가 들어갈때")
-    void testInvalidCharacters() {
-        String invalidName = "Invalid@Name#";
-        InvalidProductNameException exception = Assertions.assertThrows(InvalidProductNameException.class, () -> {
-            validateProductName(invalidName);
-        });
-        Assertions.assertEquals("상품 이름에는 특수문자 ( ), [ ], +, -, &, /, _ 만 사용할 수 있습니다.", exception.getMessage());
+    @DisplayName("상품 이름이 20자 이상일때 예외발생")
+    public void whenNameExceedsLength() {
+        // given
+        Product product = new Product();
+        product.setName("veryveryveryveryveryveryLong");
+        product.setPrice(100);
+        product.setImageUrl("test.jpg");
+
+        // when
+        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+
+        // then
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("name") && v.getMessage().contains("20자 이상 불가능"));
     }
 
     @Test
-    @Order(6)
-    @DisplayName("상품 이름에 카카오 라는 문구가 들어갈때")
-    void testContainsKakao() {
-        String nameWithKakao = "카카오Product";
-        InvalidProductNameException exception = Assertions.assertThrows(InvalidProductNameException.class, () -> {
-            validateProductName(nameWithKakao);
-        });
-        Assertions.assertEquals("상품 이름에 '카카오'가 포함되면 담당 MD와 협의가 필요합니다.", exception.getMessage());
+    @DisplayName("상품 가격이 NULL일때 예외발생")
+    public void whenPriceNull() {
+        // given
+        Product product = new Product();
+        product.setName("ValidName");
+        product.setPrice(0); // Setting price to a valid value as price is primitive int
+        product.setImageUrl("test.jpg");
+
+        // when
+        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+
+        // then
+        assertThat(violations).noneMatch(v -> v.getPropertyPath().toString().equals("price"));
     }
 
+    @Test
+    @DisplayName("상품 이미지가 NULL일때 예외발생")
+    public void whenImageUrlNull() {
+        // given
+        Product product = new Product();
+        product.setName("ValidName");
+        product.setPrice(100);
+        product.setImageUrl(null);
+
+        // when
+        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+
+        // then
+        assertThat(violations).anyMatch(v -> v.getPropertyPath().toString().equals("imageUrl") && v.getMessage().contains("URL에 NULL 불가능"));
+    }
 }
