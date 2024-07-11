@@ -1,12 +1,14 @@
 package gift.model;
 
-import java.beans.ConstructorProperties;
+import java.util.List;
+
 import gift.exception.InvalidProductException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -33,11 +35,12 @@ public class Product {
 	@Column(nullable = false)
 	private String imageUrl;
 	
+	@OneToMany(mappedBy = "product")
+    private List<Wishlist> wishlists;
+	
 	public Product() {}
 	
-	@ConstructorProperties({"id", "name", "price", "imageUrl"})
-	public Product(Long id, String name, int price, String imageUrl) {
-		this.id = id;
+	public Product(String name, int price, String imageUrl) {
 		this.setName(name);
 		this.price = price;
 		this.imageUrl = imageUrl;
@@ -76,5 +79,13 @@ public class Product {
 	
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+	
+	public List<Wishlist> getWishlists(){
+		return wishlists;
+	}
+	
+	public void setWishlists(List<Wishlist> wishlists) {
+		this.wishlists = wishlists;
 	}
 }
