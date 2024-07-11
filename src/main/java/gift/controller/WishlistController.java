@@ -1,9 +1,9 @@
 package gift.controller;
 
 import gift.model.Product;
-import gift.model.WishList;
+import gift.model.Wishlist;
 import gift.service.MemberService;
-import gift.service.WishListService;
+import gift.service.WishlistService;
 import gift.util.JwtUtility;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -22,19 +22,19 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/wishlist")
-public class WishListController {
-    private final WishListService wishListService;
+public class WishlistController {
+    private final WishlistService wishListService;
     private final MemberService memberService;
 
-    public WishListController(WishListService wishListService, MemberService memberService) {
+    public WishlistController(WishlistService wishListService, MemberService memberService) {
         this.wishListService = wishListService;
         this.memberService = memberService;
     }
 
     @GetMapping
-    public ResponseEntity<List<WishList>> getWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+    public ResponseEntity<List<Wishlist>> getWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         String email = JwtUtility.extractEmail(authHeader, memberService);
-        List<WishList> wishList = wishListService.getWishList(email);
+        List<Wishlist> wishList = wishListService.getWishList(email);
         return ResponseEntity.ok(wishList);
     }
 

@@ -9,7 +9,7 @@ import jakarta.persistence.GenerationType;
 
 @Entity
 @Table(name = "wish_lists")
-public class WishList {
+public class Wishlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,13 +18,13 @@ public class WishList {
     @Column(name = "productId", nullable = false)
     private Long productId;
 
-    public WishList(Long id, Long memberId, Long productId) {
+    public Wishlist(Long id, Long memberId, Long productId) {
         this.id = id;
         this.memberId = memberId;
         this.productId = productId;
     }
 
-    public WishList() {
+    public Wishlist() {
     }
 
     public Long getId() {

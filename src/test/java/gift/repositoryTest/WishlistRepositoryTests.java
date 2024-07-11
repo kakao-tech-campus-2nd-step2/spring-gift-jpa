@@ -2,10 +2,10 @@ package gift.repositoryTest;
 
 import gift.model.Member;
 import gift.model.Product;
-import gift.model.WishList;
+import gift.model.Wishlist;
 import gift.model.MemberRepository;
 import gift.model.ProductRepository;
-import gift.model.WishListRepository;
+import gift.model.WishlistRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,10 +13,10 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class WishListRepositoryTests {
+public class WishlistRepositoryTests {
 
     @Autowired
-    private WishListRepository wishListRepository;
+    private WishlistRepository wishListRepository;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -28,10 +28,10 @@ public class WishListRepositoryTests {
         memberRepository.save(member);
         Product product = new Product(null, "지우", 1000, "http://example.com/image.jpg");
         productRepository.save(product);
-        WishList wishList = new WishList(null, member.getId(), product.getId());
+        Wishlist wishList = new Wishlist(null, member.getId(), product.getId());
         wishListRepository.save(wishList);
 
-        List<WishList> foundWishLists = wishListRepository.findByMemberId(member.getId());
+        List<Wishlist> foundWishLists = wishListRepository.findByMemberId(member.getId());
         assertThat(foundWishLists).hasSize(1);
     }
 
@@ -41,11 +41,11 @@ public class WishListRepositoryTests {
         memberRepository.save(member);
         Product product = new Product(null, "지우", 1000, "http://example.com/image.jpg");
         productRepository.save(product);
-        WishList wishList = new WishList(null, member.getId(), product.getId());
+        Wishlist wishList = new Wishlist(null, member.getId(), product.getId());
         wishListRepository.save(wishList);
 
         wishListRepository.deleteByMemberIdAndProductId(member.getId(), product.getId());
-        List<WishList> foundWishLists = wishListRepository.findByMemberId(member.getId());
+        List<Wishlist> foundWishLists = wishListRepository.findByMemberId(member.getId());
         assertThat(foundWishLists).isEmpty();
     }
 }
