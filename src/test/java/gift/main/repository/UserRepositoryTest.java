@@ -21,7 +21,6 @@ class UserRepositoryTest {
 
 
     @Test
-    @Transactional
     public void 모두조회() {
         //given
         userRepository.save(new User("name", "123@123", "123", "USER"));
@@ -37,7 +36,6 @@ class UserRepositoryTest {
 
 
     @Test
-    @Transactional
     public void 이메일중복허용안함() {
         //given
         userRepository.save(new User("name", "123@123", "123", "USER"));

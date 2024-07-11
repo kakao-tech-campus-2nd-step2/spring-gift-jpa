@@ -21,7 +21,6 @@ class WishProductRepositoryTest {
 
 
     @Test
-    @Transactional
     public void 유저아이디값으로여러개조회하기() {
         //given(준비)
         Long userId = 1L;
@@ -40,7 +39,6 @@ class WishProductRepositoryTest {
 
 
     @Test
-    @Transactional
     public void 값삭제하기() {
         //given(준비)
         Long userId = 1L;
