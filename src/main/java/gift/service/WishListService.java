@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class WishListService {
@@ -28,16 +27,19 @@ public class WishListService {
 
     @Transactional
     public void addProductToWishList(Long memberId, Long productId, int amount) {
-        Product product = productService.getProductById(productId);
         Member member = memberService.getMemberById(memberId);
-        Optional<Wish> existingWish = wishListRepository.findByMemberAndProduct(member, product);
+        Product product = productService.getProductById(productId);
 
-        if (existingWish.isPresent()) {
-            throw new WishAlreadyExistsException(existingWish.get());
-        }
-
-        Wish wish = new Wish(member, amount, product);
-        wishListRepository.save(wish);
+        wishListRepository.findByMemberAndProduct(member, product)
+                .ifPresentOrElse(
+                        wish -> {
+                            throw new WishAlreadyExistsException(wish);
+                        },
+                        () -> {
+                            Wish wish = new Wish(member, amount, product);
+                            wishListRepository.save(wish);
+                        }
+                );
     }
 
     @Transactional
