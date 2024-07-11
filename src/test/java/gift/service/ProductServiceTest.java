@@ -83,9 +83,10 @@ public class ProductServiceTest {
     public void testAddProductInvalidPrice() {
         ProductRequest productDTO = new ProductRequest(null, "Test Product", -100, "test.jpg");
 
-        InvalidProductPriceException exception = assertThrows(InvalidProductPriceException.class, () -> {
-            productService.addProduct(productDTO);
-        });
+        InvalidProductPriceException exception = assertThrows(InvalidProductPriceException.class,
+            () -> {
+                productService.addProduct(productDTO);
+            });
 
         assertEquals(INVALID_PRICE, exception.getMessage());
     }

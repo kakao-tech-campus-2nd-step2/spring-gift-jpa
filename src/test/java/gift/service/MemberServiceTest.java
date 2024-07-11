@@ -146,7 +146,8 @@ public class MemberServiceTest {
         MemberRequest memberDTO = new MemberRequest(1L, "new@example.com", "newpassword");
         when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
         when(memberRepository.existsByEmail("new@example.com")).thenReturn(false);
-        when(memberRepository.save(any(Member.class))).thenReturn(new Member(1L, "new@example.com", "newpassword"));
+        when(memberRepository.save(any(Member.class))).thenReturn(
+            new Member(1L, "new@example.com", "newpassword"));
 
         MemberResponse response = memberService.updateMember(1L, memberDTO);
         assertEquals("new@example.com", response.email());

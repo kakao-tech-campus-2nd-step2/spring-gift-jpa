@@ -5,4 +5,6 @@ public record ProductResponse(
     String name,
     int price,
     String imageUrl
-) { }
+) {
+
+}

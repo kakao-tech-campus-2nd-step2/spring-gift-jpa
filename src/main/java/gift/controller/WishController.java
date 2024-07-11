@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/wishes")
 public class WishController {
+
     private final WishService wishService;
 
     public WishController(WishService wishService) {
@@ -27,13 +28,16 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishResponse>> getWishlist(@RequestAttribute("memberId") Long memberId) {
+    public ResponseEntity<List<WishResponse>> getWishlist(
+        @RequestAttribute("memberId") Long memberId) {
         List<WishResponse> wishlist = wishService.getWishlistByMemberId(memberId);
         return ResponseEntity.ok(wishlist);
     }
 
     @PostMapping
-    public ResponseEntity<WishResponse> addWish(@Valid @RequestBody WishCreateRequest wishRequestDTO, @RequestAttribute("memberId") Long memberId) {
+    public ResponseEntity<WishResponse> addWish(
+        @Valid @RequestBody WishCreateRequest wishRequestDTO,
+        @RequestAttribute("memberId") Long memberId) {
         WishRequest wishWithMemberId = new WishRequest(memberId, wishRequestDTO.productId());
         WishResponse createdWish = wishService.addWish(wishWithMemberId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdWish);

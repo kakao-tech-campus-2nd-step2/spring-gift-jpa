@@ -4,4 +4,6 @@ public record MemberResponse(
     Long id,
     String email,
     String token
-) { }
+) {
+
+}

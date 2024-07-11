@@ -64,7 +64,8 @@ public class WishServiceTest {
     public void testAddWishProductNotFound() {
         WishRequest wishRequest = new WishRequest(1L, 999L);
 
-        when(productService.getProductById(999L)).thenThrow(new ProductNotFoundException(PRODUCT_NOT_FOUND + 999));
+        when(productService.getProductById(999L)).thenThrow(
+            new ProductNotFoundException(PRODUCT_NOT_FOUND + 999));
 
         ProductNotFoundException exception = assertThrows(ProductNotFoundException.class, () -> {
             wishService.addWish(wishRequest);

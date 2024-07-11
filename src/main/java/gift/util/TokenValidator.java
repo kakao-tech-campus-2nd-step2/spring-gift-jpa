@@ -1,11 +1,11 @@
 package gift.util;
 
+import static gift.util.Constants.INVALID_AUTHORIZATION_HEADER;
+
 import gift.exception.member.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
-
-import static gift.util.Constants.INVALID_AUTHORIZATION_HEADER;
 
 @Component
 public class TokenValidator {

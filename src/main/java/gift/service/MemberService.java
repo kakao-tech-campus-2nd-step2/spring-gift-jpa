@@ -2,25 +2,22 @@ package gift.service;
 
 import static gift.util.Constants.EMAIL_ALREADY_USED;
 import static gift.util.Constants.ID_NOT_FOUND;
-import static gift.util.Constants.INVALID_AUTHORIZATION_HEADER;
 import static gift.util.Constants.INVALID_CREDENTIALS;
 
 import gift.dto.member.MemberRequest;
 import gift.dto.member.MemberResponse;
 import gift.exception.member.EmailAlreadyUsedException;
 import gift.exception.member.ForbiddenException;
-import gift.exception.member.InvalidTokenException;
 import gift.model.Member;
 import gift.repository.MemberRepository;
 import gift.util.JWTUtil;
-import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final JWTUtil jwtUtil;
 
@@ -74,7 +71,8 @@ public class MemberService {
         Member member = memberRepository.findById(id)
             .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
 
-        if (!member.getEmail().equals(memberDTO.email()) && memberRepository.existsByEmail(memberDTO.email())) {
+        if (!member.getEmail().equals(memberDTO.email()) && memberRepository.existsByEmail(
+            memberDTO.email())) {
             throw new EmailAlreadyUsedException(EMAIL_ALREADY_USED);
         }
 

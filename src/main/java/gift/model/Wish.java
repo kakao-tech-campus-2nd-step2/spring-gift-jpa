@@ -21,7 +21,8 @@ public class Wish {
     @Column(nullable = false)
     private Long productId;
 
-    protected Wish() {}
+    protected Wish() {
+    }
 
     public Wish(Long id, Long memberId, Long productId) {
         this.id = id;

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WishService {
+
     private final WishRepository wishRepository;
     private final ProductService productService;
 
@@ -32,7 +33,8 @@ public class WishService {
     public WishResponse addWish(WishRequest wishRequest) {
         productService.getProductById(wishRequest.productId());
 
-        if (wishRepository.existsByMemberIdAndProductId(wishRequest.memberId(), wishRequest.productId())) {
+        if (wishRepository.existsByMemberIdAndProductId(wishRequest.memberId(),
+            wishRequest.productId())) {
             throw new DuplicateWishException(WISH_ALREADY_EXISTS);
         }
 

@@ -21,7 +21,8 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    protected Member() {}
+    protected Member() {
+    }
 
     public Member(Long id, String email, String password) {
         this.id = id;
