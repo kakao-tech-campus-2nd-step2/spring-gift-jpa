@@ -160,4 +160,27 @@ class MemberRepositoryTest {
         assertThat(orphanedWish).isNull();
     }
 
+    @Test
+    @DisplayName("지연 로딩 테스트")
+    void testLazyFetch(){
+        // given
+        entityManager.persist(expectedProduct);
+        expectedProduct.addWish(expectedWish);
+        Member savedMember = members.save(expectedMember);
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        // Product 조회 (지연 로딩이므로 연관관계 조회 안함, Product 객체만 조회함)
+        Member foundMember = members.findById(savedMember.getId()).get();
+
+        // Wish 조회 (Wish 객체도 조회함)
+        List<Wish> wishes = foundMember.getWishes();
+
+        // then
+        assertAll(
+                () -> assertThat(wishes.size()).isEqualTo(1),
+                () -> assertThat(wishes.get(0)).isEqualTo(expectedWish)
+        );
+    }
 }
