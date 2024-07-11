@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.domain.Product;
+import gift.dto.request.AddProductRequest;
 import gift.dto.request.UpdateProductRequest;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
     private final ProductService productService;
+
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -28,8 +30,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addProduct(@Valid @RequestBody Product product) {
-        return ResponseEntity.ok(productService.addProduct(product));
+    public ResponseEntity<String> addProduct(@Valid @RequestBody AddProductRequest newProduct) {
+        return ResponseEntity.ok(productService.addProduct(newProduct));
     }
 
     @PutMapping("/{productId}")

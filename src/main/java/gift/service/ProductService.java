@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.domain.Product;
+import gift.dto.request.AddProductRequest;
 import gift.dto.request.UpdateProductRequest;
 import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,8 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public String addProduct(Product newProduct) {
-        productRepository.save(newProduct);
+    public String addProduct(AddProductRequest requestProduct) {
+        productRepository.save(new Product(requestProduct));
         return ADD_SUCCESS_MSG;
     }
 

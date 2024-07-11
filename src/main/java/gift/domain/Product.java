@@ -1,5 +1,6 @@
 package gift.domain;
 
+import gift.dto.request.AddProductRequest;
 import gift.util.ProductNameValidationUtil;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -41,6 +42,13 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public Product(AddProductRequest productRequest) {
+        ProductNameValidationUtil.isValidProductName(productRequest.getName());
+        this.name = productRequest.getName();
+        this.price = productRequest.getPrice();
+        this.imageUrl = productRequest.getImageUrl();
     }
 
     public Long getId() {
