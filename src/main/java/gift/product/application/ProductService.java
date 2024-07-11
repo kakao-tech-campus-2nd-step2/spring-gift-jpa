@@ -5,6 +5,7 @@ import gift.product.application.command.ProductCreateCommand;
 import gift.product.application.command.ProductUpdateCommand;
 import gift.product.domain.Product;
 import gift.product.domain.ProductRepository;
+import gift.wishlist.domain.WishlistRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,9 +15,11 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ProductService {
     private final ProductRepository productRepository;
+    private final WishlistRepository wishlistRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, WishlistRepository wishlistRepository) {
         this.productRepository = productRepository;
+        this.wishlistRepository = wishlistRepository;
     }
 
     public List<ProductResponse> findAll() {
@@ -52,6 +55,7 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException("해당 상품이 존재하지 않습니다."));
 
+        wishlistRepository.deleteAllByProductId(productId);
         productRepository.delete(product);
     }
 }

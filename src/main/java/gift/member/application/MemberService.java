@@ -6,6 +6,7 @@ import gift.member.application.command.MemberLoginCommand;
 import gift.member.application.command.MemberUpdateCommand;
 import gift.member.domain.Member;
 import gift.member.domain.MemberRepository;
+import gift.wishlist.domain.WishlistRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,9 +16,11 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final WishlistRepository wishlistRepository;
 
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, WishlistRepository wishlistRepository) {
         this.memberRepository = memberRepository;
+        this.wishlistRepository = wishlistRepository;
     }
 
     @Transactional
@@ -56,6 +59,7 @@ public class MemberService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException("해당 회원이 존재하지 않습니다."));
 
+        wishlistRepository.deleteAllByMemberId(memberId);
         memberRepository.delete(member);
     }
 }
