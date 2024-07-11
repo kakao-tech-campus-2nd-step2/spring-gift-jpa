@@ -67,4 +67,8 @@ public class Wish {
             throw new WishCanNotModifyException();
         }
     }
+
+    public boolean isOwner(final Long userId) {
+        return this.userId.equals(userId);
+    }
 }

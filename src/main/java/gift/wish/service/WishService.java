@@ -49,15 +49,21 @@ public class WishService {
     }
 
     public WishResponse getWish(final Long wishId, final Long userId) {
-        Wish wish = wishRepository.findByIdAndUserId(wishId, userId)
+        Wish wish = wishRepository.findById(wishId)
                 .orElseThrow(() -> WishNotFoundException.of(wishId));
+        if (!wish.isOwner(userId)) {
+            throw WishNotFoundException.of(wishId);
+        }
 
         return WishResponse.fromModel(wish);
     }
 
     public void deleteWish(final Long wishId, final Long userId) {
-        Wish wish = wishRepository.findByIdAndUserId(wishId, userId)
+        Wish wish = wishRepository.findById(wishId)
                 .orElseThrow(() -> WishNotFoundException.of(wishId));
+        if (!wish.isOwner(userId)) {
+            throw WishNotFoundException.of(wishId);
+        }
 
         wishRepository.delete(wish);
     }
