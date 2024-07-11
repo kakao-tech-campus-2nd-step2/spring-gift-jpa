@@ -1,7 +1,7 @@
 package gift.wishlist;
 
+import gift.member.Member;
 import gift.product.Product;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,8 +16,9 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
-    private String memberEmail;
+    @JoinColumn(nullable = false)
+    @ManyToOne
+    private Member member;
 
     @JoinColumn(nullable = false)
     @ManyToOne
@@ -26,13 +27,13 @@ public class Wishlist {
     public Wishlist() {
     }
 
-    public Wishlist(Product product, String memberEmail) {
+    public Wishlist(Product product, Member member) {
         this.product = product;
-        this.memberEmail = memberEmail;
+        this.member = member;
     }
 
-    public String getMemberEmail() {
-        return memberEmail;
+    public Member getMember() {
+        return member;
     }
 
     public Product getProduct() {

@@ -59,21 +59,23 @@ class WishlistRepositoryTest {
     @DisplayName("[Unit] getAllWishlists test")
     void getAllWishlistsTest() {
         //given
+        Member member = memberRepository.findById("aaa@email.com").get();
         List<Wishlist> expect = productRepository.findAllById(
                 LongStream.range(1L, 4L)
                     .boxed()
                     .toList()
             ).stream()
-            .map(e -> new Wishlist(e, "aaa@email.com"))
+            .map(e -> new Wishlist(e, member))
             .toList();
         wishlistRepository.saveAll(expect);
 
         Product product = productRepository.save(
             new Product(4L, "product-4", 400, "product-4-image"));
-        wishlistRepository.save(new Wishlist(product, "bbb@email.com"));
+        wishlistRepository.save(
+            new Wishlist(product, memberRepository.findById("bbb@email.com").get()));
 
         //when
-        List<Wishlist> actual = wishlistRepository.findAllByMemberEmail("aaa@email.com");
+        List<Wishlist> actual = wishlistRepository.findAllByMember(member);
 
         //then
         assertAll(
@@ -88,7 +90,8 @@ class WishlistRepositoryTest {
     @DisplayName("[Unit] addWishlist test")
     void addWishlistTest() {
         //given
-        Wishlist expect = new Wishlist(productRepository.findById(1L).get(), "aaa@email.com");
+        Wishlist expect = new Wishlist(productRepository.findById(1L).get(),
+            memberRepository.findById("aaa@email.com").get());
 
         //when
         Wishlist actual = wishlistRepository.save(expect);
@@ -102,7 +105,8 @@ class WishlistRepositoryTest {
     void deleteWishlistTest() {
         //given
         Wishlist expect = wishlistRepository.save(
-            new Wishlist(productRepository.findById(1L).get(), "aaa@email.com")
+            new Wishlist(productRepository.findById(1L).get(),
+                memberRepository.findById("aaa@email.com").get())
         );
 
         //when
@@ -118,16 +122,19 @@ class WishlistRepositoryTest {
     void existWishlistTest() {
         //given
         Product product = productRepository.findById(1L).get();
+        Member member = memberRepository.findById("aaa@email.com").get();
 
-        Wishlist expect = new Wishlist(product, "aaa@email.com");
-        wishlistRepository.save(expect);
+        Wishlist expect = wishlistRepository.save(new Wishlist(product, member));
 
         //when
-        Boolean trueCase = wishlistRepository.existsByMemberEmailAndProductId(
-            expect.getMemberEmail(), expect.getProduct().getId());
+        Boolean trueCase = wishlistRepository.existsByMemberAndProduct(
+            expect.getMember(),
+            expect.getProduct()
+        );
 
-        Boolean falseCase = wishlistRepository.existsByMemberEmailAndProductId(
-            "aaa@email.com", 2L
+        Boolean falseCase = wishlistRepository.existsByMemberAndProduct(
+            expect.getMember(),
+            new Product(2L, "product-2", 200, "product-2-image")
         );
 
         //then
