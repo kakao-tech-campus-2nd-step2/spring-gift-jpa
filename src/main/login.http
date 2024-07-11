@@ -32,12 +32,11 @@ host: localhost:8080
 ###
 POST /wishlist/add HTTP/1.1
 Authorization: Bearer POST /wishlist/add HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbjhAZW1haWwuY29tIiwiaWF0IjoxNzIwNTcxOTg1LCJleHAiOjE3MjA1NzQzODV9.adT4iTEMnp3JdARsFRVfWU3SVqIczG6L6nQoJDgDTvU
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJhZG1pbjhAZW1haWwuY29tIiwiaWF0IjoxNzIwNjk3NDg4LCJleHAiOjE3MjA2OTk4ODh9.nGw15Pjt-LvgfVJnBb8I7KOYVTQ04Xwf022D_UT_aco
 content-type: application/json
 host: localhost:8080
 
 {
-  "member_id": 74,
   "product_id": 77
 }
 ####
