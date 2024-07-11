@@ -59,23 +59,31 @@ class WishlistJpaRepositoryTest {
     void findAllByUserId() {
         // given
         User user = new User(null, "testUser", "test@test.com", "test123", Role.USER);
-        Product product = new Product(null, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+        Product product1 = new Product(null, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+        Product product2 = new Product(null, "아이스 카페 아메리카노 T", 4500, "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg");
+
 
         User savedUser = userJpaRepository.save(user);
-        Product savedProduct = productJpaRepository.save(product);
+        Product savedProduct1 = productJpaRepository.save(product1);
+        Product savedProduct2 = productJpaRepository.save(product2);
 
-        WishItem wishItem = new WishItem(null, savedUser, savedProduct);
-        WishItem expected = wishlistJpaRepository.save(wishItem);
+        WishItem wishItem1 = new WishItem(null, savedUser, savedProduct1);
+        WishItem wishItem2 = new WishItem(null, savedUser, savedProduct2);
+        WishItem savedWishItem1 = wishlistJpaRepository.save(wishItem1);
+        WishItem savedWishItem2 = wishlistJpaRepository.save(wishItem2);
 
         // when
-        List<WishItem> allByUserId = wishlistJpaRepository.findAllByUserId(savedUser.getId());
+        List<WishItem> wishlist = wishlistJpaRepository.findAllByUserId(savedUser.getId());
 
         // then
         assertAll(
-            () -> assertThat(allByUserId.size()).isEqualTo(1),
-            () -> assertThat(allByUserId.get(0).getId()).isNotNull(),
-            () -> assertThat(allByUserId.get(0).getUser()).isEqualTo(expected.getUser()),
-            () -> assertThat(allByUserId.get(0).getProduct()).isEqualTo(expected.getProduct())
+            () -> assertThat(wishlist.size()).isEqualTo(2),
+            () -> assertThat(wishlist.get(0).getId()).isNotNull(),
+            () -> assertThat(wishlist.get(0).getUser()).isEqualTo(savedWishItem1.getUser()),
+            () -> assertThat(wishlist.get(0).getProduct()).isEqualTo(savedWishItem1.getProduct()),
+            () -> assertThat(wishlist.get(1).getId()).isNotNull(),
+            () -> assertThat(wishlist.get(1).getUser()).isEqualTo(savedWishItem2.getUser()),
+            () -> assertThat(wishlist.get(1).getProduct()).isEqualTo(savedWishItem2.getProduct())
         );
     }
 
