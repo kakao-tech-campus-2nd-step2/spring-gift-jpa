@@ -1,6 +1,6 @@
 package gift.product.application.dto.response;
 
-import gift.product.domain.Product;
+import gift.product.service.dto.ProductInfo;
 
 public record ProductResponse(
         Long id,
@@ -8,7 +8,7 @@ public record ProductResponse(
         Integer price,
         String imgUrl
 ) {
-    public static ProductResponse fromModel(final Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImgUrl());
+    public static ProductResponse from(ProductInfo productInfo) {
+        return new ProductResponse(productInfo.id(), productInfo.name(), productInfo.price(), productInfo.imgUrl());
     }
 }

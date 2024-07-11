@@ -65,8 +65,9 @@ public class ProductController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductDetails(@PathVariable("id") Long id) {
-        var response = productService.getProductDetails(id);
+        var productInfo = productService.getProductDetails(id);
 
+        var response = ProductResponse.from(productInfo);
         return ResponseEntity.ok()
                 .body(response);
     }
@@ -77,8 +78,11 @@ public class ProductController {
     })
     @GetMapping()
     public ResponseEntity<List<ProductResponse>> getProductList() {
-        var responses = productService.getProducts();
+        var productInfos = productService.getProducts();
 
+        var responses = productInfos.stream()
+                .map(ProductResponse::from)
+                .toList();
         return ResponseEntity.ok()
                 .body(responses);
     }

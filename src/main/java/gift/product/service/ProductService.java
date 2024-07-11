@@ -1,9 +1,9 @@
 package gift.product.service;
 
-import gift.product.application.dto.response.ProductResponse;
 import gift.product.domain.Product;
 import gift.product.exception.ProductNotFoundException;
 import gift.product.persistence.ProductRepository;
+import gift.product.service.dto.ProductInfo;
 import gift.product.service.dto.ProductParams;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -33,19 +33,19 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse getProductDetails(final Long id) {
+    public ProductInfo getProductDetails(final Long id) {
         Product foundProduct = productRepository.findById(id)
                 .orElseThrow(() -> ProductNotFoundException.of(id));
 
-        return ProductResponse.fromModel(foundProduct);
+        return ProductInfo.from(foundProduct);
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getProducts() {
+    public List<ProductInfo> getProducts() {
         List<Product> foundProducts = productRepository.findAll();
 
         return foundProducts.stream()
-                .map(ProductResponse::fromModel)
+                .map(ProductInfo::from)
                 .toList();
     }
 
