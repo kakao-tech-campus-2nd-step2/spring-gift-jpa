@@ -8,6 +8,8 @@ import gift.repository.ProductRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,5 +71,11 @@ public class WishlistServiceImpl implements WishlistService {
             wishlist.getProduct().getPrice(),
             wishlist.getProduct().getImageUrl()
         );
+    }
+
+    @Override
+    public Page<WishlistDTO> getWishlistByUser1(String username, Pageable pageable) {
+        Page<Wishlist> wishlistEntities = wishlistRepository.findByUserUsername(username, pageable);
+        return wishlistEntities.map(this::convertToDTO);
     }
 }
