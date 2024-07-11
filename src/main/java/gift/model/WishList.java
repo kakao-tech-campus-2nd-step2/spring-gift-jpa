@@ -56,4 +56,12 @@ public class WishList {
         }
         this.product.setId(productId);
     }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Member getMember() {
+        return member;
+    }
 }
