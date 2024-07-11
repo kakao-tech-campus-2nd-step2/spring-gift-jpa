@@ -41,14 +41,14 @@ public class WishService {
     }
 
     @Transactional
-    public void deleteWishByMemberIdAndWishId(Long memberId, Long id){
+    public void deleteWishByMemberIdAndId(Long memberId, Long id){
         wishRepository.findByIdAndMemberId(id, memberId)
                 .orElseThrow(()-> new WishNotFoundException(Messages.NOT_FOUND_WISH));
         wishRepository.deleteById(id);
     }
 
     @Transactional
-    public void updateQuantityByMemberIdAndWishId(Long memberId, Long id, WishRequestDto request){
+    public void updateQuantityByMemberIdAndId(Long memberId, Long id, WishRequestDto request){
         Wish existingWish = wishRepository.findByIdAndMemberId(id, memberId)
                 .orElseThrow(()-> new WishNotFoundException(Messages.NOT_FOUND_WISH));
 
