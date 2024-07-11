@@ -54,14 +54,14 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateProduct(@LoginUser User loginUser, @PathVariable Long id,
                                                 @Valid @RequestBody UpdateProductRequest updateProductRequest) {
-        productService.updateProduct(id, updateProductRequest);
+        productService.updateProduct(loginUser, id, updateProductRequest);
         return ResponseEntity.ok().body("ok");
     }
 
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProductById(@LoginUser User loginUser, @PathVariable Long id) {
-        productService.deleteProduct(id);
+        productService.deleteProduct(loginUser, id);
         return ResponseEntity.ok().body("ok");
     }
 }

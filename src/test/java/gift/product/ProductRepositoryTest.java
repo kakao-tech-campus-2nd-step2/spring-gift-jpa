@@ -31,7 +31,7 @@ public class ProductRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        user = new User("aabb@kakao.com", "1234", Role.SELLER, "aaaa");
+        user = new User("aabb@kakao.com", "1234", Role.USER, "aaaa");
         product = new Product("Test", 1000, "url", user);
     }
 

@@ -5,6 +5,7 @@ import gift.product.model.dto.CreateProductRequest;
 import gift.product.model.dto.Product;
 import gift.product.model.dto.ProductResponse;
 import gift.product.model.dto.UpdateProductRequest;
+import gift.user.exception.ForbiddenException;
 import gift.user.model.dto.User;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -42,9 +43,11 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateProduct(Long id, UpdateProductRequest updateProductRequest) {
+    public void updateProduct(User user, Long id, UpdateProductRequest updateProductRequest) {
         Product product = productRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
+        checkProductOwner(user, product);
+
         product.setName(updateProductRequest.name());
         product.setPrice(updateProductRequest.price());
         product.setImageUrl(updateProductRequest.imageUrl());
@@ -52,10 +55,18 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteProduct(Long id) {
+    public void deleteProduct(User user, Long id) {
         Product product = productRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
+        checkProductOwner(user, product);
+
         product.setActive(false);
         productRepository.save(product);
+    }
+
+    private void checkProductOwner(User user, Product product) {
+        if (!product.getSeller().equals(user)) {
+            throw new ForbiddenException("해당 상품에 대한 권한이 없습니다.");
+        }
     }
 }
