@@ -45,7 +45,7 @@ public class ProductController {
     }
 
     //상품 추가 데이터 응답
-    @PostMapping("/")
+    @PostMapping
     public String create(@Valid @ModelAttribute Product formProduct) {
         productService.addProduct(formProduct);
         return "redirect:/products";
