@@ -89,7 +89,7 @@ public class ProductService {
 
     public ProductDTO getById(String token, Long id){
         String email = jwtTokenProvider.getEmailFromToken(token);
-        String role = jwtTokenProvider.getRoleFromToken(token);
+
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
         if(memberOptional.isEmpty()) throw new AuthorizedException();
 
