@@ -8,6 +8,7 @@ import gift.dto.wish.WishResponseDTO;
 import gift.exception.ForbiddenRequestException;
 import gift.exception.NoSuchMemberException;
 import gift.exception.NoSuchProductException;
+import gift.exception.NoSuchWishException;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
@@ -31,19 +32,16 @@ public class WishService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NoSuchMemberException::new);
 
-        return wishRepository.findAllByMember(member)
+        return member.getAllWishes()
                 .stream()
                 .map(WishResponseDTO::from)
                 .toList();
     }
 
     public WishResponseDTO addWish(String email, WishRequestDTO wishRequestDTO) {
-        long memberId = memberRepository.findByEmail(email)
-                .orElseThrow(NoSuchMemberException::new)
-                .getId();
-
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NoSuchMemberException::new);
+
         Product product = productRepository.findById(wishRequestDTO.productId())
                 .orElseThrow(NoSuchProductException::new);
 
@@ -52,22 +50,34 @@ public class WishService {
                 product
         ));
 
+        member.addWish(wish);
+        product.addWish(wish);
+
         return WishResponseDTO.from(wish);
     }
 
     public void deleteWish(String email, long wishId) {
-        long userId = memberRepository.findByEmail(email)
-                .orElseThrow(NoSuchMemberException::new)
-                .getId();
-
-        long wishOwnerId = wishRepository.findById(wishId)
-                .orElseThrow(NoSuchProductException::new)
-                .getMemberId();
-
-        if (wishOwnerId != userId) {
+        if (!isOwner(email, wishId)) {
             throw new ForbiddenRequestException("user is not owner of wish");
         }
 
-        wishRepository.deleteById(wishId);
+        Wish wish = wishRepository.findById(wishId)
+                        .orElseThrow(NoSuchWishException::new);
+
+        wish.getOwner().removeWish(wish);
+        wish.getProduct().removeWish(wish);
+        wishRepository.delete(wish);
+
+    }
+
+    private boolean isOwner(String email, long wishId) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(NoSuchMemberException::new);
+
+        Member wishOwner = wishRepository.findById(wishId)
+                .orElseThrow(NoSuchProductException::new)
+                .getOwner();
+
+        return wishOwner.equals(member);
     }
 }

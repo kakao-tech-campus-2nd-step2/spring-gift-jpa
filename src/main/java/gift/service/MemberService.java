@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.dto.member.*;
 import gift.entity.Member;
+import gift.exception.DuplicatedEmailException;
 import gift.exception.InvalidPasswordException;
 import gift.exception.NoSuchMemberException;
 import gift.repository.MemberRepository;
@@ -38,6 +39,10 @@ public class MemberService {
         String email = memberRequestDTO.email();
         String encryptedPW = hashPassword(memberRequestDTO.password());
 
+        memberRepository.findByEmail(email).ifPresent((member) -> {
+            throw new DuplicatedEmailException("Email already exists");
+        });
+
         Member member = memberRepository.save(new Member(email, encryptedPW));
 
         String token = tokenProvider.generateToken(member.getEmail());
@@ -68,7 +73,7 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email)
                         .orElseThrow(NoSuchMemberException::new);
 
-        memberRepository.deleteById(member.getId());
+        memberRepository.delete(member);
     }
 
     public void updatePw(long id, PwUpdateDTO pwUpdateDTO) {

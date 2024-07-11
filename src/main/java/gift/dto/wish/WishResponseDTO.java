@@ -7,6 +7,6 @@ public record WishResponseDTO(
         long productId
 ) {
     public static WishResponseDTO from(Wish wish) {
-        return new WishResponseDTO(wish.getId(), wish.getProductId());
+        return new WishResponseDTO(wish.getId(), wish.getProduct().getId());
     }
 }

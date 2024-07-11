@@ -1,9 +1,9 @@
 package gift.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Member {
@@ -11,8 +11,13 @@ public class Member {
     @Id
     private long id;
 
+    @Column(unique = true)
     private String email;
+
     private String password;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wish> wishes = new ArrayList<>();
 
     public Member() {}
 
@@ -35,5 +40,17 @@ public class Member {
 
     public void setPassword(String encryptedPw) {
         this.password = encryptedPw;
+    }
+
+    public List<Wish> getAllWishes() {
+        return wishes;
+    }
+
+    public void addWish(Wish wish) {
+        wishes.add(wish);
+    }
+
+    public void removeWish(Wish wish) {
+        wishes.remove(wish);
     }
 }

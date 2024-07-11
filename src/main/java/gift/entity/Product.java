@@ -4,6 +4,9 @@ import gift.dto.product.ProductPatchDTO;
 import gift.dto.product.ProductRequestDTO;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +19,9 @@ public class Product {
     private String name;
 
     private String imageUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wish> wishes = new ArrayList<>();
 
     public Product() {}
 
@@ -39,6 +45,18 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public List<Wish> getAllWishes() {
+        return wishes;
+    }
+
+    public void addWish(Wish wish) {
+        wishes.add(wish);
+    }
+
+    public void removeWish(Wish wish) {
+        wishes.remove(wish);
     }
 
     public Product patch(ProductPatchDTO patch) {

@@ -11,7 +11,7 @@ CREATE TABLE product (
 
 CREATE TABLE member (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
     password VARCHAR(255)
 );
 
