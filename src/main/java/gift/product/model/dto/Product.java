@@ -1,11 +1,15 @@
 package gift.product.model.dto;
 
 
+import gift.user.model.dto.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,13 +28,18 @@ public class Product {
     @Column(name = "image_url")
     private String imageUrl; // 선물 이미지 URL
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User seller;
+
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true; // 선물의 활성화 상태
 
-    public Product(String name, int price, String imageUrl) {
+    public Product(String name, int price, String imageUrl, User seller) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.seller = seller;
     }
 
     public Product() {
@@ -63,6 +72,14 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public User getSeller() {
+        return seller;
+    }
+
+    public void setSeller(User seller) {
+        this.seller = seller;
     }
 
     public boolean isActive() {

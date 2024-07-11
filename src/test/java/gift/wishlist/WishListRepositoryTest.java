@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import gift.product.model.ProductRepository;
 import gift.product.model.dto.Product;
 import gift.user.model.UserRepository;
+import gift.user.model.dto.Role;
 import gift.user.model.dto.User;
 import gift.wishlist.model.WishListRepository;
 import gift.wishlist.model.dto.Wish;
-import gift.wishlist.model.dto.WishListResponse;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,8 +34,8 @@ public class WishListRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        user = new User("aabb@kakao.com", "1234", "USER", "aaaa");
-        product = new Product("Test", 1000, "url");
+        user = new User("aabb@kakao.com", "1234", Role.SELLER, "aaaa");
+        product = new Product("Test", 1000, "url", user);
 
         user = userRepository.save(user);
         product = productRepository.save(product);
@@ -48,10 +48,9 @@ public class WishListRepositoryTest {
     public void testFindWishesByUserId() {
         System.out.println("user = " + user.getId());
         // 테스트 시작
-        List<WishListResponse> results = wishListRepository.findWishesByUserId(user.getId());
+        List<Wish> results = wishListRepository.findWishesByUserIdAndIsActiveTrue(user.getId());
 
         assertThat(results).isNotEmpty();
-        assertThat(results.get(0).getProductName()).isEqualTo(product.getName());
-        assertThat(results.get(0).getProductId()).isEqualTo(product.getId());
+        assertThat(results.get(0).getProduct().getId()).isEqualTo(product.getId());
     }
 }

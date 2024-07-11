@@ -4,6 +4,7 @@ import gift.user.exception.ForbiddenException;
 import gift.user.jwt.JwtService;
 import gift.user.model.UserRepository;
 import gift.user.model.dto.LoginRequest;
+import gift.user.model.dto.Role;
 import gift.user.model.dto.SignUpRequest;
 import gift.user.model.dto.UpdatePasswordRequest;
 import gift.user.model.dto.User;
@@ -75,7 +76,7 @@ public class UserService {
 
 
     public void verifyAdminAccess(User user) {
-        if (!user.getRole().equals("ADMIN")) {
+        if (user.getRole() != Role.ADMIN) {
             throw new ForbiddenException("해당 요청에 대한 관리자 권한이 없습니다.");
         }
     }

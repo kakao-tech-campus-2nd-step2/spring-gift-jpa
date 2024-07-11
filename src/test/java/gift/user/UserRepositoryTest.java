@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import gift.user.model.UserRepository;
+import gift.user.model.dto.Role;
 import gift.user.model.dto.User;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -21,14 +22,14 @@ public class UserRepositoryTest {
 
     @Test
     public void testSaveUser() {
-        User user = new User("aa@kakao.com", "1234", "USER", "aaaa");
+        User user = new User("aa@kakao.com", "1234", Role.USER, "aaaa");
         User savedUser = userRepository.save(user);
         assertThat(user).isEqualTo(savedUser);
     }
 
     @Test
     public void testFindByEmailAndIsActiveTrue() {
-        User user = new User("aa@kakao.com", "1234", "USER", "aaaa");
+        User user = new User("aa@kakao.com", "1234", Role.USER, "aaaa");
         userRepository.save(user);
 
         Optional<User> foundUser = userRepository.findByEmailAndIsActiveTrue(user.getEmail());
@@ -38,7 +39,7 @@ public class UserRepositoryTest {
 
     @Test
     public void testFindByEmailAndIsActiveTrueIfUserFalse() {
-        User user = new User("aa@kakao.com", "1234", "USER", "aaaa");
+        User user = new User("aa@kakao.com", "1234", Role.USER, "aaaa");
         user.setIsActive(false);
         userRepository.save(user);
 
@@ -48,7 +49,7 @@ public class UserRepositoryTest {
 
     @Test
     public void testFindByIdAndIsActiveTrue() {
-        User user = new User("aa@kakao.com", "1234", "USER", "aaaa");
+        User user = new User("aa@kakao.com", "1234", Role.USER, "aaaa");
         userRepository.save(user);
 
         Optional<User> foundUser = userRepository.findByIdAndIsActiveTrue(user.getId());
@@ -58,7 +59,7 @@ public class UserRepositoryTest {
 
     @Test
     public void testUpdatePassword() {
-        User user = new User("aa@kakao.com", "1234", "USER", "aaaa");
+        User user = new User("aa@kakao.com", "1234", Role.USER, "aaaa");
         userRepository.save(user);
 
         user.setPassword("1111");
@@ -69,10 +70,10 @@ public class UserRepositoryTest {
 
     @Test
     public void testUniqueEmailConstraint() {
-        User user = new User("aa@kakao.com", "1234", "USER", "aaaa");
-        userRepository.save(new User("aa@kakao.com", "1234", "USER", "aaaa"));
+        User user = new User("aa@kakao.com", "1234", Role.USER, "aaaa");
+        userRepository.save(new User("aa@kakao.com", "1234", Role.USER, "aaaa"));
         assertThatThrownBy(() ->
-                userRepository.save(new User("aa@kakao.com", "1234", "USER", "aaaa"))
+                userRepository.save(new User("aa@kakao.com", "1234", Role.USER, "aaaa"))
         ).isInstanceOf(DataIntegrityViolationException.class);
     }
 }

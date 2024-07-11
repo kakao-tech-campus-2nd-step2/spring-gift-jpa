@@ -5,6 +5,8 @@ import gift.product.model.dto.Product;
 import gift.product.model.dto.ProductResponse;
 import gift.product.model.dto.UpdateProductRequest;
 import gift.product.service.ProductService;
+import gift.user.model.dto.User;
+import gift.user.resolver.LoginUser;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -43,13 +45,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addProduct(@Valid @RequestBody CreateProductRequest createProductRequest) {
-        productService.addProduct(createProductRequest);
+    public ResponseEntity<String> addProduct(@LoginUser User loginUser,
+                                             @Valid @RequestBody CreateProductRequest createProductRequest) {
+        productService.addProduct(loginUser, createProductRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable Long id,
+    public ResponseEntity<String> updateProduct(@LoginUser User loginUser, @PathVariable Long id,
                                                 @Valid @RequestBody UpdateProductRequest updateProductRequest) {
         productService.updateProduct(id, updateProductRequest);
         return ResponseEntity.ok().body("ok");
@@ -57,7 +60,7 @@ public class ProductController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProductById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteProductById(@LoginUser User loginUser, @PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok().body("ok");
     }

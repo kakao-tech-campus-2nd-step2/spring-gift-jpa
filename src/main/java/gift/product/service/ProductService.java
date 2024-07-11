@@ -5,6 +5,7 @@ import gift.product.model.dto.CreateProductRequest;
 import gift.product.model.dto.Product;
 import gift.product.model.dto.ProductResponse;
 import gift.product.model.dto.UpdateProductRequest;
+import gift.user.model.dto.User;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,9 +35,9 @@ public class ProductService {
     }
 
     @Transactional
-    public void addProduct(CreateProductRequest createProductRequest) {
+    public void addProduct(User user, CreateProductRequest createProductRequest) {
         Product product = new Product(createProductRequest.name(), createProductRequest.price(),
-                createProductRequest.imageUrl());
+                createProductRequest.imageUrl(), user);
         productRepository.save(product);
     }
 
