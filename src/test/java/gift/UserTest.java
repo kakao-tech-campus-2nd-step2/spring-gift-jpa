@@ -2,18 +2,15 @@ package gift;
 
 import gift.domain.model.entity.User;
 import gift.domain.repository.UserRepository;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 public class UserTest {
-
-    @Autowired
-    private TestEntityManager entityManager;
 
     @Autowired
     private UserRepository userRepository;
@@ -78,5 +75,21 @@ public class UserTest {
         assertThat(updatedUser).isNotNull();
         assertThat(updatedUser.getEmail()).isEqualTo("updated@example.com");
         assertThat(updatedUser.getPassword()).isEqualTo("newpassword123");
+    }
+
+    @Test
+    public void existsByEmailTest() {
+        // given
+        String email = "test@example.com";
+        User user = new User(email, "password123");
+        userRepository.save(user);
+
+        // when
+        boolean exists = userRepository.existsByEmail(email);
+        boolean notExists = userRepository.existsByEmail("nonexistent@example.com");
+
+        // then
+        assertThat(exists).isTrue();
+        assertThat(notExists).isFalse();
     }
 }

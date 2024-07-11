@@ -2,18 +2,15 @@ package gift;
 
 import gift.domain.model.entity.Product;
 import gift.domain.repository.ProductRepository;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 public class ProductTest {
-
-    @Autowired
-    private TestEntityManager entityManager;
 
     @Autowired
     private ProductRepository productRepository;
@@ -68,5 +65,40 @@ public class ProductTest {
         assertThat(updatedProduct.getName()).isEqualTo("Updated Product");
         assertThat(updatedProduct.getPrice()).isEqualTo(2000L);
         assertThat(updatedProduct.getImageUrl()).isEqualTo("http://example.com/updated.jpg");
+    }
+
+    @Test
+    public void existsByNameTest() {
+        // given
+        String productName = "Test Product";
+        Product product = new Product(productName, 1000L, "http://example.com/image.jpg");
+        productRepository.save(product);
+
+        // when
+        boolean existsProduct = productRepository.existsByName(productName);
+        boolean notExistsProduct = productRepository.existsByName("Non-existent Product");
+
+        // then
+        assertThat(existsProduct).isTrue();
+        assertThat(notExistsProduct).isFalse();
+    }
+
+    @Test
+    public void findByNameTest() {
+        // given
+        String productName = "Test Product";
+        Product product = new Product(productName, 1000L, "http://example.com/image.jpg");
+        productRepository.save(product);
+
+        // when
+        Optional<Product> found = productRepository.findByName(productName);
+
+        // then
+        assertThat(found).isPresent();
+        found.ifPresent(foundProduct -> {
+            assertThat(foundProduct.getName()).isEqualTo(product.getName());
+            assertThat(foundProduct.getPrice()).isEqualTo(product.getPrice());
+            assertThat(foundProduct.getImageUrl()).isEqualTo(product.getImageUrl());
+        });
     }
 }

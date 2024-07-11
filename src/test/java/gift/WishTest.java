@@ -142,13 +142,11 @@ public class WishTest {
         // when
         boolean exists = wishRepository.existsByUserEmailAndProductId(user.getEmail(),
             product.getId());
+        boolean notExists = wishRepository.existsByUserEmailAndProductId("nonexistent@email.com",
+            product.getId());
 
         // then
         assertThat(exists).isTrue();
-
-        // 존재하지 않는 경우
-        boolean notExists = wishRepository.existsByUserEmailAndProductId("nonexistent@email.com",
-            product.getId());
         assertThat(notExists).isFalse();
     }
 
