@@ -1,4 +1,4 @@
-package gift.compositeKey;
+package gift.entity.compositeKey;
 
 import gift.entity.Product;
 import jakarta.persistence.Embeddable;
@@ -12,8 +12,6 @@ import java.io.Serializable;
 public class OptionId implements Serializable {
     int id;
     String option;
-
-
 
     public String getOption() {
         return option;

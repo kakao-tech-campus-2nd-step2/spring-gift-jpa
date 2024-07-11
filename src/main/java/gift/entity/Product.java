@@ -13,7 +13,6 @@ import java.util.List;
 @Entity
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Product {
-    static int id_cnt=1;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
@@ -28,12 +27,22 @@ public class Product {
     @Column(nullable = false)
     String imageUrl;
 
-    @OneToMany
+
+    @OneToMany(mappedBy = "product")
     List<Option> options = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product")
+    List <WishList> wishlists = new ArrayList<>();
 
     public void addOptions(Option option){
         options.add(option);
+        option.setProduct(this);
     }
+    public void addWishlist(WishList wishlist){
+        wishlists.add(wishlist);
+        wishlist.setProduct(this);
+    }
+
     public int getId() {
         return id;
     }
@@ -51,7 +60,6 @@ public class Product {
     }
 
     public Product(String name, int price, String imageUrl) {
-        this.id = id_cnt++;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

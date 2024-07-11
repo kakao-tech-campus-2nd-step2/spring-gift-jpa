@@ -1,7 +1,6 @@
 package gift.repository;
 
-import gift.compositeKey.OptionId;
-import gift.dto.ProductDTO;
+import gift.entity.compositeKey.OptionId;
 import gift.entity.Option;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

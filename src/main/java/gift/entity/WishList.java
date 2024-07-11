@@ -1,6 +1,6 @@
 package gift.entity;
 
-import gift.compositeKey.WishListId;
+import gift.entity.compositeKey.WishListId;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,13 +9,16 @@ public class WishList {
     @EmbeddedId
     private WishListId id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", insertable = false, updatable = false)
-    private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @MapsId("userId")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @MapsId("productId")
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
     // getters and setters
 
     public WishList(WishListId id) {

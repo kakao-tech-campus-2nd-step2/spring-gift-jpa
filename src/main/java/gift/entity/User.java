@@ -8,7 +8,7 @@ import java.util.List;
 @Entity
 @Table(name="user_tb")
 public class User {
-    static int id_cnt = 1;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -24,8 +24,9 @@ public class User {
     public User() {
     }
 
-    public void addWishlist(WishList wishList){
-        this.wishlist.add(wishList);
+    public void addWishlist(WishList wishlist){
+        this.wishlist.add(wishlist);
+        wishlist.setUser(this);
     }
 
     public int getId() {

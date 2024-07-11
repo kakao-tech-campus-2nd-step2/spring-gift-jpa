@@ -1,7 +1,7 @@
 package gift.entity;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import gift.compositeKey.OptionId;
+import gift.entity.compositeKey.OptionId;
 import jakarta.persistence.*;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -10,6 +10,12 @@ public class Option {
     @EmbeddedId
     OptionId id;
 
+    @ManyToOne
+    Product product;
+
+    public void setProduct(Product product){
+        this.product = product;
+    }
 
     public OptionId getId() {
         return id;

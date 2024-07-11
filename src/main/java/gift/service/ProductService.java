@@ -2,7 +2,7 @@ package gift.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.compositeKey.OptionId;
+import gift.entity.compositeKey.OptionId;
 import gift.dto.ProductDTO;
 import gift.entity.Option;
 import gift.entity.Product;
@@ -11,13 +11,11 @@ import gift.exception.exception.UnAuthException;
 import gift.exception.exception.NotFoundException;
 import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
-import gift.repository.WishListRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -94,7 +92,7 @@ public class ProductService {
         if(productRepository.findById(id).isEmpty())
             throw new NotFoundException("존재하지 않는 id입니다.");
         productRepository.deleteById(id);
-        optionRepository.deleteByProductID(id);
+        //optionRepository.deleteByProductID(id);
     }
 
 
