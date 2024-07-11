@@ -10,7 +10,6 @@ import gift.exception.user.UserNotFoundException;
 import gift.repository.UserRepository;
 import gift.util.auth.JwtUtil;
 import gift.util.mapper.UserMapper;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,11 +23,10 @@ public class UserService {
     }
 
     public UserResponse registerUser(UserRegisterRequest request) {
-        Optional<User> user = userRepository.findByEmail(request.email());
-        if(user.isPresent()) {
-            throw new UserAlreadyExistException("이미 존재하는 Email입니다.");
-        }
-
+        userRepository.findByEmail(request.email())
+            .ifPresent(user -> {
+                throw new UserAlreadyExistException("이미 존재하는 Email입니다.");
+            });
         User registeredUser = userRepository.save(UserMapper.toUser(request));
 
         return UserMapper.toResponse(jwtUtil.generateToken(registeredUser.getId(),
