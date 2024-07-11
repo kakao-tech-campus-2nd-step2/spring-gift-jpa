@@ -36,4 +36,9 @@ public class ItemDTO {
     public int hashCode() {
         return Objects.hash(id, name, price, imgUrl);
     }
+
+    public Item toEntity() {
+        return new Item(id, name, price, imgUrl);
+    }
+
 }
