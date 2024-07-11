@@ -1,6 +1,6 @@
 package gift.Valid;
 
-import gift.Model.Product;
+import gift.Model.DTO.ProductDTO;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -10,13 +10,13 @@ public class NameValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return Product.class.equals(clazz);
+        return ProductDTO.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        Product product = (Product) target;
-        if (product.getName().contains("카카오")) {
+        ProductDTO productDTO = (ProductDTO) target;
+        if (productDTO.name().contains("카카오")) {
             errors.rejectValue("name", "name.invalid", "이름에 '카카오'가 포함될 수 없습니다.");
         }
     }
