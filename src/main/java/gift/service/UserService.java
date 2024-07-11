@@ -24,7 +24,7 @@ public class UserService {
     }
 
     public String signup(UserDTO user) {
-        User savedUser = userRepository.save(user);
+        User savedUser = userRepository.save(new User(user));
         return userUtility.makeAccessToken(savedUser);
     }
 

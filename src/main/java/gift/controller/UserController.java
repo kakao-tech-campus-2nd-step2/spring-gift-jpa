@@ -1,7 +1,6 @@
 package gift.controller;
 
 import gift.model.UserDTO;
-import gift.repository.UserRepository;
 import gift.service.UserService;
 import gift.util.UserUtility;
 import jakarta.validation.Valid;
@@ -15,26 +14,24 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/user")
 public class UserController {
 
-    private final UserRepository userRepository;
     private final UserUtility userUtility;
     private final UserService userService;
 
     @Autowired
-    public UserController(UserRepository userRepository, UserUtility userUtility, UserService userService) {
-        this.userRepository = userRepository;
+    public UserController(UserUtility userUtility, UserService userService) {
         this.userUtility = userUtility;
         this.userService = userService;
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> signup(@RequestBody @Valid UserDTO user) {
-        String accessToken = userService.signup(user);
+    public ResponseEntity<Object> signup(@RequestBody @Valid UserDTO form) {
+        String accessToken = userService.signup(form);
         return ResponseEntity.ok().body(userUtility.accessTokenToObject(accessToken));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody @Valid UserDTO user) {
-        String accessToken = userService.login(user);
+    public ResponseEntity<Object> login(@RequestBody @Valid UserDTO form) {
+        String accessToken = userService.login(form);
         return ResponseEntity.ok().body(userUtility.accessTokenToObject(accessToken));
     }
 
