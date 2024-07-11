@@ -55,7 +55,7 @@ public class ProductController {
         }
 
         try {
-            Product updatedProduct = new Product(id, product.name(), product.price(), product.imageUrl());
+            Product updatedProduct = new Product(id, product.getName(), product.getPrice(), product.getImageUrl());
             productService.updateProduct(updatedProduct);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (IllegalArgumentException e) {
