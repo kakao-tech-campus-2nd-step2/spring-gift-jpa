@@ -37,19 +37,15 @@ public class User {
         return new Builder();
     }
 
-    public Long getId() {
+    public Long id() {
         return id;
     }
 
-    public String getEmail() {
+    public String email() {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public Set<Wish> getWishes() {
+    public Set<Wish> wishes() {
         return wishes;
     }
 

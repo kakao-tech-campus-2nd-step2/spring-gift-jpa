@@ -16,13 +16,13 @@ public class ProductMapper {
     }
 
     public static void updateProduct(Product product, UpdateProductRequest request) {
-        product.setName(request.name());
-        product.setPrice(request.price());
-        product.setImageUrl(request.imageUrl());
+        product.changeName(request.name());
+        product.changePrice(request.price());
+        product.changeImageUrl(request.imageUrl());
     }
 
     public static ProductResponse toResponse(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        return new ProductResponse(product.id(), product.name(), product.price(), product.imageUrl());
     }
 
 }

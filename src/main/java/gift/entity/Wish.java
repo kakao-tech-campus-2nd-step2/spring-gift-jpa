@@ -38,23 +38,23 @@ public class Wish {
         return new Builder();
     }
 
-    public Long getId() {
+    public Long id() {
         return id;
     }
 
-    public Integer getQuantity() {
+    public Integer quantity() {
         return quantity;
     }
 
-    public User getUser() {
+    public User user() {
         return user;
     }
 
-    public Product getProduct() {
+    public Product product() {
         return product;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void changeQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 

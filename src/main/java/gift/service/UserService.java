@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
@@ -29,15 +30,16 @@ public class UserService {
             });
         User registeredUser = userRepository.save(UserMapper.toUser(request));
 
-        return UserMapper.toResponse(jwtUtil.generateToken(registeredUser.getId(),
-            registeredUser.getEmail()));
+        return UserMapper.toResponse(jwtUtil.generateToken(registeredUser.id(),
+            registeredUser.email()));
     }
 
     public UserResponse loginUser(UserLoginRequest userRequest) {
-        User user = userRepository.findByEmailAndPassword(userRequest.email(), userRequest.password())
+        User user = userRepository.findByEmailAndPassword(userRequest.email(),
+                userRequest.password())
             .orElseThrow(() -> new UserNotFoundException("로그인할 수 없습니다."));
 
-        String token = jwtUtil.generateToken(user.getId(), user.getEmail());
+        String token = jwtUtil.generateToken(user.id(), user.email());
 
         return UserMapper.toResponse(token);
     }
@@ -49,7 +51,7 @@ public class UserService {
 
     public Long getUserIdByToken(String token) {
         Long userId = jwtUtil.extractUserId(token);
-        if(userId == null || !userRepository.existsById(userId)) {
+        if (userId == null || !userRepository.existsById(userId)) {
             throw new InvalidTokenException();
         }
         return userId;

@@ -34,31 +34,31 @@ public class Product {
         return new Builder();
     }
 
-    public Long getId() {
+    public Long id() {
         return id;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
-    public Integer getPrice() {
+    public Integer price() {
         return price;
     }
 
-    public String getImageUrl() {
+    public String imageUrl() {
         return imageUrl;
     }
 
-    public void setName(String name) {
+    public void changeName(String name) {
         this.name = name;
     }
 
-    public void setPrice(Integer price) {
+    public void changePrice(Integer price) {
         this.price = price;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void changeImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 

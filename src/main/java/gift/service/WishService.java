@@ -47,19 +47,19 @@ public class WishService {
             .build();
 
         Wish savedWish = wishRepository.save(wish);
-        return savedWish.getId();
+        return savedWish.id();
     }
 
     public void updateWishes(List<UpdateWishRequest> requests) {
         for (UpdateWishRequest request : requests) {
             Wish wish = getWish(request.id());
-            wish.setQuantity(request.quantity());
+            wish.changeQuantity(request.quantity());
             updateWish(wish);
         }
     }
 
     private void updateWish(Wish wish) {
-        if (wish.getQuantity() <= 0) {
+        if (wish.quantity() <= 0) {
             deleteWish(wish);
             return;
         }
