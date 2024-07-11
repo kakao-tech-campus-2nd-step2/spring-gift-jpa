@@ -8,7 +8,9 @@ import gift.domain.product.Product;
 import gift.domain.product.JpaProductRepository;
 import gift.domain.user.User;
 import gift.domain.user.JpaUserRepository;
+import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import jdk.jfr.Description;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,8 @@ public class CartItemRepositoryTest {
     private JpaUserRepository userRepository;
     @Autowired
     private JpaProductRepository productRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     private User user;
     private Product product1;
@@ -63,8 +67,8 @@ public class CartItemRepositoryTest {
     @Description("장바구니 추가")
     void addCartItem() {
         // when
-        cartItemRepository.save(new CartItem(user, product1));
-        List<CartItem> cartItems = cartItemRepository.findAllByUser(user);
+        CartItem savedCartItem = cartItemRepository.saveAndFlush(new CartItem(user, product1));
+        List<CartItem> cartItems = cartItemRepository.findAllByUser(savedCartItem.getUser());
         // then
         assertThat(cartItems.size()).isEqualTo(1);
         CartItem cartItem = cartItems.get(0);
@@ -81,6 +85,37 @@ public class CartItemRepositoryTest {
         List<CartItem> cartItems = cartItemRepository.findAllByUserId(user.getId());
         // then
         assertThat(cartItems.size()).isEqualTo(0);
+    }
 
+    @Test
+    @Description("지연 로딩 - 쿼리 확인")
+    void fetchLazy() {
+        // when
+        CartItem savedCartItem = cartItemRepository.save(new CartItem(user, product1));
+        clear();
+
+        // then
+        cartItemRepository.findById(savedCartItem.getId());
+    }
+
+    @Test
+    @Description("지연 로딩 - 연관 엔티티 조회 시 쿼리 늦게 나감")
+    void fetchLazyAndGetLater() {
+        // given
+        CartItem savedCartItem = cartItemRepository.saveAndFlush(new CartItem(user, product1));
+        clear();
+
+        // when
+        CartItem findCartItem = cartItemRepository.findById(savedCartItem.getId()).get();
+        User findUser = findCartItem.getUser();
+        Product findProduct = findCartItem.getProduct();
+
+        // then - 직접 사용해야 SELECT 쿼리 나감
+        System.out.println("findUser = " + findUser);
+        System.out.println("findProduct = " + findProduct);
+    }
+
+    private void clear() {
+        entityManager.clear();
     }
 }
