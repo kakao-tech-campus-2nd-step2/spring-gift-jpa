@@ -2,7 +2,6 @@ package gift.product.application;
 
 import gift.product.application.dto.request.ProductRequest;
 import gift.product.application.dto.response.ProductResponse;
-import gift.product.persistence.ProductRepository;
 import gift.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,38 +27,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
-    private final ProductRepository productRepository;
     private final ProductService productService;
 
     @Autowired
-    public ProductController(ProductRepository productRepository, ProductService productService) {
-        this.productRepository = productRepository;
+    public ProductController(ProductService productService) {
         this.productService = productService;
-    }
-
-    @Operation(summary = "상품 목록 조회", description = "상품 목록을 조회합니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공"),
-    })
-    @GetMapping()
-    public ResponseEntity<List<ProductResponse>> getProductList() {
-        var responses = productService.getProducts();
-
-        return ResponseEntity.ok()
-                .body(responses);
-    }
-
-    @Operation(summary = "상품 상세 조회", description = "상품 상세 정보를 조회합니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "상품 상세 조회 성공"),
-            @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음")
-    })
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProductDetails(@PathVariable("id") Long id) {
-        var response = productService.getProductDetails(id);
-
-        return ResponseEntity.ok()
-                .body(response);
     }
 
     @Operation(summary = "상품 등록", description = "상품을 등록합니다.")
@@ -81,6 +53,31 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public void modifyProduct(@PathVariable("id") Long id, @RequestBody @Valid ProductRequest modifyProduct) {
         productService.modifyProduct(id, modifyProduct);
+    }
+
+    @Operation(summary = "상품 상세 조회", description = "상품 상세 정보를 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "상품 상세 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "상품을 찾을 수 없음")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getProductDetails(@PathVariable("id") Long id) {
+        var response = productService.getProductDetails(id);
+
+        return ResponseEntity.ok()
+                .body(response);
+    }
+
+    @Operation(summary = "상품 목록 조회", description = "상품 목록을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공"),
+    })
+    @GetMapping()
+    public ResponseEntity<List<ProductResponse>> getProductList() {
+        var responses = productService.getProducts();
+
+        return ResponseEntity.ok()
+                .body(responses);
     }
 
     @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
