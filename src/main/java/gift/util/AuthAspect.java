@@ -15,20 +15,23 @@ import org.springframework.web.server.ResponseStatusException;
 @Component
 public class AuthAspect {
     private final JwtUtil jwtUtil;
+    private static final String BEARER_PREFIX = "Bearer ";
+    private static final String AUTH_HEADER = "Authorization";
+    public static final String ATTRIBUTE_NAME_AUTH_MEMBER = "authenticatedMember";
 
     public AuthAspect(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 
-    @Before("@annotation(AuthenticatedUser)")
+    @Before("@annotation(AuthenticatedMember)")
     public void getUserFromToken() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String authorizationHeader = request.getHeader("Authorization");
+        String authorizationHeader = request.getHeader(AUTH_HEADER);
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        if (authorizationHeader != null && authorizationHeader.startsWith(BEARER_PREFIX)) {
             String token = authorizationHeader.substring(7);
             MemberResponse memberResponse = jwtUtil.getMemberFromToken(token);
-            request.setAttribute("authenticatedMember", memberResponse);
+            request.setAttribute(ATTRIBUTE_NAME_AUTH_MEMBER, memberResponse);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이 필요한 기능입니다");
         }

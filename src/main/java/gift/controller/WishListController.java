@@ -4,7 +4,8 @@ import gift.domain.WishList.WishListRequest;
 import gift.domain.member.MemberResponse;
 import gift.domain.product.Product;
 import gift.service.WishListService;
-import gift.util.AuthenticatedUser;
+import gift.util.AuthAspect;
+import gift.util.AuthenticatedMember;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -25,25 +26,25 @@ public class WishListController {
     }
 
     @GetMapping
-    @AuthenticatedUser
+    @AuthenticatedMember
     public List<Product> readWishList(HttpServletRequest httpServletRequest) {
-        MemberResponse member = (MemberResponse) httpServletRequest.getAttribute("authenticatedMember");
+        MemberResponse member = (MemberResponse) httpServletRequest.getAttribute(AuthAspect.ATTRIBUTE_NAME_AUTH_MEMBER);
         return wishListService.read(member.id());
     }
 
     @PutMapping
-    @AuthenticatedUser
+    @AuthenticatedMember
     public void addWishList(HttpServletRequest httpServletRequest, @Valid @RequestBody
         WishListRequest wishListRequest) {
-        MemberResponse member = (MemberResponse)httpServletRequest.getAttribute("authenticatedMember");
+        MemberResponse member = (MemberResponse)httpServletRequest.getAttribute(AuthAspect.ATTRIBUTE_NAME_AUTH_MEMBER);
         wishListService.create(member.id(), wishListRequest.productId());
     }
 
     @DeleteMapping
-    @AuthenticatedUser
+    @AuthenticatedMember
     public void deleteWishList(HttpServletRequest httpServletRequest, @Valid @RequestBody
     WishListRequest wishListRequest) {
-        MemberResponse member = (MemberResponse)httpServletRequest.getAttribute("authenticatedMember");
+        MemberResponse member = (MemberResponse)httpServletRequest.getAttribute(AuthAspect.ATTRIBUTE_NAME_AUTH_MEMBER);
         wishListService.delete(member.id(), wishListRequest.productId());
     }
 }
