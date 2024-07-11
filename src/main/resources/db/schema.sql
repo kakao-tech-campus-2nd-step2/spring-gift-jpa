@@ -15,7 +15,7 @@ CREATE TABLE member
     role     VARCHAR(50)  NOT NULL
 );
 
-CREATE TABLE wish
+CREATE TABLE wishlist
 (
     id         BIGINT AUTO_INCREMENT PRIMARY KEY,
     member_id  VARCHAR(255) NOT NULL,
