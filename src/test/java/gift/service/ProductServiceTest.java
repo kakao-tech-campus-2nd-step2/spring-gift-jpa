@@ -86,18 +86,20 @@ class ProductServiceTest {
         String SORT = "name";
         String DIRECTION = "desc";
 
-        for (int i=1; i<=PRODUCT_COUNT; i++) {
-            productService.insertProduct(new ClientProductDto("테스트"+i, 1000+i, "테스트주소"+i));
+        for (int i = 1; i <= PRODUCT_COUNT; i++) {
+            productService.insertProduct(new ClientProductDto("테스트" + i, 1000 + i, "테스트주소" + i));
         }
 
         Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString(DIRECTION), SORT);
         Page<Product> products = productService.getProductAll(pageable);
 
         assertSoftly(softly -> {
-            assertThat(products.getTotalPages()).isEqualTo((int)Math.ceil((double)PRODUCT_COUNT / SIZE));
+            assertThat(products.getTotalPages()).isEqualTo(
+                (int) Math.ceil((double) PRODUCT_COUNT / SIZE));
             assertThat(products.getTotalElements()).isEqualTo(PRODUCT_COUNT);
             assertThat(products.getSize()).isEqualTo(SIZE);
-            assertThat(products.getContent().get(0).getName()).isEqualTo("테스트" + (PRODUCT_COUNT - SIZE));
+            assertThat(products.getContent().get(0).getName()).isEqualTo(
+                "테스트" + (PRODUCT_COUNT - SIZE));
         });
     }
 
