@@ -30,7 +30,6 @@ class JpaWishRepositoryTest {
     @Test
     void 위시_추가(){
         //given
-        setWish();
         //when
         Long insertWishId = insertWish(wish);
         Wish findWish = jpaWishRepository.findById(insertWishId).get();
@@ -43,7 +42,6 @@ class JpaWishRepositoryTest {
     @Test
     void 위시_조회(){
         //given
-        setWish();
         Long insertWishId = insertWish(wish);
         //when
         Wish findWish = jpaWishRepository.findById(insertWishId).get();
@@ -86,7 +84,6 @@ class JpaWishRepositoryTest {
     @Test
     void 위시_삭제(){
         //given
-        setWish();
         Long insertWishId = insertWish(wish);
         //when
         Wish findWish = jpaWishRepository.findById(insertWishId).get();
@@ -101,7 +98,6 @@ class JpaWishRepositoryTest {
     @Test
     void 상품_삭제(){
         //given
-        setWish();
         Long insertWishId = insertWish(wish);
         //when
         Wish findWish = jpaWishRepository.findById(insertWishId).get();

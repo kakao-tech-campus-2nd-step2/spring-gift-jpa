@@ -30,7 +30,6 @@ class JpaProductRepositoryTest {
     @Test
     void 상품_저장(){
         //given
-        setProduct();
         //when
         Long insertProductId = insertProduct(product);
         Product findProduct = jpaProductRepository.findById(insertProductId).get();
@@ -43,7 +42,6 @@ class JpaProductRepositoryTest {
     @Test
     void 상품_단일_조회(){
         //given
-        setProduct();
         Long insertProductId = insertProduct(product);
         //when
         Product findProduct = jpaProductRepository.findById(insertProductId).get();
@@ -75,7 +73,6 @@ class JpaProductRepositoryTest {
     @Test
     void 상품_수정(){
         //given
-        setProduct();
         insertProduct(product);
         //when
         product.update("바나나", 15000,"www.daum.net");
@@ -90,7 +87,6 @@ class JpaProductRepositoryTest {
     @Test
     void 상품_삭제(){
         //given
-        setProduct();
         Long insertProductId = insertProduct(product);
         //when
         Product findProduct = jpaProductRepository.findById(insertProductId).get();

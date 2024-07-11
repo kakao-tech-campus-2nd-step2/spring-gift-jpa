@@ -30,7 +30,6 @@ class JpaUserRepositoryTest {
     @Test
     void 회원_가입() {
         //given
-        setUser();
         //when
         Long insertUserId = insertUser(user);
         User findUser = jpaUserRepository.findById(insertUserId).get();
@@ -42,7 +41,6 @@ class JpaUserRepositoryTest {
     @Test
     void 회원_조회(){
         //given
-        setUser();
         Long insertUserId = insertUser(user);
         //when
         User findUser = jpaUserRepository.findById(insertUserId).get();
@@ -59,7 +57,6 @@ class JpaUserRepositoryTest {
     @Test
     void 이메일_회원_조회(){
         //given
-        setUser();
         Long insertUserId = insertUser(user);
         //when
         User findUserByEmail = jpaUserRepository.findByEmail("www.naver.com").get();
