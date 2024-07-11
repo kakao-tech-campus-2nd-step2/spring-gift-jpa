@@ -1,11 +1,14 @@
 package gift.service;
 
-import gift.controller.wish.WishDto;
+import gift.controller.wish.WishRequest;
+import gift.domain.Wish;
 import gift.exception.WishNotExistsException;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishService {
@@ -16,21 +19,25 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public List<WishDto> findAll(String email) {
-        return wishRepository.findAll(email).stream()
-            .map(WishDto::of)
+    public List<WishRequest> findAll(String email) {
+        return wishRepository.findByEmail(email).stream()
+            .map(WishRequest::of)
             .toList();
     }
 
-    public WishDto update(String email, WishDto wish) {
-        if (wishRepository.find(email, wish.productId()).isEmpty()) {
-            return WishDto.of(wishRepository.save(email, wish));
+    public WishRequest update(String email, WishRequest wish) {
+        Optional<Wish> foundWish = wishRepository.findByEmailAndProductId(email, wish.productId());
+        if (foundWish.isEmpty()) {
+            return WishRequest.of(wishRepository.save(new Wish(email, wish.productId(), wish.count())));
         }
-        return WishDto.of(wishRepository.update(email, wish));
+        Wish wishToUpdate = foundWish.get();
+        wishToUpdate.setCount(wish.count());
+        return WishRequest.of(wishRepository.save(wishToUpdate));
     }
 
+    @Transactional
     public void delete(String email, Long productId) {
-        wishRepository.find(email, productId).orElseThrow(WishNotExistsException::new);
-        wishRepository.delete(email, productId);
+        wishRepository.findByEmailAndProductId(email, productId).orElseThrow(WishNotExistsException::new);
+        wishRepository.deleteByEmailAndProductId(email, productId);
     }
 }

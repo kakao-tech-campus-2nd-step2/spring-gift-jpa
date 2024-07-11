@@ -25,7 +25,7 @@ public class WishController {
     }
 
     @GetMapping("/{email}")
-    public ResponseEntity<List<WishDto>> getAllWishes(@LoginMember MemberDto member, @PathVariable String email) {
+    public ResponseEntity<List<WishRequest>> getAllWishes(@LoginMember MemberDto member, @PathVariable String email) {
         if (!member.email().equals(email)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -34,17 +34,18 @@ public class WishController {
     }
 
     @PostMapping
-    public ResponseEntity<WishDto> addWish(@LoginMember MemberDto member, @RequestBody WishDto wish) {
+    public ResponseEntity<WishRequest> addWish(@LoginMember MemberDto member, @RequestBody WishRequest wish) {
         return ResponseEntity.status(HttpStatus.CREATED).body(wishService.update(member.email(), wish));
     }
 
     @PutMapping("/{email}/{productId}")
-    public ResponseEntity<WishDto> putWish(@LoginMember MemberDto member, @PathVariable Long productId, @RequestBody WishDto wish) {
+    public ResponseEntity<WishRequest> putWish(@LoginMember MemberDto member, @PathVariable Long productId, @RequestBody WishRequest wish) {
         return ResponseEntity.status(HttpStatus.OK).body(wishService.update(member.email(), wish));
     }
 
     @DeleteMapping("/{email}/{productId}")
     public ResponseEntity<Void> deleteProduct(@LoginMember MemberDto member, @PathVariable Long productId) {
+        System.out.println("called");
         wishService.delete(member.email(), productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }

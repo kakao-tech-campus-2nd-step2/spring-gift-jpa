@@ -1,5 +1,6 @@
 package gift.controller.product;
 
+import gift.domain.Product;
 import jakarta.validation.constraints.*;
 
 public record ProductRequest(
@@ -10,4 +11,7 @@ public record ProductRequest(
     String name,
     Long price,
     String imageUrl) {
+    public static Product toProduct(ProductRequest productRequest) {
+        return new Product(productRequest.name(), productRequest.price(), productRequest.imageUrl());
+    }
 }

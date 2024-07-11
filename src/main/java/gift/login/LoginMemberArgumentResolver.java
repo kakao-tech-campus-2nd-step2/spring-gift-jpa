@@ -34,6 +34,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         Claims claims = verifyToken(token);
 
         String email = claims.getSubject();
-        return memberService.find(email);
+        return memberService.findByEmail(email);
     }
 }

@@ -31,19 +31,22 @@ public class ProductService {
     }
 
     public ProductResponse save(ProductRequest product) {
-        productRepository.findByValues(product).ifPresent(p -> {
+        productRepository.findByNameAndPriceAndImageUrl(product.name(), product.price(), product.imageUrl()).ifPresent(p -> {
             throw new ProductAlreadyExistsException();
         });
-        return ProductResponse.of(productRepository.save(product));
+        return ProductResponse.of(productRepository.save(ProductRequest.toProduct(product)));
     }
 
     public ProductResponse update(Long id, ProductRequest product) {
-        productRepository.findById(id).orElseThrow(ProductNotExistsException::new);
-        return ProductResponse.of(productRepository.update(id, product));
+        Product foundProduct = productRepository.findById(id).orElseThrow(ProductNotExistsException::new);
+        foundProduct.setName(product.name());
+        foundProduct.setPrice(product.price());
+        foundProduct.setImageUrl(product.imageUrl());
+        return ProductResponse.of(productRepository.save(foundProduct));
     }
 
     public void delete(Long id) {
         productRepository.findById(id).orElseThrow(ProductNotExistsException::new);
-        productRepository.delete(id);
+        productRepository.deleteById(id);
     }
 }
