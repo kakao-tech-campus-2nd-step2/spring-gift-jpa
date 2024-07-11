@@ -1,4 +1,4 @@
-package gift;
+package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -15,18 +15,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
 @SuppressWarnings("NonAsciiCharacters")
-class ClientProductTest {
+class ProductServiceTest {
 
     final ProductService productService;
 
     @Autowired
-    ClientProductTest(ProductService productService) {
+    ProductServiceTest(ProductService productService) {
         this.productService = productService;
     }
 
@@ -80,7 +79,7 @@ class ClientProductTest {
     }
 
     @Test
-    void 상품_전쳬_조회_페이지_테스트() {
+    void 상품_전체_조회_페이지_테스트() {
         int PRODUCT_COUNT = 9;
         int PAGE = 1;
         int SIZE = 4;

@@ -1,4 +1,4 @@
-package gift;
+package gift.integrity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

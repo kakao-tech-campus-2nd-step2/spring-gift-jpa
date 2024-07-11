@@ -1,4 +1,4 @@
-package gift;
+package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,13 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 @SuppressWarnings("NonAsciiCharacters")
-class LoginTest {
+class AuthServiceTest {
 
     final AuthService authService;
     final MemberDto memberDto = new MemberDto("test@test.com", "1234");
 
     @Autowired
-    LoginTest(AuthService authService) {
+    AuthServiceTest(AuthService authService) {
         this.authService = authService;
     }
 

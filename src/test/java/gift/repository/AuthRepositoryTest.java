@@ -1,4 +1,4 @@
-package gift;
+package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
