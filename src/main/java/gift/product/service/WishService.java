@@ -19,7 +19,8 @@ public class WishService {
     private final ProductService productService;
     private final AuthRepository authRepository;
 
-    public WishService(WishRepository wishRepository, ProductService productService, AuthRepository authRepository) {
+    public WishService(WishRepository wishRepository, ProductService productService,
+        AuthRepository authRepository) {
         this.wishRepository = wishRepository;
         this.productService = productService;
         this.authRepository = authRepository;

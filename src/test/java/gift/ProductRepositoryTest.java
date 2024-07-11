@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 @SuppressWarnings("NonAsciiCharacters")
 class ProductRepositoryTest {
+
     @Autowired
     ProductRepository productRepository;
 

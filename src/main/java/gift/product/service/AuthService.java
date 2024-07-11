@@ -1,7 +1,6 @@
 package gift.product.service;
 
 import gift.product.dto.JwtResponse;
-import gift.product.dto.LoginMember;
 import gift.product.dto.MemberDto;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.Member;

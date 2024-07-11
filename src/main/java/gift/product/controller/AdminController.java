@@ -2,13 +2,11 @@ package gift.product.controller;
 
 import gift.product.dto.AdminProductDto;
 import gift.product.dto.JwtResponse;
-import gift.product.dto.LoginMember;
 import gift.product.dto.MemberDto;
 import gift.product.model.Product;
 import gift.product.service.AuthService;
 import gift.product.service.ProductService;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.net.URI;

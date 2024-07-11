@@ -1,6 +1,5 @@
 package gift.product.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,7 +22,7 @@ public class Wish {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    @OnDelete(action= OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private final Product product;
 
     protected Wish() {

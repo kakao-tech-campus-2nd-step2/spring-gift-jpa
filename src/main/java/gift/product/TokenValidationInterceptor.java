@@ -18,16 +18,13 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 public class TokenValidationInterceptor implements HandlerInterceptor {
 
+    private final AuthRepository authRepository;
     @Value("${jwt.header}")
     private String AUTHORIZATION;
-
     @Value("${jwt.type}")
     private String TYPE;
-
     @Value("${jwt.secret}")
     private String SECRET_KEY;
-
-    private final AuthRepository authRepository;
 
     public TokenValidationInterceptor(AuthRepository authRepository) {
         this.authRepository = authRepository;

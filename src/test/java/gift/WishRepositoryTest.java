@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 @SuppressWarnings("NonAsciiCharacters")
 class WishRepositoryTest {
+
     @Autowired
     WishRepository wishRepository;
 
@@ -76,7 +77,8 @@ class WishRepositoryTest {
 
         Wish wish = wishRepository.save(new Wish(member, product));
         wishRepository.deleteById(wish.getId());
-        boolean isPresentWish = wishRepository.findByIdAndMemberId(wish.getId(), member.getId()).isPresent();
+        boolean isPresentWish = wishRepository.findByIdAndMemberId(wish.getId(), member.getId())
+            .isPresent();
 
         assertThat(isPresentWish).isFalse();
     }
