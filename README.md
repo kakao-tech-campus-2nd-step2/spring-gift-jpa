@@ -35,8 +35,6 @@
         primary key (id)
     )
     ```
-## 기능
-### 기존의 wishlist(2주차 과제) 때의 기능은 같지만 JPA로 리팩토링, repository의 TEST 기능 추가
 
 ---
 
