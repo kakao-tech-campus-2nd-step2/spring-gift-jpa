@@ -31,17 +31,6 @@ public class Product {
         this.wishes.remove(wish);
     }
 
-    public void removeWishes() {
-        Iterator<Wish> iterator = this.wishes.iterator();
-
-        while(iterator.hasNext()) {
-            Wish wish = iterator.next();
-
-            wish.setProduct(null);
-            iterator.remove();
-        }
-    }
-
     protected Product () {
     }
 
