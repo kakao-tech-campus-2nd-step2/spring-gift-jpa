@@ -4,20 +4,20 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MemberDto {
-    private Long memberId;
+    private Long id;
     private String email;
     private String password;
     private String role;
 
-    public MemberDto(Long memberId, String email, String password, String role) {
-        this.memberId = memberId;
+    public MemberDto(Long id, String email, String password, String role) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {

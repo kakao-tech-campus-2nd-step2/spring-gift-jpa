@@ -32,7 +32,7 @@ public class WishController {
 //    Wish 추가
     @PostMapping
     public ResponseEntity<RequestStateDTO> addWish(@LoginMember MemberDto memberDto, @RequestBody RequestWishDto requestWishDto) {
-        wishService.addWish(memberDto.getMemberId(), requestWishDto.getProductId());
+        wishService.addWish(memberDto.getId(), requestWishDto.getProductId());
         return ResponseEntity.ok().body(new RequestStateDTO(
             RequestStatus.success,
             null
@@ -42,7 +42,7 @@ public class WishController {
 //    Wishlist 조회
     @GetMapping
     public ResponseEntity<WishListRequestStateDTO> getWishlistById(@LoginMember MemberDto memberDto) {
-        List<WishDto> wishes = wishService.getWishListById(memberDto.getMemberId());
+        List<WishDto> wishes = wishService.getWishListById(memberDto.getId());
         return ResponseEntity.ok().body(new WishListRequestStateDTO(
             RequestStatus.success,
             null,
@@ -53,7 +53,7 @@ public class WishController {
 //    Wish 삭제
     @DeleteMapping
     public void deleteWish(@LoginMember MemberDto memberDto, @RequestBody RequestWishDto requestWishDto){
-        wishService.deleteWish(memberDto.getMemberId(), requestWishDto.getProductId());
+        wishService.deleteWish(memberDto.getId(), requestWishDto.getProductId());
 
     }
 }
