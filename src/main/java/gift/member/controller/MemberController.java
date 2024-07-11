@@ -1,6 +1,6 @@
 package gift.member.controller;
 
-import gift.member.domain.TokenDTO;
+import gift.member.domain.Token;
 import gift.member.domain.Member;
 import gift.member.service.MemberService;
 import jakarta.validation.Valid;
@@ -21,13 +21,13 @@ public class MemberController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody Member member) {
-        TokenDTO token = memberService.register(member);
+        Token token = memberService.register(member);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody Member member) {
-        TokenDTO token = memberService.login(member);
+        Token token = memberService.login(member);
         return ResponseEntity.ok(token);
     }
 

@@ -1,7 +1,7 @@
 package gift.product.controller;
 
 import gift.product.error.NotFoundException;
-import gift.product.model.Product;
+import gift.product.domain.Product;
 import gift.product.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class ProductController {
     }
 
     //상품 추가 데이터 응답
-    @PostMapping("/new")
+    @PostMapping("/")
     public String create(@Valid @ModelAttribute Product formProduct) {
         productService.addProduct(formProduct);
         return "redirect:/products";
@@ -69,7 +69,7 @@ public class ProductController {
     }
 
     //상품 삭제 기능
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable("id") Long id, Model model) {
         Product product = productService.getProductById(id);
         if (product == null) {
@@ -91,7 +91,7 @@ public class ProductController {
     }
 
     //상품 수정 기능
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public String updateProduct(@PathVariable("id") Long id, @Valid @ModelAttribute Product updateProduct) {
         productService.updateProduct(id, updateProduct);
         return "redirect:/products/" + id;

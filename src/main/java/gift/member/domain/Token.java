@@ -1,10 +1,10 @@
 package gift.member.domain;
 
-public class TokenDTO {
+public class Token {
 
     private String token;
 
-    public TokenDTO(String token) {
+    public Token(String token) {
         this.token = token;
     }
 
