@@ -6,6 +6,7 @@ import gift.product.application.command.ProductCreateCommand;
 import gift.product.application.command.ProductUpdateCommand;
 import gift.product.domain.Product;
 import gift.product.domain.ProductRepository;
+import gift.wishlist.domain.WishlistRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,9 @@ public class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private WishlistRepository wishlistRepository;
 
     @BeforeEach
     public void setUp() {
@@ -130,15 +134,17 @@ public class ProductServiceTest {
     @Test
     public void 상품_삭제_테스트() {
         // Given
-        Product product = new Product("Product1", 1000, "http://example.com/image1.jpg");
+        Product product = new Product(1L, "Product1", 1000, "http://example.com/image1.jpg");
         when(productRepository.findById(any(Long.class))).thenReturn(Optional.of(product));
-        doNothing().when(productRepository).delete(any(Product.class));
+        doNothing().when(wishlistRepository).deleteAllByProductId(product.getId());
+        doNothing().when(productRepository).delete(product);
 
         // When
         productService.delete(1L);
 
         // Then
         verify(productRepository, times(1)).findById(1L);
+        verify(wishlistRepository, times(1)).deleteAllByProductId(product.getId());
         verify(productRepository, times(1)).delete(product);
     }
 
