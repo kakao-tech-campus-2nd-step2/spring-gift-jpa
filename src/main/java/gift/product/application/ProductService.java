@@ -1,6 +1,7 @@
 package gift.product.application;
 
-import gift.product.error.ProductNotFoundException;
+import gift.error.CustomException;
+import gift.error.ErrorCode;
 import gift.product.dao.ProductRepository;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
@@ -31,7 +32,7 @@ public class ProductService {
     public ProductResponse getProductByIdOrThrow(Long id) {
         return productRepository.findById(id)
                 .map(ProductMapper::toResponseDto)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     public ProductResponse createProduct(ProductRequest request) {
@@ -51,7 +52,7 @@ public class ProductService {
 
     public Long updateProduct(Long id, ProductRequest request) {
         Product product = productRepository.findById(id)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
         product.update(request);
 
