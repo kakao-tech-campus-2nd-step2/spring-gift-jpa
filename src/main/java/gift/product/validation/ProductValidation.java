@@ -2,7 +2,7 @@ package gift.product.validation;
 
 import gift.product.dao.ProductDao;
 import gift.product.exception.InstanceValueException;
-import gift.product.exception.InvalidProductIdException;
+import gift.product.exception.InvalidIdException;
 import gift.product.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class ProductValidation {
         if(isNullId(id))
             throw new InstanceValueException("수정할 상품의 ID가 누락되었습니다.");
         if(!productDao.existsById(id))
-            throw new InvalidProductIdException("변경을 시도하는 상품의 ID가 존재하지 않습니다.");
+            throw new InvalidIdException("변경을 시도하는 상품의 ID가 존재하지 않습니다.");
     }
 
     public boolean isIncludeNameKakao(String name) {

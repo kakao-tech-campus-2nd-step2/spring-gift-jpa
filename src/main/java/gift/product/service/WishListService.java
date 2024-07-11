@@ -3,6 +3,7 @@ package gift.product.service;
 import gift.product.dao.MemberDao;
 import gift.product.dao.ProductDao;
 import gift.product.dao.WishListDao;
+import gift.product.model.Member;
 import gift.product.model.Product;
 import gift.product.model.Wish;
 import gift.product.util.CertifyUtil;
@@ -55,20 +56,23 @@ public class WishListService {
     }
 
     public ResponseEntity<String> registerWishProduct(HttpServletRequest request, Map<String, Long> requestBody) {
+
         String token = certifyUtil.checkAuthorization(request.getHeader("Authorization"));
-        if(token == null)
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid");
-        Wish wish = new Wish(memberDao.findById(requestBody.get("memberId")).get(), productDao.findById(requestBody.get("productId")).get());
-        wishListValidation.registerWishProduct(wish.getProduct().getId());
-        wishListDao.save(wish);
+        productDao.existsById(requestBody.get("productId"));
+
+        wishListDao.save(
+                new Wish(
+                        memberDao.findByEmail(certifyUtil.getEmailByToken(token)).get(),
+                        productDao.findById(requestBody.get("productId")).get()
+                )
+        );
+
         return ResponseEntity.status(HttpStatus.CREATED).body("WishProduct registered successfully");
     }
 
     public ResponseEntity<String> deleteWishProduct(HttpServletRequest request, Long id) {
         String token = certifyUtil.checkAuthorization(request.getHeader("Authorization"));
-        if(token == null)
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid");
-
+        wishListValidation.deleteValidation(id, memberDao.findByEmail(certifyUtil.getEmailByToken(token)).get());
         wishListDao.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("delete WishProduct successfully");
     }

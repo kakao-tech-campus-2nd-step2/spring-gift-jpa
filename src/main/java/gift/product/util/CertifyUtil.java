@@ -12,6 +12,9 @@ import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 
 import java.util.Date;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,6 +28,7 @@ public class CertifyUtil {
         this.memberDao = memberDao;
     }
 
+    // 토큰 생성
     public String generateToken(String email) {
         long expirationTimeMillis = 3600000;
         Date issuedAt = new Date();
@@ -38,7 +42,9 @@ public class CertifyUtil {
             .compact();
     }
 
+    // 토큰의 서명 및 유효성 건즘
     public boolean isValidToken(String token) {
+        System.out.println("[CertifyUtil] isValidToken()");
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
             String subject = claimsJws.getBody().getSubject();
@@ -55,8 +61,9 @@ public class CertifyUtil {
         return false;
     }
 
+    // 토큰에서 클레임 추출
     public Claims extractClaims(String token) {
-        System.out.println("[TokenService] extractClaims()");
+        System.out.println("[CertifyUtil] extractClaims()");
         return Jwts.parser()
             .setSigningKey(key)
             .build()
@@ -64,19 +71,21 @@ public class CertifyUtil {
             .getBody();
     }
 
+    // HTTP 헤더 인증정보 확인하여 올바른 형식이면 토큰 반환
     public String checkAuthorization(String authorizationHeader) {
-        System.out.println("[TokenService] checkAuthorization()");
+        System.out.println("[CertifyUtil] checkAuthorization()");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))
             throw new UnauthorizedException("인증에 필요한 정보가 HTTP 헤더에 존재하지 않습니다.");
 
         String token = authorizationHeader.substring(7);
-        if (!isValidToken(token))
+        if (!isValidToken(token) || token == null)
             throw new UnauthorizedException("인증 토큰에 대한 정보가 존재하지 않습니다.");
 
         return token;
     }
 
+    // 토큰을 이용해 이메일 추출
     public String getEmailByToken(String token) {
         return extractClaims(token).getSubject();
     }

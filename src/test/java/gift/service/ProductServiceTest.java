@@ -2,7 +2,7 @@ package gift.service;
 
 import gift.product.dao.ProductDao;
 import gift.product.exception.InstanceValueException;
-import gift.product.exception.InvalidProductIdException;
+import gift.product.exception.InvalidIdException;
 import gift.product.model.Product;
 import gift.product.service.ProductService;
 import org.junit.jupiter.api.Assertions;
@@ -77,7 +77,7 @@ public class ProductServiceTest {
                 "image.url"
         );
         productDao.save(product);
-        Assertions.assertThrows(InvalidProductIdException.class, () -> {
+        Assertions.assertThrows(InvalidIdException.class, () -> {
             productService.updateProduct(-1L, product);
         });
     }
