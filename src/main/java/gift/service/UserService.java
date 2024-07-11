@@ -24,10 +24,6 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
     public void registerUser(String email, String password) {
         if (userRepository.findByEmail(email) != null) {
             throw new EmailAlreadyExistsException("이미 존재하는 email입니다.");
