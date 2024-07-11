@@ -1,7 +1,7 @@
 package gift.Model;
 
 public class User {
-    private int id;
+    private long id;
     private String email;
     private String name;
     private String password;
@@ -11,7 +11,7 @@ public class User {
       
     }
 
-    public User(int id, String email, String password, String name, boolean isAdmin) {
+    public User(long id, String email, String password, String name, boolean isAdmin) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -43,11 +43,11 @@ public class User {
         this.name = name;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
