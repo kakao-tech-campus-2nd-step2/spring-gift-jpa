@@ -2,51 +2,62 @@ package gift.service;
 
 import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
+import gift.dto.ProductChangeRequestDto;
 import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
+import gift.exception.CustomException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static gift.exception.ErrorCode.INVALID_PRODUCT;
+
 @Service
 public class ProductService {
-    private final ProductRepository repository;
+    private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
-        this.repository = productRepository;
+        this.productRepository = productRepository;
     }
 
-    public void addProduct(ProductRequestDto requestDto){
+    @Transactional
+    public void addProduct(ProductRequestDto requestDto) {
         Product product = new Product(requestDto.getName(), requestDto.getPrice(), requestDto.getImgUrl());
-        repository.save(product);
+        productRepository.save(product);
     }
 
-    public List<ProductResponseDto> findAll(){
-        return repository.findAll()
+    public List<ProductResponseDto> findAll() {
+        return productRepository.findAll()
                 .stream()
                 .map(ProductResponseDto::new)
                 .toList();
     }
 
-    public ProductResponseDto findProduct(Long id){
-        checkValidId(id);
-        return new ProductResponseDto(repository.findById(id));
+    public ProductResponseDto findProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new CustomException(INVALID_PRODUCT));
+        return new ProductResponseDto(product);
     }
 
-    public ProductResponseDto editProduct(Long id, ProductRequestDto request){
-        checkValidId(id);
-        repository.update(id,request);
-        return new ProductResponseDto(repository.findById(id));
+    @Transactional
+    public ProductResponseDto editProduct(Long id, ProductChangeRequestDto request) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new CustomException(INVALID_PRODUCT));
+        product.update(request.getName(), request.getPrice(), request.getImgUrl());
+        productRepository.save(product);
+        return new ProductResponseDto(product);
     }
 
-    public void deleteProduct(Long id){
-        checkValidId(id);
-        repository.deleteById(id);
+    @Transactional
+    public void deleteProduct(Long id) {
+        checkProductValidation(id);
+        productRepository.deleteById(id);
     }
 
-    public void checkValidId(Long id) {
-        if (repository.isNotExistProductId(id)){
-            throw new IllegalArgumentException("유효하지 않은 상품 정보입니다.");
+    private void checkProductValidation(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new CustomException(INVALID_PRODUCT);
         }
     }
 }

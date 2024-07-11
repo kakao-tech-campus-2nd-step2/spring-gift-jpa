@@ -1,14 +1,6 @@
 package gift.domain.product;
 
-import gift.dto.ProductRequestDto;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
-public interface ProductRepository {
-    void save(Product product);
-    List<Product> findAll();
-    Product findById(Long id);
-    void deleteById(Long id);
-    void update(Long id, ProductRequestDto dto);
-    boolean isNotExistProductId(Long id);
+public interface ProductRepository extends JpaRepository<Product, Long> {
 }
