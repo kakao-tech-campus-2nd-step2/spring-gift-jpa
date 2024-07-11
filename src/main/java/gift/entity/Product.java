@@ -1,7 +1,6 @@
 package gift.entity;
 
 import gift.dto.ProductDto;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +25,7 @@ public class Product{
 
     private String imageUrl;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY,  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<WishList> wishList;
 
     public Product() {
