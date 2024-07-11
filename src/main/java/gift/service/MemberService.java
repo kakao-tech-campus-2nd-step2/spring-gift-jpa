@@ -21,27 +21,22 @@ public class MemberService {
     }
 
     public MemberRegisterResponseDto signUpMember(MemberRegisterRequestDto requestDto) {
-        if (memberRepository.isAlreadyExist(requestDto.email())) {
+        if (memberRepository.existsByEmail(requestDto.email())) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
         Member member = new Member(requestDto.email(), requestDto.email(), requestDto.password(), 1);
-        Member registered = memberRepository.registerMember(member);
+        Member registered = memberRepository.save(member);
         return new MemberRegisterResponseDto(registered.getId(), registered.getEmail(), requestDto.name());
     }
-    public String loginMember(MemberRequestDto requestDto){
-        Member member = memberRepository.findByEmail(requestDto.getEmail());
 
-        if (!member.isMatch(requestDto.getPassword())){
+    public String loginMember(MemberRequestDto requestDto) {
+        Member member = memberRepository.findByEmail(requestDto.getEmail()).orElseThrow(
+                () -> new IllegalArgumentException("유효하지 않은 멤버 정보입니다."));
+
+        if (!member.isMatch(requestDto.getPassword())) {
             throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
         }
 
-        return jwtUtil.generateToken(member.getEmail());
-    }
-
-    public Member findMemberByEmail(String email){
-        if (memberRepository.isNotExistMember(email)) {
-            throw new IllegalArgumentException("유효하지 않은 회원 정보입니다.");
-        }
-        return memberRepository.findByEmail(email);
+        return jwtUtil.generateToken(member.getId(), member.getEmail());
     }
 }

@@ -29,7 +29,8 @@ public class Member {
         this.role = role;
     }
 
-    public Member() {}
+    public Member() {
+    }
 
     public Long getId() {
         return id;
@@ -51,7 +52,7 @@ public class Member {
         this.name = name;
     }
 
-    public boolean isMatch(String password){
+    public boolean isMatch(String password) {
         return password.equals(this.password);
     }
 }
