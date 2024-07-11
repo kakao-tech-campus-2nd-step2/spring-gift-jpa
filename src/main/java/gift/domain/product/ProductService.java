@@ -1,11 +1,13 @@
 package gift.domain.product;
 
+import gift.domain.product.repository.JpaProductRepository;
 import gift.global.exception.BusinessException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
