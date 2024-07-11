@@ -28,16 +28,6 @@ public class Product {
     }
 
     public Product(String name, Long price, String imageUrl) {
-<<<<<<< HEAD
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
-    public Product(Long id, String name, Long price, String imageUrl) {
-        this.id = id;
-=======
->>>>>>> 4b5ff17 (refacotr: ProductRepository JPA 방식으로 리팩토링)
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
