@@ -56,7 +56,7 @@ public class MemberController {
 
     @GetMapping("/wishlists")
     public ResponseEntity<ResponsePagingWishlistDto> getWishlistsByPage(@MemberId Long memberId,
-        @RequestParam int page) {
+        @RequestParam("page") int page) {
         var wishListPagingDto = wishlistService.getWishListsByPage(memberId, page);
         var responseWishlistPagingDto = ResponsePagingWishlistDto.from(wishListPagingDto);
         return ResponseEntity.ok(responseWishlistPagingDto);
