@@ -3,12 +3,15 @@ package gift.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import gift.common.dto.PageResponse;
 import gift.model.product.ProductRequest;
 import gift.model.product.ProductResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
@@ -47,16 +50,16 @@ public class ProductServiceTest {
         );
     }
 
-    /*@Test
+    @Test
     @DisplayName("전체 상품 조회")
     void findAll() {
         ProductRequest productRequest1 = new ProductRequest("product1", 1000, "image1.jpg");
         ProductRequest productRequest2 = new ProductRequest("product2", 2000, "image2.jpg");
         productService.register(productRequest1);
         productService.register(productRequest2);
-        ProductListResponse products = productService.findAllProduct();
-        assertThat(products.productResponses()).hasSize(2);
-    }*/
+        PageResponse<ProductResponse> products = productService.findAllProduct(1, 10);
+        assertThat(products.getTotalCount()).isEqualTo(2);
+    }
 
     @Test
     @DisplayName("상품 수정")
@@ -73,7 +76,7 @@ public class ProductServiceTest {
         );
     }
 
-    /*@Test
+    @Test
     @DisplayName("상품 삭제")
     void delete() {
         ProductRequest productRequest1 = new ProductRequest("product1", 1000, "image1.jpg");
@@ -81,7 +84,7 @@ public class ProductServiceTest {
         productService.register(productRequest1);
         productService.register(productRequest2);
         productService.deleteProduct(1L);
-        ProductListResponse products = productService.findAllProduct();
-        assertThat(products.productResponses()).hasSize(1);
-    }*/
+        PageResponse<ProductResponse> products = productService.findAllProduct(1, 10);
+        assertThat(products.getTotalCount()).isEqualTo(1);
+    }
 }

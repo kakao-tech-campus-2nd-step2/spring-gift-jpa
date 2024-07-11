@@ -3,6 +3,7 @@ package gift.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import gift.common.dto.PageResponse;
 import gift.model.product.ProductRequest;
 import gift.model.product.ProductResponse;
 import gift.model.user.UserRequest;
@@ -19,7 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Sql("/truncate.sql")
 public class WishServiceTest {
 
-    /*@Autowired
+    @Autowired
     private WishService wishService;
     @Autowired
     private UserService userService;
@@ -54,7 +55,7 @@ public class WishServiceTest {
         UserResponse user = userService.register(userRequest);
         ProductResponse product = productService.register(productRequest);
         wishService.addWistList(user.id(), new WishRequest(product.id(), 3));
-        WishListResponse wishes = wishService.findAllWish(user.id());
+        PageResponse<WishResponse> wishes = wishService.findAllWish(user.id(), 1, 10);
 
         assertThat(wishes).isNotNull();
     }
@@ -68,7 +69,7 @@ public class WishServiceTest {
         ProductResponse product = productService.register(productRequest);
         wishService.addWistList(user.id(), new WishRequest(product.id(), 3));
         wishService.deleteWishList(user.id(), product.id());
-        WishListResponse wish = wishService.findAllWish(user.id());
-        assertThat(wish.wishResponses()).isEmpty();
-    }*/
+        PageResponse<WishResponse> wishes = wishService.findAllWish(user.id(), 1, 10);
+        assertThat(wishes.getResponses()).isEmpty();
+    }
 }
