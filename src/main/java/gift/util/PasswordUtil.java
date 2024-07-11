@@ -11,4 +11,8 @@ public class PasswordUtil {
     public static String decodePassword(String encodedPassword) {
         return new String(Base64.getDecoder().decode(encodedPassword));
     }
+
+    public static boolean matches(String dtoPassword, String entityPassword) {
+        return decodePassword(entityPassword).equals(dtoPassword);
+    }
 }
