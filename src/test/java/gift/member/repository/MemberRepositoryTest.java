@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Description;
 import org.springframework.test.context.TestPropertySource;
 
@@ -19,11 +20,16 @@ class MemberRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private TestEntityManager entityManager;
+
     private Member member;
+    private Member savedMember;
 
     @BeforeEach
     void beforeEach() {
         member = new Member(null, MemberType.USER, new Email("email"), new Password("password"), new Nickname("nickname"));
+        savedMember = memberRepository.save(member);
     }
 
     @Test
@@ -31,8 +37,6 @@ class MemberRepositoryTest {
     void saveTest() {
         // given
         // when
-        Member savedMember = memberRepository.save(member);
-
         // then
         assertThat(savedMember.getId()).isNotNull();
         assertThat(savedMember.getMemberType()).isEqualTo(member.getMemberType());
@@ -45,8 +49,6 @@ class MemberRepositoryTest {
     @Description("findById 테스트")
     void findByIdTest() {
         // given
-        Member savedMember = memberRepository.save(member);
-
         // when
         Optional<Member> foundMember = memberRepository.findById(savedMember.getId());
 
@@ -62,6 +64,7 @@ class MemberRepositoryTest {
         Member member2 = new Member(null, MemberType.USER, new Email("email2"), new Password("password2"), new Nickname("nickname2"));
         member1 = memberRepository.save(member1);
         member2 = memberRepository.save(member2);
+        entityManager.flush();
 
         // when
         List<Member> members = memberRepository.findAll();
@@ -74,8 +77,6 @@ class MemberRepositoryTest {
     @Description("update 테스트")
     void updateTest() {
         // given
-        Member savedMember = memberRepository.save(member);
-
         // when
         savedMember = new Member(savedMember.getId(), savedMember.getMemberType(), savedMember.getEmail(), savedMember.getPassword(), savedMember.getNickname());
         Member updateProduct = memberRepository.save(savedMember);
@@ -88,8 +89,6 @@ class MemberRepositoryTest {
     @Description("deleteById 테스트")
     void deleteTest() {
         // given
-        Member savedMember = memberRepository.save(member);
-
         // when
         memberRepository.deleteById(savedMember.getId());
         Optional<Member> members = memberRepository.findById(member.getId());
