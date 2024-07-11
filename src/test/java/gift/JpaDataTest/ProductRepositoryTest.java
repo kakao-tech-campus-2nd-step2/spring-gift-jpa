@@ -10,6 +10,8 @@ import gift.global.exception.BusinessException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.ConstraintViolationException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import jdk.jfr.Description;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,19 +34,22 @@ public class ProductRepositoryTest {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private Product product;
+    private Product product1;
+    private Product product2;
 
     @BeforeEach
     void setUp() {
-        Product product = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
-        this.product = product;
+        Product product1 = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
+        this.product1 = product1;
+        Product product2 = new Product("아이스 말차라떼 T", 4500, "https://example.com/image.jpg");
+        this.product2 = product2;
     }
 
     @Test
     @Description("상품 정상 저장")
     void save() {
         // when
-        Product savedProduct = productRepository.saveAndFlush(product);
+        Product savedProduct = productRepository.saveAndFlush(product1);
         clear();
         Product findProduct = productRepository.findById(savedProduct.getId()).get();
 
@@ -92,9 +97,9 @@ public class ProductRepositoryTest {
     @Description("상품 수정")
     void update() {
         // given
-        productRepository.saveAndFlush(product);
+        productRepository.saveAndFlush(product1);
         clear();
-        Product findProduct = productRepository.findById(product.getId()).get();
+        Product findProduct = productRepository.findById(product1.getId()).get();
 
         // when
         findProduct.setPrice(4700);
@@ -110,12 +115,29 @@ public class ProductRepositoryTest {
     @Description("상품 삭제")
     void delete() {
             // when
-            Product savedProduct = productRepository.saveAndFlush(product);
+            Product savedProduct = productRepository.saveAndFlush(product1);
             productRepository.deleteById(savedProduct.getId());
 
             // then
             Optional<Product> findProduct = productRepository.findById(savedProduct.getId());
             assertThat(findProduct.isEmpty()).isEqualTo(true);
+    }
+
+    @Test
+    @Description("상품들 삭제")
+    void deleteAllByIdsIn() {
+        // given
+        Product savedProduct1 = productRepository.saveAndFlush(product1);
+        Product savedProduct2 = productRepository.saveAndFlush(product2);
+        List<Long> ids = new ArrayList<>();
+        ids.add(savedProduct1.getId());
+        ids.add(savedProduct2.getId());
+
+        // when
+        productRepository.deleteAllByIdIn(ids);
+        List<Product> products = productRepository.findAll();
+        // then
+        assertThat(products.size()).isEqualTo(0);
     }
 
     private void flush() {

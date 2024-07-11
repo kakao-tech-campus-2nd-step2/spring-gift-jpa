@@ -85,7 +85,7 @@ public class ProductService {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "삭제할 상품을 선택하세요.");
         }
 
-        productRepository.deleteByIds(productIds);
+        productRepository.deleteAllByIdIn(productIds);
     }
 
     /**
