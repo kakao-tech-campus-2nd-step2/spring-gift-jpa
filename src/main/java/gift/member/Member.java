@@ -3,13 +3,11 @@ package gift.member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Email;
 
 @Entity
 public class Member {
 
     @Id
-    @Email(message = "This is not an email format")
     private String email;
 
     @Column(nullable = false)

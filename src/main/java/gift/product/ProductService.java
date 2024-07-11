@@ -1,5 +1,7 @@
 package gift.product;
 
+import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
+
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +31,7 @@ public class ProductService {
 
     public void updateProduct(long id, ProductDTO productDTO) {
         if (!productRepository.existsById(id)) {
-            throw new IllegalArgumentException("Product does not exist");
+            throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
         }
         productRepository.save(
             new Product(

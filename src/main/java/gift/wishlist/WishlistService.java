@@ -1,5 +1,7 @@
 package gift.wishlist;
 
+import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
+
 import gift.member.MemberRepository;
 import gift.product.Product;
 import gift.product.ProductRepository;
@@ -59,7 +61,7 @@ public class WishlistService {
     private Product getProductById(long productId) {
         Optional<Product> product = productRepository.findById(productId);
         if (product.isEmpty()) {
-            throw new IllegalArgumentException("Product does not exist");
+            throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
         }
         return product.get();
     }
