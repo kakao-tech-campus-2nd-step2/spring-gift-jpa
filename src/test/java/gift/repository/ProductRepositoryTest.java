@@ -155,6 +155,7 @@ class ProductRepositoryTest {
     void testCascadeRemove(){
         // given
         entityManager.persist(expectedMember);
+
         expectedProduct.addWish(expectedWish);
         Product savedProduct = products.save(expectedProduct);
         entityManager.flush();
@@ -180,6 +181,7 @@ class ProductRepositoryTest {
     void testOrphanRemoval(){
         // given
         entityManager.persist(expectedMember);
+
         expectedProduct.addWish(expectedWish);
         Product savedProduct = products.save(expectedProduct);
         entityManager.flush();
@@ -202,6 +204,7 @@ class ProductRepositoryTest {
     void testLazyFetch(){
         // given
         entityManager.persist(expectedMember);
+
         expectedProduct.addWish(expectedWish);
         Product savedProduct = products.save(expectedProduct);
         entityManager.flush();
