@@ -41,21 +41,13 @@ public class ProductController {
 
     // 상품 수정(Update)
     @PutMapping("/{id}")
-    public ResponseEntity<ProductServiceStatus> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        ProductServiceStatus response = productService.editProduct(id, product);
-        if (response == ProductServiceStatus.SUCCESS) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    public ProductServiceStatus updateProduct(@PathVariable Long id, @RequestBody Product product) {
+        return productService.editProduct(id, product);
     }
 
     // 상품 삭제(Delete)
     @DeleteMapping("/{id}")
-    public ResponseEntity<ProductServiceStatus> deleteProduct(@PathVariable Long id) {
-        ProductServiceStatus response = productService.deleteProduct(id);
-        if (response == ProductServiceStatus.SUCCESS) {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    public ProductServiceStatus deleteProduct(@PathVariable Long id) {
+        return productService.deleteProduct(id);
     }
 }
