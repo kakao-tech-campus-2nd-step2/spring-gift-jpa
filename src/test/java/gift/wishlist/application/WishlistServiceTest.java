@@ -52,7 +52,7 @@ public class WishlistServiceTest {
         memberEmail = "test@example.com";
         member = new Member(memberId, memberEmail, "password");
         product = new Product(productId, "Product", 1000, "image");
-        wishlist = new Wishlist(wishlistId, memberId, productId);
+        wishlist = new Wishlist(wishlistId, member, product);
     }
 
     @Test
