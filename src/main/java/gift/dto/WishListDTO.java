@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WishListDTO implements Serializable {
+public class WishListDTO {
 
     private Long id;
     private UserDTO user;
