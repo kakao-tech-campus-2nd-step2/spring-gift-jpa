@@ -5,7 +5,7 @@ import gift.dto.LoginResponseDTO;
 import gift.dto.UserRequestDTO;
 import gift.dto.UserResponseDTO;
 import gift.exception.DuplicateException;
-import gift.model.User;
+import gift.model.Member;
 import gift.repository.UserRepository;
 import gift.util.JwtUtil;
 
@@ -24,13 +24,13 @@ public class UserService {
         if (userRepository.findByEmail(userRequestDTO.getEmail()).isPresent()) {
             throw new DuplicateException("이미 존재하는 회원입니다.");
         }
-        User user = new User(userRequestDTO.getEmail(), userRequestDTO.getPassword());
-        userRepository.save(user);
+        Member member = new Member(userRequestDTO.getEmail(), userRequestDTO.getPassword());
+        userRepository.save(member);
     }
 
 
     public LoginResponseDTO authenticate(UserRequestDTO userRequestDTO) {
-        Optional<User> userOpt = userRepository.findByEmail(userRequestDTO.getEmail());
+        Optional<Member> userOpt = userRepository.findByEmail(userRequestDTO.getEmail());
         if (userOpt.isEmpty() || !userOpt.get().checkPassword(userRequestDTO.getPassword())) {
             throw new IllegalArgumentException("유효하지 않은 이메일 or 비밀번호입니다.");
         }
@@ -43,8 +43,8 @@ public class UserService {
         if (!JwtUtil.validateToken(userRequest.getToken(), email)) {
             throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
         }
-        User user = userRepository.findByEmail(email)
+        Member member = userRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-        return new UserResponseDTO(user.getId(), user.getEmail());
+        return new UserResponseDTO(member.getId(), member.getEmail());
     }
 }
