@@ -2,7 +2,7 @@ package gift.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import gift.domain.User;
+import gift.model.user.User;
 import gift.repository.user.UserRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;

@@ -2,7 +2,11 @@ package gift.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import gift.domain.WishList;
+import gift.model.product.Product;
+import gift.model.user.User;
+import gift.model.wishlist.WishList;
+import gift.repository.product.ProductRepository;
+import gift.repository.user.UserRepository;
 import gift.repository.wish.WishListRepository;
 import java.util.List;
 import java.util.Optional;
@@ -15,16 +19,36 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 public class WishListRepositoryTest {
-    @Autowired
+
     private WishListRepository wishListRepository;
+    private ProductRepository productRepository;
+    private UserRepository userRepository;
+    @Autowired
+    public WishListRepositoryTest(WishListRepository wishListRepository,
+        ProductRepository productRepository, UserRepository userRepository) {
+        this.wishListRepository = wishListRepository;
+        this.productRepository = productRepository;
+        this.userRepository = userRepository;
+    }
 
     private WishList wish1;
     private WishList wish2;
+    private User user1, user2;
+    private Product product1, product2;
 
     @BeforeEach
     void setup() {
-        wish1 = new WishList(1L, 1L, 2);
-        wish2 = new WishList(1L, 3L, 3);
+        product1 = new Product("아메리카노", 4500, "americano");
+        product2 = new Product("가방", 120000, "bag");
+        user1 = new User("kakao", "kakao@google.com", "password", "user");
+        user2 = new User("naver", "naver@google.com", "password", "user");
+        userRepository.save(user1);
+        userRepository.save(user2);
+        productRepository.save(product1);
+        productRepository.save(product2);
+
+        wish1 = new WishList(user1, product1, 2);
+        wish2 = new WishList(user2, product2, 3);
         wishListRepository.save(wish1);
         wishListRepository.save(wish2);
     }
@@ -33,8 +57,9 @@ public class WishListRepositoryTest {
     @Test
     void save() {
         // given
-        WishList wish3 = new WishList(1L, 1L, 2);
+        WishList wish3 = new WishList(user1, product2, 2);
         // when
+
         WishList savedWish = wishListRepository.save(wish3);
         // then
         Assertions.assertAll(
