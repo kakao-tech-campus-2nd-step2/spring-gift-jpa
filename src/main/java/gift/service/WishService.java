@@ -39,7 +39,6 @@ public class WishService {
     @Transactional(readOnly = true)
     public List<WishResponseDto> getMemberWishListByMemberId(Long memberId){
         return wishRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new WishNotFoundException(Messages.NOT_FOUND_WISH))
                 .stream()
                 .map(WishResponseDto::from)
                 .toList();
