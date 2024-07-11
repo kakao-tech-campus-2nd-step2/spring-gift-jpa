@@ -1,4 +1,5 @@
 package gift.Model.DTO;
 
-public record UserDTO(String email, String password) {
+public record MemberDTO(String email, String password) {
+
 }

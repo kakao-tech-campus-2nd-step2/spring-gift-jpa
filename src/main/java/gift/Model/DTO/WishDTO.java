@@ -1,2 +1,4 @@
-package gift.Model.DTO;public class WishDTO {
+package gift.Model.DTO;
+
+public record WishDTO(MemberDTO member, ProductDTO product) {
 }
