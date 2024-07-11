@@ -2,10 +2,12 @@ package gift.repository;
 
 import gift.model.Product;
 import gift.model.ProductDTO;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,49 +20,69 @@ public class ProductRepositoryIntegrationTest {
 
     @Test
     public void save() {
-        ProductDTO product = new ProductDTO("abc", 123, "test.com");
-        Product savedProduct = productRepository.save(product);
+        // given
+        ProductDTO product = makeProducts(1).get(0);
 
+        // when
+        Product savedProduct = productRepository.save(product);
         Product findProduct = productRepository.findById(savedProduct.getId());
-        assertThat(product.getName()).isEqualTo(findProduct.getName());
-        assertThat(product.getPrice()).isEqualTo(findProduct.getPrice());
-        assertThat(product.getImageUrl()).isEqualTo(findProduct.getImageUrl());
+
+        // then
+        Assertions.assertAll(
+                () -> assertThat(product.getName()).isEqualTo(findProduct.getName()),
+                () -> assertThat(product.getPrice()).isEqualTo(findProduct.getPrice()),
+                () -> assertThat(product.getImageUrl()).isEqualTo(findProduct.getImageUrl())
+        );
     }
 
     @Test
     public void delete() {
-        ProductDTO product = new ProductDTO("abc", 123, "test.com");
+        // given
+        ProductDTO product = makeProducts(1).get(0);
         Product savedProduct = productRepository.save(product);
 
+        // when
         boolean result = productRepository.delete(savedProduct.getId());
+
+        // then
         assertThat(result).isEqualTo(true);
     }
 
     @Test
     public void edit() {
-        ProductDTO product = new ProductDTO("abc", 123, "test.com");
-        Product savedProduct = productRepository.save(product);
+        // given
+        List<ProductDTO> products = makeProducts(2);
+        Product savedProduct = productRepository.save(products.get(0));
 
-        ProductDTO editProductForm = new ProductDTO("def", product.getPrice(),
-                product.getImageUrl());
-
+        // when
+        ProductDTO editProductForm = products.get(1);
         Product editProduct = productRepository.edit(savedProduct.getId(), editProductForm);
         Product findProduct = productRepository.findById(savedProduct.getId());
+
+        // then
         assertThat(findProduct.getName()).isEqualTo(editProduct.getName());
     }
 
     @Test
     public void findAll() {
-        ProductDTO product1 = new ProductDTO("abc", 123, "test1.com");
-        ProductDTO product2 = new ProductDTO("def", 234, "test2.com");
-        ProductDTO product3 = new ProductDTO("ghi", 345, "test3.com");
+        // given
+        List<ProductDTO> products = makeProducts(3);
 
-        productRepository.save(product1);
-        productRepository.save(product2);
-        productRepository.save(product3);
-
+        // when
+        for (ProductDTO product : products) {
+            productRepository.save(product);
+        }
         List<Product> allProducts = productRepository.findAll();
+
+        // then
         assertThat(allProducts.size()).isEqualTo(3);
     }
 
+    public List<ProductDTO> makeProducts(int n) {
+        ArrayList<ProductDTO> products = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            products.add(new ProductDTO("name" + Integer.toString(i), i, "imageUrl" + Integer.toString(i)));
+        }
+        return products;
+    }
 }
