@@ -71,6 +71,6 @@ public class WishService {
 
     private void validateWishExists(Long id) {
         wishRepository.findById(id)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(WishNotFoundException::new);
     }
 }
