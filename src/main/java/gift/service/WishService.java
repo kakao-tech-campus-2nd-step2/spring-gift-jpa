@@ -49,7 +49,7 @@ public class WishService {
             .build();
 
         Wish savedWish = wishRepository.save(wish);
-        return savedWish.id();
+        return savedWish.getId();
     }
 
     public void updateWishes(List<UpdateWishRequest> requests) {

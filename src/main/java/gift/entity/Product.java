@@ -70,19 +70,19 @@ public class Product {
         return new Builder();
     }
 
-    public Long id() {
+    public Long getId() {
         return id;
     }
 
-    public String name() {
+    public String getName() {
         return name;
     }
 
-    public Integer price() {
+    public Integer getPrice() {
         return price;
     }
 
-    public String imageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 

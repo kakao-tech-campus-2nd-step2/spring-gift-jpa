@@ -61,18 +61,18 @@ class WishRepositoryTest {
         assertThat(actual.size()).isEqualTo(2);
 
         // product1, quantity: 2
-        assertThat(actual.getFirst().product().id()).isEqualTo(product1.id());
-        assertThat(actual.getFirst().product().name()).isEqualTo(product1.name());
-        assertThat(actual.getFirst().product().price()).isEqualTo(product1.price());
-        assertThat(actual.getFirst().product().imageUrl()).isEqualTo(product1.imageUrl());
-        assertThat(actual.getFirst().quantity()).isEqualTo(2);
+        assertThat(actual.getFirst().getProduct().getId()).isEqualTo(product1.getId());
+        assertThat(actual.getFirst().getProduct().getName()).isEqualTo(product1.getName());
+        assertThat(actual.getFirst().getProduct().getPrice()).isEqualTo(product1.getPrice());
+        assertThat(actual.getFirst().getProduct().getImageUrl()).isEqualTo(product1.getImageUrl());
+        assertThat(actual.getFirst().getQuantity()).isEqualTo(2);
 
         // product3, quantity: 1
-        assertThat(actual.get(1).product().id()).isEqualTo(product3.id());
-        assertThat(actual.get(1).product().name()).isEqualTo(product3.name());
-        assertThat(actual.get(1).product().price()).isEqualTo(product3.price());
-        assertThat(actual.get(1).product().imageUrl()).isEqualTo(product3.imageUrl());
-        assertThat(actual.get(1).quantity()).isEqualTo(1);
+        assertThat(actual.get(1).getProduct().getId()).isEqualTo(product3.getId());
+        assertThat(actual.get(1).getProduct().getName()).isEqualTo(product3.getName());
+        assertThat(actual.get(1).getProduct().getPrice()).isEqualTo(product3.getPrice());
+        assertThat(actual.get(1).getProduct().getImageUrl()).isEqualTo(product3.getImageUrl());
+        assertThat(actual.get(1).getQuantity()).isEqualTo(1);
     }
 
     @Test
@@ -92,10 +92,10 @@ class WishRepositoryTest {
 
         // then
         assertThat(actual).isNotNull();
-        assertThat(actual.id()).isNotNull();
-        assertThat(actual.user().id()).isEqualTo(userId);
-        assertThat(actual.product().id()).isEqualTo(productId);
-        assertThat(actual.quantity()).isEqualTo(2);
+        assertThat(actual.getId()).isNotNull();
+        assertThat(actual.getUser().getId()).isEqualTo(userId);
+        assertThat(actual.getProduct().getId()).isEqualTo(productId);
+        assertThat(actual.getQuantity()).isEqualTo(2);
     }
 
     @Test
@@ -110,7 +110,7 @@ class WishRepositoryTest {
         final Wish actual = wishRepository.findById(1L).get();
 
         // then
-        assertThat(actual.quantity()).isEqualTo(newQuantity);
+        assertThat(actual.getQuantity()).isEqualTo(newQuantity);
     }
 
     @Test
@@ -118,7 +118,7 @@ class WishRepositoryTest {
     void deleteTest() {
         // given
         final Wish actual = wishRepository.findByUserId(1L).getFirst();
-        Long actualId = actual.id();
+        Long actualId = actual.getId();
 
         // when
         wishRepository.delete(actual);

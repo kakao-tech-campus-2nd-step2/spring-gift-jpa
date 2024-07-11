@@ -90,10 +90,10 @@ class ProductRepositoryTest {
 
         // then
         assertThat(actual).isNotNull();
-        assertThat(actual.id()).isEqualTo(expected.id());
-        assertThat(actual.name()).isEqualTo(expected.name());
-        assertThat(actual.price()).isEqualTo(expected.price());
-        assertThat(actual.imageUrl()).isEqualTo(expected.imageUrl());
+        assertThat(actual.getId()).isEqualTo(expected.getId());
+        assertThat(actual.getName()).isEqualTo(expected.getName());
+        assertThat(actual.getPrice()).isEqualTo(expected.getPrice());
+        assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl());
     }
 
     @Test
@@ -120,10 +120,10 @@ class ProductRepositoryTest {
 
         // then
         assertThat(actual).isNotNull();
-        assertThat(actual.id()).isNotNull();
-        assertThat(actual.name()).isEqualTo("new product");
-        assertThat(actual.price()).isEqualTo(10_000);
-        assertThat(actual.imageUrl()).isNull();
+        assertThat(actual.getId()).isNotNull();
+        assertThat(actual.getName()).isEqualTo("new product");
+        assertThat(actual.getPrice()).isEqualTo(10_000);
+        assertThat(actual.getImageUrl()).isNull();
     }
 
     @Test
@@ -139,10 +139,10 @@ class ProductRepositoryTest {
 
         // then
         assertThat(actual).isNotNull();
-        assertThat(actual.id()).isEqualTo(1L);
-        assertThat(actual.name()).isEqualTo("update product");
-        assertThat(actual.price()).isEqualTo(1_000);
-        assertThat(actual.imageUrl()).isEqualTo("http://example.com/images/product_a.jpg");
+        assertThat(actual.getId()).isEqualTo(1L);
+        assertThat(actual.getName()).isEqualTo("update product");
+        assertThat(actual.getPrice()).isEqualTo(1_000);
+        assertThat(actual.getImageUrl()).isEqualTo("http://example.com/images/product_a.jpg");
     }
 
     @Test

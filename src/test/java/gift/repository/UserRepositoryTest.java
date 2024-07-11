@@ -63,8 +63,8 @@ class UserRepositoryTest {
 
         // then
         assertThat(userRepository.findAll()).hasSize(4);
-        assertThat(actual.id()).isNotNull().isEqualTo(4L);
-        assertThat(actual.email()).isEqualTo("newuser@email.com");
+        assertThat(actual.getId()).isNotNull().isEqualTo(4L);
+        assertThat(actual.getEmail()).isEqualTo("newuser@email.com");
     }
 
     @Test
@@ -79,8 +79,8 @@ class UserRepositoryTest {
 
         // then
         assertThat(actual).isNotNull();
-        assertThat(actual.id()).isEqualTo(expected.id());
-        assertThat(actual.email()).isEqualTo(expected.email());
+        assertThat(actual.getId()).isEqualTo(expected.getId());
+        assertThat(actual.getEmail()).isEqualTo(expected.getEmail());
     }
 
     @Test
@@ -104,8 +104,8 @@ class UserRepositoryTest {
 
         // then
         assertThat(actual).isNotNull();
-        assertThat(actual.id()).isEqualTo(2L);
-        assertThat(actual.email()).isEqualTo(email);
+        assertThat(actual.getId()).isEqualTo(2L);
+        assertThat(actual.getEmail()).isEqualTo(email);
     }
 
     @Test
@@ -133,8 +133,8 @@ class UserRepositoryTest {
 
         // then
         assertThat(actual).isNotNull();
-        assertThat(actual.id()).isEqualTo(2L);
-        assertThat(actual.email()).isEqualTo(email);
+        assertThat(actual.getId()).isEqualTo(2L);
+        assertThat(actual.getEmail()).isEqualTo(email);
     }
 
     @Test

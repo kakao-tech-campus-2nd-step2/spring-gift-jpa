@@ -112,10 +112,10 @@ class ProductServiceTest {
         Product actual = productService.getProductById(2L);
 
         //then
-        assertThat(actual.id()).isEqualTo(expected.id());
-        assertThat(actual.name()).isEqualTo(expected.name());
-        assertThat(actual.price()).isEqualTo(expected.price());
-        assertThat(actual.imageUrl()).isEqualTo(expected.imageUrl());
+        assertThat(actual.getId()).isEqualTo(expected.getId());
+        assertThat(actual.getName()).isEqualTo(expected.getName());
+        assertThat(actual.getPrice()).isEqualTo(expected.getPrice());
+        assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl());
     }
 
     @Test
@@ -136,10 +136,10 @@ class ProductServiceTest {
             .build();
 
         //then
-        assertThat(actual.id()).isEqualTo(expected.id());
-        assertThat(actual.name()).isEqualTo(expected.name());
-        assertThat(actual.price()).isEqualTo(expected.price());
-        assertThat(actual.imageUrl()).isEqualTo(expected.imageUrl());
+        assertThat(actual.getId()).isEqualTo(expected.getId());
+        assertThat(actual.getName()).isEqualTo(expected.getName());
+        assertThat(actual.getPrice()).isEqualTo(expected.getPrice());
+        assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl());
     }
 
     @Test
@@ -160,7 +160,7 @@ class ProductServiceTest {
         //then
         assertThat(actual).hasSize(4);
         assertThat(actual).extracting(ProductResponse::id)
-            .doesNotContain(product1.id());
+            .doesNotContain(product1.getId());
     }
 
     @Test

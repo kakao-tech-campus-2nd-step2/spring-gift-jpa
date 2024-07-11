@@ -75,19 +75,19 @@ public class Wish {
         return new Builder();
     }
 
-    public Long id() {
+    public Long getId() {
         return id;
     }
 
-    public Integer quantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public User user() {
+    public User getUser() {
         return user;
     }
 
-    public Product product() {
+    public Product getProduct() {
         return product;
     }
 

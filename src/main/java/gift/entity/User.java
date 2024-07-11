@@ -73,11 +73,11 @@ public class User {
         return new Builder();
     }
 
-    public Long id() {
+    public Long getId() {
         return id;
     }
 
-    public String email() {
+    public String getEmail() {
         return email;
     }
 
