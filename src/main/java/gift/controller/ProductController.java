@@ -40,8 +40,7 @@ public class ProductController {
     @PostMapping("/add")
     public String addProduct(@ModelAttribute @Valid ProductDTO productDTO) {
         Product product = new Product(null, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
-        Product savedProduct = productRepository.save(product);
-        productRepository.validateKaKaoName(savedProduct.getName());
+        productRepository.save(product);
         return "redirect:/api/products";
     }
 
@@ -59,7 +58,6 @@ public class ProductController {
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
         Product updatedProduct = new Product(id, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
         productRepository.save(updatedProduct);
-        productRepository.validateKaKaoName(productDTO.getName());
         return "redirect:/api/products";
     }
 
