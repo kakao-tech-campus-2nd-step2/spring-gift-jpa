@@ -32,9 +32,18 @@
 <table id="wishListTable">
   <thead>
   <tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Price</th>
+    <th>ID
+    <a id="idAsc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.wishPage().number} + '&sort=product.id,asc\')'">▲</a>
+    <a id="idDesc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.wishPage().number} + '&sort=product.id,desc\')'">▼</a>
+  </th>
+    <th>Name
+      <a id="nameAsc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.wishPage().number} + '&sort=product.name,asc\')'">▲</a>
+      <a id="nameDesc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.wishPage().number} + '&sort=product.name,desc\')'">▼</a>
+    </th>
+    <th>Price
+      <a id="priceAsc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.wishPage().number} + '&sort=product.price,asc\')'">▲</a>
+      <a id="priceDesc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.wishPage().number} + '&sort=product.price,desc\')'">▼</a>
+    </th>
     <th>ImageUrl</th>
     <th>수량</th>
     <th>편집</th>
