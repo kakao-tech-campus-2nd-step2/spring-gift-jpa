@@ -2,6 +2,7 @@ package gift.repository;
 
 import gift.domain.Member;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,20 @@ class MemberRepositoryTest {
     @Autowired
     private EntityManager entityManager;
 
+    private String expectedEmail;
+    private String expectedPassword;
+    private Member expected;
+
+    @BeforeEach
+    void setupMember() {
+        expectedEmail = "a@a.com";
+        expectedPassword = "1234";
+        expected = new Member(expectedEmail,expectedPassword);
+    }
+
     @Test
     @DisplayName("멤버 저장 테스트")
     void save() {
-        // given
-        Member expected = new Member("a@a.com","1234");
-
         // when
         Member actual = members.save(expected);
 
@@ -38,9 +47,6 @@ class MemberRepositoryTest {
     @DisplayName("멤버 이메일, 비밀번호로 조회 테스트")
     void findByEmailAndPassword() {
         // given
-        String expectedEmail = "a@a.com";
-        String expectedPassword = "1234";
-        Member expected = new Member(expectedEmail,expectedPassword);
         Member savedMember = members.save(expected);
         entityManager.flush();
         entityManager.clear();
@@ -60,9 +66,6 @@ class MemberRepositoryTest {
     @DisplayName("멤버 이메일 조회 테스트")
     void findByEmail() {
         // given
-        String expectedEmail = "a@a.com";
-        String expectedPassword = "1234";
-        Member expected = new Member(expectedEmail,expectedPassword);
         Member savedMember = members.save(expected);
         entityManager.flush();
         entityManager.clear();
