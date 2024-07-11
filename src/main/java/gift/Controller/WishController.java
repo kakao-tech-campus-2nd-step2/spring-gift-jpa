@@ -40,9 +40,9 @@ public class WishController {
 
     // 생성된 리소스의 URI를 빌드
     var location = ServletUriComponentsBuilder.fromCurrentRequest()
-      .path("/{id}")
-      .buildAndExpand(addedWishProduct.getId())
-      .toUri();
+        .path("/{id}")
+        .buildAndExpand(addedWishProduct.getId())
+        .toUri();
 
     return ResponseEntity.created(location).body(addedWishProduct);
   }

@@ -19,10 +19,11 @@ public class WishListService {
   private final MemberRepository memberRepository;
   private final ProductRepository productRepository;
 
-  public WishListService(WishListRepository wishListRepository,ProductRepository productRepository, MemberRepository memberRepository) {
+  public WishListService(WishListRepository wishListRepository, ProductRepository productRepository,
+      MemberRepository memberRepository) {
     this.wishListRepository = wishListRepository;
     this.memberRepository = memberRepository;
-    this.productRepository=productRepository;
+    this.productRepository = productRepository;
   }
 
   public WishListDto addProductToWishList(WishListDto wishListDto) {
@@ -30,14 +31,14 @@ public class WishListService {
     Long productId = wishListDto.getProductDto().getId();
     Member member = memberRepository.getById(memberId);
     Product product = productRepository.getById(productId);
-    WishList wishList = new WishList(member,product);
+    WishList wishList = new WishList(member, product);
     wishListRepository.save(wishList);
     return wishListDto;
   }
 
   public List<WishListDto> getWishList() {
     List<WishListDto> wishListDtos = wishListRepository.findAll().stream()
-      .map(ConverterToDto::convertToWishListDto).toList();
+        .map(ConverterToDto::convertToWishListDto).toList();
     return wishListDtos;
   }
 

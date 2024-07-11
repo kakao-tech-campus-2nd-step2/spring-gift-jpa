@@ -1,6 +1,5 @@
 package gift.DTO;
 
-
 import jakarta.validation.constraints.NotBlank;
 
 public class WishListDto {
