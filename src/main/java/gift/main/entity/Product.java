@@ -12,26 +12,34 @@ public class Product {
 
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false, columnDefinition = "decimal(10,2) check (price >= 0)")
     private int price;
+
     @Column(nullable = false)
     private String imageUrl;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private User seller;
 
-    public Product(ProductRequest productRequest) {
-        this.name = productRequest.name();
-        this.price = productRequest.price();
-        this.imageUrl = productRequest.imageUrl();
-    }
-
-    public Product(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
 
     public Product() {
 
+    }
+
+    public Product(ProductRequest productRequest,User seller) {
+        this.name = productRequest.name();
+        this.price = productRequest.price();
+        this.imageUrl = productRequest.imageUrl();
+        this.seller = seller;
+    }
+
+    public Product(String name, int price, String imageUrl,User seller) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.seller = seller;
     }
 
     public void updateValue(ProductRequest productRequest) {
@@ -60,6 +68,10 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public String getSellerName() {
+        return seller.getName();
     }
 
 }
