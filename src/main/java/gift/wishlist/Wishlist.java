@@ -1,10 +1,13 @@
 package gift.wishlist;
 
+import gift.product.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Wishlist {
@@ -16,14 +19,15 @@ public class Wishlist {
     @Column(nullable = false)
     private String memberEmail;
 
-    @Column(nullable = false)
-    private long productId;
+    @JoinColumn(nullable = false)
+    @ManyToOne
+    private Product product;
 
     public Wishlist() {
     }
 
-    public Wishlist(long productId, String memberEmail) {
-        this.productId = productId;
+    public Wishlist(Product product, String memberEmail) {
+        this.product = product;
         this.memberEmail = memberEmail;
     }
 
@@ -31,8 +35,8 @@ public class Wishlist {
         return memberEmail;
     }
 
-    public long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
     @Override

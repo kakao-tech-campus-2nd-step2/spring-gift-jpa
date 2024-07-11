@@ -9,6 +9,7 @@ import gift.product.Product;
 import gift.product.ProductRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.LongStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ class WishlistRepositoryTest {
 
         for (int i = 1; i < 4; i++) {
             productRepository.save(
-                new Product(i, "product-" + i, i * 100, "product-" + i + "-image"));
+                new Product(i, "product-" + i, i * 100, "image-url-" + i));
         }
     }
 
@@ -58,17 +59,18 @@ class WishlistRepositoryTest {
     @DisplayName("[Unit] getAllWishlists test")
     void getAllWishlistsTest() {
         //given
-        List<Wishlist> expect = List.of(
-            new Wishlist(1L, "aaa@email.com"),
-            new Wishlist(2L, "aaa@email.com"),
-            new Wishlist(3L, "aaa@email.com")
-        );
+        List<Wishlist> expect = productRepository.findAllById(
+                LongStream.range(1L, 4L)
+                    .boxed()
+                    .toList()
+            ).stream()
+            .map(e -> new Wishlist(e, "aaa@email.com"))
+            .toList();
+        wishlistRepository.saveAll(expect);
 
-        for (Wishlist wish : expect) {
-            wishlistRepository.save(wish);
-        }
-        productRepository.save(new Product(4L, "product-4", 400, "product-4-image"));
-        wishlistRepository.save(new Wishlist(4L, "bbb@email.com"));
+        Product product = productRepository.save(
+            new Product(4L, "product-4", 400, "product-4-image"));
+        wishlistRepository.save(new Wishlist(product, "bbb@email.com"));
 
         //when
         List<Wishlist> actual = wishlistRepository.findAllByMemberEmail("aaa@email.com");
@@ -86,7 +88,7 @@ class WishlistRepositoryTest {
     @DisplayName("[Unit] addWishlist test")
     void addWishlistTest() {
         //given
-        Wishlist expect = new Wishlist(1L, "aaa@email.com");
+        Wishlist expect = new Wishlist(productRepository.findById(1L).get(), "aaa@email.com");
 
         //when
         Wishlist actual = wishlistRepository.save(expect);
@@ -99,11 +101,12 @@ class WishlistRepositoryTest {
     @DisplayName("[Unit] deleteWishlist test")
     void deleteWishlistTest() {
         //given
-        Wishlist expect = wishlistRepository.save(new Wishlist(1L, "aaa@email.com"));
+        Wishlist expect = wishlistRepository.save(
+            new Wishlist(productRepository.findById(1L).get(), "aaa@email.com")
+        );
 
         //when
         wishlistRepository.delete(expect);
-//        Optional<Wishlist> actual = wishlistRepository.findById(expect.getId());
         Optional<Wishlist> actual = wishlistRepository.findById(1L);
 
         //then
@@ -114,12 +117,14 @@ class WishlistRepositoryTest {
     @DisplayName("[Unit] existWishlist test")
     void existWishlistTest() {
         //given
-        Wishlist expect = new Wishlist(1L, "aaa@email.com");
+        Product product = productRepository.findById(1L).get();
+
+        Wishlist expect = new Wishlist(product, "aaa@email.com");
         wishlistRepository.save(expect);
 
         //when
         Boolean trueCase = wishlistRepository.existsByMemberEmailAndProductId(
-            expect.getMemberEmail(), expect.getProductId());
+            expect.getMemberEmail(), expect.getProduct().getId());
 
         Boolean falseCase = wishlistRepository.existsByMemberEmailAndProductId(
             "aaa@email.com", 2L

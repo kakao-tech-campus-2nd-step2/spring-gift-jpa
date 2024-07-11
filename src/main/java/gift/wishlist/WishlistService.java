@@ -24,9 +24,7 @@ public class WishlistService {
     public List<Product> getAllWishlists(MemberTokenDTO memberTokenDTO) {
         return wishlistRepository.findAllByMemberEmail(memberTokenDTO.getEmail())
             .stream()
-            .map(e -> productRepository.findById(e.getProductId()))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+            .map(e -> getProductById(e.getProduct().getId()))
             .toList();
     }
 
@@ -35,18 +33,28 @@ public class WishlistService {
             productId)) {
             throw new IllegalArgumentException("Wishlist already exists");
         }
-        hasProductByProductID(productId);
-        wishlistRepository.save(new Wishlist(productId, memberTokenDTO.getEmail()));
+        wishlistRepository.save(
+            new Wishlist(
+                getProductById(productId),
+                memberTokenDTO.getEmail()
+            )
+        );
     }
 
     public void deleteWishlist(MemberTokenDTO memberTokenDTO, long productId) {
-        hasProductByProductID(productId);
-        wishlistRepository.delete(new Wishlist(productId, memberTokenDTO.getEmail()));
+        wishlistRepository.delete(
+            new Wishlist(
+                getProductById(productId),
+                memberTokenDTO.getEmail()
+            )
+        );
     }
 
-    private void hasProductByProductID(long productId) {
-        if (!productRepository.existsById(productId)) {
+    private Product getProductById(long productId) {
+        Optional<Product> product = productRepository.findById(productId);
+        if (product.isEmpty()) {
             throw new IllegalArgumentException("Product does not exist");
         }
+        return product.get();
     }
 }
