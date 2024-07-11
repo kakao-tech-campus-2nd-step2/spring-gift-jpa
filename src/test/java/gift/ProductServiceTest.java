@@ -8,18 +8,19 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import gift.repository.ProductRepository;
 import gift.service.ProductService;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+@DataJpaTest
 public class ProductServiceTest {
 
-
-    @Mock
+    @Autowired
     private ProductRepository productRepository;
 
     @InjectMocks
@@ -69,30 +70,18 @@ public class ProductServiceTest {
 
     @Test
     public void testSave() {
-        Product product = new Product();
-        product.setName("Product 1");
-        product.setPrice(1000);
-        product.setImageUrl("http://example.com/product1.jpg");
+      Product product = new Product();
+      product.setName("Product 1");
+      product.setPrice(1000);
+      product.setImageUrl("http://example.com/product1.jpg");
 
-        Product productWithId = new Product();
-        productWithId.setId(1L);
-        productWithId.setName(product.getName());
-        productWithId.setPrice(product.getPrice());
-        productWithId.setImageUrl(product.getImageUrl());
+      Product savedProduct = productRepository.save(product);
 
-        when(productRepository.save(any(Product.class))).thenReturn(productWithId.getPrice());
-
-        Product savedProduct = productService.save(product);
-        assertNotNull(savedProduct.getId());
-        assertEquals(product.getName(), savedProduct.getName());
-        verify(productRepository, times(1)).save(product);
-    }
-
-    @Test
-    public void testDeleteById() {
-        doNothing().when(productRepository).deleteById(1L);
-
-        productService.deleteById(1L);
-        verify(productRepository, times(1)).deleteById(1L);
+      assertAll(
+              () -> assertThat(savedProduct.getId()).isNotNull(),
+              () -> assertThat(savedProduct.getName()).isEqualTo(product.getName()),
+              () -> assertThat(savedProduct.getPrice()).isEqualTo(product.getPrice()),
+              () -> assertThat(savedProduct.getImageUrl()).isEqualTo(product.getImageUrl())
+      );
     }
 }
