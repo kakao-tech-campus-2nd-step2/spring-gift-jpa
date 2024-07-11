@@ -5,11 +5,14 @@ import static gift.util.ResponseEntityUtil.responseError;
 import gift.constants.ResponseMsgConstants;
 import gift.dto.ProductDTO;
 import gift.dto.ResponseDTO;
+import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -36,8 +39,13 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public String getProducts(Model model) {
-        model.addAttribute("productList", productService.getProductList());
+    public String getProducts(Model model, Pageable pageable) {
+        Page<ProductDTO> productPage = productService.getProductList(pageable);
+        model.addAttribute("productPage", productPage);
+        System.out.println("productPage = " + productPage);
+        System.out.println("productPage.getContent() = " + productPage.getContent());
+        System.out.println("productPage.getSize() = " + productPage.getSize());
+        System.out.println("productPage.getNumber() = " + productPage.getNumber());
         return "getProducts";
     }
 

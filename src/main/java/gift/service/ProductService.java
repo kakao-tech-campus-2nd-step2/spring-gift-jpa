@@ -9,12 +9,12 @@ import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,8 +51,8 @@ public class ProductService {
         }
     }
 
-    public List<ProductDTO> getProductList() {
-        return ProductConverter.convertToProductDTO(productRepository.findAll());
+    public Page<ProductDTO> getProductList(Pageable pageable) {
+        return ProductConverter.convertToProductDTO(productRepository.findAll(pageable));
     }
 
     @Transactional
