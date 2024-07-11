@@ -29,26 +29,27 @@ JPA 테스트
 
 ### 구현할 기능 목록
 양방향 OneToMany 설계
-- [ ] Member
-- [ ] Product
+- [X] Member
+- [X] Product
+- [X] Wish
 
-OneToMany 설정 후 repository 테스트
+양방향 OneToMany 설정 후 테스트
+- Product
+  - [ ] addWish() 테스트
+  - [ ] removeWish() 테스트
+
 - ProductRepository
-  - [ ] Product 저장
-  - [ ] Product 조회
-  - [ ] Product 삭제
+  - [ ] Cascade Persist 테스트 (Product 저장 시, 연관된 Wish 객체들도 자동으로 저장되는지 확인)
+  - [ ] Cascade Remove 테스트 (Product 삭제 시, 연관된 Wish 객체들도 자동으로 삭제되는지 확인)
+  - [ ] OrphanRemoval 테스트 (Product의 wish 리스트에서 wish 삭제 시, 해당 Wish 객체가 데이터 베이스에서 사라지는지 확인)
+  - [ ] Lazy Fetch 테스트 (연관된 엔티티 필드에 접근할 때 데이터베이스 쿼리가 실행되는지 확인)
 
-- ProductService
-  - [ ] Product 수정
+- Member
+  - [ ] addWish() 테스트
+  - [ ] removeWish() 테스트
 
 - MemberRepository
-  - [ ] Member 저장
-  - [ ] Member 조회
-
-- WishRepository
-  - [ ] Wish 저장
-  - [ ] Wish 조회
-  - [ ] Wish 삭제
-
-- WishService
-  - [ ] Wish 수정
+  - [ ] Cascade Persist 테스트
+  - [ ] Cascade Remove 테스트
+  - [ ] OrphanRemoval 테스트
+  - [ ] Lazy Fetch 테스트
