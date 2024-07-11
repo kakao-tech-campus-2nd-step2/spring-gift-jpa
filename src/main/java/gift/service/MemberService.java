@@ -4,29 +4,29 @@ import static gift.util.JwtUtil.generateJwtToken;
 import gift.dto.MemberDto;
 import gift.exception.ForbiddenException;
 import gift.domain.Member;
-import gift.repository.MemberDao;
+import gift.repository.MemberRepository;
+import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
-    private final MemberDao memberDao;
-
-    public MemberService(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    private final MemberRepository memberRepository;
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     public String registerMember(MemberDto memberDto) {
-        if (memberDao.findByEmail(memberDto.getEmail()) != null) {
+        if (memberRepository.findByEmail(memberDto.getEmail()) != null) {
             throw new RuntimeException("Email already registered");
         }
 
         Member newMember = new Member(memberDto.getEmail(), memberDto.getPassword());
-        memberDao.save(newMember);
+        memberRepository.save(newMember);
         return newMember.getEmail();
     }
 
     public String login(MemberDto memberDto) {
-        Member member = memberDao.findByEmail(memberDto.getEmail());
+        Member member = memberRepository.findByEmail(memberDto.getEmail());
         if (member == null || !memberDto.getPassword().equals(member.getPassword())) {
             throw new ForbiddenException("사용자 없거나 비밀번호 틀림");
         }
@@ -35,7 +35,8 @@ public class MemberService {
     }
 
     public Member findById(long id) {
-        Member member = memberDao.findById(id);
+        Member member = memberRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("해당 id의 멤버 없음: " + id));
         return member;
     }
 }
