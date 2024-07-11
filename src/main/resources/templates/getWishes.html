@@ -9,6 +9,7 @@
   <link rel="stylesheet" type="text/css" th:href="@{/css/getWishes.css}">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="/js/getWishes.js"></script>
+  <script src="/js/wishPage.js"></script>
 </head>
 <body>
 <div class="productListBox">
@@ -41,7 +42,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:each="wish : ${wishListDTO.wishList()}">
+  <tr th:each="wish : ${wishListDTO.wishPage().getContent()}">
     <td th:text="${wish.getProduct().getId()}" id="productId" class = "productId">1</td>
     <td th:text="${wish.getProduct().getName()}" id="productName" class="productName">Product Name</td>
     <td th:text="${wish.getProduct().getPrice()}" id="productPrice" class="productPrice">1000</td>
@@ -58,6 +59,20 @@
   </tr>
   </tbody>
 </table>
+
+<div class="wishPagination"
+     th:data-number="${wishListDTO.wishPage().number}"
+     th:data-size="${wishListDTO.wishPage().size}"
+     th:data-total-elements="${wishListDTO.wishPage().totalElements}"
+     th:data-has-next="${wishListDTO.wishPage().hasNext()}"
+     th:data-has-previous="${wishListDTO.wishPage().hasPrevious()}"
+     th:data-total-pages="${wishListDTO.wishPage().totalPages}">
+  <a id="firstPage" style="display:none"><<</a>
+  <a id="previousPage" style="display:none"><</a>
+  <div class="pages"></div>
+  <a id="nextPage" style="display:none">></a>
+  <a id="lastPage" style="display:none">>></a>
+</div>
 
 </body>
 </html>
