@@ -11,6 +11,7 @@ import gift.domain.user.JpaUserRepository;
 import gift.global.jwt.JwtProvider;
 
 import jdk.jfr.Description;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,28 +30,30 @@ public class UserRepositoryTest {
     @Autowired
     JwtProvider jwtProvider;
 
+    private User user;
+    private UserDTO userDTO;
+
+    @BeforeEach
+    void setUp() {
+        User user = new User("minji@example.com", "password1");
+        this.user = user;
+        UserDTO userDTO = new UserDTO("minji@example.com", "password1");
+        this.userDTO = userDTO;
+    }
     @Test
     @Description("회원 가입")
     public void join() {
-        // given
-        User user = new User("minji@example.com", "password1");
         // when
         User savedUser = userRepository.saveAndFlush(user);
         // then
-        assertAll(
-            () -> assertThat(savedUser.getEmail()).isEqualTo("minji@example.com"),
-            () -> assertThat(savedUser.getPassword()).isEqualTo("password1")
-        );
+        assertThat(savedUser).isEqualTo(user);
     }
 
     @Test
     @Description("로그인")
     public void login() {
         // given
-        User user = new User("minji@example.com", "password1");
         User savedUser = userRepository.saveAndFlush(user);
-
-        UserDTO userDTO = new UserDTO("minji@example.com", "password1");
         // when
         String token = userService.login(userDTO);
         UserInfo userInfo = jwtProvider.getUserInfo(token);
