@@ -37,7 +37,20 @@ public class WishService {
     }
 
     public void createWish(WishServiceDto wishServiceDto) {
-        wishRepository.save(getWishByWishServiceDto(wishServiceDto));
+        wishRepository.save(findOrCreateWish(wishServiceDto));
+    }
+
+    private Wish findOrCreateWish(WishServiceDto wishServiceDto) {
+        // Wish가 존재하지 않으면 새로운 Wish 생성
+        Wish wish = wishRepository.findByMemberIdAndProductId(wishServiceDto.memberId(), wishServiceDto.productId())
+                .orElseGet(() -> getWishByWishServiceDto(wishServiceDto));
+
+        if (!wish.checkNew()) {
+            // Wish가 이미 존재하면 productCount 증가
+            wish.increaseProductCount(wishServiceDto.productCount());
+        }
+
+        return wish;
     }
 
     public void updateWish(WishServiceDto wishServiceDto) {

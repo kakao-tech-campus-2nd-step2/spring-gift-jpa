@@ -43,4 +43,5 @@ public class ProductCount {
     public int hashCode() {
         return Objects.hash(value);
     }
+
 }

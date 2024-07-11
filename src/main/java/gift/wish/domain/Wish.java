@@ -71,4 +71,7 @@ public class Wish {
         return Objects.hash(id);
     }
 
+    public void increaseProductCount(ProductCount productCount) {
+        this.productCount = new ProductCount(this.productCount.getValue() + productCount.getValue());
+    }
 }

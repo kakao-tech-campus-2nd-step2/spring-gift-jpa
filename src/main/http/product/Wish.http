@@ -16,7 +16,7 @@ Content-Type: application/json
 
 {
   "memberId": 1,
-  "productId": 1,
+  "productId": 2,
   "productCount": 5
 }
 
