@@ -43,8 +43,7 @@ public class ProductAdminController {
 
   @GetMapping("product/{id}")
   public String editProductForm(@PathVariable Long id, Model model) {
-    ProductDto product = productService.getProductById(id)
-      .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
+    ProductDto product = productService.getProductById(id);
     model.addAttribute("product", product);
     return "product-form";
   }

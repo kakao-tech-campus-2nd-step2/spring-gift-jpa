@@ -31,8 +31,8 @@ public class ProductController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Optional<ProductDto>> getProductById(@PathVariable Long id) {
-    Optional<ProductDto> productDTO = productService.getProductById(id);
+  public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+    ProductDto productDTO = productService.getProductById(id);
 
     if (productDTO == null) {
       return ResponseEntity.notFound().build();
@@ -48,7 +48,7 @@ public class ProductController {
   @PutMapping("/{id}")
   public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id,
     @RequestBody ProductDto updatedProductDto) {
-    Optional<ProductDto> existingProductDto = productService.updateProduct(id,
+    ProductDto existingProductDto = productService.updateProduct(id,
       updatedProductDto);
     if (existingProductDto == null) {
       return ResponseEntity.notFound().build();
@@ -58,8 +58,8 @@ public class ProductController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Optional<ProductDto>> deleteProduct(@PathVariable Long id) {
-    Optional<ProductDto> existingProductDto = productService.deleteProduct(id);
+  public ResponseEntity<ProductDto> deleteProduct(@PathVariable Long id) {
+    ProductDto existingProductDto = productService.deleteProduct(id);
     return ResponseEntity.ok(existingProductDto);
   }
 }

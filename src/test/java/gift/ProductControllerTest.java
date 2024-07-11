@@ -1,6 +1,5 @@
 package gift;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -14,7 +13,6 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,18 +80,18 @@ public class ProductControllerTest {
     ProductDto addedProduct = productController.addProduct(productDto);
 
     // getProductById() 호출 - 존재하는 제품 ID
-    ResponseEntity<Optional<ProductDto>> responseEntity = productController.getProductById(1L);
+    ResponseEntity<ProductDto> responseEntity = productController.getProductById(1L);
 
     // 반환된 ResponseEntity 검증
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode()); // 상태 코드가 200 OK인지 확인
 
     // 반환된 제품 검증
-    Optional<ProductDto> returnedProductDto = responseEntity.getBody();
+    ProductDto returnedProductDto = responseEntity.getBody();
     assertNotNull(returnedProductDto);
-    assertEquals(productDto.getId(), returnedProductDto.get().getId());
-    assertEquals(productDto.getName(), returnedProductDto.get().getName());
-    assertEquals(productDto.getPrice(), returnedProductDto.get().getPrice());
-    assertEquals(productDto.getImageUrl(), returnedProductDto.get().getImageUrl());
+    assertEquals(productDto.getId(), returnedProductDto.getId());
+    assertEquals(productDto.getName(), returnedProductDto.getName());
+    assertEquals(productDto.getPrice(), returnedProductDto.getPrice());
+    assertEquals(productDto.getImageUrl(), returnedProductDto.getImageUrl());
   }
 
   @DirtiesContext
@@ -148,7 +146,7 @@ public class ProductControllerTest {
     productController.addProduct(productDto);
 
     // deleteProduct() 호출 - 존재하는 제품 ID
-    ResponseEntity<Optional<ProductDto>> responseDto = productController.deleteProduct(1L);
+    ResponseEntity<ProductDto> responseDto = productController.deleteProduct(1L);
 
     assertEquals(HttpStatus.OK, responseDto.getStatusCode()); // 상태 코드가 200 OK인지 확인
 
