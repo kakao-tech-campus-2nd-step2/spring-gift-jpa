@@ -1,7 +1,9 @@
 package gift.member;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import gift.global.exception.NotFoundException;
 import gift.member.business.dto.JwtToken;
 import gift.global.authentication.jwt.JwtValidator;
 import gift.global.authentication.jwt.TokenType;
@@ -9,6 +11,7 @@ import gift.member.persistence.repository.MemberRepository;
 import gift.member.persistence.repository.WishlistRepository;
 import gift.member.presentation.dto.RequestMemberDto;
 import gift.member.presentation.dto.RequestWishlistDto;
+import gift.member.presentation.dto.ResponsePagingWishlistDto;
 import gift.member.presentation.dto.ResponseWishListDto;
 import gift.product.persistence.entity.Product;
 import gift.product.persistence.repository.ProductRepository;
@@ -153,25 +156,24 @@ public class MemberApiTest {
         assertThat(response1.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         //given
-        url = "http://localhost:" + port + "/api/members/wishlists";
+        url = "http://localhost:" + port + "/api/members/wishlists?page=0";
         headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
 
         entity = new HttpEntity<>(headers);
 
         // when
-        ResponseEntity<List<ResponseWishListDto>> response2 = restTemplate.exchange(
+        ResponseEntity<ResponsePagingWishlistDto> response2 = restTemplate.exchange(
             url,
             HttpMethod.GET,
             entity,
-            new ParameterizedTypeReference<List<ResponseWishListDto>>() {}
+            ResponsePagingWishlistDto.class
         );
 
         //then
         assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response2.getBody()).hasSize(1);
-        var responseWishListDto = response2.getBody().getFirst();
-        assertThat(responseWishListDto.productName()).isEqualTo("test");
+        var responseWishListDto = response2.getBody();
+        assertThat(responseWishListDto.wishlistList().getFirst().productName()).isEqualTo("test");
     }
 
     @Test
@@ -197,7 +199,7 @@ public class MemberApiTest {
 
         // then
         assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.OK);
-        var wishlist = wishlistRepository.getWishListByMemberId(1L).getFirst();
+        var wishlist = wishlistRepository.getWishListByMemberIdAndProductId(1L, 1L);
         assertThat(wishlist.getCount()).isEqualTo(2);
     }
 
@@ -222,7 +224,7 @@ public class MemberApiTest {
 
         // then
         assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.OK);
-        var wishlist = wishlistRepository.getWishListByMemberId(1L);
-        assertThat(wishlist).isEmpty();
+        assertThrows(NotFoundException.class,
+            () -> wishlistRepository.getWishListByMemberIdAndProductId(1L, 1L));
     }
 }
