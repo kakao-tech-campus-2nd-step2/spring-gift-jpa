@@ -10,7 +10,6 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
-import java.util.Base64;
 
 import org.springframework.stereotype.Component;
 
@@ -23,10 +22,6 @@ public class CertifyUtil {
 
     public CertifyUtil(MemberDao memberDao) {
         this.memberDao = memberDao;
-    }
-
-    public String encodingPassword(String password) {
-        return Base64.getEncoder().encodeToString(password.getBytes());
     }
 
     public String generateToken(String email) {
