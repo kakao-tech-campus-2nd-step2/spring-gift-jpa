@@ -1,4 +1,4 @@
-package gift.domain.model;
+package gift.domain.model.dto;
 
 public class ProductResponseDto {
 

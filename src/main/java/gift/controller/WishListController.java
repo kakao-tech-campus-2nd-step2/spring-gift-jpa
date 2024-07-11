@@ -1,11 +1,9 @@
 package gift.controller;
 
 import gift.config.auth.LoginUser;
-import gift.domain.model.ProductResponseDto;
-import gift.domain.model.User;
-import gift.domain.model.Wish;
-import gift.domain.model.WishResponseDto;
-import gift.domain.model.WishUpdateRequestDto;
+import gift.domain.model.entity.User;
+import gift.domain.model.dto.WishResponseDto;
+import gift.domain.model.dto.WishUpdateRequestDto;
 import gift.service.WishListService;
 import jakarta.validation.Valid;
 import java.util.HashMap;

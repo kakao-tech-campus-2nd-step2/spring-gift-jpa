@@ -1,6 +1,10 @@
 package gift.service;
 
-import gift.domain.model.*;
+import gift.domain.model.dto.WishResponseDto;
+import gift.domain.model.dto.WishUpdateRequestDto;
+import gift.domain.model.entity.Product;
+import gift.domain.model.entity.User;
+import gift.domain.model.entity.Wish;
 import gift.domain.repository.WishRepository;
 import gift.exception.DuplicateWishItemException;
 import gift.exception.NoSuchWishException;

@@ -1,8 +1,8 @@
 package gift.controller;
 
-import gift.domain.model.ProductAddRequestDto;
-import gift.domain.model.ProductResponseDto;
-import gift.domain.model.ProductUpdateRequestDto;
+import gift.domain.model.dto.ProductAddRequestDto;
+import gift.domain.model.dto.ProductResponseDto;
+import gift.domain.model.dto.ProductUpdateRequestDto;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.HashMap;

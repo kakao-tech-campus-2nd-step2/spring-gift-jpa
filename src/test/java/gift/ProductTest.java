@@ -1,6 +1,6 @@
 package gift;
 
-import gift.domain.model.Product;
+import gift.domain.model.entity.Product;
 import gift.domain.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

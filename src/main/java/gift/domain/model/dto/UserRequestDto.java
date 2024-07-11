@@ -1,4 +1,4 @@
-package gift.domain.model;
+package gift.domain.model.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

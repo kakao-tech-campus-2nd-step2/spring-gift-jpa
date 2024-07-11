@@ -1,4 +1,4 @@
-package gift.domain.model;
+package gift.domain.model.entity;
 
 
 import jakarta.persistence.Column;

@@ -1,6 +1,6 @@
 package gift;
 
-import gift.domain.model.User;
+import gift.domain.model.entity.User;
 import gift.domain.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
