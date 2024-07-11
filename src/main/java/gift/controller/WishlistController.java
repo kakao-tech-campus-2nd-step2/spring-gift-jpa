@@ -39,7 +39,7 @@ public class WishlistController {
     public ResponseEntity<List<WishList>> getItems(@RequestHeader("Authorization") String token) {
         Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
         Long memberId = Long.parseLong(claims.getSubject());
-        List<WishList> products = wishlistService.getProductsByMemberId(memberId);
+        List<WishList> products = wishlistService.getProductsByMember(memberId);
         return ResponseEntity.ok(products);
     }
 
