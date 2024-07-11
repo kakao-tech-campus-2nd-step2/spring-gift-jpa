@@ -42,7 +42,9 @@ public class MemberDTO {
         this.wishList = wishList;
     }
 
-    public String getEmail() { return email; }
+    public String getEmail() {
+        return email;
+    }
 
     public void setEmail(String email) {
         this.email = email;
@@ -72,9 +74,13 @@ public class MemberDTO {
         this.role = role;
     }
 
-    public List<Wish> getWishList() { return wishList; }
+    public List<Wish> getWishList() {
+        return wishList;
+    }
 
-    public void setWishList(List<Wish> wishList) { this.wishList = wishList; }
+    public void setWishList(List<Wish> wishList) {
+        this.wishList = wishList;
+    }
 
     @Override
     public String toString() {

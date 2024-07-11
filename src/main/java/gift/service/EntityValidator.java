@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EntityValidator {
+
     private final Validator entityValidator;
 
     @Autowired
@@ -23,8 +24,9 @@ public class EntityValidator {
     public Product validateProduct(ProductDTO productDTO) throws ConstraintViolationException {
         Product product = new Product(productDTO);
         Set<ConstraintViolation<Product>> violations = entityValidator.validate(product);
-        if(!violations.isEmpty())
+        if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
+        }
 
         return product;
     }
@@ -32,8 +34,9 @@ public class EntityValidator {
     public Member validateMember(MemberDTO memberDTO) throws ConstraintViolationException {
         Member member = new Member(memberDTO);
         Set<ConstraintViolation<Member>> violations = entityValidator.validate(member);
-        if(!violations.isEmpty())
+        if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
+        }
 
         return member;
     }

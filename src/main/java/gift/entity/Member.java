@@ -25,26 +25,27 @@ public class Member {
 
     @Email(message = "올바른 이메일 형식이 아닙니다.")
     @Column(nullable = false, unique = true)
-    @Size(max=255)
+    @Size(max = 255)
     private String email;
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Size(max=255)
+    @Size(max = 255)
     @Column(nullable = false)
     private String password;
 
-    @Size(max=255)
+    @Size(max = 255)
     @Column(nullable = false)
     private String name;
 
-    @Size(max=255)
+    @Size(max = 255)
     @Column(nullable = false)
     private String role;
 
     @OneToMany(mappedBy = "member")
     private List<Wish> wishList;
 
-    public Member() { }
+    public Member() {
+    }
 
     public Member(String email, String password, String name, String role, List<Wish> wishList) {
         this.email = email;
@@ -106,7 +107,7 @@ public class Member {
         return id;
     }
 
-    public void changeMemberInfo(Member member){
+    public void changeMemberInfo(Member member) {
         setEmail(member.getEmail());
         setPassword(member.getPassword());
         setName(member.getName());
@@ -145,8 +146,12 @@ public class Member {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Member member = (Member) o;
         return Objects.equals(email, member.email) &&
                 Objects.equals(password, member.password) &&

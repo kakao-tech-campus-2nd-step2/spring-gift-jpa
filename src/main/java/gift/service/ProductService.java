@@ -7,11 +7,9 @@ import gift.exception.BadRequestExceptions.NoSuchProductIdException;
 import gift.exception.InternalServerExceptions.InternalServerException;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -41,11 +39,14 @@ public class ProductService {
             Product product = entityValidator.validateProduct(productDTO);
             productRepository.save(product);
         } catch (Exception e) {
-            if (e instanceof IllegalArgumentException || e instanceof DataIntegrityViolationException)
+            if (e instanceof IllegalArgumentException
+                    || e instanceof DataIntegrityViolationException) {
                 throw new BadRequestException("잘못된 제품 값을 입력했습니다. 입력 칸 옆의 설명을 다시 확인해주세요");
+            }
 
-            if(e instanceof ConstraintViolationException)
+            if (e instanceof ConstraintViolationException) {
                 throw new BadRequestException(e.getMessage());
+            }
 
             throw new InternalServerException(e.getMessage());
         }
@@ -60,12 +61,13 @@ public class ProductService {
         parameterValidator.validateParameter(id, productDTO);
         Optional<Product> productInDb = productRepository.findById(id);
 
-        if (productInDb.isEmpty())
+        if (productInDb.isEmpty()) {
             throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
+        }
 
         Product productInDB = productInDb.get();
         Product product;
-        try{
+        try {
             product = entityValidator.validateProduct(productDTO);
         } catch (ConstraintViolationException e) {
             throw new BadRequestException(e.getMessage());

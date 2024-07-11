@@ -1,3 +1,5 @@
 package gift.dto;
 
-public record JwtDTO(String token) { }
+public record JwtDTO(String token) {
+
+}

@@ -8,9 +8,12 @@ import java.util.stream.Collectors;
 
 
 public class ProductConverter {
-    public static List<ProductDTO> convertToProductDTO(List<Product> productList) throws BadRequestException {
+
+    public static List<ProductDTO> convertToProductDTO(List<Product> productList)
+            throws BadRequestException {
         return productList.stream().map(product -> {
-            return new ProductDTO(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+            return new ProductDTO(product.getId(), product.getName(), product.getPrice(),
+                    product.getImageUrl());
         }).collect(Collectors.toList());
     }
 }

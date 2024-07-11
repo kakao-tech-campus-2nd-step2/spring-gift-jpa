@@ -19,13 +19,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ResponseDTO> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ResponseDTO> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
         StringBuilder errorMessage = new StringBuilder();
         errorMessage.append("\n");
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errorMessage.append(error.getDefaultMessage()).append("\n");
         }
-        return new ResponseEntity<>(new ResponseDTO(true, errorMessage.toString().trim()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ResponseDTO(true, errorMessage.toString().trim()),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -36,19 +38,23 @@ public class GlobalExceptionHandler {
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
             errorMessage.append(violation.getMessage()).append("\n");
         }
-        return new ResponseEntity<>(new ResponseDTO(true, errorMessage.toString().trim()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ResponseDTO(true, errorMessage.toString().trim()),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ResponseDTO> handleValidationExceptions(HttpMessageNotReadableException ex) {
+    public ResponseEntity<ResponseDTO> handleValidationExceptions(
+            HttpMessageNotReadableException ex) {
         return new ResponseEntity<>(new ResponseDTO(true, "가격은 숫자여야 합니다."), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ResponseDTO> handleValidationExceptions(MethodArgumentTypeMismatchException ex) {
-        return new ResponseEntity<>(new ResponseDTO(true, "상품의 개수는 숫자로 입력해야 합니다."), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ResponseDTO> handleValidationExceptions(
+            MethodArgumentTypeMismatchException ex) {
+        return new ResponseEntity<>(new ResponseDTO(true, "상품의 개수는 숫자로 입력해야 합니다."),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)

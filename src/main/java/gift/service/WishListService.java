@@ -36,16 +36,19 @@ public class WishListService {
     public WishListDTO getWishList(MemberDTO memberDTO)
             throws RuntimeException {
 
-        Optional<Member> optionalMember = memberRepository.findByEmail(new Member(memberDTO).getEmail());
-        if (optionalMember.isEmpty())
+        Optional<Member> optionalMember = memberRepository.findByEmail(
+                new Member(memberDTO).getEmail());
+        if (optionalMember.isEmpty()) {
             throw new UserNotFoundException(memberDTO.getEmail() + "을(를) 가지는 유저를 찾을 수 없습니다.");
+        }
 
         return optionalMember.get().convertToWishListDTO();
     }
 
     @Transactional
     public void addWishes(MemberDTO memberDTO, ProductDTO productDTO) {
-        Map<String, Object> validatedParameterMap = parameterValidator.validateParameter(memberDTO, productDTO);
+        Map<String, Object> validatedParameterMap = parameterValidator.validateParameter(memberDTO,
+                productDTO);
         Member member = (Member) validatedParameterMap.get("member");
         Product product = (Product) validatedParameterMap.get("product");
 
@@ -63,7 +66,8 @@ public class WishListService {
     public void removeWishListProduct(MemberDTO memberDTO, Long id)
             throws NoSuchProductIdException, EmptyResultDataAccessException {
         try {
-            Map<String, Object> validatedParameterMap = parameterValidator.validateParameter(memberDTO, id);
+            Map<String, Object> validatedParameterMap = parameterValidator.validateParameter(
+                    memberDTO, id);
             Member member = (Member) validatedParameterMap.get("member");
             Product product = (Product) validatedParameterMap.get("product");
 
@@ -77,14 +81,16 @@ public class WishListService {
     @Transactional
     public void setWishListNumber(MemberDTO memberDTO, ProductDTO productDTO, Integer quantity)
             throws RuntimeException {
-        Map<String, Object> validatedParameterMap = parameterValidator.validateParameter(memberDTO, productDTO);
+        Map<String, Object> validatedParameterMap = parameterValidator.validateParameter(memberDTO,
+                productDTO);
         Member member = (Member) validatedParameterMap.get("member");
         Product product = (Product) validatedParameterMap.get("product");
 
         Optional<Wish> optionalWish = wishRepository.findByMemberAndProduct(member, product);
 
-        if (optionalWish.isEmpty())
+        if (optionalWish.isEmpty()) {
             throw new BadRequestException("위시리스트에 그러한 품목을 찾을 수 없습니다.");
+        }
 
         Wish wish = optionalWish.get();
         wish.setQuantity(quantity);

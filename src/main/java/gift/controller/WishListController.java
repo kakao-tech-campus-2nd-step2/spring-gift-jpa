@@ -72,7 +72,8 @@ public class WishListController {
     }
 
     @PutMapping("/{quantity}")
-    public ResponseEntity<ResponseDTO> setWishes(@PathVariable @Min(0) @NotNull Integer quantity, @LoginMember MemberDTO MemberDTO,
+    public ResponseEntity<ResponseDTO> setWishes(@PathVariable @Min(0) @NotNull Integer quantity,
+            @LoginMember MemberDTO MemberDTO,
             @RequestBody @Valid ProductDTO productDTO) {
         try {
             wishListService.setWishListNumber(MemberDTO, productDTO, quantity);
