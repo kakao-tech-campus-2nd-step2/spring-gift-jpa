@@ -3,6 +3,7 @@ package gift.controller;
 import gift.dto.WishListDTO;
 import gift.service.WishListService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class WishListController {
     private final WishListService wishListService;
 
-
     public WishListController(WishListService wishListService) {
         this.wishListService = wishListService;
     }
@@ -29,7 +29,7 @@ public class WishListController {
         if (email == null) {
             return "redirect:/users/login";
         }
-        WishListDTO wishList = wishListService.getWishListByUser(email);
+        List<WishListDTO> wishList = wishListService.getWishListByUser(email);
 
         model.addAttribute("wishList", wishList);
         return "wishlist";

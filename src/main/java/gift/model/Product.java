@@ -17,22 +17,18 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
+    private Long id;
 
     @Valid
     @NotNull(message = "이름을 입력해주세요.")
-    private final Name name;
+    private Name name;
 
-    private final int price;
+    private int price;
 
     @Column(name = "image_url")
-    private final String imageUrl;
+    private String imageUrl;
 
     protected Product() {
-        id = null;
-        name = new Name();
-        price = 0;
-        imageUrl = null;
     }
 
     public Product(Long id, Name name, int price, String imageUrl) {

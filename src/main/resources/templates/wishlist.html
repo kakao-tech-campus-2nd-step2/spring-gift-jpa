@@ -51,7 +51,14 @@
               'Content-Type': 'application/json'
             }
           })
-
+          .then(response => {
+            if (response.status === 200) {
+              window.location.reload();
+            } else {
+              throw new Error('삭제하는 데 실패했습니다.');
+            }
+          })
+          .catch(error => alert(error.message));
         });
       });
     });
@@ -73,16 +80,16 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:if="${wishList == null || wishList.products.isEmpty()}">
+  <tr th:if="${wishList == null || wishList.isEmpty()}">
     <td colspan="5">위시 리스트가 비어 있습니다.</td>
   </tr>
-  <tr th:each="product : ${wishList.products}">
-    <td th:text="${product.id}"></td>
-    <td th:text="${product.name.name}"></td>
-    <td th:text="${product.price}"></td>
-    <td th:text="${product.imageUrl}"></td>
+  <tr th:each="item : ${wishList}">
+    <td th:text="${item.product.id}"></td>
+    <td th:text="${item.product.name.name}"></td>
+    <td th:text="${item.product.price}"></td>
+    <td th:text="${item.product.imageUrl}"></td>
     <td>
-      <form th:action="@{/wishlist/remove/{productId}(productId=${product.id})}" method="post" style="display:inline;">
+      <form th:action="@{/wishlist/remove/{productId}(productId=${item.product.id})}" method="post" style="display:inline;">
         <input type="hidden" name="_method" value="DELETE" />
         <button type="submit">삭제</button>
       </form>

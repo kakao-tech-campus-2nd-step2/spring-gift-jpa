@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 
-public class ProductDTO implements Serializable {
+public class ProductDTO {
 
     private Long id;
 
