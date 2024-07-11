@@ -1,28 +1,37 @@
 package gift.wishlist.model;
 
-import jakarta.persistence.Column;
+import gift.member.model.Member;
+import gift.product.model.Product;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="wishes")
+@Table(name = "wishes")
 public class Wish {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
-    private Long memberId;
-    @Column(nullable = false)
-    private Long productId;
 
-    public Wish() {}
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
-    public Wish(Long memberId, Long productId) {
-        this.memberId = memberId;
-        this.productId = productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    public Wish() {
+    }
+
+    public Wish(Member member, Product product) {
+        this.member = member;
+        this.product = product;
     }
 
     public Long getId() {
@@ -33,20 +42,20 @@ public class Wish {
         this.id = id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
 }
