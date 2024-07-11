@@ -1,13 +1,12 @@
 package gift.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "tokens")
 public class Token {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
     @NonNull
