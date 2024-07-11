@@ -3,16 +3,16 @@ package gift.model;
 import gift.util.ProductIdConstraint;
 import jakarta.validation.constraints.NotNull;
 
-public class WishListDTO {
+public class WishlistDTO {
 
     @ProductIdConstraint
     @NotNull
     private Long productId;
 
-    public WishListDTO() {
+    public WishlistDTO() {
     }
 
-    public WishListDTO(Long productId) {
+    public WishlistDTO(Long productId) {
         this.productId = productId;
     }
 

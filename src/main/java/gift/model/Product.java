@@ -12,25 +12,34 @@ public class Product {
     private Long id;
     private String name;
     private int price;
-    @Column(name = "imageurl")
-    private String imageUrl;
+    private String imageurl;
 
     @ManyToOne
     @JoinColumn(name = "wishlist_id")
     @JsonIgnore
-    private WishList wishlist;
+    private Wishlist wishlist;
+
+    public Wishlist getWishlist() {
+        return wishlist;
+    }
+
+    public void setWishlist(Wishlist wishlist) {
+        this.wishlist = wishlist;
+    }
 
     public Product() {
     }
 
-    public Product(Long id) {
-        this.id = id;
+    public Product(ProductDTO product) {
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.imageurl = product.getImageurl();
     }
 
-    public Product(String name, int price, String imageUrl) {
+    public Product(String name, int price, String imageurl) {
         this.name = name;
         this.price = price;
-        this.imageUrl = imageUrl;
+        this.imageurl = imageurl;
     }
 
     public Long getId() {
@@ -57,30 +66,11 @@ public class Product {
         this.price = price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageurl() {
+        return imageurl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public WishList getWishlist() {
-        return wishlist;
-    }
-
-    public void setWishlist(WishList wishlist) {
-        this.wishlist = wishlist;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", wishlist=" + wishlist +
-                '}';
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
     }
 }

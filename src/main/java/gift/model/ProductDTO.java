@@ -11,38 +11,38 @@ public class ProductDTO {
     @NotNull
     private Integer price;
     @NotNull
-    private String imageUrl;
+    private String imageurl;
 
-    public ProductDTO(String name, Integer price, String imageUrl) {
+    public ProductDTO(String name, Integer price, String imageurl) {
         this.name = name;
         this.price = price;
-        this.imageUrl = imageUrl;
+        this.imageurl = imageurl;
     }
 
     public ProductDTO() {
     }
 
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 
-    public Integer getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setName(String name) {
+    public void setName(@NotNull String name) {
         this.name = name;
     }
 
-    public void setPrice(int price) {
+    public @NotNull Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(@NotNull Integer price) {
         this.price = price;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public @NotNull String getImageurl() {
+        return imageurl;
+    }
+
+    public void setImageurl(@NotNull String imageurl) {
+        this.imageurl = imageurl;
     }
 }

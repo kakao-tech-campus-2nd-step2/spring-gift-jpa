@@ -11,13 +11,17 @@ public class User {
     private String email;
     private String password;
 
+    public User() {
+    }
+
     public User(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public User() {
-
+    public User(UserDTO user) {
+        this.email = user.getEmail();
+        this.password = user.getPassword();
     }
 
     public String getEmail() {
@@ -34,14 +38,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
     }
 
     public void setId(Long id) {
