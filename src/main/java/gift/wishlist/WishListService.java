@@ -1,9 +1,17 @@
 package gift.wishlist;
 
 import gift.auth.JwtUtil;
+import gift.product.Product;
+import gift.product.ProductDTO;
 import gift.product.ProductService;
+import gift.user.User;
+import gift.user.UserDTO;
+import gift.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -12,21 +20,24 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class WishListService {
-
+    private static final Logger logger = LoggerFactory.getLogger(WishListService.class);
     private final WishListRepository wishListRepository;
     private final ProductService productService;
+    private final UserService userService;
     private final JwtUtil jwtUtil;
 
     @Autowired
     public WishListService(WishListRepository wishListRepository, ProductService productService,
+        UserService userService,
         JwtUtil jwtUtil) {
         this.wishListRepository = wishListRepository;
         this.productService = productService;
+        this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
 
-    public List<WishListDTO> getWishListsByEmail(String email) {
-        return wishListRepository.findAllByEmail(email).stream()
+    public List<WishListDTO> getWishListsByUserId(long id) {
+        return wishListRepository.findAllByUserId(id).stream()
             .map(WishListDTO::fromWishList)
             .toList();
     }
@@ -44,35 +55,42 @@ public class WishListService {
         }
     }
 
-    public void addWishList(WishListDTO wishList) {
-        if (wishListRepository.existsByEmailAndProductId(wishList.getEmail(),
+    public void addWishList(WishListDTO wishList, String email) throws NotFoundException {
+        UserDTO userDTO = userService.findUserByEmail(email);
+        User user = userDTO.toUser();
+        if (wishListRepository.existsByUserIdAndProductId(user.getId(),
             wishList.getProductId())) {
-            throw new IllegalArgumentException(wishList.getEmail() + "의 위시리스트에 존재하는 상품입니다.");
+            throw new IllegalArgumentException(email + "의 위시리스트에 존재하는 상품입니다.");
         }
-        wishListRepository.save(wishList.toWishList());
+        logger.info("id: {}", wishList.getProductId());
+        ProductDTO productDTO = productService.getProductById(wishList.getProductId());
+        Product product = productDTO.toProduct();
+        WishList wishList1 = new WishList(user, product, wishList.getNum());
+        user.addWishList(wishList1);
+        product.addWishList(wishList1);
+        wishListRepository.save(wishList1);
     }
 
-    public void updateWishList(String email, long productId, int num) throws NotFoundException {
-        WishList wishList = wishListRepository.findByEmailAndProductId(email, productId);
-        if (!existsByEmailAndProductId(email, productId)) {
+    public void updateWishList(long userId, long productId, int num) throws NotFoundException {
+        WishList wishList = wishListRepository.findByUserIdAndProductId(userId, productId);
+        if (!wishListRepository.existsByUserIdAndProductId(userId, productId)) {
             throw new IllegalArgumentException(
-                email + "의 위시리스트에는 " + productService.getProductById(productId).getName()
+                userService.findById(userId).email() + "의 위시리스트에는 " + productService.getProductById(productId).getName()
                     + " 상품이 존재하지 않습니다.");
         }
-        wishList.update(email, productId, num);
+        wishList.update(num);
         wishListRepository.save(wishList);
     }
 
-    public Boolean existsByEmailAndProductId(String email, long productId) {
-        return wishListRepository.existsByEmailAndProductId(email, productId);
-    }
-
-    public void deleteWishList(String email, long productId) throws NotFoundException {
-        if (!existsByEmailAndProductId(email, productId)) {
+    public void deleteWishList(long userId, long productId) throws NotFoundException {
+        if (!wishListRepository.existsByUserIdAndProductId(userId, productId)) {
             throw new IllegalArgumentException(
-                email + "의 위시리스트에는 " + productService.getProductById(productId).getName()
+                userService.findById(userId).email() + "의 위시리스트에는 " + productService.getProductById(productId).getName()
                     + " 상품이 존재하지 않습니다.");
         }
-        wishListRepository.deleteByEmailAndProductId(email, productId);
+        WishList wishList = wishListRepository.findByUserIdAndProductId(userId, productId);
+        wishList.getUser().removeWishList(wishList);
+        wishList.getProduct().removeWishList(wishList);
+        wishListRepository.deleteByUserIdAndProductId(userId, productId);
     }
 }

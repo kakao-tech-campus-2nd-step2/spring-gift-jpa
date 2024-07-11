@@ -6,3 +6,8 @@
 3. entity & repository 구현(product)
 4. entity & repository 구현(wishlist)
 5. @DataJpaTest사용해서 test구현
+
+### step 2
+1. entity에서의 id를 Long으로 바꾸기
+2. test코드 수정
+3. 연관 관계 매핑

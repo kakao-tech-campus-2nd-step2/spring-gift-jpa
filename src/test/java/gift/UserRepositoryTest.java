@@ -43,7 +43,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    @DisplayName("회원 이메일과 비밀번호로 찾기")
+    @DisplayName("이메일과 비밀번호가 둘 다 존재하지 않는 회원을 찾으면 false 리턴")
     void notExistsByEmailAndPassword() {
         //Given
         User user = new User("admin@email.com","1234");
@@ -71,7 +71,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    @DisplayName("회원 이메일로 찾기")
+    @DisplayName("존재하지 않는 이메일로 회원을 찾으면 false 리턴")
     void notExistsByEmail(){
         //Given
         User user = new User("admin@email.com","1234");
