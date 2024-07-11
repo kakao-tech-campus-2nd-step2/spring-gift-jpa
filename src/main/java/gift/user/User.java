@@ -47,7 +47,13 @@ public class User {
 
     public List<WishList> getWishes(){return wishes;}
 
-    public void addWishList(List<WishList> wishes){this.wishes = wishes;}
+    public void addWishList(WishList wishList){
+        this.wishes.add(wishList);
+        wishList.setUser(this);
+    }
 
-    public void removeWishList(){this.wishes = null;}
+    public void removeWishList(WishList wishList){
+        wishes.remove(wishList);
+        wishList.setUser(null);
+    }
 }

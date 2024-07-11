@@ -8,6 +8,7 @@ import gift.user.User;
 import gift.user.UserDTO;
 import gift.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -65,6 +66,8 @@ public class WishListService {
         ProductDTO productDTO = productService.getProductById(wishList.getProductId());
         Product product = productDTO.toProduct();
         WishList wishList1 = new WishList(user, product, wishList.getNum());
+        user.addWishList(wishList1);
+        product.addWishList(wishList1);
         wishListRepository.save(wishList1);
     }
 
@@ -85,6 +88,9 @@ public class WishListService {
                 userService.findById(userId).email() + "의 위시리스트에는 " + productService.getProductById(productId).getName()
                     + " 상품이 존재하지 않습니다.");
         }
+        WishList wishList = wishListRepository.findByUserIdAndProductId(userId, productId);
+        wishList.getUser().removeWishList(wishList);
+        wishList.getProduct().removeWishList(wishList);
         wishListRepository.deleteByUserIdAndProductId(userId, productId);
     }
 }
