@@ -41,7 +41,7 @@ public class ProductController {
     })
     @PostMapping
     public ResponseEntity<Void> saveProduct(@RequestBody @Valid ProductRequest newProduct) {
-        var createdProductId = productService.saveProduct(newProduct.toProductParams());
+        var createdProductId = productService.saveProduct(newProduct.toProductParam());
 
         return ResponseEntity.created(URI.create("/api/products/" + createdProductId))
                 .build();
@@ -55,7 +55,7 @@ public class ProductController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void modifyProduct(@PathVariable("id") Long id, @RequestBody @Valid ProductRequest modifyProduct) {
-        productService.modifyProduct(id, modifyProduct.toProductParams());
+        productService.modifyProduct(id, modifyProduct.toProductParam());
     }
 
     @Operation(summary = "상품 상세 조회", description = "상품 상세 정보를 조회합니다.")

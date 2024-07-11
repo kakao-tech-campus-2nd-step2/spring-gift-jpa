@@ -4,7 +4,7 @@ import gift.product.domain.Product;
 import gift.product.exception.ProductNotFoundException;
 import gift.product.persistence.ProductRepository;
 import gift.product.service.dto.ProductInfo;
-import gift.product.service.dto.ProductParams;
+import gift.product.service.dto.ProductParam;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +17,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Long saveProduct(ProductParams productRequest) {
+    public Long saveProduct(ProductParam productRequest) {
         Product product = productRequest.toEntity();
         product = productRepository.save(product);
 
@@ -25,7 +25,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void modifyProduct(final Long id, ProductParams productRequest) {
+    public void modifyProduct(final Long id, ProductParam productRequest) {
         var product = productRepository.findById(id)
                 .orElseThrow(() -> ProductNotFoundException.of(id));
 

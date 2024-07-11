@@ -4,9 +4,9 @@ import gift.user.domain.User;
 import gift.user.exception.UserAlreadyExistsException;
 import gift.user.exception.UserNotFoundException;
 import gift.user.persistence.UserRepository;
-import gift.user.service.dto.UserInfoParams;
-import gift.user.service.dto.UserSignInInfos;
-import gift.user.service.dto.UserSignupInfos;
+import gift.user.service.dto.UserInfoParam;
+import gift.user.service.dto.UserSignInInfo;
+import gift.user.service.dto.UserSignupInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +21,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserSignupInfos signUp(UserInfoParams userSignupRequest) {
+    public UserSignupInfo signUp(UserInfoParam userSignupRequest) {
         userRepository.findByUsername(userSignupRequest.username())
                 .ifPresent(u -> {
                     throw new UserAlreadyExistsException();
@@ -33,11 +33,11 @@ public class UserService {
 
         String token = jwtProvider.generateToken(newUser.getUsername(), newUser.getPassword());
 
-        return UserSignupInfos.of(newUser.getId(), token);
+        return UserSignupInfo.of(newUser.getId(), token);
     }
 
     @Transactional(readOnly = true)
-    public UserSignInInfos signIn(UserInfoParams userSignupRequest) {
+    public UserSignInInfo signIn(UserInfoParam userSignupRequest) {
         User savedUser = userRepository.findByUsername(userSignupRequest.username())
                 .orElseThrow(UserNotFoundException::new);
         if (PasswordProvider.match(userSignupRequest.username(), userSignupRequest.password(),
@@ -47,6 +47,6 @@ public class UserService {
 
         String token = jwtProvider.generateToken(savedUser.getUsername(), savedUser.getPassword());
 
-        return UserSignInInfos.of(token);
+        return UserSignInInfo.of(token);
     }
 }
