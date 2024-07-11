@@ -7,6 +7,7 @@ import gift.exception.NotFoundElementException;
 import gift.model.MemberRole;
 import gift.model.Product;
 import gift.repository.ProductRepository;
+import gift.repository.WishProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,9 +18,11 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final WishProductRepository wishProductRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, WishProductRepository wishProductRepository) {
         this.productRepository = productRepository;
+        this.wishProductRepository = wishProductRepository;
     }
 
     public ProductResponse addProduct(ProductRequest productRequest, MemberRole memberRole) {
@@ -46,6 +49,7 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
+        wishProductRepository.deleteWishProductsByProductId(id);
         productRepository.deleteById(id);
     }
 

@@ -27,7 +27,7 @@ public class Member extends BaseEntity {
     @Enumerated
     @Column(name = "role")
     private MemberRole role;
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<WishProduct> wishes = new ArrayList<>();
 
     public Member() {

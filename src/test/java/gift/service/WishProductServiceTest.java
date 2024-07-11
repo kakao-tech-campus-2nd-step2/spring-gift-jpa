@@ -8,7 +8,6 @@ import gift.exception.NotFoundElementException;
 import gift.model.MemberRole;
 import gift.reflection.AuthTestReflectionComponent;
 import gift.repository.MemberRepository;
-import gift.repository.ProductRepository;
 import gift.service.auth.AuthService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -33,8 +32,6 @@ class WishProductServiceTest {
     private MemberService memberService;
     @Autowired
     private MemberRepository memberRepository;
-    @Autowired
-    private ProductRepository productRepository;
     @Autowired
     private AuthTestReflectionComponent authTestReflectionComponent;
     private Long managerId;
