@@ -1,7 +1,7 @@
 package gift.config;
 
-import gift.authService.Interceptor;
-import gift.authService.LoginUserArgumentResolver;
+import gift.auth.AuthInterceptor;
+import gift.auth.LoginMemberArgumentResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -17,10 +17,10 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
     @Autowired
-    private Interceptor interceptor;
+    private AuthInterceptor authInterceptor;
 
     @Autowired
-    private LoginUserArgumentResolver loginUserArgumentResolver;
+    private LoginMemberArgumentResolver loginUserArgumentResolver;
 
     /**
      * 커스텀 인터셉터를 애플리케이션의 인터셉터 레지스트리에 추가합니다. 이 인터셉터는 "/api/login", "/api/login/signup"을 제외한 모든 요청에 대해
@@ -30,7 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(interceptor).addPathPatterns("/**")
+        registry.addInterceptor(authInterceptor).addPathPatterns("/**")
             .excludePathPatterns("/api/login", "/api/login/signup");
     }
 

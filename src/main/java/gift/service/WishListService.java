@@ -1,7 +1,9 @@
 package gift.service;
 
-import gift.model.WishList;
-import gift.model.WishListRepository;
+import gift.DTO.WishListDTO;
+import gift.model.wishlist.WishListEntity;
+import gift.aspect.CheckProductExists;
+import gift.model.wishlist.WishListRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,20 +13,31 @@ import org.springframework.stereotype.Service;
  * WhishListService 클래스는 WishList 관련 비즈니스 로직을 처리하는 서비스 클래스입니다
  */
 @Service
-public class WhishListService {
+public class WishListService {
 
     private final WishListRepository wishListRepository;
-    private final ProductService productService;
 
     /**
      * WhishListService 생성자
      *
      * @param wishListRepository WishListDAO 객체
-     * @param productService
      */
-    public WhishListService(WishListRepository wishListRepository, ProductService productService) {
+    public WishListService(WishListRepository wishListRepository) {
         this.wishListRepository = wishListRepository;
-        this.productService = productService;
+    }
+
+    private WishListDTO toWishListDTO(WishListEntity wishListEntity) {
+        return new WishListDTO(
+            wishListEntity.getUserId(),
+            wishListEntity.getProductId()
+        );
+    }
+
+    private WishListEntity toWishListEntity(WishListDTO wishListDTO) {
+        var wishListEntity = new WishListEntity();
+        wishListEntity.setUserId(wishListDTO.getUserId());
+        wishListEntity.setProductId(wishListDTO.getProductId());
+        return wishListEntity;
     }
 
     /**
@@ -34,10 +47,13 @@ public class WhishListService {
      * @param userId    WishList에 추가할 사용자의 ID
      * @return 생성된 WishList 객체의 ID 리스트
      */
+    @CheckProductExists
     public List<Long> createWishList(long productId, long userId) {
-        productService.productNotFoundDetector(productId);
-        WishList newWishList = wishListRepository.createWishList(productId, userId);
-        return Collections.singletonList(newWishList.getProductId());
+        var wishListEntity = new WishListEntity();
+        wishListEntity.setProductId(productId);
+        wishListEntity.setUserId(userId);
+        wishListRepository.save(wishListEntity);
+        return Collections.singletonList(wishListEntity.getId());
     }
 
     /**
@@ -47,10 +63,10 @@ public class WhishListService {
      * @return 지정된 사용자의 모든 WishList 객체의 productId 리스트
      */
     public List<Long> getWishListsByUserId(long userId) {
-        List<WishList> wishLists = wishListRepository.getWishListsByUserId(userId);
-        return wishLists.stream()
-                        .map(WishList::getProductId)
-                        .collect(Collectors.toList());
+        var wishListEntities = wishListRepository.findAllByUserId(userId);
+        return wishListEntities.stream()
+            .map(WishListEntity::getProductId)
+            .collect(Collectors.toList());
     }
 
     /**
@@ -60,11 +76,7 @@ public class WhishListService {
      * @return 삭제 성공 여부
      */
     public boolean deleteWishListsByUserId(long userId) {
-        if (wishListRepository.deleteWishListsByUserId(userId)){
-            return true;
-        } else {
-            return false;
-        }
+        return wishListRepository.deleteWishListsByUserId(userId) > 0;
     }
 
     /**
@@ -74,9 +86,9 @@ public class WhishListService {
      * @param productId 삭제할 상품의 ID
      * @return 삭제 성공 여부
      */
+    @CheckProductExists
     public boolean deleteWishListByUserIdAndProductId(long userId, long productId) {
-        productService.productNotFoundDetector(productId);
-        return wishListRepository.deleteWishListByUserIdAndProductId(userId, productId);
+        return wishListRepository.deleteWishListByUserIdAndProductId(userId, productId) > 0;
     }
 
     /**
@@ -86,8 +98,12 @@ public class WhishListService {
      * @param productId 추가할 상품의 ID
      * @return 추가 성공 여부
      */
+    @CheckProductExists
     public boolean addWishListByUserIdAndProductId(long userId, long productId) {
-        productService.productNotFoundDetector(productId);
-        return wishListRepository.addWishListByUserIdAndProductId(userId, productId);
+        var wishListEntity = new WishListEntity();
+        wishListEntity.setUserId(userId);
+        wishListEntity.setProductId(productId);
+        wishListRepository.save(wishListEntity);
+        return true;
     }
 }

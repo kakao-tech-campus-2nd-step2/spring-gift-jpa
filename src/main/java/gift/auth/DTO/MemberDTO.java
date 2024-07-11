@@ -1,4 +1,4 @@
-package gift.model;
+package gift.auth.DTO;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 /**
  * 로그인 모델 클래스
  */
-public class Login {
+public class MemberDTO {
 
     private Long id;
 
@@ -27,14 +27,14 @@ public class Login {
      * @param email    이메일
      * @param password 비밀번호
      */
-    public Login(Long id, String email, String password) {
+    public MemberDTO(Long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
     // 기본 생성자
-    public Login() {
+    public MemberDTO() {
     }
 
     /**

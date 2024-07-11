@@ -1,6 +1,7 @@
-package gift.authService;
+package gift.auth;
 
-import gift.exception.AuthException;
+import gift.auth.utill.JwtToken;
+import gift.auth.exception.AuthException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
-public class Interceptor implements HandlerInterceptor {
+public class AuthInterceptor implements HandlerInterceptor {
 
     private JwtToken jwtToken = new JwtToken();
 
