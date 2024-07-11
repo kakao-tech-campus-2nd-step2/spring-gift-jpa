@@ -10,10 +10,10 @@ import java.util.Optional;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
-    @Query("SELECT w FROM Wish w LEFT JOIN Product p ON w.product.id =p.id  WHERE w.memberId = :memberId")
+    @Query("SELECT w FROM Wish w LEFT JOIN Product p ON w.product.id =p.id  WHERE w.member.id = :memberId")
     List<Wish> findAllByMemberIdWithProduct(@Param("memberId") Long memberId);
 
-    @Query("SELECT w FROM Wish w WHERE w.memberId = :memberId and w.product.id = :productId")
-    Optional<Wish> findByMemberIdAndProductId(Long memberId, Long productId);
+    @Query("SELECT w FROM Wish w WHERE w.member.id = :memberId and w.product.id = :productId")
+    Optional<Wish> findByMemberIdAndProductId(@Param("memberId") Long memberId, @Param("productId") Long productId);
 
 }

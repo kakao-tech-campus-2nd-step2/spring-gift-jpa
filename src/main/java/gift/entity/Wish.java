@@ -11,18 +11,20 @@ public class Wish {
     Long id;
 
     @NotNull
-    Long memberId;
+    @ManyToOne
+    @JoinColumn(name = "memberId", foreignKey = @ForeignKey(name = "fk_wish_member_id_ref_member_id"))
+    Member member;
 
     @NotNull
     Integer amount;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "productId")
+    @JoinColumn(name = "productId", foreignKey = @ForeignKey(name = "fk_wish_product_id_ref_product_id"))
     Product product;
 
-    public Wish(Long memberId, Integer amount, Product product) {
-        this.memberId = memberId;
+    public Wish(Member member, Integer amount, Product product) {
+        this.member = member;
         this.amount = amount;
         this.product = product;
     }
@@ -40,6 +42,10 @@ public class Wish {
 
     public Product getProduct() {
         return product;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     public void setAmount(Integer amount) {

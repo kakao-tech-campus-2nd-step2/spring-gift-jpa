@@ -36,4 +36,9 @@ public class MemberService {
         return registeredMember.getId();
     }
 
+    public Member getMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::new);
+    }
+
 }

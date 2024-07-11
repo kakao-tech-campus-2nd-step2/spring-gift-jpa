@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.dto.response.WishProductResponse;
+import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wish;
 import gift.exception.WishAlreadyExistsException;
@@ -17,10 +18,12 @@ public class WishListService {
 
     private final WishRepository wishListRepository;
     private final ProductService productService;
+    private final MemberService memberService;
 
-    public WishListService(WishRepository wishListRepository, ProductService productService) {
+    public WishListService(WishRepository wishListRepository, ProductService productService, MemberService memberService) {
         this.wishListRepository = wishListRepository;
         this.productService = productService;
+        this.memberService = memberService;
     }
 
     @Transactional
@@ -30,7 +33,8 @@ public class WishListService {
             throw new WishAlreadyExistsException(existingWish.get());
         }
         Product product = productService.getProduct(productId);
-        Wish wish = new Wish(memberId, amount, product);
+        Member member = memberService.getMemberById(memberId);
+        Wish wish = new Wish(member, amount, product);
         wishListRepository.save(wish);
     }
 
