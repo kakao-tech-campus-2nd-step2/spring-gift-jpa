@@ -1,6 +1,5 @@
 function createProducts() {
     const product = {
-        id: document.querySelector('#productId').value,
         name: document.querySelector('#productName').value,
         price: document.querySelector('#productPrice').value,
         imageUrl: document.querySelector('#productImageUrl').value
