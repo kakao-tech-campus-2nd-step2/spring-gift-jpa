@@ -23,18 +23,18 @@ public class ProductService {
 
 
   public List<ProductDto> getAllProducts() {
-    List<Product> productEntities = productDao.findAll();
-    List<ProductDto> productDtos = productEntities.stream()
+    List<Product> product = productDao.findAll();
+    List<ProductDto> productDtos = product.stream()
       .map(ConverterToDto::convertToProductDto)
       .collect(Collectors.toList());
     return productDtos;
   }
 
   public Optional<ProductDto> getProductById(Long id) {
-    Optional<Product> productEntityOptional = productDao.findById(id);
+    Optional<Product> productOptional = productDao.findById(id);
 
     //Optional에 ProductConverter::convertToDto를 직접 이용 못하므로, map 이용하여 entity 뽑아낸 후에 적용
-    return productEntityOptional.map(ConverterToDto::convertToProductDto);
+    return productOptional.map(ConverterToDto::convertToProductDto);
   }
 
   public ProductDto addProduct(@Valid ProductDto productDto) {
@@ -44,23 +44,23 @@ public class ProductService {
     return productDto;
   }
   public Optional<ProductDto> updateProduct(Long id, @Valid ProductDto updatedProductDto) {
-    Optional<Product> existingProductEntityOptional = productDao.findById(id);
+    Optional<Product> existingProductOptional = productDao.findById(id);
     Product newProduct = new Product(id,
       updatedProductDto.getName(), updatedProductDto.getPrice(),
       updatedProductDto.getImageUrl());
     productDao.deleteById(id);
     productDao.save(newProduct);
-    return existingProductEntityOptional.map(ConverterToDto::convertToProductDto);
+    return existingProductOptional.map(ConverterToDto::convertToProductDto);
   }
 
   public Optional<ProductDto> deleteProduct(@PathVariable Long id) {
-    Optional<Product> existingProductEntityOptional = productDao.findById(id);
-    if (existingProductEntityOptional == null) {
+    Optional<Product> existingProductOptional = productDao.findById(id);
+    if (existingProductOptional == null) {
       throw new EmptyResultDataAccessException("해당 데이터가 없습니다", 1);
     }
     productDao.deleteById(id);
 
-    return existingProductEntityOptional.map(ConverterToDto::convertToProductDto);
+    return existingProductOptional.map(ConverterToDto::convertToProductDto);
   }
 
 }
