@@ -3,6 +3,7 @@ package gift.service;
 import gift.domain.Wish;
 import gift.dto.WishDto;
 import gift.repository.WishRepository;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,4 +23,7 @@ public class WishService {
         wishRepository.deleteById(wishId);
     }
 
+    public List<Wish> findByMemberId(Long id) {
+        return wishRepository.findByMemberId(id);
+    }
 }
