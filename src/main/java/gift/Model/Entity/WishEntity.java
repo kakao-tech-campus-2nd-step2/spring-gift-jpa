@@ -1,25 +1,25 @@
-package gift.Model;
+package gift.Model.Entity;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name="wish")
-public class Wish {
+public class WishEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name="member_id")
-        private Member member;
+        private MemberEntity member;
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name="product_id")
-        private Product product;
+        private ProductEntity product;
 
-        public Wish(){}
+        public WishEntity(){}
 
-        public Wish(Member member, Product product){
+        public WishEntity(MemberEntity member, ProductEntity product){
                 this.member = member;
                 this.product = product;
         }
@@ -32,19 +32,19 @@ public class Wish {
                 this.id = id;
         }
 
-        public Member getMember() {
+        public MemberEntity getMember() {
                 return member;
         }
 
-        public void setMember(Member member) {
+        public void setMember(MemberEntity member) {
                 this.member = member;
         }
 
-        public Product getProduct() {
+        public ProductEntity getProduct() {
                 return product;
         }
 
-        public void setProduct(Product product) {
+        public void setProduct(ProductEntity product) {
                 this.product = product;
         }
 }

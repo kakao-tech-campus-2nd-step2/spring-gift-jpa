@@ -1,22 +1,20 @@
-package gift.Model;
+package gift.Model.Entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
 @Entity
 @Table(name="product")
-public class Product {
+public class ProductEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
         @Column(name="name")
-        @Size(max=15, message = "글자의 길이는 15를 넘을 수 없습니다.")
-        @Pattern(regexp = "^[a-zA-Z0-9가-힣 ()\\[\\]+\\-&/_]*$", message = "허용되지 않은 특수 기호((),[],+,-,&,/,_ 이외)가 있습니다.")
         private String name;
 
         @Column(name="price")
@@ -25,13 +23,14 @@ public class Product {
         @Column(name = "image_url")
         private String imageUrl;
 
+        @OnDelete(action= OnDeleteAction.CASCADE)
         @OneToMany(mappedBy = "product")
         @JsonManagedReference
-        private List<Wish> wishes;
+        private List<WishEntity> wishEntities;
 
-        public Product(){}
+        public ProductEntity(){}
 
-        public Product(String name, int price, String imageUrl){
+        public ProductEntity(String name, int price, String imageUrl){
                 this.name = name;
                 this.price = price;
                 this.imageUrl = imageUrl;
@@ -69,12 +68,12 @@ public class Product {
                 this.imageUrl = imageUrl;
         }
 
-        public List<Wish> getWishes() {
-                return wishes;
+        public List<WishEntity> getWishes() {
+                return wishEntities;
         }
 
-        public void setWishes(List<Wish> wishes) {
-                this.wishes = wishes;
+        public void setWishes(List<WishEntity> wishEntities) {
+                this.wishEntities = wishEntities;
         }
 }
 
