@@ -5,57 +5,52 @@
   <title>상품 추가</title>
 </head>
 <body>
-  <form id="addProductForm">
-    <div>
-      <label>ID: </label>
-      <input type="text" id="productId" />
-    </div>
-    <div>
-      <label>상품 이름: </label>
-      <input type="text" id="productName" />
-    </div>
-    <div>
-      <label>상품 가격: </label>
-      <input type="text" id="productPrice" />
-    </div>
-    <div>
-      <label>이미지 URL: </label>
-      <input type="text" id="productImageUrl" />
-    </div>
-    <div>
-      <button type="submit">저장</button>
-    </div>
-  </form>
-  <a th:href="@{/products}">돌아가기</a>
+<form id="addProductForm">
+  <div>
+    <label>상품 이름: </label>
+    <input type="text" id="productName"/>
+  </div>
+  <div>
+    <label>상품 가격: </label>
+    <input type="text" id="productPrice"/>
+  </div>
+  <div>
+    <label>이미지 URL: </label>
+    <input type="text" id="productImageUrl"/>
+  </div>
+  <div>
+    <button type="submit">저장</button>
+  </div>
+</form>
+<a th:href="@{/products}">돌아가기</a>
 
-  <script>
-    document.getElementById('addProductForm').addEventListener('submit', async function(event) {
-      event.preventDefault();
-      const product = {
-        id: parseInt(document.getElementById('productId').value, 10),
-        name: document.getElementById('productName').value,
-        price: parseInt(document.getElementById('productPrice').value, 10),
-        imageUrl: document.getElementById('productImageUrl').value
-      };
+<script>
+  document.getElementById('addProductForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+    const product = {
+      name: document.getElementById('productName').value,
+      price: parseInt(document.getElementById('productPrice').value, 10),
+      imageUrl: document.getElementById('productImageUrl').value
+    };
 
-      const response = await fetch(`/api/products`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(product)
+    const response = await fetch(`/api/products`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(product)
+    });
+
+    if (response.ok) {
+      alert("상품이 정상적으로 추가되었습니다.");
+      window.location.href = '/products';
+    } else {
+      response.json().then((errorData) => {
+        alert(errorData.detail);
       });
-
-      if(response.ok) {
-        alert("상품이 정상적으로 추가되었습니다.");
-        window.location.href = '/products';
-      } else {
-        response.json().then((errorData) => {
-          alert(errorData.detail);
-        });
-        window.location.reload();
-      }
-    })
-  </script>
+      window.location.reload();
+    }
+  })
+</script>
 </body>
 </html>

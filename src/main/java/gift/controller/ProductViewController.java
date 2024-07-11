@@ -1,7 +1,8 @@
 package gift.controller;
 
+import gift.dto.product.ProductResponse;
+import gift.entity.Product;
 import gift.service.ProductService;
-import gift.model.Product;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/products")
 public class ProductViewController {
+
     private final ProductService productService;
 
     public ProductViewController(ProductService productService) {
@@ -20,7 +22,7 @@ public class ProductViewController {
 
     @GetMapping
     public String products(Model model) {
-        List<Product> products = productService.getAllProducts();
+        List<ProductResponse> products = productService.getAllProducts();
 
         model.addAttribute("products", products);
         return "product_list";
@@ -28,7 +30,7 @@ public class ProductViewController {
 
     @GetMapping("/new")
     public String newProduct(Model model) {
-        model.addAttribute("product", new Product(null, "", null, ""));
+        model.addAttribute("product", Product.builder().build());
         return "product_add_form";
     }
 

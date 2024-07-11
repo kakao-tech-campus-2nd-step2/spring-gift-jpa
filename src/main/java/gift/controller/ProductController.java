@@ -1,9 +1,14 @@
 package gift.controller;
 
+import gift.dto.product.AddProductRequest;
+import gift.dto.product.ProductResponse;
+import gift.dto.product.UpdateProductRequest;
+import gift.entity.Product;
 import gift.service.ProductService;
-import gift.model.Product;
 import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.List;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,10 +19,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
+
     private final ProductService productService;
 
     public ProductController(ProductService productService) {
@@ -25,36 +32,48 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
         try {
-            List<Product> products = productService.getAllProducts();
-            return new ResponseEntity<>(products, HttpStatus.OK);
+            List<ProductResponse> products = productService.getAllProducts();
+            return ResponseEntity.ok(products);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        return ResponseEntity.ok(product);
     }
 
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody @Valid Product product) {
-        productService.addProduct(product);
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
+    public ResponseEntity<Long> addProduct(@RequestBody @Valid AddProductRequest request) {
+        Long productId = productService.addProduct(request);
+        return new ResponseEntity<>(productId, getProductLocationHeader(productId),
+            HttpStatus.CREATED);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody @Valid Product product) {
-        productService.updateProduct(id, product);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+    public ResponseEntity updateProduct(@PathVariable Long id, @RequestBody @Valid
+    UpdateProductRequest request) {
+        productService.updateProduct(id, request);
+        return ResponseEntity.ok(null);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Product> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(null);
+    }
+
+    private HttpHeaders getProductLocationHeader(Long productId) {
+        HttpHeaders headers = new HttpHeaders();
+        URI location = UriComponentsBuilder.newInstance()
+            .path("api/products/{id}")
+            .buildAndExpand(productId)
+            .toUri();
+        headers.setLocation(location);
+        return headers;
     }
 }
