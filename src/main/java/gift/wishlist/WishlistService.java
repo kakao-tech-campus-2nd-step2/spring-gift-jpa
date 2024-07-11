@@ -1,8 +1,10 @@
 package gift.wishlist;
 
 import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
+import static gift.exception.ErrorMessage.WISHLIST_ALREADY_EXISTS;
+import static gift.exception.ErrorMessage.WISHLIST_NOT_FOUND;
 
-import gift.member.MemberRepository;
+import gift.member.Member;
 import gift.product.Product;
 import gift.product.ProductRepository;
 import gift.token.MemberTokenDTO;
@@ -15,23 +17,18 @@ public class WishlistService {
 
     private final WishlistRepository wishlistRepository;
     private final ProductRepository productRepository;
-    private final MemberRepository memberRepository;
 
     public WishlistService(
         WishlistRepository wishlistRepository,
-        ProductRepository productRepository,
-        MemberRepository memberRepository
+        ProductRepository productRepository
     ) {
         this.wishlistRepository = wishlistRepository;
         this.productRepository = productRepository;
-        this.memberRepository = memberRepository;
     }
 
     public List<Product> getAllWishlists(MemberTokenDTO memberTokenDTO) {
         return wishlistRepository
-            .findAllByMember(
-                memberRepository.findById(memberTokenDTO.getEmail()).get()
-            )
+            .findAllByMember(new Member(memberTokenDTO.getEmail(), null))
             .stream()
             .map(e -> getProductById(e.getProduct().getId()))
             .toList();
@@ -39,27 +36,31 @@ public class WishlistService {
 
     public void addWishlist(MemberTokenDTO memberTokenDTO, long productId) {
         if (wishlistRepository.existsByMemberAndProduct(
-            memberRepository.findById(memberTokenDTO.getEmail()).get(),
-            productRepository.findById(productId).get())
+            new Member(memberTokenDTO.getEmail(), null),
+            getProductById(productId))
         ) {
-            throw new IllegalArgumentException("Wishlist already exists");
+            throw new IllegalArgumentException(WISHLIST_ALREADY_EXISTS);
         }
 
         wishlistRepository.save(
             new Wishlist(
                 getProductById(productId),
-                memberRepository.findById(memberTokenDTO.getEmail()).get()
+                new Member(memberTokenDTO.getEmail(), null)
             )
         );
     }
 
     public void deleteWishlist(MemberTokenDTO memberTokenDTO, long productId) {
-        wishlistRepository.delete(
-            new Wishlist(
-                getProductById(productId),
-                memberRepository.findById(memberTokenDTO.getEmail()).get()
-            )
+        Wishlist findWishlist = wishlistRepository.findByMemberAndProduct(
+            new Member(memberTokenDTO.getEmail(), null),
+            new Product(productId, null, -1, null)
         );
+
+        if (findWishlist == null) {
+            throw new IllegalArgumentException(WISHLIST_NOT_FOUND);
+        }
+
+        wishlistRepository.delete(findWishlist);
     }
 
     private Product getProductById(long productId) {
