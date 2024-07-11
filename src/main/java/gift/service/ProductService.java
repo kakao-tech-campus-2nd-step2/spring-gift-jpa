@@ -27,8 +27,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductResponseDto getProductById(Long id) {
-        return ProductResponseDto.from(productRepository.findById(id).get());
+    public ProductResponseDto getProductById(Long id) throws IllegalArgumentException {
+        return ProductResponseDto.from(productRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Product Not Found")));
     }
 
     @Transactional
@@ -38,8 +39,9 @@ public class ProductService {
 
     @Transactional
     public void updateProductById(Long id, ProductRequestDto productRequestDto)
-        throws ProductException {
-        Product product = productRepository.findById(id).get();
+        throws ProductException, IllegalArgumentException {
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Product Not Found"));
         product.updateInfo(productRequestDto.toEntity());
     }
 
