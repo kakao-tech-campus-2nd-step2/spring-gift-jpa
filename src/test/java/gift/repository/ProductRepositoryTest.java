@@ -150,4 +150,28 @@ class ProductRepositoryTest {
         );
     }
 
+    @Test
+    @DisplayName("상품->위시 삭제 전파 테스트")
+    void testCascadeRemove(){
+        // given
+        entityManager.persist(expectedMember);
+        expectedProduct.addWish(expectedWish);
+        Product savedProduct = products.save(expectedProduct);
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        Product foundProduct = products.findById(savedProduct.getId()).get();
+        products.deleteById(foundProduct.getId());
+        entityManager.flush();
+        entityManager.clear();
+
+        //then
+        List<Product> findProducts = products.findAll();
+        Wish deletedWish = entityManager.find(Wish.class, expectedWish.getId());
+        assertAll(
+                () -> assertThat(findProducts.size()).isEqualTo(0),
+                () -> assertThat(deletedWish).isNull()
+        );
+    }
 }
