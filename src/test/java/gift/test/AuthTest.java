@@ -37,9 +37,7 @@ public class AuthTest {
 	
 	@Test
     public void testRegister() {
-        User user = new User();
-        user.setEmail("test@test.com");
-        user.setPassword("pw");
+        User user = new User("test@test.com", "pw");
         doNothing().when(authService).createUser(any(User.class), any(BindingResult.class));
         ResponseEntity<String> response = authController.register(user, bindingResult);
         
@@ -49,9 +47,7 @@ public class AuthTest {
 	
 	@Test
     public void testLogin() {
-        User user = new User();
-        user.setEmail("test@test.com");
-        user.setPassword("pw");
+		User user = new User("test@test.com", "pw");
         
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", "dummyToken");
