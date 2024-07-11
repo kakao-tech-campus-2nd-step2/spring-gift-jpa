@@ -29,9 +29,8 @@ public class ProductService {
     @Transactional
     public void update(Long id, ProductRequest productRequest) {
         Product product = entityManager.find(Product.class, id);
-        product.setName(productRequest.getName());
-        product.setPrice(productRequest.getPrice());
-        product.setImageUrl(productRequest.getImageUrl());
+        product.update(productRequest.getName(), productRequest.getPrice(),
+                productRequest.getImageUrl());
     }
 
     public void delete(Long id) {
