@@ -1,6 +1,7 @@
 package gift.Service;
 
-import gift.DTO.UserEntity;
+import gift.ConverterToDto;
+import gift.DTO.WishListDto;
 import gift.DTO.WishListEntity;
 import gift.Repository.WishListDao;
 import java.util.List;
@@ -15,17 +16,20 @@ public class WishListService {
     this.wishListDao = wishListDao;
   }
 
-  public WishListEntity addProductToWishList(WishListEntity wishListEntity) {
+  public WishListDto addProductToWishList(WishListDto wishListDto) {
+    WishListEntity wishListEntity = new WishListEntity(wishListDto.getId(), wishListDto.getUserId(),
+      wishListDto.getProductId());
     wishListDao.save(wishListEntity);
-    return wishListEntity;
+    return wishListDto;
   }
 
-  public List<WishListEntity> getWishList(UserEntity user) {
-    return wishListDao.findAll();
+  public List<WishListDto> getWishList() {
+    List<WishListDto> wishListDtos = wishListDao.findAll().stream()
+      .map(ConverterToDto::convertToWishListDto).toList();
+    return wishListDtos;
   }
 
   public void deleteProductToWishList(Long id) {
     wishListDao.deleteById(id);
-
   }
 }
