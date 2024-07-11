@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.ProductChangeRequestDto;
 import gift.service.ProductService;
 import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
@@ -41,14 +42,14 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponseDto> editProduct(
             @PathVariable("id") Long id,
-            @Valid @RequestBody ProductRequestDto request) {
-        ProductResponseDto edited = productService.editProduct(id,request);
+            @Valid @RequestBody ProductChangeRequestDto request) {
+        ProductResponseDto edited = productService.editProduct(id, request);
         return ResponseEntity.ok(edited);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteProduct(
-            @PathVariable("id") Long id){
+            @PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
