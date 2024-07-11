@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class ProductDTO {
+public class ProductDto {
     @NotBlank(message = "이름은 필수 입력 값입니다.")
     @Size(max = 15, message = "이름은 최대 15자까지 입력 가능합니다.")
     @Pattern(regexp = "^[a-zA-Z0-9가-힣_()+&/ ]*$",
@@ -13,7 +13,7 @@ public class ProductDTO {
     private int price;
     private String imageUrl;
 
-    public ProductDTO() {}
+    public ProductDto() {}
 
     public int getPrice() {
         return price;

@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dto.MemberDTO;
+import gift.dto.MemberDto;
 import gift.util.JwtUtility;
 import gift.util.TokenBlacklist;
 import gift.model.Member;
@@ -20,7 +20,7 @@ public class MemberService {
         this.tokenBlacklist = tokenBlacklist;
     }
 
-    public String register(@Valid MemberDTO memberDTO) {
+    public String register(@Valid MemberDto memberDTO) {
         memberRepository.findByEmail(memberDTO.getEmail())
                 .ifPresent(existingMember -> {
                     throw new DuplicateKeyException("이미 존재하는 이메일입니다.");
@@ -33,10 +33,10 @@ public class MemberService {
         return token;
     }
 
-    public String login(MemberDTO memberDTO) {
-        Member existingMember = memberRepository.findByEmail(memberDTO.getEmail())
+    public String login(MemberDto memberDto) {
+        Member existingMember = memberRepository.findByEmail(memberDto.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 이메일 또는 잘못된 비밀번호입니다."));
-        if (!existingMember.getPassword().equals(memberDTO.getPassword())) {
+        if (!existingMember.getPassword().equals(memberDto.getPassword())) {
             throw new NoSuchElementException("존재하지 않는 이메일 또는 잘못된 비밀번호입니다.");
         }
         String token = JwtUtility.generateToken(existingMember.getEmail());

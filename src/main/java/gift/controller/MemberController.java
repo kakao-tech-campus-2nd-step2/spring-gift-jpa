@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.dto.MemberDTO;
+import gift.dto.MemberDto;
 import gift.service.MemberService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -21,16 +21,16 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Valid MemberDTO memberDTO) {
-        String token = memberService.register(memberDTO);
+    public ResponseEntity<String> register(@RequestBody @Valid MemberDto memberDto) {
+        String token = memberService.register(memberDto);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         return ResponseEntity.ok().headers(headers).body("{\"token\": \"" + token + "\"}");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid MemberDTO memberDTO) {
-        String token = memberService.login(memberDTO);
+    public ResponseEntity<String> login(@RequestBody @Valid MemberDto memberDto) {
+        String token = memberService.login(memberDto);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         return ResponseEntity.ok().headers(headers).body("{\"token\": \"" + token + "\"}");
