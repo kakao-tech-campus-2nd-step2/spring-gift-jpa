@@ -2,6 +2,7 @@ package gift.entity.compositeKey;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -16,7 +17,8 @@ public class WishListId implements Serializable {
     private int productId;
 
     // 기본 생성자
-    public WishListId() {}
+    public WishListId() {
+    }
 
     // 매개 변수가 있는 생성자
     public WishListId(int userId, int productId) {

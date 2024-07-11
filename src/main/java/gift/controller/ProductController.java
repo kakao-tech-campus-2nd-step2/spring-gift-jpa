@@ -9,9 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
-
 @Controller
-public class  ProductController {
+public class ProductController {
     @Autowired
     private ProductService productService;
 
@@ -32,9 +31,9 @@ public class  ProductController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/api/products/{id}")
-    public void deleteProduct(@PathVariable int id) {
-        productService.deleteProduct(id);
+    @DeleteMapping("/api/products/{Id}")
+    public void deleteProduct(@PathVariable int Id) {
+        productService.deleteProduct(Id);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -47,8 +46,8 @@ public class  ProductController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @GetMapping("/api/product/{id}")
-    public String getProduct(@PathVariable int id){
-        String product = productService.getProductByID(id);
+    public String getProduct(@PathVariable int Id) {
+        String product = productService.getProductById(Id);
         return product;
     }
 }
