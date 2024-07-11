@@ -26,8 +26,8 @@ public class AuthService {
 	@Autowired
 	private UserRepository userRespository;
 	
-	private String secret = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
-	private SecretKey secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+	private String SECRET = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
+	private SecretKey secretKey = new SecretKeySpec(SECRET.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
 	
 	public void createUser(User user, BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
