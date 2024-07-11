@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.exception.ErrorCode;
 import gift.exception.RepositoryException;
 import gift.model.Member;
 import gift.model.Product;
@@ -28,9 +29,11 @@ public class WishListService {
 
     public void createWishList(WishListDTO wishListDTO) {
         Product product = productRepository.findByName(wishListDTO.productName())
-            .orElseThrow(() -> new RepositoryException("해당 상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new RepositoryException(ErrorCode.PRODUCT_NOT_FOUND,
+                wishListDTO.productName()));
         Member member = memberRepository.findById(wishListDTO.memberId())
-            .orElseThrow(() -> new RepositoryException("해당 사용자를 찾을 수 업습니다."));
+            .orElseThrow(() -> new RepositoryException(ErrorCode.MEMBER_NOT_FOUND,
+                wishListDTO.memberId()));
         WishList wishList = new WishList(wishListDTO.email(), member,
             product, wishListDTO.quantity());
         wishListRepository.save(wishList);
@@ -52,15 +55,17 @@ public class WishListService {
 
     public void updateWishListQuantity(WishListDTO wishListDTO) {
         WishList currentWishList = wishListRepository.findByMemberIdAndProductName(
-            wishListDTO.memberId(),
-            wishListDTO.productName()).orElseThrow(() -> new RepositoryException(
-            wishListDTO.email() + "의 사용자의 위시 리스트에서 " + wishListDTO.productName()
-                + "을(를) 찾지 못했습니다."));
+                wishListDTO.memberId(),
+                wishListDTO.productName())
+            .orElseThrow(() -> new RepositoryException(
+                ErrorCode.WISHLIST_NOT_FOUND, wishListDTO.memberId(), wishListDTO.productName()));
 
         Product product = productRepository.findByName(wishListDTO.productName()).
-            orElseThrow(() -> new RepositoryException("해당 상품을 찾을 수 없습니다."));
+            orElseThrow(() -> new RepositoryException(ErrorCode.PRODUCT_NOT_FOUND,
+                wishListDTO.productName()));
         Member member = memberRepository.findById(wishListDTO.memberId())
-            .orElseThrow(() -> new RepositoryException("해당 사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> new RepositoryException(ErrorCode.MEMBER_NOT_FOUND,
+                wishListDTO.memberId()));
         WishList newWishList = new WishList(currentWishList.getId(), currentWishList.getEmail(),
             member, product, wishListDTO.quantity());
         wishListRepository.save(newWishList);
@@ -68,8 +73,8 @@ public class WishListService {
 
     public void deleteWishList(long memberId, String productName) {
         WishList wishList = wishListRepository.findByMemberIdAndProductName(memberId, productName)
-            .orElseThrow(() -> new RepositoryException(
-                "해당 사용자의 위시 리스트에서 " + productName + "을(를) 찾지 못해 지울 수 없습니다."));
+            .orElseThrow(() -> new RepositoryException(ErrorCode.WISHLIST_NOT_FOUND,
+                memberId, productName));
         wishListRepository.deleteById(wishList.getId());
     }
 
