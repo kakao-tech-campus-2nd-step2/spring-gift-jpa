@@ -1,4 +1,4 @@
-package gift.Login;
+package gift.login;
 
 import gift.common.auth.JwtUtil;
 import gift.member.repository.MemberRepository;

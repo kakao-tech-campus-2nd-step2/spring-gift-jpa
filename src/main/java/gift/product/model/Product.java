@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "product")
@@ -20,11 +21,21 @@ public class Product {
     @Column(nullable = false)
     private int price;
 
-    @Column(name = "image_url", nullable = false)
+    @Column(nullable = false)
     private String imageUrl;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Wish> wishes = new ArrayList<>();
+
+    // 활용 메서드들
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product comparingProduct)) return false;
+        return price == comparingProduct.price &&
+                name.equals(comparingProduct.name) &&
+                imageUrl.equals(comparingProduct.imageUrl);
+    }
 
     // Constructors, Getters, and Setters
     public Product() {}

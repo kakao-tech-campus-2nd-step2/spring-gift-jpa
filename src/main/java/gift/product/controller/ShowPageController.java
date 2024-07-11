@@ -23,7 +23,7 @@ public class ShowPageController {
     public String showProductsForm(Model model) {
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
-        return "main";
+        return "product";
     }
 
     @GetMapping("/new")
