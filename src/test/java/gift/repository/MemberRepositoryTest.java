@@ -1,6 +1,7 @@
 package gift.repository;
 
 import gift.entity.Member;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,32 +20,38 @@ class MemberRepositoryTest {
     private MemberRepository memberRepository;
 
     @Test
+    @DisplayName("이메일과 비밀번호로 멤버 찾기(로그인용)")
     void findMemberByEmailAndPassword() {
-        //GIVEN
+        //Given
         Member member = new Member(EMAIL, PASSWORD);
         memberRepository.save(member);
 
-        //WHEN
+        //When
         Optional<Member> foundMember = memberRepository.findMemberByEmailAndPassword(EMAIL, PASSWORD);
 
-        //THEN
-        assertThat(foundMember).isPresent();
-        assertThat(foundMember.get().getEmail()).isEqualTo(EMAIL);
-        assertThat(foundMember.get().getId()).isPositive();
+        //Then
+        assertThat(foundMember).isPresent()
+                .hasValueSatisfying(m -> {
+                    assertThat(m.getEmail()).isEqualTo(EMAIL);
+                    assertThat(m.getId()).isPositive();
+                });
     }
 
     @Test
+    @DisplayName("이메일로 멤버 찾기(이메일 중복 확인용)")
     void findByEmail() {
-        //GIVEN
+        //Given
         Member member = new Member(EMAIL, PASSWORD);
         Long savedMemberId = memberRepository.save(member).getId();
 
-        //WHEN
+        //When
         Optional<Member> foundMember = memberRepository.findByEmail(EMAIL);
 
-        //THEN
-        assertThat(foundMember).isPresent();
-        assertThat(foundMember.get().getId()).isEqualTo(savedMemberId);
+        //Then
+        assertThat(foundMember).isPresent()
+                        .hasValueSatisfying(m->
+                            assertThat(m.getId()).isEqualTo(savedMemberId)
+                        );
     }
 
 }
