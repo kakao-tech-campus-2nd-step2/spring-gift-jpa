@@ -1,15 +1,11 @@
-package gift.DTO;
+package gift.DTO.User;
 
-public class UserDTO {
+public class UserRequest {
     String userId;
     String email;
     String password;
 
-    public UserDTO(){
-
-    }
-
-    public UserDTO(String userId, String email, String password){
+    public UserRequest(String userId, String email, String password){
         this.userId = userId;
         this.email = email;
         this.password = password;
