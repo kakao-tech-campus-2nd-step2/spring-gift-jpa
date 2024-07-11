@@ -7,7 +7,8 @@
 
 ## 기능 목록 
 
-- [] jpa로 entitiy 와 db 테이블 매핑 
+- [x] jpa로 entitiy 와 db 테이블 매핑 
+- [] 서비스 테이블 수정 
 - [] repository 에 JpaRepository extends
 
 - []  @DataJpaTest 사용해서 학습테스트
