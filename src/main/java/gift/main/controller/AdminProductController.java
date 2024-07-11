@@ -7,9 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -33,15 +31,16 @@ public class AdminProductController {
     }
 
     @PostMapping("/product")
-        public ResponseEntity<String> addProduct(@Valid  @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<String> addProduct(@Valid @RequestBody ProductRequest productRequest) {
         productService.addProduct(productRequest);
         return ResponseEntity.ok("Product added successfully");
     }
 
     @PutMapping("/product")
-    public ResponseEntity<?>  updateProduct(@RequestParam(value = "id") long id,@Valid @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<?> updateProduct(@RequestParam(value = "id") long id,
+                                           @Valid @RequestBody ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
-        return ResponseEntity.ok("Product updated successfully");
+        return ResponseEntity.ok("Product added successfully");
     }
 
     @DeleteMapping("/product/{id}")

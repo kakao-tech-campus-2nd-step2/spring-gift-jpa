@@ -36,13 +36,10 @@ public class ProductService {
     }
 
     @Transactional
-    public void updateProduct(long id,ProductRequest productRequest) {
+    public void updateProduct(long id, ProductRequest productRequest) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
-        product.setName(product.getName());
-        product.setPrice(product.getPrice());
-        product.setImageUrl(product.getImageUrl());
-
+        product.updateProduct(productRequest);
         productRepository.save(product);
     }
 
