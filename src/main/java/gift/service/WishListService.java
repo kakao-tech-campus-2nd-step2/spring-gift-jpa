@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,14 +35,11 @@ public class WishListService {
         this.parameterValidator = parameterValidator;
     }
 
-    public WishListDTO getWishList(MemberDTO memberDTO)
-            throws RuntimeException {
-
-        Optional<Member> optionalMember = memberRepository.findByEmail(new Member(memberDTO).getEmail());
-        if (optionalMember.isEmpty())
-            throw new UserNotFoundException(memberDTO.getEmail() + "을(를) 가지는 유저를 찾을 수 없습니다.");
-
-        return optionalMember.get().convertToWishListDTO();
+    public WishListDTO getWishList(MemberDTO memberDTO, Pageable pageable) {
+        Member member = memberRepository.findByEmail(memberDTO.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("해당 이메일을 가지는 유저를 찾을 수 없습니다."));
+        Page<Wish> wishPage = wishRepository.findByMember(member, pageable);
+        return new WishListDTO(wishPage);
     }
 
     @Transactional
