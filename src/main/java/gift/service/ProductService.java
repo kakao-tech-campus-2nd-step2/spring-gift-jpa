@@ -9,14 +9,17 @@ import java.util.Optional;
 
 import gift.dto.ProductDto;
 import gift.entity.Product;
+import gift.entity.WishList;
 import gift.exception.CustomException;
 import gift.repository.ProductRepository;
+import gift.repository.WishListRepository;
 import jakarta.transaction.Transactional;
 
 @Service
 public class ProductService{
 
-    private final ProductRepository productRepository;
+    private ProductRepository productRepository;
+    private WishListRepository wishListRepository;
 
     @Autowired
     public ProductService(ProductRepository productRepository) {
@@ -65,6 +68,13 @@ public class ProductService{
 
     @Transactional
     public void deleteProduct(Long id) {
+
+        productRepository.findById(id)
+            .orElseThrow(() -> new CustomException("Product with id " + id + " not found", HttpStatus.NOT_FOUND));
+
+        List<WishList> wishList = wishListRepository.findByProductId(id);
+        wishListRepository.deleteAll(wishList);
+
         productRepository.deleteById(id);
     }
 }
