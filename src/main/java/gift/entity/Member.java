@@ -11,11 +11,14 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true)
     @NotNull
     private String email;
+
     @NotNull
     private String password;
+
     @OneToMany(mappedBy = "member")
     private List<Wish> wishes;
 

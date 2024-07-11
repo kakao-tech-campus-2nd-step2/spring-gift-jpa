@@ -11,14 +11,18 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
+
     @NotNull
     @Size(max = 15)
-    String name;
+    private String name;
+
     @NotNull
-    Integer price;
+    private Integer price;
+
     @NotNull
-    String imageUrl;
+    private String imageUrl;
+
     @OneToMany(mappedBy = "product")
     private List<Wish> wishes;
 

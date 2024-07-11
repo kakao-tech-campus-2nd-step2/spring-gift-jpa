@@ -8,20 +8,20 @@ public class Wish {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "memberId", foreignKey = @ForeignKey(name = "fk_wish_member_id_ref_member_id"))
-    Member member;
+    private Member member;
 
     @NotNull
-    Integer amount;
+    private Integer amount;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "productId", foreignKey = @ForeignKey(name = "fk_wish_product_id_ref_product_id"))
-    Product product;
+    private Product product;
 
     public Wish(Member member, Integer amount, Product product) {
         this.member = member;
