@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -103,5 +105,28 @@ public class JpaWishlistRepositoryTest {
 
         // then
         assertThat(expect.getProducts().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void deleteWishlistCascade() {
+        // given
+        String testEmail = "test@naver.com";
+        ProductDTO product1 = new ProductDTO("test1", 123, "test1.com");
+        ProductDTO product2 = new ProductDTO("test2", 456, "test2.com");
+        Product saved1 = productRepository.save(product1);
+        Product saved2 = productRepository.save(product2);
+
+        // when
+        WishList wishlist = wishlistRepository.findByEmail(testEmail);
+        wishlist.addProduct(saved1);
+        wishlist.addProduct(saved2);
+        wishlistRepository.save(wishlist);
+
+        wishlistRepository.delete(testEmail);
+
+        List<Product> expect = productRepository.findAll();
+
+        // then
+        assertThat(expect.size()).isEqualTo(2);
     }
 }
