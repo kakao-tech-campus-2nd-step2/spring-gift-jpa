@@ -36,8 +36,8 @@ public class WishService {
                 .orElseThrow(WishNotFoundException::new));
     }
 
-    public void createWish(WishServiceDto wishServiceDto) {
-        wishRepository.save(findOrCreateWish(wishServiceDto));
+    public Wish createWish(WishServiceDto wishServiceDto) {
+        return wishRepository.save(findOrCreateWish(wishServiceDto));
     }
 
     private Wish findOrCreateWish(WishServiceDto wishServiceDto) {
@@ -53,9 +53,9 @@ public class WishService {
         return wish;
     }
 
-    public void updateWish(WishServiceDto wishServiceDto) {
+    public Wish updateWish(WishServiceDto wishServiceDto) {
         validateWishExists(wishServiceDto.id());
-        wishRepository.save(getWishByWishServiceDto(wishServiceDto));
+        return wishRepository.save(getWishByWishServiceDto(wishServiceDto));
     }
 
     public void deleteWish(Long id) {
