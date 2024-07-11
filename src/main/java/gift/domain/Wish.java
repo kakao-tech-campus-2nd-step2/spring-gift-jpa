@@ -13,7 +13,7 @@ public class Wish {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long wishId;
+    private Long id;
 
     @Column(nullable = false)
     private Long memberId;
@@ -23,14 +23,14 @@ public class Wish {
 
     public Wish() {}
 
-    public Wish(Long wishId, Long memberId, Long productId) {
-        this.wishId = wishId;
+    public Wish(Long id, Long memberId, Long productId) {
+        this.id = id;
         this.memberId = memberId;
         this.productId = productId;
     }
 
-    public Long getWishId() {
-        return wishId;
+    public Long getId() {
+        return id;
     }
 
     public Long getMemberId() {
@@ -39,6 +39,10 @@ public class Wish {
 
     public Long getProductId() {
         return productId;
+    }
+
+    public void setId(Long memberId) {
+        this.memberId = memberId;
     }
 
     public void setMemberId(Long memberId) {
