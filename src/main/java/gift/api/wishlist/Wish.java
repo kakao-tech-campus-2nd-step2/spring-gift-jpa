@@ -1,39 +1,36 @@
 package gift.api.wishlist;
 
+import gift.api.member.Member;
+import gift.api.product.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
 @Entity
 @IdClass(WishId.class)
 public class Wish {
     @Id
-    private Long memberId;
+    @OneToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
     @Id
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
     @Column(nullable = false)
     private Integer quantity;
 
     protected Wish() {
     }
 
-    public Wish(Long memberId, Long productId, Integer quantity) {
-        this.memberId = memberId;
-        this.productId = productId;
+    public Wish(Member member, Product product, Integer quantity) {
+        this.member = member;
+        this.product = product;
         this.quantity = quantity;
-    }
-
-    public Long getMemberId() {
-        return memberId;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
     }
 
     public void updateQuantity(Integer quantity) {
@@ -41,5 +38,17 @@ public class Wish {
             throw new InvalidQuantityException();
         }
         this.quantity = quantity;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
     }
 }

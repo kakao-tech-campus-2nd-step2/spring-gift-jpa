@@ -1,5 +1,7 @@
 package gift.api.wishlist;
 
+import gift.api.member.Member;
+import gift.api.product.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -21,7 +23,9 @@ public class WishService {
     }
 
     public void add(Long memberId, WishRequest wishRequest) {
-        wishRepository.save(new Wish(memberId, wishRequest.productId(), wishRequest.quantity()));
+        Member member = entityManager.find(Member.class, memberId);
+        Product product = entityManager.find(Product.class, wishRequest.productId());
+        wishRepository.save(new Wish(member, product, wishRequest.quantity()));
     }
 
     @Transactional
@@ -31,6 +35,6 @@ public class WishService {
     }
 
     public void delete(Long memberId, WishRequest wishRequest) {
-        wishRepository.deleteByMemberIdAndProductId(memberId, wishRequest.productId());
+        wishRepository.deleteById(new WishId(memberId, wishRequest.productId()));
     }
 }
