@@ -2,7 +2,8 @@ package gift.wishlist.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.TestUtils;
+import gift.utils.RestPage;
+import gift.utils.TestUtils;
 import gift.auth.dto.LoginReqDto;
 import gift.auth.token.AuthToken;
 import gift.common.exception.ErrorResponse;
@@ -114,17 +115,17 @@ class WishListControllerTest {
 
     private List<ProductResDto> getProductResDtos(String productUrl) {
         var productRequest = TestUtils.createRequestEntity(productUrl, null, HttpMethod.GET, accessToken);
-        var responseType = new ParameterizedTypeReference<List<ProductResDto>>() {};
+        var responseType = new ParameterizedTypeReference<RestPage<ProductResDto>>() {};
         var actualProduct = restTemplate.exchange(productRequest, responseType);
-        return actualProduct.getBody();
+        return actualProduct.getBody().getContent();
     }
 
     private List<WishListResDto> getWishList() {
         var url = baseUrl + "/api/wish-list";
         var request = TestUtils.createRequestEntity(url, null, HttpMethod.GET, accessToken);
-        var responseType = new ParameterizedTypeReference<List<WishListResDto>>() {};
+        var responseType = new ParameterizedTypeReference<RestPage<WishListResDto>>() {};
         var actual = restTemplate.exchange(request, responseType);
-        return actual.getBody();
+        return actual.getBody().getContent();
     }
 
     @AfterEach
@@ -138,18 +139,10 @@ class WishListControllerTest {
     @Test
     @DisplayName("위시 리스트 조회")
     void 위시_리스트_조회() {
-        // given
-        var url = baseUrl + "/api/wish-list";
-        var request = TestUtils.createRequestEntity(url, null, HttpMethod.GET, accessToken);
-
         // when
-        var responseType = new ParameterizedTypeReference<List<WishListResDto>>() {};
-        var actual = restTemplate.exchange(request, responseType);
-
-        var wishList = actual.getBody();
+        List<WishListResDto> wishList = getWishList();
 
         // then
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(wishList).isNotNull();
 
         assertThat(wishList).hasSize(3);
