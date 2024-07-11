@@ -3,6 +3,9 @@ package gift.view;
 import gift.controller.ProductController;
 import gift.model.Product;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +21,9 @@ public class ProductViewController
     }
 
     @GetMapping("")
-    public String getAllProducts(Model model) {
-        List<Product> products = productController.getAllProducts().getBody();
+    public String getAllProducts(Model model, @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "10") int size) {
+        Page<Product> products = productController.getAllProducts(page, size).getBody();
         model.addAttribute("products", products);
         return "products";
     }
