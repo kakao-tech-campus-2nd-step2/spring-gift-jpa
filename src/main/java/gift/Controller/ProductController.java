@@ -1,5 +1,6 @@
 package gift.Controller;
 
+import gift.Entity.Products;
 import gift.Model.Product;
 import gift.Service.ProductService;
 
@@ -7,7 +8,6 @@ import java.util.Optional;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,14 +27,14 @@ public class ProductController {
 
     @GetMapping("/api/products")
     public String getAllProductsByRoot(Model model) {
-        List<Product> products = productService.getAllProducts();
+        List<Products> products = productService.getAllProducts();
         model.addAttribute("products", products);
         return "products";
     }
 
     @GetMapping("/products")
     public String getAllProductsByUser(Model model) {
-        List<Product> products = productService.getAllProducts();
+        List<Products> products = productService.getAllProducts();
         model.addAttribute("products", products);
         return "user_products";
     }
@@ -55,11 +55,11 @@ public class ProductController {
     @RequestMapping(value = "/api/products/update/{id}", method = {RequestMethod.GET, RequestMethod.POST})
     public String updateProductById(@PathVariable Long id, @Valid @ModelAttribute Product productDetails, HttpServletRequest request, Model model) {
         if ("GET".equalsIgnoreCase(request.getMethod())) {
-            Optional<Product> optionalProduct = productService.getProductById(id);
+            Optional<Products> optionalProduct = productService.getProductById(id);
             model.addAttribute("product", optionalProduct.get());
             return "product_form";
         } else if ("POST".equalsIgnoreCase(request.getMethod())) {
-            productService.updateProduct(id, productDetails);
+            productService.updateProduct(productDetails);
             return "redirect:/api/products";
         }
         return "error";
@@ -67,7 +67,7 @@ public class ProductController {
 
     @PostMapping("/api/products/delete/{id}")
     public String deleteProduct(@PathVariable Long id, Model model) {
-        Optional<Product> optionalProduct = productService.getProductById(id);
+        Optional<Products> optionalProduct = productService.getProductById(id);
         model.addAttribute("product", optionalProduct.get());
         productService.deleteProduct(id);
         return "redirect:/api/products";  // 제품 목록 페이지로 리디렉션
