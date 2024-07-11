@@ -16,7 +16,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:each="product : ${products}">
+  <tr th:each="product : ${products.content}">
     <td th:text="${product.id}"></td>
     <td th:text="${product.name}"></td>
     <td th:text="${product.price}"></td>
@@ -29,6 +29,26 @@
   </tr>
   </tbody>
 </table>
+<div th:if="${products.totalPages > 1}">
+  <ul class="pagination">
+    <li th:class="${products.first ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{userId}/new(userId=${userId})}" th:text="First"></a>
+    </li>
+    <li th:class="${products.first ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{userId}/new(userId=${userId}, page=${products.number - 1}, size=${products.size})}" th:text="Previous"></a>
+    </li>
+    <li th:each="pageNumber : ${#numbers.sequence(0, products.totalPages - 1)}"
+        th:class="${pageNumber == products.number ? 'active' : ''}">
+      <a th:href="@{/wishlist/{userId}/new(userId=${userId}, page=${pageNumber}, size=${products.size})}" th:text="${pageNumber + 1}"></a>
+    </li>
+    <li th:class="${products.last ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{userId}/new(userId=${userId}, page=${products.number + 1}, size=${products.size})}" th:text="Next"></a>
+    </li>
+    <li th:class="${products.last ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{userId}/new(userId=${userId}, page=${products.totalPages - 1}, size=${products.size})}" th:text="Last"></a>
+    </li>
+  </ul>
+</div>
 <button id="addToWishlistBtn">Add to Wishlist</button>
 
 <script th:inline="javascript">
