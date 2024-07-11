@@ -8,6 +8,7 @@ import gift.controller.dto.response.WishResponse;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
+import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,12 @@ import java.util.List;
 public class WishService {
     private final WishRepository wishRepository;
     private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
 
-    public WishService(WishRepository wishRepository, ProductRepository productRepository) {
+    public WishService(WishRepository wishRepository, ProductRepository productRepository, MemberRepository memberRepository) {
         this.wishRepository = wishRepository;
         this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
     }
 
     public void update(WishPatchRequest request, Long memberId) {
@@ -38,8 +41,8 @@ public class WishService {
     public void save(WishInsertRequest request, int productCount, Long memberId) {
         checkProductByProductId(request.productId());
         checkDuplicateWish(request.productId(), memberId);
-        Member member = new Member(memberId);
-        Product product = new Product(request.productId());
+        Member member = memberRepository.getReferenceById(memberId);
+        Product product = productRepository.getReferenceById(request.productId());
         wishRepository.save(new Wish(member, productCount, product));
     }
 

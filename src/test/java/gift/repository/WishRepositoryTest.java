@@ -166,7 +166,10 @@ class WishRepositoryTest {
         String imageUrl = "imageUrl";
         Product product = productRepository.save(new Product(name, price, imageUrl));
         int productCount = 10;
-        Wish wish = new Wish(new Member(member.getId()), productCount, new Product(product.getId()));
+        Wish wish = new Wish(
+                new Member(member.getId(), null, null, null, null, null),
+                productCount,
+                new Product(product.getId(), null, 0, null, null, null));
 
         // when
         Long wishId = wishRepository.save(wish).getId();

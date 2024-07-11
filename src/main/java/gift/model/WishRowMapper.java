@@ -18,7 +18,7 @@ public class WishRowMapper implements RowMapper<Wish> {
         );
         return new Wish(
                 rs.getLong("id"),
-                new Member(rs.getLong("member_id")),
+                new Member(rs.getLong("member_id"), null, null, null, null, null),
                 rs.getInt("product_count"),
                 product,
                 rs.getTimestamp("created_at").toLocalDateTime(),
