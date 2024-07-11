@@ -1,5 +1,7 @@
-package gift;
+package gift.controller;
 
+import gift.domain.Product;
+import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;

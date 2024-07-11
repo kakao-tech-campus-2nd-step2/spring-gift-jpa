@@ -1,5 +1,6 @@
-package gift;
+package gift.repository;
 
+import gift.domain.Member;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,5 +1,10 @@
-package gift;
+package gift.controller;
 
+import gift.util.LoginMember;
+import gift.domain.Member;
+import gift.domain.Wish;
+import gift.dto.WishRequest;
+import gift.service.WishService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;

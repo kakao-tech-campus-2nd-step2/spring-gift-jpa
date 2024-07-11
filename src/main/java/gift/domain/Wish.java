@@ -1,4 +1,4 @@
-package gift;
+package gift.domain;
 
 public class Wish {
     private final Long id;

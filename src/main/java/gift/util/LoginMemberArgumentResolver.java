@@ -1,5 +1,8 @@
-package gift;
+package gift.util;
 
+import gift.domain.Member;
+import gift.service.JwtUtil;
+import gift.service.MemberService;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

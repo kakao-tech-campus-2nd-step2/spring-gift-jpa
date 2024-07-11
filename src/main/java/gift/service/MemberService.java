@@ -1,5 +1,7 @@
-package gift;
+package gift.service;
 
+import gift.domain.Member;
+import gift.repository.MemberRepository;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 

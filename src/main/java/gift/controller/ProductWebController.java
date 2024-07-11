@@ -1,5 +1,7 @@
-package gift;
+package gift.controller;
 
+import gift.domain.Product;
+import gift.service.ProductService;
 import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.stereotype.Controller;

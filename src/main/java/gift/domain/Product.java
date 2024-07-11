@@ -1,4 +1,4 @@
-package gift;
+package gift.domain;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;

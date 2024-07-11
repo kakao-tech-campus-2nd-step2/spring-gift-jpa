@@ -1,5 +1,6 @@
-package gift;
+package gift.service;
 
+import gift.domain.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
