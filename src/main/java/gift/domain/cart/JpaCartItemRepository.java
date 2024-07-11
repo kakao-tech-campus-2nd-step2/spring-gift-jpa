@@ -1,6 +1,5 @@
 package gift.domain.cart;
 
-import gift.domain.cart.CartItem;
 import gift.domain.product.Product;
 import gift.domain.user.User;
 import java.util.List;

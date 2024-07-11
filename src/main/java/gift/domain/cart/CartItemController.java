@@ -3,11 +3,9 @@ package gift.domain.cart;
 import gift.domain.product.Product;
 import gift.domain.user.dto.UserInfo;
 import gift.global.resolver.LoginInfo;
-
 import gift.global.response.ResponseMaker;
 import gift.global.response.ResultResponseDto;
 import gift.global.response.SimpleResultResponseDto;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

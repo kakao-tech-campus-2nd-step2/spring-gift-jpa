@@ -1,7 +1,6 @@
 package gift.domain.user.dto;
 
 
-
 /**
  * 토큰에서 추출한 사용자 정보를 담음
  */

@@ -6,7 +6,6 @@ import jakarta.validation.Validator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,7 +19,8 @@ public class ProductService {
     private final Validator validator;
 
     @Autowired
-    public ProductService(JdbcTemplate jdbcTemplate, JpaProductRepository jpaProductRepository, Validator validator) {
+    public ProductService(JdbcTemplate jdbcTemplate, JpaProductRepository jpaProductRepository,
+        Validator validator) {
         this.jdbcTemplate = jdbcTemplate;
         this.productRepository = jpaProductRepository;
         this.validator = validator;
@@ -48,7 +48,7 @@ public class ProductService {
     public List<Product> getProducts() {
         List<Product> products = productRepository.findAll();
         System.out.println("products = " + products);
-        
+
         return products;
     }
 
@@ -63,7 +63,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "수정할 상품이 존재하지 않습니다."));
 
-        product.update(productDTO.getName(), productDTO.getPrice(),productDTO.getImageUrl());
+        product.update(productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
 
         validateProduct(product);
 
@@ -91,7 +91,7 @@ public class ProductService {
     /**
      * 비즈니스 제약 사항 검사
      */
-     public void validateProduct(Product product) {
+    public void validateProduct(Product product) {
         Set<ConstraintViolation<Product>> violations = validator.validate(product);
         if (!violations.isEmpty()) {
             String message = violations.stream()

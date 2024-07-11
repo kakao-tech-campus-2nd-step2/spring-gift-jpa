@@ -1,9 +1,8 @@
 package gift.domain.user;
 
 import gift.domain.user.dto.UserDTO;
-
-import gift.global.jwt.JwtProvider;
 import gift.global.exception.BusinessException;
+import gift.global.jwt.JwtProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final JpaUserRepository userRepository;
+
     public UserService(JpaUserRepository jpaUserRepository) {
         this.userRepository = jpaUserRepository;
     }
@@ -38,7 +38,7 @@ public class UserService {
 
         // jwt 토큰 생성
         String jwt = JwtProvider.generateToken(user);
-        
+
         return jwt;
     }
 }
