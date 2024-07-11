@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class ProductRequest {
+
     private long id;
 
     @NotBlank(message = "상품의 이름은 필수 항목입니다.")
@@ -16,6 +17,14 @@ public class ProductRequest {
     private int price;
 
     private String imgUrl;
+
+
+    public ProductRequest(long id, String name, int price, String imgUrl) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imgUrl = imgUrl;
+    }
 
     public long getId() {
         return id;
@@ -50,11 +59,11 @@ public class ProductRequest {
     }
 
     public static ProductRequest from(Product product) {
-        ProductRequest request = new ProductRequest();
-        request.setId(product.getId());
-        request.setName(product.getName());
-        request.setPrice(product.getPrice());
-        request.setImgUrl(product.getImgUrl());
-        return request;
+        return new ProductRequest(product.getId(), product.getName(), product.getPrice(),
+            product.getImgUrl());
+    }
+
+    public static Product toEntity(ProductRequest request) {
+        return new Product(request.getName(), request.getPrice(), request.getImgUrl());
     }
 }
