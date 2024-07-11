@@ -1,7 +1,14 @@
 package gift.domain.member;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
     private String email;
     private String name;
     private String password;
@@ -22,7 +29,7 @@ public class Member {
         this.role = role;
     }
 
-
+    public Member() {}
 
     public Long getId() {
         return id;
@@ -30,14 +37,6 @@ public class Member {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public int getRole() {
-        return role;
     }
 
     public String getName() {
@@ -52,7 +51,7 @@ public class Member {
         this.name = name;
     }
 
-    public boolean isMatch(String input){
-        return input.equals(password);
+    public boolean isMatch(String password){
+        return password.equals(this.password);
     }
 }
