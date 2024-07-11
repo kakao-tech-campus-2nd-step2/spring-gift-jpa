@@ -11,8 +11,8 @@ import java.util.Date;
 @Service
 public class TokenService {
 
-    private final static SecretKey KEY = Jwts.SIG.HS256.key().build();
-    private final static int JWT_EXPIRATION_IN_MS = 1000 * 60 * 60 * 2;
+    private static final SecretKey KEY = Jwts.SIG.HS256.key().build();
+    private static final int JWT_EXPIRATION_IN_MS = 1000 * 60 * 60 * 2;
 
     public TokenResponse generateToken(Long registeredMemberId) {
         Date now = new Date();

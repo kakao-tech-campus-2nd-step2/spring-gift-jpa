@@ -1,25 +1,30 @@
 package gift.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 @Entity
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
+
     @NotNull
     @Size(max = 15)
-    String name;
+    private String name;
+
     @NotNull
-    Integer price;
+    private Integer price;
+
     @NotNull
-    String imageUrl;
+    private String imageUrl;
+
+    @OneToMany(mappedBy = "product")
+    private List<Wish> wishes;
 
     public Product(String name, Integer price, String imageUrl) {
         this.name = name;
@@ -27,7 +32,7 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Product() {
+    protected Product() {
     }
 
     public Long getId() {
@@ -46,15 +51,15 @@ public class Product {
         return imageUrl;
     }
 
-    public void setName(String name) {
+    public void changeName(String name) {
         this.name = name;
     }
 
-    public void setPrice(Integer price) {
+    public void changePrice(Integer price) {
         this.price = price;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void changeImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 

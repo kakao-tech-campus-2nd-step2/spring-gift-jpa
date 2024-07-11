@@ -25,7 +25,7 @@ public class ProductService {
         return new AddedProductIdResponse(addedProductId);
     }
 
-    public Product getProduct(Long productId) {
+    public Product getProductById(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
     }
@@ -33,7 +33,7 @@ public class ProductService {
     public List<ProductResponse> getProductResponses() {
         return productRepository.findAll()
                 .stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
+                .map(ProductResponse::fromProduct)
                 .toList();
     }
 
@@ -42,9 +42,9 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
 
-        product.setName(name);
-        product.setPrice(price);
-        product.setImageUrl(imageUrl);
+        product.changeName(name);
+        product.changePrice(price);
+        product.changeImageUrl(imageUrl);
     }
 
     @Transactional

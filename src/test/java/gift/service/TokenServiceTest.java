@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.dto.response.TokenResponse;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +17,7 @@ class TokenServiceTest {
     private TokenService tokenService;
 
     @Test
+    @DisplayName("멤버ID로 토큰 생성")
     void generateToken() {
         //When
         TokenResponse token = tokenService.generateToken(MEMBER_ID);
@@ -25,6 +27,7 @@ class TokenServiceTest {
     }
 
     @Test
+    @DisplayName("토큰에서 멤버ID추출")
     void getMemberIdByToken() {
         //Given
         TokenResponse tokenResponse = tokenService.generateToken(MEMBER_ID);
@@ -37,6 +40,7 @@ class TokenServiceTest {
     }
 
     @Test
+    @DisplayName("토큰 유효성 검증")
     void isValidateToken() {
         //Given
         TokenResponse tokenResponse = tokenService.generateToken(MEMBER_ID);

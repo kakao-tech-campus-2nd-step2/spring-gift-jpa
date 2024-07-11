@@ -1,58 +1,78 @@
 package gift.repository;
 
+import gift.entity.Member;
+import gift.entity.Product;
 import gift.entity.Wish;
-import gift.service.ProductService;
-import gift.service.WishListService;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@DataJpaTest
 class WishRepositoryTest {
 
     @Autowired
     private WishRepository wishRepository;
 
-    @BeforeAll
-    static void dataInit(@Autowired WishListService wishListService,
-                         @Autowired ProductService productService) {
-        //Given
-        productService.addProduct("almond", 500, "almond.jpg");
-        productService.addProduct("choco", 55000, "choco.jpg");
-        wishListService.addProductToWishList(MEMBER_ID, 1L, 100);
-        wishListService.addProductToWishList(MEMBER_ID, 2L, 100);
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    private Member testMember;
+    private Product testProduct1;
+    private Wish testWish1;
+    private Wish testWish2;
+
+    @BeforeEach
+    void setUp() {
+        testMember = new Member("test@email.com", "password");
+        memberRepository.save(testMember);
+
+        testProduct1 = new Product("almond", 500, "almond.jpg");
+        Product testProduct2 = new Product("ice", 9000, "ice.jpg");
+        productRepository.save(testProduct1);
+        productRepository.save(testProduct2);
+
+        testWish1 = new Wish(testMember, 100, testProduct1);
+        testWish2 = new Wish(testMember, 2000, testProduct2);
+        wishRepository.save(testWish1);
+        wishRepository.save(testWish2);
     }
 
-    private static final Long MEMBER_ID = 1L;
-
     @Test
-    @Transactional
+    @DisplayName("멤버의 전체 위시 찾기")
     void findAllByMemberIdWithProduct() {
         //When
-        List<Wish> wishes = wishRepository.findAllByMemberIdWithProduct(MEMBER_ID);
+        List<Wish> wishes = wishRepository.findAllByMember(testMember);
 
         //Then
-        assertThat(wishes).isNotEmpty();
-        for (Wish wish : wishes) {
-            System.out.println(wish.getProduct().getName());
-        }
+        assertThat(wishes).isNotEmpty()
+                .hasSize(2)
+                .containsExactly(testWish1, testWish2);
+
+        assertThat(testWish1.getProduct()).isEqualTo(testProduct1);
     }
 
     @Test
+    @DisplayName("멤버, 상품으로 위시 찾기")
     void findByMemberIdAndProductId() {
         //When
-        Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(MEMBER_ID, 1L);
+        Optional<Wish> wish = wishRepository.findByMemberAndProduct(testMember, testProduct1);
 
         //Then
-        assertThat(wish).isPresent();
-        assertThat(wish.get().getProduct().getName()).isEqualTo("almond");
+        assertThat(wish).isPresent()
+                .hasValueSatisfying(w -> {
+                    assertThat(w).isEqualTo(testWish1);
+                    assertThat(w.getProduct()).isEqualTo(testProduct1);
+                });
     }
 
 }

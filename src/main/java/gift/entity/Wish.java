@@ -8,26 +8,28 @@ public class Wish {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
-    @NotNull
-    Long memberId;
-
-    @NotNull
-    Integer amount;
+    private Long id;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "productId")
-    Product product;
+    @JoinColumn(name = "memberId", foreignKey = @ForeignKey(name = "fk_wish_member_id_ref_member_id"))
+    private Member member;
 
-    public Wish(Long memberId, Integer amount, Product product) {
-        this.memberId = memberId;
+    @NotNull
+    private Integer amount;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "productId", foreignKey = @ForeignKey(name = "fk_wish_product_id_ref_product_id"))
+    private Product product;
+
+    public Wish(Member member, Integer amount, Product product) {
+        this.member = member;
         this.amount = amount;
         this.product = product;
     }
 
-    public Wish() {
+    protected Wish() {
     }
 
     public Long getId() {
@@ -42,7 +44,11 @@ public class Wish {
         return product;
     }
 
-    public void setAmount(Integer amount) {
+    public Member getMember() {
+        return member;
+    }
+
+    public void changeAmount(Integer amount) {
         this.amount = amount;
     }
 
