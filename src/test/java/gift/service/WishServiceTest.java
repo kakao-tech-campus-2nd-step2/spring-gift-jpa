@@ -1,16 +1,20 @@
 package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import gift.domain.Member;
 import gift.domain.Wish;
 import gift.dto.WishRequest;
+import gift.entity.WishEntity;
 import gift.repository.WishRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,46 +29,60 @@ class WishServiceTest {
     @Mock
     WishRepository wishRepository;
     @Test
-    void getWishesByMemberTest() {
+    @DisplayName("getWishesByMember 테스트")
+    void getWishesByMember() {
         // given
         Member savedMember = new Member(1L, "email@google.co.kr", "password");
-        Wish wish1 = new Wish(1L, 1L, 1L);
-        Wish wish2 = new Wish(2L, 2L, 2L);
-        List<Wish> wishList = Arrays.asList(wish1, wish2);
+        WishEntity wish1 = new WishEntity(1L, 1L);
+        WishEntity wish2 = new WishEntity(1L, 2L);
 
-        doReturn(wishList).when(wishRepository).findByMemberId(savedMember.getId());
+        WishEntity spyWish1 = spy(wish1);
+        WishEntity spyWish2 = spy(wish2);
+        Wish expected1 = spyWish1.toWish();
+        Wish expected2 = spyWish2.toWish();
+
+        List<WishEntity> wishList = Arrays.asList(spyWish1, spyWish2);
+        List<Wish> expected = Arrays.asList(expected1, expected2);
+
+        doReturn(wishList).when(wishRepository).findAllByMemberId(savedMember.getId());
+        doReturn(expected.get(0)).when(spyWish1).toWish();
+        doReturn(expected.get(1)).when(spyWish2).toWish();
 
         // when
-        List<Wish> actualwishList = wishService.getWishesByMember(savedMember);
+        List<Wish> actual = wishService.getWishesByMember(savedMember);
 
         // then
-        assertThat(actualwishList).isEqualTo(wishList);
+        assertThat(actual).isEqualTo(expected);
     }
     @Test
     @DisplayName("위시 리스트 추가 테스트")
-    void addWishTest() {
+    void addWish() {
         // given
-        WishRequest wishRequest = new WishRequest(1L);
+        WishRequest wishRequest = new WishRequest(1L, 1L);
         Member savedMember = new Member(1L, "email@google.com", "password");
-        Wish wish = new Wish(1L, wishRequest.getProductId(), savedMember.getId());
+        WishEntity wishEntity = new WishEntity(wishRequest.getMemberId(), wishRequest.getProductId());
+        WishEntity spyWishEntity = spy(wishEntity);
 
-        doReturn(wish).when(wishRepository).save(wishRequest, savedMember.getId());
+        Wish expected = new Wish(1L, savedMember.getId(), wishRequest.getProductId());
 
+        doReturn(spyWishEntity).when(wishRepository).save(any(WishEntity.class));
+        doReturn(expected).when(spyWishEntity).toWish();
         // when
-        Wish actualWish = wishService.addWish(wishRequest, savedMember);
+        Wish actual = wishService.addWish(wishRequest);
 
         // then
-        assertThat(actualWish).isEqualTo(wish);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("위시 리시트 삭제 테스트")
-    void deleteWishTest() {
+    void deleteWish() {
         Long id = 1L;
         Member savedMember = new Member(1L, "email@google.co.kr", "password");
+        WishEntity wishEntity = new WishEntity(1L, 1L);
 
+        doReturn(Optional.of(wishEntity)).when(wishRepository).findById(id);
         wishService.deleteWish(id, savedMember);
-
-        verify(wishRepository, times(1)).delete(id, savedMember.getId());
+        verify(wishRepository, times(1)).delete(wishEntity);
     }
 }
