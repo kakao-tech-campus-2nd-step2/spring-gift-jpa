@@ -1,11 +1,14 @@
 package gift.controller;
 
+import gift.domain.Member;
 import gift.dto.JwtResponse;
 import gift.dto.MemberRequest;
 import gift.service.MemberService;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +22,12 @@ public class MemberController {
 
     public MemberController(MemberService memberService){
         this.memberService = memberService;
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<Member>> getAllMember(){
+        List<Member> memberList = memberService.findAllMember();
+        return new ResponseEntity<>(memberList, HttpStatus.OK);
     }
 
     @PostMapping("/register")
