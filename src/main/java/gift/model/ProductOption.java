@@ -51,12 +51,12 @@ public class ProductOption extends BaseEntity {
     }
 
     public void addProduct(Product product) {
-        product.getOptions().add(this);
+        product.getProductOptions().add(this);
         this.product = product;
     }
 
     public void removeOption() {
-        product.getOptions().remove(this);
+        product.getProductOptions().remove(this);
         this.product = null;
     }
 }

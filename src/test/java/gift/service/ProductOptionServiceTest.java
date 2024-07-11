@@ -3,6 +3,7 @@ package gift.service;
 import gift.dto.ProductOptionRequest;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
+import gift.exception.NotFoundElementException;
 import gift.model.MemberRole;
 import gift.repository.ProductRepository;
 import org.assertj.core.api.Assertions;
@@ -62,7 +63,9 @@ class ProductOptionServiceTest {
         optionService.addOption(size255gbOptionDto);
         //then
         Assertions.assertThat(optionService.getOptions(product.id()).size()).isEqualTo(2);
-        var options = productRepository.findByIdOrThrow(product.id()).getOptions();
+        var options = productRepository.findById(product.id())
+                .orElseThrow(() -> new NotFoundElementException(product.id() + "를 가진 상품이 존재하지 않습니다."))
+                .getProductOptions();
         Assertions.assertThat(options.size()).isEqualTo(2);
     }
 

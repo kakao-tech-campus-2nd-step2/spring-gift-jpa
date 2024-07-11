@@ -3,6 +3,7 @@ package gift.service;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.exception.InvalidProductNameWithKAKAOException;
+import gift.exception.NotFoundElementException;
 import gift.model.MemberRole;
 import gift.model.Product;
 import gift.repository.ProductRepository;
@@ -28,12 +29,12 @@ public class ProductService {
     }
 
     public void updateProduct(Long id, ProductRequest productRequest) {
-        var product = productRepository.findByIdOrThrow(id);
+        var product = findProductById(id);
         updateProductWithProductRequest(product, productRequest);
     }
 
     public ProductResponse getProduct(Long id) {
-        var product = productRepository.findByIdOrThrow(id);
+        var product = findProductById(id);
         return getProductResponseFromProduct(product);
     }
 
@@ -50,8 +51,7 @@ public class ProductService {
 
     private Product saveProductWithProductRequest(ProductRequest productRequest) {
         var product = new Product(productRequest.name(), productRequest.price(), productRequest.imageUrl());
-        var savedProduct = productRepository.save(product);
-        return savedProduct;
+        return productRepository.save(product);
     }
 
     private void updateProductWithProductRequest(Product product, ProductRequest productRequest) {
@@ -67,5 +67,10 @@ public class ProductService {
 
     private ProductResponse getProductResponseFromProduct(Product product) {
         return ProductResponse.of(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    }
+
+    private Product findProductById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundElementException(id + "를 가진 상품옵션이 존재하지 않습니다."));
     }
 }

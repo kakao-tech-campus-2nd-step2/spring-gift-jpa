@@ -131,7 +131,9 @@ class WishProductServiceTest {
         var managerWishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
         var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
         //when
-        var wishProducts = memberRepository.findByIdOrThrow(managerId).getWishes();
+        var wishProducts = memberRepository.findById(managerId)
+                .orElseThrow(() -> new NotFoundElementException(managerId + "를 가진 멤버가 존재하지 않습니다."))
+                .getWishes();
         //then
         Assertions.assertThat(wishProducts.size()).isEqualTo(2);
 
@@ -146,7 +148,8 @@ class WishProductServiceTest {
         var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
         var managerWishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
         //when
-        var wishProducts = productRepository.findByIdOrThrow(product1Id).getWishes();
+        var wishProducts = productRepository.findById(product1Id)
+                .orElseThrow(() -> new NotFoundElementException(product1Id + "를 가진 상품이 존재하지 않습니다.")).getWishes();
         //then
         Assertions.assertThat(wishProducts.size()).isEqualTo(1);
 

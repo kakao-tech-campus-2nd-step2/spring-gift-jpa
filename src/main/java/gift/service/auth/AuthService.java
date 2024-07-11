@@ -5,6 +5,7 @@ import gift.dto.LoginRequest;
 import gift.dto.RegisterRequest;
 import gift.exception.DuplicatedEmailException;
 import gift.exception.InvalidLoginInfoException;
+import gift.exception.NotFoundElementException;
 import gift.model.Member;
 import gift.model.MemberRole;
 import gift.repository.MemberRepository;
@@ -32,26 +33,21 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest registerRequest) {
         emailValidation(registerRequest.email());
-        var member = createMemberWithMemberRequest(registerRequest);
+        var member = saveMemberWithMemberRequest(registerRequest);
         var token = createAccessTokenWithMember(member);
         return AuthResponse.of(token);
     }
 
     public AuthResponse login(LoginRequest loginRequest) {
-        var member = findMemberByEmail(loginRequest.email());
+        var member = memberRepository.findByEmail(loginRequest.email())
+                .orElseThrow(() -> new NotFoundElementException(loginRequest.email() + "를 가진 멤버가 존재하지 않습니다."));
         loginInfoValidation(member, loginRequest.password());
         var token = createAccessTokenWithMember(member);
         return AuthResponse.of(token);
     }
 
-    private Member findMemberByEmail(String email) {
-        var member = memberRepository.findByEmail(email);
-        if (member.isEmpty()) throw new InvalidLoginInfoException("로그인 정보가 유효하지 않습니다.");
-        return member.get();
-    }
-
     private String createAccessTokenWithMember(Member member) {
-        var token = Jwts.builder()
+        return Jwts.builder()
                 .subject(member.getId().toString())
                 .claim("name", member.getName())
                 .claim("role", member.getRole())
@@ -59,7 +55,6 @@ public class AuthService {
                 .expiration(new Date(System.currentTimeMillis() + expiredTime))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
                 .compact();
-        return token;
     }
 
     private void emailValidation(String email) {
@@ -74,9 +69,8 @@ public class AuthService {
         }
     }
 
-    private Member createMemberWithMemberRequest(RegisterRequest registerRequest) {
+    private Member saveMemberWithMemberRequest(RegisterRequest registerRequest) {
         var member = new Member(registerRequest.name(), registerRequest.email(), registerRequest.password(), MemberRole.valueOf(registerRequest.role()));
-        var savedMember = memberRepository.save(member);
-        return savedMember;
+        return memberRepository.save(member);
     }
 }

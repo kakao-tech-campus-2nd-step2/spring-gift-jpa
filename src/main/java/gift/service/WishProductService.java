@@ -4,6 +4,7 @@ import gift.dto.ProductResponse;
 import gift.dto.WishProductAddRequest;
 import gift.dto.WishProductResponse;
 import gift.dto.WishProductUpdateRequest;
+import gift.exception.NotFoundElementException;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.WishProduct;
@@ -30,8 +31,10 @@ public class WishProductService {
     }
 
     public WishProductResponse addWishProduct(WishProductAddRequest wishProductAddRequest, Long memberId) {
-        var product = productRepository.findByIdOrThrow(wishProductAddRequest.productId());
-        var member = memberRepository.findByIdOrThrow(memberId);
+        var product = productRepository.findById(wishProductAddRequest.productId())
+                .orElseThrow(() -> new NotFoundElementException(wishProductAddRequest.productId() + "를 가진 상품이 존재하지 않습니다."));
+        var member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundElementException(memberId + "를 가진 멤버가 존재하지 않습니다."));
         if (wishProductRepository.existsByProductAndMember(product, member)) {
             return updateWishProductWithProductAndMember(product, member, wishProductAddRequest.count());
         }
@@ -40,7 +43,7 @@ public class WishProductService {
     }
 
     public void updateWishProduct(Long id, WishProductUpdateRequest wishProductUpdateRequest) {
-        var wishProduct = wishProductRepository.findByIdOrThrow(id);
+        var wishProduct = findWishProductById(id);
         if (wishProductUpdateRequest.count() == 0) {
             deleteWishProduct(id);
             return;
@@ -56,7 +59,7 @@ public class WishProductService {
     }
 
     public void deleteWishProduct(Long id) {
-        var wishProduct = wishProductRepository.findByIdOrThrow(id);
+        var wishProduct = findWishProductById(id);
         wishProduct.removeWishProduct();
         wishProductRepository.deleteById(id);
     }
@@ -65,12 +68,12 @@ public class WishProductService {
         var wishProduct = new WishProduct(count);
         wishProduct.addProduct(product);
         wishProduct.addMember(member);
-        var savedWishProduct = wishProductRepository.save(wishProduct);
-        return savedWishProduct;
+        return wishProductRepository.save(wishProduct);
     }
 
     private WishProductResponse updateWishProductWithProductAndMember(Product product, Member member, Integer count) {
-        var wishProduct = wishProductRepository.findByProductAndMember(product, member);
+        var wishProduct = wishProductRepository.findByProductAndMember(product, member)
+                .orElseThrow(() -> new NotFoundElementException(product.getId() + "를 가진 상품과, " + member.getId() + "를 가진 멤버를 가진 위시 리스트가 존재하지 않습니다."));
         var updatedCount = wishProduct.getCount() + count;
         var updatedWishProduct = updateWishProductWithCount(wishProduct, updatedCount);
         return getWishProductResponseFromWishProduct(updatedWishProduct);
@@ -86,5 +89,10 @@ public class WishProductService {
         var product = wishProduct.getProduct();
         var productResponse = ProductResponse.of(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
         return WishProductResponse.of(wishProduct.getId(), productResponse, wishProduct.getCount());
+    }
+
+    private WishProduct findWishProductById(Long id) {
+        return wishProductRepository.findById(id).orElseThrow(
+                () -> new NotFoundElementException(id + "를 가진 위시 리스트가 존재하지 않습니다."));
     }
 }

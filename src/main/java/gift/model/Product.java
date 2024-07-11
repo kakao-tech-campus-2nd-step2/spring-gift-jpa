@@ -23,7 +23,7 @@ public class Product extends BaseEntity {
     @Column(name = "image_url")
     private String imageUrl;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductOption> options = new ArrayList<>();
+    private List<ProductOption> productOptions = new ArrayList<>();
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishProduct> wishes = new ArrayList<>();
 
@@ -52,8 +52,8 @@ public class Product extends BaseEntity {
         return imageUrl;
     }
 
-    public List<ProductOption> getOptions() {
-        return options;
+    public List<ProductOption> getProductOptions() {
+        return productOptions;
     }
 
     public List<WishProduct> getWishes() {
