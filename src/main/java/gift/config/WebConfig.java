@@ -14,19 +14,16 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final JwtUtil jwtUtil;
     private final UserService userService;
+    private final LoginUserIdArgumentResolver loginUserIdArgumentResolver;
 
-    public WebConfig(JwtUtil jwtUtil, UserService userService) {
+    public WebConfig(JwtUtil jwtUtil, UserService userService, LoginUserIdArgumentResolver loginUserIdArgumentResolver) {
         this.jwtUtil = jwtUtil;
         this.userService = userService;
-    }
-
-    @Bean
-    public LoginUserIdArgumentResolver loginUserIdArgumentResolver() {
-        return new LoginUserIdArgumentResolver(jwtUtil, userService);
+        this.loginUserIdArgumentResolver = loginUserIdArgumentResolver;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(loginUserIdArgumentResolver());
+        resolvers.add(loginUserIdArgumentResolver);
     }
 }
