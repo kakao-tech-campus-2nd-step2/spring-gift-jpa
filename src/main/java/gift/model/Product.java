@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+
 @Entity
 @Table(name = "product")
 public class Product {
@@ -17,11 +18,14 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(nullable = false , length = 20)
+
     @NotNull(message = "이름에 NULL 불가능")
     @Size(max = 20, message = "20자 이상 불가능")
     private String name;
+  
     @Column(nullable = false)
     private int price;
+  
     @Column(name = "image_url", nullable = false)
     @NotNull(message = "URL에 NULL 불가능")
     private String imageUrl;
