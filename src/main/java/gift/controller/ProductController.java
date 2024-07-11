@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
+
     private final ProductService productService;
 
     public ProductController(ProductService productService) {
@@ -27,28 +28,30 @@ public class ProductController {
 
     @GetMapping()
     public List<Product> readProducts() {
-        return productService.readProductAll();
+        return productService.findAll();
     }
 
     @GetMapping("/{id}")
     public Product readProduct(@PathVariable Long id) {
-        return productService.readProductById(id);
+        return productService.findById(id);
     }
 
     @PostMapping()
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody ProductRequest productRequest) {
-        Product product = productService.createProduct(productRequest);
-        return ResponseEntity.created(URI.create("/api/products/" + product.id())).body(product);
+    public ResponseEntity<Product> createProduct(
+        @Valid @RequestBody ProductRequest productRequest) {
+        Product product = productService.save(productRequest);
+        return ResponseEntity.created(URI.create("/api/products/" + product.getId())).body(product);
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
-        return productService.updateProduct(id, productRequest);
+    public Product updateProduct(@PathVariable Long id,
+        @Valid @RequestBody ProductRequest productRequest) {
+        return productService.update(id, productRequest);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
+        productService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

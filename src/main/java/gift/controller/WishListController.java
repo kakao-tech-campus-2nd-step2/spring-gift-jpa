@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/wishes")
 public class WishListController {
+
     private final WishListService wishListService;
 
     public WishListController(WishListService wishListService) {
@@ -28,23 +29,26 @@ public class WishListController {
     @GetMapping
     @AuthenticatedMember
     public List<Product> readWishList(HttpServletRequest httpServletRequest) {
-        MemberResponse member = (MemberResponse) httpServletRequest.getAttribute(AuthAspect.ATTRIBUTE_NAME_AUTH_MEMBER);
-        return wishListService.read(member.id());
+        MemberResponse member = (MemberResponse) httpServletRequest.getAttribute(
+            AuthAspect.ATTRIBUTE_NAME_AUTH_MEMBER);
+        return wishListService.findByMemberId(member.id());
     }
 
     @PutMapping
     @AuthenticatedMember
     public void addWishList(HttpServletRequest httpServletRequest, @Valid @RequestBody
-        WishListRequest wishListRequest) {
-        MemberResponse member = (MemberResponse)httpServletRequest.getAttribute(AuthAspect.ATTRIBUTE_NAME_AUTH_MEMBER);
-        wishListService.create(member.id(), wishListRequest.productId());
+    WishListRequest wishListRequest) {
+        MemberResponse member = (MemberResponse) httpServletRequest.getAttribute(
+            AuthAspect.ATTRIBUTE_NAME_AUTH_MEMBER);
+        wishListService.save(member.id(), wishListRequest);
     }
 
     @DeleteMapping
     @AuthenticatedMember
     public void deleteWishList(HttpServletRequest httpServletRequest, @Valid @RequestBody
     WishListRequest wishListRequest) {
-        MemberResponse member = (MemberResponse)httpServletRequest.getAttribute(AuthAspect.ATTRIBUTE_NAME_AUTH_MEMBER);
-        wishListService.delete(member.id(), wishListRequest.productId());
+        MemberResponse member = (MemberResponse) httpServletRequest.getAttribute(
+            AuthAspect.ATTRIBUTE_NAME_AUTH_MEMBER);
+        wishListService.delete(member.id(), wishListRequest);
     }
 }
