@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
@@ -15,8 +16,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.annotation.Rollback;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,10 +36,13 @@ public class WishServiceTest {
     private UserRepository userRepository;
 
     @Autowired
+    private WishService wishService;
+
+    @Autowired
     private ProductService productService;
 
     @Autowired
-    private WishService wishService;
+    private UserService userService;
 
     @AfterEach
     public void 데이터_정리() {
@@ -46,13 +52,10 @@ public class WishServiceTest {
     }
 
     @Test
+    @Rollback
     public void 위시리스트_추가() {
-        Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
-        productRepository.save(product);
-
-        User user = new User("test@example.com", "password");
-        userRepository.save(user);
-
+        User user = userRepository.save(new User("user@example.com", "password"));
+        Product product = productRepository.save(new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg"));
         ProductResponseDto productResponseDto = productService.getProductById(product.getId());
 
         WishRequestDto requestDto = new WishRequestDto(productResponseDto.getId());
@@ -67,21 +70,18 @@ public class WishServiceTest {
     }
 
     @Test
+    @Rollback
     public void 위시리스트_조회() {
-        Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
-        productRepository.save(product);
+        User user = userRepository.save(new User("user@example.com", "password"));
+        Product product = productRepository.save(new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg"));
+        wishRepository.save(new Wish(user, product));
 
-        User user = new User("test@example.com", "password");
-        userRepository.save(user);
-
-        Wish wish = new Wish(user, product);
-        wishRepository.save(wish);
-
-        List<WishResponseDto> wishList = wishService.getWishesByUserId(user.getId());
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<WishResponseDto> wishList = wishService.getWishesByUserId(user.getId(), pageable);
 
         assertNotNull(wishList);
-        assertEquals(1, wishList.size());
-        WishResponseDto retrievedWish = wishList.get(0);
+        assertEquals(1, wishList.getTotalElements());
+        WishResponseDto retrievedWish = wishList.getContent().get(0);
         assertEquals(product.getId(), retrievedWish.getProductId());
         assertEquals(product.getName().getValue(), retrievedWish.getProductName());
         assertEquals(product.getPrice(), retrievedWish.getProductPrice());
@@ -89,24 +89,40 @@ public class WishServiceTest {
     }
 
     @Test
+    @Rollback
     public void 위시리스트_삭제() {
-        Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
-        productRepository.save(product);
-
-        User user = new User("test@example.com", "password");
-        userRepository.save(user);
-
-        Wish wish = new Wish(user, product);
-        wishRepository.save(wish);
+        User user = userRepository.save(new User("user@example.com", "password"));
+        Product product = productRepository.save(new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg"));
+        Wish wish = wishRepository.save(new Wish(user, product));
 
         wishService.deleteWish(wish.getId());
 
-        List<WishResponseDto> wishList = wishService.getWishesByUserId(user.getId());
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<WishResponseDto> wishList = wishService.getWishesByUserId(user.getId(), pageable);
         assertTrue(wishList.isEmpty());
     }
 
     @Test
+    @Rollback
     public void 위시리스트_삭제_없는위시() {
         assertThrows(BusinessException.class, () -> wishService.deleteWish(999L));
+    }
+
+    @Test
+    @Rollback
+    public void 위시리스트_목록_페이지네이션() {
+        User user = userRepository.save(new User("user@example.com", "password"));
+        for (int i = 1; i <= 25; i++) {
+            Product product = productRepository.save(new Product(new ProductName("상품 " + i), 10000, "https://example.com/product" + i + ".jpg"));
+            wishRepository.save(new Wish(user, product));
+        }
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<WishResponseDto> wishList = wishService.getWishesByUserId(user.getId(), pageable);
+
+        assertNotNull(wishList);
+        assertEquals(10, wishList.getSize());
+        assertEquals(25, wishList.getTotalElements());
+        assertEquals(3, wishList.getTotalPages());
     }
 }
