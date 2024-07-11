@@ -1,10 +1,10 @@
-package gift.dto.user;
+package gift.dto.member;
 
-public record UserResponseDTO(
+public record MemberResponseDTO(
         long id,
         String email
 ) {
-    public UserResponseDTO {
+    public MemberResponseDTO {
         if (id < 0) {
             throw new IllegalArgumentException("Id cannot be negative");
         }

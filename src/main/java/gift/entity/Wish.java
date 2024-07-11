@@ -11,7 +11,7 @@ public class Wish {
     @Id
     private long id;
 
-    private long memberId;
+
     private long productId;
 
     public Wish() {}

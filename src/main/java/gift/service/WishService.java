@@ -4,9 +4,9 @@ import gift.entity.Wish;
 import gift.dto.wish.WishRequestDTO;
 import gift.dto.wish.WishResponseDTO;
 import gift.exception.ForbiddenRequestException;
-import gift.exception.NoSuchUserException;
+import gift.exception.NoSuchMemberException;
 import gift.exception.NoSuchProductException;
-import gift.repository.UserRepository;
+import gift.repository.MemberRepository;
 import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +15,16 @@ import java.util.List;
 @Service
 public class WishService {
     private final WishRepository wishRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
-    public WishService(WishRepository wishRepository, UserRepository userRepository) {
+    public WishService(WishRepository wishRepository, MemberRepository memberRepository) {
         this.wishRepository = wishRepository;
-        this.userRepository = userRepository;
+        this.memberRepository = memberRepository;
     }
 
     public List<WishResponseDTO> getWishes(String email) {
-        long userId = userRepository.findByEmail(email)
-                .orElseThrow(NoSuchUserException::new)
+        long userId = memberRepository.findByEmail(email)
+                .orElseThrow(NoSuchMemberException::new)
                 .getId();
 
         return wishRepository.findAllByMemberId(userId)
@@ -34,8 +34,8 @@ public class WishService {
     }
 
     public WishResponseDTO addWish(String email, WishRequestDTO wishRequestDTO) {
-        long userId = userRepository.findByEmail(email)
-                .orElseThrow(NoSuchUserException::new)
+        long userId = memberRepository.findByEmail(email)
+                .orElseThrow(NoSuchMemberException::new)
                 .getId();
 
         Wish wish = wishRepository.save(new Wish(
@@ -47,8 +47,8 @@ public class WishService {
     }
 
     public void deleteWish(String email, long wishId) {
-        long userId = userRepository.findByEmail(email)
-                .orElseThrow(NoSuchUserException::new)
+        long userId = memberRepository.findByEmail(email)
+                .orElseThrow(NoSuchMemberException::new)
                 .getId();
 
         long wishOwnerId = wishRepository.findById(wishId)

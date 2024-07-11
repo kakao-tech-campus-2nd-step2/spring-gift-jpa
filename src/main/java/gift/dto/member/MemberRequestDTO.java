@@ -1,10 +1,10 @@
-package gift.dto.user;
+package gift.dto.member;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
-public record UserRequestDTO(
+public record MemberRequestDTO(
         @Email(message = "email 형식에 맞지 않습니다.")
         @NotNull(message = "이메일은 비어 있을 수 없습니다.")
         String email,
