@@ -1,9 +1,10 @@
 package gift;
 
-import gift.DTO.UserDto;
+import gift.DTO.UserEntity;
 import gift.Exception.UnauthorizedException;
 import gift.Service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -36,7 +37,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
       throw new UnauthorizedException("No Bearer token found in request headers");
     }
     String token = authorizationHeader.substring(TOKEN_TYPE.length());
-    UserDto user = jwtService.getUserEmailFromToken(token);
+    Optional<UserEntity> user = jwtService.getUserEmailFromToken(token);
     return user;
   }
 }

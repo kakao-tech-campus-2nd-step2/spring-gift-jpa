@@ -1,9 +1,10 @@
 package gift.Controller;
 
-import gift.DTO.ProductDto;
+import gift.DTO.ProductEntity;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +26,13 @@ public class ProductController {
   }
 
   @GetMapping
-
-  public List<ProductDto> getAllProducts() {
+  public List<ProductEntity> getAllProducts() {
     return productService.getAllProducts();
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
-    ProductDto productDTO = productService.getProductById(id);
+  public ResponseEntity<Optional<ProductEntity>> getProductById(@PathVariable Long id) {
+    Optional<ProductEntity> productDTO = productService.getProductById(id);
 
     if (productDTO == null) {
       return ResponseEntity.notFound().build();
@@ -41,24 +41,25 @@ public class ProductController {
   }
 
   @PostMapping
-  public ProductDto addProduct(@Valid @RequestBody ProductDto productDTO) {
-    return productService.addProduct(productDTO);
+  public ProductEntity addProduct(@Valid @RequestBody ProductEntity productEntity) {
+    return productService.addProduct(productEntity);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id,
-    @Valid @RequestBody ProductDto updatedProductDto) {
-    ProductDto existingProductDto = productService.updateProduct(id, updatedProductDto);
+  public ResponseEntity<ProductEntity> updateProduct(@PathVariable Long id,
+    @Valid @RequestBody ProductEntity updatedProductEntity) {
+    Optional<ProductEntity> existingProductDto = productService.updateProduct(id,
+      updatedProductEntity);
     if (existingProductDto == null) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok(updatedProductDto);
+    return ResponseEntity.ok(updatedProductEntity);
 
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ProductDto> deleteProduct(@PathVariable Long id) {
-    ProductDto existingProductDto = productService.deleteProduct(id);
+  public ResponseEntity<Optional<ProductEntity>> deleteProduct(@PathVariable Long id) {
+    Optional<ProductEntity> existingProductDto = productService.deleteProduct(id);
     return ResponseEntity.ok(existingProductDto);
   }
 }

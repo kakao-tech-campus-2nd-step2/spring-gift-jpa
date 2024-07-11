@@ -1,9 +1,11 @@
 package gift.Service;
 
-import gift.DTO.ProductDto;
+import gift.DTO.ProductEntity;
 import gift.Repository.ProductDao;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,34 +19,36 @@ public class ProductService {
     this.productDao = productDao;
   }
 
-  public List<ProductDto> getAllProducts() {
-    List<ProductDto> ProductDtos = productDao.selectAllProducts();
-    return ProductDtos;
+  public List<ProductEntity> getAllProducts() {
+    List<ProductEntity> productEntities = productDao.findAll();
+    return productEntities;
   }
 
-  public ProductDto getProductById(Long id) {
-    return productDao.selectProduct(id);
+  public Optional<ProductEntity> getProductById(Long id) {
+    return productDao.findById(id);
   }
 
-  public ProductDto addProduct(@Valid ProductDto productDTO) {
-    productDao.insertProduct(productDTO);
-    return productDTO;
+  public ProductEntity addProduct(@Valid ProductEntity productEntity) {
+    productDao.save(productEntity);
+    return productEntity;
   }
 
-  public ProductDto updateProduct(Long id, @Valid ProductDto updatedProductDto) {
-    ProductDto existingProductDto = productDao.selectProduct(id);
-    if (existingProductDto != null) {
-      productDao.updateProduct(id, updatedProductDto);
-    }
-    return existingProductDto;
+  public Optional<ProductEntity> updateProduct(Long id, @Valid ProductEntity updatedProductEntity) {
+    Optional<ProductEntity> existingProductDto = productDao.findById(id);
+    ProductEntity newProduct = new ProductEntity(id,
+      updatedProductEntity.getName(), updatedProductEntity.getPrice(), updatedProductEntity.getImageUrl());
+    productDao.deleteById(id);
+    productDao.save(newProduct);
+    return Optional.of(newProduct);
   }
 
-  public ProductDto deleteProduct(@PathVariable Long id) {
-    ProductDto existingProductDto = productDao.selectProduct(id);
+  public Optional<ProductEntity> deleteProduct(@PathVariable Long id) {
+    Optional<ProductEntity> existingProductDto = productDao.findById(id);
     if (existingProductDto == null) {
-      throw new EmptyResultDataAccessException("해당 데이터가 없습니다",1);
+      throw new EmptyResultDataAccessException("해당 데이터가 없습니다", 1);
     }
-    productDao.deleteProduct(id);
+    productDao.deleteById(id);
+
     return existingProductDto;
   }
 

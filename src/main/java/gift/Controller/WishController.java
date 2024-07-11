@@ -1,11 +1,11 @@
 package gift.Controller;
 
-import gift.DTO.ProductDto;
-import gift.DTO.UserDto;
-import gift.DTO.WishListDto;
+import gift.DTO.UserEntity;
+import gift.DTO.WishListEntity;
 import gift.LoginUser;
 import gift.Service.WishListService;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,15 +27,16 @@ public class WishController {
   }
 
   @GetMapping
-  public ResponseEntity<List<ProductDto>> getWishList(@LoginUser UserDto user) {
-    WishListDto wishList = wishListService.getWishList(user);
-    return ResponseEntity.ok(wishList.wishListDto());
+  public ResponseEntity<List<WishListEntity>> getWishList(@LoginUser UserEntity user) {
+    List<WishListEntity> wishList = wishListService.getWishList(user);
+    return ResponseEntity.ok(wishList);
   }
 
   @PostMapping
-  public ResponseEntity<ProductDto> addProductToWishList(@RequestBody ProductDto wishProduct,
-    @LoginUser UserDto user) {
-    ProductDto addedWishProduct = wishListService.addProductToWishList(wishProduct, user);
+  public ResponseEntity<WishListEntity> addProductToWishList(@RequestBody WishListEntity wishProduct,
+    @LoginUser Optional<UserEntity> user) {
+    WishListEntity addedWishProduct = wishListService.addProductToWishList(wishProduct);
+
     // 생성된 리소스의 URI를 빌드
     var location = ServletUriComponentsBuilder.fromCurrentRequest()
       .path("/{id}")
@@ -46,9 +47,10 @@ public class WishController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<ProductDto> deleteProductToWishList(@PathVariable Long id) {
-    ProductDto deletedWishProduct = wishListService.deleteProductToWishList(id);
-    return ResponseEntity.ok(deletedWishProduct);
+  public ResponseEntity<Void> deleteProductToWishList(@PathVariable Long id) {
+    wishListService.deleteProductToWishList(id);
+    return ResponseEntity.noContent().build();
+
   }
 
 }

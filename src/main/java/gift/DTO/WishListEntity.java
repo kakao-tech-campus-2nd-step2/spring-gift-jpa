@@ -7,15 +7,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-public class WishListDto {
-  private Long id;
+@Entity
+@Table
+public class WishListEntity {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)private Long id;
+
+  @Column(unique = true)
   private Long userId;
+  @Column(unique = true)
   private Long productId;
 
-  public WishListDto() {
+  public WishListEntity() {
   }
 
-  public WishListDto(Long id, Long userId, Long productId){
+  public WishListEntity(Long id, Long userId, Long productId){
     this.id=id;
     this.userId=userId;
     this.productId=productId;
