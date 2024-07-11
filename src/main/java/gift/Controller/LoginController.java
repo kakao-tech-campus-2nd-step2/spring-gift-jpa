@@ -1,8 +1,7 @@
 package gift.Controller;
 
-import gift.Model.User;
+import gift.Model.DTO.MemberDTO;
 import gift.Service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,12 +16,12 @@ public class LoginController {
     }
 
     @PostMapping("/members/register")
-    public ResponseEntity<?> register(@RequestBody User user){
-        return ResponseEntity.ok(userService.register(user));
+    public ResponseEntity<?> register(@RequestBody MemberDTO memberDTO){
+        return ResponseEntity.ok(userService.register(memberDTO));
     }
 
     @PostMapping("/members/login")
-    public ResponseEntity<?> login(@RequestBody User user){
-        return ResponseEntity.ok(userService.login(user));
+    public ResponseEntity<?> login(@RequestBody MemberDTO memberDTO){
+        return ResponseEntity.ok(userService.login(memberDTO));
     }
 }
