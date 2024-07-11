@@ -28,7 +28,7 @@ public class WishlistRepositoryTests {
         memberRepository.save(member);
         Product product = new Product(null, "지우", 1000, "http://example.com/image.jpg");
         productRepository.save(product);
-        Wishlist wishList = new Wishlist(null, member.getId(), product.getId());
+        Wishlist wishList = new Wishlist(null, member, product);
         wishListRepository.save(wishList);
 
         List<Wishlist> foundWishLists = wishListRepository.findByMemberId(member.getId());
@@ -41,7 +41,7 @@ public class WishlistRepositoryTests {
         memberRepository.save(member);
         Product product = new Product(null, "지우", 1000, "http://example.com/image.jpg");
         productRepository.save(product);
-        Wishlist wishList = new Wishlist(null, member.getId(), product.getId());
+        Wishlist wishList = new Wishlist(null, member, product);
         wishListRepository.save(wishList);
 
         wishListRepository.deleteByMemberIdAndProductId(member.getId(), product.getId());

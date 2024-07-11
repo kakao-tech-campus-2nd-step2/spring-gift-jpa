@@ -23,25 +23,25 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/wishlist")
 public class WishlistController {
-    private final WishlistService wishListService;
+    private final WishlistService wishlistService;
     private final MemberService memberService;
 
-    public WishlistController(WishlistService wishListService, MemberService memberService) {
-        this.wishListService = wishListService;
+    public WishlistController(WishlistService wishlistService, MemberService memberService) {
+        this.wishlistService = wishlistService;
         this.memberService = memberService;
     }
 
     @GetMapping
     public ResponseEntity<List<Wishlist>> getWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         String email = JwtUtility.extractEmail(authHeader, memberService);
-        List<Wishlist> wishList = wishListService.getWishList(email);
+        List<Wishlist> wishList = wishlistService.getWishList(email);
         return ResponseEntity.ok(wishList);
     }
 
     @PostMapping
     public ResponseEntity<Void> addProductToWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody @Valid Product product) {
         String email = JwtUtility.extractEmail(authHeader, memberService);
-        wishListService.addProductToWishList(email, product.getId());
+        wishlistService.addProductToWishList(email, product.getId());
         URI location = URI.create("/api/wishlist/" + product.getId());
         return ResponseEntity.created(location).build();
     }//DTO클래스 사용하도록 나중에 리팩터링할 것!!
@@ -49,7 +49,7 @@ public class WishlistController {
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> removeProductFromWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @PathVariable Long productId) {
         String email = JwtUtility.extractEmail(authHeader, memberService);
-        wishListService.removeProductFromWishList(email, productId);
+        wishlistService.removeProductFromWishList(email, productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
