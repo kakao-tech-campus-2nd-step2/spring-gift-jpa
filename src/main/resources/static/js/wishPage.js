@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', (event) => {
   const paginationElement = document.querySelector('.wishPagination');
   const pageNumber = Number(paginationElement.dataset.number);
-  console.log(pageNumber);
   const pageSize = paginationElement.dataset.size;
   const totalElements = paginationElement.dataset.totalElements;
   const totalPages = paginationElement.dataset.totalPages;
@@ -32,7 +31,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 
   if (hasPrevious === 'true') {
-    console.log(hasPrevious);
     previousPage.onclick = function (){
       getRequestWithToken('/api/products/wishes?page=' + (pageNumber - 1))
     }

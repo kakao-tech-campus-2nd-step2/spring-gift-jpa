@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', (event) => {
   const paginationElement = document.querySelector('.pagination');
   const pageNumber = Number(paginationElement.dataset.number);
-  console.log(pageNumber);
+
   const pageSize = paginationElement.dataset.size;
   const totalElements = paginationElement.dataset.totalElements;
   const totalPages = paginationElement.dataset.totalPages;
@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 
   if (hasPrevious === 'true') {
-    console.log(hasPrevious);
     previousPage.href = '/api/products?page=' + (pageNumber - 1);
     previousPage.style.display = 'flex';
   }
