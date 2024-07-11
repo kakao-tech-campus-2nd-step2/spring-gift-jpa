@@ -1,12 +1,16 @@
 package gift.wishlist.entity;
 
-import static jakarta.persistence.GenerationType.*;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
-import gift.wishlist.dto.WishListReqDto;
+import gift.member.entity.Member;
+import gift.product.entity.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class WishList {
@@ -15,46 +19,57 @@ public class WishList {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
-    @Column(nullable = false)
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     @Column(nullable = false)
     private Integer quantity;
 
-    public WishList(Long memberId, Long productId, Integer quantity) {
-        this.memberId = memberId;
-        this.productId = productId;
-        this.quantity = quantity;
+    protected WishList() {
     }
 
-    protected WishList() {
+    public WishList(Member member, Product product, Integer quantity) {
+        this.member = member;
+        this.product = product;
+        this.quantity = quantity;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
     public Integer getQuantity() {
         return quantity;
     }
 
-    public void update(WishListReqDto wishListReqDto) {
-        this.productId = wishListReqDto.productId();
-        this.quantity = wishListReqDto.quantity();
+    public void changeQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public void addQuantity(Integer quantity) {
         this.quantity += quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "WishList{" +
+                "id=" + id +
+                ", member=" + member +
+                ", product=" + product +
+                ", quantity=" + quantity +
+                '}';
     }
 }

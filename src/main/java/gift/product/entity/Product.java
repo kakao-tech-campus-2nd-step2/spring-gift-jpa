@@ -3,10 +3,15 @@ package gift.product.entity;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import gift.product.dto.ProductReqDto;
+import gift.wishlist.entity.WishList;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -23,6 +28,9 @@ public class Product {
 
     @Column(nullable = false)
     private String imageUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<WishList> wishLists = new ArrayList<>();
 
     public Product(String name, Integer price, String imageUrl) {
         this.name = name;
@@ -65,5 +73,15 @@ public class Product {
         this.name = productReqDto.name();
         this.price = productReqDto.price();
         this.imageUrl = productReqDto.imageUrl();
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
     }
 }
