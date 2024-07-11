@@ -162,7 +162,7 @@ class WishListControllerTest {
 
     @ParameterizedTest(name = "위시 리스트 추가 테스트 - 상품 ID: {0}, 수량: {1}")
     @CsvSource({    // 상품 ID, 수량, 기대 상품 수, 기대 총 수량
-            "3, 3, 4, 3",  // productList.get(3): 새로운 상품 추가
+            "3, 3, 4, 3",   // productList.get(3): 새로운 상품 추가
             "1, 4, 3, 11"   // productList.get(1): 기존 상품 수량 증가
     })
     @DisplayName("위시 리스트 추가")
