@@ -21,7 +21,7 @@ public class MemberService {
         this.jwtProvider = jwtProvider;
     }
 
-    @Transactional
+    //@Transactional
     public void register(MemberRequest.Register request) {
         if (memberJpaRepository.existsByEmail(request.email())) {
             throw new InvalidAuthRequestException("User already exists.");
@@ -29,7 +29,7 @@ public class MemberService {
         memberJpaRepository.save(request.toEntity());
     }
 
-    @Transactional
+    //@Transactional(readOnly = true)
     public String login(MemberRequest.Login request) {
         Member member = memberJpaRepository.findByEmail(request.email())
             .orElseThrow(() -> new NotFoundException("User not found."));
@@ -38,10 +38,9 @@ public class MemberService {
             throw new InvalidAuthRequestException("Password is incorrect.");
         }
         return jwtProvider.createToken(member.getId(), member.getRole());
-
     }
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public MemberResponse.Info getUser(Long memberId) {
         var member = memberJpaRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException("User not found."));

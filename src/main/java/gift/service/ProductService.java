@@ -20,14 +20,14 @@ public class ProductService {
         this.productJpaRepository = productJpaRepository;
     }
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public ProductResponse.Info getProduct(Long id) {
         var product = productJpaRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
         return ProductResponse.Info.from(product);
     }
 
-    @Transactional
+    //@Transactional
     public void createProduct(ProductRequest.Register request) {
         productJpaRepository.save(request.toEntity());
     }
@@ -40,12 +40,12 @@ public class ProductService {
         productJpaRepository.save(product);
     }
 
-    @Transactional
+    //@Transactional
     public void deleteProduct(Long id) {
         productJpaRepository.deleteById(id);
     }
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public PageResponse<ProductResponse.Info> getProductsPaging(int page, int size) {
         Page<Product> productPage = productJpaRepository.findAllByOrderByIdDesc(
             PageRequest.of(page, size));
