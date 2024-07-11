@@ -42,12 +42,13 @@ public class ProductService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<ProductResponseDto> getProductsWithPaging(Pageable pageable, SearchType searchType, String searchValue) {
+	public Page<Product> getProductsWithPaging(Pageable pageable, SearchType searchType, String searchValue) {
 		if (searchValue == null || searchValue.isBlank()) {
-			return productRepository.findAll(pageable).map(ProductResponseDto::from);
+			return productRepository.findAll(pageable);
 		}
 		return switch (searchType) {
-			case NAME -> productRepository.findByNameContaining(searchValue, pageable).map(ProductResponseDto::from);};
+			case NAME -> productRepository.findByNameContaining(searchValue, pageable);
+		};
 	}
 
 	@Transactional
