@@ -6,6 +6,7 @@ import gift.member.application.command.MemberLoginCommand;
 import gift.member.application.command.MemberUpdateCommand;
 import gift.member.domain.Member;
 import gift.member.domain.MemberRepository;
+import gift.wishlist.domain.WishlistRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,9 @@ public class MemberServiceTest {
 
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private WishlistRepository wishlistRepository;
 
     @InjectMocks
     private MemberService memberService;
@@ -133,6 +137,7 @@ public class MemberServiceTest {
         // Given
         when(memberRepository.findById(member.getId())).thenReturn(Optional.of(member));
         doNothing().when(memberRepository).delete(member);
+        doNothing().when(wishlistRepository).deleteAllByMemberId(member.getId());
 
         // When
         assertDoesNotThrow(() -> memberService.delete(member.getId()));
@@ -140,5 +145,6 @@ public class MemberServiceTest {
         // Then
         verify(memberRepository, times(1)).findById(member.getId());
         verify(memberRepository, times(1)).delete(member);
+        verify(wishlistRepository, times(1)).deleteAllByMemberId(member.getId());
     }
 }
