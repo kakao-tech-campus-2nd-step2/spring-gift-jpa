@@ -14,7 +14,6 @@
 
 - [x] 전체적인 리팩토링 
   - [x] 멤버 서비스 인터페이스 생성
-  - [ ] Deprecated API 최신형 API로 변경
-  - [ ] 2주차 PR 리뷰 반영
-  - [ ] MemberId를 UUID로 구현
-  - [ ] @OneToMany, @ManyToOne으로 연관관계 매핑 리팩토링 
+  - [x] 2주차 PR 리뷰 반영
+    - [x] 시크릿키 암호화 
+  - [x] Deprecated API 최신형 API로 변경

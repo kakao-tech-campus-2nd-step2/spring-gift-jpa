@@ -1,6 +1,8 @@
 spring:
   application:
     name: spring-gift
+  config:
+    import: classpath:/application-secret.yml
   h2:
     console:
       enabled: true # H2 console 활성화 여부
@@ -25,5 +27,3 @@ logging:
   level:
     root: INFO
     org.springframework.web: DEBUG
-jwt:
-  secret: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
