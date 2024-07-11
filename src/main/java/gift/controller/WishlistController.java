@@ -29,9 +29,9 @@ public class WishlistController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Wish>> getAllWishlists(@LoginUser String email) {
+    public ResponseEntity<List<WishlistResponseDto>> getAllWishlists(@LoginUser String email) {
         Long memberId = memberService.getMemberId(email);
-        return new ResponseEntity<>(wishService.getWishlist(memberId), HttpStatus.OK);
+        return new ResponseEntity<>(wishService.getWishListByMemberId(memberId), HttpStatus.OK);
     }
 
 

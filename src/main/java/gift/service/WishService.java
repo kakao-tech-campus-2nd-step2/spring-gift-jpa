@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.WishlistResponseDto;
 import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wish;
@@ -8,6 +9,7 @@ import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +24,13 @@ public class WishService {
         this.memberRepository = memberRepository;
         this.productRepository = productRepository;
 
+    }
+
+    public List<WishlistResponseDto> getWishListByMemberId(Long memberId) {
+        List<Wish> wishList = wishRepository.findByMemberId(memberId);
+        return wishList.stream()
+            .map(wish -> new WishlistResponseDto(wish.getMember().getId(), wish.getProduct().getId()))
+            .collect(Collectors.toList());
     }
 
     public List<Wish> getWishlist(Long memberId) {
@@ -40,17 +49,7 @@ public class WishService {
         return true;
     }
 
-    public boolean updateWishlist(Long memberId, Long productId){
-        Optional<Member> member = memberRepository.findById(memberId);
-        Optional<Product> product = productRepository.findById(productId);
 
-        if(member.isEmpty() || product.isEmpty()){
-            return false;
-        }
-        Wish wish = new Wish(member.get(), product.get());
-        wishRepository.save(wish);
-        return true;
-    }
 
     public boolean deleteWishlist(Long memberId, Long productId){
         Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(memberId, productId);
