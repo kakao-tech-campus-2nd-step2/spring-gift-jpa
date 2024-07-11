@@ -2,6 +2,10 @@ package gift.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 @Entity
 @Table(name="product")
 public class Product {
@@ -14,6 +18,29 @@ public class Product {
     private int price;
     @Column(name="image_url", nullable = false)
     private String imageUrl;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wish> wishes = new ArrayList<>();
+
+    public void addWish(Wish wish) {
+        this.wishes.add(wish);
+        wish.setProduct(this);
+    }
+
+    public void removeWish(Wish wish) {
+        wish.setProduct(null);
+        this.wishes.remove(wish);
+    }
+
+    public void removeWishes() {
+        Iterator<Wish> iterator = this.wishes.iterator();
+
+        while(iterator.hasNext()) {
+            Wish wish = iterator.next();
+
+            wish.setProduct(null);
+            iterator.remove();
+        }
+    }
 
     protected Product () {
     }
@@ -45,5 +72,9 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public List<Wish> getWishes() {
+        return wishes;
     }
 }
