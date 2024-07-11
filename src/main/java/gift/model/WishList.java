@@ -20,11 +20,11 @@ public class WishList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private final User user;
+    private User user;
 
     @ManyToMany
     @JoinTable(
@@ -35,8 +35,6 @@ public class WishList {
     private final List<Product> products = new ArrayList<>();
 
     protected WishList(){
-        id = 1L;
-        user = new User();
     }
 
     public WishList(Long id, User user, List<Product> products) {
