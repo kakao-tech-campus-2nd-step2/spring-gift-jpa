@@ -1,5 +1,6 @@
 package gift.dto;
 
+import gift.entity.ProductEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -30,22 +31,15 @@ public class ProductRequest {
         return name;
     }
 
-    public void setName(String name) { this.name = name; }
-
     public int getPrice() {
         return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public ProductEntity toProductEntity(){
+        return new ProductEntity(this.name, this.price, this.imageUrl);
     }
-
 }
