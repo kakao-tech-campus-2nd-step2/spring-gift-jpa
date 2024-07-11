@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.domain.Member;
+import gift.repository.MemberRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;

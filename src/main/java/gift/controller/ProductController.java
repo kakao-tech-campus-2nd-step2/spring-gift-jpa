@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.domain.Product;
 import gift.dto.ProductDTO;
+import gift.repository.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
