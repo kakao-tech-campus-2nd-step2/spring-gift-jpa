@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.domain.Product;
 import gift.domain.Wishlist;
+import gift.domain.member.Member;
 import gift.exception.ProductAlreadyInWishlistException;
 import gift.exception.ProductNotFoundException;
 import gift.exception.ProductNotInWishlistException;
@@ -25,37 +26,37 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> getProducts(Long memberId) {
-        List<Wishlist> wishlist = wishlistRepository.findByMemberId(memberId);
+    public List<ProductResponse> getProducts(Member member) {
+        List<Wishlist> wishes = member.getWishes();
 
-        List<Long> productIds = wishlist.stream()
-                .map(Wishlist::getProductId)
-                .collect(Collectors.toList());
-
-        return productRepository.findByIdIn(productIds).stream()
+        return wishes.stream()
+                .map(Wishlist::getProduct)
                 .map(Product::toDto)
                 .collect(Collectors.toList());
     }
 
-    public void addProduct(Long memberId, Long productId) {
-        productRepository.findById(productId)
+    public void addProduct(Member member, Long productId) {
+        Product product = productRepository.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
 
-        if (wishlistRepository.existsByMemberIdAndProductId(memberId, productId)) {
+        if (wishlistRepository.existsByMemberIdAndProductId(member.getId(), productId)) {
             throw new ProductAlreadyInWishlistException();
         }
 
-        Wishlist wishlist = new Wishlist(memberId, productId);
+        Wishlist wishlist = new Wishlist(member, product);
 
         wishlistRepository.save(wishlist);
     }
 
-    public void removeProduct(Long memberId, Long productId) {
-        if (!wishlistRepository.existsByMemberIdAndProductId(memberId, productId)) {
+    public void removeProduct(Member member, Long productId) {
+        if (!wishlistRepository.existsByMemberIdAndProductId(member.getId(), productId)) {
             throw new ProductNotInWishlistException();
         }
 
-        Wishlist wishlist = new Wishlist(memberId, productId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(ProductNotFoundException::new);
+
+        Wishlist wishlist = new Wishlist(member, product);
 
         wishlistRepository.delete(wishlist);
     }

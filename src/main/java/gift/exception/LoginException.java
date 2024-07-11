@@ -5,7 +5,7 @@ import gift.constant.ErrorMessage;
 public class LoginException extends GiftException {
 
     public LoginException() {
-        super(ErrorMessage.LOGIN_FAILURE);
+        super(ErrorMessage.LOGIN_FAILURE.getMessage());
     }
 
     @Override

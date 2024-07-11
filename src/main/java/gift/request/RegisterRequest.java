@@ -1,6 +1,5 @@
 package gift.request;
 
-import gift.constant.ErrorMessage;
 import gift.domain.member.Member;
 import gift.validation.member.NotDuplicateEmail;
 import jakarta.validation.constraints.NotBlank;
@@ -9,17 +8,17 @@ import org.hibernate.validator.constraints.Length;
 
 public class RegisterRequest {
 
-    @NotBlank(message = ErrorMessage.MEMBER_NAME_NOT_BLANK)
-    @Length(max = 15, message = ErrorMessage.MEMBER_NAME_EXCEEDS_MAX_LENGTH)
+    @NotBlank
+    @Length(max = 15)
     private String name;
 
-    @NotBlank(message = ErrorMessage.EMAIL_NOT_BLANK)
-    @Pattern(regexp = "[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = ErrorMessage.INVALID_EMAIL_FORMAT)
+    @NotBlank
+    @Pattern(regexp = "[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "올바른 이메일 형식을 입력해 주세요.")
     @NotDuplicateEmail
     private String email;
 
-    @NotBlank(message = ErrorMessage.PASSWORD_NOT_BLANK)
-    @Length(min = 4, max = 16, message = ErrorMessage.PASSWORD_LENGTH)
+    @NotBlank
+    @Length(min = 4, max = 16)
     private String password;
 
     public Member toEntity() {

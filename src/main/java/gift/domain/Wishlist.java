@@ -1,5 +1,6 @@
 package gift.domain;
 
+import gift.domain.member.Member;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,22 +10,24 @@ public class Wishlist {
     @Id
     private Long id;
 
-    @Column(nullable = false)
-    private Long memberId;
+    @JoinColumn(name = "member_id", nullable = false)
+    @ManyToOne
+    private Member member;
 
-    @Column(nullable = false)
-    private Long productId;
+    @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne
+    private Product product;
 
     public Wishlist() {
     }
 
-    public Wishlist(Long memberId, Long productId) {
-        this.memberId = memberId;
-        this.productId = productId;
+    public Wishlist(Member member, Product product) {
+        this.member = member;
+        this.product = product;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
 }

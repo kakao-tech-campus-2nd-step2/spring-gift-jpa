@@ -5,7 +5,7 @@ import gift.constant.ErrorMessage;
 public class ProductNotFoundException extends GiftException {
 
     public ProductNotFoundException() {
-        super(ErrorMessage.PRODUCT_NOT_FOUND);
+        super(ErrorMessage.PRODUCT_NOT_FOUND.getMessage());
     }
 
     @Override
