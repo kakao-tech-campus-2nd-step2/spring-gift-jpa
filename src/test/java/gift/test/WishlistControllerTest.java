@@ -8,9 +8,7 @@ import gift.repository.UserRepository;
 import gift.repository.WishlistRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -23,7 +21,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@TestMethodOrder(OrderAnnotation.class)
 public class WishlistControllerTest {
 
     @Autowired
@@ -63,13 +60,13 @@ public class WishlistControllerTest {
     }
 
     @Test
-    @DisplayName("담긴 상품 수량 변경")
+    @DisplayName("담긴 상품 수량 변경할때 정상 작동")
     @WithMockUser(username = "testuser")
     void testUpdateWishlistQuantity() throws Exception {
         // Given
         Wishlist item = new Wishlist();
-        item.setUser(siteUser);  // 수정된 부분
-        item.setProduct(product);  // 수정된 부분
+        item.setUser(siteUser);
+        item.setProduct(product);
         item.setQuantity(2);
         wishlistRepository.save(item);
 
@@ -84,13 +81,13 @@ public class WishlistControllerTest {
     }
 
     @Test
-    @DisplayName("담긴 상품 삭제")
+    @DisplayName("담긴 상품 삭제할때 정상 작동")
     @WithMockUser(username = "testuser")
     void testRemoveFromWishlist() throws Exception {
         // Given
         Wishlist item = new Wishlist();
-        item.setUser(siteUser);  // 수정된 부분
-        item.setProduct(product);  // 수정된 부분
+        item.setUser(siteUser);
+        item.setProduct(product);
         item.setQuantity(2);
         wishlistRepository.save(item);
 

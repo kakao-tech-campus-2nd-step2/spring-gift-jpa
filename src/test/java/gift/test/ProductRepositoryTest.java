@@ -7,11 +7,9 @@ import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import gift.model.Product;
 import gift.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import jakarta.validation.Validation;
@@ -19,7 +17,6 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
 @DataJpaTest
-@TestMethodOrder(OrderAnnotation.class)
 public class ProductRepositoryTest {
 
     @Autowired
@@ -27,7 +24,7 @@ public class ProductRepositoryTest {
     private Validator validator;
 
     @Test
-    @DisplayName("상품 추가")
+    @DisplayName("상품 추가할때 성공적으로 작동되는 경우")
     void addProductPrice() {
         // Given
         Product product = new Product(1234L,"Test Product", 1000, "test.jpg");
@@ -46,7 +43,7 @@ public class ProductRepositoryTest {
 
 
     @Test
-    @DisplayName("상품 수정")
+    @DisplayName("상품 수정할때 성공적으로 작동되는 경우")
     void updateProductPrice() {
         // Given
         Product product = new Product(1234L,"Test Product", 1000, "test.jpg");
@@ -66,7 +63,7 @@ public class ProductRepositoryTest {
 
 
     @Test
-    @DisplayName("상품 삭제")
+    @DisplayName("상품 삭제할때 성공적으로 작동되는 경우")
     void deleteProductPrice() {
         // Given
         Product product = new Product(1234L,"Test Product", 1000, "test.jpg");
@@ -88,7 +85,7 @@ public class ProductRepositoryTest {
 
 
     @Test
-    @DisplayName("상품 이름이 NULL 일때")
+    @DisplayName("상품 이름이 NULL 일때 예외발생")
     public void whenNameNull(){
         // given
         Product product = new Product();
@@ -102,7 +99,7 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    @DisplayName("상품 이름이 20자 이상일때")
+    @DisplayName("상품 이름이 20자 이상일때 예외발생")
     public void whenNameExceedsLength() {
         // given
         Product product = new Product();
@@ -118,6 +115,7 @@ public class ProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("상품 가격이 NULL일때 예외발생")
     public void whenPriceNull() {
         // given
         Product product = new Product();
@@ -133,6 +131,7 @@ public class ProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("상품 이미지가 NULL일때 예외발생")
     public void whenImageUrlNull() {
         // given
         Product product = new Product();
