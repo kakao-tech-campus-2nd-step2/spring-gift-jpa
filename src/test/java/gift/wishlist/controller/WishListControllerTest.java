@@ -18,9 +18,12 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -35,6 +38,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(Lifecycle.PER_CLASS)
 @DisplayName("위시 리스트 컨트롤러 테스트")
 class WishListControllerTest {
 
@@ -60,20 +64,12 @@ class WishListControllerTest {
 
     private static Long memberId;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    void beforeAll() {
         baseUrl = "http://localhost:" + port;
 
-        var url = baseUrl + "/api/members/register";
-        var uniqueEmail = "wishListController@test.com";
-        var reqBody = new LoginReqDto(uniqueEmail, "1234");
-        var requestEntity = new RequestEntity<>(reqBody, HttpMethod.POST, URI.create(url));
-        var actual = restTemplate.exchange(requestEntity, AuthToken.class);
-
-        assert actual.getBody() != null;
-        accessToken = actual.getBody().accessToken();
-
-        memberId = jwtTokenProvider.getMemberId(accessToken);
+        // 상품 등록을 위한 임의의 회원 가입
+        accessToken = registration("productAdd@test.com");
 
         // 상품 초기화
         var productUrl = baseUrl + "/api/products";
@@ -84,6 +80,25 @@ class WishListControllerTest {
 
         // 테스트에 이용하기 위해 저장된 상품 불러오기
         productList = getProductResDtos(productUrl);
+    }
+
+    private String registration(String mail) {
+        var url = baseUrl + "/api/members/register";
+        var reqBody = new LoginReqDto(mail, "1234");
+        var requestEntity = new RequestEntity<>(reqBody, HttpMethod.POST, URI.create(url));
+        var actual = restTemplate.exchange(requestEntity, AuthToken.class);
+
+        assert actual.getBody() != null;
+        return actual.getBody().accessToken();
+    }
+
+    @BeforeEach
+    void setUp() {
+        baseUrl = "http://localhost:" + port;
+
+        accessToken = registration("wishListController@test.com");
+
+        memberId = jwtTokenProvider.getMemberId(accessToken);
 
         // 위시 리스트 초기화
         var wishListUrl = baseUrl + "/api/wish-list";
@@ -118,13 +133,6 @@ class WishListControllerTest {
         var url = baseUrl + "/api/members/" + memberId;
         var request = TestUtils.createRequestEntity(url, null, HttpMethod.DELETE, accessToken);
         restTemplate.exchange(request, String.class);
-
-        // 상품 삭제
-        var productUrl = baseUrl + "/api/products";
-        productList.forEach(product -> {
-            var productRequest = TestUtils.createRequestEntity(productUrl + "/" + product.id(), null, HttpMethod.DELETE, accessToken);
-            restTemplate.exchange(productRequest, String.class);
-        });
     }
 
     @Test
