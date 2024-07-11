@@ -2,7 +2,6 @@ package gift.product.application.dto.request;
 
 import gift.common.validation.ProductNamePattern;
 import gift.common.validation.ValidateErrorMessage;
-import gift.product.domain.Product;
 import gift.product.service.dto.ProductParam;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,9 +23,5 @@ public record ProductRequest(
 ) {
     public ProductParam toProductParam() {
         return new ProductParam(name(), price(), imgUrl());
-    }
-
-    public Product toModel(final Long id) {
-        return new Product(id, name(), price(), imgUrl());
     }
 }
