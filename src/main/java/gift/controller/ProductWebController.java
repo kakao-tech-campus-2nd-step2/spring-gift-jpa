@@ -7,6 +7,9 @@ import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,10 +26,15 @@ public class ProductWebController {
     }
 
     @GetMapping("/list")
-    public String getAllProducts(Model model) {
-        List<ProductDTO> products = productService.getAllProducts();
-        model.addAttribute("products", products);
-        return "productList"; // product list view의 이름을 반환
+    public String getAllProducts(Model model,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "3") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> productPage = productService.getProducts(pageable);
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+        return "productList";
     }
 
     @GetMapping("/detail/{id}")
