@@ -3,7 +3,6 @@ package gift.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.function.Function;
 import org.slf4j.Logger;
