@@ -25,3 +25,14 @@
   - 양방향 연관관계 설정
   - fetch join 쿼리 작성
   - fetch join test
+
+## Step3 - ToDo List
+- 3단계 - 페이지네이션
+
+- 기능 요구 사항
+  - 상품과 위시 리스트 보기에 페이지네이션을 구현한다.
+
+- 구현 기능 목록
+  - Entity create, update 시간 관리 기능
+  - 상품 paging 기능
+  - 위시 paging 기능
