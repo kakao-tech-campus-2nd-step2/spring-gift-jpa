@@ -34,10 +34,10 @@ public class MemberService {
         return Optional.empty();
     }
 
-    public Long getUserId(String email) {
-        Optional<Member> user = memberRepository.findByEmail(email);
-        if(user.isPresent()){
-            return user.get().getId();
+    public Long getMemberId(String email) {
+        Optional<Member> member = memberRepository.findByEmail(email);
+        if(member.isPresent()){
+            return member.get().getId();
         }
         return -1L;
     }

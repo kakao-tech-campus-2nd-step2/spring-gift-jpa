@@ -20,26 +20,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/wishlist")
 public class WishlistController {
-    private final WishService wishlistService;
-    private final MemberService userService;
+    private final WishService wishService;
+    private final MemberService memberService;
 
-    public WishlistController(WishService wishlistService, MemberService userService) {
-        this.wishlistService = wishlistService;
-        this.userService = userService;
+    public WishlistController(WishService wishService, MemberService memberService) {
+        this.wishService = wishService;
+        this.memberService = memberService;
     }
 
     @GetMapping
     public ResponseEntity<List<Wish>> getAllWishlists(@LoginUser String email) {
-        Long userId = userService.getUserId(email);
-        return new ResponseEntity<>(wishlistService.getWishlist(userId), HttpStatus.OK);
+        Long memberId = memberService.getMemberId(email);
+        return new ResponseEntity<>(wishService.getWishlist(memberId), HttpStatus.OK);
     }
 
 
     @PostMapping
     public ResponseEntity<WishlistResponseDto> addWishlist (@LoginUser String email, @RequestBody WishlistRequestDto requestDto) {
-        Long userId = userService.getUserId(email);
-        WishlistResponseDto wishlistResponseDto = new WishlistResponseDto(userId, requestDto.getProductId());
-        if(wishlistService.addWishlist(new Wish(userId, requestDto.getProductId()))) {
+        Long memberId = memberService.getMemberId(email);
+        WishlistResponseDto wishlistResponseDto = new WishlistResponseDto(memberId, requestDto.getProductId());
+        if(wishService.addWishlist(memberId, requestDto.getProductId())) {
             return new ResponseEntity<>(wishlistResponseDto, HttpStatus.OK);
         }
         return new ResponseEntity<>(wishlistResponseDto, HttpStatus.BAD_REQUEST);
@@ -47,9 +47,9 @@ public class WishlistController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Long> deleteWishlist(@PathVariable Long productId, @LoginUser String email) {
-        Long userId = userService.getUserId(email);
-        if(wishlistService.deleteWishlist(userId, productId)){
-            return new ResponseEntity<>(userId, HttpStatus.OK);
+        Long memberId = memberService.getMemberId(email);
+        if(wishService.deleteWishlist(memberId, productId)){
+            return new ResponseEntity<>(memberId, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
