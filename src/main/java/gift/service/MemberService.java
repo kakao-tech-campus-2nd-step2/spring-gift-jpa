@@ -23,7 +23,7 @@ public class MemberService {
         if (memberRepository.existsByEmail(email)) {
             throw new DuplicateDataException("Email already exists", "Duplicate Email");
         }
-        Member member = new Member(null, email, password, role);
+        Member member = new Member(email, password, role);
         memberRepository.save(member);
     }
 

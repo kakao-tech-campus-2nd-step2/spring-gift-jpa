@@ -1,13 +1,13 @@
 package gift.model;
 
 import gift.common.enums.Role;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 @Entity
-public class Member {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Member extends BasicEntity {
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -21,8 +21,11 @@ public class Member {
 
     protected Member() {}
 
-    public Member(Long id, String email, String password, Role role) {
-        this.id = id;
+    public Member(Long id) {
+        super(id);
+    }
+
+    public Member(String email, String password, Role role) {
         this.email = email;
         this.password = password;
         this.role = role;
@@ -32,10 +35,6 @@ public class Member {
         this.email = email;
         this.password = password;
         this.role = role;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getPassword() {

@@ -18,6 +18,10 @@ public class Product extends BasicEntity{
 
     protected Product() {}
 
+    public Product(Long id) {
+        super(id);
+    }
+
     public Product(Long id, String name, int price, String imageUrl, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(id, createdAt, updatedAt);
         this.name = name;

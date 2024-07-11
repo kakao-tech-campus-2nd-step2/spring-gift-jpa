@@ -40,7 +40,6 @@ public class ProductService {
                 .orElseThrow(() ->
                         new EntityNotFoundException("Product with id " + id + " not found"));
         product.updateProduct(request.name(), request.price(), request.imageUrl());
-        productRepository.save(product);
     }
 
     public void deleteById(Long id) {

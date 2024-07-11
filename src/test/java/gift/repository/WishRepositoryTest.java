@@ -4,6 +4,9 @@ import gift.common.enums.Role;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -20,6 +23,8 @@ class WishRepositoryTest {
     private MemberRepository memberRepository;
     @Autowired
     private ProductRepository productRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Test
     void findByMemberIdAndProductId() {
@@ -27,7 +32,7 @@ class WishRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(null, email, password, role));
+        Member member = memberRepository.save(new Member(email, password, role));
         String[] names = {"test1", "test2"};
         int[] prices = {10, 20};
         String[] imageUrls = {"test1", "test2"};
@@ -67,7 +72,7 @@ class WishRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(null, email, password, role));
+        Member member = memberRepository.save(new Member(email, password, role));
         String[] names = {"test1", "test2"};
         int[] prices = {10, 20};
         String[] imageUrls = {"test1", "test2"};
@@ -111,7 +116,7 @@ class WishRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(null, email, password, role));
+        Member member = memberRepository.save(new Member(email, password, role));
         String name = "product1";
         int price = 1000;
         String imageUrl = "imageUrl";
@@ -133,7 +138,7 @@ class WishRepositoryTest {
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(null, email, password, role));
+        Member member = memberRepository.save(new Member(email, password, role));
         String name = "product1";
         int price = 1000;
         String imageUrl = "imageUrl";
@@ -149,21 +154,24 @@ class WishRepositoryTest {
     }
 
     @Test
-    void save() {
+    @DisplayName("Member와 Product의 id만으로 Wish 저장 후 Select 테스트[성공]")
+    void saveAndFindTest() {
         // given
         String email = "test@gmail.com";
         String password = "password";
         Role role = Role.USER;
-        Member member = memberRepository.save(new Member(null, email, password, role));
+        Member member = memberRepository.save(new Member(email, password, role));
         String name = "product1";
         int price = 1000;
         String imageUrl = "imageUrl";
         Product product = productRepository.save(new Product(name, price, imageUrl));
         int productCount = 10;
-        Wish wish = new Wish(member, productCount, product);
+        Wish wish = new Wish(new Member(member.getId()), productCount, new Product(product.getId()));
 
         // when
-        Wish actual = wishRepository.save(wish);
+        Long wishId = wishRepository.save(wish).getId();
+        entityManager.clear();  // 영속성 컨텍스트 초기화
+        Wish actual = wishRepository.findById(wishId).orElseThrow();
 
         // then
         assertThat(actual.getId()).isNotNull();
