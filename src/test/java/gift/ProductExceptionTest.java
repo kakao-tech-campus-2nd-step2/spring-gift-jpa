@@ -1,8 +1,7 @@
 package gift;
 
-import gift.product.exception.ProductAlreadyExistsException;
+import gift.common.exception.ProductAlreadyExistsException;
 import gift.product.model.Product;
-import gift.product.repository.ProductRepositoryImpl;
 import gift.product.service.ProductService;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;

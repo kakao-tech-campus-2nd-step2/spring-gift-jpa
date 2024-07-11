@@ -1,8 +1,6 @@
 package gift;
 
 import gift.product.model.Product;
-import gift.product.repository.ProductRepository;
-import gift.product.repository.ProductRepositoryImpl;
 import gift.product.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

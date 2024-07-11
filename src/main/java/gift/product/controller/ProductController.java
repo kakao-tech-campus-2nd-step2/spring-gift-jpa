@@ -1,6 +1,6 @@
 package gift.product.controller;
 
-import gift.product.exception.ProductNotFoundException;
+import gift.common.exception.ProductNotFoundException;
 import gift.product.model.Product;
 import gift.product.service.ProductService;
 import org.springframework.stereotype.Controller;
