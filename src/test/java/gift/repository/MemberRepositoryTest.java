@@ -136,4 +136,28 @@ class MemberRepositoryTest {
                 () -> assertThat(deletedWish).isNull()
         );
     }
+
+    @Test
+    @DisplayName("고아 객체 제거 테스트")
+    void testOrphanRemoval(){
+        // given
+        entityManager.persist(expectedProduct);
+
+        expectedProduct.addWish(expectedWish);
+        Member savedMember = members.save(expectedMember);
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        Member foundMember = members.findById(savedMember.getId()).get();
+        Wish foudnWish = foundMember.getWishes().get(0);
+        foundMember.removeWish(foudnWish);
+        entityManager.flush();
+        entityManager.clear();
+
+        // then
+        Wish orphanedWish = entityManager.find(Wish.class, expectedWish.getId());
+        assertThat(orphanedWish).isNull();
+    }
+
 }
