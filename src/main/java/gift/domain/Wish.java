@@ -1,4 +1,4 @@
-package gift;
+package gift.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -14,12 +14,12 @@ public class Wish {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private gift.Member member;
+    private Member member;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
-    private gift.Product product;
+    private Product product;
 
     private Wish() {
     }
@@ -34,30 +34,30 @@ public class Wish {
         return id;
     }
 
-    public gift.Member getMember() {
+    public Member getMember() {
         return member;
     }
 
-    public gift.Product getProduct() {
+    public Product getProduct() {
         return product;
     }
 
     public static class WishBuilder {
         private Long id;
-        private gift.Member member;
-        private gift.Product product;
+        private Member member;
+        private Product product;
 
         public WishBuilder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public WishBuilder member(gift.Member member) {
+        public WishBuilder member(Member member) {
             this.member = member;
             return this;
         }
 
-        public WishBuilder product(gift.Product product) {
+        public WishBuilder product(Product product) {
             this.product = product;
             return this;
         }
