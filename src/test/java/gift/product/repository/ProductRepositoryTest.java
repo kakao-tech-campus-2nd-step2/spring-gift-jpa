@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
+@DisplayName("상품 리파지토리 테스트")
 class ProductRepositoryTest {
 
     @Autowired
@@ -21,8 +22,6 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        productRepository.deleteAll();
-
         // 임의의 상품 3개
         List<Product> products = List.of(
                 new Product("상품1", 1000, "keyboard.png"),
