@@ -24,7 +24,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     public Optional<Product> findById(Long id) {
         return jpaProductRepository
                 .findById(id)
-                .map(this::mapToProduct);
+                .map(ProductEntity::toDomain);
     }
 
     @Override
@@ -44,21 +44,16 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<Product> findAll() {
-        return jpaProductRepository.findAll().stream().map(this::mapToProduct).toList();
+        return jpaProductRepository
+                .findAll()
+                .stream()
+                .map(ProductEntity::toDomain)
+                .toList();
     }
 
     @Override
     public void remove(Long id) {
         jpaProductRepository.deleteById(id);
-    }
-
-    private Product mapToProduct(ProductEntity entity) {
-        return new Product(
-                entity.getId(),
-                entity.getName(),
-                entity.getPrice(),
-                entity.getImageUrl()
-        );
     }
 
     private ProductEntity mapToProductEntity(Product product) {
