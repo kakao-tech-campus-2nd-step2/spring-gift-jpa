@@ -1,17 +1,15 @@
 package gift.JpaDataTest;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.domain.cart.CartItem;
 import gift.domain.cart.JpaCartItemRepository;
-import gift.domain.product.Product;
 import gift.domain.product.JpaProductRepository;
-import gift.domain.user.User;
+import gift.domain.product.Product;
 import gift.domain.user.JpaUserRepository;
+import gift.domain.user.User;
 import jakarta.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
-
 import jdk.jfr.Description;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -114,6 +112,17 @@ public class CartItemRepositoryTest {
         // then - 직접 사용해야 SELECT 쿼리 나감
         System.out.println("findUser = " + findUser);
         System.out.println("findProduct = " + findProduct);
+    }
+
+    @Test
+    @Description("식별자 vs non 식별자를 사용했을 때 영속성 컨텍스트 내 엔티티 조회 가능 여부 확인")
+    void testEntityRetrievalByIdVsByName() {
+        // given
+        CartItem savedCartItem = cartItemRepository.saveAndFlush(new CartItem(user, product1));
+        // when - id(식별자) 조회 -> 영속성 컨텍스트에서 찾을 수 있음, 기타 필드로 조회 -> db 에 쿼리 날려야 함
+        cartItemRepository.findById(savedCartItem.getId());
+        CartItem cartItem = cartItemRepository.findByUserIdAndProductId(user.getId(),
+            product1.getId()).orElseThrow();
     }
 
     private void clear() {
