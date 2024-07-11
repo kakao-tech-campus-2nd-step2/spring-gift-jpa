@@ -2,6 +2,7 @@ package gift.product;
 
 import gift.wishlist.WishList;
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,8 +17,8 @@ public class Product {
     private String name;
     @Column(nullable = false)
     private String imageUrl;
-    @OneToMany(mappedBy = "product")
-    private List<WishList> wishes;
+    @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<WishList> wishes = new ArrayList<>();;
 
     public Product() {
     }
@@ -58,4 +59,8 @@ public class Product {
     }
 
     public List<WishList> getWishes(){return wishes;}
+
+    public void addWishList(List<WishList> wishes){this.wishes = wishes;}
+
+    public void removeWishList(){this.wishes = null;}
 }

@@ -2,6 +2,7 @@ package gift.user;
 
 import gift.wishlist.WishList;
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "users")
@@ -15,8 +16,8 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
-    @OneToMany(mappedBy = "user")
-    private List<WishList> wishes;
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<WishList> wishes = new ArrayList<>();;
 
     public User() {
     }
@@ -45,4 +46,8 @@ public class User {
     }
 
     public List<WishList> getWishes(){return wishes;}
+
+    public void addWishList(List<WishList> wishes){this.wishes = wishes;}
+
+    public void removeWishList(){this.wishes = null;}
 }
