@@ -115,10 +115,10 @@ alter table member
   - [x] product
   - [x] member(user)
   - [x] wish
-- [ ] 학습 테스트 작성
-  - [ ] ProductRepository
-  - [ ] UserRepository
-  - [ ] WishRepository
+- [x] 학습 테스트 작성
+  - [x] ProductRepository
+  - [x] UserRepository
+  - [x] WishRepository
 
 
 
