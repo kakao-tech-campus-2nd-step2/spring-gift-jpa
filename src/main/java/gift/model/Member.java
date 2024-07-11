@@ -18,7 +18,7 @@ public class Member extends BaseEntity {
     @Column(name = "name")
     private String name;
     @NotNull
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
     @NotNull
     @Column(name = "password")
