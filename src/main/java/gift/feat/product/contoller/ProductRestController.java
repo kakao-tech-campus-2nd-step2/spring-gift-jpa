@@ -1,6 +1,7 @@
 package gift.feat.product.contoller;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -37,8 +38,10 @@ public class ProductRestController {
 		@RequestParam(required = false) String searchValue,
 		@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
 	) {
-		return ResponseEntity.ok(productService.getProductsWithPaging(pageable, searchType, searchValue));
+		return ResponseEntity.ok(productService.getProductsWithPaging(pageable, searchType, searchValue).map(ProductResponseDto::from));
 	}
+
+
 
 
 	@GetMapping("/api/v1/product/{id}")
