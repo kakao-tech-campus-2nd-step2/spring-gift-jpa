@@ -1,6 +1,7 @@
 package gift.Service;
 
 import gift.DTO.JwtToken;
+import gift.DTO.UserDto;
 import gift.DTO.UserEntity;
 import gift.Exception.ForbiddenException;
 import gift.Exception.UnauthorizedException;
@@ -20,20 +21,21 @@ public class UserService {
     this.jwtService = jwtService;
   }
 
-  public UserEntity userSignUp(UserEntity userInfo) {
-    userDao.save(userInfo);
+  public UserDto userSignUp(UserDto userInfo) {
+    UserEntity userEntity = new UserEntity(userInfo.getId(), userInfo.getEmail(),
+      userInfo.getPassword());
+    userDao.save(userEntity);
     return userInfo;
   }
 
-  public JwtToken userLogin(UserEntity userInfo) {
+  public JwtToken userLogin(UserDto userInfo) {
     String email = userInfo.getEmail();
-    String password = userInfo.getPassword();
     Optional<UserEntity> userByEmail = userDao.findByEmail(email);
 
     if (userByEmail == null) {
       throw new EmptyResultDataAccessException("해당 유저가 없습니다.", 1);
     }
-    if (userInfo.matchLoginInfo(userByEmail)) {
+    if (userByEmail.get().matchLoginInfo(userInfo)) {
       JwtToken jwtToken = jwtService.createAccessToken(userByEmail);
       if (jwtService.isValidToken(jwtToken)) { //토큰이 만료되었다면
         throw new UnauthorizedException("토큰이 유효하지 않습니다.");
