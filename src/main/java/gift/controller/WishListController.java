@@ -1,19 +1,13 @@
 package gift.controller;
 
-import gift.DTO.ProductDTO;
-import gift.DTO.Token;
 import gift.DTO.UserDTO;
 import gift.DTO.WishProductDTO;
-import gift.domain.WishProduct;
 import gift.security.AuthenticateMember;
-import gift.service.ProductService;
-import gift.service.UserService;
 import gift.service.WishListService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
