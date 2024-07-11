@@ -1,5 +1,6 @@
 package gift.repository;
 
+import gift.model.Product;
 import gift.model.WishList;
 import jakarta.persistence.EntityManager;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,10 @@ public class JpaWishlistRepository implements WishlistRepository {
 
     @Override
     public boolean delete(String email) {
+        for (Product product : findByEmail(email).getProducts()) {
+            product.setWishlist(null);
+            em.persist(product);
+        }
         int result = em.createQuery("delete from WishList w where w.email=:email")
                 .setParameter("email", email)
                 .executeUpdate();

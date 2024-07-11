@@ -21,6 +21,11 @@ public class WishList {
         product.setWishlist(this);
     }
 
+    public void removeProduct(Product product) {
+        products.remove(product);
+        product.setWishlist(null);
+    }
+
     public WishList() {
     }
 
