@@ -16,7 +16,6 @@ public class ProductDto {
   })
   @NotBlank
   private String name;
-  @NotBlank
   private int price;
   private String imageUrl;
 
