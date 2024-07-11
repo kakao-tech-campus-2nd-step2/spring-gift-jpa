@@ -32,7 +32,7 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Product() {
+    protected Product() {
     }
 
     public Long getId() {
@@ -49,10 +49,6 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public List<Wish> getWishes() {
-        return wishes;
     }
 
     public void setName(String name) {

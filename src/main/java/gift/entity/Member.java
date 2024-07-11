@@ -27,7 +27,7 @@ public class Member {
         this.password = password;
     }
 
-    public Member() {
+    protected Member() {
     }
 
     public Long getId() {
@@ -36,26 +36,6 @@ public class Member {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public List<Wish> getWishes() {
-        return wishes;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
 }

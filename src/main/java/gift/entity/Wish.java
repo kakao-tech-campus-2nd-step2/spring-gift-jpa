@@ -29,7 +29,7 @@ public class Wish {
         this.product = product;
     }
 
-    public Wish() {
+    protected Wish() {
     }
 
     public Long getId() {
