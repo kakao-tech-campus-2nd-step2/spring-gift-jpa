@@ -51,6 +51,7 @@ public class WishProductService {
         updateWishProductWithCount(wishProduct, wishProductUpdateRequest.count());
     }
 
+    @Transactional(readOnly = true)
     public List<WishProductResponse> getWishProducts(Long memberId) {
         return wishProductRepository.findAllByMemberId(memberId)
                 .stream()

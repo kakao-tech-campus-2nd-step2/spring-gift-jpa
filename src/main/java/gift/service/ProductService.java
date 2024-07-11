@@ -36,11 +36,13 @@ public class ProductService {
         updateProductWithProductRequest(product, productRequest);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getProduct(Long id) {
         var product = findProductById(id);
         return getProductResponseFromProduct(product);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> getProducts() {
         return productRepository.findAll()
                 .stream()

@@ -36,11 +36,13 @@ public class ProductOptionService {
         productOptionRepository.save(productOption);
     }
 
+    @Transactional(readOnly = true)
     public ProductOptionResponse getOption(Long id) {
         var productOption = findProductOptionById(id);
         return getProductOptionResponseFromProductOption(productOption);
     }
 
+    @Transactional(readOnly = true)
     public List<ProductOptionResponse> getOptions(Long productId) {
         return productOptionRepository.findAllByProductId(productId)
                 .stream()

@@ -5,7 +5,6 @@ import gift.dto.LoginRequest;
 import gift.dto.RegisterRequest;
 import gift.exception.DuplicatedEmailException;
 import gift.exception.InvalidLoginInfoException;
-import gift.exception.NotFoundElementException;
 import gift.model.Member;
 import gift.model.MemberRole;
 import gift.repository.MemberRepository;
@@ -38,9 +37,10 @@ public class AuthService {
         return AuthResponse.of(token);
     }
 
+    @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest loginRequest) {
         var member = memberRepository.findByEmail(loginRequest.email())
-                .orElseThrow(() -> new NotFoundElementException(loginRequest.email() + "를 가진 멤버가 존재하지 않습니다."));
+                .orElseThrow(() -> new InvalidLoginInfoException(loginRequest.email() + "를 가진 멤버가 존재하지 않습니다."));
         loginInfoValidation(member, loginRequest.password());
         var token = createAccessTokenWithMember(member);
         return AuthResponse.of(token);
