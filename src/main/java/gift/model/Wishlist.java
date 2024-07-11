@@ -15,7 +15,7 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
+    @Column(name = "member_email", nullable = false)
     private String memberEmail;
 
     @Column(name = "product_id", nullable = false)
