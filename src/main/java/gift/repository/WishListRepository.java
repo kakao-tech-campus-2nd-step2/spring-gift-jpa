@@ -19,17 +19,17 @@ public interface WishListRepository extends JpaRepository<WishProduct, Long> {
     /*
      * DB에서 userId 열을 기준으로 위시리스트를 반환
      */
-    List<WishProduct> findByUserId(String userId);
+    List<WishProduct> findByUserId(Long userId);
     /*
      * DB에 특정한 wishProduct가 있는지 확인
      */
-    boolean existsByUserIdAndProductId(String userId, Long productId);
+    boolean existsByUserIdAndProductId(Long userId, Long productId);
     /*
      * DB에서 userId와 productId를 기준으로 위시리스트 항목을 가져옴
      */
-    WishProduct findByUserIdAndProductId(String userId, Long productId);
+    WishProduct findByUserIdAndProductId(Long userId, Long productId);
     /*
      * DB에서 userId와 productId 열을 기준으로 위시리스트 내용을 삭제
      */
-    void deleteByUserIdAndProductId(String userId, Long productId);
+    void deleteByUserIdAndProductId(Long userId, Long productId);
 }

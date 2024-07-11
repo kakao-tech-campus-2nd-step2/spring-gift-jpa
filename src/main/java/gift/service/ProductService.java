@@ -1,6 +1,7 @@
 package gift.service;
 
-import gift.DTO.ProductDTO;
+import gift.DTO.Product.ProductRequest;
+import gift.DTO.Product.ProductResponse;
 import gift.domain.Product;
 import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,12 @@ public class ProductService {
     /*
      * DB에 저장된 모든 Product 객체를 불러와 전달해주는 로직
      */
-    public List<ProductDTO> loadAllProduct(){
-        List<ProductDTO> products = new ArrayList<>();
+    public List<ProductResponse> loadAllProduct(){
+        List<ProductResponse> products = new ArrayList<>();
 
         List<Product> all = productRepository.findAll();
         for (Product product : all) {
-            products.add(new ProductDTO(
+            products.add(new ProductResponse(
                     product.getId(),
                     product.getName(),
                     product.getPrice(),
@@ -37,9 +38,9 @@ public class ProductService {
     /*
      * DB에 저장된 Product를 ID를 기준으로 찾아 반환
      */
-    public ProductDTO loadOneProduct(Long id){
+    public ProductResponse loadOneProduct(Long id){
         Product product = productRepository.findById(id).orElseThrow(NoSuchFieldError::new);
-        return new ProductDTO(
+        return new ProductResponse(
                 product.getId(),
                 product.getName(),
                 product.getPrice(),
@@ -49,7 +50,7 @@ public class ProductService {
     /*
      * 객체를 전달받아 DB에 저장
      */
-    public void createProduct(ProductDTO product){
+    public void createProduct(ProductRequest product){
         Product productEntity = new Product(
                 product.getName(),
                 product.getPrice(),
@@ -66,7 +67,7 @@ public class ProductService {
     /*
      * 현재 DB에 존재하는 Product를 새로운 Product로 대체하는 로직
      */
-    public void updateProduct(ProductDTO product, Long id){
+    public void updateProduct(ProductRequest product, Long id){
         Optional<Product> byId = productRepository.findById(id);
         if(byId.isEmpty()){
             throw new NullPointerException("해당 id를 가진 객체는 존재하지 않습니다");

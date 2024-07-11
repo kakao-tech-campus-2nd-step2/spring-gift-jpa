@@ -1,8 +1,14 @@
 package gift.controller;
 
-import gift.DTO.UserDTO;
-import gift.DTO.WishProductDTO;
+import gift.DTO.Product.ProductRequest;
+import gift.DTO.Product.ProductResponse;
+import gift.DTO.User.UserRequest;
+import gift.DTO.User.UserResponse;
+import gift.DTO.Wish.WishProductRequest;
+import gift.DTO.Wish.WishProductResponse;
 import gift.security.AuthenticateMember;
+import gift.service.ProductService;
+import gift.service.UserService;
 import gift.service.WishListService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +19,13 @@ import java.util.List;
 @RestController
 public class WishListController {
     private final WishListService wishListService;
+    private final ProductService ps;
+    private final UserService us;
 
-
-    public WishListController(WishListService wishListService){
+    public WishListController(WishListService wishListService, ProductService ps, UserService us){
         this.wishListService = wishListService;
+        this.ps = ps;
+        this.us = us;
     }
     /*
      * 위시리스트 내용 추가
@@ -26,10 +35,14 @@ public class WishListController {
      */
     @PostMapping("api/wishes/{productId}")
     public ResponseEntity<Void> addWishList(
-            @PathVariable("productId") Long id, @AuthenticateMember UserDTO user
+            @PathVariable("productId") Long id, @AuthenticateMember UserRequest user
     ){
-        WishProductDTO wishProductDTO = new WishProductDTO(user.getUserId(), id, 1);
-        wishListService.addWishList(wishProductDTO);
+        ProductResponse productRes = ps.loadOneProduct(id);
+        UserResponse userRes = us.loadOneUser(user.getUserId());
+
+        WishProductRequest wishProduct = new WishProductRequest(userRes, productRes);
+        wishListService.addWishList(wishProduct);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
     /*
@@ -39,8 +52,8 @@ public class WishListController {
      * 실패 시 : Exception Handler에서 처리
      */
     @GetMapping("api/wishes")
-    public ResponseEntity<List<WishProductDTO>> getWishList(@AuthenticateMember UserDTO user){
-        List<WishProductDTO> wishList = wishListService.loadWishList(user.getUserId());
+    public ResponseEntity<List<WishProductResponse>> getWishList(@AuthenticateMember UserRequest user){
+        List<WishProductResponse> wishList = wishListService.loadWishList(user.getUserId());
 
         return new ResponseEntity<>(wishList, HttpStatus.OK);
     }
@@ -50,10 +63,11 @@ public class WishListController {
     @PutMapping("api/wishes/{productId}")
     public ResponseEntity<Void> updateWishProduct(
             @PathVariable("productId") Long productId,
-            @AuthenticateMember UserDTO user,
+            @AuthenticateMember UserRequest user,
             @RequestParam int count
     ){
-        wishListService.updateWishProduct(user.getUserId(), productId, count);
+        Long id = us.loadOneUser(user.getUserId()).getId();
+        wishListService.updateWishProduct(id, productId, count);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -66,9 +80,11 @@ public class WishListController {
     @DeleteMapping("api/wishes/{productId}")
     public ResponseEntity<Void> deleteWishProduct(
             @PathVariable("productId") Long productId,
-            @AuthenticateMember UserDTO user
+            @AuthenticateMember UserRequest user
     ){
-        wishListService.deleteWishProduct(user.getUserId(), productId);
+        Long id = us.loadOneUser(user.getUserId()).getId();
+        wishListService.deleteWishProduct(id, productId);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -14,7 +14,6 @@ public class Product {
     private int price;
     @Column(name = "imageUrl", nullable = false)
     private String imageUrl;
-
     protected Product(){
 
     }

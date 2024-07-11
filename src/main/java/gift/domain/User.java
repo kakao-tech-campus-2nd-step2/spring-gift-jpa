@@ -56,4 +56,8 @@ public class User {
     public void setAdmin(Boolean admin) {
         this.admin = admin;
     }
+
+    public Long getId() {
+        return id;
+    }
 }

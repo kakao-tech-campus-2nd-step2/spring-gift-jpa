@@ -23,4 +23,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * User 정보를 userId를 기준으로 DB에서 삭제
      */
     void deleteByUserId(String userId);
+    /*
+     * User 정보가 DB에 존재하는지 userId를 통해 검증
+     */
+    boolean existsByUserId(String userId);
+    /*
+     * User 정보가 DB에 존재하는지 userId와 password를 통해 검증
+     */
+    boolean existsByUserIdAndPassword(String userId, String password);
 }
