@@ -1,13 +1,14 @@
 package gift.domain;
 
 import gift.dto.request.ProductRequestDto;
+import gift.utils.TimeStamp;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Product {
+public class Product extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
