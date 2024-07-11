@@ -112,10 +112,6 @@ public class AdminController {
         return REDIRECT_ADMIN_PRODUCTS;
     }
 
-    private LoginMember getLoginMember(HttpServletRequest request) {
-        return new LoginMember((Long) request.getAttribute("id"));
-    }
-
     private void addAccessTokenCookieInResponse(JwtResponse jwtResponse,
         HttpServletResponse response) {
         Cookie cookie = new Cookie("accessToken", jwtResponse.token());
