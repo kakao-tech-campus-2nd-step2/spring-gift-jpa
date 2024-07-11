@@ -9,38 +9,31 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "members")
+@Table(name = "member")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String password;
+
     private String role;
 
     public Member(){}
 
-    public Member(Long memberId, String email, String password, String role) {
-        this.memberId = memberId;
+    public Member(Long id, String email, String password, String role) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
-    }
-
-    public Long getMemberId() {
-        return memberId;
-    }
-
-    public String getRole() {
-        return role;
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -51,15 +44,8 @@ public class Member {
         return password;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public String getRole() {
+        return role;
     }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+    
 }
