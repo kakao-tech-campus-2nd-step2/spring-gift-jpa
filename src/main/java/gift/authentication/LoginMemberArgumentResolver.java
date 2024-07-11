@@ -12,6 +12,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import javax.security.sasl.AuthenticationException;
+
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
     private final MemberService memberService;
@@ -33,9 +35,9 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String header = request.getHeader("Authorization");
         if (header == null) {
-            return null;
+            throw new AuthenticationException("로그인이 필요합니다.");
         }
         String token = header.substring(BEARER);
-        return memberService.findMemberByEmail(jwtUtil.getMemberEmailByToken(token));
+        return jwtUtil.getUserDetail(token);
     }
 }
