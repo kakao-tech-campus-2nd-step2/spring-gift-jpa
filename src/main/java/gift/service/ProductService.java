@@ -25,7 +25,7 @@ public class ProductService {
         return new AddedProductIdResponse(addedProductId);
     }
 
-    public Product getProduct(Long productId) {
+    public Product getProductById(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
     }

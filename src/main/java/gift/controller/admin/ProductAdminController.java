@@ -58,7 +58,7 @@ public class ProductAdminController {
 
     @GetMapping("/edit/{id}")
     public String getEditForm(@PathVariable("id") long id, Model model) {
-        model.addAttribute("product", productService.getProduct(id));
+        model.addAttribute("product", productService.getProductById(id));
         return "version-SSR/edit-form";
     }
 
