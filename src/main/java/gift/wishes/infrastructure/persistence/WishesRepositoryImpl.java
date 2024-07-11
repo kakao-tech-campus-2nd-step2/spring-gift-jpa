@@ -1,7 +1,13 @@
 package gift.wishes.infrastructure.persistence;
 
 import gift.core.domain.product.Product;
+import gift.core.domain.product.exception.ProductNotFoundException;
+import gift.core.domain.user.exception.UserNotFoundException;
 import gift.core.domain.wishes.WishesRepository;
+import gift.product.infrastructure.persistence.JpaProductRepository;
+import gift.product.infrastructure.persistence.ProductEntity;
+import gift.user.infrastructure.persistence.JpaUserRepository;
+import gift.user.infrastructure.persistence.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -9,29 +15,50 @@ import java.util.List;
 @Repository
 public class WishesRepositoryImpl implements WishesRepository {
     private final JpaWishRepository jpaWishRepository;
+    private final JpaProductRepository jpaProductRepository;
+    private final JpaUserRepository jpaUserRepository;
 
     @Autowired
-    public WishesRepositoryImpl(JpaWishRepository jpaWishRepository) {
+    public WishesRepositoryImpl(
+            JpaWishRepository jpaWishRepository,
+            JpaProductRepository jpaProductRepository,
+            JpaUserRepository jpaUserRepository
+    ) {
         this.jpaWishRepository = jpaWishRepository;
+        this.jpaProductRepository = jpaProductRepository;
+        this.jpaUserRepository = jpaUserRepository;
     }
 
     @Override
     public void saveWish(Long userId, Long productId) {
-        jpaWishRepository.save(new WishEntity(0L, userId, productId));
+        UserEntity user = jpaUserRepository
+                .findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+        ProductEntity product = jpaProductRepository
+                .findById(productId)
+                .orElseThrow(ProductNotFoundException::new);
+
+        jpaWishRepository.save(new WishEntity(user, product));
     }
 
     @Override
     public void removeWish(Long userId, Long productId) {
-        jpaWishRepository.deleteByUserIdAndProductId(userId, productId);
+        jpaWishRepository.deleteByUser_IdAndProduct_Id(userId, productId);
     }
 
     @Override
     public boolean exists(Long userId, Long productId) {
-        return jpaWishRepository.existsByUserIdAndProductId(userId, productId);
+        return jpaWishRepository.existsByUser_IdAndProduct_Id(userId, productId);
     }
 
     @Override
     public List<Product> getWishlistOfUser(Long userId) {
-        return jpaWishRepository.findAllByUserId(userId);
+        UserEntity user = jpaUserRepository
+                .findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+        return jpaWishRepository.findAllByUser(user)
+                .stream()
+                .map((entity -> entity.getProduct().toDomain()))
+                .toList();
     }
 }
