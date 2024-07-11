@@ -12,7 +12,8 @@ import gift.wishlist.exception.WishListDeleteException;
 import gift.wishlist.exception.WishListNotFoundException;
 import gift.wishlist.exception.WishListUpdateException;
 import gift.wishlist.repository.WishListRepository;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +31,9 @@ public class WishListService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishListResDto> getWishListsByMemberId(Long id) {
-
-        return wishListRepository.findAllByMemberId(id).stream()
-                .map(WishListResDto::new)
-                .toList();
+    public Page<WishListResDto> getWishListsByMemberId(Long id, Pageable pageable) {
+        Page<WishList> wishLists = wishListRepository.findAllByMemberId(id, pageable);
+        return wishLists.map(WishListResDto::new);
     }
 
     @Transactional

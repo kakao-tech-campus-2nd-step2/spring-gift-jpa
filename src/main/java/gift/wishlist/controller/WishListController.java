@@ -6,7 +6,8 @@ import gift.wishlist.dto.WishListReqDto;
 import gift.wishlist.dto.WishListResDto;
 import gift.wishlist.service.WishListService;
 import java.net.URI;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +29,8 @@ public class WishListController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishListResDto>> getWishLists(@LoginMember MemberResDto member) {
-        List<WishListResDto> wishList = wishListService.getWishListsByMemberId(member.id());
+    public ResponseEntity<Page<WishListResDto>> getWishLists(@LoginMember MemberResDto member, Pageable pageable) {
+        Page<WishListResDto> wishList = wishListService.getWishListsByMemberId(member.id(), pageable);
         return ResponseEntity.ok(wishList);
     }
 
