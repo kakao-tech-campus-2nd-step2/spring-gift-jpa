@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.auth.jwt.JwtProvider;
 import gift.domain.product.entity.Product;
-import gift.domain.user.dao.UserDao;
+import gift.domain.user.dao.UserJpaRepository;
 import gift.domain.user.entity.Role;
 import gift.domain.user.entity.User;
 import gift.domain.wishlist.dto.WishItemDto;
@@ -43,7 +43,7 @@ class WishlistRestControllerTest {
     private WishlistService wishlistService;
 
     @MockBean
-    private UserDao userDao;
+    private UserJpaRepository userJpaRepository;
 
     @MockBean
     private JwtProvider jwtProvider;
@@ -60,7 +60,7 @@ class WishlistRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        given(userDao.findById(any(Long.class))).willReturn(Optional.of(user));
+        given(userJpaRepository.findById(any(Long.class))).willReturn(Optional.of(user));
 
         Claims claims = Mockito.mock(Claims.class);
         given(jwtProvider.getAuthentication(any(String.class))).willReturn(claims);
@@ -74,7 +74,7 @@ class WishlistRestControllerTest {
         WishItemDto wishItemDto = new WishItemDto(null, 1L);
         String jsonContent = objectMapper.writeValueAsString(wishItemDto);
 
-        WishItem wishItem = wishItemDto.toWishItem(user.getId());
+        WishItem wishItem = wishItemDto.toWishItem(user, product);
         given(wishlistService.create(any(WishItemDto.class), any(User.class))).willReturn(wishItem);
 
         // when & then
@@ -90,7 +90,7 @@ class WishlistRestControllerTest {
     @DisplayName("위시리스트 전체 조회")
     void readAll_success() throws Exception {
         // given
-        List<WishItem> wishItems = List.of(new WishItem(1L, user.getId(), product.getId()));
+        List<WishItem> wishItems = List.of(new WishItem(1L, user, product));
         given(wishlistService.readAll(any(User.class))).willReturn(wishItems);
 
         // when & then

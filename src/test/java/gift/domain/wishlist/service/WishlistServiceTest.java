@@ -49,7 +49,7 @@ class WishlistServiceTest {
         WishItemDto wishItemDto = new WishItemDto(null, 1L);
         given(productJpaRepository.findById(anyLong())).willReturn(Optional.of(product));
 
-        WishItem wishItem = wishItemDto.toWishItem(product.getId());
+        WishItem wishItem = wishItemDto.toWishItem(user, product);
         wishItem.setId(1L);
         given(wishlistJpaRepository.save(any(WishItem.class))).willReturn(wishItem);
 
@@ -85,8 +85,8 @@ class WishlistServiceTest {
         Product product2 = new Product(2L, "아이스 카페 라떼 T", 4500, "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg");
 
         List<WishItem> wishItemList = List.of(
-            new WishItem(1L, user.getId(), product.getId()),
-            new WishItem(2L, user.getId(), product2.getId())
+            new WishItem(1L, user, product),
+            new WishItem(2L, user, product2)
         );
 
         given(wishlistJpaRepository.findAllByUserId(user.getId())).willReturn(wishItemList);
@@ -105,7 +105,7 @@ class WishlistServiceTest {
     @DisplayName("위시리스트 삭제 성공")
     void delete_success() {
         // given
-        WishItem wishItem = new WishItem(1L, user.getId(), product.getId());
+        WishItem wishItem = new WishItem(1L, user, product);
         given(wishlistJpaRepository.findById(anyLong())).willReturn(Optional.of(wishItem));
         willDoNothing().given(wishlistJpaRepository).delete(any(WishItem.class));
 

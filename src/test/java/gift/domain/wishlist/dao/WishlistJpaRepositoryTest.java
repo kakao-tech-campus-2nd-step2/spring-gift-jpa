@@ -2,8 +2,6 @@ package gift.domain.wishlist.dao;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 
 import gift.domain.product.dao.ProductJpaRepository;
 import gift.domain.product.entity.Product;
@@ -18,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -27,10 +24,10 @@ class WishlistJpaRepositoryTest {
     @Autowired
     private WishlistJpaRepository wishlistJpaRepository;
 
-    @MockBean
+    @Autowired
     private UserJpaRepository userJpaRepository;
 
-    @MockBean
+    @Autowired
     private ProductJpaRepository productJpaRepository;
     
 
@@ -38,13 +35,13 @@ class WishlistJpaRepositoryTest {
     @DisplayName("위시리스트 저장 테스트")
     void save() {
         // given
-        User user = new User(1L, "testUser", "test@test.com", "test123", Role.USER);
-        Product product = new Product(1L, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+        User user = new User(null, "testUser", "test@test.com", "test123", Role.USER);
+        Product product = new Product(null, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
 
-        given(userJpaRepository.save(any(User.class))).willReturn(user);
-        given(productJpaRepository.save(any(Product.class))).willReturn(product);
+        User savedUser = userJpaRepository.save(user);
+        Product savedProduct = productJpaRepository.save(product);
 
-        WishItem expected = new WishItem(null, user.getId(), product.getId());
+        WishItem expected = new WishItem(null, savedUser, savedProduct);
 
         // when
         WishItem actual = wishlistJpaRepository.save(expected);
@@ -52,8 +49,8 @@ class WishlistJpaRepositoryTest {
         // then
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
-            () -> assertThat(actual.getUserId()).isEqualTo(user.getId()),
-            () -> assertThat(actual.getProductId()).isEqualTo(product.getId())
+            () -> assertThat(actual.getUser()).isEqualTo(savedUser),
+            () -> assertThat(actual.getProduct()).isEqualTo(savedProduct)
         );
     }
 
@@ -61,24 +58,32 @@ class WishlistJpaRepositoryTest {
     @DisplayName("위시리스트 사용자 ID로 조회 테스트")
     void findAllByUserId() {
         // given
-        User user = new User(1L, "testUser", "test@test.com", "test123", Role.USER);
-        Product product = new Product(1L, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+        User user = new User(null, "testUser", "test@test.com", "test123", Role.USER);
+        Product product1 = new Product(null, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+        Product product2 = new Product(null, "아이스 카페 아메리카노 T", 4500, "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg");
 
-        given(userJpaRepository.save(any(User.class))).willReturn(user);
-        given(productJpaRepository.save(any(Product.class))).willReturn(product);
 
-        WishItem wishItem = new WishItem(null, user.getId(), product.getId());
-        WishItem expected = wishlistJpaRepository.save(wishItem);
+        User savedUser = userJpaRepository.save(user);
+        Product savedProduct1 = productJpaRepository.save(product1);
+        Product savedProduct2 = productJpaRepository.save(product2);
+
+        WishItem wishItem1 = new WishItem(null, savedUser, savedProduct1);
+        WishItem wishItem2 = new WishItem(null, savedUser, savedProduct2);
+        WishItem savedWishItem1 = wishlistJpaRepository.save(wishItem1);
+        WishItem savedWishItem2 = wishlistJpaRepository.save(wishItem2);
 
         // when
-        List<WishItem> allByUserId = wishlistJpaRepository.findAllByUserId(user.getId());
+        List<WishItem> wishlist = wishlistJpaRepository.findAllByUserId(savedUser.getId());
 
         // then
         assertAll(
-            () -> assertThat(allByUserId.size()).isEqualTo(1),
-            () -> assertThat(allByUserId.get(0).getId()).isEqualTo(expected.getId()),
-            () -> assertThat(allByUserId.get(0).getUserId()).isEqualTo(expected.getUserId()),
-            () -> assertThat(allByUserId.get(0).getProductId()).isEqualTo(expected.getProductId())
+            () -> assertThat(wishlist.size()).isEqualTo(2),
+            () -> assertThat(wishlist.get(0).getId()).isNotNull(),
+            () -> assertThat(wishlist.get(0).getUser()).isEqualTo(savedWishItem1.getUser()),
+            () -> assertThat(wishlist.get(0).getProduct()).isEqualTo(savedWishItem1.getProduct()),
+            () -> assertThat(wishlist.get(1).getId()).isNotNull(),
+            () -> assertThat(wishlist.get(1).getUser()).isEqualTo(savedWishItem2.getUser()),
+            () -> assertThat(wishlist.get(1).getProduct()).isEqualTo(savedWishItem2.getProduct())
         );
     }
 
@@ -86,13 +91,13 @@ class WishlistJpaRepositoryTest {
     @DisplayName("위시리스트 ID로 조회 테스트")
     void findById() {
         // given
-        User user = new User(1L, "testUser", "test@test.com", "test123", Role.USER);
-        Product product = new Product(1L, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+        User user = new User(null, "testUser", "test@test.com", "test123", Role.USER);
+        Product product = new Product(null, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
 
-        given(userJpaRepository.save(any(User.class))).willReturn(user);
-        given(productJpaRepository.save(any(Product.class))).willReturn(product);
+        User savedUser = userJpaRepository.save(user);
+        Product savedProduct = productJpaRepository.save(product);
 
-        WishItem wishItem = new WishItem(null, user.getId(), product.getId());
+        WishItem wishItem = new WishItem(null, savedUser, savedProduct);
         WishItem expected = wishlistJpaRepository.save(wishItem);
 
         // when
@@ -101,8 +106,8 @@ class WishlistJpaRepositoryTest {
         // then
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
-            () -> assertThat(actual.getUserId()).isEqualTo(user.getId()),
-            () -> assertThat(actual.getProductId()).isEqualTo(product.getId())
+            () -> assertThat(actual.getUser()).isEqualTo(savedUser),
+            () -> assertThat(actual.getProduct()).isEqualTo(savedProduct)
         );
     }
 
@@ -110,13 +115,13 @@ class WishlistJpaRepositoryTest {
     @DisplayName("위시리스트 삭제 테스트")
     void delete() {
         // given
-        User user = new User(1L, "testUser", "test@test.com", "test123", Role.USER);
-        Product product = new Product(1L, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+        User user = new User(null, "testUser", "test@test.com", "test123", Role.USER);
+        Product product = new Product(null, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
 
-        given(userJpaRepository.save(any(User.class))).willReturn(user);
-        given(productJpaRepository.save(any(Product.class))).willReturn(product);
+        User savedUser = userJpaRepository.save(user);
+        Product savedProduct = productJpaRepository.save(product);
 
-        WishItem wishItem = new WishItem(null, user.getId(), product.getId());
+        WishItem wishItem = new WishItem(null, savedUser, savedProduct);
         WishItem saved = wishlistJpaRepository.save(wishItem);
 
         // when

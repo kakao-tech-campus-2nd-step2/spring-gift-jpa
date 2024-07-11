@@ -2,7 +2,6 @@ package gift.domain.wishlist.dao;
 
 import gift.domain.product.dao.ProductDao;
 import gift.domain.product.entity.Product;
-import gift.domain.user.dao.UserDao;
 import gift.domain.user.entity.User;
 import gift.domain.wishlist.dto.WishItemDto;
 import gift.domain.wishlist.entity.WishItem;
@@ -47,7 +46,7 @@ public class WishlistDao {
             .stream()
             .map(wishItemDto -> {
                 Product product = productDao.findById(wishItemDto.productId()).orElse(null);
-                return wishItemDto.toWishItem(product.getId());
+                return wishItemDto.toWishItem(user, product);
             }).toList();
     }
 
