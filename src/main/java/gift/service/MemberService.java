@@ -20,12 +20,12 @@ public class MemberService {
         this.tokenBlacklist = tokenBlacklist;
     }
 
-    public String register(@Valid MemberDto memberDTO) {
-        memberRepository.findByEmail(memberDTO.getEmail())
+    public String register(@Valid MemberDto memberDto) {
+        memberRepository.findByEmail(memberDto.getEmail())
                 .ifPresent(existingMember -> {
                     throw new DuplicateKeyException("이미 존재하는 이메일입니다.");
                 });
-        Member member = new Member(null, memberDTO.getEmail(), memberDTO.getPassword(), null);
+        Member member = new Member(null, memberDto.getEmail(), memberDto.getPassword(), null);
         Member savedMember = memberRepository.save(member);
         String token = JwtUtility.generateToken(savedMember.getEmail());
         Member updatedMember = new Member(savedMember, token);
