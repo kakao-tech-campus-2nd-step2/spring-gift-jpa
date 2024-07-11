@@ -44,15 +44,15 @@ public class MemberController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<Map<String, String>> login(@RequestParam String email, @RequestParam String password) {
+    public Map<String, String> login(@RequestParam String email, @RequestParam String password) {
         Map<String, String> response = new HashMap<>();
         try {
             String token = memberService.login(email, password);
             response.put("token", token);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return response;
         } catch (RuntimeException e) {
             response.put("error", "Invalid email or password");
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            return response;
         }
     }
 }
