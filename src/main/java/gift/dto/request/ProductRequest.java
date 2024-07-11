@@ -17,4 +17,5 @@ public record ProductRequest(
         int price,
 
         String imageUrl
-) { }
+) {
+}
