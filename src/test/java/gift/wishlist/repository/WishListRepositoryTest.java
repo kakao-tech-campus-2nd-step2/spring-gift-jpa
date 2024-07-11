@@ -1,7 +1,14 @@
 package gift.wishlist.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import gift.member.entity.Member;
+import gift.member.repository.MemberRepository;
+import gift.product.entity.Product;
+import gift.product.repository.ProductRepository;
 import gift.wishlist.entity.WishList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,22 +18,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
+@DisplayName("위시 리스트 리파지토리 테스트")
 class WishListRepositoryTest {
 
     @Autowired
     private WishListRepository wishListRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
     @BeforeEach
     void setUp() {
-        wishListRepository.deleteAll();
+        Member member =  new Member("abc123@test.com", "1234");
+        memberRepository.save(member);
+
+        List<Product> products = List.of(
+                new Product("상품1", 1000, "image1"),
+                new Product("상품2", 2000, "image2"),
+                new Product("상품3", 3000, "image3"),
+                new Product("상품4", 4000, "image4")
+        );
+        productRepository.saveAll(products);
 
         // 임의의 위시리스트 3개
         List<WishList> wishLists = List.of(
-                new WishList(1L, 1L, 3),
-                new WishList(1L, 2L, 2),
-                new WishList(1L, 3L, 5)
+                new WishList(member, products.get(0), 4),
+                new WishList(member, products.get(1), 1),
+                new WishList(member, products.get(2), 3)
         );
-
         wishListRepository.saveAll(wishLists);
     }
 
@@ -34,7 +56,9 @@ class WishListRepositoryTest {
     @DisplayName("위시리스트 생성")
     void addWishList() {
         //given
-        WishList wishList = new WishList(1L, 4L, 1);
+        Member member = memberRepository.findAll().getFirst();      // 기존 회원
+        Product product = productRepository.findAll().getLast();    // 아직 위시리스트에 없는 상품
+        WishList wishList = new WishList(member, product, 2);
 
         //when
         WishList savedWishList = wishListRepository.save(wishList);
@@ -42,8 +66,8 @@ class WishListRepositoryTest {
         //then
         assertAll(
                 () -> assertNotNull(savedWishList.getId()),
-                () -> assertEquals(wishList.getMemberId(), savedWishList.getMemberId()),
-                () -> assertEquals(wishList.getProductId(), savedWishList.getProductId()),
+                () -> assertEquals(wishList.getMember().getId(), savedWishList.getMember().getId()),
+                () -> assertEquals(wishList.getProduct().getId(), savedWishList.getProduct().getId()),
                 () -> assertEquals(wishList.getQuantity(), savedWishList.getQuantity())
         );
     }
@@ -60,8 +84,8 @@ class WishListRepositoryTest {
         wishLists.forEach(
                 wishList -> assertAll(
                         () -> assertNotNull(wishList.getId()),
-                        () -> assertNotNull(wishList.getMemberId()),
-                        () -> assertNotNull(wishList.getProductId()),
+                        () -> assertNotNull(wishList.getMember()),
+                        () -> assertNotNull(wishList.getProduct()),
                         () -> assertNotNull(wishList.getQuantity())
                 )
         );
@@ -88,8 +112,8 @@ class WishListRepositoryTest {
 
         assertAll(
                 () -> assertEquals(beforeQuantity + quantityToAdded, updatedWishList.getQuantity()),
-                () -> assertEquals(wishList.getMemberId(), updatedWishList.getMemberId()),
-                () -> assertEquals(wishList.getProductId(), updatedWishList.getProductId()),
+                () -> assertEquals(wishList.getMember().getId(), updatedWishList.getMember().getId()),
+                () -> assertEquals(wishList.getProduct().getId(), updatedWishList.getProduct().getId()),
                 () -> assertEquals(wishList.getId(), updatedWishList.getId())
         );
     }
@@ -98,7 +122,7 @@ class WishListRepositoryTest {
     @DisplayName("위시리스트 삭제")
     void deleteWishList() {
         //given
-        WishList wishList = wishListRepository.findAll().getFirst();
+        WishList wishList = wishListRepository.findAll().getLast();
 
         //when
         wishListRepository.deleteById(wishList.getId());
