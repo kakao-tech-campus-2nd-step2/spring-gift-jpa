@@ -1,10 +1,13 @@
 package gift.domain.controller;
 
+import gift.domain.dto.UserRegisterResponseDto;
 import gift.domain.dto.UserRequestDto;
 import gift.domain.service.UserService;
 import gift.global.response.SuccessResponse;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,12 +26,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, Object>> registerUser(@RequestBody UserRequestDto requestDto) {
-        return SuccessResponse.ok(userService.registerUser(requestDto).token(), "token");
+    public ResponseEntity<UserRegisterResponseDto> registerUser(@RequestBody UserRequestDto requestDto) {
+        return SuccessResponse.ok(new UserRegisterResponseDto(HttpStatus.OK, userService.registerUser(requestDto).token()));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> loginUser(@RequestBody UserRequestDto requestDto) {
-        return SuccessResponse.ok(userService.loginUser(requestDto).token(), "token");
+    public ResponseEntity<UserRegisterResponseDto> loginUser(@RequestBody UserRequestDto requestDto) {
+        return SuccessResponse.ok(new UserRegisterResponseDto(HttpStatus.OK, userService.loginUser(requestDto).token()));
     }
 }

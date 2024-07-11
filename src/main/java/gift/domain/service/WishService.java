@@ -5,7 +5,7 @@ import gift.domain.entity.Wish;
 import gift.domain.repository.ProductRepository;
 import gift.domain.exception.ProductNotFoundException;
 import gift.domain.entity.User;
-import gift.domain.dto.WishAddResponseDto;
+import gift.domain.dto.WishAddResult;
 import gift.domain.dto.WishDeleteRequestDto;
 import gift.domain.dto.WishRequestDto;
 import gift.domain.exception.ProductNotIncludedInWishlistException;
@@ -36,7 +36,7 @@ public class WishService {
         return wishRepository.findWishlistByUser(user);
     }
 
-    public WishAddResponseDto addWishlist(User user, WishRequestDto wishRequestDto) {
+    public WishAddResult addWishlist(User user, WishRequestDto wishRequestDto) {
         checkProductExists(wishRequestDto.productId());
         Optional<Wish> search = wishRepository.findByUserEmailAndProductId(user.id(), wishRequestDto.productId());
 
@@ -44,10 +44,10 @@ public class WishService {
         if (search.isEmpty()) {
             if (wishRequestDto.quantity() <= 0) {
                 // 0 이하인 경우 아무 작업 하지 않음
-                return new WishAddResponseDto("nope", 0L);
+                return new WishAddResult("nope", 0L);
             }
             wishRepository.save(WishRequestDto.toEntity(wishRequestDto, user));
-            return new WishAddResponseDto("create", wishRequestDto.quantity());
+            return new WishAddResult("create", wishRequestDto.quantity());
         }
 
         //수량은 최소한 0 이상이어야 함
@@ -57,12 +57,12 @@ public class WishService {
         //업데이트 후 수량이 음수면 delete 수행
         if (newWishRequestDto.quantity() <= 0) {
             wishRepository.delete(WishRequestDto.toEntity(newWishRequestDto, user));
-            return new WishAddResponseDto("delete", 0L);
+            return new WishAddResult("delete", 0L);
         }
 
         // 아이템이 이미 존재하므로 업데이트 수행
         wishRepository.update(WishRequestDto.toEntity(newWishRequestDto, user));
-        return new WishAddResponseDto("add", newWishRequestDto.quantity());
+        return new WishAddResult("add", newWishRequestDto.quantity());
     }
 
     public WishResponseDto updateWishlist(User user, WishRequestDto wishRequestDto) {

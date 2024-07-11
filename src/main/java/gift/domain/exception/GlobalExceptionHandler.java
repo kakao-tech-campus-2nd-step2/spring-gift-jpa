@@ -16,64 +16,64 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         FieldError error = e.getBindingResult().getFieldError();
         assert error != null;
         return ErrorResponse.of(error.getField() + ": " + error.getDefaultMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleProductNotFoundException(ProductNotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException e) {
         return ErrorResponse.notFound(e);
     }
 
     @ExceptionHandler(ProductAlreadyExistsException.class)
-    public ResponseEntity<Map<String, Object>> handleProductAlreadyExistsException(ProductAlreadyExistsException e) {
+    public ResponseEntity<ErrorResponse> handleProductAlreadyExistsException(ProductAlreadyExistsException e) {
         return ErrorResponse.conflict(e);
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<Map<String, Object>> handleUUserAlreadyExistsException(UserAlreadyExistsException e) {
+    public ResponseEntity<ErrorResponse> handleUUserAlreadyExistsException(UserAlreadyExistsException e) {
         return ErrorResponse.conflict(e);
     }
 
     @ExceptionHandler(UserIncorrectLoginInfoException.class)
-    public ResponseEntity<Map<String, Object>> handleUUserAlreadyExistsException(UserIncorrectLoginInfoException e) {
+    public ResponseEntity<ErrorResponse> handleUUserAlreadyExistsException(UserIncorrectLoginInfoException e) {
         return ErrorResponse.of(e, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(UserNotAdminException.class)
-    public ResponseEntity<Map<String, Object>> handleExpiredJwtException(UserNotAdminException e) {
+    public ResponseEntity<ErrorResponse> handleExpiredJwtException(UserNotAdminException e) {
         return ErrorResponse.of(e, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleUserNotFoundException(UserNotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
         return ErrorResponse.notFound(e);
     }
 
     @ExceptionHandler(TokenNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleExpiredJwtException(TokenNotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleExpiredJwtException(TokenNotFoundException e) {
         return ErrorResponse.of(e, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<Map<String, Object>> handleTokenExpiredException(TokenExpiredException e) {
+    public ResponseEntity<ErrorResponse> handleTokenExpiredException(TokenExpiredException e) {
         return ErrorResponse.of(e, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(TokenStringInvalidException.class)
-    public ResponseEntity<Map<String, Object>> handleTokenStringInvalidException(TokenStringInvalidException e) {
+    public ResponseEntity<ErrorResponse> handleTokenStringInvalidException(TokenStringInvalidException e) {
         return ErrorResponse.of(e, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(TokenUnexpectedErrorException.class)
-    public ResponseEntity<Map<String, Object>> handleTokenUnexpectedErrorException(TokenUnexpectedErrorException e) {
+    public ResponseEntity<ErrorResponse> handleTokenUnexpectedErrorException(TokenUnexpectedErrorException e) {
         return ErrorResponse.of(e, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(ProductNotIncludedInWishlistException.class)
-    public ResponseEntity<Map<String, Object>> handleProductNotIncludedInWishlistException(
+    public ResponseEntity<ErrorResponse> handleProductNotIncludedInWishlistException(
         ProductNotIncludedInWishlistException e) {
         return ErrorResponse.notFound(e);
     }

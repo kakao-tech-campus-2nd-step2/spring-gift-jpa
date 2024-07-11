@@ -13,38 +13,47 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class SuccessResponse {
 
     // status 코드에 대한 기본적인 RESTful 응답을 생성
-    public static ResponseEntity<Map<String, Object>> of(final HttpStatusCode statusCode) {
+    public static ResponseEntity<BasicResponse> of(final HttpStatusCode statusCode) {
         return ResponseEntity
             .status(statusCode)
-            .body(ResponseBodyBase.get(statusCode));
+            .body(new BasicResponse(statusCode));
     }
 
-    // 기본적인 응답에 사용자 정의 데이터 추가시 사용
-    public static <T> ResponseEntity<Map<String, Object>> of(final T data,
-                                                             final String dataLabel,
-                                                             final HttpStatusCode statusCode) {
+    public static ResponseEntity<BasicResponse> of (final HttpHeaders headers, final HttpStatusCode statusCode) {
         return ResponseEntity
             .status(statusCode)
-            .body(ResponseBodyBase.get(
-                statusCode,
-                ResponseBodyBase.Entry.of(dataLabel, data)));
+            .headers(headers)
+            .body(new BasicResponse(statusCode));
+    }
+
+    // status 코드에 대한 기본적인 RESTful 응답을 생성
+    public static <DTO> ResponseEntity<DTO> of(final DTO dto, final HttpStatusCode statusCode) {
+        return ResponseEntity
+            .status(statusCode)
+            .body(dto);
+    }
+
+    public static <DTO> ResponseEntity<DTO> of(final DTO dto, final HttpHeaders headers, final HttpStatusCode statusCode) {
+        return ResponseEntity
+            .status(statusCode)
+            .headers(headers)
+            .body(dto);
     }
 
     // HTTP code 200에 대한 기본 응답 생성
-    public static ResponseEntity<Map<String, Object>> ok() {
+    public static ResponseEntity<BasicResponse> ok() {
         return SuccessResponse.of(HttpStatus.OK);
     }
 
     // HTTP code 200에 대한 응답 생성 (with data)
-    public static <T> ResponseEntity<Map<String, Object>> ok(final T data, final String dataLabel) {
-        return SuccessResponse.of(data, dataLabel, HttpStatus.OK);
+    public static <DTO> ResponseEntity<DTO> ok(final DTO dto) {
+        return SuccessResponse.of(dto, HttpStatus.OK);
     }
 
     // HTTP code 201에 대한 응답 생성 (with header/Location, data)
-    public static <T> ResponseEntity<Map<String, Object>> created(final T data,
-                                                                  final String dataLabel,
-                                                                  final String url,
-                                                                  final Object... uriVariableValues) {
+    public static <DTO> ResponseEntity<DTO> created(final DTO dto,
+                                                    final String url,
+                                                    final Object... uriVariableValues) {
         // Header에 생성된 리소스의 Location 정보 추가
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(UriComponentsBuilder
@@ -53,10 +62,6 @@ public class SuccessResponse {
             .toUri());
 
         // 응답 생성
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .headers(headers)
-            .body(ResponseBodyBase.get(
-                HttpStatus.CREATED,
-                ResponseBodyBase.Entry.of(dataLabel, data)));
+        return SuccessResponse.of(dto, headers, HttpStatus.CREATED);
     }
 }

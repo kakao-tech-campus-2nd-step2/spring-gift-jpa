@@ -351,7 +351,7 @@
   {
     "timestamp": "2024-01-01T00:00:00.0000000",
     "status": 201,
-    "created-product": {
+    "createdProduct": {
       "id": 23,
       "name": "Product name",
       "price": 10000,
@@ -940,7 +940,7 @@ Authorization: Bearer your-token-string
   {
     "timestamp": "2024-01-01T00:00:00.0000000",
     "status": 200,
-    "wish": [
+    "wishlist": [
        { 
           "productId": 1,
           "productName": "아이스 카페 아메리카노 T",
