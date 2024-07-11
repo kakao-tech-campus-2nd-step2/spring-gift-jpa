@@ -20,7 +20,7 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.H2Dialect # org.hibernate.dialect.MySQLDialect 로 바꾸면 test db가 실패함..
         show_sql: true
     defer-datasource-initialization: true
 
