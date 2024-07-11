@@ -1,6 +1,32 @@
--- INSERT INTO gift (name,price,imageUrl) values ('coffee',1500,'abcabc');
--- INSERT INTO gift (name,price,imageUrl) values ('meat',15500,'adcadc');
--- INSERT INTO gift (name,price,imageUrl) values ('egg',3000,'bvvbbv');
--- INSERT INTO gift (name,price,imageUrl) values ('soup',40000,'adasads');
---
--- INSERT INTO users (email, password) VALUES ('admin@email.com', 'password');
+INSERT INTO gift (name, price, imageUrl) VALUES ('coffee', 1500, 'image1');
+INSERT INTO gift (name, price, imageUrl) VALUES ('meat', 15500, 'image2');
+INSERT INTO gift (name, price, imageUrl) VALUES ('egg', 3000, 'image3');
+INSERT INTO gift (name, price, imageUrl) VALUES ('soup', 40000, 'image4');
+INSERT INTO gift (name, price, imageUrl) VALUES ('bread', 2500, 'image5');
+INSERT INTO gift (name, price, imageUrl) VALUES ('milk', 1000, 'image6');
+INSERT INTO gift (name, price, imageUrl) VALUES ('cheese', 7000, 'image7');
+INSERT INTO gift (name, price, imageUrl) VALUES ('chocolate', 3500, 'image8');
+INSERT INTO gift (name, price, imageUrl) VALUES ('wine', 45000, 'image9');
+INSERT INTO gift (name, price, imageUrl) VALUES ('beer', 2000, 'image10');
+INSERT INTO gift (name, price, imageUrl) VALUES ('juice', 1200, 'image11');
+INSERT INTO gift (name, price, imageUrl) VALUES ('water', 500, 'image12');
+INSERT INTO gift (name, price, imageUrl) VALUES ('soda', 800, 'image13');
+INSERT INTO gift (name, price, imageUrl) VALUES ('apple', 300, 'image14');
+INSERT INTO gift (name, price, imageUrl) VALUES ('banana', 600, 'image15');
+INSERT INTO gift (name, price, imageUrl) VALUES ('grape', 2500, 'image16');
+INSERT INTO gift (name, price, imageUrl) VALUES ('peach', 1500, 'image17');
+INSERT INTO gift (name, price, imageUrl) VALUES ('pineapple', 3500, 'image18');
+INSERT INTO gift (name, price, imageUrl) VALUES ('mango', 4000, 'image19');
+INSERT INTO gift (name, price, imageUrl) VALUES ('strawberry', 3000, 'image20');
+INSERT INTO gift (name, price, imageUrl) VALUES ('blueberry', 5000, 'image21');
+INSERT INTO gift (name, price, imageUrl) VALUES ('raspberry', 6000, 'image22');
+INSERT INTO gift (name, price, imageUrl) VALUES ('blackberry', 5500, 'image23');
+INSERT INTO gift (name, price, imageUrl) VALUES ('orange', 2000, 'image24');
+INSERT INTO gift (name, price, imageUrl) VALUES ('lemon', 1000, 'image25');
+INSERT INTO gift (name, price, imageUrl) VALUES ('lime', 1100, 'image26');
+INSERT INTO gift (name, price, imageUrl) VALUES ('avocado', 7000, 'image27');
+INSERT INTO gift (name, price, imageUrl) VALUES ('broccoli', 2000, 'image28');
+INSERT INTO gift (name, price, imageUrl) VALUES ('carrot', 1000, 'image29');
+INSERT INTO gift (name, price, imageUrl) VALUES ('tomato', 1500, 'image30');
+
+INSERT INTO users (email, password) VALUES ('admin@email.com', 'password');
