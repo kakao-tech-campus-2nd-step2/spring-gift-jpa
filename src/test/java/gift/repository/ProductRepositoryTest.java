@@ -3,6 +3,7 @@ package gift.repository;
 import gift.domain.Member;
 import gift.domain.Product;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,22 @@ class ProductRepositoryTest {
     @Autowired
     private EntityManager entityManager;
 
+    private String expectedName;
+    private int expectedPrice;
+    private String expectedImageUrl;
+    private Product expected;
+
+    @BeforeEach
+    void setupProduct(){
+        expectedName = "아메리카노";
+        expectedPrice = 2000;
+        expectedImageUrl = "http://example.com/americano";
+        expected = new Product(expectedName, expectedPrice, expectedImageUrl);
+    }
+
     @Test
     @DisplayName("상품 저장 테스트")
     void save() {
-        // given
-        Product expected = new Product("아메리카노",2000,"http://example.com/americano");
-
         // when
         Product actual = products.save(expected);
 
@@ -42,10 +53,6 @@ class ProductRepositoryTest {
     @DisplayName("상품 아이디 조회 테스트")
     void findById() {
         // given
-        String expectedName = "아메리카노";
-        int expectedPrice = 2000;
-        String expectedImageUrl = "http://example.com/americano";
-        Product expected = new Product(expectedName, expectedPrice, expectedImageUrl);
         Product savedProduct = products.save(expected);
         entityManager.flush();
         entityManager.clear();
@@ -66,10 +73,6 @@ class ProductRepositoryTest {
     @DisplayName("상품 이름 조회 테스트")
     void findByName() {
         // given
-        String expectedName = "아메리카노";
-        int expectedPrice = 2000;
-        String expectedImageUrl = "http://example.com/americano";
-        Product expected = new Product(expectedName, expectedPrice, expectedImageUrl);
         Product savedProduct = products.save(expected);
         entityManager.flush();
         entityManager.clear();
@@ -107,10 +110,6 @@ class ProductRepositoryTest {
     @DisplayName("상품 아이디로 삭제 테스트")
     void deleteById() {
         // given
-        String expectedName = "아메리카노";
-        int expectedPrice = 2000;
-        String expectedImageUrl = "http://example.com/americano";
-        Product expected = new Product(expectedName, expectedPrice, expectedImageUrl);
         Product savedProduct = products.save(expected);
 
         // when
