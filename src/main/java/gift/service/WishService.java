@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.entity.Member;
+import gift.entity.Product;
 import gift.entity.Wish;
 import gift.dto.wish.WishRequestDTO;
 import gift.dto.wish.WishResponseDTO;
@@ -8,6 +9,7 @@ import gift.exception.ForbiddenRequestException;
 import gift.exception.NoSuchMemberException;
 import gift.exception.NoSuchProductException;
 import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +19,12 @@ import java.util.List;
 public class WishService {
     private final WishRepository wishRepository;
     private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
-    public WishService(WishRepository wishRepository, MemberRepository memberRepository) {
+    public WishService(WishRepository wishRepository, MemberRepository memberRepository, ProductRepository productRepository) {
         this.wishRepository = wishRepository;
         this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
     }
 
     public List<WishResponseDTO> getWishes(String email) {
@@ -40,11 +44,12 @@ public class WishService {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(NoSuchMemberException::new);
-
+        Product product = productRepository.findById(wishRequestDTO.productId())
+                .orElseThrow(NoSuchProductException::new);
 
         Wish wish = wishRepository.save(new Wish(
                 member,
-                wishRequestDTO.productId()
+                product
         ));
 
         return WishResponseDTO.from(wish);

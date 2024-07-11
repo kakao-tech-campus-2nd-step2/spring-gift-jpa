@@ -13,13 +13,15 @@ public class Wish {
     private Member member;
 
 
-    private long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     public Wish() {}
 
-    public Wish(Member member, long productId) {
+    public Wish(Member member, Product product) {
         this.member = member;
-        this.productId = productId;
+        this.product = product;
     }
 
     public long getId() {
@@ -31,6 +33,6 @@ public class Wish {
     }
 
     public long getProductId() {
-        return productId;
+        return product.getId();
     }
 }
