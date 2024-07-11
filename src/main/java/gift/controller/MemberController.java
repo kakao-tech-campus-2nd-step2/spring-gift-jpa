@@ -1,11 +1,10 @@
 package gift.controller;
 
+import gift.entity.MemberEntity;
 import gift.model.Member;
 import gift.service.JwtUtil;
 import gift.service.MemberService;
 import gift.service.MemberServiceStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +39,6 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody Member member) {
-        Member authenticatedMember = memberService.authenticateToken(member);
 
         if (authenticatedMember == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "Invalid email or password"));

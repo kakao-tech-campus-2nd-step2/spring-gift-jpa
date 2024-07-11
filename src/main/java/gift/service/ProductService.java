@@ -1,11 +1,12 @@
 package gift.service;
 
+import gift.entity.ProductEntity;
 import gift.model.Product;
 import gift.repository.ProductRepository;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class ProductService {
@@ -18,42 +19,71 @@ public class ProductService {
         ERROR
     }
 
+    private Product toProductDTO(ProductEntity productEntity) {
+        return new Product(
+            productEntity.getId(),
+            productEntity.getName(),
+            productEntity.getPrice(),
+            productEntity.getImageUrl()
+        );
+    }
+
+    private ProductEntity toProductEntity(Product product) {
+        return new ProductEntity(
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl()
+        );
+    }
 
     public List<Product> getAllProducts() {
-        return productRepository.getAllProducts(); // 모든 상품을 조회
+        List<ProductEntity> response = productRepository.findAll();
+        return response.stream()
+            .map(this::toProductDTO)
+            .collect(Collectors.toList());
     }
 
     // Read(단일 상품) - getProduct()
     public Product getProduct(Long id) {
-        return productRepository.getProduct(id);
+        ProductEntity response = productRepository.findById(id).orElse(null);
+        return response != null ? toProductDTO(response) : null;
     }
 
     // Create(생성) - addProduct()
     public ProductServiceStatus createProduct(Product product) {
-        productRepository.addProduct(product);
-        return ProductServiceStatus.SUCCESS;
+        try {
+            ProductEntity productEntity = toProductEntity(product);
+            productRepository.save(productEntity);
+            return ProductServiceStatus.SUCCESS;
+        } catch (Exception e) {
+            return ProductServiceStatus.ERROR;
+        }
     }
 
     // Update(수정) - updateProduct()
     public ProductServiceStatus editProduct(Long id, Product product) {
-        Product existingProduct = productRepository.getProduct(id);
-        if (existingProduct != null) {
-            productRepository.updateProduct(id, product);
-            return ProductServiceStatus.SUCCESS;
+        try {
+            ProductEntity existingProductEntity = productRepository.findById(id).orElse(null);
+            if (existingProductEntity != null) {
+                existingProductEntity.update(product.getName(), product.getPrice(), product.getImageUrl());
+                productRepository.save(existingProductEntity);
+                return ProductServiceStatus.SUCCESS;
+            }
+            return ProductServiceStatus.NOT_FOUND;
+        } catch (Exception e) {
+            return ProductServiceStatus.ERROR;
         }
-        return ProductServiceStatus.NOT_FOUND;
     }
 
     public ProductServiceStatus deleteProduct(Long id) {
         try {
-            if (productRepository.getProduct(id) != null) {
-                productRepository.removeProduct(id);
-                return ProductServiceStatus.SUCCESS; // 성공적으로 삭제되었음을 나타내는 메시지
+            if (productRepository.findById(id).orElse(null) != null) {
+                productRepository.deleteById(id);
+                return ProductServiceStatus.SUCCESS;
             }
             return ProductServiceStatus.NOT_FOUND;
         } catch (Exception e) {
-            return ProductServiceStatus.ERROR; // 에러 발생 시 메시지
+            return ProductServiceStatus.ERROR;
         }
     }
-
 }
