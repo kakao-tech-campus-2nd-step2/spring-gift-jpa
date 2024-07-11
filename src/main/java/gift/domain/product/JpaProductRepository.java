@@ -1,4 +1,4 @@
-package gift.domain.product.repository;
+package gift.domain.product;
 
 import gift.domain.product.Product;
 import java.util.List;

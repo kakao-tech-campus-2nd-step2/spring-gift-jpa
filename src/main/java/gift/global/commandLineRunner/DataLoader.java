@@ -2,10 +2,10 @@ package gift.global.commandLineRunner;
 
 import gift.domain.cart.CartItem;
 import gift.domain.cart.JpaCartItemRepository;
-import gift.domain.product.repository.JpaProductRepository;
+import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
 import gift.domain.user.User;
-import gift.domain.user.repository.JpaUserRepository;
+import gift.domain.user.JpaUserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;

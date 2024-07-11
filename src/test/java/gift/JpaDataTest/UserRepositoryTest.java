@@ -7,11 +7,9 @@ import gift.domain.user.User;
 import gift.domain.user.UserService;
 import gift.domain.user.dto.UserDTO;
 import gift.domain.user.dto.UserInfo;
-import gift.domain.user.repository.JpaUserRepository;
+import gift.domain.user.JpaUserRepository;
 import gift.global.jwt.JwtProvider;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jdk.jfr.Description;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,23 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserRepositoryTest {
 
-    private final UserService userService;
-    private final JpaUserRepository userRepository;
-    private final JwtProvider jwtProvider;
-
-    @PersistenceContext
-    EntityManager entityManager;
-
     @Autowired
-    public UserRepositoryTest(
-        UserService userService,
-        JpaUserRepository jpaUserRepository,
-        JwtProvider jwtProvider
-    ) {
-        this.userService = userService;
-        this.userRepository = jpaUserRepository;
-        this.jwtProvider = jwtProvider;
-    }
+    UserService userService;
+    @Autowired
+    JpaUserRepository userRepository;
+    @Autowired
+    JwtProvider jwtProvider;
 
     @Test
     @Description("회원 가입")

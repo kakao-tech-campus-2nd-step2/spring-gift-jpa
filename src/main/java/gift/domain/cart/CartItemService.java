@@ -1,10 +1,10 @@
 package gift.domain.cart;
 
 import gift.domain.product.Product;
-import gift.domain.product.repository.JpaProductRepository;
+import gift.domain.product.JpaProductRepository;
 
 import gift.domain.user.User;
-import gift.domain.user.repository.JpaUserRepository;
+import gift.domain.user.JpaUserRepository;
 import gift.global.exception.BusinessException;
 import java.util.List;
 import java.util.stream.Collectors;

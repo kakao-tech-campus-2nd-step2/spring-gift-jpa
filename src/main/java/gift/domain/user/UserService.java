@@ -1,7 +1,6 @@
 package gift.domain.user;
 
 import gift.domain.user.dto.UserDTO;
-import gift.domain.user.repository.JpaUserRepository;
 
 import gift.global.jwt.JwtProvider;
 import gift.global.exception.BusinessException;

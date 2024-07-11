@@ -1,4 +1,4 @@
-package gift.domain.user.repository;
+package gift.domain.user;
 
 import gift.domain.user.User;
 import java.util.Optional;

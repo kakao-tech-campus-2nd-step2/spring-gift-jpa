@@ -5,16 +5,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import gift.domain.product.Product;
 import gift.domain.product.ProductService;
-import gift.domain.product.repository.JpaProductRepository;
+import gift.domain.product.JpaProductRepository;
 import gift.global.exception.BusinessException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.validation.ConstraintViolationException;
 import java.util.Optional;
 import jdk.jfr.Description;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
@@ -29,8 +26,6 @@ public class ProductRepositoryTest {
     private JpaProductRepository productRepository;
     @Autowired
     private ProductService productService;
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Test
     @Description("상품 정상 저장")
@@ -38,7 +33,6 @@ public class ProductRepositoryTest {
         // given
         Product product = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
         Product savedProduct = productRepository.saveAndFlush(product);
-        clear();
 
         // when
         Product findProduct = productRepository.findById(savedProduct.getId()).get();
@@ -93,7 +87,6 @@ public class ProductRepositoryTest {
         // given
         Product product = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
         productRepository.saveAndFlush(product);
-        clear();
 
         Product findProduct = productRepository.findByName("아이스 아메리카노 T");
 
@@ -121,7 +114,6 @@ public class ProductRepositoryTest {
 
         // when
         productRepository.deleteById(savedProduct.getId());
-        flushAndClear();
 
         // then
         Optional<Product> findProduct = productRepository.findById(savedProduct.getId());
@@ -129,16 +121,4 @@ public class ProductRepositoryTest {
     }
 
 
-    public void flushAndClear() {
-        entityManager.flush();
-        entityManager.clear();
-    }
-
-    public void clear() {
-        entityManager.clear();
-    }
-
-    public void flush() {
-        entityManager.flush();
-    }
 }
