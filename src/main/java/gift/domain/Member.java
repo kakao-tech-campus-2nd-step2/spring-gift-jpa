@@ -1,22 +1,33 @@
-package gift.domain;
+package gift;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+@Entity
+@Table(name = "member", uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 public class Member {
-    private final Long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Email(message = "유효한 이메일을 입력해주세요.")
     @NotBlank(message = "이메일은 필수 입력 항목입니다.")
-    private final String email;
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
-    private final String password;
+    @Column(nullable = false)
+    private String password;
 
-    public Member(Long id, String email, String password) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
+    private Member() {
+    }
+
+    private Member(MemberBuilder builder) {
+        this.id = builder.id;
+        this.email = builder.email;
+        this.password = builder.password;
     }
 
     public Long getId() {
@@ -52,7 +63,7 @@ public class Member {
         }
 
         public Member build() {
-            return new Member(id, email, password);
+            return new Member(this);
         }
     }
 }
