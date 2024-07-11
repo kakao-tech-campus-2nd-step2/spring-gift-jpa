@@ -28,32 +28,39 @@ public class WishListService {
 
     @Transactional
     public void addProductToWishList(Long memberId, Long productId, int amount) {
-        Optional<Wish> existingWish = wishListRepository.findByMemberIdAndProductId(memberId, productId);
+        Product product = productService.getProductById(productId);
+        Member member = memberService.getMemberById(memberId);
+        Optional<Wish> existingWish = wishListRepository.findByMemberAndProduct(member, product);
+
         if (existingWish.isPresent()) {
             throw new WishAlreadyExistsException(existingWish.get());
         }
-        Product product = productService.getProduct(productId);
-        Member member = memberService.getMemberById(memberId);
+
         Wish wish = new Wish(member, amount, product);
         wishListRepository.save(wish);
     }
 
     @Transactional
     public void deleteProductInWishList(Long memberId, Long productId) {
-        Wish wish = wishListRepository.findByMemberIdAndProductId(memberId, productId)
+        Member member = memberService.getMemberById(memberId);
+        Product product = productService.getProductById(productId);
+        Wish wish = wishListRepository.findByMemberAndProduct(member, product)
                 .orElseThrow(WishNotFoundException::new);
         wishListRepository.delete(wish);
     }
 
     @Transactional
     public void updateWishProductAmount(Long memberId, Long productId, int amount) {
-        Wish wish = wishListRepository.findByMemberIdAndProductId(memberId, productId)
+        Member member = memberService.getMemberById(memberId);
+        Product product = productService.getProductById(productId);
+        Wish wish = wishListRepository.findByMemberAndProduct(member, product)
                 .orElseThrow(WishNotFoundException::new);
         wish.setAmount(amount);
     }
 
     public List<WishProductResponse> getWishProductsByMemberId(Long memberId) {
-        return wishListRepository.findAllByMemberIdWithProduct(memberId)
+        Member member = memberService.getMemberById(memberId);
+        return wishListRepository.findAllByMember(member)
                 .stream()
                 .map(wish -> new WishProductResponse(wish.getProduct().getId(), wish.getProduct().getName(), wish.getProduct().getPrice(), wish.getProduct().getImageUrl(), wish.getAmount()))
                 .toList();
