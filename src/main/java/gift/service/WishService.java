@@ -11,9 +11,9 @@ import gift.model.Wish;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class WishService {
@@ -46,10 +46,9 @@ public class WishService {
         wishRepository.save(new Wish(member, productCount, product));
     }
 
-    public List<WishResponse> findAllByMemberId(Long memberId) {
-        return wishRepository.findAllByMemberIdOrderByCreatedAtAsc(memberId).stream()
-                .map(WishResponse::from)
-                .toList();
+    public Page<WishResponse> findAllByMemberId(Long memberId, Pageable pageable) {
+        return wishRepository.findAllByMemberIdOrderByCreatedAtAsc(memberId, pageable)
+                .map(WishResponse::from);
     }
 
     public void deleteByProductId(Long productId, Long memberId) {

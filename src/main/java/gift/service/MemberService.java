@@ -7,9 +7,9 @@ import gift.controller.dto.request.MemberRequest;
 import gift.controller.dto.response.MemberResponse;
 import gift.model.Member;
 import gift.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class MemberService {
@@ -27,10 +27,9 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public List<MemberResponse> findAll() {
-        return memberRepository.findAll().stream()
-                .map(MemberResponse::from)
-                .toList();
+    public Page<MemberResponse> findAllMemberPaging(Pageable pageable) {
+        return memberRepository.findAll(pageable)
+                .map(MemberResponse::from);
     }
 
     public MemberResponse findById(Long id) {
