@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -37,13 +38,16 @@ public class WishListController {
     }
 
     @GetMapping("")
-    public String getWishes(Model model, @LoginMember MemberDTO memberDTO) {
+    public String getWishes(Model model, @LoginMember MemberDTO memberDTO, Pageable pageable) {
         try {
-            WishListDTO wishListDTO = wishListService.getWishList(memberDTO);
+            WishListDTO wishListDTO = wishListService.getWishList(memberDTO, pageable);
+            System.out.println("wishListDTO = " + wishListDTO);
             model.addAttribute("wishListDTO", wishListDTO);
         } catch (Exception e) {
             responseError(e);
         }
+
+
         return "getWishes";
     }
 
