@@ -41,8 +41,9 @@ public class JwtTokenFilter implements Filter {
     }
 
     private String resolveToken(HttpServletRequest request) {
+
         String bearerToken = request.getHeader("Authorization");
-        System.out.println(bearerToken);
+        System.out.println("at resolveToken mathod : "+bearerToken);
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
