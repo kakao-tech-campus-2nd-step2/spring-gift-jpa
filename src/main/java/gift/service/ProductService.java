@@ -19,26 +19,33 @@ public class ProductService {
     }
 
     public List<Product> getAllProducts() {
-        return productRepository.getAllProducts();
+        return productRepository.findAll();
     }
 
     public List<Product> getAllProductsByIds(List<Long> productIds) {
-        return productRepository.getAllProductsByIds(productIds);
+        return productRepository.findByIdIn(productIds);
     }
 
     public Optional<Product> getProductById(Long id) {
-        return productRepository.getProductById(id);
+        return productRepository.findById(id);
     }
 
     public void addProduct(Product product) {
-        productRepository.addProduct(product);
+        productRepository.save(product);
     }
 
     public void updateProduct(Product product) {
-        productRepository.updateProduct(product);
+        productRepository.findById(product.getId())
+            .orElseThrow(() -> new RuntimeException("Product Not Found with id " + product.getId()));
+        productRepository.save(product);
     }
 
     public void deleteProduct(Long id) {
-        productRepository.deleteProduct(id);
+        Optional<Product> productOptional = productRepository.findById(id);
+        if (!productOptional.isPresent()) {
+            throw new RuntimeException("Product not found with id " + id);
+        }
+
+        productRepository.delete(productOptional.get());
     }
 }
