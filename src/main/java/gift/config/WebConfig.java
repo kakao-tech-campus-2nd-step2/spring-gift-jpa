@@ -21,8 +21,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenInterceptor)
-            .addPathPatterns("/s/**")
-            .excludePathPatterns("/**");
+            .addPathPatterns("/**")
+            .excludePathPatterns("/users/**");
     }
 
     @Override
