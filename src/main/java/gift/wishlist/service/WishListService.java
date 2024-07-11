@@ -1,9 +1,12 @@
 package gift.wishlist.service;
 
-import gift.product.service.ProductService;
-import gift.wishlist.entity.WishList;
+import gift.member.entity.Member;
+import gift.member.repository.MemberRepository;
+import gift.product.entity.Product;
+import gift.product.repository.ProductRepository;
 import gift.wishlist.dto.WishListReqDto;
 import gift.wishlist.dto.WishListResDto;
+import gift.wishlist.entity.WishList;
 import gift.wishlist.exception.WishListCreateException;
 import gift.wishlist.exception.WishListDeleteException;
 import gift.wishlist.exception.WishListNotFoundException;
@@ -16,12 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class WishListService {
 
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
     private final WishListRepository wishListRepository;
-    private final ProductService productService;
 
-    public WishListService(WishListRepository wishListRepository, ProductService productService) {
+    public WishListService(MemberRepository memberRepository, ProductRepository productRepository, WishListRepository wishListRepository) {
+        this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
         this.wishListRepository = wishListRepository;
-        this.productService = productService;
     }
 
     @Transactional(readOnly = true)
@@ -40,9 +45,16 @@ public class WishListService {
             return;
         }
 
-        productService.findProductByIdOrThrow(wishListReqDto.productId());
+        Product product = productRepository.findById(wishListReqDto.productId()).orElseThrow(
+                () -> WishListNotFoundException.EXCEPTION
+        );
+
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> WishListNotFoundException.EXCEPTION
+        );
+
         try {
-            WishList wishList = wishListReqDto.toEntity(memberId);
+            WishList wishList = new WishList(member, product, wishListReqDto.quantity());
             wishListRepository.save(wishList);
         } catch (Exception e) {
             throw WishListCreateException.EXCEPTION;
@@ -71,7 +83,7 @@ public class WishListService {
 
         WishList findWishList = findByIdAndMemberIdOrThrow(memberId, wishListId);
         try {
-            findWishList.update(wishListReqDto);
+            findWishList.changeQuantity(quantity);
         } catch (Exception e) {
             throw WishListUpdateException.EXCEPTION;
         }
@@ -81,7 +93,8 @@ public class WishListService {
     public void deleteWishListById(Long memberId, Long wishListId) {
         WishList findWishList = findByIdAndMemberIdOrThrow(memberId, wishListId);
         try {
-            wishListRepository.delete(findWishList);
+            Member member = memberRepository.findById(memberId).get();  // 회원의 존재 여부는 요청 검증 과정을 거치므로 신뢰할 수 있음
+            member.deleteWishList(findWishList);
         } catch (Exception e) {
             throw WishListDeleteException.EXCEPTION;
         }
