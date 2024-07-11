@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
@@ -15,6 +16,7 @@ public class ProductService {
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
+
 
 
     public ProductResponse getProductById(Long id) {

@@ -46,13 +46,10 @@ public class UserRepositoryTest {
     void findbyid() {
         // given
         Long id = user2.getId();
-
         // when
         Optional<User> findUser = userRepository.findById(id);
         Long findId = findUser.get().getId();;
         // then
         assertThat(findId).isEqualTo(id);
     }
-
-
 }

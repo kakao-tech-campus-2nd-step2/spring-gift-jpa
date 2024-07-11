@@ -17,7 +17,6 @@ class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
-
     private Product product1;
     private Product product2;
 

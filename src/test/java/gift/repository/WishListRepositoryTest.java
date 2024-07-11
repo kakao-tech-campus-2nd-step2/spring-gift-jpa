@@ -7,6 +7,7 @@ import gift.model.user.User;
 import gift.model.wishlist.WishList;
 import gift.repository.product.ProductRepository;
 import gift.repository.user.UserRepository;
+
 import gift.repository.wish.WishListRepository;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 public class WishListRepositoryTest {
-
     private WishListRepository wishListRepository;
     private ProductRepository productRepository;
     private UserRepository userRepository;
@@ -74,6 +74,7 @@ public class WishListRepositoryTest {
         // given
         Long id = wish1.getId();
 
+
         // when
         Optional<WishList> findWish = wishListRepository.findById(id);
         Long findId = findWish.get().getId();
@@ -88,6 +89,8 @@ public class WishListRepositoryTest {
         Long deleteId = wish2.getId();
         // when
         wishListRepository.deleteById(deleteId);
+
+    
         List<WishList> savedWish = wishListRepository.findAll();
         // then
         assertThat(savedWish.size()).isEqualTo(1);

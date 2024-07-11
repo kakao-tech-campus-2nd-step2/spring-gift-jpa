@@ -1,5 +1,6 @@
 package gift.service;
 
+
 import gift.model.product.Product;
 import gift.model.user.User;
 import gift.model.wishlist.WishList;
@@ -52,3 +53,4 @@ public class WishListService {
         wishListRepository.deleteByUserIdAndAndProductId(userId, productId);
     }
 }
+
