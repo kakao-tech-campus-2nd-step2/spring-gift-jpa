@@ -27,12 +27,12 @@ public class Wish {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Wish wish = (Wish) o;
-        return quantity == wish.quantity && Objects.equals(id, wish.id) && Objects.equals(member, wish.member) && Objects.equals(product, wish.product);
+        return Objects.equals(id, wish.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, member, product, quantity);
+        return Objects.hash(id);
     }
 
     protected Wish () {
@@ -68,12 +68,26 @@ public class Wish {
     }
 
     public void setMember(Member member) {
+        if (this.member != null) {
+            this.member.getWishes().remove(this);
+        }
+
         this.member = member;
-        member.getWishes().add(this);
+
+        if (member != null) {
+            member.getWishes().add(this);
+        }
     }
 
     public void setProduct(Product product) {
+        if (this.product != null) {
+            this.product.getWishes().remove(this);
+        }
+
         this.product = product;
-        product.getWishes().add(this);
+
+        if (product != null) {
+            product.getWishes().add(this);
+        }
     }
 }
