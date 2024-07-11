@@ -42,9 +42,19 @@
 <table id="productTable">
   <thead>
   <tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Price</th>
+    <th>ID
+      <a id="idAsc" th:href="@{/api/products(page=${productPage.number}, sort='id,asc')}">▲</a>
+      <a id="idDesc" th:href="@{/api/products(page=${productPage.number}, sort='id,desc')}">▼</a>
+    </th>
+    <th>Name
+      <a id="nameAsc" th:href="@{/api/products(page=${productPage.number}, sort='name,asc')}">▲</a>
+      <a id="nameDesc" th:href="@{/api/products(page=${productPage.number}, sort='name,desc')}">▼</a>
+    </th>
+    <th>Price
+      <a id="priceAsc" th:href="@{/api/products(page=${productPage.number}, sort='price,asc')}">▲</a>
+      <a id="priceDesc" th:href="@{/api/products(page=${productPage.number}, sort='price,desc')}">▼</a>
+    </th>
+
     <th>ImageUrl</th>
     <th>저장/수정</th>
     <th>취소/삭제</th>
