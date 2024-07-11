@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,12 +20,13 @@ public class Product {
     @Id
     private Long id;
     @NotNull
+    @Size(max = 15, message = "상품 이름은 공백을 포함하여 최대 15자까지 입력할 수 있습니다.")
     private String name;
     @NotNull
     private Integer price;
     private String img;
     @OneToMany(mappedBy = "product")
-    private List<Wish> wishes;
+    private List<Wish> wishes = new ArrayList<>();
 
     public Product() {
     }

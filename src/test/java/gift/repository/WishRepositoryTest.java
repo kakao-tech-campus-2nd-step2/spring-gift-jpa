@@ -50,7 +50,7 @@ class WishRepositoryTest {
         Wish wish2 = new Wish(user, product2, 15);
         wishRepository.save(wish1);
         wishRepository.save(wish2);
-        List<Wish> wishes = wishRepository.findByUserId(user.getId()).orElse(null);
+        List<Wish> wishes = wishRepository.findByUserId(user.getId());
 
         assertThat(wishes).hasSize(2);
         assertThat(wishes.getFirst().getProduct().getName()).isEqualTo(
@@ -79,7 +79,6 @@ class WishRepositoryTest {
 
         Wish updatedWish = wishRepository.findByUserIdAndId(user.getId(), savedWish.getId()).orElse(null);
 
-        assertThat(updatedWish).isNotNull();
         assertThat(updatedWish.getNumber()).isEqualTo(30);
     }
 }

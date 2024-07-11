@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,7 @@ public class User {
     @NotNull
     private String password;
     @OneToMany(mappedBy = "user")
-    private List<Wish> wishes;
+    private List<Wish> wishes = new ArrayList<>();
 
     public User() {
     }
