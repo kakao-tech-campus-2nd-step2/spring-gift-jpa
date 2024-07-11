@@ -30,9 +30,8 @@ public class WishListService {
             .collect(Collectors.toList());
     }
 
-    public List<WishListDTO> getWishListById(long memberId) {
-        List<WishList> wishlists = wishListRepository.findByMemberId(memberId)
-            .orElseThrow(() -> new RepositoryException("해당 사용자의 위시 리스트는 비어 있습니다."));
+    public List<WishListDTO> getWishListByMemberId(long memberId) {
+        List<WishList> wishlists = wishListRepository.findWishListByMemberId(memberId);
         return wishlists.stream()
             .map(this::convertToDTO)
             .collect(Collectors.toList());

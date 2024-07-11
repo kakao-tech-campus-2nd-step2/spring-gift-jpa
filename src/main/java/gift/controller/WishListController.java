@@ -35,7 +35,7 @@ public class WishListController {
     public ResponseEntity<?> getWishList(@PathVariable long memberId,
         AuthInfo authInfo) {
         if (authInfo.id() == memberId) {
-            List<WishListDTO> wishLists = wishListService.getWishListById(memberId);
+            List<WishListDTO> wishLists = wishListService.getWishListByMemberId(memberId);
             return ResponseEntity.ok(wishLists);
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("위시 리스트를 확인할 권한이 없습니다.");
