@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Wish {
@@ -13,8 +15,9 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final Long id;
 
-    @Column(nullable = false)
-    private final Long memberId;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private final Member member;
 
     @Column(nullable = false)
     private final Long productId;
@@ -23,22 +26,22 @@ public class Wish {
         this(null, null, null);
     }
 
-    public Wish(Long id, Long memberId, Long productId) {
+    public Wish(Long id, Member member, Long productId) {
         this.id = id;
-        this.memberId = memberId;
+        this.member = member;
         this.productId = productId;
     }
 
-    public Wish(Long memberId, Long productId) {
-        this(null, memberId, productId);
+    public Wish(Member member, Long productId) {
+        this(null, member, productId);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
     public Long getProductId() {

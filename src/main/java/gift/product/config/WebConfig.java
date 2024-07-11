@@ -35,7 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public WishService wishService() {
-        return new WishService(wishRepository, productService());
+        return new WishService(wishRepository, productService(), authRepository);
     }
 
     @Bean
