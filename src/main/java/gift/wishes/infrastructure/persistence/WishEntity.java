@@ -1,5 +1,7 @@
 package gift.wishes.infrastructure.persistence;
 
+import gift.product.infrastructure.persistence.ProductEntity;
+import gift.user.infrastructure.persistence.UserEntity;
 import jakarta.persistence.*;
 
 @Entity
@@ -11,36 +13,38 @@ public class WishEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id", nullable = false)
+    private ProductEntity product;
 
     public WishEntity() {
     }
 
-    public WishEntity(Long id, Long userId, Long productId) {
+    public WishEntity(Long id, UserEntity user, ProductEntity product) {
         this.id = id;
-        this.userId = userId;
-        this.productId = productId;
+        this.user = user;
+        this.product = product;
     }
 
-    public WishEntity(Long userId, Long productId) {
+    public WishEntity(UserEntity user, ProductEntity product) {
         this.id = 0L;
-        this.userId = userId;
-        this.productId = productId;
+        this.user = user;
+        this.product = product;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public Long getProductId() {
-        return productId;
+    public ProductEntity getProduct() {
+        return product;
     }
 }

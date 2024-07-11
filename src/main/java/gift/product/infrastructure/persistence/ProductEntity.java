@@ -1,5 +1,6 @@
 package gift.product.infrastructure.persistence;
 
+import gift.core.domain.product.Product;
 import jakarta.persistence.*;
 
 @Entity
@@ -50,5 +51,9 @@ public class ProductEntity {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public Product toDomain() {
+        return new Product(id, name, price, imageUrl);
     }
 }
