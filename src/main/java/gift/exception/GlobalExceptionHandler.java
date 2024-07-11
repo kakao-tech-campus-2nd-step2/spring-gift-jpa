@@ -40,6 +40,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleCustomExceptions(CustomException e) {
-        return ResponseEntity.status(e.getErrorCode().getError()).body(new ErrorResponse(e.getErrorCode().getError(),e.getErrorCode().getMessage()));
+        return ResponseEntity.status(e.getErrorCode().getError()).body(new ErrorResponse(e.getErrorCode().getError(), e.getErrorCode().getMessage()));
     }
 }

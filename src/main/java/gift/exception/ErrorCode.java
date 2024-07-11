@@ -13,6 +13,7 @@ public enum ErrorCode {
         this.error = error;
         this.message = message;
     }
+
     public HttpStatus getError() {
         return error;
     }

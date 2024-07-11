@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.ProductChangeRequestDto;
 import gift.service.ProductService;
 import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
@@ -28,7 +29,7 @@ public class WebController {
 
     @PostMapping("products/add")
     public String add(@Valid @ModelAttribute("requestDto") ProductRequestDto requestDto, BindingResult result) {
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             return "addForm";
         }
         productService.addProduct(requestDto);
@@ -53,9 +54,9 @@ public class WebController {
     @PutMapping("products/edit/{id}")
     public String editProduct(
             @PathVariable("id") Long id,
-            @Valid @ModelAttribute("requestDto") ProductRequestDto requestDto,
+            @Valid @ModelAttribute("requestDto") ProductChangeRequestDto requestDto,
             BindingResult result) {
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             return "editForm";
         }
         productService.editProduct(id, requestDto);
