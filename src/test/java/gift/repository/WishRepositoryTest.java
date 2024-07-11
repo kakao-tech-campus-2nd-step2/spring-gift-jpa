@@ -4,6 +4,7 @@ import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wish;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -26,41 +27,53 @@ class WishRepositoryTest {
     private MemberRepository memberRepository;
 
     private Member testMember;
-    private Product testProduct;
+    private Product testProduct1;
+    private Product testProduct2;
+    private Wish testWish1;
+    private Wish testWish2;
 
     @BeforeEach
     void setUp() {
-        // Member 엔티티 생성 및 저장
         testMember = new Member("test@email.com", "password");
         memberRepository.save(testMember);
 
-        // Product 엔티티 생성 및 저장
-        testProduct = new Product("almond", 500, "almond.jpg");
-        productRepository.save(testProduct);
+        testProduct1 = new Product("almond", 500, "almond.jpg");
+        testProduct2 = new Product("ice", 9000, "ice.jpg");
+        productRepository.save(testProduct1);
+        productRepository.save(testProduct2);
 
-        // Wish 엔티티 생성 및 저장
-        Wish wish = new Wish(testMember, 100, testProduct);
-        wishRepository.save(wish);
+        testWish1 = new Wish(testMember, 100, testProduct1);
+        testWish2 = new Wish(testMember, 2000, testProduct2);
+        wishRepository.save(testWish1);
+        wishRepository.save(testWish2);
     }
 
     @Test
+    @DisplayName("멤버의 전체 위시 찾기")
     void findAllByMemberIdWithProduct() {
         //When
-        List<Wish> wishes = wishRepository.findAllByMemberIdWithProduct(testMember.getId());
+        List<Wish> wishes = wishRepository.findAllByMember(testMember);
 
         //Then
-        assertThat(wishes).isNotEmpty();
-        assertThat(wishes.get(0).getProduct().getName()).isEqualTo("almond");
+        assertThat(wishes).isNotEmpty()
+                .hasSize(2)
+                .containsExactly(testWish1,testWish2);
+
+        assertThat(testWish1.getProduct()).isEqualTo(testProduct1);
     }
 
     @Test
+    @DisplayName("멤버, 상품으로 위시 찾기")
     void findByMemberIdAndProductId() {
         //When
-        Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(testMember.getId(), testProduct.getId());
+        Optional<Wish> wish = wishRepository.findByMemberAndProduct(testMember,testProduct1);
 
         //Then
-        assertThat(wish).isPresent();
-        assertThat(wish.get().getProduct().getName()).isEqualTo("almond");
+        assertThat(wish).isPresent()
+                        .hasValueSatisfying(w->{
+                            assertThat(w).isEqualTo(testWish1);
+                            assertThat(w.getProduct()).isEqualTo(testProduct1);
+                        });
     }
 
 }
