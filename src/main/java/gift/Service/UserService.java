@@ -1,39 +1,42 @@
 package gift.Service;
 
+import gift.Entity.Users;
 import gift.Model.User;
-import gift.Repository.UserRepository;
-import gift.Utils.JwtUtil;
+import gift.Repository.UsersJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 @Qualifier("userService")
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UsersJpaRepository usersJpaRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(UsersJpaRepository usersJpaRepository) {
+        this.usersJpaRepository = usersJpaRepository;
     }
 
     public void register(User user) {
-        userRepository.save(user);
+        Users users = Users.createUsers(user);
+        usersJpaRepository.save(users);
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public Optional<Users> findByEmail(String email) {
+        return usersJpaRepository.findByEmail(email);
     }
 
     public boolean isAdmin(String email) {
-        User user = userRepository.findByEmail(email);
-        return user.isAdmin();
+        Optional<Users> user = usersJpaRepository.findByEmail(email);
+        return user.get().isAdmin();
     }
 
     public boolean authenticate(String email, String password) {
-        User user = userRepository.findByEmail(email);
-        return user != null && user.getPassword().equals(password);
+        Optional<Users> user = usersJpaRepository.findByEmailAndPassword(email, password);
+        return user != null && user.get().getPassword().equals(password);
     }
+
 
 }
