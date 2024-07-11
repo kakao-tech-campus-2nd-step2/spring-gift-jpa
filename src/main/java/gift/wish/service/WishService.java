@@ -5,12 +5,12 @@ import gift.product.exception.ProductNotFoundException;
 import gift.product.persistence.ProductRepository;
 import gift.wish.application.dto.response.WishResponse;
 import gift.wish.domain.Wish;
-import gift.wish.exception.WishCanNotModifyException;
 import gift.wish.exception.WishNotFoundException;
 import gift.wish.persistence.WishRepository;
 import gift.wish.service.dto.WishParam;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishService {
@@ -30,13 +30,12 @@ public class WishService {
         wishRepository.save(wish);
     }
 
+    @Transactional
     public void updateWish(WishParam wishRequest, final Long wishId) {
-        Wish wish = wishRepository.findByIdAndUserId(wishId, wishId)
+        Wish wish = wishRepository.findById(wishId)
                 .orElseThrow(() -> WishNotFoundException.of(wishId));
 
-        if (!wish.getProductId().equals(wishRequest.productId())) {
-            throw new WishCanNotModifyException();
-        }
+        wish.modify(wishRequest.userId(), wishRequest.productId(), wishRequest.amount());
     }
 
     public List<WishResponse> getWishList(final Long userId) {

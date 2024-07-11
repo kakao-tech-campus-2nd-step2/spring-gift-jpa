@@ -1,5 +1,6 @@
 package gift.wish.domain;
 
+import gift.wish.exception.WishCanNotModifyException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -47,5 +48,23 @@ public class Wish {
 
     public Integer getAmount() {
         return amount;
+    }
+
+    public void modify(final Long userId, final Long productId, final int amount) {
+        checkOwner(userId);
+        checkProduct(productId);
+        this.amount = amount;
+    }
+
+    private void checkOwner(final Long userId) {
+        if (!this.userId.equals(userId)) {
+            throw new WishCanNotModifyException();
+        }
+    }
+
+    private void checkProduct(final Long productId) {
+        if (!this.productId.equals(productId)) {
+            throw new WishCanNotModifyException();
+        }
     }
 }
