@@ -7,16 +7,25 @@ import gift.main.dto.UserVo;
 import gift.main.entity.Role;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+
 
 
 @Component
 @Aspect
 public class AdminAspect {
 
-    @Before("@within(gift.main.annotation.AdminCheck) || @annotation(gift.main.annotation.AdminCheck)")
+    
+    @Pointcut("execution(* gift.main.controller.ProductController.*(..))")
+    public void cut() {
+
+    }
+
+    @Before("cut()")
     public void checkAdmin(@SessionUser UserVo userVo) {
-        if (Role.ADMIN.equals(userVo.getRole())) {
+        System.out.println("실행된다.");
+        if (!Role.ADMIN.equals(userVo.getRole())) {
             throw new CustomException(ErrorCode.NO_PERMISSION);
         }
     }

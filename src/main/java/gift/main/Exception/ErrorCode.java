@@ -12,6 +12,7 @@ public enum ErrorCode {
     NO_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 비어있습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
     NO_PERMISSION(HttpStatus.UNAUTHORIZED, "해당 페이지에 권합이 없습니다."),
+    NO_PERMISSION_PRODUCT(HttpStatus.UNAUTHORIZED, "해당 상품에 권합이 없습니다."),
 
     //로그인
     ALREADY_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),

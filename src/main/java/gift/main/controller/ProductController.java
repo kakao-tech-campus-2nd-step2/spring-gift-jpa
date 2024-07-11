@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/admin")
 public class ProductController {
@@ -34,14 +33,12 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @AdminCheck
     @PostMapping("/product")
     public ResponseEntity<String> addProduct(@Valid @RequestBody ProductRequest productRequest, @SessionUser UserVo sessionUserVo) {
         productService.addProduct(productRequest, sessionUserVo);
         return ResponseEntity.ok("Product added successfully");
     }
 
-    @AdminCheck
     @PutMapping("/product")
     public ResponseEntity<?> updateProduct(
             @RequestParam(value = "id") long id,
