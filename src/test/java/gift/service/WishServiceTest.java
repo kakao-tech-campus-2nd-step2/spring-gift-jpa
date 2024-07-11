@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.domain.AuthToken;
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
@@ -13,11 +12,14 @@ import gift.repository.wish.WishRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -233,6 +235,47 @@ class WishServiceTest {
         assertAll(
                 () -> assertThat(wishDtos.size()).isEqualTo(2),
                 () -> assertThat(wishDtos.get(0).productResponseDto().name()).isEqualTo("테스트 상품")
+        );
+    }
+
+    @Test
+    @DisplayName("WISH 페이징 조회 테스트")
+    void 위시_페이징_조회_테스트(){
+        //given
+        Member member = new Member.Builder()
+                .email("abc@pusan.ac.kr")
+                .password("abc")
+                .build();
+
+        List<Wish> wishes = new ArrayList<>();
+
+        for(int i=0; i<20; i++){
+            Product product = new Product.Builder()
+                    .name("테스트" + i)
+                    .price(i)
+                    .imageUrl("abc.png")
+                    .build();
+
+            Wish wish = new Wish.Builder()
+                    .member(member)
+                    .product(product)
+                    .count(i)
+                    .build();
+
+            wishes.add(wish);
+        }
+
+        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "count"));
+
+        given(wishRepository.findWishesByMemberEmail(member.getEmail(), pageRequest)).willReturn(new PageImpl<>(wishes.subList(15, 20).reversed(), pageRequest, wishes.size()));
+
+        //when
+        List<WishResponseDto> wishDtos = wishService.findWishesPaging(member.getEmail(), pageRequest);
+
+        //then
+        assertAll(
+                () -> assertThat(wishDtos.size()).isEqualTo(5),
+                () -> assertThat(wishDtos.get(0).count()).isEqualTo(19)
         );
     }
 
