@@ -2,12 +2,11 @@ package gift.wish.service;
 
 import gift.member.domain.Member;
 import gift.member.exception.MemberNotFoundException;
-import gift.member.repository.MemberRepository;
 import gift.member.service.MemberService;
 import gift.product.domain.Product;
-import gift.product.repository.ProductRepository;
 import gift.product.service.ProductService;
 import gift.wish.domain.Wish;
+import gift.wish.dto.WishResponseDto;
 import gift.wish.dto.WishServiceDto;
 import gift.wish.exception.WishNotFoundException;
 import gift.wish.repository.WishRepository;
@@ -27,13 +26,14 @@ public class WishService {
         this.productService = productService;
     }
 
-    public List<Wish> getAllWishesByMember(Member member) {
-        return wishRepository.findAllByMemberId(member.getId());
+    public List<WishResponseDto> getAllWishesByMember(Member member) {
+        return WishResponseDto.wishListToWishResponseList(
+                wishRepository.findAllByMemberId(member.getId()));
     }
 
-    public Wish getWishById(Long id) {
-        return wishRepository.findById(id)
-                .orElseThrow(WishNotFoundException::new);
+    public WishResponseDto getWishById(Long id) {
+        return new WishResponseDto(wishRepository.findById(id)
+                .orElseThrow(WishNotFoundException::new));
     }
 
     public void createWish(WishServiceDto wishServiceDto) {

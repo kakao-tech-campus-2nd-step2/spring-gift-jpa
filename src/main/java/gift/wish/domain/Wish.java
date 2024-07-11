@@ -14,11 +14,13 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    // wish list 를 가져올 때, member 는 사용되는 경우가 적으므로, LAZY 로 가져온다
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne
+    // wish list 를 가져올 때, product 는 거의 무조건 사용되므로, EAGER 로 가져온다
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
     private Product product;
 
