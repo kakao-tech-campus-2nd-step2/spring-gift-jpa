@@ -2,8 +2,8 @@ package gift.Service;
 
 import gift.Exception.LoginException;
 import gift.Model.Role;
-import gift.Model.User;
-import gift.Model.Member;
+import gift.Model.DTO.MemberDTO;
+import gift.Model.Entity.MemberEntity;
 import gift.Repository.MemberRepository;
 import gift.Token.JwtToken;
 import gift.Token.JwtTokenProvider;
@@ -21,19 +21,19 @@ public class UserService {
             this.jwtTokenProvider = jwtTokenProvider;
         }
 
-        public JwtToken register(User user){
-            if(memberRepository.findByEmail(user.email()).isPresent())
+        public JwtToken register(MemberDTO memberDTO){
+            if(memberRepository.findByEmail(memberDTO.email()).isPresent())
                 throw new LoginException();
 
-            Member member = new Member(user.email(), user.password(), Role.CONSUMER);
-            memberRepository.save(member);
-            return new JwtToken(jwtTokenProvider.createToken(member));
+            MemberEntity memberEntity = new MemberEntity(memberDTO.email(), memberDTO.password(), Role.CONSUMER);
+            memberRepository.save(memberEntity);
+            return new JwtToken(jwtTokenProvider.createToken(memberEntity));
         }
 
-        public JwtToken login(User user){
-            Optional<Member> member = memberRepository.findByEmail(user.email());
+        public JwtToken login(MemberDTO memberDTO){
+            Optional<MemberEntity> member = memberRepository.findByEmail(memberDTO.email());
 
-            if(member.isEmpty() || !member.get().getPassword().equals(user.password()))
+            if(member.isEmpty() || !member.get().getPassword().equals(memberDTO.password()))
                 throw new LoginException();
 
             return new JwtToken(jwtTokenProvider.createToken(member.get()));

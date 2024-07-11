@@ -1,15 +1,17 @@
 package gift.Service;
 
 import gift.Exception.AuthorizedException;
-import gift.Model.Product;
-import gift.Model.Member;
+import gift.Exception.ProductNotFoundException;
+import gift.Model.DTO.ProductDTO;
+import gift.Model.Entity.ProductEntity;
+import gift.Model.Entity.MemberEntity;
 import gift.Model.Role;
 import gift.Repository.ProductRepository;
 import gift.Repository.MemberRepository;
 import gift.Token.JwtTokenProvider;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,69 +27,84 @@ public class ProductService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public void add(String token, Product product){
+    public void add(String token, ProductDTO productDTO){
         String email = jwtTokenProvider.getEmailFromToken(token);
-        String role = jwtTokenProvider.getRoleFromToken(token);
-        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+
+        Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
         if(memberOptional.isEmpty()) throw new AuthorizedException();
 
-        Member member = memberOptional.get();
-        if(member.getRole() != Role.ADMIN)
+        MemberEntity memberEntity = memberOptional.get();
+        if(memberEntity.getRole() != Role.ADMIN)
             throw new AuthorizedException();
 
-        productRepository.save(product);
+        productRepository.save(new ProductEntity(productDTO.name(), productDTO.price(), productDTO.imageUrl()));
     }
 
     public void delete(String token, Long id){
         String email = jwtTokenProvider.getEmailFromToken(token);
-        String role = jwtTokenProvider.getRoleFromToken(token);
-        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+
+        Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
         if(memberOptional.isEmpty()) throw new AuthorizedException();
 
-        Member member = memberOptional.get();
-        if(member.getRole() != Role.ADMIN)
+        MemberEntity memberEntity = memberOptional.get();
+        if(memberEntity.getRole() != Role.ADMIN)
             throw new AuthorizedException();
 
         productRepository.deleteById(id);
     }
 
-    public void edit(String token, Long id, Product product){
+    public void edit(String token, Long id, ProductDTO productDTO){
         String email = jwtTokenProvider.getEmailFromToken(token);
-        String role = jwtTokenProvider.getRoleFromToken(token);
-        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+
+        Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
         if(memberOptional.isEmpty()) throw new AuthorizedException();
 
-        Member member = memberOptional.get();
-        if(member.getRole() != Role.ADMIN)
+        MemberEntity memberEntity = memberOptional.get();
+        if(memberEntity.getRole() != Role.ADMIN)
             throw new AuthorizedException();
+        ProductEntity productEntity = new ProductEntity(productDTO.name(), productDTO.price(), productDTO.imageUrl());
+        productEntity.setId(id);
 
-        productRepository.save(product);
+        productRepository.save(productEntity);
     }
 
-    public List<Product> getAll(String token){
+    public List<ProductDTO> getAll(String token){
         String email = jwtTokenProvider.getEmailFromToken(token);
-        String role = jwtTokenProvider.getRoleFromToken(token);
-        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+
+        Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
         if(memberOptional.isEmpty()) throw new AuthorizedException();
 
-        Member member = memberOptional.get();
-        if(!member.getRole().equals(Role.ADMIN) && !member.getRole().equals(Role.CONSUMER))
+        MemberEntity memberEntity = memberOptional.get();
+        if(!memberEntity.getRole().equals(Role.ADMIN) && !memberEntity.getRole().equals(Role.CONSUMER))
             throw new AuthorizedException();
+        List<ProductEntity> entityList = productRepository.findAll();
+        List<ProductDTO> dtoList = new ArrayList<>();
 
-        return productRepository.findAll();
+        for(ProductEntity p: entityList){
+            dtoList.add(new ProductDTO(p.getId(), p.getName(), p.getPrice(), p.getImageUrl()));
+        }
+
+        return dtoList;
     }
 
-    public Optional<Product> getById(String token, Long id){
+    public ProductDTO getById(String token, Long id){
         String email = jwtTokenProvider.getEmailFromToken(token);
         String role = jwtTokenProvider.getRoleFromToken(token);
-        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+        Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
         if(memberOptional.isEmpty()) throw new AuthorizedException();
 
-        Member member = memberOptional.get();
-        if(!member.getRole().equals(Role.ADMIN) && !member.getRole().equals(Role.CONSUMER))
+        MemberEntity memberEntity = memberOptional.get();
+        if(!memberEntity.getRole().equals(Role.ADMIN) && !memberEntity.getRole().equals(Role.CONSUMER))
             throw new AuthorizedException();
 
-        return productRepository.findById(id);
+        Optional<ProductEntity> productEntityOptional = productRepository.findById(id);
+
+        if(productEntityOptional.isEmpty()){
+            throw new ProductNotFoundException();
+        }
+        ProductEntity productEntity = productEntityOptional.get();
+
+        return new ProductDTO(productEntity.getId(), productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl());
     }
 
 
