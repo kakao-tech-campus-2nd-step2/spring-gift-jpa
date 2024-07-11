@@ -43,20 +43,16 @@ public class ProductDTO {
     public Integer getPrice() {
         return price;
     }
+  
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
     public void setPrice(Integer price) {
         this.price = price;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public Product toProduct() {
-        return new Product(this.name, this.price, this.imageUrl); // dto to entity
     }
 }

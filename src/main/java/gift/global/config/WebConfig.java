@@ -23,12 +23,12 @@ public class WebConfig implements WebMvcConfigurer {
     }
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-//        resolvers.add(jwtAuthorizationArgumentResolver);
+        resolvers.add(jwtAuthorizationArgumentResolver);
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
-            .addPathPatterns("/api/products/cart");
+            .addPathPatterns("/api/users/cart");
     }
 }

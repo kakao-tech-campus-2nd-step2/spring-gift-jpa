@@ -1,5 +1,6 @@
-package gift.domain.user;
+package gift.domain.user.repository;
 
+import gift.domain.user.User;
 import gift.domain.user.dto.UserDTO;
 import gift.global.exception.BusinessException;
 import org.springframework.dao.EmptyResultDataAccessException;

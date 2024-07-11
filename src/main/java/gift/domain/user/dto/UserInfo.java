@@ -7,12 +7,12 @@ package gift.domain.user.dto;
  */
 public class UserInfo {
 
-    private String email;
     private Long id;
+    private String email;
 
-    public UserInfo(String email, Long id) {
-        this.email = email;
+    public UserInfo(Long id, String email) {
         this.id = id;
+        this.email = email;
     }
 
     public UserInfo() {
@@ -22,16 +22,8 @@ public class UserInfo {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @Override

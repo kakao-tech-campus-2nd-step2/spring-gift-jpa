@@ -1,4 +1,4 @@
-package gift.global.jwt;
+package gift.global.resolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,5 +7,5 @@ import java.lang.annotation.Target;
 
 @Target({ ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface JwtAuthorization {
+public @interface LoginInfo {
 }

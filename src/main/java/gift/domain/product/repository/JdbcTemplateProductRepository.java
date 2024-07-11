@@ -1,5 +1,6 @@
-package gift.domain.product;
+package gift.domain.product.repository;
 
+import gift.domain.product.Product;
 import gift.global.exception.BusinessException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcTemplateProductRepository implements ProductRepository{
+public class JdbcTemplateProductRepository implements ProductRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

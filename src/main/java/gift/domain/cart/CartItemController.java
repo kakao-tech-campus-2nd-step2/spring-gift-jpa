@@ -2,7 +2,8 @@ package gift.domain.cart;
 
 import gift.domain.product.Product;
 import gift.domain.user.dto.UserInfo;
-import gift.global.jwt.JwtAuthorization;
+import gift.global.resolver.LoginInfo;
+
 import gift.global.response.ResponseMaker;
 import gift.global.response.ResultResponseDto;
 import gift.global.response.SimpleResultResponseDto;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/users")
 public class CartItemController {
 
     private final CartItemService cartItemService;
@@ -36,10 +37,9 @@ public class CartItemController {
      */
     @PostMapping("/cart/{id}")
     public ResponseEntity<SimpleResultResponseDto> addCartItem(
-        @PathVariable("id") Long productId, HttpServletRequest request) {
+        @PathVariable("id") Long productId, @LoginInfo UserInfo userInfo) {
 
-        Long userId = (Long) request.getAttribute("id");
-        cartItemService.addCartItem(userId, productId);
+        cartItemService.addCartItem(userInfo.getId(), productId);
 
         return ResponseMaker.createSimpleResponse(HttpStatus.OK, "상품이 장바구니에 추가되었습니다.");
     }
@@ -49,10 +49,9 @@ public class CartItemController {
      */
     @GetMapping("/cart")
     public ResponseEntity<ResultResponseDto<List<Product>>> getProductsInCartByUserId(
-        HttpServletRequest request) {
+        @LoginInfo UserInfo userInfo) {
 
-        Long userId =   (Long) request.getAttribute("id");
-        List<Product> products = cartItemService.getProductsInCartByUserId(userId);
+        List<Product> products = cartItemService.getProductsInCartByUserId(userInfo.getId());
 
         return ResponseMaker.createResponse(HttpStatus.OK, "장바구니 조회에 성공했습니다.", products);
     }
@@ -62,10 +61,9 @@ public class CartItemController {
      */
     @DeleteMapping("/cart/{id}")
     public ResponseEntity<SimpleResultResponseDto> deleteCartItem(
-        @PathVariable("id") Long productId, HttpServletRequest request) {
+        @PathVariable("id") Long productId, @LoginInfo UserInfo userInfo) {
 
-        Long userId = (Long) request.getAttribute("id");
-        cartItemService.deleteCartItem(userId, productId);
+        cartItemService.deleteCartItem(userInfo.getId(), productId);
 
         return ResponseMaker.createSimpleResponse(HttpStatus.OK, "장바구니에서 상품이 삭제되었습니다.");
     }
