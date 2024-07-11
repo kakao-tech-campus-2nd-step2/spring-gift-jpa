@@ -29,19 +29,36 @@ JpaRepository를 그대로 상속 받게 되면, 사용 권한을 주고 싶지 
 
 > hash Override가 조금 이상한데 다른 방식으로 정의해보시길 권합니다. 저러면 Equals나 HashMap 구조에서 문제가 생길 수 있어요!
 
-넵. 공부하고 다시 제대로 적용시켜보도록 하겠습니다
+```java
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductCount that = (ProductCount) o;
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
+```
+이 방식에 정확히 어떠한 문제가 있는 지 모르겠습니다.
+GPT 를 통해 물어본 결과, 내부 value 값이 바뀐다면 문제가 생긴다고 하는데,
+setter 를 사용하지 않는다면, 문제가 되지 않는 것 아닐까요?
+또는, setter 를 사용해도 문제가 없도록 선언할 수 있는 방법이 있는 걸까요?
 
 
 ### 구현 기능
 이전 step1 에서 수정할 것들
-- [ ] equals and hashcode method 들 올바르게 수정하기
-- [ ] repository test 에서 findAll() 에 대한 테스트가 빠져있어, 추가하기
+- [x] equals and hashcode method 들 올바르게 수정하기
+- [x] repository test 에서 findAll() 에 대한 테스트가 빠져있어, 추가하기
 
 step2 에서 구현할 것들
-- [ ] 연관관계 매핑시키기
-- [ ] 아이디로 객체를 직접가져오는 방식에서 연관관계를 이용한 방식으로 수정하기
-- [ ] Member 가입 시, Email 과 Nickname 중복 불가능하도록 처리하기
-- [ ] Wish 추가 시, 이미 해당 Member 가 해당 Product 를 넣어두었다면, ProductCount 만큼 값을 추가하기
+- [x] 연관관계 매핑시키기
+- [x] 아이디로 객체를 직접가져오는 방식에서 연관관계를 이용한 방식으로 수정하기
+- [x] Member 가입 시, Email 과 Nickname 중복 불가능하도록 처리하기
+- [x] Wish 추가 시, 이미 해당 Member 가 해당 Product 를 넣어두었다면, ProductCount 만큼 값을 추가하기
 - [ ] Service test 작성하기
 
 
