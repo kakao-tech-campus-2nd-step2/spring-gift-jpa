@@ -4,7 +4,6 @@ import gift.DTO.Product;
 import gift.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +35,8 @@ public class ProductService {
 
     public void updateProduct(Product product) {
         productRepository.findById(product.getId())
-            .orElseThrow(() -> new RuntimeException("Product Not Found with id " + product.getId()));
+            .orElseThrow(
+                () -> new RuntimeException("Product Not Found with id " + product.getId()));
         productRepository.save(product);
     }
 
