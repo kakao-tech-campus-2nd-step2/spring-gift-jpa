@@ -1,6 +1,7 @@
 package gift.main.controller;
 
 import gift.main.annotation.SessionUser;
+import gift.main.dto.ProductResponce;
 import gift.main.dto.UserVo;
 import gift.main.entity.Product;
 import gift.main.entity.WishProduct;
@@ -28,7 +29,7 @@ public class WishProductController {
 
     @GetMapping
     public ResponseEntity<?> getProducts() {
-        List<Product> products = productService.getProducts();
+        List<ProductResponce> products = productService.getProducts();
         return ResponseEntity.ok(products);
     }
 
