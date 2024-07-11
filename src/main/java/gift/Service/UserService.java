@@ -5,7 +5,7 @@ import gift.DTO.UserDto;
 import gift.DTO.User;
 import gift.Exception.ForbiddenException;
 import gift.Exception.UnauthorizedException;
-import gift.Repository.UserDao;
+import gift.Repository.UserRepository;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -13,24 +13,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-  private final UserDao userDao;
+  private final UserRepository userRepository;
   private final JwtService jwtService;
 
-  public UserService(UserDao userDao, JwtService jwtService) {
-    this.userDao = userDao;
+  public UserService(UserRepository userRepository, JwtService jwtService) {
+    this.userRepository = userRepository;
     this.jwtService = jwtService;
   }
 
   public UserDto userSignUp(UserDto userDtoInfo) {
     User user = new User(userDtoInfo.getId(), userDtoInfo.getEmail(),
       userDtoInfo.getPassword());
-    userDao.save(user);
+    userRepository.save(user);
     return userDtoInfo;
   }
 
   public JwtToken userLogin(UserDto userDtoInfo) {
     String email = userDtoInfo.getEmail();
-    Optional<User> userByEmail = Optional.ofNullable(userDao.findByEmail(email)
+    Optional<User> userByEmail = Optional.ofNullable(userRepository.findByEmail(email)
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저가 없습니다.", 1)));
 
     if (userByEmail.get().matchLoginInfo(userDtoInfo)) {

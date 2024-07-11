@@ -3,33 +3,33 @@ package gift.Service;
 import gift.ConverterToDto;
 import gift.DTO.WishListDto;
 import gift.DTO.WishList;
-import gift.Repository.WishListDao;
+import gift.Repository.WishListRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public class WishListService {
 
-  private final WishListDao wishListDao;
+  private final WishListRepository wishListRepository;
 
-  public WishListService(WishListDao wishListDao) {
-    this.wishListDao = wishListDao;
+  public WishListService(WishListRepository wishListRepository) {
+    this.wishListRepository = wishListRepository;
   }
 
   public WishListDto addProductToWishList(WishListDto wishListDto) {
     WishList wishList = new WishList(wishListDto.getId(), wishListDto.getUserId(),
       wishListDto.getProductId());
-    wishListDao.save(wishList);
+    wishListRepository.save(wishList);
     return wishListDto;
   }
 
   public List<WishListDto> getWishList() {
-    List<WishListDto> wishListDtos = wishListDao.findAll().stream()
+    List<WishListDto> wishListDtos = wishListRepository.findAll().stream()
       .map(ConverterToDto::convertToWishListDto).toList();
     return wishListDtos;
   }
 
   public void deleteProductToWishList(Long id) {
-    wishListDao.deleteById(id);
+    wishListRepository.deleteById(id);
   }
 }

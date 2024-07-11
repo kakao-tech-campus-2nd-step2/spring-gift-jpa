@@ -3,7 +3,7 @@ package gift.Service;
 import gift.DTO.JwtToken;
 import gift.DTO.UserDto;
 import gift.DTO.User;
-import gift.Repository.UserDao;
+import gift.Repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -21,10 +21,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 
-  private final UserDao userDao;
+  private final UserRepository userRepository;
 
-  public JwtService(UserDao userDao) {
-    this.userDao = userDao;
+  public JwtService(UserRepository userRepository) {
+    this.userRepository = userRepository;
   }
 
   @Value("${jwt.secret}")
@@ -64,6 +64,6 @@ public class JwtService {
     Jws<Claims> claims = jwtParser.parseClaimsJws(token);
     String email = claims.getBody().get("email", String.class);
 
-    return userDao.findByEmail(email);
+    return userRepository.findByEmail(email);
   }
 }

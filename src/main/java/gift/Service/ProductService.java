@@ -3,7 +3,7 @@ package gift.Service;
 import gift.DTO.ProductDto;
 import gift.DTO.Product;
 import gift.ConverterToDto;
-import gift.Repository.ProductDao;
+import gift.Repository.ProductRepository;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Service
 public class ProductService {
 
-  private final ProductDao productDao;
+  private final ProductRepository productRepository;
 
-  public ProductService(ProductDao productDao) {
-    this.productDao = productDao;
+  public ProductService(ProductRepository productRepository) {
+    this.productRepository = productRepository;
   }
 
 
   public List<ProductDto> getAllProducts() {
-    List<Product> product = productDao.findAll();
+    List<Product> product = productRepository.findAll();
     List<ProductDto> productDtos = product.stream()
       .map(ConverterToDto::convertToProductDto)
       .collect(Collectors.toList());
@@ -31,7 +31,7 @@ public class ProductService {
   }
 
   public ProductDto getProductById(Long id) {
-    Optional<Product> productOptional = productDao.findById(id);
+    Optional<Product> productOptional = productRepository.findById(id);
 
     //Optional에 ProductConverter::convertToDto를 직접 이용 못하므로, map 이용하여 entity 뽑아낸 후에 적용
     return productOptional.map(ConverterToDto::convertToProductDto).get();
@@ -40,23 +40,23 @@ public class ProductService {
   public ProductDto addProduct(@Valid ProductDto productDto) {
     Product product = new Product(productDto.getId(), productDto.getName(),
       productDto.getPrice(), productDto.getImageUrl());
-    productDao.save(product);
+    productRepository.save(product);
     return productDto;
   }
   public ProductDto updateProduct(Long id, @Valid ProductDto updatedProductDto) {
-    Optional<Product> existingProductOptional = productDao.findById(id);
+    Optional<Product> existingProductOptional = productRepository.findById(id);
     Product newProduct = new Product(id,
       updatedProductDto.getName(), updatedProductDto.getPrice(),
       updatedProductDto.getImageUrl());
-    productDao.deleteById(id);
-    productDao.save(newProduct);
+    productRepository.deleteById(id);
+    productRepository.save(newProduct);
     return existingProductOptional.map(ConverterToDto::convertToProductDto).get();
   }
 
   public ProductDto deleteProduct(@PathVariable Long id) {
-    Optional<Product> existingProductOptional = Optional.ofNullable(productDao.findById(id)
+    Optional<Product> existingProductOptional = Optional.ofNullable(productRepository.findById(id)
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1)));
-    productDao.deleteById(id);
+    productRepository.deleteById(id);
 
     return existingProductOptional.map(ConverterToDto::convertToProductDto).get();
   }
