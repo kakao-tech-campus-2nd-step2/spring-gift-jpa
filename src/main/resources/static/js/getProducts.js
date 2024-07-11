@@ -330,7 +330,7 @@ function savePutProductRow(button) {
   });
 }
 
-function addProductForDebug(button){
+function autoAddProduct(button){
 
   for (let i = 1; i < 1001; i++) {
 
