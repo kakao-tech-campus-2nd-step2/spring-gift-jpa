@@ -30,17 +30,6 @@ public class Member {
         this.wishes.remove(wish);
     }
 
-    public void removeWishes() {
-        Iterator<Wish> iterator = this.wishes.iterator();
-
-        while(iterator.hasNext()) {
-            Wish wish = iterator.next();
-
-            wish.setMember(null);
-            iterator.remove();
-        }
-    }
-
     // JPA가 엔티티 객체를 생성할 때 reflection을 사용하기 때문에 필요함
     protected Member() {
     }
