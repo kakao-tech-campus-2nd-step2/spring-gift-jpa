@@ -26,8 +26,6 @@ public class User {
     @NotBlank(message = "비밀번호는 필수로 입력하셔야 합니다.")
     private String password;
     private String role;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-    private List<WishList> wishList = new ArrayList<>();
     public User() {}
 
     public User(String name, String email, String password, String role) {

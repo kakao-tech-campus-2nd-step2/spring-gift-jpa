@@ -23,8 +23,6 @@ public class Product {
     private String name;
     private int price;
     private String imageUrl;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product", orphanRemoval = true)
-    private List<WishList> wishList = new ArrayList<>();
 
     public Product(){}
     public Product(String name, int price, String imageUrl) {
