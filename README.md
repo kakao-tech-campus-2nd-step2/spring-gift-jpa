@@ -7,16 +7,16 @@
 
 ## 기능 목록 
 
+- [x] repository 에 JpaRepository extends
 - [x] jpa로 entitiy 와 db 테이블 매핑 
-- [] 서비스 테이블 수정 
-- [] repository 에 JpaRepository extends
+- [x] 서비스 테이블 수정
 
 - []  @DataJpaTest 사용해서 학습테스트
 
-- [] Users 테이블 
-- [] Products 테이블 
-- [] Wishes 테이블 
-- [] Token 테이블 
+- [x] Users 테이블 
+- [x] Products 테이블 
+- [x] Wishes 테이블 
+- [x] Token 테이블 
 
 
 ### 2주차 3단계 요구사항 수정
