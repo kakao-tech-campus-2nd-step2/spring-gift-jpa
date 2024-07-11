@@ -58,21 +58,16 @@ public class ProductRepositoryTest {
     void testUpdateProduct() {
         Product registerProduct = productDao.save(product);
 
-        Optional<Product> saveProduct = productDao.findById(registerProduct.getId());
-
-        assertThat(saveProduct).isPresent();
-        assertThat(saveProduct.get().getPrice()).isEqualTo(1500);
-
         productDao.save(
             new Product(
-                //saveProduct.get().getId(),
-                saveProduct.get().getName(),
-                2000,
-                saveProduct.get().getImageUrl()
+                    registerProduct.getId(),
+                    registerProduct.getName(),
+                    2000,
+                    registerProduct.getImageUrl()
             )
         );
 
-        Optional<Product> updateProduct = productDao.findById(saveProduct.get().getId());
+        Optional<Product> updateProduct = productDao.findById(registerProduct.getId());
 
         assertThat(updateProduct).isPresent();
         assertThat(updateProduct.get().getPrice()).isEqualTo(2000);
