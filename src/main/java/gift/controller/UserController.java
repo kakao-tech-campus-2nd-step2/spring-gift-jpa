@@ -1,20 +1,15 @@
 package gift.controller;
 
-import gift.model.AccessTokenDO;
-import gift.model.User;
 import gift.model.UserDTO;
 import gift.repository.UserRepository;
 import gift.service.UserService;
 import gift.util.UserUtility;
-import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -33,8 +28,7 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<Object> signup(@RequestBody @Valid UserDTO user) {
-        User savedUser = userRepository.save(user);
-        String accessToken = userUtility.makeAccessToken(savedUser);
+        String accessToken = userService.signup(user);
         return ResponseEntity.ok().body(userUtility.accessTokenToObject(accessToken));
     }
 

@@ -23,7 +23,12 @@ public class UserService {
         this.userUtility = userUtility;
     }
 
-    public String login(UserDTO user){
+    public String signup(UserDTO user) {
+        User savedUser = userRepository.save(user);
+        return userUtility.makeAccessToken(savedUser);
+    }
+
+    public String login(UserDTO user) {
         Optional<User> result = userRepository.findByEmail(user.getEmail());
         if (!result.isPresent())
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Email does not exist");
