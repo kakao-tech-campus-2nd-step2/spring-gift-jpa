@@ -61,8 +61,15 @@ class WishListServiceImplTest {
         product3 = jpaProductRepository.save(product3);
 
         //when
-        Wish wish = new Wish(member,product);
-        wish = jpaWishRepository.save(wish);
+
+        jpaWishRepository.save(new Wish(member,product));
+        jpaWishRepository.save(new Wish(member,product2));
+        jpaWishRepository.save(new Wish(member,product3));
+
+        //then
+
+
+
 
     }
 
