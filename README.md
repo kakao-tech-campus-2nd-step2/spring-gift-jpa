@@ -1,6 +1,7 @@
 # spring-gift-jpa
 ### step0
 - 위시리스트 작업물 세팅
+
 ### step1
 - 필요 의존성 추가 및 properties 추가
 - 각 entity JPA로 변환
