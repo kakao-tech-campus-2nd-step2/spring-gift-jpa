@@ -11,6 +11,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 @Entity
 @Table(name = "wishes")
 public class Wish {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +26,8 @@ public class Wish {
     @PositiveOrZero
     private int quantity;
 
-    protected Wish() {}
+    protected Wish() {
+    }
 
     public Wish(Long memberId, Long productId, int quantity) {
         this.memberId = memberId;

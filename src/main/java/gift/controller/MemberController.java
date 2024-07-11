@@ -26,14 +26,22 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> signUp(@RequestBody MemberLoginDto memberLoginDto) throws Exception {
-        String generatedToken = memberService.registerMember(memberLoginDto.email, memberLoginDto.password);
-        return new ResponseEntity<>(objectMapper.writeValueAsString(new TokenResponseEntity(generatedToken)), HttpStatus.CREATED);
+    public ResponseEntity<String> signUp(@RequestBody MemberLoginDto memberLoginDto)
+        throws Exception {
+        String generatedToken = memberService.registerMember(memberLoginDto.email,
+            memberLoginDto.password);
+        return new ResponseEntity<>(
+            objectMapper.writeValueAsString(new TokenResponseEntity(generatedToken)),
+            HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> signIn(@RequestBody MemberRegisterDto memberRegisterDto) throws Exception {
-        String generatedToken = memberService.authenticateMember(memberRegisterDto.email, memberRegisterDto.password);
-        return new ResponseEntity<>(objectMapper.writeValueAsString(new TokenResponseEntity(generatedToken)), HttpStatus.OK);
+    public ResponseEntity<String> signIn(@RequestBody MemberRegisterDto memberRegisterDto)
+        throws Exception {
+        String generatedToken = memberService.authenticateMember(memberRegisterDto.email,
+            memberRegisterDto.password);
+        return new ResponseEntity<>(
+            objectMapper.writeValueAsString(new TokenResponseEntity(generatedToken)),
+            HttpStatus.OK);
     }
 }

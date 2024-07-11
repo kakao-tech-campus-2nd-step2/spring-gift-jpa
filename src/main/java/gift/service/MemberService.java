@@ -4,7 +4,6 @@ import gift.entity.Member;
 import gift.exception.BusinessException;
 import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,11 +30,8 @@ public class MemberService {
     }
 
     public Long getMemberIdByEmail(String email) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(()-> new BusinessException("해당 이메일로 등록된 사용자 정보가 없습니다."));
+        Member member = memberRepository.findByEmail(email)
+            .orElseThrow(() -> new BusinessException("해당 이메일로 등록된 사용자 정보가 없습니다."));
         return member.getId();
-    }
-
-    public Member getMemberByEmail(String email) {
-        return memberRepository.findByEmail(email).orElseThrow(() -> new BusinessException("해당 이메일로 등록된 사용자 정보가 없습니다."));
     }
 }

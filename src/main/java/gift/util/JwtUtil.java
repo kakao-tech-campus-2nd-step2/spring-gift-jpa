@@ -29,7 +29,7 @@ public class JwtUtil {
     public static void verifyToken(String token) throws Exception {
         try {
             Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new TokenException("잘못된 로그인 정보입니다.");
         }
     }

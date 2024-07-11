@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "members")
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,7 +21,8 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    protected Member() {}
+    protected Member() {
+    }
 
     public Member(String email, String password) {
         this.email = email;

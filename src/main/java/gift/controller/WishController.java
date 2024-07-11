@@ -1,8 +1,8 @@
 package gift.controller;
 
 import gift.annotation.LoginMember;
-import gift.entity.Wish;
 import gift.dto.WishlistRequestDto;
+import gift.entity.Wish;
 import gift.service.WishService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/wishlist")
 public class WishController {
 
-    private WishService wishService;
+    private final WishService wishService;
 
     @Autowired
     public WishController(WishService wishService) {
@@ -33,13 +33,16 @@ public class WishController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addWishlist(@LoginMember Long memberId, @RequestBody WishlistRequestDto wishlistRequestDto) {
-        wishService.addWishlist(new Wish(memberId, wishlistRequestDto.getProductId(), wishlistRequestDto.getQuantity()));
+    public ResponseEntity<String> addWishlist(@LoginMember Long memberId,
+        @RequestBody WishlistRequestDto wishlistRequestDto) {
+        wishService.addWishlist(new Wish(memberId, wishlistRequestDto.getProductId(),
+            wishlistRequestDto.getQuantity()));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<String> deleteWishlist(@LoginMember Long memberId, @PathVariable Long productId) {
+    public ResponseEntity<String> deleteWishlist(@LoginMember Long memberId,
+        @PathVariable Long productId) {
         wishService.deleteById(memberId, productId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

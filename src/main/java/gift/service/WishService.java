@@ -1,7 +1,6 @@
 package gift.service;
 
 import gift.entity.Wish;
-import gift.exception.BusinessException;
 import gift.repository.WishRepository;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +22,8 @@ public class WishService {
     }
 
     public Wish addWishlist(Wish wish) {
-        Optional<Wish> wishlists = wishRepository.findByMemberIdAndProductId(wish.getMemberId(), wish.getProductId());
+        Optional<Wish> wishlists = wishRepository.findByMemberIdAndProductId(wish.getMemberId(),
+            wish.getProductId());
         if (wishlists.isPresent()) {
             Wish existingWish = wishlists.get();
             existingWish.setQuantity(wish.getQuantity());

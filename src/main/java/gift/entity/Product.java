@@ -24,7 +24,8 @@ public class Product {
     @Column(nullable = false)
     private String imageUrl;
 
-    protected Product() {}
+    protected Product() {
+    }
 
     public Product(Long id, String name, double price, String imageUrl) {
         this.id = id;
