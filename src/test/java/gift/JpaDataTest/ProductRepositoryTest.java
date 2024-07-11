@@ -7,9 +7,12 @@ import gift.domain.product.Product;
 import gift.domain.product.ProductService;
 import gift.domain.product.JpaProductRepository;
 import gift.global.exception.BusinessException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.validation.ConstraintViolationException;
 import java.util.Optional;
 import jdk.jfr.Description;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,23 +29,27 @@ public class ProductRepositoryTest {
     private JpaProductRepository productRepository;
     @Autowired
     private ProductService productService;
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    private Product product;
+
+    @BeforeEach
+    void setUp() {
+        Product product = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
+        this.product = product;
+    }
 
     @Test
     @Description("상품 정상 저장")
     void save() {
-        // given
-        Product product = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
-        Product savedProduct = productRepository.saveAndFlush(product);
-
         // when
+        Product savedProduct = productRepository.saveAndFlush(product);
+        clear();
         Product findProduct = productRepository.findById(savedProduct.getId()).get();
 
         //then
-        assertAll(
-            () -> assertThat(findProduct.getId()).isEqualTo(savedProduct.getId()),
-            () -> assertThat(findProduct.getPrice()).isEqualTo(4500),
-            () -> assertThat(findProduct.getImageUrl()).isEqualTo("https://example.com/image.jpg")
-        );
+        assertThat(savedProduct).isEqualTo(findProduct);
     }
 
     @Test
@@ -85,10 +92,9 @@ public class ProductRepositoryTest {
     @Description("상품 수정")
     void update() {
         // given
-        Product product = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
         productRepository.saveAndFlush(product);
-
-        Product findProduct = productRepository.findByName("아이스 아메리카노 T");
+        clear();
+        Product findProduct = productRepository.findById(product.getId()).get();
 
         // when
         findProduct.setPrice(4700);
@@ -97,28 +103,26 @@ public class ProductRepositoryTest {
         Product savedProduct = productRepository.saveAndFlush(findProduct);
 
         // then
-        assertAll(
-            () -> assertThat(savedProduct.getName()).isEqualTo("아이스 아메리카노 T"),
-            () -> assertThat(savedProduct.getPrice()).isEqualTo(4700),
-            () -> assertThat(savedProduct.getImageUrl()).isEqualTo(
-                "https://example.com/imageModified.jpg")
-        );
+        assertThat(findProduct).isEqualTo(savedProduct);
     }
 
     @Test
     @Description("상품 삭제")
     void delete() {
-        //given
-        Product product = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
-        Product savedProduct = productRepository.saveAndFlush(product);
+            // when
+            Product savedProduct = productRepository.saveAndFlush(product);
+            productRepository.deleteById(savedProduct.getId());
 
-        // when
-        productRepository.deleteById(savedProduct.getId());
-
-        // then
-        Optional<Product> findProduct = productRepository.findById(savedProduct.getId());
-        assertThat(findProduct.isPresent()).isEqualTo(false);
+            // then
+            Optional<Product> findProduct = productRepository.findById(savedProduct.getId());
+            assertThat(findProduct.isEmpty()).isEqualTo(true);
     }
 
+    private void flush() {
+        entityManager.flush();
+    }
+    private void clear() {
+        entityManager.clear();
+    }
 
 }
