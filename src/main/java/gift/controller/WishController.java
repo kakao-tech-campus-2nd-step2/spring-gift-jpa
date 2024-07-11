@@ -30,20 +30,20 @@ public class WishController {
 
     @PostMapping
     public ResponseEntity<Void> addWish(@RequestHeader("Authorization") String fullToken, @RequestBody WishRequestDto wishRequestDto){
-        String userEmail = jwtProvider.getUserEmail(fullToken.substring(7));
-        wishService.addWish(userEmail,wishRequestDto);
+        String userEmail = jwtProvider.getMemberEmail(fullToken.substring(7));
+        wishService.save(userEmail,wishRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
     public ResponseEntity<List<WishResponseDto>> wishList(@RequestHeader("Authorization") String fullToken){
-        String userEmail = jwtProvider.getUserEmail(fullToken.substring(7));
+        String userEmail = jwtProvider.getMemberEmail(fullToken.substring(7));
         return ResponseEntity.status(HttpStatus.OK).body(wishService.findByEmail(userEmail));
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> deleteWish(@RequestHeader("Authorization") String fullToken, @PathVariable Long productId){
-        String userEmail = jwtProvider.getUserEmail(fullToken.substring(7));
+        String userEmail = jwtProvider.getMemberEmail(fullToken.substring(7));
         wishService.deleteWish(userEmail,productId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -51,7 +51,7 @@ public class WishController {
     @PatchMapping("/{productId}")
     public ResponseEntity<Void> updateWish(@RequestHeader("Authorization") String fullToken, @PathVariable Long productId,@RequestBody
         WishPatchDto wishPatchDto){
-        String userEmail = jwtProvider.getUserEmail(fullToken.substring(7));
+        String userEmail = jwtProvider.getMemberEmail(fullToken.substring(7));
         wishService.updateWish(userEmail,productId,wishPatchDto.getQuantity());
         return ResponseEntity.status(HttpStatus.OK).build();
     }

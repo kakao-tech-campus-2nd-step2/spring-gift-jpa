@@ -1,7 +1,7 @@
 package gift.exception;
 
 import gift.dto.ErrorResponse;
-import gift.exception.UserNotFoundException;
+import gift.exception.MemberNotFoundException;
 import io.jsonwebtoken.JwtException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,8 +33,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMemberNotFoundException(MemberNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }

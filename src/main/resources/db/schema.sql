@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS products (
     );
 
 
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS members (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255),
     password VARCHAR(255)
@@ -15,10 +15,10 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS wishes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id BIGINT,
+    Member_id BIGINT,
     product_id BIGINT,
     quantity INT,
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (Member_id) REFERENCES Members(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
 

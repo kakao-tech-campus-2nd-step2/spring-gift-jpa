@@ -70,14 +70,15 @@ public class ProductController {
 
     @PostMapping("/add")
     public String addProduct(@Valid @ModelAttribute Product product){
-        productService.addProduct(product);
+        productService.save(product);
         return "redirect:/products";
     }
 
     // 삭제
     @GetMapping("/{id}/delete")
     public String deleteProduct(@PathVariable Long id){
-        productService.deleteProduct(id);
+
+        productService.deleteById(id);
         return "redirect:/products";
     }
 }

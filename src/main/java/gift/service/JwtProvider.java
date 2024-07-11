@@ -44,7 +44,7 @@ public class JwtProvider {
     }
 
     // token의 subject를 꺼낸다 == 이 토큰을 가진 client의 이름을 꺼낸다 >> 이 문자열로 클라이언트 식별한다!!
-    public String getUserEmail(String token) {
+    public String getMemberEmail(String token) {
         return getClaims(token).getSubject();
     }
 }

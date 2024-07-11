@@ -1,16 +1,18 @@
 package gift.dto;
 
+import gift.domain.Product;
+
 public class WishRequestDto {
-    private Long productId;
+    private Product product;
     private int quantity;
 
-    public WishRequestDto(Long productId, int quantity) {
-        this.productId = productId;
+    public WishRequestDto(Product product, int quantity) {
+        this.product = product;
         this.quantity = quantity;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
     public int getQuantity() {
