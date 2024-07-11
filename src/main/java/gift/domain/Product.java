@@ -1,6 +1,7 @@
 package gift.domain;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,12 +14,12 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+    @Column(nullable = false)
     @Size(max = 15)
     private String name;
-    @NotNull
+    @Column(nullable = false)
     private int price;
-    @NotNull
+    @Column(nullable = false)
     private String imageUrl;
 
     public Product(Long id, String name, int price, String imageUrl) {

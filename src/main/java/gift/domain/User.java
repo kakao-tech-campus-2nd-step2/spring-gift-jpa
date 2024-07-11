@@ -14,10 +14,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    @Column(unique = true)
+
+    @Column(nullable = false, unique = true)
     private String email;
-    @NotNull
+    @Column(nullable = false)
     private String password;
     private String role;
 
