@@ -6,6 +6,7 @@ import gift.dto.response.ProductResponseDto;
 import gift.exception.EntityNotFoundException;
 import gift.exception.KakaoInNameException;
 import gift.repository.product.ProductRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +48,12 @@ public class ProductService {
 
     public List<ProductResponseDto> findAllProducts(){
         return productRepository.findAll().stream()
+                .map(ProductResponseDto::from)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductResponseDto> findProducts(Pageable pageable){
+        return productRepository.findAll(pageable).stream()
                 .map(ProductResponseDto::from)
                 .collect(Collectors.toList());
     }
