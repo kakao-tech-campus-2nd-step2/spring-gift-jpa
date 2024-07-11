@@ -1,11 +1,21 @@
 package gift.domain.wish;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Wish {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long memberId;
     private Long productId;
-
     private Integer quantity;
+
+    public Wish() {
+    }
 
     public Wish(Long id, Long memberId, Long productId, Integer quantity) {
         this.id = id;

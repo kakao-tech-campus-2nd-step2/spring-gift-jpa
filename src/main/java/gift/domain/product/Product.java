@@ -14,7 +14,8 @@ public class Product {
     private int price;
     private String imgUrl;
 
-    public Product(){}
+    public Product() {
+    }
 
     public Product(Long id, String name, int price, String imgUrl) {
         checkName(name);
@@ -57,8 +58,8 @@ public class Product {
         this.name = name;
     }
 
-    private void checkName(String name){
-        if(name.contains("카카오")){
+    private void checkName(String name) {
+        if (name.contains("카카오")) {
             throw new IllegalArgumentException("카카오가 포함된 이름은 담당 MD와 협의가 필요합니다.");
         }
     }
