@@ -8,7 +8,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
@@ -20,7 +19,7 @@ public class ProductNameValidatorTest {
     @Autowired
     private Validator validator;
 
-    @MockBean
+    @Autowired
     private ProductService productService;
 
     @Test
@@ -86,34 +85,4 @@ public class ProductNameValidatorTest {
         //then
         Assertions.assertThat(violations).isNotEmpty();
     }
-
-//    @Test
-//    public void save_existingProductId() {
-//        //given
-//        ProductDTO product = new ProductDTO("abc", 123, "www.test.com");
-//        Product savedProduct = productService.save(new Product(product));
-//
-//        WishListDTO wishList = new WishListDTO(savedProduct.getId());
-//
-//        //when
-//        Set<ConstraintViolation<WishListDTO>> violations = validator.validate(wishList);
-//
-//        //then
-//        Assertions.assertThat(violations).isEmpty();
-//    }
-//
-//    @Test
-//    public void save_nonexistentProductId() {
-//        //given
-//        ProductDTO product = new ProductDTO("abc", 123, "www.test.com");
-//        Product savedProduct = productService.save(new Product(product));
-//
-//        WishListDTO wishList = new WishListDTO(savedProduct.getId() + 1);
-//
-//        //when
-//        Set<ConstraintViolation<WishListDTO>> violations = validator.validate(wishList);
-//
-//        //then
-//        Assertions.assertThat(violations).isNotEmpty();
-//    }
 }
