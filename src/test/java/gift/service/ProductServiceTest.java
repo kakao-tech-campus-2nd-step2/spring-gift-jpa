@@ -11,8 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -51,7 +53,7 @@ public class ProductServiceTest {
         Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product2.jpg");
         productRepository.save(product);
 
-        List<ProductResponseDto> productList = productService.getAllProducts();
+        List<ProductResponseDto> productList = productService.getAllProducts(PageRequest.of(0, 10)).getContent();
 
         assertNotNull(productList);
         assertEquals(1, productList.size());
@@ -93,7 +95,7 @@ public class ProductServiceTest {
 
         productService.deleteProduct(product.getId());
 
-        List<ProductResponseDto> productList = productService.getAllProducts();
+        List<ProductResponseDto> productList = productService.getAllProducts(PageRequest.of(0, 10)).getContent();
         assertTrue(productList.isEmpty());
     }
 
@@ -101,5 +103,36 @@ public class ProductServiceTest {
     @Rollback
     public void 상품_삭제_없는상품() {
         assertThrows(BusinessException.class, () -> productService.deleteProduct(2L));
+    }
+
+    @Test
+    @Rollback
+    public void 상품_목록_페이지네이션() {
+        for (int i = 1; i <= 25; i++) {
+            Product product = new Product(new ProductName("상품 " + i), 1000 + i, "https://example.com/product" + i + ".jpg");
+            productRepository.save(product);
+        }
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<ProductResponseDto> page1 = productService.getAllProducts(pageable);
+
+        assertNotNull(page1);
+        assertEquals(10, page1.getNumberOfElements());
+        assertEquals(0, page1.getNumber());
+        assertEquals(3, page1.getTotalPages());
+
+        pageable = PageRequest.of(1, 10);
+        Page<ProductResponseDto> page2 = productService.getAllProducts(pageable);
+
+        assertNotNull(page2);
+        assertEquals(10, page2.getNumberOfElements());
+        assertEquals(1, page2.getNumber());
+
+        pageable = PageRequest.of(2, 10);
+        Page<ProductResponseDto> page3 = productService.getAllProducts(pageable);
+
+        assertNotNull(page3);
+        assertEquals(5, page3.getNumberOfElements());
+        assertEquals(2, page3.getNumber());
     }
 }

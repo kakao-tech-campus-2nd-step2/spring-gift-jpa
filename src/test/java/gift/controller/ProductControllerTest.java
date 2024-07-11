@@ -12,10 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProductControllerTest {
@@ -44,15 +48,15 @@ public class ProductControllerTest {
         ProductRequestDto productRequestDto = new ProductRequestDto("오둥이 입니다만", 29800, "https://example.com/product2.jpg");
 
         given()
-            .contentType(ContentType.JSON)
-            .body(productRequestDto)
-        .when()
-            .post("/api/products")
-        .then()
-            .statusCode(HttpStatus.CREATED.value())
-            .body("name", equalTo("오둥이 입니다만"))
-            .body("price", equalTo(29800))
-            .body("imageUrl", equalTo("https://example.com/product2.jpg"));
+                .contentType(ContentType.JSON)
+                .body(productRequestDto)
+                .when()
+                .post("/api/products")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .body("name", equalTo("오둥이 입니다만"))
+                .body("price", equalTo(29800))
+                .body("imageUrl", equalTo("https://example.com/product2.jpg"));
     }
 
     @Test
@@ -63,30 +67,38 @@ public class ProductControllerTest {
         ProductRequestDto updateDTO = new ProductRequestDto("오둥이 아닙니다만", 35000, "https://example.com/product3.jpg");
 
         given()
-            .contentType(ContentType.JSON)
-            .body(updateDTO)
-        .when()
-            .put("/api/products/{id}", productId)
-        .then()
-            .statusCode(HttpStatus.OK.value())
-            .body("name", equalTo("오둥이 아닙니다만"))
-            .body("price", equalTo(35000))
-            .body("imageUrl", equalTo("https://example.com/product3.jpg"));
+                .contentType(ContentType.JSON)
+                .body(updateDTO)
+                .when()
+                .put("/api/products/{id}", productId)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("name", equalTo("오둥이 아닙니다만"))
+                .body("price", equalTo(35000))
+                .body("imageUrl", equalTo("https://example.com/product3.jpg"));
     }
 
     @Test
     public void 모든_상품_조회() {
         ProductResponseDto productResponseDto = productService.addProduct(new ProductRequestDto("오둥이 입니다만", 29800, "https://example.com/product2.jpg"));
 
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<ProductResponseDto> productPage = productService.getAllProducts(pageable);
+
         given()
-        .when()
-            .get("/api/products")
-        .then()
-            .statusCode(HttpStatus.OK.value())
-            .body("[0].id", equalTo(productResponseDto.getId().intValue()))
-            .body("[0].name", equalTo("오둥이 입니다만"))
-            .body("[0].price", equalTo(29800))
-            .body("[0].imageUrl", equalTo("https://example.com/product2.jpg"));
+                .when()
+                .get("/api/products?page=0&size=10")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("content[0].id", equalTo(productResponseDto.getId().intValue()))
+                .body("content[0].name", equalTo("오둥이 입니다만"))
+                .body("content[0].price", equalTo(29800))
+                .body("content[0].imageUrl", equalTo("https://example.com/product2.jpg"))
+                .body("pageable", notNullValue())
+                .body("totalPages", equalTo(1))
+                .body("totalElements", equalTo(1))
+                .body("size", equalTo(10))
+                .body("number", equalTo(0));
     }
 
     @Test
@@ -95,10 +107,10 @@ public class ProductControllerTest {
         Long productId = productResponseDto.getId();
 
         given()
-        .when()
-            .delete("/api/products/{id}", productId)
-        .then()
-            .statusCode(HttpStatus.NO_CONTENT.value());
+                .when()
+                .delete("/api/products/{id}", productId)
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
 
     }
 }
