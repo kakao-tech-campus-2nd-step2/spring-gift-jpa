@@ -20,6 +20,7 @@ import java.util.List;
 public class WishListController {
     private final WishListService wishListService;
 
+
     public WishListController(WishListService wishListService){
         this.wishListService = wishListService;
     }

@@ -23,6 +23,7 @@ public class WishProduct {
         this.userId = userId;
         this.productId = productId;
         count = 1;
+
     }
 
     public String getUserId() {
