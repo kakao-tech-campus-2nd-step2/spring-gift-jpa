@@ -26,21 +26,17 @@ public class WishList {
     @JoinColumn(name = "member_id", nullable = false)
     private User user;
 
-    @ManyToMany
-    @JoinTable(
-        name = "wish_list_products",
-        joinColumns = @JoinColumn(name = "wish_list_id"),
-        inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private final List<Product> products = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
-    protected WishList(){
+    protected WishList() {
     }
 
-    public WishList(Long id, User user, List<Product> products) {
+    public WishList(Long id, User user, Product product) {
         this.id = id;
         this.user = user;
-        this.products.addAll(products);
+        this.product = product;
     }
 
     public Long getId() {
@@ -51,15 +47,7 @@ public class WishList {
         return user;
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void addProduct(Product product) {
-        this.products.add(product);
-    }
-
-    public void removeProduct(Product product) {
-        this.products.remove(product);
+    public Product getProduct() {
+        return product;
     }
 }

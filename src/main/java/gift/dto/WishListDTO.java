@@ -8,14 +8,14 @@ public class WishListDTO implements Serializable {
 
     private Long id;
     private UserDTO user;
-    private List<ProductDTO> products = new ArrayList<>();
+    private ProductDTO product;
 
     public WishListDTO() {}
 
-    public WishListDTO(Long id, UserDTO user, List<ProductDTO> products) {
+    public WishListDTO(Long id, UserDTO user, ProductDTO product) {
         this.id = id;
         this.user = user;
-        this.products = products;
+        this.product = product;
     }
 
     public Long getId() {
@@ -34,11 +34,11 @@ public class WishListDTO implements Serializable {
         this.user = user;
     }
 
-    public List<ProductDTO> getProducts() {
-        return products;
+    public ProductDTO getProduct() {
+        return product;
     }
 
-    public void setProducts(List<ProductDTO> products) {
-        this.products = products;
+    public void setProduct(ProductDTO product) {
+        this.product = product;
     }
 }
