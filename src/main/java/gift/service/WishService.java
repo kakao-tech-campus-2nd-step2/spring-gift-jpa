@@ -21,9 +21,11 @@ public class WishService {
     }
 
     public List<Wish> getWishesByMember(Member member) {
-        return wishRepository.findAllByMemberId(member.getId()).stream().map(WishEntity::toWish)
-            .collect(
-                Collectors.toList());
+        return wishRepository
+            .findAllByMemberId(member.getId())
+            .stream()
+            .map(WishEntity::toWish)
+            .toList();
     }
 
     public Wish addWish(WishRequest wishRequest) {
@@ -31,7 +33,8 @@ public class WishService {
     }
 
     public void deleteWish(Long id, Member member) {
-        WishEntity wishEntity = wishRepository.findById(id)
+        WishEntity wishEntity = wishRepository
+            .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("not found entity"));
 
         if (member.getId() == wishEntity.getMemberId()) {

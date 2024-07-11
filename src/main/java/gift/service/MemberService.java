@@ -22,8 +22,11 @@ public class MemberService {
     }
 
     public List<Member> findAllMember() {
-        return memberRepository.findAll().stream().map(MemberEntity::toMember)
-            .collect(Collectors.toList());
+        return memberRepository
+            .findAll()
+            .stream()
+            .map(MemberEntity::toMember)
+            .toList();
     }
 
     public String register(MemberRequest memberRequest) {
@@ -34,7 +37,8 @@ public class MemberService {
     }
 
     public String login(MemberRequest memberRequest) {
-        MemberEntity memberEntity = memberRepository.findByEmail(memberRequest.getEmail())
+        MemberEntity memberEntity = memberRepository
+            .findByEmail(memberRequest.getEmail())
             .orElseThrow(() -> new EntityNotFoundException("not found Entity"));
         Member member = memberEntity.toMember();
 
@@ -45,7 +49,8 @@ public class MemberService {
     }
 
     public void deleteMember(Long id) {
-        MemberEntity memberEntity = memberRepository.findById(id)
+        MemberEntity memberEntity = memberRepository
+            .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("not found Entity"));
         memberRepository.delete(memberEntity);
     }
@@ -54,7 +59,8 @@ public class MemberService {
         String email = jwtUtil.getEmailFromToken(token);
 
         if (email != null) {
-            return memberRepository.findByEmail(email)
+            return memberRepository
+                .findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("not found Entity")).toMember();
         }
         return null;

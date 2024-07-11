@@ -21,13 +21,16 @@ public class ProductService {
     }
 
     public Product find(Long id) {
-        ProductEntity productEntity = productRepository.findById(id)
+        ProductEntity productEntity = productRepository
+            .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("not found entity"));
         return productEntity.toProduct();
     }
 
     public List<Product> findAll() {
-        return productRepository.findAll().stream().map(ProductEntity::toProduct)
+        return productRepository.findAll()
+            .stream()
+            .map(ProductEntity::toProduct)
             .collect(Collectors.toList());
     }
 
@@ -37,7 +40,8 @@ public class ProductService {
     }
 
     public Product updateProduct(Long id, ProductRequest productRequest) {
-        ProductEntity productEntity = productRepository.findById(id)
+        ProductEntity productEntity = productRepository
+            .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("not found entity"));
 
         productEntity.updateProductEntity(productRequest);
@@ -46,7 +50,8 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
-        ProductEntity productEntity = productRepository.findById(id)
+        ProductEntity productEntity = productRepository
+            .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("not found entity"));
         productRepository.delete(productEntity);
     }
