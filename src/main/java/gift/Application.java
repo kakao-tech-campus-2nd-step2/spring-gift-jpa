@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootApplication
-@EnableJpaAuditing
 public class Application{
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
