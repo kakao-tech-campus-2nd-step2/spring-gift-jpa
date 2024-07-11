@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS WISH;
 DROP TABLE IF EXISTS MEMBER;
 DROP TABLE IF EXISTS PRODUCT;
 
@@ -5,22 +6,21 @@ CREATE TABLE MEMBER (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role VARCHAR(255),
-    CHECK (role in ('USER', 'ADMIN'))
+    role ENUM ('USER', 'ADMIN')
 );
 
 CREATE TABLE PRODUCT (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     price INT NOT NULL,
-    imageUrl VARCHAR(255)
+    image_url VARCHAR(255)
 );
 
 CREATE TABLE WISH (
-    memberId BIGINT NOT NULL,
-    productId BIGINT NOT NULL,
+    member_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
     quantity INT NOT NULL,
-    PRIMARY KEY (memberId, productId),
-    FOREIGN KEY (memberId) REFERENCES MEMBER(id),
-    FOREIGN KEY (productId) REFERENCES PRODUCT(id)
+    PRIMARY KEY (member_id, product_id),
+    FOREIGN KEY (member_id) REFERENCES MEMBER(id),
+    FOREIGN KEY (product_id) REFERENCES PRODUCT(id)
 )
