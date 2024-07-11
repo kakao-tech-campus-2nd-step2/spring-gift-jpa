@@ -16,7 +16,8 @@ public class Wish {
     @Embedded
     private ProductCount productCount;
 
-    public Wish() {}
+    public Wish() {
+    }
 
     public Wish(Long id, Long memberId, Long productId, ProductCount productCount) {
         this.id = id;

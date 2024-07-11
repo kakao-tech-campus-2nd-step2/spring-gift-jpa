@@ -9,7 +9,6 @@ import gift.global.security.Login;
 import gift.global.utils.ResponseHelper;
 import gift.wish.domain.Wish;
 import gift.wish.dto.WishRequestDto;
-import gift.wish.dto.WishUpdateRequestDto;
 import gift.wish.service.WishService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

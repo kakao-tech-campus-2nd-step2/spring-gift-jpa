@@ -9,7 +9,9 @@ import java.util.Enumeration;
 public class AuthorizationExtractor {
     public static final String BEARER_TYPE = "Bearer";
 
-    private AuthorizationExtractor () {}
+    private AuthorizationExtractor() {
+    }
+
     public static String extractAccessToken(HttpServletRequest request) {
         Enumeration<String> headers = request.getHeaders(HttpHeaders.AUTHORIZATION);
         if (!headers.hasMoreElements()) {

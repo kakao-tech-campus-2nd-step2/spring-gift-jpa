@@ -13,7 +13,8 @@ public class ProductPrice {
     @Column(name = "price")
     private Long value;
 
-    public ProductPrice() {}
+    public ProductPrice() {
+    }
 
     public ProductPrice(Long value) {
         if (value < 0) {

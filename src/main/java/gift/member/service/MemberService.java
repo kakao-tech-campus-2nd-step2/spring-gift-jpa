@@ -1,9 +1,9 @@
 package gift.member.service;
 
 import gift.member.domain.Member;
+import gift.member.dto.MemberServiceDto;
 import gift.member.exception.MemberNotFoundException;
 import gift.member.repository.MemberRepository;
-import gift.member.dto.MemberServiceDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

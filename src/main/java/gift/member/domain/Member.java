@@ -1,6 +1,5 @@
 package gift.member.domain;
 
-import gift.wish.domain.Wish;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 

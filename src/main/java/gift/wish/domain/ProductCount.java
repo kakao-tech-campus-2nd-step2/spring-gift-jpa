@@ -12,7 +12,8 @@ public class ProductCount {
     @Column(name = "product_count")
     private Long value;
 
-    public ProductCount() {}
+    public ProductCount() {
+    }
 
     public ProductCount(Long value) {
         if (value < 0) {

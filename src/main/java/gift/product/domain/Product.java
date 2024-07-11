@@ -1,7 +1,6 @@
 package gift.product.domain;
 
 import gift.product.dto.ProductRequestDto;
-import gift.wish.domain.Wish;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 
@@ -20,7 +19,8 @@ public class Product {
     private String imageUrl;
 
     // JDBC 에서 엔티티 클래스를 인스턴스화할 때 반드시 기본 생성자와 파라미터 생성자가 필요하다
-    public Product() {}
+    public Product() {
+    }
 
     public Product(Long id, ProductName name, ProductPrice price, String imageUrl) {
         this.id = id;

@@ -16,7 +16,8 @@ public class ProductName {
     @Column(name = "name")
     private String value;
 
-    public ProductName() {}
+    public ProductName() {
+    }
 
     public ProductName(String value) {
         if (Objects.isNull(value)) {
