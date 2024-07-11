@@ -29,7 +29,7 @@ public class ProductEntity {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @OneToMany(mappedBy = "members", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL)
     private List<WishListEntity> wishListEntities;
 
     public ProductEntity() {

@@ -23,7 +23,7 @@ public class MemberEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "products", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL)
     private List<WishListEntity> wishListEntities;
 
     public MemberEntity() {
