@@ -1,4 +1,4 @@
-package gift.model;
+package gift.archived_model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.model.Member;
+import gift.archived_model.Member;
 import gift.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

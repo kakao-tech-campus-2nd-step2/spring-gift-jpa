@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.model.Product;
+import gift.archived_model.Product;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;

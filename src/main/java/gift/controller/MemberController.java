@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.dto.MemberDTO;
-import gift.model.Member;
+import gift.archived_model.Member;
 import gift.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

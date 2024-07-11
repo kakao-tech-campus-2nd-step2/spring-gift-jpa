@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.model.Member;
+import gift.archived_model.Member;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
