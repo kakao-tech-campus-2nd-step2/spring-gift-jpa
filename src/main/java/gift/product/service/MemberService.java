@@ -1,6 +1,6 @@
 package gift.product.service;
 
-import gift.product.dao.MemberDao;
+import gift.product.repository.MemberRepository;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.Member;
 import gift.product.util.JwtUtil;
@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberService {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
     private final MemberValidation memberValidation;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public MemberService(MemberDao memberDao, JwtUtil jwtUtil, MemberValidation memberValidation, PasswordEncoder passwordEncoder) {
-        this.memberDao = memberDao;
+    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil, MemberValidation memberValidation, PasswordEncoder passwordEncoder) {
+        this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
         this.memberValidation = memberValidation;
         this.passwordEncoder = passwordEncoder;
@@ -31,7 +31,7 @@ public class MemberService {
 
     public ResponseEntity<Map<String, String>> signUp(Member member) {
         memberValidation.signUpValidation(member);
-        memberDao.save(new Member(member.getEmail(), passwordEncoder.encode(member.getPassword())));
+        memberRepository.save(new Member(member.getEmail(), passwordEncoder.encode(member.getPassword())));
         return new ResponseEntity<>(responseToken(jwtUtil.generateToken(member.getEmail())), HttpStatus.OK);
     }
 

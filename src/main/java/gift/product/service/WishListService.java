@@ -1,8 +1,8 @@
 package gift.product.service;
 
-import gift.product.dao.MemberDao;
-import gift.product.dao.ProductDao;
-import gift.product.dao.WishListDao;
+import gift.product.repository.MemberRepository;
+import gift.product.repository.ProductRepository;
+import gift.product.repository.WishListRepository;
 import gift.product.model.Product;
 import gift.product.model.Wish;
 import gift.product.util.JwtUtil;
@@ -20,29 +20,29 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WishListService {
-    private final WishListDao wishListDao;
+    private final WishListRepository wishListRepository;
     private final JwtUtil jwtUtil;
     private final WishListValidation wishListValidation;
-    private final MemberDao memberDao;
-    private final ProductDao productDao;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public WishListService(WishListDao wishListDao, JwtUtil jwtUtil, WishListValidation wishListValidation, MemberDao memberDao, ProductDao productDao) {
-        this.wishListDao = wishListDao;
+    public WishListService(WishListRepository wishListRepository, JwtUtil jwtUtil, WishListValidation wishListValidation, MemberRepository memberRepository, ProductRepository productRepository) {
+        this.wishListRepository = wishListRepository;
         this.jwtUtil = jwtUtil;
         this.wishListValidation = wishListValidation;
-        this.memberDao = memberDao;
-        this.productDao = productDao;
+        this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
     }
 
     public Collection<Product> getAllProducts(HttpServletRequest request) {
         String token = jwtUtil.checkAuthorization(request.getHeader("Authorization"));
 
-        Collection<Wish> findList = wishListDao.findAllByMember(memberDao.findByEmail(jwtUtil.getEmailByToken(token)).get());
+        Collection<Wish> findList = wishListRepository.findAllByMember(memberRepository.findByEmail(jwtUtil.getEmailByToken(token)).get());
 
         List<Product> responseList = new ArrayList<>();
         for(Wish wish : findList)
-            productDao.findById(wish.getProduct().getId()).ifPresent(responseList::add);
+            productRepository.findById(wish.getProduct().getId()).ifPresent(responseList::add);
 
         return responseList;
     }
@@ -50,12 +50,12 @@ public class WishListService {
     public ResponseEntity<String> registerWishProduct(HttpServletRequest request, Map<String, Long> requestBody) {
 
         String token = jwtUtil.checkAuthorization(request.getHeader("Authorization"));
-        productDao.existsById(requestBody.get("productId"));
+        productRepository.existsById(requestBody.get("productId"));
 
-        wishListDao.save(
+        wishListRepository.save(
                 new Wish(
-                        memberDao.findByEmail(jwtUtil.getEmailByToken(token)).get(),
-                        productDao.findById(requestBody.get("productId")).get()
+                        memberRepository.findByEmail(jwtUtil.getEmailByToken(token)).get(),
+                        productRepository.findById(requestBody.get("productId")).get()
                 )
         );
 
@@ -64,8 +64,8 @@ public class WishListService {
 
     public ResponseEntity<String> deleteWishProduct(HttpServletRequest request, Long id) {
         String token = jwtUtil.checkAuthorization(request.getHeader("Authorization"));
-        wishListValidation.deleteValidation(id, memberDao.findByEmail(jwtUtil.getEmailByToken(token)).get());
-        wishListDao.deleteById(id);
+        wishListValidation.deleteValidation(id, memberRepository.findByEmail(jwtUtil.getEmailByToken(token)).get());
+        wishListRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("delete WishProduct successfully");
     }
 }

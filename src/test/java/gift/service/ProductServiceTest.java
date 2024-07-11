@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.product.dao.ProductDao;
+import gift.product.repository.ProductRepository;
 import gift.product.exception.InstanceValueException;
 import gift.product.exception.InvalidIdException;
 import gift.product.model.Product;
@@ -15,7 +15,7 @@ public class ProductServiceTest {
     @Autowired
     private ProductService productService;
     @Autowired
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     @Test
     void testRegisterNormalProduct() {
@@ -54,7 +54,7 @@ public class ProductServiceTest {
     @Test
     void testUpdateProduct() {
         System.out.println("[ProductServiceTest] testUpdateProduct()");
-        Product product = productDao.save(
+        Product product = productRepository.save(
                 new Product(
                         "originalProduct",
                         1000,
@@ -76,7 +76,7 @@ public class ProductServiceTest {
                 1000,
                 "image.url"
         );
-        productDao.save(product);
+        productRepository.save(product);
         Assertions.assertThrows(InvalidIdException.class, () -> {
             productService.updateProduct(-1L, product);
         });
@@ -85,7 +85,7 @@ public class ProductServiceTest {
     @Test
     void testUpdateInvalidNameProduct() {
         System.out.println("[ProductServiceTest] testUpdateInvalidNameProduct()");
-        Product product = productDao.save(
+        Product product = productRepository.save(
                 new Product(
                         "originalProduct",
                         1000,
@@ -101,7 +101,7 @@ public class ProductServiceTest {
     @Test
     void testUpdateNegativePriceProduct() {
         System.out.println("[ProductServiceTest] testUpdateNegativePriceProduct()");
-        Product product = productDao.save(
+        Product product = productRepository.save(
                 new Product(
                         "originalProduct",
                         1000,

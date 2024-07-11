@@ -1,6 +1,6 @@
 package gift.product.validation;
 
-import gift.product.dao.ProductDao;
+import gift.product.repository.ProductRepository;
 import gift.product.exception.InstanceValueException;
 import gift.product.exception.InvalidIdException;
 import gift.product.model.Product;
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProductValidation {
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public ProductValidation(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductValidation(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     public void registerValidation(Product product) {
@@ -29,7 +29,7 @@ public class ProductValidation {
         registerValidation(product);
         if(isNullId(id))
             throw new InstanceValueException("수정할 상품의 ID가 누락되었습니다.");
-        if(!productDao.existsById(id))
+        if(!productRepository.existsById(id))
             throw new InvalidIdException("변경을 시도하는 상품의 ID가 존재하지 않습니다.");
     }
 

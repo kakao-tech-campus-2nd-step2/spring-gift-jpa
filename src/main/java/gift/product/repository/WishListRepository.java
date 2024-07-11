@@ -1,4 +1,4 @@
-package gift.product.dao;
+package gift.product.repository;
 
 import gift.product.model.Member;
 import gift.product.model.Wish;
@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public interface WishListDao extends JpaRepository<Wish, Long> {
+public interface WishListRepository extends JpaRepository<Wish, Long> {
     Collection<Wish> findAllByMember(Member member);
 }

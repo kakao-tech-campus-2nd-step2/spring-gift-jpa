@@ -1,6 +1,6 @@
-package gift.dao;
+package gift.repository;
 
-import gift.product.dao.ProductDao;
+import gift.product.repository.ProductRepository;
 import gift.product.model.Product;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @DataJpaTest
 public class ProductRepositoryTest {
     @Autowired
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     private Product product;
 
@@ -29,7 +29,7 @@ public class ProductRepositoryTest {
 
     @Test
     void testRegisterProduct() {
-        Product registerProduct = productDao.save(product);
+        Product registerProduct = productRepository.save(product);
         assertThat(registerProduct.getId()).isNotNull();
         assertThat(registerProduct.getName()).isEqualTo("상품1");
         assertThat(registerProduct.getPrice()).isEqualTo(1500);
@@ -40,9 +40,9 @@ public class ProductRepositoryTest {
 
     @Test
     void testSearchProductById() {
-        Product savedProduct = productDao.save(product);
+        Product savedProduct = productRepository.save(product);
 
-        Optional<Product> retrievedProduct = productDao.findById(savedProduct.getId());
+        Optional<Product> retrievedProduct = productRepository.findById(savedProduct.getId());
         System.out.println("삽입된 객체의 ID = " + savedProduct.getId());
 
         assertThat(retrievedProduct).isPresent();
@@ -56,9 +56,9 @@ public class ProductRepositoryTest {
 
     @Test
     void testUpdateProduct() {
-        Product registerProduct = productDao.save(product);
+        Product registerProduct = productRepository.save(product);
 
-        productDao.save(
+        productRepository.save(
             new Product(
                     registerProduct.getId(),
                     registerProduct.getName(),
@@ -67,7 +67,7 @@ public class ProductRepositoryTest {
             )
         );
 
-        Optional<Product> updateProduct = productDao.findById(registerProduct.getId());
+        Optional<Product> updateProduct = productRepository.findById(registerProduct.getId());
 
         assertThat(updateProduct).isPresent();
         assertThat(updateProduct.get().getPrice()).isEqualTo(2000);
@@ -75,14 +75,14 @@ public class ProductRepositoryTest {
 
     @Test
     void testDeleteProduct() {
-        Product savedProduct = productDao.save(product);
+        Product savedProduct = productRepository.save(product);
 
-        Optional<Product> retrievedProduct = productDao.findById(savedProduct.getId());
+        Optional<Product> retrievedProduct = productRepository.findById(savedProduct.getId());
         assertThat(retrievedProduct).isPresent();
 
-        productDao.deleteById(savedProduct.getId());
+        productRepository.deleteById(savedProduct.getId());
 
-        Optional<Product> deletedProduct = productDao.findById(savedProduct.getId());
+        Optional<Product> deletedProduct = productRepository.findById(savedProduct.getId());
         assertThat(deletedProduct).isNotPresent();
     }
 }

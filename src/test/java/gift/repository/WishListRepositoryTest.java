@@ -1,8 +1,8 @@
-package gift.dao;
+package gift.repository;
 
-import gift.product.dao.MemberDao;
-import gift.product.dao.ProductDao;
-import gift.product.dao.WishListDao;
+import gift.product.repository.MemberRepository;
+import gift.product.repository.ProductRepository;
+import gift.product.repository.WishListRepository;
 import gift.product.model.Member;
 import gift.product.model.Product;
 import gift.product.model.Wish;
@@ -15,33 +15,33 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 public class WishListRepositoryTest {
 
     @Autowired
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     @Autowired
-    private MemberDao memberDao;
+    private MemberRepository memberRepository;
 
     @Autowired
-    private WishListDao wishListDao;
+    private WishListRepository wishListRepository;
 
     private Product originProduct;
     private Member originMember;
 
     @BeforeEach
     void setUp() {
-        originProduct = productDao.save(new Product("product", 1000, "image.url"));
-        originMember = memberDao.save(new Member("user@email.com", "1234"));
+        originProduct = productRepository.save(new Product("product", 1000, "image.url"));
+        originMember = memberRepository.save(new Member("user@email.com", "1234"));
     }
 
     @Test
     void testRegisterWishList() {
         Wish product = new Wish(originMember, originProduct);
-        wishListDao.save(product);
+        wishListRepository.save(product);
     }
 
     @Test
     void testDeleteWishList() {
-        Wish wish = wishListDao.save(new Wish(originMember, originProduct));
-        wishListDao.deleteById(wish.getId());
+        Wish wish = wishListRepository.save(new Wish(originMember, originProduct));
+        wishListRepository.deleteById(wish.getId());
     }
 
 }

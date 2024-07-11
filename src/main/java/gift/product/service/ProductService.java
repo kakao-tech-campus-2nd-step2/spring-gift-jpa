@@ -1,6 +1,6 @@
 package gift.product.service;
 
-import gift.product.dao.ProductDao;
+import gift.product.repository.ProductRepository;
 import gift.product.model.Product;
 import gift.product.validation.ProductValidation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,45 +12,45 @@ import java.util.Collection;
 
 @Service
 public class ProductService {
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
     private final ProductValidation productValidation;
 
     @Autowired
-    public ProductService(ProductDao productDao, ProductValidation productValidation) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository, ProductValidation productValidation) {
+        this.productRepository = productRepository;
         this.productValidation = productValidation;
     }
 
     public ResponseEntity<String> registerProduct(Product product) {
         System.out.println(product.getId()+" "+product.getName()+" "+ product.getPrice()+" "+product.getImageUrl());
         productValidation.registerValidation(product);
-        productDao.save(product);
+        productRepository.save(product);
         return ResponseEntity.status(HttpStatus.CREATED).body("Product registered successfully");
     }
 
     public ResponseEntity<String> updateProduct(Long id, Product product) {
         productValidation.updateValidation(id, product);
-        productDao.save(new Product(id, product.getName(), product.getPrice(), product.getImageUrl()));
+        productRepository.save(new Product(id, product.getName(), product.getPrice(), product.getImageUrl()));
         return ResponseEntity.status(HttpStatus.CREATED).body("Product update successfully");
     }
 
     public void deleteProduct(Long id) {
-        productDao.deleteById(id);
+        productRepository.deleteById(id);
     }
 
     public Collection<Product> getAllProducts() {
-        return productDao.findAll();
+        return productRepository.findAll();
     }
 
     public Product getProductById(Long id) {
-        return productDao.findById(id).orElse(null);
+        return productRepository.findById(id).orElse(null);
     }
 
     public Collection<Product> searchProducts(String keyword) {
-        return productDao.findByName(keyword);
+        return productRepository.findByName(keyword);
     }
 
     public boolean existsById(Long id) {
-        return productDao.existsById(id);
+        return productRepository.existsById(id);
     }
 }
