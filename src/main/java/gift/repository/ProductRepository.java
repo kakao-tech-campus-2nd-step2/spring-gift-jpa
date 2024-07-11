@@ -55,6 +55,3 @@ public class ProductRepository {
         jdbcTemplate.update("DELETE FROM product WHERE id = ?", id);
     }
 }
-
-
-

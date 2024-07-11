@@ -6,11 +6,11 @@ import jakarta.validation.constraints.NotEmpty;
 public class Member {
     private Long id;
 
-    @Email(message = "?�메???�식???�바르�? ?�습?�다.")
-    @NotEmpty(message = "?�메?��? ?�수 ??��?�니??")
+    @Email(message = "이메일 형식이 올바르지 않습니다.")
+    @NotEmpty(message = "이메일은 필수 항목입니다.")
     private String email;
 
-    @NotEmpty(message = "비�?번호???�수 ??��?�니??")
+    @NotEmpty(message = "비밀번호는 필수 항목입니다.")
     private String password;
 
     // getters and setters
@@ -39,4 +39,3 @@ public class Member {
         this.password = password;
     }
 }
-

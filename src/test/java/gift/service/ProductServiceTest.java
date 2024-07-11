@@ -22,7 +22,7 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        // ?�이??초기??코드가 ?�요??경우 추�?
+        // 데이터 초기화 코드가 필요할 경우 추가
     }
 
     @Test
@@ -69,5 +69,3 @@ class ProductServiceTest {
         assertFalse(products.stream().anyMatch(product -> product.getId().equals(1L)));
     }
 }
-
-

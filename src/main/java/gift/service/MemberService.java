@@ -27,6 +27,3 @@ public class MemberService {
         throw new IllegalArgumentException("Invalid email or password");
     }
 }
-
-
-

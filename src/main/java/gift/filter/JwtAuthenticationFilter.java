@@ -13,16 +13,17 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response, jakarta.servlet.FilterChain filterChain) throws jakarta.servlet.ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         String uri = request.getRequestURI();
 
-        // 로그???�이지?� ?�원 가???�이지???�터링하지 ?�음
+        // 로그인 페이지와 회원 가입 페이지는 필터링하지 않음
         if (uri.startsWith("/members/login") || uri.startsWith("/members/signup")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // ?�션???�용???�보가 ?�는지 ?�인
+        // 세션에 사용자 정보가 있는지 확인
         Object member = request.getSession().getAttribute("member");
         if (member == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
@@ -32,4 +33,3 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
-

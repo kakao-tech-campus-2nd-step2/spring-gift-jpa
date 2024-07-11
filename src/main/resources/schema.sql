@@ -18,6 +18,3 @@ CREATE TABLE IF NOT EXISTS wishlist (
     FOREIGN KEY (member_id) REFERENCES member(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
-
-
-

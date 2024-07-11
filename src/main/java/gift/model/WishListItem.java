@@ -37,6 +37,3 @@ public class WishListItem {
         this.productId = productId;
     }
 }
-
-
-

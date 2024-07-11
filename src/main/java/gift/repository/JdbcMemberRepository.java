@@ -42,6 +42,3 @@ public class JdbcMemberRepository implements MemberRepository {
         }
     }
 }
-
-
-

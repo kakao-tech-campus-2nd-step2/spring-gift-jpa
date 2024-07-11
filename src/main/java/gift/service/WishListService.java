@@ -39,6 +39,3 @@ public class WishListService {
         wishListRepository.removeWishListItem(id);
     }
 }
-
-
-
