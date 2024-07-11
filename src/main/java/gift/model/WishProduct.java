@@ -11,9 +11,11 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "wish_product")
 public class WishProduct extends BaseEntity {
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
     private Member member;
@@ -24,7 +26,10 @@ public class WishProduct extends BaseEntity {
     public WishProduct() {
     }
 
-    public WishProduct(Integer count) {
+    public WishProduct(Product product, Member member, Integer count) {
+        this.product = product;
+        this.member = member;
+        member.getWishes().add(this);
         this.count = count;
     }
 
@@ -48,17 +53,7 @@ public class WishProduct extends BaseEntity {
         this.count = count;
     }
 
-    public void addProduct(Product product) {
-        this.product = product;
-    }
-
-    public void addMember(Member member) {
-        member.getWishes().add(this);
-        this.member = member;
-    }
-
     public void removeWishProduct() {
-        this.product = null;
-        this.member = null;
+        member.getWishes().remove(this);
     }
 }

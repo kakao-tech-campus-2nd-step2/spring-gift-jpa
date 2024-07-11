@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "product_option")
 public class ProductOption extends BaseEntity {
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
@@ -24,7 +25,9 @@ public class ProductOption extends BaseEntity {
     public ProductOption() {
     }
 
-    public ProductOption(String name, Integer additionalPrice) {
+    public ProductOption(Product product, String name, Integer additionalPrice) {
+        this.product = product;
+        product.getProductOptions().add(this);
         this.name = name;
         this.additionalPrice = additionalPrice;
     }
@@ -50,13 +53,7 @@ public class ProductOption extends BaseEntity {
         this.additionalPrice = additionalPrice;
     }
 
-    public void addProduct(Product product) {
-        product.getProductOptions().add(this);
-        this.product = product;
-    }
-
     public void removeOption() {
         product.getProductOptions().remove(this);
-        this.product = null;
     }
 }

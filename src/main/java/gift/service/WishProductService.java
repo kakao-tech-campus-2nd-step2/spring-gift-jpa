@@ -65,9 +65,7 @@ public class WishProductService {
     }
 
     private WishProduct saveWishProductWithWishProductRequest(Product product, Member member, Integer count) {
-        var wishProduct = new WishProduct(count);
-        wishProduct.addProduct(product);
-        wishProduct.addMember(member);
+        var wishProduct = new WishProduct(product, member, count);
         return wishProductRepository.save(wishProduct);
     }
 

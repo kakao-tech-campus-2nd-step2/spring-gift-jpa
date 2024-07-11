@@ -57,8 +57,7 @@ public class ProductOptionService {
     private ProductOption saveProductOptionWithProductRequest(ProductOptionRequest productOptionRequest) {
         var product = productRepository.findById(productOptionRequest.productId())
                 .orElseThrow(() -> new NotFoundElementException(productOptionRequest.productId() + "를 가진 상품이 존재하지 않습니다."));
-        var productOption = new ProductOption(productOptionRequest.name(), productOptionRequest.additionalPrice());
-        productOption.addProduct(product);
+        var productOption = new ProductOption(product, productOptionRequest.name(), productOptionRequest.additionalPrice());
         return productOptionRepository.save(productOption);
     }
 
