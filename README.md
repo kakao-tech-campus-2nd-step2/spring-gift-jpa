@@ -78,10 +78,8 @@
 └── src
     └── main
         ├── java
-        │   └── gift    
-        │       ├── member.repository
-        │       │    └── MemberRepositoryTest.java
-        │       ├── product.repository
-        │       │    └── ProductRepository.java
-        │       ├── wishlist.repository
-        │       │    └── WishRepositoryTest.java
+            └── gift    
+               ├── MemberRepositoryTest.java
+               ├── MemberRepositoryTest.java
+               ├── ProductRepository.java
+               └── WishListRepository.java
