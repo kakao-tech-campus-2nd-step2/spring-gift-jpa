@@ -26,7 +26,7 @@ public class Product {
   }
 
   public Product(String name, int price, String imageUrl) {
-    setName(name);
+    this.name = name;
     this.price = price;
     this.imageUrl = imageUrl;
   }
@@ -35,22 +35,9 @@ public class Product {
     return id;
   }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
 
   public String getName() {
     return name;
-  }
-
-  public void setName(String name) {
-    if (name.contains("카카오")) {
-      throw new KakaoValidationException("상품 이름에 '카카오'를 포함하려면 담당 MD와 협의가 필요합니다.");
-    }
-    else if(!name.matches("^[\\p{L}\\p{N}\\s\\(\\)\\[\\]\\+\\-\\&\\/]*$")) {
-      throw new StringValidationException("허용되지 않은 특수기호는 사용할 수 없습니다. 허용된 특수기호:( ), [ ], +, -, &, /, _");
-    }
-    this.name = name;
   }
 
   public int getPrice() {
@@ -65,7 +52,14 @@ public class Product {
     return imageUrl;
   }
 
-  public void setImageUrl(String imageUrl) {
+  public void update(String name, int price, String imageUrl) {
+    if (name.contains("카카오")) {
+      throw new KakaoValidationException("상품 이름에 '카카오'를 포함하려면 담당 MD와 협의가 필요합니다.");
+    } else if (!name.matches("^[\\p{L}\\p{N}\\s\\(\\)\\[\\]\\+\\-\\&\\/]*$")) {
+      throw new StringValidationException("허용되지 않은 특수기호는 사용할 수 없습니다. 허용된 특수기호:( ), [ ], +, -, &, /, _");
+    }
+    this.name = name;
+    this.price = price;
     this.imageUrl = imageUrl;
   }
 }

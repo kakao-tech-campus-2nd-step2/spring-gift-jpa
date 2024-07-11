@@ -32,9 +32,7 @@ public class ProductService {
 
   public boolean updateProduct(Long id, Product productDetails) {
     return productRepository.findById(id).map(product -> {
-      product.setName(productDetails.getName());
-      product.setPrice(productDetails.getPrice());
-      product.setImageUrl(productDetails.getImageUrl());
+      product.update(productDetails.getName(), productDetails.getPrice(), productDetails.getImageUrl());
       productRepository.save(product);
       return true;
     }).orElse(false);

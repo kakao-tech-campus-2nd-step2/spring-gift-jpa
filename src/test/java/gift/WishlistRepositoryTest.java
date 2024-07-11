@@ -6,6 +6,7 @@ import gift.model.Product;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -28,62 +29,61 @@ public class WishlistRepositoryTest {
   private Member member;
   private Product product;
 
+  @BeforeEach
+  void setUp() {
+    member = createAndSaveMember("test@example.com", "password");
+    product = createAndSaveProduct("Product A", 100, "http://example.com/product-a");
+  }
+
   @Test
   @Transactional
   void save() {
-    member = new Member();
-    member.setEmail("test@example.com");
-    member.setPassword("password");
-    Member savedMember = memberRepository.save(member);
-
-    product = new Product();
-    product.setName("Product A");
-    product.setPrice(100);
-    product.setImageUrl("http://example.com/product-a");
-    Product savedProduct = productRepository.save(product);
-
     Wishlist wishlist = new Wishlist();
-    wishlist.setMember(savedMember);
-    wishlist.setProduct(savedProduct);
+    wishlist.setMember(member);
+    wishlist.setProduct(product);
 
     Wishlist savedWishlist = wishlistRepository.save(wishlist);
 
     assertAll(
             () -> assertThat(savedWishlist.getId()).isNotNull(),
-            () -> assertThat(savedWishlist.getMember().getId()).isEqualTo(savedMember.getId()),
-            () -> assertThat(savedWishlist.getProduct().getName()).isEqualTo(savedProduct.getName()),
-            () -> assertThat(savedWishlist.getProduct().getImageUrl()).isEqualTo(savedProduct.getImageUrl())
+            () -> assertThat(savedWishlist.getMember().getId()).isEqualTo(member.getId()),
+            () -> assertThat(savedWishlist.getProduct().getName()).isEqualTo(product.getName()),
+            () -> assertThat(savedWishlist.getProduct().getImageUrl()).isEqualTo(product.getImageUrl())
     );
   }
 
   @Test
   void findByMemberId() {
-    member = new Member();
-    member.setEmail("test@example.com");
-    member.setPassword("password");
-    Member savedMember = memberRepository.save(member);
-
-    product = new Product();
-    product.setName("Product A");
-    product.setPrice(100);
-    product.setImageUrl("http://example.com/product-a");
-    Product savedProduct = productRepository.save(product);
-
     Wishlist wishlist = new Wishlist();
-    wishlist.setMember(savedMember);
-    wishlist.setProduct(savedProduct);
+    wishlist.setMember(member);
+    wishlist.setProduct(product);
 
     wishlistRepository.save(wishlist);
 
-    List<Wishlist> wishlists = wishlistRepository.findByMemberId(savedMember.getId());
+    List<Wishlist> wishlists = wishlistRepository.findByMemberId(member.getId());
 
     assertThat(wishlists).hasSize(1);
     Wishlist foundWishlist = wishlists.get(0);
 
     assertAll(
-            () -> assertThat(foundWishlist.getMember().getId()).isEqualTo(savedMember.getId()),
-            () -> assertThat(foundWishlist.getProduct().getName()).isEqualTo(savedProduct.getName()),
-            () -> assertThat(foundWishlist.getProduct().getImageUrl()).isEqualTo(savedProduct.getImageUrl())
+            () -> assertThat(foundWishlist.getMember().getId()).isEqualTo(member.getId()),
+            () -> assertThat(foundWishlist.getProduct().getName()).isEqualTo(product.getName()),
+            () -> assertThat(foundWishlist.getProduct().getImageUrl()).isEqualTo(product.getImageUrl())
     );
+  }
+
+  private Member createAndSaveMember(String email, String password) {
+    Member member = new Member();
+    member.setEmail(email);
+    member.setPassword(password);
+    return memberRepository.save(member);
+  }
+
+  private Product createAndSaveProduct(String name, int price, String imageUrl) {
+    Product product = new Product();
+    product.setName(name);
+    product.setPrice(price);
+    product.setImageUrl(imageUrl);
+    return productRepository.save(product);
   }
 }
