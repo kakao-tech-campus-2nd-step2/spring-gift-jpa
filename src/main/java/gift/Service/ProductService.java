@@ -1,7 +1,8 @@
 package gift.Service;
 
+import gift.Entity.Products;
 import gift.Model.Product;
-import gift.Repository.ProductRepository;
+import gift.Repository.ProductJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -12,30 +13,43 @@ import java.util.*;
 @Qualifier("productService")
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final ProductJpaRepository productJpaRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductService(ProductJpaRepository productJpaRepository) {
+        this.productJpaRepository = productJpaRepository;
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAllProduct();
+    public List<Products> getAllProducts() {
+        return productJpaRepository.findByisDeletedFalse();
     }
 
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
+    public Optional<Products> getProductById(Long id) {
+        return productJpaRepository.findById(id);
     }
 
     public void saveProduct(Product product) {
-        productRepository.saveProduct(product);
+        Products products = Products.createProducts(product);
+        productJpaRepository.save(products);
+
     }
 
-    public void updateProduct(Long id, Product productDetails) {
-        productRepository.updateProduct(id, productDetails);
+    public void updateProduct(Product productDetails) {
+        Products products = Products.createProducts(productDetails);
+        productJpaRepository.save(products);
     }
 
     public void deleteProduct(Long id) {
-        productRepository.deleteProductById(id);
+        // 제품 ID로 제품을 찾습니다.
+        Optional<Products> productOptional = productJpaRepository.findById(id);
+        if (productOptional.isPresent()) {
+            // 제품이 존재하면, isDeleted를 true로 설정합니다.
+            Products products = productOptional.get();
+            products.setDeleted(true);
+            // 변경된 상태를 저장합니다.
+            productJpaRepository.save(products);
+        }
+
     }
+
 }
