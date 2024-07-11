@@ -1,8 +1,9 @@
 package gift.controller;
 
-import gift.domain.Product;
+import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,8 +50,8 @@ public class AdminController {
     //상품업데이트
     @GetMapping("/update/{id}")
     public String updateProductForm(@PathVariable("id") Long id, Model model) {
-        Product product= productService.getProduct(id);
-        if(product!=null){
+        Optional<Product> product= productService.findById(id);
+        if(product.isPresent()){
             model.addAttribute("product",product);
             return "updateProducts-form";
         }

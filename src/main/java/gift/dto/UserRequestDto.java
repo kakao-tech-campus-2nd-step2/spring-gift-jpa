@@ -1,6 +1,5 @@
 package gift.dto;
 
-import gift.domain.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -36,7 +35,4 @@ public class UserRequestDto {
         this.password = password;
     }
 
-    public User toUser() {
-        return new User(this.email, this.password);
-    }
 }

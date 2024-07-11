@@ -1,10 +1,10 @@
 package gift.controller;
 import gift.domain.JwtToken;
-import gift.domain.User;
+import gift.entity.Member;
 import gift.dto.JwtResponseDto;
 import gift.dto.UserRequestDto;
 import gift.exception.LoginException;
-import gift.service.UserService;
+import gift.service.MemberService;
 import jakarta.validation.Valid;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
@@ -18,12 +18,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/members")
-public class UserController {
-    private final UserService userService;
+public class MemberController {
+    private final MemberService memberService;
     private final JwtToken jwtToken;
 
-    public UserController(UserService userService, JwtToken jwtToken) {
-        this.userService = userService;
+    public MemberController(MemberService memberService, JwtToken jwtToken) {
+        this.memberService = memberService;
         this.jwtToken = jwtToken;
     }
 
@@ -32,12 +32,12 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, bindingResult.getFieldError().getDefaultMessage());
         }
-        Long userId = userService.register(new User(userRequestDto.getEmail(),
+        Long userId = memberService.register(new Member(userRequestDto.getEmail(),
             userRequestDto.getPassword()));
         if(userId == -1L){
             throw new LoginException("이메일이 이미 존재합니다.");
         }
-        String token = jwtToken.createToken(userRequestDto.toUser());
+        String token = jwtToken.createToken(new Member(userRequestDto.getEmail(), userRequestDto.getPassword()));
         return new ResponseEntity<>(new JwtResponseDto(token),HttpStatus.OK);
     }
 
@@ -47,7 +47,7 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, bindingResult.getFieldError().getDefaultMessage());
 
         }
-        Optional<User> user = userService.login(userRequestDto.getEmail(), userRequestDto.getPassword());
+        Optional<Member> user = memberService.login(userRequestDto.getEmail(), userRequestDto.getPassword());
         if(user.isPresent()){
             String token = jwtToken.createToken(user.get());
             return new ResponseEntity<>(new JwtResponseDto(token),HttpStatus.OK);
