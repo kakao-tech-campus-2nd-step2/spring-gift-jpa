@@ -7,10 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "product")
 public class Product {
 
     @Id
@@ -19,7 +17,7 @@ public class Product {
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "price", nullable = false)
-    private int price;
+    private Integer price;
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
@@ -46,7 +44,7 @@ public class Product {
         return name;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
