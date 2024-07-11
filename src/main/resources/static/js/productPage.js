@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', (event) => {
   const paginationElement = document.querySelector('.pagination');
-
   const pageNumber = Number(paginationElement.dataset.number);
   console.log(pageNumber);
   const pageSize = paginationElement.dataset.size;
