@@ -1,11 +1,10 @@
 package gift.controller;
 
-import gift.dto.WishListDTO;
 import gift.model.Product;
 import gift.model.WishList;
 import gift.service.MemberService;
 import gift.service.WishListService;
-import gift.util.JwtUtil;
+import gift.util.JwtUtility;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,14 +33,14 @@ public class WishListController {
 
     @GetMapping
     public ResponseEntity<List<WishList>> getWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
-        String email = JwtUtil.extractEmail(authHeader, memberService);
+        String email = JwtUtility.extractEmail(authHeader, memberService);
         List<WishList> wishList = wishListService.getWishList(email);
         return ResponseEntity.ok(wishList);
     }
 
     @PostMapping
     public ResponseEntity<Void> addProductToWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @RequestBody @Valid Product product) {
-        String email = JwtUtil.extractEmail(authHeader, memberService);
+        String email = JwtUtility.extractEmail(authHeader, memberService);
         wishListService.addProductToWishList(email, product.getId());
         URI location = URI.create("/api/wishlist/" + product.getId());
         return ResponseEntity.created(location).build();
@@ -49,7 +48,7 @@ public class WishListController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> removeProductFromWishList(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader, @PathVariable Long productId) {
-        String email = JwtUtil.extractEmail(authHeader, memberService);
+        String email = JwtUtility.extractEmail(authHeader, memberService);
         wishListService.removeProductFromWishList(email, productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

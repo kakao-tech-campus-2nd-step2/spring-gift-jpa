@@ -1,12 +1,12 @@
 package gift.dto;
 
-public class WishListDTO {
+public class WishlistDTO {
     private Long memberId;
     private Long productId;
 
-    public WishListDTO() {}
+    public WishlistDTO() {}
 
-    public WishListDTO(Long memberId, Long productId) {
+    public WishlistDTO(Long memberId, Long productId) {
         this.memberId = memberId;
         this.productId = productId;
     }

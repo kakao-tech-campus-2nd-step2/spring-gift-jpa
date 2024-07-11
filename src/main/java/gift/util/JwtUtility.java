@@ -9,8 +9,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JwtUtil {
-    private static final Key secretKey = Jwts.SIG.HS256.key().build();
+public class JwtUtility {
+    private static final Key SECRET_KEY = Jwts.SIG.HS256.key().build();
 
     public static String generateToken(String email) {
         Map<String, Object> claims = new HashMap<>();
@@ -19,7 +19,7 @@ public class JwtUtil {
                 .subject(email)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
-                .signWith(secretKey)
+                .signWith(SECRET_KEY)
                 .compact();
     }
 
@@ -29,7 +29,7 @@ public class JwtUtil {
             throw new IllegalArgumentException("Invalid or expired token");
         }
         Claims claims = Jwts.parser()
-                .verifyWith((SecretKey) secretKey)
+                .verifyWith((SecretKey) SECRET_KEY)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();

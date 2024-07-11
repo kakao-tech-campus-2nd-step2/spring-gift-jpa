@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.dto.MemberDTO;
-import gift.util.JwtUtil;
+import gift.util.JwtUtility;
 import gift.util.TokenBlacklist;
 import gift.model.Member;
 import gift.model.MemberRepository;
@@ -27,7 +27,7 @@ public class MemberService {
                 });
         Member member = new Member(null, memberDTO.getEmail(), memberDTO.getPassword(), null);
         Member savedMember = memberRepository.save(member);
-        String token = JwtUtil.generateToken(savedMember.getEmail());
+        String token = JwtUtility.generateToken(savedMember.getEmail());
         savedMember.setActiveToken(token);//setter 없애기
         memberRepository.save(savedMember);
         return token;
@@ -39,7 +39,7 @@ public class MemberService {
         if (!existingMember.getPassword().equals(memberDTO.getPassword())) {
             throw new NoSuchElementException("존재하지 않는 이메일 또는 잘못된 비밀번호입니다.");
         }
-        String token = JwtUtil.generateToken(existingMember.getEmail());
+        String token = JwtUtility.generateToken(existingMember.getEmail());
         existingMember.setActiveToken(token);//setter 없애기
         memberRepository.save(existingMember);
         return token;
