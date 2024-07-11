@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.naming.AuthenticationException;
+import java.util.NoSuchElementException;
 
 @Service
 public class MemberService {
@@ -55,6 +56,12 @@ public class MemberService {
     public Long getIdByToken(HttpServletRequest request) throws AuthenticationException {
         Claims claims = tokenInterceptor.getClaims(request);
         return claims.get("id", Long.class);
+    }
+
+    public Member getMemberByAuth(HttpServletRequest request) throws AuthenticationException {
+        Long memberId = getIdByToken(request);
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new NoSuchElementException("해당 멤버가 없습니다."));
     }
 
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
