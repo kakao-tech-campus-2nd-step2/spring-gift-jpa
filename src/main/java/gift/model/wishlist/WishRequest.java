@@ -1,31 +1,11 @@
-package gift.dto;
+package gift.model.wishlist;
 
-public class WishRequest {
-    private Long productId;
-    private int quantity;
+import gift.model.product.Product;
+import gift.model.user.User;
 
-    public WishRequest(){}
-
-    public WishRequest(Long productId, int quantity) {
-        this.productId = productId;
-        this.quantity = quantity;
+public record WishRequest(Long productId, int quantity) {
+    public WishList toEntity(User user, Product product) {
+        return new WishList(user, product, quantity);
     }
 
-    // getters, setters
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 }
