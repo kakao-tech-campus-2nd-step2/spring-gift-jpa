@@ -38,7 +38,7 @@ public class WishListService {
     public Collection<Product> getAllProducts(HttpServletRequest request) {
         String token = jwtUtil.checkAuthorization(request.getHeader("Authorization"));
 
-        Collection<Wish> findList = wishListDao.findAllByMember(memberDao.findByEmail(jwtUtil.getEmailByToken(token)));
+        Collection<Wish> findList = wishListDao.findAllByMember(memberDao.findByEmail(jwtUtil.getEmailByToken(token)).get());
 
         List<Product> responseList = new ArrayList<>();
         for(Wish wish : findList)
@@ -54,7 +54,7 @@ public class WishListService {
 
         wishListDao.save(
                 new Wish(
-                        memberDao.findByEmail(jwtUtil.getEmailByToken(token)),
+                        memberDao.findByEmail(jwtUtil.getEmailByToken(token)).get(),
                         productDao.findById(requestBody.get("productId")).get()
                 )
         );
@@ -64,7 +64,7 @@ public class WishListService {
 
     public ResponseEntity<String> deleteWishProduct(HttpServletRequest request, Long id) {
         String token = jwtUtil.checkAuthorization(request.getHeader("Authorization"));
-        wishListValidation.deleteValidation(id, memberDao.findByEmail(jwtUtil.getEmailByToken(token)));
+        wishListValidation.deleteValidation(id, memberDao.findByEmail(jwtUtil.getEmailByToken(token)).get());
         wishListDao.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("delete WishProduct successfully");
     }
