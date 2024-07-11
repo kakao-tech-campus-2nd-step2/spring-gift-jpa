@@ -13,7 +13,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
-    @Autowired
     public MemberService(MemberRepository memberRepository, JwtService jwtService) {
         this.memberRepository = memberRepository;
         this.jwtService = jwtService;
