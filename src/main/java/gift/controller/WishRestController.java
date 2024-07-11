@@ -30,14 +30,14 @@ public class WishRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeWish(@LoginMember MemberRequestDto memberRequest, @PathVariable Long wishId){
-        wishService.deleteWishByMemberIdAndWishId(memberRequest.getId(), wishId);
+    public ResponseEntity<Void> removeWish(@LoginMember MemberRequestDto memberRequest, @PathVariable Long id){
+        wishService.deleteWishByMemberIdAndId(memberRequest.getId(), id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateQuantity(@LoginMember MemberRequestDto memberRequest, @PathVariable Long wishId, @RequestBody WishRequestDto wishRequest){
-        wishService.updateQuantityByMemberIdAndWishId(memberRequest.getId(), wishId, wishRequest);
+    public ResponseEntity<Void> updateQuantity(@LoginMember MemberRequestDto memberRequest, @PathVariable Long id, @RequestBody WishRequestDto wishRequest){
+        wishService.updateQuantityByMemberIdAndId(memberRequest.getId(), id, wishRequest);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
