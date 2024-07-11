@@ -1,6 +1,6 @@
 package gift.controller.th;
 
-import gift.service.UserListService;
+import gift.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -8,16 +8,16 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class UserListController {
 
-    UserListService userListService;
+    UserService userService;
 
-    public UserListController(UserListService userListService) {
-        this.userListService = userListService;
+    public UserListController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/user/list/th")
     public ModelAndView thUserList() {
         ModelAndView mav = new ModelAndView("user-list");
-        mav.addObject("userModel", userListService.getAll());
+        mav.addObject("userModel", userService.getAll());
         return mav;
     }
 }

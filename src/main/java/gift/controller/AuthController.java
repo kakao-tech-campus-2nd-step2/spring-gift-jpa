@@ -1,7 +1,8 @@
 package gift.controller;
 
+import gift.dto.TokenDto;
 import gift.dto.UserDto;
-import gift.service.AuthService;
+import gift.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,10 +14,10 @@ import javax.naming.AuthenticationException;
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
-    private final AuthService authService;
+    private final UserService userService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+    public AuthController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("")
@@ -35,19 +36,13 @@ public class AuthController {
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute UserDto.Request request) {
-
-        String token = authService.save(request);
-        return token;
+    public TokenDto save(@ModelAttribute UserDto.Request request) {
+        return userService.save(request);
     }
 
     @PostMapping("/user/login")
-    public String login(@ModelAttribute UserDto.Request request) throws AuthenticationException {
-
-        authService.login(new UserDto(request.getId(), request.getEmail(), request.getPassword()));
-        String token = authService.generateToken(request.getEmail(), request.getPassword());
-
-        return token;
-
+    public TokenDto login(@ModelAttribute UserDto.Request request) throws AuthenticationException {
+        userService.login(new UserDto(request.getId(), request.getEmail(), request.getPassword()));
+        return userService.generateTokenDtoFrom(request.getEmail());
     }
 }
