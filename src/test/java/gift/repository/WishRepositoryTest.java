@@ -27,7 +27,9 @@ class WishRepositoryTest {
 
     @Test
     void save() {
-        Wish expected = new Wish(2L, 3L);
+        User user = userRepository.findById(2L).orElse(null);
+        Product product = productRepository.findById(3L).orElse(null);
+        Wish expected = new Wish(user, product);
 
         Wish actual = wishRepository.save(expected);
         assertAll(
@@ -48,8 +50,8 @@ class WishRepositoryTest {
         product1 = productRepository.save(product1);
         product2 = productRepository.save(product2);
 
-        Wish wish1 = new Wish(user.getId(), product1.getId());
-        Wish wish2 = new Wish(user.getId(), product2.getId());
+        Wish wish1 = new Wish(user, product1);
+        Wish wish2 = new Wish(user, product2);
 
         wishRepository.saveAll(Arrays.asList(wish1, wish2));
 
@@ -63,8 +65,11 @@ class WishRepositoryTest {
 
     @Test
     void deleteByUserIdAndProductId() {
-        wishRepository.deleteByUserIdAndProductId(2L, 1L);
-        Optional<Wish> deletedWish = wishRepository.findById(1L);
+        User user = userRepository.findById(2L).orElse(null);
+        Product product = productRepository.findById(1L).orElse(null);
+
+        wishRepository.deleteByUserAndProduct(user, product);
+        Optional<Wish> deletedWish = wishRepository.findById(2L);
 
         assertThat(deletedWish).isEmpty();
     }
