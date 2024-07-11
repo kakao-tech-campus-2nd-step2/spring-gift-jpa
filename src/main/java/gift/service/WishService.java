@@ -1,8 +1,8 @@
 package gift.service;
 
-import gift.model.Gift;
-import gift.model.User;
-import gift.model.Wish;
+import gift.model.gift.Gift;
+import gift.model.user.User;
+import gift.model.wish.Wish;
 import gift.repository.GiftRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishRepository;

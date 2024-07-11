@@ -1,6 +1,7 @@
 package gift.controller;
 
-import gift.model.*;
+import gift.model.gift.GiftRequest;
+import gift.model.gift.GiftResponse;
 import gift.service.GiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +36,7 @@ public class GiftController {
     }
 
     @GetMapping
-    public List<GiftResponse> getAllGift(@PageableDefault(sort="id",direction = Sort.Direction.ASC,size=5)Pageable pageable) {
+    public List<GiftResponse> getAllGift(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 5) Pageable pageable) {
         return giftService.getAllGifts(pageable);
     }
 

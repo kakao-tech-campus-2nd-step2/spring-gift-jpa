@@ -1,6 +1,8 @@
 package gift.controller;
 
-import gift.model.*;
+import gift.model.gift.GiftResponse;
+import gift.model.user.User;
+import gift.model.wish.WishResponse;
 import gift.service.GiftService;
 import gift.service.WishService;
 import org.springframework.beans.factory.annotation.Autowired;

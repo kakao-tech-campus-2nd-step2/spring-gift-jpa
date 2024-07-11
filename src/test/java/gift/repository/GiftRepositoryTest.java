@@ -1,8 +1,6 @@
 package gift.repository;
 
-import gift.model.Gift;
-import gift.model.User;
-import org.junit.jupiter.api.BeforeEach;
+import gift.model.gift.Gift;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -15,9 +13,10 @@ class GiftRepositoryTest {
 
     @Autowired
     private GiftRepository giftRepository;
+
     @Test
-    void saveTest(){
-        Gift gift = new Gift("test",1000,"abc.jpg");
+    void saveTest() {
+        Gift gift = new Gift("test", 1000, "abc.jpg");
         Gift actual = giftRepository.save(gift);
 
         assertAll(

@@ -1,4 +1,4 @@
-package gift.model;
+package gift.model.gift;
 
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

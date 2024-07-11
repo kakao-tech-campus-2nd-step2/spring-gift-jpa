@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.model.User;
-import gift.model.UserRequest;
+import gift.model.user.User;
+import gift.model.user.UserRequest;
 import gift.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/auth")

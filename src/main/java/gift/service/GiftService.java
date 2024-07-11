@@ -1,9 +1,9 @@
 package gift.service;
 
 
-import gift.model.Gift;
-import gift.model.GiftRequest;
-import gift.model.GiftResponse;
+import gift.model.gift.Gift;
+import gift.model.gift.GiftRequest;
+import gift.model.gift.GiftResponse;
 import gift.repository.GiftRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

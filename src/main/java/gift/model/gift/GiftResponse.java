@@ -1,17 +1,21 @@
-package gift.model;
+package gift.model.gift;
 
-public class WishResponse {
+public class GiftResponse {
 
     private Long id;
     private String name;
     private int price;
-    private int quantity;
+    private String imageUrl;
 
-    public WishResponse(Long id, String name, int price, int quantity) {
+    public GiftResponse(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.quantity = quantity;
+        this.imageUrl = imageUrl;
+    }
+
+    public static GiftResponse from(Gift gift) {
+        return new GiftResponse(gift.getId(), gift.getName(), gift.getPrice(), gift.getImageUrl());
     }
 
     public Long getId() {
@@ -38,11 +42,11 @@ public class WishResponse {
         this.price = price;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.model.User;
+import gift.model.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +26,8 @@ class UserRepositoryTest {
     }
 
     @Test
-    void saveTest(){
-        User user = new User("abc@email.com","1234");
+    void saveTest() {
+        User user = new User("abc@email.com", "1234");
         User actual = userRepository.save(user);
 
         assertAll(
@@ -37,7 +37,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    void findByEmailTest(){
+    void findByEmailTest() {
         // Given
         String emailToFind = "test1@example.com";
 
