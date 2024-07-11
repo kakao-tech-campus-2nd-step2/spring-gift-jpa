@@ -1,22 +1,27 @@
 package gift.controller;
 
 import gift.model.Product;
+import gift.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin/products")
 public class ProductAdminController {
 
-    private final Map<Long, Product> products = new HashMap<>();  // 상품을 저장하는 Map
-    private Long currentId = 1L;  // 새로운 상품의 ID를 생성하기 위한 변수
+    private final ProductService productService;
+
+    public ProductAdminController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping
     public String listProducts(Model model) {
-        model.addAttribute("products", new ArrayList<>(products.values()));
+        List<Product> products = productService.getAllProducts();
+        model.addAttribute("products", products);
         return "productList";
     }
 
@@ -28,14 +33,13 @@ public class ProductAdminController {
 
     @PostMapping("/add")
     public String addProduct(Product product) {
-        Product newProduct = new Product(currentId++, product.name(), product.price(), product.imageUrl());
-        products.put(newProduct.id(), newProduct);
+        productService.saveProduct(product);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/edit/{id}")
     public String editProductForm(@PathVariable Long id, Model model) {
-        Product product = products.get(id);
+        Product product = productService.getProductById(id);
         if (product == null) {
             throw new IllegalArgumentException("Invalid product Id:" + id);
         }
@@ -45,17 +49,14 @@ public class ProductAdminController {
 
     @PostMapping("/edit/{id}")
     public String updateProduct(@PathVariable Long id, Product product) {
-        if (!products.containsKey(id)) {
-            throw new IllegalArgumentException("Invalid product Id:" + id);
-        }
-        Product updatedProduct = new Product(id, product.name(), product.price(), product.imageUrl());
-        products.put(id, updatedProduct);
+        product.setId(id);
+        productService.updateProduct(product);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
-        products.remove(id);
+        productService.deleteProduct(id);
         return "redirect:/admin/products";
     }
 }
