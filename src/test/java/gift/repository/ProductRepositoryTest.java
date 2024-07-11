@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -195,5 +195,29 @@ class ProductRepositoryTest {
         // then
         Wish orphanedWish = entityManager.find(Wish.class, expectedWish.getId());
         assertThat(orphanedWish).isNull();
+    }
+
+    @Test
+    @DisplayName("지연 로딩 테스트")
+    void testLazyFetch(){
+        // given
+        entityManager.persist(expectedMember);
+        expectedProduct.addWish(expectedWish);
+        Product savedProduct = products.save(expectedProduct);
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        // Product 조회 (지연 로딩이므로 연관관계 조회 안함, Product 객체만 조회함)
+        Product foundProduct = products.findById(savedProduct.getId()).get();
+
+        // Wish 조회 (Wish 객체도 조회함)
+        List<Wish> wishes = foundProduct.getWishes();
+
+        // then
+        assertAll(
+                () -> assertThat(wishes.size()).isEqualTo(1),
+                () -> assertThat(wishes.get(0)).isEqualTo(expectedWish)
+        );
     }
 }
