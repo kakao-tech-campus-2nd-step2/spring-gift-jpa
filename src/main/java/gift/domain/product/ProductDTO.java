@@ -47,9 +47,6 @@ public class ProductDTO {
         return imageUrl;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
 
     public void setPrice(Integer price) {
         this.price = price;

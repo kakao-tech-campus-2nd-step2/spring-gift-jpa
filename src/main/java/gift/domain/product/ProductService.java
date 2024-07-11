@@ -1,6 +1,5 @@
 package gift.domain.product;
 
-import gift.domain.product.repository.JpaProductRepository;
 import gift.global.exception.BusinessException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
