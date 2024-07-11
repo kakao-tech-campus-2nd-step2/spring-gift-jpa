@@ -10,6 +10,7 @@ import gift.user.model.dto.AppUser;
 import gift.user.model.dto.Role;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +29,16 @@ public class ProductService {
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
     }
 
-    @Transactional(readOnly = true)
-    public List<ProductResponse> findAllProduct() {
-        return productRepository.findAllByIsActiveTrue().stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(),
-                        product.getImageUrl()))
+    public ProductResponse findProductWithWishCount(Long id) {
+        Optional<Object[]> result = productRepository.findProductByIdWithWishCount(id);
+        return result.map(objects -> new ProductResponse((Product) objects[0], (Long) objects[1]))
+                .orElseThrow(() -> new EntityNotFoundException("Product"));
+    }
+
+    public List<ProductResponse> findAllProductWithWishCount() {
+        List<Object[]> results = productRepository.findAllActiveProductsWithWishCount();
+        return results.stream()
+                .map(objects -> new ProductResponse((Product) objects[0], (Long) objects[1]))
                 .collect(Collectors.toList());
     }
 

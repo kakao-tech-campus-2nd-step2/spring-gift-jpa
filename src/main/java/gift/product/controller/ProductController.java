@@ -2,7 +2,6 @@ package gift.product.controller;
 
 import gift.product.model.dto.CreateProductAdminRequest;
 import gift.product.model.dto.CreateProductRequest;
-import gift.product.model.dto.Product;
 import gift.product.model.dto.ProductResponse;
 import gift.product.model.dto.UpdateProductRequest;
 import gift.product.service.ProductService;
@@ -33,15 +32,13 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> findProductById(@PathVariable Long id) {
-        final Product product = productService.findProduct(id);
-        ProductResponse response = new ProductResponse(product.getId(), product.getName(), product.getPrice(),
-                product.getImageUrl());
+        final ProductResponse response = productService.findProductWithWishCount(id);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> findAllProduct() {
-        final List<ProductResponse> response = productService.findAllProduct();
+        final List<ProductResponse> response = productService.findAllProductWithWishCount();
         return ResponseEntity.ok().body(response);
     }
 
