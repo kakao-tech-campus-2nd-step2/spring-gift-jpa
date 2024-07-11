@@ -4,6 +4,7 @@ import gift.DTO.SignupRequest;
 import gift.DTO.SignupResponse;
 import gift.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,8 +27,7 @@ public class SignupController {
     public ResponseEntity<SignupResponse> signup(
         @RequestBody SignupRequest signupRequest,
         Model model) {
-        String token = userService.registerUser(signupRequest);
-        SignupResponse response = new SignupResponse(token);
-        return ResponseEntity.ok().body(response);
+        SignupResponse signupResponse = userService.registerUser(signupRequest);
+        return new ResponseEntity<>(signupResponse, HttpStatus.CREATED);
     }
 }
