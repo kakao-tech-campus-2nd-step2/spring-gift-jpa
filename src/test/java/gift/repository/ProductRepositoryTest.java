@@ -67,6 +67,7 @@ class ProductRepositoryTest {
         Product newProduct = Product.builder()
             .name("new product")
             .price(10_000)
+            .imageUrl("http://example.com/images/product_new.jpg")
             .build();
 
         // when
@@ -77,7 +78,7 @@ class ProductRepositoryTest {
         assertThat(actual.getId()).isNotNull();
         assertThat(actual.getName()).isEqualTo("new product");
         assertThat(actual.getPrice()).isEqualTo(10_000);
-        assertThat(actual.getImageUrl()).isNull();
+        assertThat(actual.getImageUrl()).isEqualTo("http://example.com/images/product_new.jpg");
     }
 
     @Test

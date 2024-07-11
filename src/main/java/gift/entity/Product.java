@@ -53,7 +53,7 @@ public class Product {
     @Column(nullable = false)
     private Integer price;
 
-    @Column
+    @Column(nullable = false)
     private String imageUrl;
 
     protected Product() {
