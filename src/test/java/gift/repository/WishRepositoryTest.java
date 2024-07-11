@@ -27,10 +27,8 @@ class WishRepositoryTest {
     @Order(1)
     @Test
     void save() {
-        Member expectedMember = makeMember("member1@example.com", "password1", "member1", "user");
-        memberRepository.save(expectedMember);
-        Product expectedProduct = makeProduct("gamza", 500, "gamza.jpg");
-        productRepository.save(expectedProduct);
+        Member expectedMember = saveMember("member1@example.com", "password1", "member1", "user");
+        Product expectedProduct = saveProduct("gamza", 500, "gamza.jpg");
         Wish expected = getWish(expectedMember, expectedProduct);
 
         Wish actual = wishRepository.save(expected);
@@ -45,13 +43,10 @@ class WishRepositoryTest {
 
     @Test
     void findAllByMemberId() {
-        Member expectedMember = makeMember("member1@example.com", "password1", "member1", "user");
-        memberRepository.save(expectedMember);
-        Product expectedProduct1 = makeProduct("gamza", 500, "gamza.jpg");
-        productRepository.save(expectedProduct1);
+        Member expectedMember = saveMember("member1@example.com", "password1", "member1", "user");
+        Product expectedProduct1 = saveProduct("gamza", 500, "gamza.jpg");
         Wish expected1 = getWish(expectedMember, expectedProduct1);
-        Product expectedProduct2 = makeProduct("goguma", 1500, "goguma.jpg");
-        productRepository.save(expectedProduct2);
+        Product expectedProduct2 = saveProduct("goguma", 1500, "goguma.jpg");
         Wish expected2 = getWish(expectedMember, expectedProduct2);
         wishRepository.save(expected1);
         wishRepository.save(expected2);
@@ -63,10 +58,8 @@ class WishRepositoryTest {
 
     @Test
     void findByMemberIdAndProductId() {
-        Member expectedMember = makeMember("member1@example.com", "password1", "member1", "user");
-        memberRepository.save(expectedMember);
-        Product expectedProduct = makeProduct("gamza", 500, "gamza.jpg");
-        productRepository.save(expectedProduct);
+        Member expectedMember = saveMember("member1@example.com", "password1", "member1", "user");
+        Product expectedProduct = saveProduct("gamza", 500, "gamza.jpg");
         Wish expected = getWish(expectedMember, expectedProduct);
 
         wishRepository.save(expected);
@@ -85,10 +78,8 @@ class WishRepositoryTest {
 
     @Test
     void deleteByMemberIdAndProductId() {
-        Member expectedMember = makeMember("member1@example.com", "password1", "member1", "user");
-        memberRepository.save(expectedMember);
-        Product expectedProduct = makeProduct("gamza", 500, "gamza.jpg");
-        productRepository.save(expectedProduct);
+        Member expectedMember = saveMember("member1@example.com", "password1", "member1", "user");
+        Product expectedProduct = saveProduct("gamza", 500, "gamza.jpg");
         Wish expected = getWish(expectedMember, expectedProduct);
         wishRepository.save(expected);
 
@@ -100,12 +91,14 @@ class WishRepositoryTest {
         assertThat(actual).isNull();
     }
 
-    private static Product makeProduct(String name, Integer price, String imageUrl) {
-        return new Product(name, price, imageUrl);
+    private Product saveProduct(String name, Integer price, String imageUrl) {
+        var product = new Product(name, price, imageUrl);
+        return productRepository.save(product);
     }
 
-    private static Member makeMember(String email, String password, String name, String role) {
-        return new Member(email, password, name, role);
+    private Member saveMember(String email, String password, String name, String role) {
+        var member = new Member(email, password, name, role);
+        return memberRepository.save(member);
     }
 
     private Wish getWish(Member expectedMember, Product expectedProduct) {
