@@ -3,6 +3,7 @@ package gift.product.service;
 import gift.product.dto.LoginMember;
 import gift.product.dto.WishDto;
 import gift.product.model.Member;
+import gift.product.model.Product;
 import gift.product.model.Wish;
 import gift.product.repository.AuthRepository;
 import gift.product.repository.WishRepository;
@@ -34,11 +35,11 @@ public class WishService {
 
     @Transactional
     public Wish insertWish(WishDto wishDto, LoginMember loginMember) {
-        productService.getProduct(wishDto.productId());
+        Product product = productService.getProduct(wishDto.productId());
 
         Member member = getMember(loginMember);
 
-        Wish wish = new Wish(member, wishDto.productId());
+        Wish wish = new Wish(member, product);
         return wishRepository.save(wish);
     }
 

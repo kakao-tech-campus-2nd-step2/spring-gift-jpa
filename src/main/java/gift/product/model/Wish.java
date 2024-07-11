@@ -19,21 +19,22 @@ public class Wish {
     @JoinColumn(nullable = false)
     private final Member member;
 
-    @Column(nullable = false)
-    private final Long productId;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private final Product product;
 
     protected Wish() {
         this(null, null, null);
     }
 
-    public Wish(Long id, Member member, Long productId) {
+    public Wish(Long id, Member member, Product product) {
         this.id = id;
         this.member = member;
-        this.productId = productId;
+        this.product = product;
     }
 
-    public Wish(Member member, Long productId) {
-        this(null, member, productId);
+    public Wish(Member member, Product product) {
+        this(null, member, product);
     }
 
     public Long getId() {
@@ -44,7 +45,7 @@ public class Wish {
         return member;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 }
