@@ -22,7 +22,7 @@ public class Product extends BaseEntity {
     @NotNull
     @Column(name = "image_url")
     private String imageUrl;
-    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     private List<ProductOption> productOptions = new ArrayList<>();
 
     protected Product() {
