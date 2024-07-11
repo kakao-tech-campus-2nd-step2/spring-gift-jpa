@@ -24,10 +24,16 @@ public class WishService {
 
     @Transactional
     public void save(MemberRequestDto memberRequestDto, WishRequestDto wishRequestDto){
-        ProductResponseDto productDto = productService.findByName(wishRequestDto.getProductName());
-        Product product = new Product(productDto.getId(), productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+        ProductResponseDto productResponseDto = productService.findByName(wishRequestDto.getProductName());
 
-        wishRepository.save(new Wish(memberRequestDto.toEntity(),product,wishRequestDto.getQuantity()));
+        Product product = productResponseDto.toEntity();
+        Member member = memberRequestDto.toEntity();
+
+        Wish newWish = new Wish(member,product,wishRequestDto.getQuantity());
+
+        product.addWish(newWish);
+        member.addWish(newWish);
+        wishRepository.save(newWish);
     }
 
     @Transactional(readOnly = true)
@@ -42,8 +48,11 @@ public class WishService {
 
     @Transactional
     public void deleteWishByMemberIdAndId(Long memberId, Long id){
-        wishRepository.findByIdAndMemberId(id, memberId)
+        Wish wish = wishRepository.findByIdAndMemberId(id, memberId)
                 .orElseThrow(()-> new WishNotFoundException(Messages.NOT_FOUND_WISH));
+
+        wish.getMember().removeWish(wish);
+        wish.getProduct().removeWish(wish);
         wishRepository.deleteById(id);
     }
 
@@ -55,5 +64,4 @@ public class WishService {
         Wish updatedWish = new Wish(existingWish.getId(),existingWish.getMember(),existingWish.getProduct(),request.getQuantity());
         wishRepository.save(updatedWish);
     }
-
 }
