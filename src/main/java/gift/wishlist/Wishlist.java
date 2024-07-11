@@ -28,6 +28,10 @@ public class Wishlist {
         this.productId = productId;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public Long getMemberId() {
         return memberId;
     }
