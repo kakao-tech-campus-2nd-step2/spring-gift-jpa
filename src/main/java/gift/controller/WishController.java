@@ -3,8 +3,8 @@ package gift.controller;
 import gift.annotation.LoginMember;
 import gift.domain.Member;
 import gift.domain.Wish;
+import gift.dto.ProductIdRequest;
 import gift.dto.WishRequest;
-import gift.exception.MemberAuthorizationException;
 import gift.service.WishService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,18 +23,14 @@ public class WishController {
 
     @GetMapping
     public ResponseEntity<List<Wish>> getWishes(@LoginMember Member member) {
-        if(member == null){
-            throw new MemberAuthorizationException("Authorization failed");
-        }
+
         return new ResponseEntity<>(wishService.getWishesByMember(member), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Wish> createWish(@RequestBody WishRequest wishRequest, @LoginMember Member member) {
-        if (member == null) {
-            throw new MemberAuthorizationException("Authorization failed");
-        }
-        Wish wish =wishService.addWish(wishRequest, member);
+    public ResponseEntity<Wish> createWish(@RequestBody ProductIdRequest productIdRequest, @LoginMember Member member) {
+        WishRequest wishRequest = new WishRequest(member.getId(), productIdRequest.getProductId());
+        Wish wish =wishService.addWish(wishRequest);
 
         return new ResponseEntity<>(wish, HttpStatus.CREATED);
     }
@@ -42,15 +38,8 @@ public class WishController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Wish> deleteWish(@PathVariable("id") Long id, @LoginMember Member member) {
-        if (member == null) {
-            throw new MemberAuthorizationException("Authorization failed");
-        }
         wishService.deleteWish(id, member);
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-    }
 
-    @ExceptionHandler(value= MemberAuthorizationException.class)
-    public ResponseEntity<String> handleMemberException(Exception e){
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 }

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.domain.Member;
 import gift.dto.MemberRequest;
+import gift.dto.ProductIdRequest;
 import gift.dto.WishRequest;
 import gift.service.MemberService;
 import gift.service.WishService;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
+
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class WishControllerTest {
@@ -64,7 +66,7 @@ class WishControllerTest {
     @Test
     void createWishTest() {
         // given
-        var request = new WishRequest(1L);
+        var request = new ProductIdRequest(1L);
 
         var url = "http://localhost:" + port + "/api/wishes";
         var headers = new HttpHeaders();
@@ -86,8 +88,8 @@ class WishControllerTest {
     void deleteWishTest() {
         // given
         // 테스트를 위한 wish 1개 생성
-        var request = new WishRequest(1L);
-        wishService.addWish(request,memberService.getMemberFromToken(token));
+        var request = new WishRequest(memberService.getMemberFromToken(token).getId(),1L);
+        wishService.addWish(request);
 
         var id = 1L;
         var url = "http://localhost:" + port + "/api/wishes/" + id;

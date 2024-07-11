@@ -6,15 +6,15 @@ public class Wish {
     private Long productId;
 
     public Wish(){}
-    public Wish(Long productId, Long memberId) {
-        this.productId = productId;
+    public Wish(Long memberId, Long productId) {
         this.memberId = memberId;
+        this.productId = productId;
     }
 
-    public Wish(Long id, Long productId, Long memberId) {
+    public Wish(Long id, Long memberId, Long productId) {
         this.id = id;
-        this.productId = productId;
         this.memberId = memberId;
+        this.productId = productId;
     }
 
     public Long getId(){return this.id;}

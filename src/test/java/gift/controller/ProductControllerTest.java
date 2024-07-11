@@ -3,6 +3,10 @@ package gift.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.dto.ProductRequest;
+import gift.entity.ProductEntity;
+import gift.repository.ProductRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.net.URI;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +18,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ProductControllerTest {
@@ -22,6 +27,12 @@ class ProductControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Test
     void readAll() {
@@ -33,7 +44,11 @@ class ProductControllerTest {
     }
 
     @Test
+    @Transactional
     void read() {
+        ProductEntity product = productRepository.save(new ProductEntity("test", 1000,"test.jpg"));
+        System.out.println("테스트" + product.getName() +"id 값"+ product.getId());
+
         var url = "http://localhost:" + port + "/api/products/1";
         var request = new RequestEntity<>(HttpMethod.GET, URI.create(url));
 
@@ -43,6 +58,7 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("Product 생성 API 테스트")
+    @Transactional
     void create() {
         var request = new ProductRequest("product", 1000, "image.jpg");
         var url = "http://localhost:" + port + "/api/products";
@@ -53,7 +69,9 @@ class ProductControllerTest {
     }
 
     @Test
+    @Transactional
     void update() {
+        ProductEntity product = productRepository.save(new ProductEntity("test", 1000,"test.jpg"));
         var id = 1L;
         var request = new ProductRequest("product", 1000, "image.jpg");
         var url = "http://localhost:" + port + "/api/products/" + id;
@@ -64,7 +82,9 @@ class ProductControllerTest {
     }
 
     @Test
+    @Transactional
     void delete() {
+        ProductEntity product = productRepository.save(new ProductEntity("test", 1000,"test.jpg"));
         var id = 1L;
         var url = "http://localhost:" + port + "/api/products/" + id;
 

@@ -2,8 +2,11 @@ package gift.service;
 
 import gift.domain.Product;
 import gift.dto.ProductRequest;
+import gift.entity.ProductEntity;
 import gift.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,31 +19,30 @@ public class ProductService {
     }
 
     public Product find(Long id){
-        return productRepository.findById(id);
+        ProductEntity productEntity =productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("not found entity"));
+        return productEntity.toProduct();
     }
 
     public List<Product> findAll(){
-        return productRepository.findAll();
+        return productRepository.findAll().stream().map(ProductEntity::toProduct).collect(Collectors.toList());
     }
 
     public Product createProduct(ProductRequest productRequest) {
-        return productRepository.save(productRequest);
+        ProductEntity productEntity = productRepository.save(productRequest.toProductEntity());
+        return productEntity.toProduct();
     }
 
     public Product updateProduct(Long id, ProductRequest productRequest){
-        Product product = productRepository.findById(id);
+        ProductEntity productEntity = productRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("not found entity"));
 
-        if(product != null) {
-            Product updateProduct = new Product(product.getId(), productRequest.getName(),
-                productRequest.getPrice(), productRequest.getImageUrl());
+        productEntity.updateProductEntity(productRequest);
+        return productRepository.save(productEntity).toProduct();
 
-            return productRepository.update(product);
-        }
-
-        return null;
     }
     public void deleteProduct(Long id){
-        productRepository.delete(id);
+       ProductEntity productEntity = productRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("not found entity"));
+        productRepository.delete(productEntity);
     }
-
 }
