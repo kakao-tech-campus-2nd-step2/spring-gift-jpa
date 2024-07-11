@@ -26,8 +26,9 @@ public class WishlistService {
 
     }
 
-    public List<WishList> getProductsByMemberId(Long memberId) {
-        return wishlistRepository.findByMemberId(memberId);
+    public List<WishList> getProductsByMember(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        return wishlistRepository.findByMember(member);
     }
 
     public void deleteById(Long productId) {
