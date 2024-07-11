@@ -85,18 +85,19 @@ class WishRepositoryTest {
 
     @Test
     void deleteByMemberIdAndProductId() {
-//        Wish expected = new Wish(1L, 1L, 1);
-//        wishRepository.save(expected);
-//        Wish actual = wishRepository.findByMemberIdAndProductId(expected.getMemberId(),
-//            expected.getProductId());
-//        assertThat(actual).isNotNull();
-//
-//        wishRepository.deleteByMemberIdAndProductId(expected.getMemberId(),
-//            expected.getProductId());
-//
-//        actual = wishRepository.findByMemberIdAndProductId(expected.getMemberId(),
-//            expected.getProductId());
-//        assertThat(actual).isNull();
+        Member expectedMember = makeMember("member1@example.com", "password1", "member1", "user");
+        memberRepository.save(expectedMember);
+        Product expectedProduct = makeProduct("gamza", 500, "gamza.jpg");
+        productRepository.save(expectedProduct);
+        Wish expected = getWish(expectedMember, expectedProduct);
+        wishRepository.save(expected);
+
+        wishRepository.deleteByMemberIdAndProductId(expected.getMember().getId(),
+            expected.getProduct().getId());
+
+        Wish actual = wishRepository.findByMemberIdAndProductId(expected.getMember().getId(),
+            expected.getProduct().getId());
+        assertThat(actual).isNull();
     }
 
     private static Product makeProduct(String name, Integer price, String imageUrl) {
