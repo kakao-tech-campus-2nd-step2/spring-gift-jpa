@@ -12,7 +12,7 @@ public class Product {
 
     @Id
     private Long id;
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
     @Column(name = "price", nullable = false)
 
@@ -20,6 +20,7 @@ public class Product {
     @Column(name = "imageUrl", nullable = false)
 
     private String imageUrl;
+
 
     protected Product() {
     }
