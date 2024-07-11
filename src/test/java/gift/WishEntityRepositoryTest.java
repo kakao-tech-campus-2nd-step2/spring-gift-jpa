@@ -1,6 +1,11 @@
 package gift;
 
-import gift.Model.Wish;
+import gift.Model.Entity.MemberEntity;
+import gift.Model.Entity.ProductEntity;
+import gift.Model.Entity.WishEntity;
+import gift.Model.Role;
+import gift.Repository.MemberRepository;
+import gift.Repository.ProductRepository;
 import gift.Repository.WishRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,35 +15,49 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
-public class WishRepositoryTest {
+public class WishEntityRepositoryTest {
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private ProductRepository productRepository;
     @Autowired
     private WishRepository wishRepository;
 
     @Test
     void save(){
-        Wish expected = new Wish(1L, 1L);
-        Wish actual = wishRepository.save(expected);
+        MemberEntity member = new MemberEntity("a","b", Role.CONSUMER);
+        ProductEntity product = new ProductEntity("a",1,"b");
+        memberRepository.save(member);
+        productRepository.save(product);
+        WishEntity expected = new WishEntity(member, product);
+        WishEntity actual = wishRepository.save(expected);
         assertAll(
                 () -> assertThat(actual.getId()).isNotNull(),
-                () -> assertThat(actual.getMemberId()).isEqualTo(expected.getMemberId())
+                () -> assertThat(actual.getMember()).isEqualTo(expected.getMember())
         );
     }
 
     @Test
     void findByName() {
-        Long expectedMemberId = 1L;
-        Long expectedProductId = 1L;
-        wishRepository.save(new Wish(expectedMemberId, expectedProductId));
-        Long actual = wishRepository.findByMemberId(expectedMemberId).get(0).getMemberId();
-        assertThat(actual).isEqualTo(expectedMemberId);
+        MemberEntity member = new MemberEntity("a","b", Role.CONSUMER);
+        ProductEntity product = new ProductEntity("a",1,"b");
+        memberRepository.save(member);
+        productRepository.save(product);
+
+        wishRepository.save(new WishEntity(member, product));
+        WishEntity actual = wishRepository.findByMemberId(member.getId()).getFirst();
+
+        assertThat(actual.getMember()).isEqualTo(member);
     }
 
     @Test
     void deleteByProductIDAndMemberId(){
-        Long expectedMemberId = 1L;
-        Long expectedProductId = 1L;
-        wishRepository.save(new Wish(expectedMemberId, expectedProductId));
-        Long actual = wishRepository.findByMemberIdAndProductId(expectedMemberId, expectedProductId).getMemberId();
-        assertThat(actual).isEqualTo(expectedMemberId);
+        MemberEntity member = new MemberEntity("a","b", Role.CONSUMER);
+        ProductEntity product = new ProductEntity("a",1,"b");
+        memberRepository.save(member);
+        productRepository.save(product);
+        wishRepository.save(new WishEntity(member, product));
+        MemberEntity actual = wishRepository.findByMemberIdAndProductId(member.getId(), product.getId()).getMember();
+        assertThat(actual).isEqualTo(member);
     }
 }
