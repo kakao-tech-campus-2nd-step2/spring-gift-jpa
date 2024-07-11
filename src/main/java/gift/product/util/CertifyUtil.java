@@ -11,6 +11,7 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 
+import java.util.Date;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,8 +26,14 @@ public class CertifyUtil {
     }
 
     public String generateToken(String email) {
+        long expirationTimeMillis = 3600000;
+        Date issuedAt = new Date();
+        Date expiration = new Date(issuedAt.getTime() + expirationTimeMillis);
+
         return Jwts.builder()
             .setSubject(email)
+            .setIssuedAt(issuedAt)
+            .setExpiration(expiration)
             .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
             .compact();
     }
@@ -35,8 +42,7 @@ public class CertifyUtil {
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
             String subject = claimsJws.getBody().getSubject();
-            //if(!memberDao.isExistsMember(Base64.getEncoder().encodeToString(subject.getBytes())))
-             //   return false;
+            return true;
         } catch (SignatureException e) {
             System.out.println("Invalid JWT signature: " + e.getMessage());
         } catch (MalformedJwtException e) {
@@ -46,7 +52,7 @@ public class CertifyUtil {
         } catch (IllegalArgumentException e) {
             System.out.println("JWT token is invalid: " + e.getMessage());
         }
-        return true;
+        return false;
     }
 
     public Claims extractClaims(String token) {

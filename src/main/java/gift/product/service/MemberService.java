@@ -1,6 +1,5 @@
 package gift.product.service;
 
-import gift.product.config.SecurityConfig;
 import gift.product.dao.MemberDao;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.Member;
