@@ -2,14 +2,16 @@ package gift.service;
 
 import gift.exception.CustomException.ItemNotFoundException;
 import gift.exception.ErrorCode;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
 import gift.model.item.Item;
 import gift.model.item.ItemDTO;
 import gift.model.item.ItemForm;
 import gift.repository.ItemRepository;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class ItemService {
 
