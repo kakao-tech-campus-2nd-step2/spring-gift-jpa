@@ -3,18 +3,23 @@ package gift.domain;
 import gift.domain.vo.Email;
 import gift.domain.vo.Password;
 import gift.web.validation.exception.IncorrectPasswordException;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
 
-public class Member extends BaseEntity{
+@Entity
+public class Member extends BaseEntity {
 
-    private final Email email;
-    private final Password password;
-    private final String name;
+    @Embedded
+    private Email email;
 
-    public Member(Long id, Email email, Password password, String name) {
-        super(id);
-        this.email = email;
-        this.password = password;
-        this.name = name;
+    @Embedded
+    private Password password;
+
+    @Column(nullable = false)
+    private String name;
+
+    protected Member() {
     }
 
     public static class Builder extends BaseEntity.Builder<Member.Builder> {
