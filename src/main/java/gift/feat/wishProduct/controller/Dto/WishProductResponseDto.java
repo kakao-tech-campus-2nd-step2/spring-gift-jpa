@@ -1,7 +1,7 @@
-package gift.feat.wishList;
+package gift.feat.wishProduct.controller.Dto;
 
-import gift.feat.product.domain.Product;
-import gift.feat.product.dto.ProductResponseDto;
+import gift.feat.product.contoller.dto.ProductResponseDto;
+import gift.feat.wishProduct.domain.WishProduct;
 
 public record WishProductResponseDto(
 	ProductResponseDto product

@@ -1,4 +1,4 @@
-package gift.feat.product.dto;
+package gift.feat.product.contoller.dto;
 
 import gift.feat.product.domain.Product;
 

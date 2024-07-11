@@ -7,11 +7,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import gift.feat.product.dto.ProductResponseDto;
+import gift.feat.product.contoller.dto.ProductResponseDto;
 import gift.feat.product.service.ProductService;
 
 import gift.feat.user.repository.UserJpaRepository;
-import gift.feat.wishList.WishProductJpaRepository;
+import gift.feat.wishProduct.repository.WishProductJpaRepository;
 import lombok.RequiredArgsConstructor;
 
 @Controller

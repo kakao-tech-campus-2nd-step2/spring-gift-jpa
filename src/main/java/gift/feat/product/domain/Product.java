@@ -2,8 +2,6 @@ package gift.feat.product.domain;
 
 import java.util.Objects;
 
-import gift.feat.product.dto.ProductResponseDto;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,11 +27,6 @@ public class Product {
 
 	public static Product of(String name, Long price, String imageUrl) {
 		return new Product(name, price, imageUrl);
-	}
-
-	public static Product from(ProductResponseDto productResponseDto) {
-		return new Product( productResponseDto.name(), productResponseDto.price(),
-			productResponseDto.imageUrl());
 	}
 
 	public Long getId() {
