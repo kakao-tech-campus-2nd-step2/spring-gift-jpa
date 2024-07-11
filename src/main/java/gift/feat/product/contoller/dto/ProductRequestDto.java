@@ -1,4 +1,4 @@
-package gift.feat.product.dto;
+package gift.feat.product.contoller.dto;
 
 import gift.core.annotaions.NoKakao;
 import gift.core.annotaions.ValidCharset;
