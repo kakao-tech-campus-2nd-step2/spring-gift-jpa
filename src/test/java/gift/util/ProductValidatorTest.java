@@ -113,7 +113,7 @@ public class ProductValidatorTest {
         ProductDTO product = new ProductDTO("abc", 123, "www.test.com");
         Product savedProduct = productRepository.save(product);
 
-        WishListDTO wishList = new WishListDTO(savedProduct.getId()+1);
+        WishListDTO wishList = new WishListDTO(savedProduct.getId() + 1);
 
         //when
         Set<ConstraintViolation<WishListDTO>> violations = validator.validate(wishList);
