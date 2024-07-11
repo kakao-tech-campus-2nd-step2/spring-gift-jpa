@@ -90,5 +90,4 @@ create table wish
 
 ## 구현 기능 목록
 
-- Product 페이지네이션 구현
-- Wish 페이지네이션 구현
+- 상품 리스트 및 위시 리스트 조회 API 페이지네이션 적용
