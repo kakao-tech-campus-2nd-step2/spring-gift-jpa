@@ -51,6 +51,17 @@ class ProductControllerTest {
         var actual = restTemplate.exchange(requestEntity, AuthToken.class);
 
         accessToken = actual.getBody().accessToken();
+
+        // 상품 초기화
+        var productUrl = baseUrl + "/api/products";
+        List.of(
+                new ProductReqDto("상품1", 1000, "keyboard.png"),
+                new ProductReqDto("상품2", 2000, "mouse.png"),
+                new ProductReqDto("상품3", 3000, "monitor.png")
+        ).forEach(productReqDto -> {
+            var productRequest = TestUtils.createRequestEntity(productUrl, productReqDto, HttpMethod.POST, accessToken);
+            restTemplate.exchange(productRequest, String.class);
+        });
     }
 
     @Test
@@ -66,7 +77,7 @@ class ProductControllerTest {
         //then
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actual.getBody()).isNotNull();
-        assertThat(actual.getBody().size()).isEqualTo(10);  // 상품 개수가 10개인지 확인
+        assertThat(actual.getBody().size()).isEqualTo(3);
 
         actual.getBody().forEach(product -> assertThat(product).isInstanceOf(ProductResDto.class));
     }
@@ -88,9 +99,9 @@ class ProductControllerTest {
         assertThat(product).isInstanceOf(ProductResDto.class);
 
         assertThat(product.id()).isEqualTo(productId);
-        assertThat(product.name()).isEqualTo("키보드");
-        assertThat(product.price()).isEqualTo(10000);
-        assertThat(product.imageUrl()).isEqualTo("https://www.google.com/keyboard.png");
+        assertThat(product.name()).isEqualTo("상품1");
+        assertThat(product.price()).isEqualTo(1000);
+        assertThat(product.imageUrl()).isEqualTo("keyboard.png");
     }
 
     @Test

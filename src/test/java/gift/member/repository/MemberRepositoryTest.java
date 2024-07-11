@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
+@DisplayName("회원 리파지토리 테스트")
 class MemberRepositoryTest {
 
     @Autowired
@@ -23,8 +24,6 @@ class MemberRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        memberRepository.deleteAll();
-
         // 임의의 회원 3명
         List<Member> members = List.of(
                 new Member("test1@test.com", "1234"),

@@ -9,6 +9,6 @@ public record WishListResDto(
 ) {
 
     public WishListResDto(WishList wishList) {
-        this(wishList.getId(), wishList.getProductId(), wishList.getQuantity());
+        this(wishList.getId(), wishList.getProduct().getId(), wishList.getQuantity());
     }
 }
