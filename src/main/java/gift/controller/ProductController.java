@@ -5,11 +5,12 @@ import gift.dto.ProductResponseDto;
 import gift.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -37,8 +38,9 @@ public class ProductController {
 
     @GetMapping
     @Operation(summary = "모든 상품 조회", description = "모든 상품을 조회합니다.")
-    public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
-        List<ProductResponseDto> productDTOs = productService.getAllProducts();
+    public ResponseEntity<Page<ProductResponseDto>> getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductResponseDto> productDTOs = productService.getAllProducts(pageable);
         return new ResponseEntity<>(productDTOs, HttpStatus.OK);
     }
 

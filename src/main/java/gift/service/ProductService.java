@@ -8,6 +8,8 @@ import gift.exception.BusinessException;
 import gift.exception.ErrorCode;
 import gift.mapper.ProductMapper;
 import gift.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,11 +38,9 @@ public class ProductService {
         return ProductMapper.toProductResponseDTO(existingProduct);
     }
 
-    public List<ProductResponseDto> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-                .map(ProductMapper::toProductResponseDTO)
-                .collect(Collectors.toList());
+    public Page<ProductResponseDto> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(ProductMapper::toProductResponseDTO);
     }
 
     public ProductResponseDto getProductById(Long id) {
@@ -62,8 +62,7 @@ public class ProductService {
     }
 
     public List<ProductResponseDto> getProductsByIds(List<Long> ids) {
-        List<Product> products = productRepository.findAllById(ids);
-        return products.stream()
+        return productRepository.findAllById(ids).stream()
                 .map(ProductMapper::toProductResponseDTO)
                 .collect(Collectors.toList());
     }
