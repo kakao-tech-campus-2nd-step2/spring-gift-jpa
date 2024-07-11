@@ -17,9 +17,6 @@ public class Product {
     @Column(nullable = false)
     private String imageUrl;
 
-    public Product() {
-
-    }
 
     public Product(ProductRequest productRequest) {
         this.name = productRequest.name();
@@ -27,29 +24,25 @@ public class Product {
         this.imageUrl = productRequest.imageUrl();
     }
 
-    public Product(long id, String name, int price, String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
     public Product(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public Product() {
 
     }
 
-    public void setName(String name) {
+    public void updateValue(ProductRequest productRequest) {
+        this.name = productRequest.name();
+        this.price = productRequest.price();
+        this.imageUrl = productRequest.imageUrl();
+    }
+
+    public void updateValue(String name, int price, String imageUrl) {
         this.name = name;
-    }
-
-    public void setPrice(int price) {
         this.price = price;
-    }
-
-    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 

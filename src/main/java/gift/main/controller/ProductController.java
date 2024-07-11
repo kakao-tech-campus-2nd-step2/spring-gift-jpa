@@ -11,10 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-public class AdminProductController {
+public class ProductController {
     private final ProductService productService;
 
-    public AdminProductController(ProductService productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 

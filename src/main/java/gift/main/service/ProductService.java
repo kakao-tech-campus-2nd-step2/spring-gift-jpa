@@ -39,7 +39,7 @@ public class ProductService {
     public void updateProduct(long id, ProductRequest productRequest) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
-        product.updateProduct(productRequest);
+        product.updateValue(productRequest);
         productRepository.save(product);
     }
 
@@ -50,9 +50,6 @@ public class ProductService {
 
         return product;
     }
-
-
-
 
 
 }
