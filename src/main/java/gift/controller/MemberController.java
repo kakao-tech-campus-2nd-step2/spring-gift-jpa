@@ -3,7 +3,6 @@ package gift.controller;
 import gift.domain.Member;
 import gift.service.JwtService;
 import gift.service.MemberService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,14 +16,12 @@ public class MemberController {
 
     private MemberService memberService;
 
-    private JwtService jwtService;
-
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Member member) {
+    public ResponseEntity<Object> register(@RequestBody Member member) {
         try {
             memberService.register(member);
             return ResponseEntity.status(HttpStatus.CREATED).body(new TokenResponse(""));
@@ -35,7 +32,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Member member) {
+    public ResponseEntity<Object> login(@RequestBody Member member) {
         try {
             String token = memberService.login(member);
             return ResponseEntity.ok(new TokenResponse(token));

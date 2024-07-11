@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.dao.ProductDAO;
 import gift.domain.Product;
+import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,15 +16,15 @@ public class ProductController {
 
     private static final String REDIRECT_URL = "redirect:/api/products";
 
-    private final ProductDAO productDAO;
+    private final ProductService productService;
 
-    public ProductController(ProductDAO productDAO) {
-        this.productDAO = productDAO;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
     public String getProducts(Model model) {
-        List<Product> products = productDAO.findAll();
+        List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
         return "productList";
     }
@@ -35,7 +35,7 @@ public class ProductController {
             return "addProduct";
         }
 
-        productDAO.save(product);
+        productService.addProduct(product);
 
         return REDIRECT_URL;  // 새로운 상품 추가 후 상품 조회 화면으로 리다이렉트
     }
@@ -48,7 +48,7 @@ public class ProductController {
 
     @GetMapping("/{id}/edit")
     public String showEditProductForm(@PathVariable("id") Long id, Model model) {
-        Product product = productDAO.findById(id);
+        Product product = productService.getProductById(id);
 
         if (product == null) {
             return REDIRECT_URL;
@@ -65,7 +65,7 @@ public class ProductController {
         if (bindingResult.hasErrors()) {
             return "editProduct";
         }
-        productDAO.update(id, product);
+        productService.updateProduct(id, product);
 
         return REDIRECT_URL;
     }
@@ -73,7 +73,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable("id") Long id) {
         // 요청받은 id를 가진 상품을 삭제
-        productDAO.delete(id);
+        productService.deleteProduct(id);
 
         return REDIRECT_URL;
     }

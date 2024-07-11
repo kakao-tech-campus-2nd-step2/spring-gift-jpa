@@ -1,13 +1,21 @@
 package gift.domain;
 
+import jakarta.persistence.*;
+
+@Entity
 public class Member {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Column(name = "password", nullable = false)
     private String password;
 
-    public Member() {}
+    protected Member() {}
 
     public Member(Long id, String email, String password) {
         this.id = id;

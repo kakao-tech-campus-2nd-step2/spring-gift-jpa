@@ -3,18 +3,16 @@ package gift.domain;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "wish")
 public class Wish {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id")
-
+    @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @Column(name = "product_name")
+    @Column(name = "product_name", nullable = false)
     private String productName;
 
     public Wish() {}
