@@ -10,7 +10,6 @@ import gift.exception.wish.WishNotFoundException;
 import gift.repository.WishRepository;
 import gift.util.mapper.WishMapper;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,7 +33,7 @@ public class WishService {
 
         return wishes.stream()
             .map(WishMapper::toResponse)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     public Long addWish(Long userId, AddWishRequest request) {

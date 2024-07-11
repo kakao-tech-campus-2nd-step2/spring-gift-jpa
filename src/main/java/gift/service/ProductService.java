@@ -8,7 +8,6 @@ import gift.exception.product.ProductNotFoundException;
 import gift.repository.ProductRepository;
 import gift.util.mapper.ProductMapper;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +22,7 @@ public class ProductService {
         List<Product> products = productRepository.findAll();
         return products.stream()
             .map(ProductMapper::toResponse)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     public Product getProductById(Long id) {
