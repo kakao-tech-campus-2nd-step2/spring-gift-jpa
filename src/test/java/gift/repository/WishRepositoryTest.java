@@ -29,7 +29,7 @@ class WishRepositoryTest {
 
     @Test
     void saveWishTest() {
-        var expected = new Wish(memberRepository.findAll().getFirst().getId(), "상품명");
+        var expected = new Wish(memberRepository.findAll().getFirst(), "상품명");
 
         var actual = wishRepository.save(expected);
         assertAll(
@@ -40,7 +40,7 @@ class WishRepositoryTest {
 
     @Test
     void findWishByIdTest() {
-        var expected = new Wish(memberRepository.findAll().getFirst().getId(), "상품명");
+        var expected = new Wish(memberRepository.findAll().getFirst(), "상품명");
 
         var actual = wishRepository.save(expected);
 
@@ -54,22 +54,21 @@ class WishRepositoryTest {
 
     @Test
     void findWishByMemberIdTest() {
-        var expected = new Wish(memberRepository.findAll().getFirst().getId(), "상품명");
+        var expected = new Wish(memberRepository.findAll().getFirst(), "상품명");
         wishRepository.save(expected);
 
-        var actual = wishRepository.findByMemberId(
-            memberRepository.findAll().getFirst().getId());
+        var actual = wishRepository.findByMember(memberRepository.findAll().getFirst());
 
         assertThat(actual.getFirst()).isEqualTo(expected);
     }
 
     @Test
     void deleteWishByMemberIdAndId() {
-        var expected = new Wish(memberRepository.findAll().getFirst().getId(), "상품명");
+        var expected = new Wish(memberRepository.findAll().getFirst(), "상품명");
         var savedWish = wishRepository.save(expected);
 
-        var b = wishRepository.deleteByIdAndMemberId(savedWish.getId(),
-            memberRepository.findAll().getFirst().getId());
+        var b = wishRepository.deleteByIdAndMember(savedWish.getId(),
+            memberRepository.findAll().getFirst());
         System.out.println(wishRepository.findAll());
         assertTrue(wishRepository.findAll().isEmpty());
     }
