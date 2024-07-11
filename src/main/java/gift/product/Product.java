@@ -48,6 +48,10 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    public static Product fromProductIdWithoutBody(long id) {
+        return new Product(id, null, -1, null);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Product product) {

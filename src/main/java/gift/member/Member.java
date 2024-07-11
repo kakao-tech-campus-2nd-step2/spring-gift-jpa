@@ -1,5 +1,6 @@
 package gift.member;
 
+import gift.token.MemberTokenDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -28,6 +29,10 @@ public class Member {
 
     public boolean isSamePassword(Member member) {
         return this.password.equals(member.password);
+    }
+
+    public static Member fromMemberWithoutBody(MemberTokenDTO memberTokenDTO) {
+        return new Member(memberTokenDTO.getEmail(), null);
     }
 
     @Override

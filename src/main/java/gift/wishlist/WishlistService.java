@@ -9,7 +9,6 @@ import gift.product.Product;
 import gift.product.ProductRepository;
 import gift.token.MemberTokenDTO;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,32 +27,40 @@ public class WishlistService {
 
     public List<Product> getAllWishlists(MemberTokenDTO memberTokenDTO) {
         return wishlistRepository
-            .findAllByMember(new Member(memberTokenDTO.getEmail(), null))
+            .findAllByMember(Member.fromMemberWithoutBody(memberTokenDTO))
             .stream()
-            .map(e -> getProductById(e.getProduct().getId()))
+            .map(Wishlist::getProduct)
             .toList();
     }
 
     public void addWishlist(MemberTokenDTO memberTokenDTO, long productId) {
-        if (wishlistRepository.existsByMemberAndProduct(
-            new Member(memberTokenDTO.getEmail(), null),
-            getProductById(productId))
-        ) {
+        if (!productRepository.existsById(productId)) {
+            throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
+        }
+
+        if (isWishlistExists(memberTokenDTO, productId)) {
             throw new IllegalArgumentException(WISHLIST_ALREADY_EXISTS);
         }
 
         wishlistRepository.save(
             new Wishlist(
-                getProductById(productId),
-                new Member(memberTokenDTO.getEmail(), null)
+                Product.fromProductIdWithoutBody(productId),
+                Member.fromMemberWithoutBody(memberTokenDTO)
             )
+        );
+    }
+
+    private boolean isWishlistExists(MemberTokenDTO memberTokenDTO, long productId) {
+        return wishlistRepository.existsByMemberAndProduct(
+            Member.fromMemberWithoutBody(memberTokenDTO),
+            Product.fromProductIdWithoutBody(productId)
         );
     }
 
     public void deleteWishlist(MemberTokenDTO memberTokenDTO, long productId) {
         Wishlist findWishlist = wishlistRepository.findByMemberAndProduct(
-            new Member(memberTokenDTO.getEmail(), null),
-            new Product(productId, null, -1, null)
+            Member.fromMemberWithoutBody(memberTokenDTO),
+            Product.fromProductIdWithoutBody(productId)
         );
 
         if (findWishlist == null) {
@@ -61,15 +68,5 @@ public class WishlistService {
         }
 
         wishlistRepository.delete(findWishlist);
-    }
-
-    private Product getProductById(long productId) {
-        Optional<Product> product = productRepository.findById(productId);
-
-        if (product.isEmpty()) {
-            throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
-        }
-
-        return product.get();
     }
 }
