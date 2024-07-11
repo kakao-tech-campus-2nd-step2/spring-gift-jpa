@@ -59,7 +59,7 @@ public class MemberController {
     @ResponseBody
     public List<ProductDto> wishlist(Model model, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
-        return memberService.getAllWishlist(email).stream().map(ProductDto::new).toList();
+        return memberService.getAllWishlist(email);
     }
 
     /**

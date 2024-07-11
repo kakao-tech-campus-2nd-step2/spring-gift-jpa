@@ -1,16 +1,10 @@
 package gift.dto;
 
-import gift.constants.ErrorMessage;
-import gift.constants.RegularExpression;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,20 +12,10 @@ import java.util.List;
 public class Product {
 
     @Id
-    @NotNull
     long id;
 
-    @NotBlank(message = ErrorMessage.PRODUCT_NAME_VALID_NOT_BLANK_MSG)
-    @Size(min = 1, max = 15, message = ErrorMessage.PRODUCT_NAME_VALID_SIZE_MSG)
-    @Pattern(
-        regexp = RegularExpression.PRODUCT_NAME_CHAR_VALID_REGEX,
-        message = ErrorMessage.PRODUCT_NAME_VALID_CHAR_MSG)
-    @Pattern(
-        regexp = RegularExpression.PRODUCT_NAME_FIND_KAKAO_REGEX,
-        message = ErrorMessage.PRODUCT_NAME_VALID_KAKAO_MSG)
     String name;
 
-    @NotNull
     long price;
 
     @Column(name = "imageurl")
@@ -41,6 +25,11 @@ public class Product {
     private List<Wishlist> wishlist = new ArrayList<>();
 
     public Product() {
+    }
+
+    public Product(ProductDto productDto) {
+        this(productDto.getId(), productDto.getName(), productDto.getPrice(),
+            productDto.getImageUrl());
     }
 
     public Product(long id, String name, long price, String imageUrl) {

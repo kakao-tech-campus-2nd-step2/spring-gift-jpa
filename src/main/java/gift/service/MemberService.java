@@ -3,6 +3,7 @@ package gift.service;
 import gift.constants.ErrorMessage;
 import gift.dto.Member;
 import gift.dto.Product;
+import gift.dto.ProductDto;
 import gift.dto.Wishlist;
 import gift.dto.WishlistRequest;
 import gift.jwt.JwtUtil;
@@ -64,10 +65,10 @@ public class MemberService {
      * @param email
      * @return
      */
-    public List<Product> getAllWishlist(String email) {
+    public List<ProductDto> getAllWishlist(String email) {
         Member member = memberJpaDao.findByEmail(email)
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.MEMBER_NOT_EXISTS_MSG));
-        return member.getWishlist().stream().map(Wishlist::getProduct).toList();
+        return member.getWishlist().stream().map(o -> new ProductDto(o.getProduct())).toList();
     }
 
     /**
