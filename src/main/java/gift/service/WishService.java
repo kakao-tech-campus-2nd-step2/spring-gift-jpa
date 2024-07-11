@@ -4,11 +4,11 @@ import gift.model.Wish;
 import gift.model.dto.LoginMemberDto;
 import gift.model.dto.WishRequestDto;
 import gift.model.dto.WishResponseDto;
-import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishService {
@@ -21,6 +21,7 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<WishResponseDto> getWishList(LoginMemberDto loginMemberDto) {
         return wishRepository.findAllByMemberId(loginMemberDto.getId())
             .stream()
@@ -28,6 +29,7 @@ public class WishService {
             .toList();
     }
 
+    @Transactional
     public void addProductToWishList(WishRequestDto wishRequestDto, LoginMemberDto loginMemberDto) {
         Wish wish = wishRequestDto.toEntity();
         wish.setProduct(productRepository.findById(wishRequestDto.getProductId()).get());
@@ -35,6 +37,7 @@ public class WishService {
         wishRepository.save(wish);
     }
 
+    @Transactional
     public void updateProductInWishList(WishRequestDto wishRequestDto,
         LoginMemberDto loginMemberDto) {
         if (wishRequestDto.isCountZero()) {
@@ -45,9 +48,9 @@ public class WishService {
         Wish wish = wishRepository.findByMemberIdAndProductId(loginMemberDto.getId(),
             wishRequestDto.getProductId());
         wish.setCount(wishRequestDto.getCount());
-        wishRepository.save(wish);
     }
 
+    @Transactional
     public void deleteProductInWishList(WishRequestDto wishRequestDto,
         LoginMemberDto loginMemberDto) {
         wishRepository.deleteByMemberIdAndProductId(loginMemberDto.getId(),

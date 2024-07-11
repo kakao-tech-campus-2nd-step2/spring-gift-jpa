@@ -1,6 +1,5 @@
 package gift.model.dto;
 
-import gift.model.Product;
 import gift.model.Wish;
 
 public class WishRequestDto {

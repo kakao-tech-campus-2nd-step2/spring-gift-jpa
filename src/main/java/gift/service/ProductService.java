@@ -7,6 +7,7 @@ import gift.model.dto.ProductResponseDto;
 import gift.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -17,6 +18,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponseDto> getAllProducts() {
         return productRepository.findAll()
             .stream()
@@ -24,19 +26,21 @@ public class ProductService {
             .toList();
     }
 
+    @Transactional(readOnly = true)
     public ProductResponseDto getProductById(Long id) {
         return ProductResponseDto.from(productRepository.findById(id).get());
     }
 
+    @Transactional
     public void insertProduct(ProductRequestDto productRequestDto) throws ProductException {
         productRepository.save(productRequestDto.toEntity());
     }
 
+    @Transactional
     public void updateProductById(Long id, ProductRequestDto productRequestDto)
         throws ProductException {
         Product product = productRepository.findById(id).get();
         product.updateInfo(productRequestDto.toEntity());
-        productRepository.save(product);
     }
 
     public void deleteProductById(Long id) {

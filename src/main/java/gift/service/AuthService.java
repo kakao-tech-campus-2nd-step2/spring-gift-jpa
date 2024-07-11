@@ -8,6 +8,7 @@ import gift.model.dto.MemberResponseDto;
 import gift.repository.MemberRepository;
 import gift.util.TokenProvider;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
@@ -20,6 +21,7 @@ public class AuthService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional(readOnly = true)
     public MemberResponseDto getToken(MemberRequestDto memberRequestDto) throws MemberException {
         Member member = memberRepository.findByEmail(memberRequestDto.getEmail());
         if (!member.matchPassword(memberRequestDto.getPassword())) {
