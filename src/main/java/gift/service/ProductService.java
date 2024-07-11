@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.exception.ProductException;
+import gift.exception.NotFoundProductException;
 import gift.model.Product;
 import gift.repository.ProductRepository;
 import java.util.List;
@@ -23,7 +23,7 @@ public class ProductService {
 
     public Product getProduct(Long id) {
         return productRepository.findById(id)
-            .orElseThrow(() -> new ProductException("상품이 존재하지 않습니다."));
+            .orElseThrow(NotFoundProductException::new);
     }
 
     @Transactional
@@ -35,9 +35,9 @@ public class ProductService {
     @Transactional
     public void editProduct(Long id, String name, Integer price, String imageUrl) {
         productRepository.findById(id)
-            .ifPresentOrElse( p -> p.updateProduct(name, price, imageUrl),
+            .ifPresentOrElse(p -> p.updateProduct(name, price, imageUrl),
                 () -> {
-                    throw new ProductException("상품이 존재하지 않습니다.");
+                    throw new NotFoundProductException();
                 }
             );
     }
@@ -47,7 +47,7 @@ public class ProductService {
         productRepository.findById(id)
             .ifPresentOrElse(productRepository::delete
                 , () -> {
-                    throw new ProductException("상품이 존재하지 않습니다.");
+                    throw new NotFoundProductException();
                 }
             );
     }

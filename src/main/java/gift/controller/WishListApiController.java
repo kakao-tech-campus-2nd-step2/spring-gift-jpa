@@ -7,11 +7,8 @@ import gift.response.ProductResponse;
 import gift.request.WishListRequest;
 import gift.exception.InputException;
 import gift.model.Product;
-import gift.model.WishProduct;
-import gift.repository.WishProductDao;
-import gift.service.WishProductService;
+import gift.service.WishService;
 import jakarta.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WishListApiController {
 
-    private final WishProductService wishProductService;
+    private final WishService wishService;
 
-    public WishListApiController(WishProductService wishProductService) {
-        this.wishProductService = wishProductService;
+    public WishListApiController(WishService wishService) {
+        this.wishService = wishService;
     }
 
     @CheckRole("ROLE_USER")
@@ -36,7 +33,7 @@ public class WishListApiController {
     public ResponseEntity<List<ProductResponse>> getWishList(
         @LoginMember LoginMemberDto memberDto) {
         List<ProductResponse> dtoList;
-        List<Product> wishlist = wishProductService.getMyWishList(memberDto.id());
+        List<Product> wishlist = wishService.getMyWishList(memberDto.id());
 
         dtoList = wishlist.stream()
             .map(ProductResponse::new)
@@ -52,7 +49,7 @@ public class WishListApiController {
             throw new InputException(bindingResult.getAllErrors());
         }
 
-        wishProductService.addMyWish(memberDto.id(), dto.productId());
+        wishService.addMyWish(memberDto.id(), dto.productId());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -65,7 +62,7 @@ public class WishListApiController {
             throw new InputException(bindingResult.getAllErrors());
         }
 
-        wishProductService.removeMyWish(memberDto.id(), dto.productId());
+        wishService.removeMyWish(memberDto.id(), dto.productId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

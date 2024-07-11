@@ -1,14 +1,15 @@
 package gift.service;
 
-import gift.exception.ProductException;
-import gift.exception.WishListException;
+import gift.exception.NotFoundProductException;
+import gift.exception.wishlist.DuplicateWishException;
 import gift.exception.member.NotFoundMemberException;
+import gift.exception.wishlist.NotFoundWishException;
 import gift.model.Member;
 import gift.model.Product;
-import gift.model.WishProduct;
+import gift.model.Wish;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
-import gift.repository.WishProductRepository;
+import gift.repository.WishRepository;
 import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -16,45 +17,45 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
-public class WishProductService {
+public class WishService {
 
-    private final WishProductRepository wishProductRepository;
+    private final WishRepository wishRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
 
-    public WishProductService(WishProductRepository wishProductRepository,
+    public WishService(WishRepository wishRepository,
         ProductRepository productRepository, MemberRepository memberRepository) {
-        this.wishProductRepository = wishProductRepository;
+        this.wishRepository = wishRepository;
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
     }
 
     public List<Product> getMyWishList(Long memberId) {
-        return wishProductRepository.findAllByMemberId(memberId);
+        return wishRepository.findAllByMemberId(memberId);
     }
 
     @Transactional
     public void addMyWish(Long memberId, Long productId) {
 
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new NotFoundMemberException("존재하지 않는 회원입니다."));
+            .orElseThrow(NotFoundMemberException::new);
         Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new ProductException("해당 제품이 존재하지 않습니다."));
+            .orElseThrow(NotFoundProductException::new);
 
         try {
-            WishProduct wishProduct = new WishProduct(member, product);
-            wishProductRepository.save(wishProduct);
+            Wish wish = new Wish(member, product);
+            wishRepository.save(wish);
         } catch (DataIntegrityViolationException e) {
-            throw new WishListException("해당 제품이 이미 위시 리스트에 존재합니다.");
+            throw new DuplicateWishException();
         }
     }
 
     @Transactional
     public void removeMyWish(Long memberId, Long productId) {
-        wishProductRepository.findByMemberIdAndProductId(memberId, productId)
-            .ifPresentOrElse(wishProductRepository::delete
+        wishRepository.findByMemberIdAndProductId(memberId, productId)
+            .ifPresentOrElse(wishRepository::delete
                 , () -> {
-                    throw new WishListException("해당 상품이 위시 리스트에 존재하지 않습니다.");
+                    throw new NotFoundWishException();
                 }
             );
     }

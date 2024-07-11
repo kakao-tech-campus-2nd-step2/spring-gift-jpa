@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    public static final String DUPLICATE_EMAIL_MESSAGE = "중복된 이메일의 회원이 이미 존재합니다.";
 
     public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
@@ -24,7 +23,7 @@ public class MemberService {
         try {
             return memberRepository.save(new Member(email, password));
         } catch (DataIntegrityViolationException e) {
-            throw new DuplicateEmailException(DUPLICATE_EMAIL_MESSAGE);
+            throw new DuplicateEmailException();
         }
 
     }
@@ -33,7 +32,7 @@ public class MemberService {
 
         return memberRepository.findByEmail(email)
             .filter(member -> member.validating(email, password))
-            .orElseThrow(() -> new NotFoundMemberException("아이디 또는 비밀번호가 일치하지 않습니다."));
+            .orElseThrow(NotFoundMemberException::new);
     }
 
 }

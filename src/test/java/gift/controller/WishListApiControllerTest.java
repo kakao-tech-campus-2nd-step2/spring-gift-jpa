@@ -1,15 +1,14 @@
 package gift.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import gift.auth.JwtTokenProvider;
 import gift.model.Member;
 import gift.model.Product;
-import gift.model.WishProduct;
+import gift.model.Wish;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
-import gift.repository.WishProductRepository;
+import gift.repository.WishRepository;
 import gift.request.WishListRequest;
 import gift.response.ProductResponse;
 import gift.service.MemberService;
@@ -45,7 +44,7 @@ class WishListApiControllerTest {
     ProductRepository productRepository;
 
     @Autowired
-    WishProductRepository wishProductRepository;
+    WishRepository wishRepository;
 
     @Autowired
     MemberService memberService;
@@ -72,15 +71,15 @@ class WishListApiControllerTest {
         member = memberService.join("aaa123@a.com", "1234");
         token = jwtTokenProvider.generateToken(member);
 
-        List<WishProduct> wishProducts = products.stream()
-            .map(product -> new WishProduct(member, product))
+        List<Wish> wishes = products.stream()
+            .map(product -> new Wish(member, product))
             .toList();
-        wishProductRepository.saveAll(wishProducts);
+        wishRepository.saveAll(wishes);
     }
 
     @AfterEach
     void after() {
-        wishProductRepository.deleteAll();
+        wishRepository.deleteAll();
         memberRepository.delete(member);
         productRepository.deleteAll();
     }
