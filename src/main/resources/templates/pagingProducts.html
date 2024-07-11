@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <link href="../css/bootstrap.min.css"
+        th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <style>
+    th {
+      text-align: center;
+    }
+
+    td {
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="container" style="max-width: 600px">
+  <div class="py-5 text-center">
+    <h2>상품 목록</h2>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <button class="btn btn-primary float-end"
+              onclick="location.href='joinForm.html'"
+              th:onclick="|location.href='@{/view/join}'|" type="button">회원가입
+      </button>
+    </div>
+    <div class="col">
+      <button class="btn btn-primary float-end"
+              onclick="location.href='loginForm.html'"
+              th:onclick="|location.href='@{/view/login}'|" type="button">로그인
+      </button>
+    </div>
+    <div class="col">
+      <button class="btn btn-primary float-end"
+              onclick="location.href='wish.html'"
+              th:onclick="|location.href='@{/view/wish}'|" type="button">위시 리스트
+      </button>
+    </div>
+  </div>
+
+  <hr class="my-4">
+  <div>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>상품명</th>
+        <th>가격</th>
+        <th>이미지-URL</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="product : ${products}">
+        <td th:text="${product.id}">상품 ID</td>
+        <td th:text="${product.name}">상품명</td>
+        <td th:text="${product.price}">0원</td>
+        <td th:text="${product.imageUrl}">link</td>
+        <td>
+          <button class="btn btn-secondary"
+                  onclick="location.href='wish.html'"
+                  th:onclick="|addConfirm([[${product.id}]])|" type="button">위시추가
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+
+<script th:inline="javascript">
+
+  function addConfirm(id) {
+
+    if (!confirm('해당 제품을 위시 리스트에 추가할까요?')) {
+      return false;
+    }
+
+    let form = document.createElement('form');
+    let obj;
+    obj = document.createElement('input');
+    obj.setAttribute('type', 'hidden');
+    obj.setAttribute('name', 'id')
+    obj.setAttribute('value', id);
+
+    form.appendChild(obj);
+    form.setAttribute('method', 'post');
+    form.setAttribute('action', '/view/wish/add');
+    document.body.appendChild(form);
+    form.submit();
+  }
+</script>
+
+</html>
