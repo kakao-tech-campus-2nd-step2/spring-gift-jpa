@@ -1,6 +1,7 @@
 package gift.dto;
 
 public class MemberLoginDto {
+
     public final String email;
     public final String password;
 
@@ -8,5 +9,4 @@ public class MemberLoginDto {
         this.email = email;
         this.password = password;
     }
-
 }

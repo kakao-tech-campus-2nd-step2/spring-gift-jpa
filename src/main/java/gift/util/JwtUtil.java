@@ -14,7 +14,7 @@ public class JwtUtil {
 
     private static final long EXPIRATION_TIME = 86400000; // 24 hours
 
-    public static String generateToken(String email, String password) {
+    public static String generateToken(String email) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
 
@@ -29,7 +29,7 @@ public class JwtUtil {
     public static void verifyToken(String token) throws Exception {
         try {
             Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new TokenException("잘못된 로그인 정보입니다.");
         }
     }

@@ -4,9 +4,10 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public class WishlistRequestDto {
+
     @NotEmpty(message = "상품 ID는 필수 입니다.")
     private Long productId;
-    
+
     @PositiveOrZero(message = "수량은 0개 이상이어야 합니다.")
     private int quantity;
 
