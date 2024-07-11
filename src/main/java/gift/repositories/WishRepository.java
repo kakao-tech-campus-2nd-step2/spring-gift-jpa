@@ -13,8 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
     // 특정 회원의 Wishlist 조회
-    @Query("SELECT w FROM Wish w WHERE w.memberId = :memberId")
-    List<Wish> findWishListById(@Param("memberId") Long memberId);
+    List<Wish> findAllByMemberId(Long memberId);
 
     // 특정 회원의 특정 상품에 대한 Wish 삭제
     void deleteByMemberIdAndProductId(Long memberId, Long productId);

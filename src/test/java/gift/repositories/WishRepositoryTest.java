@@ -33,7 +33,7 @@ class WishRepositoryTest {
         wishRepository.save(wish2);
 
         // when
-        List<Wish> wishList = wishRepository.findWishListById(memberId);
+        List<Wish> wishList = wishRepository.findAllByMemberId(memberId);
 
         // then
         assertThat(wishList).hasSize(2);
@@ -55,7 +55,7 @@ class WishRepositoryTest {
         wishRepository.save(wish);
 
         // then
-        List<Wish> wishList = wishRepository.findWishListById(memberId);
+        List<Wish> wishList = wishRepository.findAllByMemberId(memberId);
         assertThat(wishList).hasSize(1);
         assertThat(wishList.get(0).getProductId()).isEqualTo(productId);
     }
@@ -76,7 +76,7 @@ class WishRepositoryTest {
         wishRepository.deleteByMemberIdAndProductId(memberId, productId);
 
         // then
-        List<Wish> wishList = wishRepository.findWishListById(memberId);
+        List<Wish> wishList = wishRepository.findAllByMemberId(memberId);
         assertThat(wishList).isEmpty();
     }
 

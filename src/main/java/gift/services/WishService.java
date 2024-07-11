@@ -20,7 +20,7 @@ public class WishService {
 //    Wishlist 조회
     @Transactional
     public List<WishDto> getWishListById(Long memberId) {
-        List<Wish> wishList = wishRepository.findWishListById(memberId);
+        List<Wish> wishList = wishRepository.findAllByMemberId(memberId);
         return wishList.stream()
             .map(wish -> new WishDto(
                 wish.getMemberId(),
