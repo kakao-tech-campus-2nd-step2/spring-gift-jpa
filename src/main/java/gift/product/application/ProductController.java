@@ -41,7 +41,7 @@ public class ProductController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public void saveProduct(@RequestBody @Valid ProductRequest newProduct) {
-        productService.saveProduct(newProduct);
+        productService.saveProduct(newProduct.toProductParams());
     }
 
     @Operation(summary = "상품 수정", description = "상품을 수정합니다.")
@@ -52,7 +52,7 @@ public class ProductController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void modifyProduct(@PathVariable("id") Long id, @RequestBody @Valid ProductRequest modifyProduct) {
-        productService.modifyProduct(id, modifyProduct);
+        productService.modifyProduct(id, modifyProduct.toProductParams());
     }
 
     @Operation(summary = "상품 상세 조회", description = "상품 상세 정보를 조회합니다.")

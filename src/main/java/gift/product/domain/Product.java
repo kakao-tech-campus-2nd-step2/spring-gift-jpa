@@ -28,6 +28,10 @@ public class Product {
     protected Product() {
     }
 
+    public Product(String name, Integer price, String imgUrl) {
+        this(null, name, price, imgUrl);
+    }
+
     public Product(Long id, String name, Integer price, String imgUrl) {
         checkName(name);
         this.id = id;
@@ -51,7 +55,7 @@ public class Product {
     public String getImgUrl() {
         return imgUrl;
     }
-    
+
     private void checkName(String name) {
         if (name.contains("카카오")) {
             throw new ProductNoConferredException(List.of("카카오"));

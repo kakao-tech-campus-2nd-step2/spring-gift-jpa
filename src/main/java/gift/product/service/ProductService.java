@@ -1,10 +1,10 @@
 package gift.product.service;
 
-import gift.product.application.dto.request.ProductRequest;
 import gift.product.application.dto.response.ProductResponse;
 import gift.product.domain.Product;
 import gift.product.exception.ProductNotFoundException;
 import gift.product.persistence.ProductRepository;
+import gift.product.service.dto.ProductParams;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,16 +17,16 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public void saveProduct(ProductRequest productRequest) {
-        Product product = productRequest.toModel();
+    public void saveProduct(ProductParams productRequest) {
+        Product product = productRequest.toEntity();
         productRepository.save(product);
     }
 
-    public void modifyProduct(final Long id, ProductRequest productRequest) {
+    public void modifyProduct(final Long id, ProductParams productRequest) {
         productRepository.findById(id)
                 .orElseThrow(() -> ProductNotFoundException.of(id));
 
-        Product newProduct = productRequest.toModel();
+        Product newProduct = productRequest.toEntity(id);
         productRepository.save(newProduct);
     }
 
