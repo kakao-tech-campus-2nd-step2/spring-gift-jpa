@@ -1,10 +1,9 @@
-package gift.member;
+package gift.wishList;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpStatus.OK;
 
 import gift.domain.Member;
+import gift.domain.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,12 +15,13 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class MemberTest {
+public class WishListTest {
 
     @LocalServerPort
     private int port;
@@ -38,32 +38,53 @@ public class MemberTest {
 
         url = "http://localhost:" + port;
 
-        Member member = new Member("admin@example.com", "1234");
+        Member member = new Member("admin2@example.com", "2222");
 
-        HttpEntity<Member> requestEntity = new HttpEntity<>(member);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Member> requestEntity = new HttpEntity<>(member, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url + "/members/register", member, String.class);
 
+        System.out.println(responseEntity);
 
         int startIndex = responseEntity.getBody().indexOf("\"token\":\"") + "\"token\":\"".length();
         int endIndex = responseEntity.getBody().indexOf("\"", startIndex);
         token = responseEntity.getBody().substring(startIndex, endIndex);
-
     }
 
     @Test
-    @DisplayName("로그인 확인")
+    @DisplayName("위시리스트 추가")
     @DirtiesContext
-    void login() {
-        Member member = new Member("admin@example.com", "1234");
+    void addWishList() {
+        Product product = new Product(4L,"Sample3", 3000L, "http://image3.jpg");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(token);
 
-        HttpEntity<Member> requestEntity = new HttpEntity<>(member, headers);
-        ResponseEntity<String> loginResponse = restTemplate.exchange(url + "/members/login", POST, requestEntity, String.class);
+        HttpEntity<Product> requestEntity = new HttpEntity<>(product, headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/wishlist", HttpMethod.POST,
+            requestEntity, String.class);
 
-        assertThat(loginResponse.getStatusCode()).isEqualTo(OK);
+        System.out.println(responseEntity);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
+    @Test
+    @DisplayName("위시리스트 조회")
+    @DirtiesContext
+    void getWishList() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(token);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/wishlist", HttpMethod.GET,
+            requestEntity, String.class);
+
+        System.out.println(responseEntity);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 }
