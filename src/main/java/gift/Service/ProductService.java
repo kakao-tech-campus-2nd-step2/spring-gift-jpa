@@ -5,7 +5,6 @@ import gift.Repository.ProductRepository;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,19 +21,20 @@ public class ProductService {
     }
 
     public Product getProductById(Long id){
-        return productRepository.findById(id);
+        return productRepository.findProductById(id);
     }
 
     public void addProduct(Product product){
-        productRepository.add(product);
+        productRepository.save(product);
     }
 
     public void updateProduct(Product product){
-        productRepository.update(product);
+        productRepository.save(product);
     }
 
     public void deleteProduct(Long id){
-        productRepository.delete(id);
+        productRepository.deleteById(id);
+
     }
 
 }
