@@ -1,5 +1,6 @@
 package gift.model.dto;
 
+import gift.model.Product;
 import gift.model.Wish;
 
 public class WishRequestDto {
@@ -26,11 +27,13 @@ public class WishRequestDto {
         return count;
     }
 
-    public Wish toEntity(Long memberId) {
+    public Wish toEntity() {
         return new Wish(
-            memberId,
-            productId,
             count
         );
+    }
+
+    public boolean isCountZero() {
+        return count == 0;
     }
 }

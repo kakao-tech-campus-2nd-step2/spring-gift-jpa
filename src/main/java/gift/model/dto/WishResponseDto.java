@@ -25,7 +25,7 @@ public class WishResponseDto {
 
     public static WishResponseDto from(Wish wish) {
         return new WishResponseDto(
-            wish.getProductId(),
+            wish.getProduct().getId(),
             wish.getCount()
         );
     }

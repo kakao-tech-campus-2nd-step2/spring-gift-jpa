@@ -1,5 +1,7 @@
 package gift.model.dto;
 
+import gift.model.Member;
+
 public class LoginMemberDto {
 
     Long id;
@@ -28,5 +30,14 @@ public class LoginMemberDto {
 
     public String getRole() {
         return role;
+    }
+
+    public Member toEntity() {
+        return new Member(
+            id,
+            email,
+            name,
+            role
+        );
     }
 }

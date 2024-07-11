@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.exception.ProductException;
+import gift.model.Product;
 import gift.model.dto.ProductRequestDto;
 import gift.model.dto.ProductResponseDto;
 import gift.repository.ProductRepository;
@@ -28,12 +29,14 @@ public class ProductService {
     }
 
     public void insertProduct(ProductRequestDto productRequestDto) throws ProductException {
-        productRepository.save(productRequestDto.toEntity(null));
+        productRepository.save(productRequestDto.toEntity());
     }
 
     public void updateProductById(Long id, ProductRequestDto productRequestDto)
         throws ProductException {
-        productRepository.save(productRequestDto.toEntity(id));
+        Product product = productRepository.findById(id).get();
+        product.updateInfo(productRequestDto.toEntity());
+        productRepository.save(product);
     }
 
     public void deleteProductById(Long id) {
