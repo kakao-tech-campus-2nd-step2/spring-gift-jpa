@@ -5,6 +5,9 @@ import gift.model.GiftRequest;
 import gift.model.GiftResponse;
 import gift.service.GiftService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +29,9 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String adminHome(Model model) {
-        Collection<GiftResponse> giftlist = giftService.getAllGifts(null);
+    public String adminHome(Model model,
+                            @PageableDefault(sort="id",direction = Sort.Direction.ASC,size=5) Pageable pageable) {
+        Collection<GiftResponse> giftlist = giftService.getAllGifts(pageable);
         model.addAttribute("giftlist", giftlist);
         return "admin";
     }
