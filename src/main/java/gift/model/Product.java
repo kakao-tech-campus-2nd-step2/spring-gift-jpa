@@ -25,10 +25,6 @@ public class Product {
 
     }
 
-    public Product(Long id) {
-        this.id = id;
-    }
-
     public Product(String name, int price, String imageUrl) {
         validateKakaoWord(name);
         this.name = name;
