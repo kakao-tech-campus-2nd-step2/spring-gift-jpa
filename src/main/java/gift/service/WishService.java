@@ -1,12 +1,11 @@
 package gift.service;
 
-import gift.dto.wish.WishCreateDTO;
 import gift.entity.Wish;
 import gift.dto.wish.WishRequestDTO;
 import gift.dto.wish.WishResponseDTO;
 import gift.exception.ForbiddenRequestException;
 import gift.exception.NoSuchUserException;
-import gift.exception.NoSuchWishException;
+import gift.exception.NoSuchProductException;
 import gift.repository.UserRepository;
 import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,7 @@ public class WishService {
                 .orElseThrow(NoSuchUserException::new)
                 .getId();
 
-        return wishRepository.findAllByUser_Id(userId)
+        return wishRepository.findAllByMemberId(userId)
                 .stream()
                 .map(WishResponseDTO::from)
                 .toList();
@@ -53,8 +52,8 @@ public class WishService {
                 .getId();
 
         long wishOwnerId = wishRepository.findById(wishId)
-                .orElseThrow(NoSuchWishException::new)
-                .getId();
+                .orElseThrow(NoSuchProductException::new)
+                .getMemberId();
 
         if (wishOwnerId != userId) {
             throw new ForbiddenRequestException("user is not owner of wish");

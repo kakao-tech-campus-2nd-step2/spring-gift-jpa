@@ -27,6 +27,7 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.6'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
 }
 
 tasks.named('test') {
