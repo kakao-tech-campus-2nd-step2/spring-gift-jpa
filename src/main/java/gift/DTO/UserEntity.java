@@ -43,9 +43,9 @@ public class UserEntity {
     return this.password;
   }
 
-  public boolean matchLoginInfo(Optional<UserEntity> userByEmail) {
-    return this.email.equals(userByEmail.get().getEmail()) && this.password.equals(
-      userByEmail.get().getPassword());
+  public boolean matchLoginInfo(UserDto userByEmail) {
+    return this.email.equals(userByEmail.getEmail()) && this.password.equals(
+      userByEmail.getPassword());
   }
 
 }
