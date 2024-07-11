@@ -12,6 +12,7 @@ import gift.wishlist.dto.WishListReqDto;
 import gift.wishlist.dto.WishListResDto;
 import gift.wishlist.exception.WishListErrorCode;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -48,6 +49,14 @@ class WishListControllerTest {
     private static String baseUrl;
     private static String accessToken;
 
+    private static List<ProductReqDto> products = List.of(
+            new ProductReqDto("상품1", 1000, "keyboard.png"),
+            new ProductReqDto("상품2", 2000, "mouse.png"),
+            new ProductReqDto("상품3", 3000, "monitor.png"),
+            new ProductReqDto("상품4", 4000, "headset.png")
+    );
+    private static List<ProductResDto> productList = new ArrayList<>();
+
     private static Long memberId;
 
     @BeforeEach
@@ -65,19 +74,41 @@ class WishListControllerTest {
 
         memberId = jwtTokenProvider.getMemberId(accessToken);
 
-        // 위시 리스트 초기화
-        // 상품은 data.sql로 10개 등록되어있음. 여기서 위시 리스트에 3개의 상품을 임의 수량으로 추가
-        var wishListUrl = baseUrl + "/api/wish-list";
-        List<WishListReqDto> wishListReqDtos = List.of(
-                new WishListReqDto(1L, 3),
-                new WishListReqDto(2L, 7),
-                new WishListReqDto(3L, 5)
-        );
+        // 상품 초기화
+        var productUrl = baseUrl + "/api/products";
+        products.forEach(productReqDto -> {
+            var productRequest = TestUtils.createRequestEntity(productUrl, productReqDto, HttpMethod.POST, accessToken);
+            restTemplate.exchange(productRequest, String.class);
+        });
 
-        wishListReqDtos.forEach(wishListReqDto -> {
+        // 테스트에 이용하기 위해 저장된 상품 불러오기
+        productList = getProductResDtos(productUrl);
+
+        // 위시 리스트 초기화
+        var wishListUrl = baseUrl + "/api/wish-list";
+        List.of(
+                new WishListReqDto(productList.get(0).id(), 3),
+                new WishListReqDto(productList.get(1).id(), 7),
+                new WishListReqDto(productList.get(2).id(), 5)
+        ).forEach(wishListReqDto -> {
             var wishListRequest = TestUtils.createRequestEntity(wishListUrl, wishListReqDto, HttpMethod.POST, accessToken);
             restTemplate.exchange(wishListRequest, String.class);
         });
+    }
+
+    private List<ProductResDto> getProductResDtos(String productUrl) {
+        var productRequest = TestUtils.createRequestEntity(productUrl, null, HttpMethod.GET, accessToken);
+        var responseType = new ParameterizedTypeReference<List<ProductResDto>>() {};
+        var actualProduct = restTemplate.exchange(productRequest, responseType);
+        return actualProduct.getBody();
+    }
+
+    private List<WishListResDto> getWishList() {
+        var url = baseUrl + "/api/wish-list";
+        var request = TestUtils.createRequestEntity(url, null, HttpMethod.GET, accessToken);
+        var responseType = new ParameterizedTypeReference<List<WishListResDto>>() {};
+        var actual = restTemplate.exchange(request, responseType);
+        return actual.getBody();
     }
 
     @AfterEach
@@ -86,6 +117,13 @@ class WishListControllerTest {
         var url = baseUrl + "/api/members/" + memberId;
         var request = TestUtils.createRequestEntity(url, null, HttpMethod.DELETE, accessToken);
         restTemplate.exchange(request, String.class);
+
+        // 상품 삭제
+        var productUrl = baseUrl + "/api/products";
+        productList.forEach(product -> {
+            var productRequest = TestUtils.createRequestEntity(productUrl + "/" + product.id(), null, HttpMethod.DELETE, accessToken);
+            restTemplate.exchange(productRequest, String.class);
+        });
     }
 
     @Test
@@ -112,14 +150,13 @@ class WishListControllerTest {
             assertThat(w.quantity()).isNotNull();
         });
 
-        assertThat(wishList.get(0).productId()).isEqualTo(1L);
-        assertThat(wishList.get(0).quantity()).isEqualTo(3);
+        // 위시 리스트에 담긴 상품 ID와 상품 목록의 ID 비교: 마지막 상품은 담지 않았음
+        assertThat(wishList).extracting(WishListResDto::productId)
+                .containsExactly(productList.get(0).id(), productList.get(1).id(), productList.get(2).id());
 
-        assertThat(wishList.get(1).productId()).isEqualTo(2L);
-        assertThat(wishList.get(1).quantity()).isEqualTo(7);
-
-        assertThat(wishList.get(2).productId()).isEqualTo(3L);
-        assertThat(wishList.get(2).quantity()).isEqualTo(5);
+        // 위시 리스트에 담긴 상품 수량 비교
+        assertThat(wishList).extracting(WishListResDto::quantity)
+                .containsExactly(3, 7, 5);
     }
 
     @ParameterizedTest(name = "위시 리스트 추가 테스트 - 상품 ID: {0}, 수량: {1}")
@@ -182,9 +219,9 @@ class WishListControllerTest {
         assertThat(errorResponse).isNotNull();
         assertThat(errorResponse).isInstanceOf(ErrorResponse.class);
 
-        assertThat(errorResponse.getCode()).isEqualTo(ProductErrorCode.PRODUCT_NOT_FOUND.getCode());
+        assertThat(errorResponse.getCode()).isEqualTo(WishListErrorCode.WISH_LIST_NOT_FOUND.getCode());
         assertThat(errorResponse.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
-        assertThat(errorResponse.getMessage()).isEqualTo(ProductErrorCode.PRODUCT_NOT_FOUND.getMessage());
+        assertThat(errorResponse.getMessage()).isEqualTo(WishListErrorCode.WISH_LIST_NOT_FOUND.getMessage());
         assertThat(errorResponse.getInvalidParams()).isNull();
     }
 
@@ -195,10 +232,7 @@ class WishListControllerTest {
             BiPredicate<List<WishListResDto>, Long> resultPredicate) {
         // given
         // 자신의 위시 리스트 조회
-        var urlGet = baseUrl + "/api/wish-list";
-        var requestGet = TestUtils.createRequestEntity(urlGet, null, HttpMethod.GET, accessToken);
-        var responseTypeGet = new ParameterizedTypeReference<List<WishListResDto>>() {};
-        var wishList = restTemplate.exchange(requestGet, responseTypeGet).getBody();
+        var wishList = getWishList();
 
         // 수정할 마지막 요소 가져오기
         assert wishList != null;
@@ -218,10 +252,9 @@ class WishListControllerTest {
         assertThat(actual.getBody()).isEqualTo(expectedMessage);
 
         // 수정된 위시 리스트 조회
-        var responseType = new ParameterizedTypeReference<List<WishListResDto>>() {};
-        var wishListUpdated = restTemplate.exchange(requestGet, responseType).getBody();
+        var updatedWishList = getWishList();
 
-        assertThat(resultPredicate.test(wishListUpdated, lastWishList.id())).isTrue();
+        assertThat(resultPredicate.test(updatedWishList, lastWishList.id())).isTrue();
     }
 
     private static Stream<Arguments> provideWishListUpdateScenarios() {
@@ -246,10 +279,7 @@ class WishListControllerTest {
     void 위시_리스트_삭제() {
         // given
         // 자신의 위시 리스트 조회
-        var urlGet = baseUrl + "/api/wish-list";
-        var requestGet = TestUtils.createRequestEntity(urlGet, null, HttpMethod.GET, accessToken);
-        var responseTypeGet = new ParameterizedTypeReference<List<WishListResDto>>() {};
-        var wishList = restTemplate.exchange(requestGet, responseTypeGet).getBody();
+        var wishList = getWishList();
 
         // when
         assert wishList != null;
@@ -261,10 +291,8 @@ class WishListControllerTest {
 
         // then
         // 삭제 후 위시 리스트 조회
-        var actual = restTemplate.exchange(requestGet, responseTypeGet);
-        var wishListAfterDelete = actual.getBody();
+        var wishListAfterDelete = getWishList();
 
-        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(wishListAfterDelete).isEmpty();
     }
 
