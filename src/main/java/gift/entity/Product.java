@@ -20,7 +20,7 @@ public class Product {
     @NotNull
     private String name;
     @NotNull
-    private int price;
+    private Integer price;
     private String img;
     @OneToMany(mappedBy = "product")
     private List<Wish> wishes;
