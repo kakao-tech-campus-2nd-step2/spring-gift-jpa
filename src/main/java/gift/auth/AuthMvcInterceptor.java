@@ -1,25 +1,21 @@
 package gift.auth;
 
-import gift.model.Member;
 import gift.model.Role;
-import gift.repository.MemberDao;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 @Component
-public class AuthInterceptor implements HandlerInterceptor {
+public class AuthMvcInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider tokenProvider;
 
-    public AuthInterceptor(JwtTokenProvider tokenProvider) {
+    public AuthMvcInterceptor(JwtTokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
 
@@ -31,7 +27,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             CheckRole checkRole = handlerMethod.getMethodAnnotation(CheckRole.class);
 
-            String token = tokenProvider.extractJwtTokenFromHeader(request);
+            String token = tokenProvider.extractJwtTokenFromCookie(request);
 
             //토큰이 존재하지 않음
             if (token == null) {
