@@ -17,24 +17,24 @@ public class ProductAdminController {
     private ProductService productService;
 
     @GetMapping("/admin/products")
-    public String adminProducts(Model model){
+    public String adminProducts(Model model) {
         List<ProductDTO.WithOptionDTO> products = productService.getAllProducts();
         model.addAttribute("products", products);
-        return  ("admin/products");
+        return ("admin/products");
     }
 
     @GetMapping("/admin/add")
-    public String adminProductsAdd(Model model){
-        return  ("admin/add");
+    public String adminProductsAdd(Model model) {
+        return ("admin/add");
     }
 
     @GetMapping("/admin/modify")
-    public String adminProductsModify(Model model){
-        return  ("admin/modify");
+    public String adminProductsModify(Model model) {
+        return ("admin/modify");
     }
 
     @GetMapping("/admin/delete")
-    public String adminProductsDelete(Model model){
-        return  ("admin/delete");
+    public String adminProductsDelete(Model model) {
+        return ("admin/delete");
     }
 }

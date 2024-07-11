@@ -18,7 +18,7 @@ public class WishListController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/wishlist/{product_id}")
-    public String addWishList(@RequestHeader("Authorization") String token, @PathVariable int product_id){
+    public String addWishList(@RequestHeader("Authorization") String token, @PathVariable int product_id) {
         wishListService.add(token, product_id);
         return "redirect:/wishlist";
     }
@@ -32,8 +32,8 @@ public class WishListController {
 
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/wishlist/{product_id}")
-    public String deleteWishList(@RequestHeader("Authorization") String token, @PathVariable int product_id){
-        wishListService.deleteWishList(token,product_id);
+    public String deleteWishList(@RequestHeader("Authorization") String token, @PathVariable int product_id) {
+        wishListService.deleteWishList(token, product_id);
         return "redirect:/wishlist";
     }
 

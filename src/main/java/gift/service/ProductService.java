@@ -29,7 +29,7 @@ public class ProductService {
     ProductRepository productRepository;
     @Autowired
     private OptionRepository optionRepository;
-
+    ObjectMapper objectMapper = new ObjectMapper();
     public List<ProductDTO.WithOptionDTO> getAllProducts() {
         return optionRepository.findAllWithOption().stream()
                 .map(array -> new ProductDTO.WithOptionDTO(
@@ -41,12 +41,12 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public String getJsonAllProducts(){
-        ObjectMapper objectMapper = new ObjectMapper();
+    public String getJsonAllProducts() {
+
         List<Product> products = productRepository.findAll();
-        String jsonProduct="";
+        String jsonProduct = "";
         try {
-             jsonProduct = objectMapper.writeValueAsString(products);
+            jsonProduct = objectMapper.writeValueAsString(products);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -54,52 +54,51 @@ public class ProductService {
     }
 
     public void saveProduct(ProductDTO.SaveDTO product) {
-        if(product.getOption() == null)
+        if (product.getOption() == null)
             throw new BadRequestException("하나의 옵션은 필요합니다.");
 
         Product saveProduct = new Product(product.getName(), product.getPrice(), product.getImageUrl());
 
-        if(isValidProduct(saveProduct)){
+        if (isValidProduct(saveProduct)) {
             productRepository.save(saveProduct);
         }
         List<String> optionList = Arrays.stream(product.getOption().split(",")).toList();
-        for(String str : optionList){
+        for (String str : optionList) {
             OptionId optionId = new OptionId(saveProduct.getId(), str);
-            if(isValidOption(optionId))
+            if (isValidOption(optionId))
                 optionRepository.save(new Option(optionId));
 
         }
     }
 
-    private boolean isValidProduct(@Valid Product product){
-        if(product.getName().contentEquals("카카오"))
+    private boolean isValidProduct(@Valid Product product) {
+        if (product.getName().contentEquals("카카오"))
             throw new UnAuthException("MD와 상담해주세요.");
         Optional<Product> productOptional = productRepository.findById(product.getId());
         return productOptional.map(value -> value.equals(product)).orElse(true);
     }
 
-    private boolean isValidOption(@Valid OptionId optionID){
-        if(optionRepository.findById(optionID).isPresent())
+    private boolean isValidOption(@Valid OptionId optionId) {
+        if (optionRepository.findById(optionId).isPresent())
             throw new BadRequestException("이미 존재하는 옵션입니다.");
         return true;
     }
 
     public void deleteProduct(int id) {
-        if(productRepository.findById(id).isEmpty())
+        if (productRepository.findById(id).isEmpty())
             throw new NotFoundException("존재하지 않는 id입니다.");
         productRepository.deleteById(id);
         optionRepository.deleteByProductID(id);
     }
 
 
-    public String getProductByID(int id) {
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        if(optionalProduct.isEmpty())
+    public String getProductById(int Id) {
+        Optional<Product> optionalProduct = productRepository.findById(Id);
+        if (optionalProduct.isEmpty())
             throw new NotFoundException("해당 물건이 없습니다.");
         Product product = optionalProduct.get();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonProduct="";
+        String jsonProduct = "";
         try {
             jsonProduct = objectMapper.writeValueAsString(product);
         } catch (JsonProcessingException e) {
@@ -109,7 +108,7 @@ public class ProductService {
     }
 
     public void modifyProduct(Product product) {
-        if(productRepository.findById(product.getId()).isEmpty())
+        if (productRepository.findById(product.getId()).isEmpty())
             throw new NotFoundException("물건이 없습니다.");
         productRepository.deleteById(product.getId());
         productRepository.save(product);

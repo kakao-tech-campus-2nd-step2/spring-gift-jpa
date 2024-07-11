@@ -14,7 +14,6 @@ public class OptionId implements Serializable {
     String option;
 
 
-
     public String getOption() {
         return option;
     }

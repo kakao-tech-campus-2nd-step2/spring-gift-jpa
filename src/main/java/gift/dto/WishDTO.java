@@ -1,7 +1,7 @@
 package gift.dto;
 
 public class WishDTO {
-    public static class wishListProduct{
+    public static class wishListProduct {
         String name;
         int price;
         String imageUrl;

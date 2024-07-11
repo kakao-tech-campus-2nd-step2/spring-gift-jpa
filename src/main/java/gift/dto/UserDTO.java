@@ -1,7 +1,7 @@
 package gift.dto;
 
 public class UserDTO {
-    public static class LoginDTO{
+    public static class LoginDTO {
         String email;
         String password;
 
@@ -14,7 +14,7 @@ public class UserDTO {
         }
     }
 
-    public static class SignUpDTO{
+    public static class SignUpDTO {
         String email;
         String password;
 
