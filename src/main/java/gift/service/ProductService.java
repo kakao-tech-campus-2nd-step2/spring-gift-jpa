@@ -2,15 +2,14 @@ package gift.service;
 
 import gift.domain.Product;
 import gift.repository.ProductRepository;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class ProductService {
+
     private final ProductRepository productRepository;
 
-    @Autowired
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
@@ -20,8 +19,7 @@ public class ProductService {
     }
 
     public Product createProduct(Product product) {
-        productRepository.save(product);
-        return product;
+        return productRepository.save(product);
     }
 
     public Product updateProduct(Long id, Product product) {
@@ -35,8 +33,7 @@ public class ProductService {
             .imageUrl(product.getImageUrl())
             .description(product.getDescription())
             .build();
-        productRepository.update(updatedProduct);
-        return updatedProduct;
+        return productRepository.save(updatedProduct);
     }
 
     public Long deleteProduct(Long id) {
@@ -48,10 +45,10 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findById(id);
+        return productRepository.findById(id).orElse(null);
     }
 
     private boolean isExist(Long id) {
-        return productRepository.findById(id) != null;
+        return productRepository.existsById(id);
     }
 }
