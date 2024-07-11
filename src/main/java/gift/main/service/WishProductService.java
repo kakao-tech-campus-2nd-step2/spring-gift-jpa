@@ -28,7 +28,7 @@ public class WishProductService {
 
     public List<WishProduct> getWishProducts(Long userId) {
         List<WishProduct> wishProducts = wishProductRepository.findAllByUserId(userId)
-                .orElseGet(()->List.of());
+                .orElseGet(() -> List.of());
 
         return wishProducts;
 
@@ -36,9 +36,9 @@ public class WishProductService {
 
     public void addWishlistProduct(Long productId, UserVo sessionUser) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(()-> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
         User user = userRepository.findByEmail(sessionUser.getEmail())
-                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         wishProductRepository.save(new WishProduct(product, user));
     }
 

@@ -5,7 +5,6 @@ import gift.main.annotation.SessionUser;
 import gift.main.dto.ProductRequest;
 import gift.main.dto.ProductResponce;
 import gift.main.dto.UserVo;
-import gift.main.entity.Product;
 import gift.main.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +37,7 @@ public class ProductController {
     @AdminCheck
     @PostMapping("/product")
     public ResponseEntity<String> addProduct(@Valid @RequestBody ProductRequest productRequest, @SessionUser UserVo sessionUserVo) {
-        productService.addProduct(productRequest,sessionUserVo);
+        productService.addProduct(productRequest, sessionUserVo);
         return ResponseEntity.ok("Product added successfully");
     }
 

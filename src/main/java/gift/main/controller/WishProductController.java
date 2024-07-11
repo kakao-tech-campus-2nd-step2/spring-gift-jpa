@@ -3,7 +3,6 @@ package gift.main.controller;
 import gift.main.annotation.SessionUser;
 import gift.main.dto.ProductResponce;
 import gift.main.dto.UserVo;
-import gift.main.entity.Product;
 import gift.main.entity.WishProduct;
 import gift.main.service.ProductService;
 import gift.main.service.WishProductService;
@@ -11,9 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
@@ -48,7 +45,7 @@ public class WishProductController {
 
     @Transactional
     @PostMapping("/wishlist/{productId}")
-    public ResponseEntity<?> addWishlistProduct(@PathVariable(name = "productId") Long productId, @SessionUser UserVo sessionUser){
+    public ResponseEntity<?> addWishlistProduct(@PathVariable(name = "productId") Long productId, @SessionUser UserVo sessionUser) {
         wishProductService.addWishlistProduct(productId, sessionUser);
         return ResponseEntity.ok("successfully added the item to your wishlist");
     }

@@ -28,14 +28,14 @@ public class Product {
 
     }
 
-    public Product(ProductRequest productRequest,User seller) {
+    public Product(ProductRequest productRequest, User seller) {
         this.name = productRequest.name();
         this.price = productRequest.price();
         this.imageUrl = productRequest.imageUrl();
         this.seller = seller;
     }
 
-    public Product(String name, int price, String imageUrl,User seller) {
+    public Product(String name, int price, String imageUrl, User seller) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

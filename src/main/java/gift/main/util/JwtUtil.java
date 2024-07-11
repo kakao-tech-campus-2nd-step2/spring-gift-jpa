@@ -21,7 +21,7 @@ public class JwtUtil {
     }
 
     public String createToken(Long id, String name, String email, String password, String role) {
-        String token =  Jwts.builder()
+        String token = Jwts.builder()
                 .claim("id", id)
                 .claim("name", name)
                 .claim("email", email)
@@ -35,7 +35,7 @@ public class JwtUtil {
     }
 
     public String createToken(User user) {
-        String token =  Jwts.builder()
+        String token = Jwts.builder()
                 .claim("id", user.getId())
                 .claim("name", user.getName())
                 .claim("email", user.getEmail())
@@ -51,7 +51,7 @@ public class JwtUtil {
 
     public String createToken(Long id, UserDto userDto) {
 
-        String token =  Jwts.builder()
+        String token = Jwts.builder()
                 .claim("id", id)
                 .claim("name", userDto.getName())
                 .claim("email", userDto.getEmail())

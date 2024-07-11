@@ -12,7 +12,6 @@ import gift.main.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,8 +37,8 @@ public class ProductService {
     @Transactional
     public void addProduct(ProductRequest productRequest, UserVo user) {
         User seller = userRepository.findById(user.getId())
-                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
-        Product product = new Product(productRequest,seller);
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        Product product = new Product(productRequest, seller);
         productRepository.save(product);
     }
 
