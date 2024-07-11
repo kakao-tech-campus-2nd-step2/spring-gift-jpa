@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
-public class MemberRepositoryTest {
+public class MemberIntegrationTest {
     @Autowired
     private MemberRepository memberRepository;
 
