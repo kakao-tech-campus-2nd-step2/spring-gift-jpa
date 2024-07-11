@@ -1,15 +1,19 @@
 package gift.DTO;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table
-public class User {
+public class Member {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +23,14 @@ public class User {
   @Column(nullable = false)
   private String password;
 
-  public User() {
+  @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+  private List<WishList> wishLists = new ArrayList<>();
+
+  public Member() {
 
   }
 
-  public User(Long id, String email, String password) {
+  public Member(Long id, String email, String password) {
     this.id = id;
     this.email = email;
     this.password = password;
@@ -42,9 +49,11 @@ public class User {
     return this.password;
   }
 
-  public boolean matchLoginInfo(UserDto userDtoByEmail) {
-    return this.email.equals(userDtoByEmail.getEmail()) && this.password.equals(
-      userDtoByEmail.getPassword());
+
+
+  public boolean matchLoginInfo(MemberDto memberDtoByEmail) {
+    return this.email.equals(memberDtoByEmail.getEmail()) && this.password.equals(
+      memberDtoByEmail.getPassword());
   }
 
 }

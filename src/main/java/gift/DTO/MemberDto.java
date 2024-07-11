@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class UserDto {
+public class MemberDto {
 
   private Long id;
   @NotBlank(message = "Email을 필수입니다.")
@@ -14,11 +14,11 @@ public class UserDto {
   @Size(min = 5, max = 15)
   private String password;
 
-  public UserDto() {
+  public MemberDto() {
 
   }
 
-  public UserDto(Long id, String email, String password) {
+  public MemberDto(Long id, String email, String password) {
     this.id = id;
     this.email = email;
     this.password = password;

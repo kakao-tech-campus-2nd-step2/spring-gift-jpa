@@ -1,9 +1,9 @@
 package gift.Service;
 
 import gift.DTO.JwtToken;
-import gift.DTO.UserDto;
-import gift.DTO.User;
-import gift.Repository.UserRepository;
+import gift.DTO.MemberDto;
+import gift.DTO.Member;
+import gift.Repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -21,22 +21,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 
-  private final UserRepository userRepository;
+  private final MemberRepository memberRepository;
 
-  public JwtService(UserRepository userRepository) {
-    this.userRepository = userRepository;
+  public JwtService(MemberRepository memberRepository) {
+    this.memberRepository = memberRepository;
   }
 
   @Value("${jwt.secret}")
   private String key;
 
-  public JwtToken createAccessToken(UserDto userDto) {
+  public JwtToken createAccessToken(MemberDto memberDto) {
     Instant now = Instant.now();
     Instant expiresAt = now.plus(1, ChronoUnit.DAYS); // 현재 시각에서 1일 뒤로 만료 설정
     String accessToken = Jwts.builder()
       .setHeaderParam("typ", "Bearer") // 토큰 타입을 지정
-      .setSubject(userDto.getEmail())
-      .claim("email", userDto.getEmail())
+      .setSubject(memberDto.getEmail())
+      .claim("email", memberDto.getEmail())
       .setIssuedAt(Date.from(now)) // 토큰 발행 시간 설정
       .setExpiration(Date.from(expiresAt))
       .signWith(Keys.hmacShaKeyFor(key.getBytes()), SignatureAlgorithm.HS256)
@@ -56,7 +56,7 @@ public class JwtService {
     }
   }
 
-  public Optional<User> getUserEmailFromToken(String token) {
+  public Optional<Member> getUserEmailFromToken(String token) {
     JwtParser jwtParser = Jwts.parser()
       .setSigningKey(Keys.hmacShaKeyFor(key.getBytes()))
       .build();
@@ -64,6 +64,6 @@ public class JwtService {
     Jws<Claims> claims = jwtParser.parseClaimsJws(token);
     String email = claims.getBody().get("email", String.class);
 
-    return userRepository.findByEmail(email);
+    return memberRepository.findByEmail(email);
   }
 }

@@ -1,6 +1,6 @@
 package gift;
 
-import gift.DTO.User;
+import gift.DTO.Member;
 import gift.Exception.UnauthorizedException;
 import gift.Service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,7 +37,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
       throw new UnauthorizedException("No Bearer token found in request headers");
     }
     String token = authorizationHeader.substring(TOKEN_TYPE.length());
-    Optional<User> user = jwtService.getUserEmailFromToken(token);
+    Optional<Member> user = jwtService.getUserEmailFromToken(token);
     return user;
   }
 }

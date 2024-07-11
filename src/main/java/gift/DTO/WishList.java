@@ -1,45 +1,57 @@
 package gift.DTO;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "wish_list")
 public class WishList {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(unique = true, nullable = false)
-  private Long userId;
 
-  @Column(unique = true, nullable = false)
-  private Long productId;
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "product_id")
+  private Product product;
+
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "member_id")
+  private Member member;
 
   public WishList() {
   }
 
-  public WishList(Long id, Long userId, Long productId) {
+  public WishList(Long id, Member member, Product product) {
     this.id = id;
-    this.userId = userId;
-    this.productId = productId;
+    this.member = member;
+    this.product = product;
   }
+
+  public WishList(Member member, Product product) {
+    this.member = member;
+    this.product = product;
+  }
+
+
 
   public Long getId() {
     return this.id;
   }
 
-  public Long getUserId() {
-    return this.userId;
+  public Member getMember() {
+    return this.member;
   }
 
-  public Long getProductId() {
-    return this.productId;
+  public Product getProduct() {
+    return this.product;
   }
 
 }

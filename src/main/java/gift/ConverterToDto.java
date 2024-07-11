@@ -2,8 +2,8 @@ package gift;
 
 import gift.DTO.ProductDto;
 import gift.DTO.Product;
-import gift.DTO.UserDto;
-import gift.DTO.User;
+import gift.DTO.MemberDto;
+import gift.DTO.Member;
 import gift.DTO.WishListDto;
 import gift.DTO.WishList;
 
@@ -15,13 +15,15 @@ public class ConverterToDto {
     return productDto;
   }
 
-  public static UserDto convertToUserDto(User user){
-    UserDto userDto = new UserDto(user.getId(), user.getEmail(), user.getPassword());
-    return userDto;
+  public static MemberDto convertToUserDto(Member member){
+    MemberDto memberDto = new MemberDto(member.getId(), member.getEmail(), member.getPassword());
+    return memberDto;
   }
 
   public static WishListDto convertToWishListDto(WishList wishList){
-    WishListDto wishListDto = new WishListDto(wishList.getId(), wishList.getUserId(), wishList.getProductId());
+    ProductDto productDto = convertToProductDto(wishList.getProduct());
+    MemberDto memberDto = convertToUserDto(wishList.getMember());
+    WishListDto wishListDto = new WishListDto(wishList.getId(), memberDto, productDto);
     return wishListDto;
   }
 }
