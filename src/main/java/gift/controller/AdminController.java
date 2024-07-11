@@ -42,7 +42,7 @@ public class AdminController {
 
   @GetMapping("/edit/{id}")
   public String showEditProductForm(@PathVariable("id") Long id, Model model) {
-    Optional<Product> product = Optional.ofNullable(productService.getProductById(id));
+    Optional<Optional<Product>> product = Optional.ofNullable(productService.getProductById(id));
     if (product.isPresent()) {
       model.addAttribute("product", product.get());
       return "product-form";

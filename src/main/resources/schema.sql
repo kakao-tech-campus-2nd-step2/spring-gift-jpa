@@ -16,6 +16,6 @@ CREATE TABLE IF NOT EXISTS wish (
     member_email VARCHAR(255) NOT NULL,
     product_id BIGINT NOT NULL,
     FOREIGN KEY (product_id) REFERENCES product(id),
-    FOREIGN KEY (member_email) REFERENCES member(email)
+    FOREIGN KEY (member_email) REFERENCES member(email),
     UNIQUE (member_email, product_id)
 );
