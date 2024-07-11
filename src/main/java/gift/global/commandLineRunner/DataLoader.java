@@ -1,7 +1,7 @@
 package gift.global.commandLineRunner;
 
 import gift.domain.cart.CartItem;
-import gift.domain.cart.repository.JpaCartItemRepository;
+import gift.domain.cart.JpaCartItemRepository;
 import gift.domain.product.repository.JpaProductRepository;
 import gift.domain.product.Product;
 import gift.domain.user.User;
@@ -27,19 +27,25 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Product
-        jpaProductRepository.save(new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg"));
-        jpaProductRepository.save(new Product("아이스 카푸치노 M", 4700, "https://example.com/image.jpg"));
-        jpaProductRepository.save(new Product("핫 말차라떼 L", 6800, "https://example.com/image.jpg"));
+        Product americano = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
+        Product cafuchino = new Product("아이스 카푸치노 M", 4700, "https://example.com/image.jpg");
+        Product malcha = new Product("핫 말차라떼 L", 6800, "https://example.com/image.jpg");
+        jpaProductRepository.save(americano);
+        jpaProductRepository.save(cafuchino);
+        jpaProductRepository.save(malcha);
 
         // User
-        jpaUserRepository.save(new User("minji@example.com", "password1"));
-        jpaUserRepository.save(new User("junseo@example.com", "password2"));
-        jpaUserRepository.save(new User("donghyun@example.com", "password3"));
+        User minji = new User("minji@example.com", "password1");
+        User junseo = new User("junseo@example.com", "password2");
+        User donghyun = new User("donghyun@example.com", "password3");
+        jpaUserRepository.save(minji);
+        jpaUserRepository.save(junseo);
+        jpaUserRepository.save(donghyun);
 
         // CartItem
-        jpaCartItemRepository.save(new CartItem(1L, 3L));
-        jpaCartItemRepository.save(new CartItem(2L, 3L));
-        jpaCartItemRepository.save(new CartItem(3L, 2L));
+        jpaCartItemRepository.save(new CartItem(minji, malcha));
+        jpaCartItemRepository.save(new CartItem(junseo, cafuchino));
+        jpaCartItemRepository.save(new CartItem(donghyun, cafuchino));
 
     }
 }

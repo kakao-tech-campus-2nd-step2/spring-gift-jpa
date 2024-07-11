@@ -3,18 +3,13 @@ package gift.JpaDataTest;
 import static org.assertj.core.api.Assertions.*;
 
 import gift.domain.cart.CartItem;
-import gift.domain.cart.CartItemService;
-import gift.domain.cart.repository.JpaCartItemRepository;
+import gift.domain.cart.JpaCartItemRepository;
 import gift.domain.product.Product;
 import gift.domain.product.repository.JpaProductRepository;
 import gift.domain.user.User;
-import gift.domain.user.UserService;
-import gift.domain.user.dto.UserDTO;
 import gift.domain.user.repository.JpaUserRepository;
-import gift.global.jwt.JwtProvider;
 import java.util.List;
 import jdk.jfr.Description;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,8 +41,8 @@ public class CartItemRepositoryTest {
         productRepository.saveAndFlush(product1);
         productRepository.saveAndFlush(product2);
 
-        cartItemRepository.save(new CartItem(savedUser.getId(), product1.getId()));
-        cartItemRepository.save(new CartItem(savedUser.getId(), product2.getId()));
+        cartItemRepository.save(new CartItem(user, product1));
+        cartItemRepository.save(new CartItem(user, product2));
         // when
         List<CartItem> cartItems = cartItemRepository.findAllByUserId(savedUser.getId());
         // then
@@ -62,16 +57,18 @@ public class CartItemRepositoryTest {
         User savedUser = userRepository.saveAndFlush(user);
 
         Product product = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
-        productRepository.saveAndFlush(product);
+        Product savedProduct = productRepository.saveAndFlush(product);
 
-        cartItemRepository.save(new CartItem(savedUser.getId(), product.getId()));
+        cartItemRepository.save(new CartItem(user, product));
         // when
-        List<CartItem> cartItems = cartItemRepository.findAllByUserId(savedUser.getId());
+        List<CartItem> cartItems = cartItemRepository.findAllByUser(savedUser);
         // then
         assertThat(cartItems.size()).isEqualTo(1);
         CartItem cartItem = cartItems.get(0);
-        assertThat(cartItem.getUserId()).isEqualTo(savedUser.getId());
-        assertThat(cartItem.getProductId()).isEqualTo(product.getId());
+        System.out.println("cartItem.getUser() = " + cartItem.getUser());
+        System.out.println("savedUser = " + savedUser);
+        assertThat(cartItem.getUser()).isEqualTo(savedUser);
+        assertThat(cartItem.getProduct()).isEqualTo(savedProduct);
     }
 
     @Test
@@ -82,9 +79,9 @@ public class CartItemRepositoryTest {
         User savedUser = userRepository.saveAndFlush(user);
 
         Product product = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
-        productRepository.saveAndFlush(product);
+        Product savedProduct = productRepository.saveAndFlush(product);
 
-        cartItemRepository.save(new CartItem(savedUser.getId(), product.getId()));
+        cartItemRepository.save(new CartItem(savedUser, savedProduct));
         // when
         cartItemRepository.deleteByUserIdAndProductId(savedUser.getId(), product.getId());
         List<CartItem> cartItems = cartItemRepository.findAllByUserId(savedUser.getId());

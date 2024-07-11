@@ -1,6 +1,8 @@
-package gift.domain.cart.repository;
+package gift.domain.cart;
 
 import gift.domain.cart.CartItem;
+import gift.domain.product.Product;
+import gift.domain.user.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,5 +14,7 @@ public interface JpaCartItemRepository extends JpaRepository<CartItem, Long> {
 
     void deleteByUserIdAndProductId(Long userId, Long productId);
 
-    boolean existsByUserIdAndProductId(Long userId, Long productId);
+    boolean existsByUserAndProduct(User user, Product product);
+
+    List<CartItem> findAllByUser(User user);
 }
