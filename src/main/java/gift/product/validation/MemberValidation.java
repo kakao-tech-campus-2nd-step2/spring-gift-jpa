@@ -4,7 +4,7 @@ import gift.product.dao.MemberDao;
 import gift.product.exception.DuplicateException;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.Member;
-import gift.product.util.CertifyUtil;
+import gift.product.util.JwtUtil;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,12 +16,12 @@ public class MemberValidation {
     private final ConcurrentHashMap<String, String> tokenMap = new ConcurrentHashMap<>();
 
     private final MemberDao memberDao;
-    private final CertifyUtil certifyUtil;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public MemberValidation(MemberDao memberDao, CertifyUtil certifyUtil) {
+    public MemberValidation(MemberDao memberDao, JwtUtil jwtUtil) {
         this.memberDao = memberDao;
-        this.certifyUtil = certifyUtil;
+        this.jwtUtil = jwtUtil;
     }
 
     public void signUpValidation(Member member) {
@@ -41,7 +41,7 @@ public class MemberValidation {
     }
 
     public void login(String email) {
-        tokenMap.put(email, certifyUtil.generateToken(email));
+        tokenMap.put(email, jwtUtil.generateToken(email));
     }
 
     public void logout(String email) {

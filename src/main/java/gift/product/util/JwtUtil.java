@@ -1,6 +1,5 @@
 package gift.product.util;
 
-import gift.product.dao.MemberDao;
 import gift.product.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -13,20 +12,13 @@ import java.security.Key;
 
 import java.util.Date;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CertifyUtil {
+public class JwtUtil {
 
     private final String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
     private final Key key = Keys.hmacShaKeyFor(secretKey.getBytes());
-    private final MemberDao memberDao;
-
-    public CertifyUtil(MemberDao memberDao) {
-        this.memberDao = memberDao;
-    }
 
     // 토큰 생성
     public String generateToken(String email) {
