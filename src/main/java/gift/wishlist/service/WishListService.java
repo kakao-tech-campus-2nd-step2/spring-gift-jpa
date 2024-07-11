@@ -24,6 +24,6 @@ public class WishListService {
 
     // 위시리스트에 상품 삭제
     public void removeProductFromWishList(Long userId, Long productId) {
-        wishListRepository.removeProductFromWishList(userId, productId);
+        WishListRepository.removeProductFromWishList(userId, productId);
     }
 }

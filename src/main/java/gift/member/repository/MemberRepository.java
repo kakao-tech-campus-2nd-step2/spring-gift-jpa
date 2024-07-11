@@ -1,13 +1,14 @@
 package gift.member.repository;
 
 import gift.member.model.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 
-import java.sql.*;
+import java.util.Optional;
 
-// JDBC 에 직접 연결
-public interface MemberRepository extends CrudRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    Optional<Member> findByEmail(String email);
+
     // h2-console JDBC 연결 할때
     String URL = "jdbc:h2:mem:testdb";
     String USERNAME = "sa";
@@ -17,7 +18,10 @@ public interface MemberRepository extends CrudRepository<Member, Long> {
     String SQL_INSERT_MEMBER = "INSERT INTO member (email, password) VALUES (?, ?)";
     String SQL_FIND_BY_EMAIL_AND_PASSWORD = "SELECT * FROM member WHERE email = ? AND password = ?";
 
-    @Query("SELECT * FROM member WHERE email = :email AND password = :password")
-    Member findByEmailAndPassword(String email, String password);
+    // @Query 어노테이션을 사용하여 직접 SQL 쿼리 작성
+    @Query("SELECT m FROM Member m WHERE m.email = :email AND m.password = :password")
+    default Member findByEmailAndPassword(String email, String password) {
+        return null;
+    }
 
 }

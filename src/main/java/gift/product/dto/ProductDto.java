@@ -1,9 +1,7 @@
 package gift.product.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.URL;
 
 public class ProductDto {
@@ -27,11 +25,7 @@ public class ProductDto {
         this.imgUrl = imgUrl;
     }
 
-    public Long id() {
-        return id;
-    }
-
-    public void id(Long id) {
+    public void id() {
         this.id = id;
     }
 

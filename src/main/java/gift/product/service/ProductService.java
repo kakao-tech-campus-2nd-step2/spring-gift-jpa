@@ -1,62 +1,56 @@
 package gift.product.service;
 
 import gift.product.dto.ProductDto;
-import gift.product.model.Product;
-import gift.product.model.ProductDao;
-import gift.product.model.ProductName;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
-    private final ProductDao productDao;
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public void save(ProductDto productDto) {
-        ProductName productName = new ProductName(productDto.name());
-        productName.validate();
-
-        Product product = new Product(
-                productDto.name(),
-                productDto.price(),
-                productDto.imgUrl()
-        );
-        productDao.save(product);
+        String sql = "INSERT INTO products (name, price, imgUrl) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, productDto.name(), productDto.price(), productDto.imgUrl());
     }
 
-    // 상품 전체 목록 조회
     public List<ProductDto> findAll() {
-        return productDao.findAll().stream()
-                .map(product -> new ProductDto(product.id(), product.name(), product.price(), product.imgUrl()))
-                .collect(Collectors.toList());
+        String sql = "SELECT * FROM products";
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new ProductDto(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getInt("price"),
+                        rs.getString("imgUrl")
+                ));
     }
 
-    // id로 상품 조회
     public ProductDto findById(Long id) {
-        Product product = productDao.findById(id);
-        return new ProductDto(product.id(), product.name(), product.price(), product.imgUrl());
+        String sql = "SELECT * FROM products WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) ->
+                new ProductDto(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getInt("price"),
+                        rs.getString("imgUrl")
+                ));
     }
 
-    // 상품 수정
     public void update(Long id, ProductDto productDto) {
-        ProductName productName = new ProductName(productDto.name());
-        productName.validate(); // 상품명 유효성 검사 수행
-
-        Product product = productDao.findById(id);
-        product.update(productDto.id(), productDto.name(), productDto.price(), productDto.imgUrl());
-        productDao.update(product);
+        String sql = "UPDATE products SET name = ?, price = ?, imgUrl = ? WHERE id = ?";
+        jdbcTemplate.update(sql, productDto.name(), productDto.price(), productDto.imgUrl(), id);
     }
 
-    // 상품 삭제
     public void deleteById(Long id) {
-        productDao.deleteById(id);
+        String sql = "DELETE FROM products WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
-
 }

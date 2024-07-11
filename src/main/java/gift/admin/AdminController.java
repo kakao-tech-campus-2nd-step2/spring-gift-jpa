@@ -52,9 +52,11 @@ public class AdminController {
 
     @GetMapping("/products/edit/{id}")
     public String showEditProductForm(@PathVariable Long id, Model model) {
-        ProductDto product = productService.findById(id);
-        model.addAttribute("productDto", new ProductDto(product.id(), product.name(), product.price(), product.imgUrl()));
-        return "edit";
+        ProductDto product = productService.findById(id); // productService를 사용하여 id로 상품 찾기
+
+        model.addAttribute("product", product); // 모델에 상품 추가
+
+        return "edit"; // 렌더링할 뷰의 이름 반환
     }
 
     @PostMapping("/products/edit/{id}")

@@ -1,9 +1,6 @@
 package gift.member.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Member {
@@ -24,10 +21,12 @@ public class Member {
         return id;
     }
 
+    @Column(nullable = false, unique = true)
     public String email() {
         return email;
     }
 
+    @Column(nullable = false)
     public String password() {
         return password;
     }
