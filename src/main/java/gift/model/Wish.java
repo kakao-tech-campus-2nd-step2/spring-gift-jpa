@@ -11,21 +11,23 @@ public class Wish {
     @Column(name = "ID")
     private long id;
 
-    @Column(name = "MEMBER_ID")
-    private long memberId;
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID", nullable = false)
+    private Member member;
 
-    @Column(name = "PRODUCT_ID")
-    private long productId;
+    @ManyToOne
+    @JoinColumn(name = "PRODUCT_ID", nullable = false)
+    private Product product;
 
-    public Wish(long id, long memberId, long productId) {
+    public Wish(long id, Member member, Product product) {
         this.id = id;
-        this.memberId = memberId;
-        this.productId = productId;
+        this.member = member;
+        this.product = product;
     }
 
-    public Wish(long memberId, long productId) {
-        this.memberId = memberId;
-        this.productId = productId;
+    public Wish(Member member, Product product) {
+        this.member = member;
+        this.product = product;
     }
 
     public Wish() {
@@ -35,12 +37,12 @@ public class Wish {
         return id;
     }
 
-    public long getMemberId() {
-        return memberId;
+    public Member getMemberId() {
+        return member;
     }
 
-    public long getProductId() {
-        return productId;
+    public Product getProductId() {
+        return product;
     }
 
     @Override
@@ -48,11 +50,11 @@ public class Wish {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Wish wish = (Wish) o;
-        return memberId == wish.memberId && productId == wish.productId;
+        return Objects.equals(member, wish.member) && Objects.equals(product, wish.product);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(memberId, productId);
+        return Objects.hash(member, product);
     }
 }
