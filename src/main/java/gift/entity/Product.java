@@ -8,8 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -20,9 +18,6 @@ public class Product {
     @Id
     private Long id;
     @NotNull
-    @Size(max = 15, message = "상품 이름은 공백을 포함하여 최대 15자까지 입력할 수 있습니다.")
-    @Pattern(regexp = "^[a-zA-Z0-9가-힣 ()\\[\\]+\\-&/_]*$", message = "(),[],+,-,&,/,_를 제외한 특수 문자 사용은 불가능합니다.")
-    @Pattern(regexp = "^(?!.*카카오).*$", message = "카카오가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.")
     private String name;
     @NotNull
     private int price;
@@ -34,6 +29,13 @@ public class Product {
     }
 
     public Product(String name, int price, String img) {
+        this.name = name;
+        this.price = price;
+        this.img = img;
+    }
+
+    public Product(Long id, String name, int price, String img) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.img = img;
