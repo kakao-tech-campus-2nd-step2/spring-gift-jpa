@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.entity.Member;
 import gift.entity.Wish;
 import gift.dto.wish.WishRequestDTO;
 import gift.dto.wish.WishResponseDTO;
@@ -23,23 +24,26 @@ public class WishService {
     }
 
     public List<WishResponseDTO> getWishes(String email) {
-        long userId = memberRepository.findByEmail(email)
-                .orElseThrow(NoSuchMemberException::new)
-                .getId();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(NoSuchMemberException::new);
 
-        return wishRepository.findAllByMemberId(userId)
+        return wishRepository.findAllByMember(member)
                 .stream()
                 .map(WishResponseDTO::from)
                 .toList();
     }
 
     public WishResponseDTO addWish(String email, WishRequestDTO wishRequestDTO) {
-        long userId = memberRepository.findByEmail(email)
+        long memberId = memberRepository.findByEmail(email)
                 .orElseThrow(NoSuchMemberException::new)
                 .getId();
 
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(NoSuchMemberException::new);
+
+
         Wish wish = wishRepository.save(new Wish(
-                userId,
+                member,
                 wishRequestDTO.productId()
         ));
 

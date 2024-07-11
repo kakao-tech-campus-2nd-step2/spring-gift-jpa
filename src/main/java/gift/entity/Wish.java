@@ -1,9 +1,6 @@
 package gift.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Wish {
@@ -11,13 +8,17 @@ public class Wish {
     @Id
     private long id;
 
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
 
     private long productId;
 
     public Wish() {}
 
-    public Wish(long memberId, long productId) {
-        this.memberId = memberId;
+    public Wish(Member member, long productId) {
+        this.member = member;
         this.productId = productId;
     }
 
@@ -26,7 +27,7 @@ public class Wish {
     }
 
     public long getMemberId() {
-        return memberId;
+        return member.getId();
     }
 
     public long getProductId() {
