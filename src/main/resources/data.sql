@@ -9,3 +9,10 @@ values ('샐러드',
 
 insert into users (email,password) values ('123@123','123');
 insert into users (email,password) values ('test@test','test');
+insert into users (email,password) values ('test2@test2','test');
+
+
+insert into wish (user_id,item_id) values(1,1);
+insert into wish (user_id,item_id) values(1,2);
+insert into wish (user_id,item_id) values(2,1);
+insert into wish (user_id,item_id) values(3,1);
