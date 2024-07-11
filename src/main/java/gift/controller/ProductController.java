@@ -5,7 +5,6 @@ import static gift.util.ResponseEntityUtil.responseError;
 import gift.constants.ResponseMsgConstants;
 import gift.dto.ProductDTO;
 import gift.dto.ResponseDTO;
-import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;

@@ -135,14 +135,6 @@ public class Member {
         return false;
     }
 
-    public WishListDTO convertToWishListDTO() {
-        List<Wish> wishListForView = new ArrayList<>(this.getWishList());
-        for (Wish wish : wishListForView) {
-            wish.setMember(null); // 개인정보 보호
-        }
-        return new WishListDTO(wishListForView);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
