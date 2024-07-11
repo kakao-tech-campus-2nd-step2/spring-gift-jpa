@@ -10,6 +10,8 @@ import gift.product.repository.WishRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
@@ -28,6 +30,10 @@ public class WishService {
 
     public List<Wish> getWishAll(LoginMember loginMember) {
         return wishRepository.findAllByMemberId(loginMember.id());
+    }
+
+    public Page<Wish> getWishAll(Pageable pageable) {
+        return wishRepository.findAll(pageable);
     }
 
     public Wish getWish(Long id, LoginMember loginMember) {
