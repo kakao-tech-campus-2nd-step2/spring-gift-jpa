@@ -58,9 +58,6 @@ public class AdminController {
      */
     @PostMapping
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        if (isProductExists(product.getId())) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400 Bad Request
-        }
         productService.addProduct(product);
         return new ResponseEntity<>(product, HttpStatus.CREATED); // 201 Created
     }
@@ -73,9 +70,6 @@ public class AdminController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        if (!isProductExists(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -90,14 +84,7 @@ public class AdminController {
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id,
         @RequestBody Product updatedProduct) {
-        if (!isProductExists(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found
-        }
-        productService.updateProduct(updatedProduct);
+        productService.updateProduct(id, updatedProduct);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK); // 200 OK
-    }
-
-    private boolean isProductExists(Long id) {
-        return productService.getProductById(id).isPresent();
     }
 }

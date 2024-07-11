@@ -2,10 +2,10 @@ package gift.service;
 
 import gift.DTO.Product;
 import gift.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
@@ -33,19 +33,18 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public void updateProduct(Product product) {
-        productRepository.findById(product.getId())
-            .orElseThrow(
-                () -> new RuntimeException("Product Not Found with id " + product.getId()));
-        productRepository.save(product);
+    public void updateProduct(Long id, Product updatedProduct) {
+        Product product = getProductByIdOrThrow(id);
+        productRepository.save(updatedProduct);
     }
 
     public void deleteProduct(Long id) {
-        Optional<Product> productOptional = productRepository.findById(id);
-        if (!productOptional.isPresent()) {
-            throw new RuntimeException("Product not found with id " + id);
-        }
+        Product product = getProductByIdOrThrow(id);
+        productRepository.delete(product);
+    }
 
-        productRepository.delete(productOptional.get());
+    private Product getProductByIdOrThrow(Long id) {
+        return productRepository.findById(id).orElseThrow(() ->
+            new RuntimeException("Product not found with id: " + id));
     }
 }
