@@ -1,4 +1,4 @@
-package gift.model;
+package gift.archived_model;
 
 public class WishListItem {
     private Long id;

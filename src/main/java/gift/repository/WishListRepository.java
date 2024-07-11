@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.model.WishListItem;
+import gift.archived_model.WishListItem;
 
 import java.util.List;
 import java.util.Optional;

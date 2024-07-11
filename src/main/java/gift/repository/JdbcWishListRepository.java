@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.model.WishListItem;
+import gift.archived_model.WishListItem;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;

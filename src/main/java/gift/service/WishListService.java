@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.model.WishListItem;
+import gift.archived_model.WishListItem;
 import gift.repository.WishListRepository;
 import gift.util.JwtUtil;
 import org.springframework.stereotype.Service;

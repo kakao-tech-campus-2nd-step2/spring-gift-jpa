@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.model.WishListItem;
+import gift.archived_model.WishListItem;
 import gift.service.WishListService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
