@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "member")
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,7 +24,8 @@ public class Member {
 
     private String role;
 
-    public Member(){}
+    public Member() {
+    }
 
     public Member(Long id, String email, String password, String role) {
         this.id = id;
@@ -47,5 +49,5 @@ public class Member {
     public String getRole() {
         return role;
     }
-    
+
 }
