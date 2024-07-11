@@ -27,8 +27,8 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        checkProductExist(id);
-        return productRepository.findById(id).get();
+        return productRepository.findById(id)
+            .orElseThrow(() -> new ProductNotFoundException("해당 ID의 상품을 찾을 수 없습니다."));
     }
 
     public Long addProduct(AddProductRequest request) {
