@@ -11,10 +11,6 @@
   <form th:action="@{/admin/form}" th:object="${product}" method="post">
     <input type="hidden" th:if="${isEditing}" name="_method" value="put"/>
     <div class="form-group">
-      <label for="id">ID</label>
-      <input type="number" class="form-control" id="id" th:field="*{id}" th:attr="readonly=${isEditing}" min="1" required>
-    </div>
-    <div class="form-group">
       <label for="name">Name</label>
       <input type="text" class="form-control" id="name" th:field="*{name}" required>
       <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</td>
