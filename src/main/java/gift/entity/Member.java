@@ -5,7 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -22,7 +25,10 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    public Member(){}
+    @OneToMany(mappedBy = "member")
+    private List<Wish> wishList = new ArrayList<>();
+
+    public Member(){};
 
     public Member(String email, String password) {
         this.email = email;
