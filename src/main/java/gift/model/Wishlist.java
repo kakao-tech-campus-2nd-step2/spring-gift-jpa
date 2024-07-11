@@ -42,12 +42,4 @@ public class Wishlist {
         return productId;
     }
 
-    @Override
-    public String toString() {
-        return "Wishlist{" +
-            "id=" + id +
-            ", memberEmail='" + memberEmail + '\'' +
-            ", productId=" + productId +
-            '}';
-    }
 }

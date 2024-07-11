@@ -61,13 +61,4 @@ public class Product {
         return imageUrl;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", price='" + price + '\'' +
-            ", imageUrl='" + imageUrl + '\'' +
-            '}';
-    }
 }

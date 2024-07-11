@@ -64,14 +64,4 @@ public class Member {
         return role;
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", email='" + email + '\'' +
-            ", password='" + password + '\'' +
-            ", role='" + role + '\'' +
-            '}';
-    }
 }
