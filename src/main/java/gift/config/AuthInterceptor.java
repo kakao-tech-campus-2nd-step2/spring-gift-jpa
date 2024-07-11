@@ -30,8 +30,8 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         String token = header.substring(BEARER_PREFIX_LENGTH);
         try {
-            String email = tokenService.extractEmail(token);
-            request.setAttribute("email", email);
+            Long memberId = tokenService.extractMemberId(token);
+            request.setAttribute("memberId", memberId);
         } catch (ForbiddenException e) {
             throw new ForbiddenException("권한이 없는 요청입니다.");
         }

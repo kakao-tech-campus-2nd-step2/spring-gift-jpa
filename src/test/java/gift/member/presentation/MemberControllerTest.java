@@ -3,6 +3,7 @@ package gift.member.presentation;
 import gift.auth.TokenService;
 import gift.member.application.MemberResponse;
 import gift.member.application.MemberService;
+import gift.member.application.command.MemberUpdateCommand;
 import gift.member.presentation.request.MemberJoinRequest;
 import gift.member.presentation.request.MemberLoginRequest;
 import gift.member.presentation.request.MemberUpdateRequest;
@@ -35,12 +36,14 @@ public class MemberControllerTest {
     @MockBean
     private TokenService tokenService;
 
+    private Long memberId;
     private String email;
     private String password;
     private String token;
 
     @BeforeEach
     void setUp() {
+        memberId = 1L;
         email = "test@example.com";
         password = "password";
         token = "testToken";
@@ -50,8 +53,8 @@ public class MemberControllerTest {
     void 회원가입_테스트() throws Exception {
         MemberJoinRequest request = new MemberJoinRequest(email, password);
 
-        Mockito.when(memberService.join(any())).thenReturn(email);
-        Mockito.when(tokenService.createToken(email)).thenReturn(token);
+        Mockito.when(memberService.join(request.toCommand())).thenReturn(memberId);
+        Mockito.when(tokenService.createToken(memberId)).thenReturn(token);
 
         mockMvc.perform(post("/api/member/join")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -64,8 +67,9 @@ public class MemberControllerTest {
     void 로그인_테스트() throws Exception {
         MemberLoginRequest request = new MemberLoginRequest(email, password);
 
-        Mockito.when(memberService.login(any())).thenReturn(email);
-        Mockito.when(tokenService.createToken(email)).thenReturn(token);
+        // Todo eq랑 그냥 넘겼을때 비교
+        Mockito.when(memberService.login(request.toCommand())).thenReturn(memberId);
+        Mockito.when(tokenService.createToken(memberId)).thenReturn(token);
 
         mockMvc.perform(post("/api/member/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -75,12 +79,12 @@ public class MemberControllerTest {
     }
 
     @Test
-    void 이메일로_찾기_테스트() throws Exception {
-        MemberResponse response = new MemberResponse(email, password);
+    void 아이디로_찾기_테스트() throws Exception {
+        MemberResponse response = new MemberResponse(memberId, email, password);
 
-        Mockito.when(memberService.findByEmail(eq(email))).thenReturn(response);
+        Mockito.when(memberService.findById(eq(memberId))).thenReturn(response);
 
-        mockMvc.perform(get("/api/member/{email}", email))
+        mockMvc.perform(get("/api/member/{id}", memberId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(email))
                 .andExpect(jsonPath("$.password").value(password));
@@ -88,8 +92,8 @@ public class MemberControllerTest {
 
     @Test
     void 전체_회원_찾기_테스트() throws Exception {
-        MemberResponse response1 = new MemberResponse(email, password);
-        MemberResponse response2 = new MemberResponse("test2@example.com", "password2");
+        MemberResponse response1 = new MemberResponse(memberId, email, password);
+        MemberResponse response2 = new MemberResponse(2L, "test2@example.com", "password2");
 
         Mockito.when(memberService.findAll()).thenReturn(Arrays.asList(response1, response2));
 
@@ -101,22 +105,26 @@ public class MemberControllerTest {
 
     @Test
     void 회원_업데이트_테스트() throws Exception {
+        String newEmail = "test2@example.com";
         String newPassword = "newPassword";
-        MemberUpdateRequest request = new MemberUpdateRequest(newPassword);
 
-        mockMvc.perform(put("/api/member/{email}", email)
+        MemberUpdateCommand expectedCommand = new MemberUpdateCommand(memberId, newEmail, newPassword);
+
+        mockMvc.perform(put("/api/member/{id}", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"password\":\"" + newPassword + "\"}"))
+                        .content("{\"email\":\"" + newEmail + "\", \"password\":\"" + newPassword + "\"}"))
                 .andExpect(status().isOk());
 
-        Mockito.verify(memberService).update(any());
+        // Mockito의 eq 매처를 사용하여 전달된 인자를 검증
+        Mockito.verify(memberService).update(eq(expectedCommand));
     }
+
 
     @Test
     void 회원_삭제_테스트() throws Exception {
-        mockMvc.perform(delete("/api/member/{email}", email))
+        mockMvc.perform(delete("/api/member/{id}", memberId))
                 .andExpect(status().isOk());
 
-        Mockito.verify(memberService).delete(eq(email));
+        Mockito.verify(memberService).delete(eq(memberId));
     }
 }

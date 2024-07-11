@@ -8,6 +8,6 @@ public record ProductCreateCommand(
         String imageUrl
 ) {
     public Product toProduct () {
-        return new Product(null, name, price, imageUrl);
+        return new Product(name, price, imageUrl);
     }
 }

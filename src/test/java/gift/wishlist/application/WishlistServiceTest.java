@@ -34,39 +34,47 @@ public class WishlistServiceTest {
     @InjectMocks
     private WishlistService wishlistService;
 
+    private Long memberId;
+    private Long productId;
+    private Long wishlistId;
+    private String memberEmail;
+    private Member member;
+    private Product product;
+    private Wishlist wishlist;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        memberId = 1L;
+        productId = 1L;
+        wishlistId = 1L;
+        memberEmail = "test@example.com";
+        member = new Member(memberId, memberEmail, "password");
+        product = new Product(productId, "Product", 1000, "image");
+        wishlist = new Wishlist(wishlistId, memberId, productId);
     }
 
     @Test
     public void 위시리스트에_상품_추가() {
         // Given
-        String memberEmail = "test@example.com";
-        Long productId = 1L;
-        Member member = new Member(memberEmail, "password");
-        Product product = new Product(productId, "Product", 1000, "image");
-
-        when(memberRepository.findByEmail(memberEmail)).thenReturn(Optional.of(member));
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
 
         // When
-        wishlistService.add(memberEmail, productId);
+        wishlistService.save(memberId, productId);
 
         // Then
-        verify(wishlistRepository, times(1)).addWishlist(any(Wishlist.class));
+        verify(wishlistRepository, times(1)).save(any(Wishlist.class));
     }
 
     @Test
     public void 위시리스트에_존재하지_않는_사용자_추가_실패() {
         // Given
-        String memberEmail = "test@example.com";
-        Long productId = 1L;
-
-        when(memberRepository.findByEmail(memberEmail)).thenReturn(Optional.empty());
+        when(memberRepository.findById(memberId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> wishlistService.add(memberEmail, productId))
+        assertThatThrownBy(() -> wishlistService.save(memberId, productId))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("해당 사용자가 존재하지 않습니다.");
     }
@@ -74,15 +82,11 @@ public class WishlistServiceTest {
     @Test
     public void 위시리스트에_존재하지_않는_상품_추가_실패() {
         // Given
-        String memberEmail = "test@example.com";
-        Long productId = 1L;
-        Member member = new Member(memberEmail, "password");
-
-        when(memberRepository.findByEmail(memberEmail)).thenReturn(Optional.of(member));
+        when(memberRepository.findById(memberId)).thenReturn(Optional.of(member));
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThatThrownBy(() -> wishlistService.add(memberEmail, productId))
+        assertThatThrownBy(() -> wishlistService.save(memberId, productId))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("해당 상품이 존재하지 않습니다.");
     }
@@ -90,39 +94,31 @@ public class WishlistServiceTest {
     @Test
     public void 사용자의_위시리스트_조회() {
         // Given
-        String memberEmail = "test@example.com";
-        Wishlist wishlist = new Wishlist(1L, memberEmail, 1L);
-
-        when(wishlistRepository.findByMemberEmail(memberEmail)).thenReturn(List.of(wishlist));
+        when(wishlistRepository.findByMemberId(memberId)).thenReturn(List.of(wishlist));
 
         // When
-        List<WishlistResponse> result = wishlistService.findAllByMember(memberEmail);
+        List<WishlistResponse> result = wishlistService.findByMemberId(memberId);
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getMemberEmail()).isEqualTo(memberEmail);
+        assertThat(result.get(0).getMemberId()).isEqualTo(memberId);
     }
 
     @Test
     public void 위시리스트_삭제() {
         // Given
-        Long wishlistId = 1L;
-        Wishlist wishlist = new Wishlist(wishlistId, "test@example.com", 1L);
-
         when(wishlistRepository.findById(wishlistId)).thenReturn(Optional.of(wishlist));
 
         // When
         wishlistService.delete(wishlistId);
 
         // Then
-        verify(wishlistRepository, times(1)).deleteWishlist(wishlistId);
+        verify(wishlistRepository, times(1)).delete(wishlist);
     }
 
     @Test
     public void 존재하지_않는_위시리스트_삭제_실패() {
         // Given
-        Long wishlistId = 1L;
-
         when(wishlistRepository.findById(wishlistId)).thenReturn(Optional.empty());
 
         // When & Then

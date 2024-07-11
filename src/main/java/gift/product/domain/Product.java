@@ -1,12 +1,31 @@
 package gift.product.domain;
 
 import gift.exception.type.KakaoInNameException;
+import gift.product.application.command.ProductUpdateCommand;
+import jakarta.persistence.*;
 
+@Entity
 public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 15)
     private String name;
+
+    @Column(nullable = false)
     private Integer price;
+
+    @Column(nullable = false)
     private String imageUrl;
+
+    public Product() {
+    }
+
+    public Product(String name, Integer price, String imageUrl) {
+        this(null, name, price, imageUrl);
+    }
 
     public Product(Long id, String name, Integer price, String imageUrl) {
         this.id = id;
@@ -31,10 +50,10 @@ public class Product {
         return imageUrl;
     }
 
-    public void update(String name, Integer price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public void update(ProductUpdateCommand command) {
+        this.name = command.name();
+        this.price = command.price();
+        this.imageUrl = command.imageUrl();
     }
 
     public void validateKakaoInName() {
