@@ -33,7 +33,7 @@ public class ProductService {
     public List<ProductResponse> getProductResponses() {
         return productRepository.findAll()
                 .stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
+                .map(ProductResponse::fromProduct)
                 .toList();
     }
 

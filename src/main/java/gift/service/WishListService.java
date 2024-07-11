@@ -62,7 +62,7 @@ public class WishListService {
         Member member = memberService.getMemberById(memberId);
         return wishListRepository.findAllByMember(member)
                 .stream()
-                .map(wish -> new WishProductResponse(wish.getProduct().getId(), wish.getProduct().getName(), wish.getProduct().getPrice(), wish.getProduct().getImageUrl(), wish.getAmount()))
+                .map(WishProductResponse::fromWish)
                 .toList();
     }
 
