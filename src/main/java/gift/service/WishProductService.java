@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dto.ProductResponse;
+import gift.dto.ProductBasicInformation;
 import gift.dto.WishProductAddRequest;
 import gift.dto.WishProductResponse;
 import gift.dto.WishProductUpdateRequest;
@@ -85,8 +85,8 @@ public class WishProductService {
 
     private WishProductResponse getWishProductResponseFromWishProduct(WishProduct wishProduct) {
         var product = wishProduct.getProduct();
-        var productResponse = ProductResponse.of(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-        return WishProductResponse.of(wishProduct.getId(), productResponse, wishProduct.getCount());
+        var productBasicInformation = ProductBasicInformation.of(product.getId(), product.getName(), product.getPrice());
+        return WishProductResponse.of(wishProduct.getId(), productBasicInformation, wishProduct.getCount());
     }
 
     private WishProduct findWishProductById(Long id) {

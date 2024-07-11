@@ -1,8 +1,8 @@
 package gift.service;
 
+import gift.dto.ProductBasicInformation;
 import gift.dto.ProductOptionRequest;
 import gift.dto.ProductOptionResponse;
-import gift.dto.ProductResponse;
 import gift.exception.NotFoundElementException;
 import gift.model.ProductOption;
 import gift.repository.ProductOptionRepository;
@@ -63,8 +63,8 @@ public class ProductOptionService {
 
     private ProductOptionResponse getProductOptionResponseFromProductOption(ProductOption productOption) {
         var product = productOption.getProduct();
-        var productResponse = ProductResponse.of(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-        return ProductOptionResponse.of(productOption.getId(), productResponse, productOption.getName(), productOption.getAdditionalPrice());
+        var productBasicInformation = ProductBasicInformation.of(product.getId(), product.getName(), product.getPrice());
+        return ProductOptionResponse.of(productOption.getId(), productBasicInformation, productOption.getName(), productOption.getAdditionalPrice());
     }
 
     private ProductOption findProductOptionById(Long id) {
