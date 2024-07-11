@@ -5,6 +5,7 @@ import gift.entity.Product;
 import gift.exception.BadRequestExceptions.BadRequestException;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
 
 
 public class ProductConverter {
@@ -13,4 +14,11 @@ public class ProductConverter {
             return new ProductDTO(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
         }).collect(Collectors.toList());
     }
+
+    public static Page<ProductDTO> convertToProductDTO(Page<Product> productPage) throws BadRequestException {
+        return productPage.map(product -> {
+            return new ProductDTO(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        });
+    }
+
 }
