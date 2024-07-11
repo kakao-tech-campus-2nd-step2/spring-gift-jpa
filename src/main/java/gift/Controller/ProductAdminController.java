@@ -1,5 +1,6 @@
 package gift.Controller;
 
+import gift.DTO.ProductDto;
 import gift.DTO.ProductEntity;
 import gift.Exception.ProductNotFoundException;
 import gift.Service.ProductService;
@@ -35,22 +36,22 @@ public class ProductAdminController {
   }
 
   @PostMapping("/add")
-  public String addProduct(@Valid @ModelAttribute ProductEntity productEntity) {
-    productService.addProduct(productEntity);
+  public String addProduct(@Valid @ModelAttribute ProductDto productDto) {
+    productService.addProduct(productDto);
     return "redirect:/admin/products";
   }
 
   @GetMapping("product/{id}")
   public String editProductForm(@PathVariable Long id, Model model) {
-    ProductEntity product = productService.getProductById(id)
+    ProductDto product = productService.getProductById(id)
       .orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
     model.addAttribute("product", product);
     return "product-form";
   }
 
   @PostMapping("product/{id}")
-  public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute ProductEntity productEntity) {
-    productService.updateProduct(id, productEntity);
+  public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute ProductDto productDto) {
+    productService.updateProduct(id, productDto);
     return "redirect:/admin/products";
   }
 
