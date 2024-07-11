@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.model.user;
 
 public class AuthenticationRequest {
     private String email;

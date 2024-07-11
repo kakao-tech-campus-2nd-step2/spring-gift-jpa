@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.model.user;
 
 public class RegisterRequest {
     private String name;

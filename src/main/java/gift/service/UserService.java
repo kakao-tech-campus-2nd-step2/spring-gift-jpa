@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.domain.User;
+import gift.model.user.User;
 import gift.repository.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

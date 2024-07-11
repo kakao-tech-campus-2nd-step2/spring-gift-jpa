@@ -1,10 +1,10 @@
-package gift.resolver;
+package gift.common.resolver;
 
-import gift.annotation.LoginMember;
-import gift.dto.LoginUserDTO;
-import gift.domain.User;
+import gift.common.annotation.LoginMember;
+import gift.model.user.LoginUserDTO;
+import gift.model.user.User;
 import gift.service.UserService;
-import gift.utils.JwtUtil;
+import gift.common.utils.JwtUtil;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;

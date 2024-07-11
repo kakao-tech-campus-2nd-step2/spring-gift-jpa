@@ -30,34 +30,36 @@ public class WishList {
 
     public WishList() {}
 
-    public WishList(User user, Product product) {
+    public WishList(User user, Product product, int quantity) {
         this.user = user;
         this.product = product;
+        this.quantity = quantity;
     }
 
     // getters, setters
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
 
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
-        id = id;
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public int getQuantity() {
@@ -65,6 +67,11 @@ public class WishList {
     }
 
     public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    // upadate
+    public void update(int quantity) {
         this.quantity = quantity;
     }
 }

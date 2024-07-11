@@ -1,6 +1,6 @@
-package gift.config;
+package gift.common.config;
 
-import gift.resolver.LoginMemberArgumentResolver;
+import gift.common.resolver.LoginMemberArgumentResolver;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

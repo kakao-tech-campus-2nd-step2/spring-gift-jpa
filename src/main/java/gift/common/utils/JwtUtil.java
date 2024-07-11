@@ -1,4 +1,4 @@
-package gift.utils;
+package gift.common.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

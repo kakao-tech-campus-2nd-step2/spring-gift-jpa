@@ -1,11 +1,11 @@
 package gift.controller;
 
-import gift.domain.User;
-import gift.dto.AuthenticationRequest;
-import gift.dto.AuthenticationResponse;
-import gift.dto.RegisterRequest;
+import gift.model.user.User;
+import gift.model.user.AuthenticationRequest;
+import gift.model.user.AuthenticationResponse;
+import gift.model.user.RegisterRequest;
 import gift.service.UserService;
-import gift.utils.JwtUtil;
+import gift.common.utils.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
