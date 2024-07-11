@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class WishlistController {
 
     private final WishlistService wishlistService;
+
     public WishlistController(WishlistService wishlistService) {
         this.wishlistService = wishlistService;
     }

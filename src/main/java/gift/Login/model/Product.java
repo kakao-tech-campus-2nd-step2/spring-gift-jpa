@@ -24,7 +24,8 @@ public class Product {
     private Wishlist wishlist;
 
     // Default constructor
-    public Product() {}
+    public Product() {
+    }
 
     // Constructor with parameters
     public Product(String name, long price, String temperatureOption, String cupOption, String sizeOption, String imageUrl) {

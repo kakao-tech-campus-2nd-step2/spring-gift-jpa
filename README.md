@@ -1,19 +1,7 @@
-# [구현할 기능 목록] 1단계 - 엔티티 매핑
-### 1. spring data jpa 의존성 추가
-- [x] `implementation 'org.springframework.boot:spring-boot-starter-data-jpa'`
+# [구현할 기능 목록] 2단계 - 연관 관계 매핑 
+- 실제 도메인 모델을 어떻게 구성하고 객체와 테이블을 어떻게 매핑해야 하는지 알아보자!
+### 1. 객체의 참조와 테이블의 외래 키를 매핑해서 객체에서는 참조를 사용하고 테이블에서는 외래 키 사용하기 
+- [ ] 멤버 - 위시리스트 매핑 (일대다) 
+- [ ] 위시리스트 - 상품 매핑 (일대다)
+### 2. 테스트해보기 
 
-### 2. 지금까지 작성한 JdbcTemplate 기반 코드를 JPA 기반 코드로 리팩토링
-- [x] Login/repository 리팩토링
-- [x] Login/model 리팩토링
-### 3. 테스트해보기
-- [x] E2E Test
-  - [x] 회원가입 테스트
-  - [x] 로그인 테스트
-- [x] @DataJpaTest
-  - [x] wishlist CRUD 테스트
-
-- [x] 전체적인 리팩토링
-  - [x] 멤버 서비스 인터페이스 생성
-  - [x] 2주차 PR 리뷰 반영
-    - [x] 시크릿키 암호화
-  - [x] Deprecated API 최신형 API로 변경

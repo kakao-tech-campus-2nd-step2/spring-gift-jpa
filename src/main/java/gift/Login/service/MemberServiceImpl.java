@@ -17,6 +17,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final Key key;
+
     public MemberServiceImpl(MemberRepository memberRepository, @Value("${jwt.secret}") String secretKey) {
         this.memberRepository = memberRepository;
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
@@ -45,7 +46,7 @@ public class MemberServiceImpl implements MemberService {
 
     public String login(String email, String password) {
         Member member = memberRepository.findByEmail(email).orElseThrow(
-                () -> new IllegalArgumentException("No such member: " )
+                () -> new IllegalArgumentException("No such member: ")
         );
         if (!member.getPassword().equals(password)) {
             return null;

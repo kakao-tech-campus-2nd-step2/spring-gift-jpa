@@ -1,6 +1,7 @@
 package gift.Login.model;
 
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,8 @@ public class Wishlist {
 
 
     // 생성자
-    public Wishlist() {}
+    public Wishlist() {
+    }
 
     public Wishlist(Long memberId) {
         this.memberId = memberId;

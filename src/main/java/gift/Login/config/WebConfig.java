@@ -3,7 +3,6 @@ package gift.Login.config;
 import gift.Login.auth.JwtUtil;
 import gift.Login.auth.LoginMemberArgumentResolver;
 import gift.Login.repository.MemberRepository;
-import gift.Login.service.MemberService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
