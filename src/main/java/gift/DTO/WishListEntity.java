@@ -10,21 +10,24 @@ import jakarta.persistence.Table;
 @Entity
 @Table
 public class WishListEntity {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)private Long id;
 
-  @Column(unique = true)
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @Column(unique = true, nullable = false)
   private Long userId;
-  @Column(unique = true)
+
+  @Column(unique = true, nullable = false)
   private Long productId;
 
   public WishListEntity() {
   }
 
-  public WishListEntity(Long id, Long userId, Long productId){
-    this.id=id;
-    this.userId=userId;
-    this.productId=productId;
+  public WishListEntity(Long id, Long userId, Long productId) {
+    this.id = id;
+    this.userId = userId;
+    this.productId = productId;
   }
 
   public Long getId() {
