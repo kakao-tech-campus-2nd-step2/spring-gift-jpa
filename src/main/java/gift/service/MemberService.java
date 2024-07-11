@@ -16,13 +16,17 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public void createMember(MemberDTO memberDTO) {
+    public MemberDTO createMember(MemberDTO memberDTO) {
         Member member = new Member(memberDTO.id(), memberDTO.email(), memberDTO.password());
-        memberRepository.save(member);
+        return convertToDTO(memberRepository.save(member));
     }
 
     public Member findMemberByCredentials(String email, String password) {
         return memberRepository.findByEmailAndPassword(email, password)
             .orElseThrow(() -> new RepositoryException(ErrorCode.MEMBER_NOT_FOUND, email));
+    }
+
+    private MemberDTO convertToDTO(Member member) {
+        return new MemberDTO(member.getId(), member.getEmail(), member.getPassword());
     }
 }

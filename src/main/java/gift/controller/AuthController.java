@@ -25,9 +25,8 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity<?> createMember(@RequestBody MemberDTO memberDTO) {
-        memberService.createMember(memberDTO);
-        Member savedMember = memberService.findMemberByCredentials(memberDTO.email(), memberDTO.password());
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedMember.getId());
+        MemberDTO createdMember = memberService.createMember(memberDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdMember);
     }
 
     @PostMapping("/login")

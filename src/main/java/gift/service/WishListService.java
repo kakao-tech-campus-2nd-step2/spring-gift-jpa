@@ -27,7 +27,7 @@ public class WishListService {
         this.memberRepository = memberRepository;
     }
 
-    public void createWishList(WishListDTO wishListDTO) {
+    public WishListDTO createWishList(WishListDTO wishListDTO) {
         Product product = productRepository.findByName(wishListDTO.productName())
             .orElseThrow(() -> new RepositoryException(ErrorCode.PRODUCT_NOT_FOUND,
                 wishListDTO.productName()));
@@ -36,7 +36,7 @@ public class WishListService {
                 wishListDTO.memberId()));
         WishList wishList = new WishList(wishListDTO.email(), member,
             product, wishListDTO.quantity());
-        wishListRepository.save(wishList);
+        return convertToDTO(wishListRepository.save(wishList));
     }
 
     public List<WishListDTO> getAllWishList() {
@@ -53,7 +53,7 @@ public class WishListService {
             .collect(Collectors.toList());
     }
 
-    public void updateWishListQuantity(WishListDTO wishListDTO) {
+    public WishListDTO updateWishListQuantity(WishListDTO wishListDTO) {
         WishList currentWishList = wishListRepository.findByMemberIdAndProductName(
                 wishListDTO.memberId(),
                 wishListDTO.productName())
@@ -68,7 +68,7 @@ public class WishListService {
                 wishListDTO.memberId()));
         WishList newWishList = new WishList(currentWishList.getId(), currentWishList.getEmail(),
             member, product, wishListDTO.quantity());
-        wishListRepository.save(newWishList);
+        return convertToDTO(wishListRepository.save(newWishList));
     }
 
     public void deleteWishList(long memberId, String productName) {
