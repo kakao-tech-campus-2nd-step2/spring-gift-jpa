@@ -3,7 +3,7 @@ package gift.Login.controller;
 import gift.Login.auth.LoginMember;
 import gift.Login.model.Member;
 import gift.Login.model.Product;
-import gift.Login.model.Wishlist;
+import gift.Login.model.Wish;
 import gift.Login.service.WishlistService;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +25,7 @@ public class WishlistController {
 
     // 2. 위시리스트 조회
     @GetMapping
-    public Wishlist getWishlist(@LoginMember Member member) {
+    public Wish getWishlist(@LoginMember Member member) {
         return wishlistService.getWishlistByMemberId(member.getId());
     }
 

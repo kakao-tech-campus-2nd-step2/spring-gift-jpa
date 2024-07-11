@@ -1,10 +1,10 @@
 package gift.Login.service;
 
 import gift.Login.model.Product;
-import gift.Login.model.Wishlist;
+import gift.Login.model.Wish;
 
 public interface WishlistService {
-    Wishlist getWishlistByMemberId(Long memberId);
+    Wish getWishlistByMemberId(Long memberId);
 
     void addProductToWishlist(Long memberId, Product product);
 

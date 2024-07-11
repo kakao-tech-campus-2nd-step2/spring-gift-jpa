@@ -1,7 +1,7 @@
 package gift.Login;
 
 import gift.Login.model.Product;
-import gift.Login.model.Wishlist;
+import gift.Login.model.Wish;
 import gift.Login.repository.ProductRepository;
 import gift.Login.repository.WishlistRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,7 @@ public class WishlistDataTest {
     private ProductRepository productRepository;
 
     private Product product;
-    private Wishlist wishlist;
+    private Wish wishlist;
 
     @BeforeEach
     public void setUp() {
@@ -36,7 +36,7 @@ public class WishlistDataTest {
         productRepository.save(product);
 
         // wishlist 저장
-        wishlist = new Wishlist();
+        wishlist = new Wish();
         wishlist.setMemberId(1L);
         wishlist.getProducts().add(product);
         product.setWishlist(wishlist);
@@ -46,7 +46,7 @@ public class WishlistDataTest {
     @Test
     public void testCreateWishlistWithProduct() {
         // when
-        Wishlist fetchedWishlist = wishlistRepository.findByMemberId(1L).orElse(null);
+        Wish fetchedWishlist = wishlistRepository.findByMemberId(1L).orElse(null);
 
         // then
         assertThat(fetchedWishlist).isNotNull();
@@ -58,7 +58,7 @@ public class WishlistDataTest {
     @Test
     public void testReadWishlist() {
         // when
-        Wishlist fetchedWishlist = wishlistRepository.findByMemberId(1L).orElse(null);
+        Wish fetchedWishlist = wishlistRepository.findByMemberId(1L).orElse(null);
 
         // then
         assertThat(fetchedWishlist).isNotNull();
@@ -70,7 +70,7 @@ public class WishlistDataTest {
     @Test
     public void testUpdateProductInWishlist() {
         // given
-        Wishlist fetchedWishlist = wishlistRepository.findByMemberId(1L).orElse(null);
+        Wish fetchedWishlist = wishlistRepository.findByMemberId(1L).orElse(null);
         assertThat(fetchedWishlist).isNotNull();
         Product fetchedProduct = fetchedWishlist.getProducts().get(0);
         fetchedProduct.setName("Updated Product");
@@ -78,7 +78,7 @@ public class WishlistDataTest {
 
         // when
         productRepository.save(fetchedProduct);
-        Wishlist updatedWishlist = wishlistRepository.findByMemberId(1L).orElse(null);
+        Wish updatedWishlist = wishlistRepository.findByMemberId(1L).orElse(null);
 
         // then
         assertThat(updatedWishlist).isNotNull();
@@ -90,7 +90,7 @@ public class WishlistDataTest {
     @Test
     public void testDeleteProductFromWishlist() {
         // given
-        Wishlist fetchedWishlist = wishlistRepository.findByMemberId(1L).orElse(null);
+        Wish fetchedWishlist = wishlistRepository.findByMemberId(1L).orElse(null);
         assertThat(fetchedWishlist).isNotNull();
         Product fetchedProduct = fetchedWishlist.getProducts().get(0);
 
@@ -98,7 +98,7 @@ public class WishlistDataTest {
         fetchedWishlist.getProducts().remove(fetchedProduct);
         productRepository.delete(fetchedProduct);
         wishlistRepository.save(fetchedWishlist);
-        Wishlist updatedWishlist = wishlistRepository.findByMemberId(1L).orElse(null);
+        Wish updatedWishlist = wishlistRepository.findByMemberId(1L).orElse(null);
 
         // then
         assertThat(updatedWishlist).isNotNull();

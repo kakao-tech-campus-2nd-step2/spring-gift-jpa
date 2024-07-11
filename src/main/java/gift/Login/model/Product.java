@@ -1,7 +1,9 @@
 package gift.Login.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -11,33 +13,28 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
-    private long price;
-    private String temperatureOption;
-    private String cupOption;
-    private String sizeOption;
+
+    @Column(nullable = false)
+    private int price;
+
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @ManyToOne
-    @JoinColumn(name = "wishlist_id")
-    @JsonIgnore
-    private Wishlist wishlist;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Wish> wishes = new ArrayList<>();
 
-    // Default constructor
-    public Product() {
-    }
+    // Constructors, Getters, and Setters
+    public Product() {}
 
-    // Constructor with parameters
-    public Product(String name, long price, String temperatureOption, String cupOption, String sizeOption, String imageUrl) {
+    public Product(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
-        this.temperatureOption = temperatureOption;
-        this.cupOption = cupOption;
-        this.sizeOption = sizeOption;
         this.imageUrl = imageUrl;
     }
 
-    // Getters and Setters
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -54,36 +51,12 @@ public class Product {
         this.name = name;
     }
 
-    public long getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(long price) {
+    public void setPrice(int price) {
         this.price = price;
-    }
-
-    public String getTemperatureOption() {
-        return temperatureOption;
-    }
-
-    public void setTemperatureOption(String temperatureOption) {
-        this.temperatureOption = temperatureOption;
-    }
-
-    public String getCupOption() {
-        return cupOption;
-    }
-
-    public void setCupOption(String cupOption) {
-        this.cupOption = cupOption;
-    }
-
-    public String getSizeOption() {
-        return sizeOption;
-    }
-
-    public void setSizeOption(String sizeOption) {
-        this.sizeOption = sizeOption;
     }
 
     public String getImageUrl() {
@@ -94,11 +67,21 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Wishlist getWishlist() {
-        return wishlist;
+    public List<Wish> getWishes() {
+        return wishes;
     }
 
-    public void setWishlist(Wishlist wishlist) {
-        this.wishlist = wishlist;
+    public void setWishes(List<Wish> wishes) {
+        this.wishes = wishes;
+    }
+
+    public void addWish(Wish wish) {
+        wishes.add(wish);
+        wish.setProduct(this);
+    }
+
+    public void removeWish(Wish wish) {
+        wishes.remove(wish);
+        wish.setProduct(null);
     }
 }

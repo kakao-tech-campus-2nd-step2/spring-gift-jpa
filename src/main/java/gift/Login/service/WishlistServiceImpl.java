@@ -1,7 +1,7 @@
 package gift.Login.service;
 
 import gift.Login.model.Product;
-import gift.Login.model.Wishlist;
+import gift.Login.model.Wish;
 import gift.Login.repository.ProductRepository;
 import gift.Login.repository.WishlistRepository;
 import org.springframework.stereotype.Service;
@@ -21,8 +21,8 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     @Transactional
     public void addProductToWishlist(Long memberId, Product product) {
-        Wishlist wishlist = wishlistRepository.findByMemberId(memberId)
-                .orElseGet(() -> new Wishlist(memberId));
+        Wish wishlist = wishlistRepository.findByMemberId(memberId)
+                .orElseGet(() -> new Wish(memberId));
 
         // 먼저 Product를 저장합니다.
         productRepository.save(product);
@@ -37,7 +37,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     @Transactional(readOnly = true)
-    public Wishlist getWishlistByMemberId(Long memberId) {
+    public Wish getWishlistByMemberId(Long memberId) {
         return wishlistRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Wishlist not found for memberId: " + memberId));
     }
@@ -45,7 +45,7 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     @Transactional
     public void updateProductInWishlist(Long memberId, Long productId, Product updatedProduct) {
-        Wishlist wishlist = wishlistRepository.findByMemberId(memberId)
+        Wish wishlist = wishlistRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Wishlist not found for memberId: " + memberId));
         Product product = wishlist.getProducts().stream()
                 .filter(p -> p.getId().equals(productId))
@@ -65,7 +65,7 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     @Transactional
     public void removeProductFromWishlist(Long memberId, Long productId) {
-        Wishlist wishlist = wishlistRepository.findByMemberId(memberId)
+        Wish wishlist = wishlistRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Wishlist not found for memberId: " + memberId));
         Product product = wishlist.getProducts().stream()
                 .filter(p -> p.getId().equals(productId))
