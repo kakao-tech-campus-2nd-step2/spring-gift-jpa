@@ -6,7 +6,8 @@ import gift.TestUtils;
 import gift.auth.dto.LoginReqDto;
 import gift.auth.token.AuthToken;
 import gift.common.exception.ErrorResponse;
-import gift.product.exception.ProductErrorCode;
+import gift.product.dto.ProductReqDto;
+import gift.product.dto.ProductResDto;
 import gift.utils.JwtTokenProvider;
 import gift.wishlist.dto.WishListReqDto;
 import gift.wishlist.dto.WishListResDto;
@@ -15,7 +16,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +23,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -160,10 +161,15 @@ class WishListControllerTest {
     }
 
     @ParameterizedTest(name = "위시 리스트 추가 테스트 - 상품 ID: {0}, 수량: {1}")
-    @MethodSource("provideWishListAddScenarios")
+    @CsvSource({    // 상품 ID, 수량, 기대 상품 수, 기대 총 수량
+            "3, 3, 4, 3",  // productList.get(3): 새로운 상품 추가
+            "1, 4, 3, 11"   // productList.get(1): 기존 상품 수량 증가
+    })
     @DisplayName("위시 리스트 추가")
-    void 위시_리스트_추가(long productId, int quantity, int expectedTotalItems, Predicate<List<WishListResDto>> resultPredicate) {
+    void 위시_리스트_추가(int productIndex, int quantity, int expectedTotalItems, int expectedTotalQuantity) {
         // given
+        long productId = productList.get(productIndex).id();
+
         var url = baseUrl + "/api/wish-list";
         var reqBody = new WishListReqDto(productId, quantity);
         var request = TestUtils.createRequestEntity(url, reqBody, HttpMethod.POST, accessToken);
@@ -178,28 +184,11 @@ class WishListControllerTest {
         assertThat(actual.getHeaders().getLocation()).isEqualTo(URI.create("/api/wish-list"));
 
         // 위시 리스트 추가 후 조회
-        var requestGet = TestUtils.createRequestEntity(url, null, HttpMethod.GET, accessToken);
-        var responseType = new ParameterizedTypeReference<List<WishListResDto>>() {};
-        var actualGet = restTemplate.exchange(requestGet, responseType);
-
-        var wishList = actualGet.getBody();
+        var wishList = getWishList();
 
         assertThat(wishList).hasSize(expectedTotalItems);
-        assertThat(resultPredicate.test(wishList)).isTrue();
-    }
-
-    private static Stream<Arguments> provideWishListAddScenarios() {
-        return Stream.of(
-                // 새로운 상품 추가 (productId: 5L는 기존 위시 리스트에 없다고 가정)
-                Arguments.of(5L, 4, 4,
-                        (Predicate<List<WishListResDto>>) wishList ->
-                                wishList.stream().anyMatch(w -> w.productId() == 5L && w.quantity() == 4)),
-
-                // 기존 상품의 수량 증가 (productId: 1L는 이미 위시 리스트에 있고 수량이 3이라고 가정)
-                Arguments.of(1L, 4, 3,
-                        (Predicate<List<WishListResDto>>) wishList ->
-                                wishList.stream().anyMatch(w -> w.productId() == 1L && w.quantity() == 7))
-        );
+        assertThat(wishList).extracting(WishListResDto::quantity)
+                .contains(expectedTotalQuantity);
     }
 
     @Test
