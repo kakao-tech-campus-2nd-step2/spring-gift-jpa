@@ -5,7 +5,6 @@ import gift.dto.wish.WishInfoDTO;
 import gift.dto.wish.WishRequestDTO;
 import gift.dto.wish.WishResponseDTO;
 import gift.exception.ForbiddenRequestException;
-import gift.repository.UserDAO;
 import gift.repository.WishDAO;
 import org.springframework.stereotype.Service;
 

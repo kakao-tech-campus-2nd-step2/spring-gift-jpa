@@ -1,8 +1,9 @@
 package gift.service;
 
 import gift.dto.user.*;
+import gift.entity.User;
 import gift.exception.InvalidPasswordException;
-import gift.repository.UserDAO;
+import gift.repository.UserRepository;
 import gift.security.jwt.TokenProvider;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -11,20 +12,20 @@ import java.util.List;
 
 @Service
 public class UserService {
-    private final UserDAO userDAO;
+    private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
 
 
-    public UserService(UserDAO userDAO, TokenProvider tokenProvider) {
-        this.userDAO = userDAO;
+    public UserService(UserRepository userRepository, TokenProvider tokenProvider) {
+        this.userRepository = userRepository;
         this.tokenProvider = tokenProvider;
     }
 
     public List<UserResponseDTO> getAllUsers() {
 
-        return userDAO.findAll().stream().map((userInfo) -> new UserResponseDTO(
-                userInfo.id(),
-                userInfo.email()
+        return userRepository.findAll().stream().map((user) -> new UserResponseDTO(
+                user.getId(),
+                user.getEmail()
         )).toList();
     }
 
@@ -36,47 +37,51 @@ public class UserService {
         String email = userRequestDTO.email();
         String encryptedPW = hashPassword(userRequestDTO.password());
 
-        UserInfoDTO userInfoDTO = userDAO.create(new UserEncryptedDTO(email, encryptedPW));
+        User user = userRepository.save(new User(email, encryptedPW));
 
-        String token = tokenProvider.generateToken(userInfoDTO.email());
+        String token = tokenProvider.generateToken(user.getEmail());
 
         return new TokenResponseDTO(token);
     }
 
     public TokenResponseDTO login(UserRequestDTO userRequestDTO) throws InvalidPasswordException {
-        UserInfoDTO userInfoDTO = userDAO.findUserByEmail(userRequestDTO.email());
-        String encodedOriginalPw = userInfoDTO.encryptedPw();
+        User user = userRepository.findByEmail(userRequestDTO.email());
+        String encodedOriginalPw = user.getEncryptedPw();
 
         if (!BCrypt.checkpw(userRequestDTO.password(), encodedOriginalPw)) {
             throw new InvalidPasswordException("Invalid password");
         }
 
-        String token = tokenProvider.generateToken(userInfoDTO.email());
+        String token = tokenProvider.generateToken(user.getEmail());
 
         return new TokenResponseDTO(token);
     }
 
     public void deleteUser(long id) {
-        userDAO.delete(id);
+        userRepository.deleteById(id);
     }
 
     public void deleteUser(String email) {
-        UserInfoDTO user = userDAO.findUserByEmail(email);
+        User user = userRepository.findByEmail(email);
 
-        userDAO.delete(user.id());
+        userRepository.deleteById(user.getId());
     }
 
     public void updatePw(long id, PwUpdateDTO pwUpdateDTO) {
         String encryptedPW = hashPassword(pwUpdateDTO.password());
 
-        userDAO.updatePw(new EncryptedUpdateDTO(id, encryptedPW));
+        User user = userRepository.findById(id).get();
+        user.setEncryptedPw(encryptedPW);
+
+        userRepository.save(user);
     }
 
     public void updatePw(String email, PwUpdateDTO pwUpdateDTO) {
-        UserInfoDTO user = userDAO.findUserByEmail(email);
-
         String encryptedPW = hashPassword(pwUpdateDTO.password());
 
-        userDAO.updatePw(new EncryptedUpdateDTO(user.id(), encryptedPW));
+        User user = userRepository.findByEmail(email);
+        user.setEncryptedPw(encryptedPW);
+
+        userRepository.save(user);
     }
 }
