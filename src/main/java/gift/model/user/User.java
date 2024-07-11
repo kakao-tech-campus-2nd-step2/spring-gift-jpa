@@ -82,9 +82,5 @@ public class User {
         return this.password.equals(rawPassword);
     }
 
-    // get
-    public List<WishList> getWishList() {
-        return wishList;
-    }
 
 }
