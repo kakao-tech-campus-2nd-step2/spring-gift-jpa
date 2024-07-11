@@ -1,7 +1,7 @@
 package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import gift.entity.Product;
 import jakarta.validation.ConstraintViolationException;
@@ -14,7 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 class ProductRepositoryTest {
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Test
     @DisplayName("save 테스트")
@@ -43,8 +43,8 @@ class ProductRepositoryTest {
     void edgeCaseTest() {
         Product product = new Product("카카오", 2000, "image.jpg");
 
-        assertThrows(ConstraintViolationException.class, () -> {
+        assertThatThrownBy(() -> {
             productRepository.save(product);
-        });
+        }).isInstanceOf(ConstraintViolationException.class);
     }
 }

@@ -12,11 +12,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 class UserRepositoryTest {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Test
     @DisplayName("save 테스트")
-    public void saveTest() {
+    void saveTest() {
         User expected = new User("test@abc.com", "password");
         User actual = userRepository.save(expected);
 
@@ -26,7 +26,7 @@ class UserRepositoryTest {
 
     @Test
     @DisplayName("이메일 기반으로 유저 찾기 테스트")
-    public void findByEmailTest() {
+    void findByEmailTest() {
         User user = new User("test@abc.com", "password");
         User actual = userRepository.save(user);
         User expected = userRepository.findByEmail(user.getEmail());
@@ -37,7 +37,7 @@ class UserRepositoryTest {
 
     @Test
     @DisplayName("저장되어있지 않은 이메일로 유저를 찾을 때 Null을 리턴하는지 테스트")
-    public void edgeCaseTest() {
+    void edgeCaseTest() {
         String NotSavedEmail = "notSavedEmail@abc.com";
 
         assertThat(userRepository.findByEmail(NotSavedEmail)).isNull();

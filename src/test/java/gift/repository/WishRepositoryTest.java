@@ -17,16 +17,16 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 class WishRepositoryTest {
 
     @Autowired
-    WishRepository wishRepository;
+    private WishRepository wishRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     private User user;
     private Product product1;
@@ -53,7 +53,8 @@ class WishRepositoryTest {
         List<Wish> wishes = wishRepository.findByUserId(user.getId());
 
         assertThat(wishes).hasSize(2);
-        assertThat(wishes.getFirst().getProduct().getName()).isEqualTo(wish1.getProduct().getName());
+        assertThat(wishes.getFirst().getProduct().getName()).isEqualTo(
+            wish1.getProduct().getName());
     }
 
     @Test
@@ -68,7 +69,7 @@ class WishRepositoryTest {
     }
 
     @Test
-    @DisplayName("위시 리스트 특정 객체 수량 변경 테스트")
+    @DisplayName("updateWishNumber JPQL 테스트")
     void updateWishNumber() {
         Wish wish = new Wish(user, product1, 10);
         Wish savedWish = wishRepository.save(wish);
