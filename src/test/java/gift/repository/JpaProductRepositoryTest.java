@@ -33,8 +33,8 @@ class JpaProductRepositoryTest {
         setProduct();
         //when
         Long insertProductId = insertProduct(product);
-        //then
         Product findProduct = jpaProductRepository.findById(insertProductId).get();
+        //then
         assertAll(
             () -> assertThat(findProduct).isEqualTo(product)
         );

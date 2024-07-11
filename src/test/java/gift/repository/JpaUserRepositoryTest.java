@@ -33,8 +33,8 @@ class JpaUserRepositoryTest {
         setUser();
         //when
         Long insertUserId = insertUser(user);
-        //then
         User findUser = jpaUserRepository.findById(insertUserId).get();
+        //then
         assertAll(
             () -> assertThat(findUser).isEqualTo(user)
         );

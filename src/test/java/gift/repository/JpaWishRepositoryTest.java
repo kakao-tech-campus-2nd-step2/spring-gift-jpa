@@ -33,8 +33,8 @@ class JpaWishRepositoryTest {
         setWish();
         //when
         Long insertWishId = insertWish(wish);
-        //then
         Wish findWish = jpaWishRepository.findById(insertWishId).get();
+        //then
         assertAll(
             () -> assertThat(findWish).isEqualTo(wish)
         );
