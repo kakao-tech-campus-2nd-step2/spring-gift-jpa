@@ -67,12 +67,16 @@ class WishlistRepositoryTest {
             ).stream()
             .map(e -> new Wishlist(e, member))
             .toList();
+
         wishlistRepository.saveAll(expect);
 
         Product product = productRepository.save(
-            new Product(4L, "product-4", 400, "product-4-image"));
+            new Product(4L, "product-4", 400, "product-4-image")
+        );
+
         wishlistRepository.save(
-            new Wishlist(product, memberRepository.findById("bbb@email.com").get()));
+            new Wishlist(product, memberRepository.findById("bbb@email.com").get())
+        );
 
         //when
         List<Wishlist> actual = wishlistRepository.findAllByMember(member);
@@ -90,8 +94,10 @@ class WishlistRepositoryTest {
     @DisplayName("[Unit] addWishlist test")
     void addWishlistTest() {
         //given
-        Wishlist expect = new Wishlist(productRepository.findById(1L).get(),
-            memberRepository.findById("aaa@email.com").get());
+        Wishlist expect = new Wishlist(
+            productRepository.findById(1L).get(),
+            memberRepository.findById("aaa@email.com").get()
+        );
 
         //when
         Wishlist actual = wishlistRepository.save(expect);
@@ -105,8 +111,10 @@ class WishlistRepositoryTest {
     void deleteWishlistTest() {
         //given
         Wishlist expect = wishlistRepository.save(
-            new Wishlist(productRepository.findById(1L).get(),
-                memberRepository.findById("aaa@email.com").get())
+            new Wishlist(
+                productRepository.findById(1L).get(),
+                memberRepository.findById("aaa@email.com").get()
+            )
         );
 
         //when
@@ -121,10 +129,12 @@ class WishlistRepositoryTest {
     @DisplayName("[Unit] existWishlist test")
     void existWishlistTest() {
         //given
-        Product product = productRepository.findById(1L).get();
-        Member member = memberRepository.findById("aaa@email.com").get();
-
-        Wishlist expect = wishlistRepository.save(new Wishlist(product, member));
+        Wishlist expect = wishlistRepository.save(
+            new Wishlist(
+                productRepository.findById(1L).get(),
+                memberRepository.findById("aaa@email.com").get()
+            )
+        );
 
         //when
         Boolean trueCase = wishlistRepository.existsByMemberAndProduct(

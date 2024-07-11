@@ -27,14 +27,15 @@ public class ProductController {
     }
 
     @PostMapping
-    public void addProduct(
-        @Valid @RequestBody ProductDTO productDto) {
+    public void addProduct(@Valid @RequestBody ProductDTO productDto) {
         productService.addProduct(productDto);
     }
 
     @PatchMapping("/{id}")
-    public void updateProduct(@PathVariable(value = "id") Long id,
-        @Valid @RequestBody ProductDTO productDto) {
+    public void updateProduct(
+        @PathVariable(value = "id") Long id,
+        @Valid @RequestBody ProductDTO productDto
+    ) {
         productService.updateProduct(id, productDto);
     }
 

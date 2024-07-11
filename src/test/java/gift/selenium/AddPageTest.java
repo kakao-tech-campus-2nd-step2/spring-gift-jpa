@@ -36,9 +36,11 @@ public class AddPageTest {
     @DisplayName("add product E2E Test")
     public void addPageTest() throws InterruptedException {
         driver.get("http://localhost:" + port + "/admin?page=1");
+
         for (int i = 0; i < 10; i++) {
             addProduct("Product-" + i, i + "000", "imageUrl-" + i);
         }
+
         String currentURL = driver.getCurrentUrl();
         assertEquals(currentURL, "http://localhost:" + port + "/admin?page=1");
     }

@@ -67,12 +67,15 @@ class ProductControllerTest {
     @ParameterizedTest
     @DisplayName("[Unit] addProduct test")
     @MethodSource(value = "addProductTestValues")
-    void addProductTest(ProductDTO productDTO, String errorMessage, HttpStatus httpStatus)
-        throws Exception {
+    void addProductTest(
+        ProductDTO productDTO,
+        String errorMessage,
+        HttpStatus httpStatus
+    ) throws Exception {
         mockMvc.perform(post(apiUrl)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productDTO)))
-            .andExpect(status().is(httpStatus.value()))
+                .content(objectMapper.writeValueAsString(productDTO))
+            ).andExpect(status().is(httpStatus.value()))
             .andExpect(content().string(errorMessage));
     }
 
@@ -94,8 +97,11 @@ class ProductControllerTest {
                 HttpStatus.BAD_REQUEST
             ),
             Arguments.of(
-                new ProductDTO("ThisSequenceIsTooLongForProductName", 300,
-                    "ThisSequenceIsTooLongForProductName-image-url"),
+                new ProductDTO(
+                    "ThisSequenceIsTooLongForProductName",
+                    300,
+                    "ThisSequenceIsTooLongForProductName-image-url"
+                ),
                 PRODUCT_NAME_LENGTH,
                 HttpStatus.BAD_REQUEST
             )
@@ -105,8 +111,12 @@ class ProductControllerTest {
     @ParameterizedTest
     @DisplayName("[Unit] updateProduct test")
     @MethodSource("updateProductTest")
-    void updateProductTest(long id, ProductDTO productDTO, String errorMessage,
-        HttpStatus httpStatus) throws Exception {
+    void updateProductTest(
+        long id,
+        ProductDTO productDTO,
+        String errorMessage,
+        HttpStatus httpStatus
+    ) throws Exception {
         mockMvc.perform(patch(apiUrl + "/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(productDTO))
@@ -136,8 +146,11 @@ class ProductControllerTest {
             ),
             Arguments.of(
                 4L,
-                new ProductDTO("ThisSequenceIsTooLongForProductName", 300,
-                    "ThisSequenceIsTooLongForProductName-image-url"),
+                new ProductDTO(
+                    "ThisSequenceIsTooLongForProductName",
+                    300,
+                    "ThisSequenceIsTooLongForProductName-image-url"
+                ),
                 PRODUCT_NAME_LENGTH,
                 HttpStatus.BAD_REQUEST
             )

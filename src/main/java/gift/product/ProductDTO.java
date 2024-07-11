@@ -14,6 +14,7 @@ public record ProductDTO(
     // 제품의 이름에 대소문자 구문없이 kakao, 카카오라는 이름이 들어가서는 안된다.
     @Pattern(regexp = "^(?i)(?!.*(kakao|카카오)).*$", message = PRODUCT_NAME_KAKAO_STRING)
     String name,
+
     int price,
     String imageUrl) {
 
