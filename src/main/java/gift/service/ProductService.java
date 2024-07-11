@@ -1,37 +1,48 @@
 package gift.service;
 
-import gift.domain.Product;
-import gift.repository.ProductDao;
+import gift.entity.Product;
+import gift.exception.BusinessException;
+import gift.repository.ProductRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
-    private final ProductDao productDao;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts() {
-        return productDao.findAll();
+    public List<Product> findAll() {
+        return productRepository.findAll();
     }
 
-    public Product getProductById(Long id) {
-        return productDao.findById(id);
+    public Optional<Product> findById(Long id) {
+        if (productRepository.findById(id).isEmpty()) {
+            throw new BusinessException("해당 아이디에 대한 상품이 존재하지 않습니다.");
+        }
+        return productRepository.findById(id);
     }
 
-    public void createProduct(Product product) {
-        productDao.save(product);
+    public Product save(Product product) {
+        return productRepository.save(product);
     }
 
-    public void deleteProduct(Long id) {
-        productDao.deleteById(id);
+    public Product update(Long id, Product product) {
+        return productRepository.findById(id)
+            .map(existingProduct -> {
+                existingProduct.setName(product.getName());
+                existingProduct.setPrice(product.getPrice());
+                existingProduct.setImageUrl(product.getImageUrl());
+                return productRepository.save(existingProduct);
+            }).orElseThrow(() -> new BusinessException("해당 아이디에 대한 상품이 존재하지 않습니다."));
     }
 
-    public void updateProduct(Long id, Product productDetails) {
-        productDao.update(id, productDetails);
+    public void deleteById(Long id) {
+        productRepository.deleteById(id);
     }
 }
