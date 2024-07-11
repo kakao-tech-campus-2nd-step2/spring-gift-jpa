@@ -34,9 +34,7 @@ public class Wish {
     }
 
     public Wish(Long productId, Long userId, Integer amount) {
-        this.productId = productId;
-        this.userId = userId;
-        this.amount = amount;
+        this(null, productId, userId, amount);
     }
 
     public Long getId() {

@@ -3,12 +3,12 @@ package gift.wish.service;
 import gift.product.domain.Product;
 import gift.product.exception.ProductNotFoundException;
 import gift.product.persistence.ProductRepository;
-import gift.wish.application.dto.request.WishRequest;
 import gift.wish.application.dto.response.WishResponse;
 import gift.wish.domain.Wish;
 import gift.wish.exception.WishCanNotModifyException;
 import gift.wish.exception.WishNotFoundException;
 import gift.wish.persistence.WishRepository;
+import gift.wish.service.dto.WishParam;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -22,24 +22,21 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
-    public void saveWish(WishRequest wishRequest, final Long userId) {
+    public void saveWish(WishParam wishRequest) {
         Product product = productRepository.findById(wishRequest.productId())
                 .orElseThrow(() -> ProductNotFoundException.of(wishRequest.productId()));
 
-        Wish wish = wishRequest.toModel(userId);
+        Wish wish = wishRequest.toEntity();
         wishRepository.save(wish);
     }
 
-    public void updateWish(Long wishId, WishRequest wishRequest, final Long userId) {
-        Wish wish = wishRepository.findByIdAndUserId(wishId, userId)
+    public void updateWish(WishParam wishRequest, final Long wishId) {
+        Wish wish = wishRepository.findByIdAndUserId(wishId, wishId)
                 .orElseThrow(() -> WishNotFoundException.of(wishId));
 
         if (!wish.getProductId().equals(wishRequest.productId())) {
             throw new WishCanNotModifyException();
         }
-
-        Wish newWish = wishRequest.toModel(wishId, userId);
-        wishRepository.save(newWish);
     }
 
     public List<WishResponse> getWishList(final Long userId) {

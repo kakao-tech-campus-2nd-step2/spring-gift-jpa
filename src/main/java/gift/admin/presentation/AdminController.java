@@ -45,7 +45,7 @@ public class AdminController {
 
     @PostMapping("/products")
     public String saveProduct(@RequestBody ProductRequest newProduct) {
-        productRepository.save(newProduct.toModel());
+        productRepository.save(null);
 
         return "admin/list";
     }

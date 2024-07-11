@@ -42,7 +42,7 @@ public class WishController {
     public void saveWish(@RequestBody WishRequest wishRequest,
                          @LoginUser User loginUser
     ) {
-        wishService.saveWish(wishRequest, loginUser.getId());
+        wishService.saveWish(wishRequest.toWishParam(loginUser.getId()));
     }
 
     @Operation(summary = "위시리스트 수정", description = "위시리스트를 수정합니다.")
@@ -56,7 +56,7 @@ public class WishController {
                            @RequestBody WishRequest wishRequest,
                            @LoginUser User loginUser
     ) {
-        wishService.updateWish(wishId, wishRequest, loginUser.getId());
+        wishService.updateWish(wishRequest.toWishParam(loginUser.getId()), wishId);
     }
 
     @Operation(summary = "위시리스트 목록 조회", description = "위시리스트 목록을 조회합니다.")
