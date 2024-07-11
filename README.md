@@ -4,16 +4,16 @@
 
 ### 2. 지금까지 작성한 JdbcTemplate 기반 코드를 JPA 기반 코드로 리팩토링
 - [x] Login/repository 리팩토링
-- [x] Login/model 리팩토링 
+- [x] Login/model 리팩토링
 ### 3. 테스트해보기
 - [x] E2E Test
   - [x] 회원가입 테스트
   - [x] 로그인 테스트
 - [x] @DataJpaTest
-    - [x] wishlist CRUD 테스트
+  - [x] wishlist CRUD 테스트
 
-- [x] 전체적인 리팩토링 
+- [x] 전체적인 리팩토링
   - [x] 멤버 서비스 인터페이스 생성
   - [x] 2주차 PR 리뷰 반영
-    - [x] 시크릿키 암호화 
+    - [x] 시크릿키 암호화
   - [x] Deprecated API 최신형 API로 변경
