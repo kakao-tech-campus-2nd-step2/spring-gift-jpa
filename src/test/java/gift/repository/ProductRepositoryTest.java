@@ -41,7 +41,7 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("Valid 조건에 맞지 않는 이름이 들어갔을 경우 오류를 던지는지 테스트")
     void edgeCaseTest() {
-        Product product = new Product("카카오", 2000, "image.jpg");
+        Product product = new Product("아이스 아메리카노 엑스라지 사이즈", 2000, "image.jpg");
 
         assertThatThrownBy(() -> {
             productRepository.save(product);

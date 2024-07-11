@@ -36,10 +36,10 @@ class UserRepositoryTest {
     }
 
     @Test
-    @DisplayName("저장되어있지 않은 이메일로 유저를 찾을 때 Null을 리턴하는지 테스트")
+    @DisplayName("저장되어있지 않은 이메일로 유저를 찾을 때 빈 Optional을 리턴하는지 테스트")
     void edgeCaseTest() {
         String NotSavedEmail = "notSavedEmail@abc.com";
 
-        assertThat(userRepository.findByEmail(NotSavedEmail)).isNull();
+        assertThat(userRepository.findByEmail(NotSavedEmail)).isEmpty();
     }
 }
