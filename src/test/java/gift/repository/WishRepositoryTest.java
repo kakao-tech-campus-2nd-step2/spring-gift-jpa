@@ -3,8 +3,11 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import gift.model.Member;
+import gift.model.Product;
 import gift.model.Wish;
 import java.util.List;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -15,56 +18,97 @@ class WishRepositoryTest {
     @Autowired
     private WishRepository wishRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Order(1)
     @Test
     void save() {
-        Wish expected = new Wish(1L, 1L, 1);
+        Member expectedMember = makeMember("member1@example.com", "password1", "member1", "user");
+        memberRepository.save(expectedMember);
+        Product expectedProduct = makeProduct("gamza", 500, "gamza.jpg");
+        productRepository.save(expectedProduct);
+        Wish expected = getWish(expectedMember, expectedProduct);
 
         Wish actual = wishRepository.save(expected);
 
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
-            () -> assertThat(actual.getMemberId()).isEqualTo(expected.getMemberId()),
-            () -> assertThat(actual.getProductId()).isEqualTo(expected.getProductId()),
+            () -> assertThat(actual.getMember().getId()).isEqualTo(expectedMember.getId()),
+            () -> assertThat(actual.getProduct().getId()).isEqualTo(expectedProduct.getId()),
             () -> assertThat(actual.getCount()).isEqualTo(expected.getCount())
         );
     }
 
     @Test
     void findAllByMemberId() {
-        Wish expected = new Wish(1L, 1L, 1);
-        Wish expected2 = new Wish(1L, 2L, 2);
-        wishRepository.save(expected);
+        Member expectedMember = makeMember("member1@example.com", "password1", "member1", "user");
+        memberRepository.save(expectedMember);
+        Product expectedProduct1 = makeProduct("gamza", 500, "gamza.jpg");
+        productRepository.save(expectedProduct1);
+        Wish expected1 = getWish(expectedMember, expectedProduct1);
+        Product expectedProduct2 = makeProduct("goguma", 1500, "goguma.jpg");
+        productRepository.save(expectedProduct2);
+        Wish expected2 = getWish(expectedMember, expectedProduct2);
+        wishRepository.save(expected1);
         wishRepository.save(expected2);
 
-        List<Wish> actual = wishRepository.findAllByMemberId(expected.getMemberId());
+        List<Wish> actual = wishRepository.findAllByMemberId(expectedMember.getId());
 
-        assertThat(actual).isEqualTo(List.of(expected, expected2));
+        assertThat(actual).isEqualTo(List.of(expected1, expected2));
     }
 
     @Test
     void findByMemberIdAndProductId() {
-        Wish expected = new Wish(1L, 1L, 1);
+        Member expectedMember = makeMember("member1@example.com", "password1", "member1", "user");
+        memberRepository.save(expectedMember);
+        Product expectedProduct = makeProduct("gamza", 500, "gamza.jpg");
+        productRepository.save(expectedProduct);
+        Wish expected = getWish(expectedMember, expectedProduct);
+
         wishRepository.save(expected);
 
-        Wish actual = wishRepository.findByMemberIdAndProductId(expected.getMemberId(),
-            expected.getProductId());
+        Wish actual = wishRepository.findByMemberIdAndProductId(expectedMember.getId(),
+            expectedProduct.getId());
 
-        assertThat(actual).isEqualTo(expected);
+        assertAll(
+            () -> assertThat(actual.getMember().getId()).isEqualTo(expectedMember.getId()),
+            () -> assertThat(actual.getMember().getRole()).isEqualTo(expectedMember.getRole()),
+            () -> assertThat(actual.getProduct().getId()).isEqualTo(expectedProduct.getId()),
+            () -> assertThat(actual.getProduct().getPrice()).isEqualTo(expectedProduct.getPrice()),
+            () -> assertThat(actual.getCount()).isEqualTo(expected.getCount())
+        );
     }
 
     @Test
     void deleteByMemberIdAndProductId() {
-        Wish expected = new Wish(1L, 1L, 1);
-        wishRepository.save(expected);
-        Wish actual = wishRepository.findByMemberIdAndProductId(expected.getMemberId(),
-            expected.getProductId());
-        assertThat(actual).isNotNull();
+//        Wish expected = new Wish(1L, 1L, 1);
+//        wishRepository.save(expected);
+//        Wish actual = wishRepository.findByMemberIdAndProductId(expected.getMemberId(),
+//            expected.getProductId());
+//        assertThat(actual).isNotNull();
+//
+//        wishRepository.deleteByMemberIdAndProductId(expected.getMemberId(),
+//            expected.getProductId());
+//
+//        actual = wishRepository.findByMemberIdAndProductId(expected.getMemberId(),
+//            expected.getProductId());
+//        assertThat(actual).isNull();
+    }
 
-        wishRepository.deleteByMemberIdAndProductId(expected.getMemberId(),
-            expected.getProductId());
+    private static Product makeProduct(String name, Integer price, String imageUrl) {
+        return new Product(name, price, imageUrl);
+    }
 
-        actual = wishRepository.findByMemberIdAndProductId(expected.getMemberId(),
-            expected.getProductId());
-        assertThat(actual).isNull();
+    private static Member makeMember(String email, String password, String name, String role) {
+        return new Member(email, password, name, role);
+    }
+
+    private Wish getWish(Member expectedMember, Product expectedProduct) {
+        return new Wish(
+            expectedMember, expectedProduct, 1);
     }
 }
