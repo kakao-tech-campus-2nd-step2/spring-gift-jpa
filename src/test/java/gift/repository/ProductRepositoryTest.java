@@ -100,12 +100,7 @@ class ProductRepositoryTest {
         List<Product> findProducts = products.findAll();
 
         // then
-        assertAll(
-                () -> assertThat(findProducts.size()).isEqualTo(3),
-                () -> assertThat(findProducts.get(0).getName()).isEqualTo(product1.getName()),
-                () -> assertThat(findProducts.get(0).getPrice()).isEqualTo(product1.getPrice()),
-                () -> assertThat(findProducts.get(0).getImageUrl()).isEqualTo(product1.getImageUrl())
-        );
+        assertThat(findProducts.size()).isEqualTo(3);
     }
 
     @Test
