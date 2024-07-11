@@ -38,7 +38,7 @@ public class WishService {
 
     public WishListResponse findAllWish(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        List<Wish> wishList = wishRepository.findByUser(user);
+        List<Wish> wishList = wishRepository.findByUserId(userId);
 
         List<WishResponse> responseList = wishList.stream()
             .map(wish -> WishResponse.from(wish,
@@ -57,7 +57,7 @@ public class WishService {
         Product product = productRepository.findById(wishRequest.productId())
             .orElseThrow(ProductNotFoundException::new);
 
-        if (wishRepository.existsByProductAndUser(product, user)) {
+        if (wishRepository.existsByProductIdAndUserId(product.getId(), userId)) {
             throw new ExistWishException();
         }
 
@@ -71,7 +71,7 @@ public class WishService {
         Product product = productRepository.findById(wishRequest.productId())
             .orElseThrow(ProductNotFoundException::new);
 
-        Wish wish = wishRepository.findByProductAndUser(product, user)
+        Wish wish = wishRepository.findByProductIdAndUserId(wishRequest.productId(), userId)
             .orElseThrow(WishNotFoundException::new);
 
         if (wishRequest.count() == 0) {
@@ -88,10 +88,10 @@ public class WishService {
         Product product = productRepository.findById(productId)
             .orElseThrow(ProductNotFoundException::new);
 
-        if (!wishRepository.existsByProductAndUser(product, user)) {
+        if (!wishRepository.existsByProductIdAndUserId(productId, userId)) {
             throw new WishNotFoundException();
         }
 
-        wishRepository.deleteByProductAndUser(product, user);
+        wishRepository.deleteByProductIdAndUserId(productId, userId);
     }
 }

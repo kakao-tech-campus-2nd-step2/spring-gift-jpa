@@ -60,7 +60,7 @@ public class ProductService {
         if (!productRepository.existsById(productId)) {
             throw new ProductNotFoundException();
         }
-        wishRepository.deleteByProduct(product);
+        wishRepository.deleteByProductId(productId);
         productRepository.deleteById(productId);
     }
 }

@@ -9,13 +9,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
-    boolean existsByProductAndUser(Product product, User user);
+    boolean existsByProductIdAndUserId(Long productId, Long userId);
 
-    List<Wish> findByUser(User user);
+    List<Wish> findByUserId(Long userId);
 
-    void deleteByProductAndUser(Product product, User user);
+    void deleteByProductIdAndUserId(Long productId, Long userId);
 
-    Optional<Wish> findByProductAndUser(Product product, User user);
+    Optional<Wish> findByProductIdAndUserId(Long productId, Long userId);
 
-    void deleteByProduct(Product product);
+    void deleteByProductId(Long productId);
 }
