@@ -27,7 +27,7 @@ public class WishListController {
     @GetMapping("/wish")
     public ResponseEntity<?> getGiftList(@RequestAttribute("user") User user) {
         if (user != null) {
-            List<GiftResponse> gifts = giftService.getAllGifts();
+            List<GiftResponse> gifts = giftService.getAllGifts(null);
             return ResponseEntity.ok(gifts);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");

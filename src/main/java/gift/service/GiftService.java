@@ -7,6 +7,8 @@ import gift.model.GiftResponse;
 import gift.repository.GiftRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +25,8 @@ public class GiftService {
         this.giftRepository = giftRepository;
     }
 
-    public List<GiftResponse> getAllGifts() {
-        List<Gift> gifts = giftRepository.findAll();
+    public List<GiftResponse> getAllGifts(Pageable pageable) {
+        Page<Gift> gifts = giftRepository.findAll(pageable);
         return gifts.stream()
                 .map(GiftResponse::from)
                 .collect(Collectors.toList());

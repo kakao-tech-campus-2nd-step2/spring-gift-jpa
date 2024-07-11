@@ -3,6 +3,9 @@ package gift.controller;
 import gift.model.*;
 import gift.service.GiftService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +35,8 @@ public class GiftController {
     }
 
     @GetMapping
-    public List<GiftResponse> getAllGift() {
-        return giftService.getAllGifts();
+    public List<GiftResponse> getAllGift(@PageableDefault(sort="id",direction = Sort.Direction.ASC,size=5)Pageable pageable) {
+        return giftService.getAllGifts(pageable);
     }
 
     @PutMapping("/{id}")

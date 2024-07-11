@@ -27,7 +27,7 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String adminHome(Model model) {
-        Collection<GiftResponse> giftlist = giftService.getAllGifts();
+        Collection<GiftResponse> giftlist = giftService.getAllGifts(null);
         model.addAttribute("giftlist", giftlist);
         return "admin";
     }
