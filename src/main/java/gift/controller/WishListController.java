@@ -9,6 +9,8 @@ import gift.model.User;
 import gift.service.ProductService;
 import gift.service.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,16 +38,21 @@ public class WishListController {
         return "addWishProduct"; // addWishProduct.html로 이동
     }
 
-    @PostMapping
-    public String addWishProduct(@LoginUser User user, @RequestBody WishRequestDTO wishRequestDTO) {
-        wishService.addWishProduct(wishRequestDTO);
-        return "wishlist";
+    @PostMapping("/addWishProduct")
+    public ResponseEntity<String> addWishProduct(@LoginUser User user, @RequestBody WishRequestDTO wishRequestDTO, Model model) {
+        wishService.addWishProduct(user.getId(), wishRequestDTO);
+
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
 
     @DeleteMapping
-    public String deleteWishProduct(@LoginUser User user, @RequestBody ProductRequestDTO productRequestDTO) {
-        wishService.deleteWishProduct(user.getId(), productRequestDTO.id());
+    public String deleteWishProduct(@LoginUser User user, @RequestBody WishRequestDTO wishRequestDTO, Model model) {
+        wishService.deleteWishProduct(user.getId(), wishRequestDTO.productId());
+
+        WishResponseDTO wishProducts = wishService.getWishlist(user.getId());
+        model.addAttribute("wishProducts", wishProducts);
+
         return "wishlist";
     }
 }
