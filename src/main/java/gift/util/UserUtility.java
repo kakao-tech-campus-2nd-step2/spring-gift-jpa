@@ -42,12 +42,6 @@ public class UserUtility {
         return obj;
     }
 
-    public Object emailToObject(String email) {
-        Map<String, Object> obj = new HashMap<>();
-        obj.put("email", email);
-        return obj;
-    }
-
     public Claims tokenParser(String accessToken) {
         try {
             Jws<Claims> jwt;

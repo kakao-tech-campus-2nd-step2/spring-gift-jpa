@@ -20,7 +20,7 @@ create table product
     id          bigint AUTO_INCREMENT PRIMARY KEY,
     name        varchar(255),
     price       int,
-    imageUrl    varchar(255),
+    imageurl    varchar(255),
     wishlist_id BIGINT,
     FOREIGN KEY (wishlist_id) REFERENCES wishlist (id) ON DELETE SET NULL
 );
