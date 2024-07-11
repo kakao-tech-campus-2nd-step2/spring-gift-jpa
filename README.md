@@ -10,7 +10,7 @@
 #### DB 작성 & 초기 데이터 입력
 기존 SQL문으로 작성했던 `schema.sql`과 `data.sql`을 JPA를 사용하여 리팩터링한다.
 
-#### Productㅎ
+#### Product
 - `Product` 엔티티 클래스를 작성한다.
 - HashMap 기반 `ProductRepository` 리포지토리 클래스를 JPA로 리팩터링한다.
 - `@DataJpaTest`를 사용하여 학습 테스트를 진행한다.
@@ -35,7 +35,6 @@
 - `Product` 엔티티에 판매자 필드를 추가한다.
 - 상품 수정/삭제 요청 시 상품 판매자 or 관리자만 접근을 허용한다.
 - "카카오" 키워드가 들어간 상품 등록 요청 시 관리자만 접근을 허용한다.
-- product 조회시 찜(위시) 갯수도 함께 조회한다.
 
 ### User
 - role 필드는 enum을 사용한다.
