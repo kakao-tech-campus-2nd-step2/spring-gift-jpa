@@ -21,7 +21,7 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Member member) {
+    public ResponseEntity<Object> register(@RequestBody Member member) {
         try {
             memberService.register(member);
             return ResponseEntity.status(HttpStatus.CREATED).body(new TokenResponse(""));
@@ -32,7 +32,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Member member) {
+    public ResponseEntity<Object> login(@RequestBody Member member) {
         try {
             String token = memberService.login(member);
             return ResponseEntity.ok(new TokenResponse(token));
