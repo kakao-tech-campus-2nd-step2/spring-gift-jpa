@@ -34,11 +34,11 @@ public class WishRepositoryTest {
         Product product = new Product("치킨", 20000, "chicken.com");
         productRepository.save(product);
 
-        Wish wish = new Wish(member.getId(), product.getId());
+        Wish wish = new Wish(member, product);
         wishRepository.save(wish);
 
         List<Wish> wishList = wishRepository.findByMemberId(member.getId());
-        assertThat(wishList.get(0).getProductId()).isEqualTo(product.getId());
+        assertThat(wishList.get(0).getProduct().getId()).isEqualTo(product.getId());
     }
 
     @Test
@@ -50,7 +50,7 @@ public class WishRepositoryTest {
         Product product = new Product("치킨", 20000, "chicken.com");
         productRepository.save(product);
 
-        Wish wish = new Wish(member.getId(), product.getId());
+        Wish wish = new Wish(member, product);
         wishRepository.save(wish);
 
         wishRepository.delete(wish);
@@ -68,12 +68,12 @@ public class WishRepositoryTest {
         Product product = new Product("치킨", 20000, "chicken.com");
         productRepository.save(product);
 
-        Wish expected = new Wish(member.getId(), product.getId());
+        Wish expected = new Wish(member, product);
         Wish actual = wishRepository.save(expected);
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
-            () -> assertThat(actual.getMemberId()).isEqualTo(expected.getMemberId()),
-            () -> assertThat(actual.getProductId()).isEqualTo(expected.getProductId())
+            () -> assertThat(actual.getMember().getId()).isEqualTo(expected.getMember().getId()),
+            () -> assertThat(actual.getProduct().getId()).isEqualTo(expected.getProduct().getId())
         );
     }
 
@@ -89,8 +89,8 @@ public class WishRepositoryTest {
         Product product2 = new Product("피자", 30000, "pizza.com");
         productRepository.save(product2);
 
-        wishRepository.save(new Wish(member.getId(), product.getId()));
-        wishRepository.save(new Wish(member.getId(), product2.getId()));
+        wishRepository.save(new Wish(member, product));
+        wishRepository.save(new Wish(member, product2));
 
         List<Wish> wishlists = wishRepository.findByMemberId(member.getId());
         assertThat(wishlists).hasSize(2);

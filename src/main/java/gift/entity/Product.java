@@ -27,7 +27,7 @@ public class Product {
     @Column(name = "image_url", nullable=false)
     private String imageUrl;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "product")
     private List<Wish> wishList = new ArrayList<>();
 
     public Product() {}

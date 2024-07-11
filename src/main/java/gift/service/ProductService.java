@@ -29,6 +29,7 @@ public class ProductService {
     public void deleteById(Long id) {
         productRepository.deleteById(id);
     }
+
     public Long addProduct(Product product) {
         if(productRepository.existsByName(product.getName())) {
             return -1L;
