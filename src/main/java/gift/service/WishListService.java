@@ -32,8 +32,10 @@ public class WishListService {
     //해당 사용자의 위시리스트 조회
     @Transactional(readOnly = true)
     public List<WishList> getWishListItems(Long memberId) {
-        MemberEntity memberEntity = memberRepository.findById(memberId)
-                .orElseThrow(()->new NotFoundException("멤버가 존재하지 않습니다."));
+        Optional<MemberEntity> memberEntity = memberRepository.findById(memberId);
+        if(memberEntity.isEmpty()) {
+            throw new NotFoundException("멤버가 존재하지 않습니다.");
+        }
         List<WishListEntity> wishListEntities =  wishListRepository.findByMemberEntity(memberEntity);
         return wishListEntities.stream()
             .map(this::entityToDto)

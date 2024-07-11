@@ -47,7 +47,7 @@ public class MemberService {
     }
 
     private Member entityToDto(Optional<MemberEntity> memberEntity) {
-        return new Member(memberEntity.get().getEmail(), memberEntity.get().getPassword());
+        return new Member(memberEntity.get().getId(), memberEntity.get().getEmail(), memberEntity.get().getPassword());
     }
 
     private MemberEntity dtoToEntity(Member member) {

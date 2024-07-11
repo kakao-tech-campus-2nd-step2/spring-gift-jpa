@@ -59,7 +59,7 @@ public class ProductTest {
     @DisplayName("상품 생성")
     @DirtiesContext
     void createProduct() {
-        Product product = new Product("우유", 1000L, "https://example1.jpg");
+        Product product = new Product("우유", 1000L, "https://milk.jpg");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

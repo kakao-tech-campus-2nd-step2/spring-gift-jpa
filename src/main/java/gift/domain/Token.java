@@ -12,4 +12,8 @@ public class Token {
         return token;
     }
 
+    public void setToken() {
+        this.token = token;
+    }
+
 }

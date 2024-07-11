@@ -35,6 +35,12 @@ public class WishListEntity {
         this.productEntity = productEntity;
     }
 
+    public WishListEntity(Long id, MemberEntity memberEntity, ProductEntity productEntity) {
+        this.id = id;
+        this.memberEntity = memberEntity;
+        this.productEntity = productEntity;
+    }
+
     public Long getId() {
         return id;
     }

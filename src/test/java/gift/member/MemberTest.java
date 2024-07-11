@@ -15,8 +15,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class MemberTest {
@@ -50,6 +52,7 @@ public class MemberTest {
 
     @Test
     @DisplayName("로그인 확인")
+    @DirtiesContext
     void login() {
         Member member = new Member("admin@example.com", "1234");
 
@@ -58,7 +61,7 @@ public class MemberTest {
         headers.setBearerAuth(token);
 
         HttpEntity<Member> requestEntity = new HttpEntity<>(member, headers);
-        ResponseEntity<String> loginResponse = restTemplate.postForEntity(url + "/members/login", requestEntity, String.class);
+        ResponseEntity<String> loginResponse = restTemplate.exchange(url + "/members/login", POST, requestEntity, String.class);
 
         assertThat(loginResponse.getStatusCode()).isEqualTo(OK);
     }
