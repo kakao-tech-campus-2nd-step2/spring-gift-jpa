@@ -36,7 +36,6 @@ public class WishService {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
         Product product = productRepository.findByName(wishRequest.getProductName()).orElseThrow(() -> new IllegalArgumentException("Invalid product name"));
 
-//        Wish wish = new Wish(wishRequest.getProductName(), memberId);
         Wish wish = new Wish(product, member);
         wishRepository.save(wish);
         return new WishResponse(wish.getId(), wish.getProduct().getName(), wish.getMember().getId());
