@@ -1,56 +1,55 @@
 package gift.wishList;
 
 import gift.annotation.LoginUser;
+import gift.product.Product;
+import gift.product.ProductRepository;
 import gift.user.User;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/wishes")
 public class WishListController {
 
-    private final WishListRepository wishListRepository;
+    private final WishListService wishListService;
 
-    public WishListController(WishListRepository wishListRepository) {
-        this.wishListRepository = wishListRepository;
+    public WishListController(WishListService wishListService) {
+        this.wishListService = wishListService;
     }
 
     //생성
     @PostMapping
-    public ResponseEntity<?> addWishes(@LoginUser User user, @RequestBody WishListDTO wishListDTO){
-        WishList wishList = wishListRepository.save(new WishList(user.getId(), wishListDTO.getProductID(), wishListDTO.getCount()));
-        return ResponseEntity.ok(wishList);
+    @Transactional
+    public WishListDTO addWishes(@LoginUser User user, @RequestBody WishListDTO wishListDTO) {
+        return wishListService.addWish(wishListDTO, user);
     }
 
     //조회(userid)
     @GetMapping
-    public ResponseEntity<?> getWishesByUserID(@LoginUser User user){
-        List<WishList> wishLists = wishListRepository.findByUserID(user.getId());
-        return ResponseEntity.ok(wishLists);
+    @Transactional
+    public List<WishListDTO> getWishesByUser(@LoginUser User user) {
+        return wishListService.findByUser(user);
     }
 
     //수정(count) -> 0이면 삭제
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<?> updateWishesCount(@PathVariable long id, @RequestBody CountDTO count){
-        if(count.count == 0){
-            wishListRepository.deleteById(id);
-            return ResponseEntity.ok(null);
+    public WishListDTO updateWishesCount(@PathVariable long id, @RequestBody CountDTO count) {
+        if (count.count == 0) {
+            wishListService.deleteByID(id);
+            return null;
         }
-        Optional<WishList> wishList = wishListRepository.findById(id);
-        wishList.ifPresent(wish -> wish.setCount(count.getCount()));
-        return ResponseEntity.ok(wishList);
+        return wishListService.updateCount(count, id);
     }
 
     //삭제(id)
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteWishes(@PathVariable long id){
-        wishListRepository.deleteById(id);
-        return ResponseEntity.ok(null);
+    @Transactional
+    public WishListDTO deleteWishes(@PathVariable long id) {
+        wishListService.deleteByID(id);
+        return null;
     }
 
 }
