@@ -22,7 +22,7 @@ public class WishController {
     @GetMapping
     public ResponseEntity<List<Wish>> getWishes(@LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(403).build();
+            throw new IllegalArgumentException("Member not found or unauthorized");
         }
         List<Wish> wishes = wishService.getWishesByMemberId(member.getId());
         return ResponseEntity.ok(wishes);
@@ -31,7 +31,7 @@ public class WishController {
     @PostMapping
     public ResponseEntity<String> addWish(@RequestBody @Valid WishRequest request, @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(403).build();
+            throw new IllegalArgumentException("Member not found or unauthorized");
         }
         wishService.addWish(member.getId(), request.getProductId());
         return ResponseEntity.ok("Wish added successfully");
@@ -40,7 +40,7 @@ public class WishController {
     @DeleteMapping
     public ResponseEntity<String> removeWish(@RequestBody @Valid WishRequest request, @LoginMember Member member) {
         if (member == null) {
-            return ResponseEntity.status(403).build();
+            throw new IllegalArgumentException("Member not found or unauthorized");
         }
         wishService.removeWish(member.getId(), request.getProductId());
         return ResponseEntity.ok("Wish removed successfully");
