@@ -30,7 +30,7 @@ public class WishlistService {
         Member member = getMember(memberId);
         Product product = getProduct(productId);
 
-        Wishlist wishlist = new Wishlist(null, member.getId(), product.getId());
+        Wishlist wishlist = new Wishlist(member, product);
         wishlistRepository.save(wishlist);
     }
 
