@@ -17,6 +17,7 @@ public class Gift {
     @NotNull
     private int price;
     @NotNull
+    @Column(name = "imageurl")
     private String imageUrl;
 
     public Gift() {
