@@ -36,7 +36,7 @@ public class ProductService {
     public ProductResponse updateProduct(Long id, ProductRequest updatedProduct) {
         Product product = productRepository.findById(id).orElseThrow();
         product.update(updatedProduct);
-        return ProductResponse.from(product);
+        return ProductResponse.from(productRepository.save(product));
     }
 
     public void deleteProduct(Long id) {
