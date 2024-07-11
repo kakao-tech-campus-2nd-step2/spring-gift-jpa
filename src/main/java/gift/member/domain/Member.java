@@ -68,6 +68,6 @@ public class Member {
 
     @Override
     public int hashCode() {
-        return id.intValue();
+        return Objects.hash(id);
     }
 }

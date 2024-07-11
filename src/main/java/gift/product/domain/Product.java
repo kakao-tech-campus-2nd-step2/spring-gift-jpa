@@ -68,6 +68,6 @@ public class Product {
 
     @Override
     public int hashCode() {
-        return id.intValue();
+        return Objects.hash(id);
     }
 }
