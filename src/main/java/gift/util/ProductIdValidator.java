@@ -5,6 +5,8 @@ import gift.repository.ProductRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
+import java.util.Optional;
+
 public class ProductIdValidator implements ConstraintValidator<ProductIdConstraint, Long> {
 
     private final ProductRepository productRepository;
@@ -20,8 +22,8 @@ public class ProductIdValidator implements ConstraintValidator<ProductIdConstrai
 
     @Override
     public boolean isValid(Long productId, ConstraintValidatorContext cxt) {
-        Product product = productRepository.findById(productId);
-        if (product == null) return returnValidationResult("Such product doesn't exist", cxt);
+        Optional<Product> product = productRepository.findById(productId);
+        if (product.isEmpty()) return returnValidationResult("Such product doesn't exist", cxt);
         return true;
     }
 
