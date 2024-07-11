@@ -19,6 +19,12 @@ spring:
       mode: always
       schema-locations: classpath:/db/schema.sql
 
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show_sql: true
+
 logging:
   level:
     org:

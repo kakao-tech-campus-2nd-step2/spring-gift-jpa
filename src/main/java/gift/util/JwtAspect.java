@@ -19,11 +19,10 @@ public class JwtAspect {
     @Before("@annotation(gift.util.JwtAuthenticated)")
     public void authenticate() {
         String token = request.getHeader("Authorization");
-        if (token == null || !token.startsWith("Bearer ")) {
+        if (token == null) {
             throw new RuntimeException("JWT Token is missing");
         }
 
-        token = token.substring(7);
         String email = jwtUtil.extractUsername(token);
 
         if (!jwtUtil.validateToken(token, email)) {

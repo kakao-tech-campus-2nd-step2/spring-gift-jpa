@@ -17,6 +17,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     //Jwt
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
@@ -28,6 +29,7 @@ dependencies {
 
     // Spring AOP
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
