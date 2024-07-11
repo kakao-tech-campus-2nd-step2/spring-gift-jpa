@@ -30,4 +30,16 @@ public class ProductRequest {
         this.price = price;
         this.imageUrl = imageUrl;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
 }

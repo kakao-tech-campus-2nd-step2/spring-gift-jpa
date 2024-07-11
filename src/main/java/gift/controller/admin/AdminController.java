@@ -1,7 +1,9 @@
 package gift.controller.admin;
 
 import gift.DTO.Product;
+import gift.DTO.ProductRequest;
 import gift.service.ProductService;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
@@ -57,9 +59,9 @@ public class AdminController {
      * @return 같은 ID의 상품이 존재하지 않으면 201 Created, 아니면 400 Bad Request
      */
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        productService.addProduct(product);
-        return new ResponseEntity<>(product, HttpStatus.CREATED); // 201 Created
+    public ResponseEntity<ProductRequest> addProduct(@RequestBody @Valid ProductRequest productRequest) {
+        productService.addProduct(productRequest);
+        return new ResponseEntity<>(productRequest, HttpStatus.CREATED); // 201 Created
     }
 
     /**
@@ -82,8 +84,8 @@ public class AdminController {
      * @return 상품 정보 수정에 성공하면 200 OK, 해당 id의 상품이 없으면 404 NOT FOUND
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id,
-        @RequestBody Product updatedProduct) {
+    public ResponseEntity<ProductRequest> updateProduct(@PathVariable Long id,
+        @RequestBody @Valid ProductRequest updatedProduct) {
         productService.updateProduct(id, updatedProduct);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK); // 200 OK
     }

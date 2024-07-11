@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.DTO.Product;
+import gift.DTO.ProductRequest;
 import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.Optional;
@@ -29,13 +30,19 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public void addProduct(Product product) {
-        productRepository.save(product);
+    public void addProduct(ProductRequest productRequest) {
+        Product productEntity = new Product(productRequest.getName(),
+                                            productRequest.getPrice(),
+                                            productRequest.getImageUrl());
+        productRepository.save(productEntity);
     }
 
-    public void updateProduct(Long id, Product updatedProduct) {
+    public void updateProduct(Long id, ProductRequest updatedProduct) {
         Product product = getProductByIdOrThrow(id);
-        productRepository.save(updatedProduct);
+        product.setName(updatedProduct.getName());
+        product.setPrice(updatedProduct.getPrice());
+        product.setImageUrl(updatedProduct.getImageUrl());
+        productRepository.save(product);
     }
 
     public void deleteProduct(Long id) {
