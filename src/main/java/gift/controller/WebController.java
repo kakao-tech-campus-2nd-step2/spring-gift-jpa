@@ -3,6 +3,9 @@ package gift.controller;
 import gift.model.Product;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -35,8 +38,9 @@ public class WebController {
     }
 
     @GetMapping("/user-products")
-    public String showUserProductsPage(Model model) {
-        ResponseEntity<List<Product>> response = productController.getAllProducts();
+    public String showUserProductsPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        ResponseEntity<Page<Product>> response = productController.getAllProducts(pageable);
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
             return "error/500";
         }
@@ -45,8 +49,9 @@ public class WebController {
     }
 
     @GetMapping("/products")
-    public String viewProductPage(Model model) {
-        ResponseEntity<List<Product>> response = productController.getAllProducts();
+    public String viewProductPage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        ResponseEntity<Page<Product>> response = productController.getAllProducts(pageable);
         if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
             return "error/500";
         }
@@ -71,8 +76,8 @@ public class WebController {
         }
         ResponseEntity<Object> response = productController.addProduct(product, bindingResult);
         if (response.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            Map<String, String> errors = (Map<String, String>) response.getBody();
-            errors.forEach((key, value) -> model.addAttribute("valid_" + key, value));
+            Map<String, Object> errors = (Map<String, Object>) response.getBody();
+            errors.forEach((key, value) -> model.addAttribute("valid_" + key, value.toString()));
             return "product/new";
         }
         return "redirect:/products";
@@ -98,8 +103,8 @@ public class WebController {
         }
         ResponseEntity<Object> response = productController.updateProduct(id, product, bindingResult);
         if (response.getStatusCode() == HttpStatus.BAD_REQUEST) {
-            Map<String, String> errors = (Map<String, String>) response.getBody();
-            errors.forEach((key, value) -> model.addAttribute("valid_" + key, value));
+            Map<String, Object> errors = (Map<String, Object>) response.getBody();
+            errors.forEach((key, value) -> model.addAttribute("valid_" + key, value.toString()));
             return "product/edit";
         }
         return "redirect:/products";

@@ -2,14 +2,16 @@ package gift.controller;
 
 import gift.model.Product;
 import gift.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/api/products")
@@ -23,7 +25,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addProduct(@RequestBody Product product, BindingResult bindingResult) {
+    public ResponseEntity<Object> addProduct(@Valid @RequestBody Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
@@ -32,8 +34,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
+        return productService.getAllProducts(pageable);
     }
 
     @GetMapping("/{id}")
@@ -46,7 +48,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateProduct(@PathVariable Long id, @RequestBody Product product, BindingResult bindingResult) {
+    public ResponseEntity<Object> updateProduct(@Valid @PathVariable Long id, @RequestBody Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
