@@ -1,6 +1,9 @@
 package gift.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name="member")
@@ -18,6 +21,18 @@ public class Member {
         @Enumerated(EnumType.STRING)
         @Column(name="role")
         private Role role;
+
+        @OneToMany(mappedBy = "member")
+        @JsonManagedReference
+        private List<Wish> wishes;
+
+        public Member(){}
+
+        public Member(String email, String password, Role role){
+                this.email = email;
+                this.password = password;
+                this.role = role;
+        }
 
         public Long getId() {
                 return id;
@@ -51,11 +66,11 @@ public class Member {
                 this.role = role;
         }
 
-        public Member(){}
+        public List<Wish> getWishes() {
+                return wishes;
+        }
 
-        public Member(String email, String password, Role role){
-                this.email = email;
-                this.password = password;
-                this.role = role;
+        public void setWishes(List<Wish> wishes) {
+                this.wishes = wishes;
         }
 }

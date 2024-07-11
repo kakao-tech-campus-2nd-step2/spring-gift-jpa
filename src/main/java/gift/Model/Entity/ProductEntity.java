@@ -1,8 +1,11 @@
 package gift.Model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 @Entity
 @Table(name="product")
@@ -21,6 +24,18 @@ public class Product {
 
         @Column(name = "image_url")
         private String imageUrl;
+
+        @OneToMany(mappedBy = "product")
+        @JsonManagedReference
+        private List<Wish> wishes;
+
+        public Product(){}
+
+        public Product(String name, int price, String imageUrl){
+                this.name = name;
+                this.price = price;
+                this.imageUrl = imageUrl;
+        }
 
         public Long getId() {
                 return id;
@@ -53,12 +68,13 @@ public class Product {
         public void setImageUrl(String imageUrl) {
                 this.imageUrl = imageUrl;
         }
-        public Product(){}
 
-        public Product(String name, int price, String imageUrl){
-                this.name = name;
-                this.price = price;
-                this.imageUrl = imageUrl;
+        public List<Wish> getWishes() {
+                return wishes;
+        }
+
+        public void setWishes(List<Wish> wishes) {
+                this.wishes = wishes;
         }
 }
 

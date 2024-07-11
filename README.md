@@ -1,4 +1,4 @@
-# spring-gift-product
+# spring-gift-productEntity
 
 1주차
 step-1의 구현 사항
@@ -11,9 +11,9 @@ step-1의 구현 사항
 
 step-2의 구현 사항
 1. thymeleaf를 이용한 관리자 페이지 구현
-   1. 조회 시 사용할 products.html의 구현(id, name, price, imageUrl을 컨트롤러에서 받아 테이블 형태로 화면에 출력)
-   2. products.html에 사용할 css파일(style.css) 구현
-   3. 조회 기능을 담당하는 메소드에서 product.html을 사용하도록 연결
+   1. 조회 시 사용할 productEntities.html의 구현(id, name, price, imageUrl을 컨트롤러에서 받아 테이블 형태로 화면에 출력)
+   2. productEntities.html에 사용할 css파일(style.css) 구현
+   3. 조회 기능을 담당하는 메소드에서 productEntity.html을 사용하도록 연결
    4. 추가 기능을 웹으로 구현하기 위해 add.html 및 menu.css 추가
    5. 수정 기능을 웹으로 구현하기 위해 edit.html 및 menu.css 추가
    6. 웹 화면에서 추가, 삭제, 수정, 조회 기능을 담당하는 adminController 클래스 추가
@@ -32,7 +32,7 @@ step-3의 구현 사항
       2. 수정 기능 : 파라미터로 Long id 및 Product를 받으며, sql구문 및 jdbcTemplate의 update 메소드를 통해 수정
       3. 조회 기능 : 전체 데이터를 조회할 경우 query를 통해 받으며, 파라미터로 Long id를 입력받아 queryForObject를 이용하여 받음
    4. 기타 기능
-      1. url, user, password를 빠르게 입력하기 위하여 getConnection() 구현
+      1. url, memberDTO, password를 빠르게 입력하기 위하여 getConnection() 구현
       2. application.properties에서 url을 "jdbc:h2:mem:test"으로 지정
 2. step-2에서 미흡한 사항 보완
    1. ProductController에서 추가, 삭제, 수정 기능에서 성공 여부 판별을 위해 if문 사용 : Database 사용 시 다시 조회해서 확인해야하는 불편함 있음
@@ -80,3 +80,11 @@ step-3의 구현 사항
       => 각각의 데이터베이스를 담당할 MemberRepository, ProductRepository, WishlistRepository 생성
       => 테스트를 위해 data.sql 추가 및 데이터 삽입
       => 테스트를 위해 각 데이터베이스 별 테스트 코드 작성, 크게 추가와 interface에 추가한 기능 확인용으로 사용
+
+2. step-2의 구현사항
+   1. 각 데이터베이스의 연관 관계를 설정
+      => 연관 관계가 있는 것 : Wishlist(다) <-> Member(일) (다대일 및 일대다 관계), Product(일) <-> Wishlist(다) (다대일 및 일대다 관계)
+      => 일대다 관계에서 일에 해당하는 데이터 삭제 시 다에 해당하는 데이터도 삭제해야 함(Ex. 상품 목록에 있는 상품이 사라지면 위시리스트의 상품도 사라져야 함)
+   2. step-1에서 미흡한 사항 보완
+      1. Repository와 매핑되는 Entity를 Controller 단계에서 그대로 사용하는 문제
+         => DTO와 Entity를 분리하여 사용(리팩토링 진행)
