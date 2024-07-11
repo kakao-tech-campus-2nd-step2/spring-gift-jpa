@@ -12,9 +12,8 @@
     <thead>
     <tr>
         <th scope="col">Id</th>
-        <th scope="col">Name</th>
-        <th scope="col">Price</th>
-        <th scope="col">Image</th>
+        <th scope="col">ProductId</th>
+        <th scope="col">Count</th>
         <th scope="col">Option</th>
     </tr>
     </thead>
@@ -37,18 +36,16 @@
             success: function (data) {
                 var tbody = $('#product-tbody');
                 tbody.empty(); // 초기화
-
                 // 데이터에 따라 테이블 행을 생성
-                data.forEach(function (product) {
+                data.forEach(function(wishProduct) {
                     // 한 행의 내용
                     var row = `
                         <tr>
-                            <td>${product.id}</td>
-                            <td>${product.name}</td>
-                            <td>${product.price}</td>
-                            <td><img src="${product.imageUrl}" alt="image"/></td>
+                            <td>${wishProduct.userId}</td>
+                            <td>${wishProduct.productId}</td>
+                            <td>${wishProduct.count}</td>
                             <td>
-                                <a href="#" onclick="deleteFunction(${product.id})">삭제</a>
+                                <a href="#" onclick="deleteFunction(${wishProduct.productId})">삭제</a>
                             </td>
                         </tr>
                     `;

@@ -58,3 +58,9 @@
 # spring-gift-jpa
 ### step 0. 기본 코드 준비
 - 새로운 리포지토리를 fork 해와 이전 코드를 붙여 넣기
+### step 1. 엔티티 매핑
+- JPA를 이용하여 엔티티를 DB의 테이블과 매핑시키기
+- 필요한 사항
+    1. 코드 리펙터링 : Domain 객체를 엔티티로 사용
+    2. 코드 리펙터링 : Spring Application 동작 시 수행되던 table 생성 로직 삭제
+    3. 코드 리펙터링 : Repository 클래스 내용 JPA에 맞게 변경

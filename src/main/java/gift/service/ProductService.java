@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -34,27 +35,22 @@ public class ProductService {
         return products;
     }
     /*
-     * DB에 저장된 모든 Product의 ID를 불러와 전달해주는 로직
+     * DB에 저장된 Product를 ID를 기준으로 찾아 반환
      */
-    public List<Long> loadAllId(){
-        return productRepository.findAllId();
-    }
-
     public ProductDTO loadOneProduct(Long id){
-        Product byId = productRepository.findById(id);
+        Product product = productRepository.findById(id).orElseThrow(NoSuchFieldError::new);
         return new ProductDTO(
-                byId.getId(),
-                byId.getName(),
-                byId.getPrice(),
-                byId.getImageUrl()
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl()
         );
     }
     /*
-     * 객체를 전달받아 DB에 저장해주는 로직
+     * 객체를 전달받아 DB에 저장
      */
     public void createProduct(ProductDTO product){
         Product productEntity = new Product(
-                product.getId(),
                 product.getName(),
                 product.getPrice(),
                 product.getImageUrl()
@@ -65,26 +61,29 @@ public class ProductService {
      * DB에 있는 특정한 ID의 객체를 삭제해주는 로직
      */
     public void deleteProduct(Long id){
-        productRepository.delete(id);
+        productRepository.deleteById(id);
     }
     /*
      * 현재 DB에 존재하는 Product를 새로운 Product로 대체하는 로직
      */
     public void updateProduct(ProductDTO product, Long id){
-        Product productEntity = new Product(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl()
-        );
-        productRepository.update(productEntity, id);
+        Optional<Product> byId = productRepository.findById(id);
+        if(byId.isEmpty()){
+            throw new NullPointerException("해당 id를 가진 객체는 존재하지 않습니다");
+        }
+        Product product1 = byId.get();
+
+        product1.setName(product.getName());
+        product1.setPrice(product.getPrice());
+        product1.setImageUrl(product.getImageUrl());
+
+        productRepository.save(product1);
     }
     /*
      * 새로운 ID가 기존 ID와 중복되었는지를 확인하는 로직
      */
     public boolean isDuplicate(Long id){
-        List<Long> allId = loadAllId();
-        return allId.contains(id);
+        return productRepository.existsById(id);
     }
 
 }

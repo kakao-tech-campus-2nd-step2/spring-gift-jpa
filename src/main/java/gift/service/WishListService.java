@@ -3,6 +3,7 @@ package gift.service;
 import gift.DTO.WishProductDTO;
 import gift.domain.WishProduct;
 import gift.repository.WishListRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,11 +20,17 @@ public class WishListService {
      * 특정 상품을 위시리스트에 추가하는 로직
      */
     public void addWishList(WishProductDTO wishProductDTO){
-        WishProduct wishProduct = new WishProduct(
-                wishProductDTO.getUserId(),
-                wishProductDTO.getProductId()
-        );
+        String userId = wishProductDTO.getUserId();
+        Long productId = wishProductDTO.getProductId();
 
+        if(wishListRepository.existsByUserIdAndProductId(userId, productId)){
+            WishProduct wishProduct = wishListRepository.findByUserIdAndProductId(userId, productId);
+            wishProduct.changeCount(wishProduct.getCount() + 1);
+            wishListRepository.save(wishProduct);
+            return;
+        }
+
+        WishProduct wishProduct = new WishProduct(userId, productId);
         wishListRepository.save(wishProduct);
     }
     /*
@@ -32,11 +39,12 @@ public class WishListService {
     public List<WishProductDTO> loadWishList(String userId){
         List<WishProductDTO> list = new ArrayList<>();
 
-        List<WishProduct> byEmail = wishListRepository.findByUserId(userId);
-        for (WishProduct wishProduct : byEmail) {
+        List<WishProduct> wishes = wishListRepository.findByUserId(userId);
+        for (WishProduct wishProduct : wishes) {
             WishProductDTO wishProductDTO = new WishProductDTO(
                     wishProduct.getUserId(),
-                    wishProduct.getProductId()
+                    wishProduct.getProductId(),
+                    wishProduct.getCount()
             );
             list.add(wishProductDTO);
         }
@@ -44,10 +52,19 @@ public class WishListService {
         return list;
     }
     /*
+     * 특정 유저의 특정 위시리스트 물품의 수량을 변경하는 로직
+     */
+    public void updateWishProduct(String userId, Long productId, int count){
+        WishProduct wish = wishListRepository.findByUserIdAndProductId(userId, productId);
+        wish.changeCount(count);
+        wishListRepository.save(wish);
+    }
+    /*
      * 특정 유저의 특정 위시리스트 물품을 삭제하는 로직
      */
-    public void deleteWishProduct(String email, Long id){
-        wishListRepository.delete(email, id);
+    @Transactional
+    public void deleteWishProduct(String userId, Long productId){
+        wishListRepository.deleteByUserIdAndProductId(userId, productId);
     }
 
 }

@@ -35,7 +35,7 @@ public class UserController {
     }
     /*
      * 회원가입
-     * 회원가입 성공시 : 201 Created 및 Token 반환
+     * 회원가입 성공시 : 201 Created
      */
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody UserDTO user){
@@ -44,5 +44,33 @@ public class UserController {
 
         userService.createUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+    /*
+     * 모든 User의 정보 가져오기
+     */
+    @GetMapping("/users")
+    public ResponseEntity<List<UserDTO>> readUsers() {
+        List<UserDTO> all = userService.findAll();
+
+        return new ResponseEntity<>(all, HttpStatus.OK);
+    }
+    /*
+     * 유저 정보 수정하기
+     */
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<Void> updateUsers(@PathVariable("userId") String userId){
+        if(!userService.isDuplicate(userService.loadOneUser(userId)))
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    /*
+     * 유저 정보 삭제하기
+     */
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<Void> deleteUsers(@PathVariable("userId") String userId){
+        userService.delete(userId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

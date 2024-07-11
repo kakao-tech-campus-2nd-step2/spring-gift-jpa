@@ -11,37 +11,7 @@
 <div class="header" id="header">
 
 </div>
-<h1>Administrator Page</h1>
-<div class="form-inline">
-    <label for="id">Id:</label>
-    <input type="text" id="id" name="id" required>
-
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
-
-    <label for="price">Price:</label>
-    <input type="number" id="price" name="price" required>
-
-    <label for="image">Image:</label>
-    <input type="text" id="image" name="imageUrl" required>
-
-    <input type="button" id="post" value="추가">
-</div>
-<div class="form-inline">
-    <label for="p_id">Id:</label>
-    <input type="text" id="p_id" name="id" required>
-
-    <label for="p_name">Name:</label>
-    <input type="text" id="p_name" name="name" required>
-
-    <label for="p_price">Price:</label>
-    <input type="number" id="p_price" name="price" required>
-
-    <label for="p_image">Image:</label>
-    <input type="text" id="p_image" name="imageUrl" required>
-
-    <input type="button" id="put" value="수정">
-</div>
+<h1>Product List Page</h1>
 <table id="product-table">
     <thead>
     <tr>
@@ -49,7 +19,6 @@
         <th scope="col">Name</th>
         <th scope="col">Price</th>
         <th scope="col">Image</th>
-        <th scope="col">Option</th>
         <th scope="col">Choose</th>
     </tr>
     </thead>
@@ -79,9 +48,6 @@
                             <td>${product.price}</td>
                             <td><img src="${product.imageUrl}" alt="image"/></td>
                             <td>
-                                <a href="#" onclick="deleteFunction(${product.id})">삭제</a>
-                            </td>
-                            <td>
                                 <a href="#" onclick="chooseFunction(${product.id})">추가</a>
                             </td>
                         </tr>
@@ -97,106 +63,16 @@
         if(localStorage.getItem('token')){
             var inline = $('#header');
             inline.empty();
-            inline.append('<a href="wishList" className="header-link">위시리스트</a>\n' +
+            inline.append('<a href="/wishList" className="header-link">위시리스트</a>\n' +
                 '            <a href="" onclick="logoutFunction()" className="header-link">로그아웃</a>');
         }
         else {
             var inline = $('#header');
             inline.empty();
-            inline.append('<a href="login" className="header-link">로그인</a>\n' +
-                '            <a href="register" className="header-link">회원가입</a>');
+            inline.append('<a href="/login" className="header-link">로그인</a>\n' +
+                '            <a href="/register" className="header-link">회원가입</a>');
         }
     });
-
-    $("#post").click(function () {
-        var product = {
-            id: $("#id").val(),
-            name : $("#name").val(),
-            price : $("#price").val(),
-            imageUrl : $("#image").val()
-        }
-
-        $.ajax({
-            type : "POST",
-            url : "api/products",
-            contentType: "application/json",
-            datatype : "json",
-            data : JSON.stringify(product),
-            success : function(res){
-                var tbody = $('#product-tbody');
-                var row = `
-                <tr>
-                    <td>${product.id}</td>
-                    <td>${product.name}</td>
-                    <td>${product.price}</td>
-                    <td><img src="${product.imageUrl}" alt="image"/></td>
-                    <td>
-                        <a href="" onclick="deleteFunction(${product.id})">삭제</a>
-                    </td>
-                    <td>
-                        <a href="" onclick="chooseFunction(${product.id})">추가</a>
-                    </td>
-                </tr>
-            `;
-                tbody.append(row);
-            },
-            error : function(err){
-                var text = err.responseText;
-                if(text) {
-                    var errors = JSON.parse(text);
-                    alert("[Name error : " + errors.name + "]");
-                }
-                else {
-                    alert("[Id error : " + err.status + ", 중복된 ID는 사용할 수 없습니다]");
-                }
-            }
-        })
-    });
-
-    function deleteFunction(id){
-        $.ajax({
-            type: "DELETE",
-            url: "api/products/" + id,
-            success : function(res){
-                $('#product-table').find('tr[data-id="' + id + '"]').remove();
-                alert("상품 ID : " + id + "가 삭제되었습니다.");
-                location.reload();
-            },
-            error : function(error){
-                alert("error occur! [error code : " + err.status + "]");
-            }
-        })
-    }
-
-    $("#put").click(function(){
-        var product ={
-            id : $("#p_id").val(),
-            name : $("#p_name").val(),
-            price : $("#p_price").val(),
-            imageUrl : $("#p_image").val()
-        }
-
-        $.ajax({
-            type : "PUT",
-            url : "api/products/" + product.id,
-            contentType: "application/json",
-            datatype : "json",
-            data : JSON.stringify(product),
-            success : function(res){
-                location.reload();
-            },
-            error : function(err){
-                var text = err.responseText;
-                if(text) {
-                    var errors = JSON.parse(text);
-                    alert("[Name error : " + errors.name + "]");
-                }
-                else {
-                    alert("[Id error : " + err.status + ", 등록되지 않은 상품을 수정할 수 없습니다]");
-                }
-            }
-        })
-    })
 
     function chooseFunction(id){
         $.ajax({
@@ -217,7 +93,6 @@
 
     function logoutFunction(){
         localStorage.removeItem('token');
-        localStorage.removeItem('email');
         backToHome();
     }
 </script>
