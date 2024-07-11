@@ -110,4 +110,30 @@ class MemberRepositoryTest {
                 () -> assertThat(foundMember.getWishes().get(0)).isEqualTo(expectedWish)
         );
     }
+
+    @Test
+    @DisplayName("멤버->위시 삭제 전파 테스트")
+    void testCascadeRemove(){
+        // given
+        entityManager.persist(expectedProduct);
+
+        expectedProduct.addWish(expectedWish);
+        Member savedMember = members.save(expectedMember);
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        Member foundMember = members.findById(savedMember.getId()).get();
+        members.deleteById(foundMember.getId());
+        entityManager.flush();
+        entityManager.clear();
+
+        //then
+        List<Member> findMembers = members.findAll();
+        Wish deletedWish = entityManager.find(Wish.class, expectedWish.getId());
+        assertAll(
+                () -> assertThat(findMembers.size()).isEqualTo(0),
+                () -> assertThat(deletedWish).isNull()
+        );
+    }
 }
