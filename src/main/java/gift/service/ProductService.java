@@ -1,8 +1,8 @@
 package gift.service;
 
+import gift.domain.Product;
 import gift.entity.ProductEntity;
 import gift.error.AlreadyExistsException;
-import gift.domain.Product;
 import gift.error.NotFoundException;
 import gift.repository.ProductRepository;
 import java.util.List;
@@ -22,7 +22,7 @@ public class ProductService {
     //전체 상품 조회 기능
     @Transactional(readOnly = true)
     public List<Product> getAllProducts() {
-        List<ProductEntity> productEntities =  productRepository.findAll();
+        List<ProductEntity> productEntities = productRepository.findAll();
         return productEntities.stream()
             .map(this::entityToDto)
             .collect(Collectors.toList());
@@ -85,7 +85,8 @@ public class ProductService {
     }
 
     private Product entityToDto(ProductEntity productEntity) {
-        return new Product(productEntity.getName(), productEntity.getPrice(), productEntity.getImageUrl());
+        return new Product(productEntity.getName(), productEntity.getPrice(),
+            productEntity.getImageUrl());
     }
 
     private ProductEntity dtoToEntity(Product dto) {

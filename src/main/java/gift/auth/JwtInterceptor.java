@@ -16,14 +16,16 @@ public class JwtInterceptor implements HandlerInterceptor {
     private final String header;
     private final String prefix;
 
-    public JwtInterceptor(JwtUtil jwtUtil, @Value("${jwt.header}") String header, @Value("${jwt.prefix}") String prefix) {
+    public JwtInterceptor(JwtUtil jwtUtil, @Value("${jwt.header}") String header,
+        @Value("${jwt.prefix}") String prefix) {
         this.jwtUtil = jwtUtil;
         this.header = header;
         this.prefix = prefix;
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+        Object handler) throws Exception {
 
         if (HttpMethod.OPTIONS.matches(request.getMethod())) {
             return true;

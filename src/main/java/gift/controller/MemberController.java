@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.domain.Token;
 import gift.domain.Member;
+import gift.domain.Token;
 import gift.service.MemberService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/members")
 public class MemberController {
+
     private MemberService memberService;
 
     public MemberController(MemberService memberService) {

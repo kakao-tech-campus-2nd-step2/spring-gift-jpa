@@ -11,6 +11,7 @@ public class Member {
     @NotNull(message = "email을 작성해주세요")
     @Email
     private String email;
+
     @Size(min = 4, max = 20, message = "비밀번호는 4~20자 사이로 작성해주세요")
     private String password;
 

@@ -1,9 +1,5 @@
 package gift.error;
 
-import gift.error.ForbiddenException;
-import gift.error.UnauthorizedException;
-import gift.error.AlreadyExistsException;
-import gift.error.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -14,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNotFoundException(NotFoundException ex, Model model) {
@@ -30,8 +27,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleValidationException(MethodArgumentNotValidException ex, Model model){
-        model.addAttribute("errorMessage", "유효성 검사 실패: " + ex.getBindingResult().getFieldError().getDefaultMessage());
+    public String handleValidationException(MethodArgumentNotValidException ex, Model model) {
+        model.addAttribute("errorMessage",
+            "유효성 검사 실패: " + ex.getBindingResult().getFieldError().getDefaultMessage());
         return "error";
     }
 

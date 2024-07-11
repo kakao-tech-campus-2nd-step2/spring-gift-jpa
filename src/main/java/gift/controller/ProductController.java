@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.error.NotFoundException;
 import gift.domain.Product;
+import gift.error.NotFoundException;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
@@ -92,7 +92,8 @@ public class ProductController {
 
     //상품 수정 기능
     @PutMapping("/{id}")
-    public String updateProduct(@PathVariable("id") Long id, @Valid @ModelAttribute Product updateProduct) {
+    public String updateProduct(@PathVariable("id") Long id,
+        @Valid @ModelAttribute Product updateProduct) {
         productService.updateProduct(id, updateProduct);
         return "redirect:/products/" + id;
     }

@@ -1,10 +1,10 @@
 package gift.controller;
 
-import gift.error.UnauthorizedException;
-import gift.util.JwtUtil;
 import gift.domain.Product;
 import gift.domain.WishList;
+import gift.error.UnauthorizedException;
 import gift.service.WishListService;
+import gift.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -43,7 +43,8 @@ public class WishListController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<?> addWishListItem(HttpServletRequest request, @Valid @RequestBody Product product) {
+    public ResponseEntity<?> addWishListItem(HttpServletRequest request,
+        @Valid @RequestBody Product product) {
         String token = extractToken(request);
         Claims claims = jwtUtil.extractAllClaims(token);
         Number memberId = (Number) claims.get("id");

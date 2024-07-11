@@ -39,7 +39,7 @@ public class WishList {
         this.productId = productId;
     }
 
-    public static class JoinedWishList{
+    public static class JoinedWishList {
 
         private Long id;
         private Long memberId;
@@ -101,6 +101,5 @@ public class WishList {
         }
 
     }
-
 
 }
