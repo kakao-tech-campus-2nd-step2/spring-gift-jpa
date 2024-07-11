@@ -7,6 +7,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+
+import java.util.List;
+
 
 @Entity
 @Table(name = "users")
@@ -24,8 +29,8 @@ public class User {
     @Column(name="role", nullable = false)
     private String role;
 
-//    @OneToMany(mappedBy = "user")
-//    private Set<Wish> wishes;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Wish> wishes;
 
     public User() { }
 
