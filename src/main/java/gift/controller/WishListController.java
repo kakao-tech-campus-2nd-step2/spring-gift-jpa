@@ -1,23 +1,21 @@
 package gift.controller;
 
 import gift.common.annotation.LoginUser;
-import gift.model.product.ProductListResponse;
+import gift.common.dto.PageResponse;
 import gift.model.user.LoginUserRequest;
-import gift.model.user.User;
 import gift.model.wish.WishDeleteRequest;
-import gift.model.wish.WishListResponse;
 import gift.model.wish.WishRequest;
-import gift.service.UserService;
+import gift.model.wish.WishResponse;
 import gift.service.WishService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,8 +29,12 @@ public class WishListController {
     }
 
     @GetMapping("")
-    public ResponseEntity<WishListResponse> getAllWishList(@LoginUser LoginUserRequest user) {
-        WishListResponse responses = wishService.findAllWish(user.id());
+    public ResponseEntity<PageResponse<WishResponse>> getAllWishList(
+        @LoginUser LoginUserRequest user,
+        @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+        @RequestParam(value = "size", required = false, defaultValue = "10") int size
+    ) {
+        PageResponse responses = wishService.findAllWish(user.id(), page, size);
         return ResponseEntity.ok().body(responses);
     }
 

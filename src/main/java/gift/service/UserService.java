@@ -3,15 +3,10 @@ package gift.service;
 import gift.common.auth.JwtTokenProvider;
 import gift.common.exception.ExistUserException;
 import gift.common.exception.UserNotFoundException;
-import gift.model.product.Product;
-import gift.model.product.ProductListResponse;
-import gift.model.product.ProductResponse;
 import gift.model.user.User;
 import gift.model.user.UserRequest;
 import gift.model.user.UserResponse;
 import gift.repository.UserRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

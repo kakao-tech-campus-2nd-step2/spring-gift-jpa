@@ -1,22 +1,22 @@
 package gift.service;
 
+import gift.common.dto.PageResponse;
 import gift.common.exception.ExistWishException;
 import gift.common.exception.ProductNotFoundException;
 import gift.common.exception.UserNotFoundException;
 import gift.common.exception.WishNotFoundException;
 import gift.model.product.Product;
-import gift.model.product.ProductListResponse;
-import gift.model.product.ProductResponse;
 import gift.model.user.User;
 import gift.model.wish.Wish;
-import gift.model.wish.WishListResponse;
 import gift.model.wish.WishRequest;
 import gift.model.wish.WishResponse;
 import gift.repository.ProductRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishRepository;
 import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,18 +36,18 @@ public class WishService {
     }
 
 
-    public WishListResponse findAllWish(Long userId) {
+    public PageResponse<WishResponse> findAllWish(Long userId, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("id").descending());
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        List<Wish> wishList = wishRepository.findByUserId(userId);
+        Page<Wish> wishList = wishRepository.findByUserId(userId, pageRequest);
 
-        List<WishResponse> responseList = wishList.stream()
+        List<WishResponse> wishResponses = wishList.getContent().stream()
             .map(wish -> WishResponse.from(wish,
                 productRepository.findById(wish.getProduct().getId()).orElseThrow(
                     ProductNotFoundException::new)))
             .toList();
-
-        WishListResponse responses = new WishListResponse(responseList);
-        return responses;
+        int totalCount = (int) wishList.getTotalElements();
+        return new PageResponse<>(wishResponses, page, size, totalCount);
     }
 
     @Transactional
