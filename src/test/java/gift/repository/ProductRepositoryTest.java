@@ -2,6 +2,7 @@ package gift.repository;
 
 import gift.domain.Member;
 import gift.domain.Product;
+import gift.domain.Wish;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,28 +25,34 @@ class ProductRepositoryTest {
     private String expectedName;
     private int expectedPrice;
     private String expectedImageUrl;
-    private Product expected;
+    private Product expectedProduct;
+    private Member expectedMember;
+    private Wish expectedWish;
 
     @BeforeEach
-    void setupProduct(){
+    void setUp(){
         expectedName = "아메리카노";
         expectedPrice = 2000;
         expectedImageUrl = "http://example.com/americano";
-        expected = new Product(expectedName, expectedPrice, expectedImageUrl);
+
+        expectedProduct = new Product(expectedName, expectedPrice, expectedImageUrl);
+
+        expectedMember = new Member("a@a.com", "1234");
+        expectedWish = new Wish(expectedMember, expectedProduct, 1);
     }
 
     @Test
     @DisplayName("상품 저장 테스트")
     void save() {
         // when
-        Product actual = products.save(expected);
+        Product actual = products.save(expectedProduct);
 
         // then
         assertAll(
                 ()->assertThat(actual.getId()).isNotNull(),
-                ()->assertThat(actual.getName()).isEqualTo(expected.getName()),
-                ()->assertThat(actual.getPrice()).isEqualTo(expected.getPrice()),
-                ()->assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl())
+                ()->assertThat(actual.getName()).isEqualTo(expectedProduct.getName()),
+                ()->assertThat(actual.getPrice()).isEqualTo(expectedProduct.getPrice()),
+                ()->assertThat(actual.getImageUrl()).isEqualTo(expectedProduct.getImageUrl())
         );
     }
 
@@ -53,7 +60,7 @@ class ProductRepositoryTest {
     @DisplayName("상품 아이디 조회 테스트")
     void findById() {
         // given
-        Product savedProduct = products.save(expected);
+        Product savedProduct = products.save(expectedProduct);
         entityManager.flush();
         entityManager.clear();
 
@@ -73,7 +80,7 @@ class ProductRepositoryTest {
     @DisplayName("상품 이름 조회 테스트")
     void findByName() {
         // given
-        Product savedProduct = products.save(expected);
+        Product savedProduct = products.save(expectedProduct);
         entityManager.flush();
         entityManager.clear();
 
@@ -110,7 +117,7 @@ class ProductRepositoryTest {
     @DisplayName("상품 아이디로 삭제 테스트")
     void deleteById() {
         // given
-        Product savedProduct = products.save(expected);
+        Product savedProduct = products.save(expectedProduct);
 
         // when
         products.deleteById(savedProduct.getId());
@@ -119,6 +126,27 @@ class ProductRepositoryTest {
         List<Product> findProducts = products.findAll();
         assertAll(
                 () -> assertThat(findProducts.size()).isEqualTo(0)
+        );
+    }
+
+    @Test
+    @DisplayName("상품->위시 영속 전파 테스트")
+    void testCascadePersist(){
+        // given
+        entityManager.persist(expectedMember);
+
+        // when
+        expectedProduct.addWish(expectedWish);
+        Product savedProduct = products.save(expectedProduct);
+        entityManager.flush();
+        entityManager.clear();
+
+        // then
+        Product foundProduct = products.findById(savedProduct.getId()).get();
+        assertAll(
+                () -> assertThat(foundProduct).isEqualTo(savedProduct),
+                () -> assertThat(foundProduct.getWishes().size()).isEqualTo(1),
+                () -> assertThat(foundProduct.getWishes().get(0)).isEqualTo(expectedWish)
         );
     }
 
