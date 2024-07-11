@@ -11,6 +11,7 @@ public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String secretKey;
+
     public String createJWT(Long id) {
         Claims claims = Jwts.claims();
         claims.put("id", id);
@@ -26,7 +27,7 @@ public class JwtUtil {
         return claims.get("id", Long.class);
     }
 
-    public String getJWT(String authorization){
+    public String getJWT(String authorization) {
         if (authorization != null && authorization.startsWith("Bearer ")) {
             return authorization.substring(7);
         }

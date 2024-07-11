@@ -32,11 +32,12 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes;
 
-    public Product() {}
+    public Product() {
+    }
 
     public Product(long id, String name, int price, String imageUrl) {
         ProductNameValidationUtil.isValidProductName(name);
-        this.id =  id;
+        this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

@@ -29,7 +29,8 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes;
 
-    public Member() {}
+    public Member() {
+    }
 
     public Member(String email, String password) {
         this.email = email;

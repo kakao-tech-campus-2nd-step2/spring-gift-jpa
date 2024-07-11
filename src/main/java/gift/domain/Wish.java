@@ -18,7 +18,8 @@ public class Wish {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public Wish() {}
+    public Wish() {
+    }
 
     public Wish(Long id, Member member, Product product) {
         this.id = id;

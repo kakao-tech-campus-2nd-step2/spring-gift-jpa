@@ -15,6 +15,7 @@ import static gift.constant.Path.*;
 public class ProductManageController {
 
     private final ProductService productService;
+
     public ProductManageController(ProductService productService) {
         this.productService = productService;
     }
