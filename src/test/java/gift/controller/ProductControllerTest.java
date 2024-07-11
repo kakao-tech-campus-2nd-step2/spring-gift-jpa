@@ -18,6 +18,7 @@ import org.springframework.http.RequestEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProductControllerTest {
+
     @LocalServerPort
     private int port;
 
@@ -34,7 +35,7 @@ public class ProductControllerTest {
     void createTest() {
         // given
         var url = "http://localhost:" + port + "/api/products";
-        var request = new AddProductRequest( "product", 1_000, "image.jpg");
+        var request = new AddProductRequest("product", 1_000, "image.jpg");
         var requestEntity = new RequestEntity<>(request, HttpMethod.POST, URI.create(url));
 
         // when

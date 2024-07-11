@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Disabled
 @SpringBootTest
 class UserServiceTest {
+
     @Autowired
     private UserService userService;
     @Autowired

@@ -3,11 +3,10 @@ package gift.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-
 import gift.dto.product.ProductResponse;
 import gift.dto.product.UpdateProductRequest;
-import gift.exception.product.ProductNotFoundException;
 import gift.entity.Product;
+import gift.exception.product.ProductNotFoundException;
 import gift.util.mapper.ProductMapper;
 import java.util.List;
 import org.junit.jupiter.api.Disabled;
@@ -23,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Disabled
 @SpringBootTest
 class ProductServiceTest {
+
     @Autowired
     private ProductService productService;
 
@@ -65,7 +65,8 @@ class ProductServiceTest {
     @DisplayName("getAllProducts empty test")
     @Transactional
     void getAllProductsEmptyTest() {
-        productService.getAllProducts().forEach(product -> productService.deleteProduct(product.id()));
+        productService.getAllProducts()
+            .forEach(product -> productService.deleteProduct(product.id()));
 
         //when
         List<ProductResponse> products = productService.getAllProducts();
