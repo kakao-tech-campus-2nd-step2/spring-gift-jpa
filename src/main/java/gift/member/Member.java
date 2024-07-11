@@ -22,17 +22,16 @@ public class Member {
         this.password = password;
     }
 
-    public Member(MemberDTO memberDTO) {
-        this.email = memberDTO.getEmail();
-        this.password = memberDTO.getPassword();
-    }
-
     public boolean isSamePassword(Member member) {
         return this.password.equals(member.password);
     }
 
-    public static Member fromMemberWithoutBody(MemberTokenDTO memberTokenDTO) {
+    public static Member fromMemberTokenDTOWithoutBody(MemberTokenDTO memberTokenDTO) {
         return new Member(memberTokenDTO.getEmail(), null);
+    }
+
+    public static Member fromMemberDTO(MemberDTO memberDTO) {
+        return new Member(memberDTO.getEmail(), memberDTO.getPassword());
     }
 
     @Override

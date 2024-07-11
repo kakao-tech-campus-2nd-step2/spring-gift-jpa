@@ -27,7 +27,7 @@ public class WishlistService {
 
     public List<Product> getAllWishlists(MemberTokenDTO memberTokenDTO) {
         return wishlistRepository
-            .findAllByMember(Member.fromMemberWithoutBody(memberTokenDTO))
+            .findAllByMember(Member.fromMemberTokenDTOWithoutBody(memberTokenDTO))
             .stream()
             .map(Wishlist::getProduct)
             .toList();
@@ -45,21 +45,21 @@ public class WishlistService {
         wishlistRepository.save(
             new Wishlist(
                 Product.fromProductIdWithoutBody(productId),
-                Member.fromMemberWithoutBody(memberTokenDTO)
+                Member.fromMemberTokenDTOWithoutBody(memberTokenDTO)
             )
         );
     }
 
     private boolean isWishlistExists(MemberTokenDTO memberTokenDTO, long productId) {
         return wishlistRepository.existsByMemberAndProduct(
-            Member.fromMemberWithoutBody(memberTokenDTO),
+            Member.fromMemberTokenDTOWithoutBody(memberTokenDTO),
             Product.fromProductIdWithoutBody(productId)
         );
     }
 
     public void deleteWishlist(MemberTokenDTO memberTokenDTO, long productId) {
         Wishlist findWishlist = wishlistRepository.findByMemberAndProduct(
-            Member.fromMemberWithoutBody(memberTokenDTO),
+            Member.fromMemberTokenDTOWithoutBody(memberTokenDTO),
             Product.fromProductIdWithoutBody(productId)
         );
 
