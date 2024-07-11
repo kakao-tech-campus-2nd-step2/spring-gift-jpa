@@ -1,6 +1,7 @@
 package gift.resolver;
 
 import gift.annotation.LoginMember;
+import gift.exception.MemberAuthorizationException;
 import gift.service.MemberService;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
             String token = authorizationHeader.substring(7);
             return memberService.getMemberFromToken(token);
         }
-        return null;
+        throw new MemberAuthorizationException("Authorization failed");
     }
 }
