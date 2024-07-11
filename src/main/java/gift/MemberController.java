@@ -41,17 +41,24 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@Valid @RequestBody Member member) {
-        Optional<Member> foundMemberOpt = memberService.getMemberByEmail(member.getEmail());
-        Member foundMember = foundMemberOpt.orElse(null);
+        Member foundMember = getValidMember(member);
 
-        if (foundMember != null && foundMember.getPassword().equals(member.getPassword())) {
-            Map<String, String> response = new HashMap<>();
-            response.put("token", jwtService.generateToken(foundMember));
-            logger.debug("Login - Generated Token: " + response.get("token"));
-            return ResponseEntity.ok(response);
-        } else {
+        Map<String, String> response = new HashMap<>();
+        response.put("token", jwtService.generateToken(foundMember));
+        logger.debug("Login - Generated Token: " + response.get("token"));
+        return ResponseEntity.ok(response);
+    }
+
+    private Member getValidMember(Member member) {
+        Optional<Member> foundMemberOpt = memberService.getMemberByEmail(member.getEmail());
+        if (foundMemberOpt.isEmpty() || !isPasswordValid(foundMemberOpt.get(), member.getPassword())) {
             throw new IllegalArgumentException("Invalid email or password");
         }
+        return foundMemberOpt.get();
+    }
+
+    private boolean isPasswordValid(Member foundMember, String password) {
+        return foundMember.getPassword().equals(password);
     }
 
     @GetMapping("/profile")
