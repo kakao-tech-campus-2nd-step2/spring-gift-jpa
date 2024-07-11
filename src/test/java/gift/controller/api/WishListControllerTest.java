@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -117,7 +116,7 @@ class WishListControllerTest {
     @DisplayName("위시리스트에 추가된 상품들 조회")
     void getWishListProducts() throws Exception {
         //When
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(URL)
+        mockMvc.perform(MockMvcRequestBuilders.get(URL)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
                 )
                 //Then
@@ -126,9 +125,7 @@ class WishListControllerTest {
                         content().contentType(MediaType.APPLICATION_JSON),
                         jsonPath("$[0].productName").value("SoySource"),
                         jsonPath("$[0].productAmount").value(100)
-                )
-                .andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
+                );
     }
 
     @Test
@@ -156,7 +153,7 @@ class WishListControllerTest {
     @DisplayName("수정 되었는지 확인")
     void updateCheck() throws Exception {
         //When
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(URL)
+        mockMvc.perform(MockMvcRequestBuilders.get(URL)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
                 )
                 //Then
@@ -165,8 +162,7 @@ class WishListControllerTest {
                         content().contentType(MediaType.APPLICATION_JSON),
                         jsonPath("$[0].productName").value("SoySource"),
                         jsonPath("$[0].productAmount").value(99999)
-                ).andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
+                );
     }
 
     @Test
