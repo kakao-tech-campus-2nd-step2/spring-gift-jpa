@@ -13,7 +13,7 @@ public class BearerToken {
         this.token = parseToken(token);
     }
 
-    public String parseToken(String string) throws AuthenticationException{
+    public String parseToken(String token) throws AuthenticationException{
         if (token != null && token.startsWith("Bearer ")) {
             return token.substring(7);
         }
