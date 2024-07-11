@@ -1,12 +1,7 @@
 package gift.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "wish")
@@ -16,31 +11,31 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     // 기본 생성자
     protected Wish() {
     }
 
     // 생성자
-    public Wish(Long userId, Long productId) {
-        this.userId = userId;
-        this.productId = productId;
+    public Wish(User user, Product product) {
+        this.user = user;
+        this.product = product;
     }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
-    public Long getUserId() {
-        return userId;
-    }
+    public User getUser() { return user; }
 
-    public Long getProductId() {
-        return productId;
-    }
+    public Product getProduct() { return product; }
+
+    public Long getUserId() { return user.getId(); }
+
+    public Long getProductId() { return product.getId(); }
 }
