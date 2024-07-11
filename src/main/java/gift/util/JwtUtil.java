@@ -6,13 +6,15 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class JwtUtil {
-    private final String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
+    @Value("${jwt.secret-key}")
+    private String secretKey;
 
     public String generateToken(Member member) {
         return Jwts.builder().subject(String.valueOf(member.id()))
