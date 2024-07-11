@@ -22,15 +22,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/login")
-    public String loginForm() {
-        return "login_form";
-    }
-
-    @GetMapping("/register")
-    public String registerForm() {
-        return "register_form";
-    }
 
     // 로그인
     @PostMapping("/login")
