@@ -13,7 +13,7 @@ public class Wish {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
