@@ -1,12 +1,12 @@
 package gift.application;
 
+import gift.error.CustomException;
 import gift.error.ErrorCode;
 import gift.product.application.ProductService;
 import gift.product.dao.ProductRepository;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
 import gift.product.entity.Product;
-import gift.product.error.ProductNotFoundException;
 import gift.product.util.ProductMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -72,7 +72,7 @@ class ProductServiceTest {
         given(productRepository.findById(anyLong())).willReturn(Optional.empty());
 
         Assertions.assertThatThrownBy(() -> productService.getProductByIdOrThrow(productId))
-                .isInstanceOf(ProductNotFoundException.class)
+                .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.PRODUCT_NOT_FOUND
                                      .getMessage());
     }
@@ -130,7 +130,7 @@ class ProductServiceTest {
         given(productRepository.findById(anyLong())).willReturn(Optional.empty());
 
         Assertions.assertThatThrownBy(() -> productService.updateProduct(productId, request))
-                .isInstanceOf(ProductNotFoundException.class)
+                .isInstanceOf(CustomException.class)
                 .hasMessage(ErrorCode.PRODUCT_NOT_FOUND
                                      .getMessage());
     }

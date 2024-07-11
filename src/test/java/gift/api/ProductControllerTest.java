@@ -3,12 +3,13 @@ package gift.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.auth.security.JwtFilter;
 import gift.auth.security.JwtUtil;
+import gift.error.CustomException;
+import gift.error.ErrorCode;
 import gift.product.api.ProductController;
 import gift.product.application.ProductService;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
 import gift.product.entity.Product;
-import gift.product.error.ProductNotFoundException;
 import gift.product.util.ProductMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -100,7 +101,7 @@ class ProductControllerTest {
     @DisplayName("상품 상세 조회 실패 테스트")
     void getProductFailed() throws Exception {
         Long productId = 1L;
-        Throwable exception = new ProductNotFoundException();
+        Throwable exception = new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
         when(productService.getProductByIdOrThrow(productId)).thenThrow(exception);
 
         mockMvc.perform(get("/api/products/{id}", productId)
@@ -156,7 +157,7 @@ class ProductControllerTest {
     @DisplayName("단일 상품 삭제 실패 테스트")
     void deleteProductFailed() throws Exception {
         Long productId = 1L;
-        Throwable exception = new ProductNotFoundException();
+        Throwable exception = new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
         when(productService.deleteProductById(productId)).thenThrow(exception);
 
         mockMvc.perform(delete("/api/products/{id}", productId)
