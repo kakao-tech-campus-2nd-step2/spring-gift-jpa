@@ -1,6 +1,8 @@
 package gift.controller;
 
-import gift.domain.Product;
+import gift.model.product.Product;
+import gift.model.product.ProductRequest;
+import gift.model.product.ProductResponse;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -28,15 +30,15 @@ public class ProductRestController {
 
     // 모든 상품 조회
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+        List<ProductResponse> products = productService.getAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     // 특정 상품 조회
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Product product = productService.getProductById(id);
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
+        ProductResponse product = productService.getProductById(id);
         if (product != null) {
             return new ResponseEntity<>(product, HttpStatus.OK);
         }
@@ -46,14 +48,14 @@ public class ProductRestController {
 
     // 상품 추가
     @PostMapping
-    public ResponseEntity<Product> addProduct(@Valid @RequestBody Product product) {
-        Product createdProduct = productService.createProduct(product);
+    public ResponseEntity<ProductResponse> addProduct(@Valid @RequestBody ProductRequest product) {
+        ProductResponse createdProduct = productService.createProduct(product);
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
 
 //     상품 수정
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest product) {
         try {
             productService.updateProduct(id, product);
             return new ResponseEntity<>(HttpStatus.OK);

@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.domain.User;
+import gift.model.user.User;
 import gift.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

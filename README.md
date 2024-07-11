@@ -1,3 +1,4 @@
+
 # spring-gift-jpa
 ## Step1
 - 지금까지 작성한 JdbcTemplate 기반 코드를 JPA로 리팩터링하고 실제 도메인 모델을 어떻게 구성하고 객체와 테이블을 어떻게 매핑해야 하는지 알아본다.
@@ -8,3 +9,4 @@
   - [X] ProductRepositoryTest
   - [X] UserRepositoryTest
   - [X] WishListRepositoryTest
+

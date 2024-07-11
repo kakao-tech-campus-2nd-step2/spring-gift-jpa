@@ -1,10 +1,12 @@
 package gift.controller;
 
-import gift.annotation.LoginMember;
-import gift.dto.LoginUserDTO;
-import gift.domain.WishList;
-import gift.dto.WishRequest;
+import gift.common.annotation.LoginMember;
+import gift.model.user.LoginUserDTO;
+import gift.model.wishlist.WishList;
+import gift.model.wishlist.WishRequest;
+import gift.model.wishlist.WishResponse;
 import gift.service.WishListService;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,22 +26,28 @@ public class WishListController {
     }
 
     @GetMapping
-    public ResponseEntity<Optional<WishList>> getWishList(@LoginMember LoginUserDTO member) {
-        Optional<WishList> wishLists = wishListService.getWishListByUserId(member.getId());
+    public ResponseEntity<List<WishResponse>> getWishList(@LoginMember LoginUserDTO member) {
+        List<WishResponse> wishLists = wishListService.getWishListByUserId(member.getId());
         return ResponseEntity.ok(wishLists);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addProductToWishList(@RequestBody WishRequest wishRequest, @LoginMember
+    public ResponseEntity<WishResponse> addProductToWishList(@RequestBody WishRequest wishRequest, @LoginMember
     LoginUserDTO member) {
-        wishListService.addWishList(member.getId(), wishRequest.getProductId(), wishRequest.getQuantity());
+        wishListService.addWishList(member.getId(), wishRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("{id}")
+    public ResponseEntity<WishResponse> updateQuantityToWishList(@PathVariable("id") Long wishId, Long userId, int quantity) {
+        wishListService.updateProductQuantity(wishId, userId, quantity);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeWishList(@PathVariable("id") Long id, @LoginMember
+    public ResponseEntity<Void> removeWishList(@PathVariable("id") Long userId, @PathVariable("product_id") Long productId, @LoginMember
     LoginUserDTO member) {
-        wishListService.removeWishList(id);
+        wishListService.removeWishList(userId, productId);
         return ResponseEntity.noContent().build();
     }
 }
