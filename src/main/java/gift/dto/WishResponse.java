@@ -6,8 +6,6 @@ public class WishResponse {
     private String productName;
     private Long memberId;
 
-    public WishResponse() {}
-
     public WishResponse(Long id, String productName, Long memberId) {
         this.id = id;
         this.productName = productName;

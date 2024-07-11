@@ -40,10 +40,6 @@ public class MemberService {
         return jwtService.generateToken(member);
     }
 
-    public Member findById(Long id) {
-        return memberRepository.findById(id).orElse(null);
-    }
-
     public Member findByEmail(String email) {
         return memberRepository.findByEmail(email);
     }

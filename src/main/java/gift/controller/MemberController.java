@@ -16,8 +16,6 @@ public class MemberController {
 
     private MemberService memberService;
 
-    private JwtService jwtService;
-
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
