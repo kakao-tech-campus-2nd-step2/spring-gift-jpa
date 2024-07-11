@@ -52,13 +52,13 @@ public class JwtFilterTest {
     }
 
     @Test
-    void testRequestWithEmptyToken() throws Exception {
+    void testRequestForbiddenWithEmptyToken() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/wishlist"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void testRequestToPermittedUrlWithoutPermisson() throws Exception {
+    void testRequestPermitUrlWithoutPermisson() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/products"))
                 .andExpect(status().isOk());
     }

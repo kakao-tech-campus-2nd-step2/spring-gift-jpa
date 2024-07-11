@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Set;
 
 @SpringBootTest
-public class UserValidatorTest {
+public class UserEmailValidatorTest {
 
     @Autowired
     private Validator validator;

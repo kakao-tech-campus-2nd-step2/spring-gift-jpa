@@ -15,7 +15,7 @@ import java.util.Set;
 
 @SpringBootTest
 @Transactional
-public class ProductValidatorTest {
+public class ProductNameValidatorTest {
 
     @Autowired
     private Validator validator;
