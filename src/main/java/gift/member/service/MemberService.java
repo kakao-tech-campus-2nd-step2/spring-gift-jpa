@@ -4,9 +4,9 @@ import gift.exception.UnauthorizedException;
 import gift.member.model.Member;
 import gift.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class MemberService {
@@ -14,6 +14,7 @@ public class MemberService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final TokenService tokenService;
 
+    @Autowired
     public MemberService(MemberRepository memberRepository, BCryptPasswordEncoder passwordEncoder, TokenService tokenService) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
