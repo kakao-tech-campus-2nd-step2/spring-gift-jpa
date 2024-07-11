@@ -48,11 +48,8 @@ public class ProductController {
      */
     @PostMapping()
     public ResponseEntity<Void> addProduct(@Valid @RequestBody ProductDto productDto) {
-        Boolean result = service.addProduct(productDto.toProduct());
-        if (result) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        service.addProduct(productDto.toProduct());
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -63,11 +60,8 @@ public class ProductController {
      */
     @PutMapping()
     public ResponseEntity<Void> updateProduct(@Valid @RequestBody ProductUpdateDto productUpdateDto) {
-        Boolean result = service.updateProduct(productUpdateDto.toProduct());
-        if (result) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        service.updateProduct(productUpdateDto.toProduct());
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -77,11 +71,8 @@ public class ProductController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable(value = "id") Long id) {
-        Boolean result = service.deleteProduct(id);
-        if (result) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        service.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

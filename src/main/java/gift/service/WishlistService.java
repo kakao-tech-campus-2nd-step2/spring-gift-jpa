@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.dao.WishlistDao;
-import gift.vo.WishProduct;
+import gift.repository.WishlistRepository;
+import gift.vo.Wish;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,22 +9,22 @@ import java.util.List;
 @Service
 public class WishlistService {
 
-    private final WishlistDao wishlistDao;
+    private final WishlistRepository wishlistRepository;
 
-    public WishlistService(WishlistDao wishlistDao) {
-        this.wishlistDao = wishlistDao;
+    public WishlistService(WishlistRepository wishlistRepository) {
+        this.wishlistRepository = wishlistRepository;
     }
 
-    public List<WishProduct> getWishProductLost(String memberEmail) {
-        return wishlistDao.getWishProductList(memberEmail);
+    public List<Wish> getWishProductList(Long memberId) {
+        return wishlistRepository.findByMemberId(memberId);
     }
 
-    public Boolean addWishProduct(WishProduct wishProduct) {
-        return wishlistDao.addWishProduct(wishProduct.getMemberEmail(), wishProduct.getProductId());
+    public void addWishProduct(Wish wish) {
+        wishlistRepository.save(wish);
     }
 
-    public Boolean deleteWishProduct(String memberEmail, Long productId) {
-        return wishlistDao.deleteWishProduct(memberEmail, productId);
+    public void deleteWishProduct(Long id) {
+        wishlistRepository.deleteById(id);
     }
 
 }
