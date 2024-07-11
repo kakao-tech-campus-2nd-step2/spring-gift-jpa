@@ -1,10 +1,8 @@
 package gift.Service;
 
-import gift.Model.RequestWishListDTO;
-import gift.Model.ResponseWishListDTO;
-import gift.Model.User;
+import gift.Model.*;
 import gift.Repository.WishListRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -18,19 +16,25 @@ public class WishListService {
         this.wishListRepository = wishListRepository;
     }
 
-    public void addWishList(User user, RequestWishListDTO requestWishListDTO) {
-        wishListRepository.insertWishList(user.getEmail(), requestWishListDTO);
+    public void addWishList(Member member, RequestWishListDTO requestWishListDTO) {
+        WishList wishList = new WishList(member.getEmail(), requestWishListDTO.getProductId(), requestWishListDTO.getCount());
+        wishListRepository.save(wishList);
     }
 
-    public List<ResponseWishListDTO> getWishList(User user) {
-        return wishListRepository.selectWishList(user.getEmail());
+    public List<ResponseWishListDTO> getWishList(Member member) {
+        return wishListRepository.findWishListsByEmail(member.getEmail());
     }
 
-    public List<ResponseWishListDTO> editWishList(User user, RequestWishListDTO requestWishListDTO) {
-        return wishListRepository.updateWishList(user.getEmail(), requestWishListDTO);
+    @Transactional
+    public List<ResponseWishListDTO> editWishList(Member member, RequestWishListDTO requestWishListDTO) {
+        WishList wishList = wishListRepository.findByEmailAndProductId(member.getEmail(), requestWishListDTO.getProductId());
+        wishList.setCount(requestWishListDTO.getCount());
+        return getWishList(member);
     }
 
-    public List<ResponseWishListDTO> deleteWishList(User user, RequestWishListDTO requestWishListDTO) {
-        return wishListRepository.deleteWishList(user.getEmail(), requestWishListDTO);
+    @Transactional
+    public List<ResponseWishListDTO> deleteWishList(Member member, RequestWishListDTO requestWishListDTO) {
+        wishListRepository.deleteWishListByEmailAndProductId(member.getEmail(), requestWishListDTO.getProductId());
+        return getWishList(member);
     }
 }

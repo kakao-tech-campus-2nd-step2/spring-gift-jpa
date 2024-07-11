@@ -1,19 +1,26 @@
 package gift.Model;
 
-public class User {
+import jakarta.persistence.*;
+
+@Entity
+public class Member {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private long id;
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
     private String password;
 
-    public User () {}
+    protected Member() {}
 
-    public User( long id, String email, String password) {
+    public Member(long id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public User(String email, String password) {
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
     }

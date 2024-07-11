@@ -2,10 +2,9 @@ package gift.Controller;
 
 import gift.Model.RequestWishListDTO;
 import gift.Model.ResponseWishListDTO;
-import gift.Model.User;
+import gift.Model.Member;
 import gift.Service.WishListService;
 import gift.annotation.ValidUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +22,13 @@ public class WishListController {
     }
 
     @PostMapping("/wishList")
-    public void addWishList(@ValidUser User user, @RequestBody RequestWishListDTO requestWishListDTO){
-        wishListService.addWishList(user, requestWishListDTO);
+    public void addWishList(@ValidUser Member member, @RequestBody RequestWishListDTO requestWishListDTO){
+        wishListService.addWishList(member, requestWishListDTO);
     }
 
     @GetMapping("/wishList")
-    public ResponseEntity<Map<String, List<ResponseWishListDTO>>> getWishList(@ValidUser User user){
-        List<ResponseWishListDTO> list= wishListService.getWishList(user);
+    public ResponseEntity<Map<String, List<ResponseWishListDTO>>> getWishList(@ValidUser Member member){
+        List<ResponseWishListDTO> list= wishListService.getWishList(member);
         Map<String, List<ResponseWishListDTO>> response = new HashMap<>();
         response.put("wishlist", list);
 
@@ -37,8 +36,8 @@ public class WishListController {
     }
 
     @PutMapping("/wishList")
-    public ResponseEntity<Map<String, List<ResponseWishListDTO>>> editWishList(@ValidUser User user, @RequestBody RequestWishListDTO requestWishListDTO){
-        List<ResponseWishListDTO> list = wishListService.editWishList(user, requestWishListDTO);
+    public ResponseEntity<Map<String, List<ResponseWishListDTO>>> editWishList(@ValidUser Member member, @RequestBody RequestWishListDTO requestWishListDTO){
+        List<ResponseWishListDTO> list = wishListService.editWishList(member, requestWishListDTO);
         Map<String, List<ResponseWishListDTO>> response = new HashMap<>();
         response.put("wishlist", list);
 
@@ -46,8 +45,8 @@ public class WishListController {
     }
 
     @DeleteMapping("/wishList")
-    public ResponseEntity<Map<String, List<ResponseWishListDTO>>> deleteWishList(@ValidUser User user, @RequestBody RequestWishListDTO requestWishListDTO) {
-        List<ResponseWishListDTO> list = wishListService.deleteWishList(user, requestWishListDTO);
+    public ResponseEntity<Map<String, List<ResponseWishListDTO>>> deleteWishList(@ValidUser Member member, @RequestBody RequestWishListDTO requestWishListDTO) {
+        List<ResponseWishListDTO> list = wishListService.deleteWishList(member, requestWishListDTO);
         Map<String, List<ResponseWishListDTO>> response = new HashMap<>();
         response.put("wishlist", list);
 

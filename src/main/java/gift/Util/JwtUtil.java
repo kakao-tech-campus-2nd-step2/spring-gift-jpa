@@ -4,7 +4,7 @@ import gift.Exception.InvalidTokenException;
 import gift.Exception.TokenExpiredException;
 import gift.Exception.NullTokenException;
 import gift.Exception.NotValidTokenException;
-import gift.Model.User;
+import gift.Model.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -31,7 +31,7 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(secretKey.getBytes((StandardCharsets.UTF_8)));
     }
 
-    public String generateToken(User user) {
+    public String generateToken(Member user) {
         return Jwts.builder()
                 .setSubject(user.getEmail())
                 .setIssuedAt(new Date())

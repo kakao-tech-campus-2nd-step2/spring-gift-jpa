@@ -1,6 +1,6 @@
 package gift;
 
-import gift.Service.UserService;
+import gift.Service.MemberService;
 import gift.annotation.ValidUserArgumnetResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -12,16 +12,16 @@ import java.util.List;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final UserService userService;
+    private final MemberService memberService;
 
     @Autowired
-    public WebConfig(UserService userService) {
-        this.userService = userService;
+    public WebConfig(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(new ValidUserArgumnetResolver(userService));
+        argumentResolvers.add(new ValidUserArgumnetResolver(memberService));
     }
 
 }

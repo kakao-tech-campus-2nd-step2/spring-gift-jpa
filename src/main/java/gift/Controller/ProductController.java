@@ -2,7 +2,6 @@ package gift.Controller;
 
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import gift.Model.Product;
 import gift.Model.RequestProduct;
@@ -43,7 +42,8 @@ public class ProductController {
 
     @GetMapping("/products/edit/{id}")
     public String editProductForm(@PathVariable("id") Long id, Model model) {
-        Product product = productService.selectProduct(id);
+        Optional<Product> optionalProduct = productService.selectProduct(id);
+        Product product = optionalProduct.get();
         model.addAttribute("product", new RequestProduct(product.getName(), product.getPrice(), product.getImageUrl()));
         model.addAttribute("id", id);
         return "edit-product";
