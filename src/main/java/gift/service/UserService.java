@@ -1,8 +1,9 @@
 package gift.service;
 
 import gift.dto.user.*;
-import gift.entity.User;
+import gift.entity.Member;
 import gift.exception.InvalidPasswordException;
+import gift.exception.NoSuchUserException;
 import gift.repository.UserRepository;
 import gift.security.jwt.TokenProvider;
 import org.mindrot.jbcrypt.BCrypt;
@@ -23,9 +24,9 @@ public class UserService {
 
     public List<UserResponseDTO> getAllUsers() {
 
-        return userRepository.findAll().stream().map((user) -> new UserResponseDTO(
-                user.getId(),
-                user.getEmail()
+        return userRepository.findAll().stream().map((member) -> new UserResponseDTO(
+                member.getId(),
+                member.getEmail()
         )).toList();
     }
 
@@ -37,22 +38,24 @@ public class UserService {
         String email = userRequestDTO.email();
         String encryptedPW = hashPassword(userRequestDTO.password());
 
-        User user = userRepository.save(new User(email, encryptedPW));
+        Member member = userRepository.save(new Member(email, encryptedPW));
 
-        String token = tokenProvider.generateToken(user.getEmail());
+        String token = tokenProvider.generateToken(member.getEmail());
 
         return new TokenResponseDTO(token);
     }
 
     public TokenResponseDTO login(UserRequestDTO userRequestDTO) throws InvalidPasswordException {
-        User user = userRepository.findByEmail(userRequestDTO.email());
-        String encodedOriginalPw = user.getEncryptedPw();
+        Member member = userRepository.findByEmail(userRequestDTO.email())
+                .orElseThrow(NoSuchUserException::new);
+
+        String encodedOriginalPw = member.getPassword();
 
         if (!BCrypt.checkpw(userRequestDTO.password(), encodedOriginalPw)) {
             throw new InvalidPasswordException("Invalid password");
         }
 
-        String token = tokenProvider.generateToken(user.getEmail());
+        String token = tokenProvider.generateToken(member.getEmail());
 
         return new TokenResponseDTO(token);
     }
@@ -62,26 +65,27 @@ public class UserService {
     }
 
     public void deleteUser(String email) {
-        User user = userRepository.findByEmail(email);
+        Member member = userRepository.findByEmail(email)
+                        .orElseThrow(NoSuchUserException::new);
 
-        userRepository.deleteById(user.getId());
+        userRepository.deleteById(member.getId());
     }
 
     public void updatePw(long id, PwUpdateDTO pwUpdateDTO) {
         String encryptedPW = hashPassword(pwUpdateDTO.password());
 
-        User user = userRepository.findById(id).get();
-        user.setEncryptedPw(encryptedPW);
+        Member member = userRepository.findById(id).get();
+        member.setPassword(encryptedPW);
 
-        userRepository.save(user);
+        userRepository.save(member);
     }
 
     public void updatePw(String email, PwUpdateDTO pwUpdateDTO) {
         String encryptedPW = hashPassword(pwUpdateDTO.password());
 
-        User user = userRepository.findByEmail(email);
-        user.setEncryptedPw(encryptedPW);
+        Member member = userRepository.findByEmail(email).orElseThrow(NoSuchUserException::new);
+        member.setPassword(encryptedPW);
 
-        userRepository.save(user);
+        userRepository.save(member);
     }
 }

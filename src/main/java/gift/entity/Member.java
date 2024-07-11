@@ -6,19 +6,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class User {
+public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private long id;
 
     private String email;
-    private String encryptedPw;
+    private String password;
 
-    public User() {}
+    public Member() {}
 
-    public User(String email, String encryptedPw) {
+    public Member(String email, String password) {
         this.email = email;
-        this.encryptedPw = encryptedPw;
+        this.password = password;
     }
 
     public long getId() {
@@ -29,11 +29,11 @@ public class User {
         return email;
     }
 
-    public String getEncryptedPw() {
-        return encryptedPw;
+    public String getPassword() {
+        return password;
     }
 
-    public void setEncryptedPw(String encryptedPw) {
-        this.encryptedPw = encryptedPw;
+    public void setPassword(String encryptedPw) {
+        this.password = encryptedPw;
     }
 }
