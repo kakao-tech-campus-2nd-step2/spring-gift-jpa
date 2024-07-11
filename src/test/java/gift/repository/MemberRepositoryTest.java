@@ -165,6 +165,7 @@ class MemberRepositoryTest {
     void testLazyFetch(){
         // given
         entityManager.persist(expectedProduct);
+
         expectedProduct.addWish(expectedWish);
         Member savedMember = members.save(expectedMember);
         entityManager.flush();
