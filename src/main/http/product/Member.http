@@ -9,7 +9,7 @@ POST http://localhost:8080/api/members
 Content-Type: application/json
 
 {
-  "email": "email3",
+  "email": "email5",
   "password": "password3",
   "nickName": "nickname3"
 }

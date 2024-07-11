@@ -21,7 +21,7 @@ public class Member {
     @Embedded
     private Password password;
     @Embedded
-    private Nickname nickName;
+    private Nickname nickname;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Wish> wishes = new ArrayList<>();
@@ -30,12 +30,12 @@ public class Member {
     public Member() {
     }
 
-    public Member(Long id, MemberType memberType, Email email, Password password, Nickname nickName) {
+    public Member(Long id, MemberType memberType, Email email, Password password, Nickname nickname) {
         this.id = id;
         this.memberType = memberType;
         this.email = email;
         this.password = password;
-        this.nickName = nickName;
+        this.nickname = nickname;
     }
 
     public Long getId() {
@@ -50,8 +50,8 @@ public class Member {
         return password;
     }
 
-    public Nickname getNickName() {
-        return nickName;
+    public Nickname getNickname() {
+        return nickname;
     }
 
     public MemberType getMemberType() {

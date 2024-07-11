@@ -2,6 +2,8 @@ package gift.member.service;
 
 import gift.member.domain.Member;
 import gift.member.dto.MemberServiceDto;
+import gift.member.exception.DuplicateEmailException;
+import gift.member.exception.DuplicateNicknameException;
 import gift.member.exception.MemberNotFoundException;
 import gift.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
@@ -27,11 +29,13 @@ public class MemberService {
     }
 
     public void createMember(MemberServiceDto memberServiceDto) {
+        validateEmailAndNicknameUnique(memberServiceDto);
         memberRepository.save(memberServiceDto.toMember());
     }
 
     public void updateMember(MemberServiceDto memberServiceDto) {
         validateMemberExists(memberServiceDto.id());
+        validateEmailAndNicknameUnique(memberServiceDto);
         memberRepository.save(memberServiceDto.toMember());
     }
 
@@ -41,7 +45,18 @@ public class MemberService {
     }
 
     private void validateMemberExists(Long id) {
-        memberRepository.findById(id)
-                .orElseThrow(MemberNotFoundException::new);
+        if (memberRepository.existsById(id)) {
+            throw new DuplicateEmailException();
+        }
+    }
+
+    private void validateEmailAndNicknameUnique(MemberServiceDto memberServiceDto) {
+        if (memberRepository.existsByEmail(memberServiceDto.email())) {
+            throw new DuplicateEmailException();
+        }
+
+        if (memberRepository.existsByNickname(memberServiceDto.nickName())) {
+            throw new DuplicateNicknameException();
+        }
     }
 }

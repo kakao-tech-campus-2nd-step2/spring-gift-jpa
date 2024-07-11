@@ -1,8 +1,6 @@
 package gift.member.repository;
 
 import gift.member.domain.*;
-import gift.wish.domain.ProductCount;
-import gift.wish.domain.Wish;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +38,7 @@ class MemberRepositoryTest {
         assertThat(savedMember.getMemberType()).isEqualTo(member.getMemberType());
         assertThat(savedMember.getEmail()).isEqualTo(member.getEmail());
         assertThat(savedMember.getPassword()).isEqualTo(member.getPassword());
-        assertThat(savedMember.getNickName()).isEqualTo(member.getNickName());
+        assertThat(savedMember.getNickname()).isEqualTo(member.getNickname());
     }
 
     @Test
@@ -79,7 +77,7 @@ class MemberRepositoryTest {
         Member savedMember = memberRepository.save(member);
 
         // when
-        savedMember = new Member(savedMember.getId(), savedMember.getMemberType(), savedMember.getEmail(), savedMember.getPassword(), savedMember.getNickName());
+        savedMember = new Member(savedMember.getId(), savedMember.getMemberType(), savedMember.getEmail(), savedMember.getPassword(), savedMember.getNickname());
         Member updateProduct = memberRepository.save(savedMember);
 
         // then
