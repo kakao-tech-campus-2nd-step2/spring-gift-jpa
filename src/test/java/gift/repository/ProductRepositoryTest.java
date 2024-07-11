@@ -174,4 +174,26 @@ class ProductRepositoryTest {
                 () -> assertThat(deletedWish).isNull()
         );
     }
+
+    @Test
+    @DisplayName("고아 객체 제거 테스트")
+    void testOrphanRemoval(){
+        // given
+        entityManager.persist(expectedMember);
+        expectedProduct.addWish(expectedWish);
+        Product savedProduct = products.save(expectedProduct);
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        Product foundProduct = products.findById(savedProduct.getId()).get();
+        Wish foudnWish = foundProduct.getWishes().get(0);
+        foundProduct.removeWish(foudnWish);
+        entityManager.flush();
+        entityManager.clear();
+
+        // then
+        Wish orphanedWish = entityManager.find(Wish.class, expectedWish.getId());
+        assertThat(orphanedWish).isNull();
+    }
 }
