@@ -38,6 +38,7 @@ public class WishService {
         wish.modify(wishRequest.userId(), wishRequest.productId(), wishRequest.amount());
     }
 
+    @Transactional(readOnly = true)
     public List<WishResponse> getWishList(final Long userId) {
         List<Wish> wishes = wishRepository.findWishesByUserId(userId);
 
@@ -48,6 +49,8 @@ public class WishService {
         return responses;
     }
 
+
+    @Transactional(readOnly = true)
     public WishResponse getWish(final Long wishId, final Long userId) {
         Wish wish = wishRepository.findById(wishId)
                 .orElseThrow(() -> WishNotFoundException.of(wishId));
@@ -58,6 +61,7 @@ public class WishService {
         return WishResponse.fromModel(wish);
     }
 
+    @Transactional
     public void deleteWish(final Long wishId, final Long userId) {
         Wish wish = wishRepository.findById(wishId)
                 .orElseThrow(() -> WishNotFoundException.of(wishId));
