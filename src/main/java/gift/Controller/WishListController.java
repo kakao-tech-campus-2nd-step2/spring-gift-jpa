@@ -3,8 +3,8 @@ package gift.Controller;
 
 import gift.Model.Product;
 
-import gift.Service.MemberService;
-import gift.Service.ProductService;
+import gift.Model.Wishlist;
+
 import gift.Service.WishlistService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,7 +43,9 @@ public class WishListController {
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
         Product product = wishlistService.getProductById(id);
-        wishlistService.addWishlist(product);
+        Wishlist wishlist = new Wishlist(product.getName(), product.getPrice(), product.getImageUrl());
+        wishlistService.addWishlist(wishlist);
+
         return "redirect:/api/wish";
     }
 
