@@ -23,6 +23,13 @@ public class Product {
     private String imageUrl;
 
     public Product(){}
+
+    public Product(Long id, String name, int price, String imageUrl){
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
     
 
     // Getter 메서드들
