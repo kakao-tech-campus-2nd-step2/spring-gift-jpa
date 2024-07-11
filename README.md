@@ -55,3 +55,24 @@
 
 - WishProduct 내에 Member/Product id값 참조에 대한 리팩토링
     - wishproduct.getMemberId() → wishproduct.getMember.getId()
+
+## 3단계
+### 상품 목록과 위시리스트 목록에 페이징 구현
+- 상품 목록 View와 위시리스트 목록 View 페이징을 구현하여, 페이지 별로 목록 탐색이 가능하게 한다.
+
+#### Controller
+- ProductViewController: 상품 목록 조회/추가/수정/삭제, 위시리스트 상품 추가
+  - 상품 추가/수정/삭제는 관리자만 가능하다.
+- WishViewController: 위시리스트 목록 조회, 위시리스트 내 상품 삭제
+  - 회원가입/로그인 후 나의 위시 리스트를 조회할 수 있고, 나의 위시 리스트에 담긴 상품을 조회하거나 삭제할 수 있다.
+
+#### View
+- /view/join: 회원 가입
+- /view/login: 로그인
+- /view/products: 메인 화면
+  - /view/products/**
+    - 상품 조회/추가/수정/삭제(관리자 인가 필요)
+    - 상품 위시리스트에 추가
+- /view/wish: 위시 리스트 화면(유저 인증 필요)
+  - /view/wish/**
+    - 위시리스트 조회/삭제
