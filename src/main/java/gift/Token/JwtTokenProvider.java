@@ -1,6 +1,6 @@
 package gift.Token;
 
-import gift.Model.Member;
+import gift.Model.Entity.MemberEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 public class JwtTokenProvider {
     String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
 
-    public String createToken(Member member) {
+    public String createToken(MemberEntity memberEntity) {
         return Jwts.builder()
-                .setSubject(member.getEmail())
-                .claim("role", member.getRole())
+                .setSubject(memberEntity.getEmail())
+                .claim("role", memberEntity.getRole())
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
