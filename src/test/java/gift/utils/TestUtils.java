@@ -1,4 +1,4 @@
-package gift;
+package gift.utils;
 
 import java.net.URI;
 import org.springframework.http.HttpHeaders;
