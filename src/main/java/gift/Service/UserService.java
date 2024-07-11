@@ -38,5 +38,4 @@ public class UserService {
         return user != null && user.get().getPassword().equals(password);
     }
 
-
 }

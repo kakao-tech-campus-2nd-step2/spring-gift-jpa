@@ -34,7 +34,6 @@ public class WishListController {
         if(user == null) {
             return "redirect:/login";
         }
-
         wishListItem.setUserId(user.getId());
         wishlistService.addWishlistItem(wishListItem);
         return "redirect:/products";
@@ -55,5 +54,4 @@ public class WishListController {
 
         return "redirect:/wishlist";
     }
-
 }

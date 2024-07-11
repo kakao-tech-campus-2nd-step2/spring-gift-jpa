@@ -38,7 +38,6 @@ public class WishListService {
             wishListJpaRepository.save(wishlistOptional);
             return;
         }
-        wishListJpaRepository.delete(wishlistOptional);
     }
 
 }
