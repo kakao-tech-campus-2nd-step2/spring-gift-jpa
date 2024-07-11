@@ -9,6 +9,7 @@ import gift.util.JwtUtil;
 import gift.util.PasswordUtil;
 import gift.error.AlreadyExistsException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -21,6 +22,7 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
+    @Transactional
     public Token register(Member member) {
         MemberEntity existingMemberEntity = memberRepository.findByEmail(member.getEmail());
         if (existingMemberEntity != null) {
@@ -33,6 +35,7 @@ public class MemberService {
         return new Token(jwtUtil.generateToken(entityToDto(memberEntity)));
     }
 
+    @Transactional
     public Token login(Member member) {
         MemberEntity existingMemberEntity = memberRepository.findByEmail(member.getEmail());
         if (existingMemberEntity != null &&

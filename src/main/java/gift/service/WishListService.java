@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishListService {
@@ -28,7 +29,8 @@ public class WishListService {
         this.productRepository = productRepository;
     }
 
-
+    //해당 사용자의 위시리스트 조회
+    @Transactional(readOnly = true)
     public List<WishList> getWishListItems(Long memberId) {
         MemberEntity memberEntity = memberRepository.findById(memberId)
                 .orElseThrow(()->new NotFoundException("멤버가 존재하지 않습니다."));
@@ -38,10 +40,14 @@ public class WishListService {
             .collect(Collectors.toList());
     }
 
+    //위시리스트 추가
+    @Transactional
     public void addWishListItem(WishList item) {
         wishListRepository.save(dtoToEntity(item));
     }
 
+    //위시리스트 삭제
+    @Transactional
     public void deleteWishListItem(Long id) {
         wishListRepository.deleteById(id);
     }

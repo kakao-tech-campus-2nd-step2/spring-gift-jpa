@@ -8,6 +8,7 @@ import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -19,6 +20,7 @@ public class ProductService {
     }
 
     //전체 상품 조회 기능
+    @Transactional(readOnly = true)
     public List<Product> getAllProducts() {
         List<ProductEntity> productEntities =  productRepository.findAll();
         return productEntities.stream()
@@ -27,6 +29,7 @@ public class ProductService {
     }
 
     //단일 상품 조회 기능
+    @Transactional(readOnly = true)
     public Product getProductById(Long id) {
         ProductEntity productEntity = productRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
@@ -34,6 +37,8 @@ public class ProductService {
 
     }
 
+    //이름을 통한 상품 검색 기능
+    @Transactional(readOnly = true)
     public List<Product> searchProduct(String name) {
         List<ProductEntity> productEntities = productRepository.findByNameContaining(name);
         return productEntities.stream()
@@ -42,12 +47,14 @@ public class ProductService {
     }
 
     //상품 추가 기능
+    @Transactional
     public void addProduct(Product product) {
         checkAlreadyExists(product);
         productRepository.save(dtoToEntity(product));
     }
 
     //상품 수정 기능
+    @Transactional
     public void updateProduct(Long id, Product product) {
         ProductEntity existingProduct = productRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
@@ -59,6 +66,7 @@ public class ProductService {
     }
 
     //상품 삭제 기능
+    @Transactional
     public void deleteProduct(Long id) {
         ProductEntity existingProduct = productRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
