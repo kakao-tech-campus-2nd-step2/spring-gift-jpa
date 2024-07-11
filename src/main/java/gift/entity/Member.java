@@ -58,4 +58,12 @@ public class Member {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<Wish> getWishList() {
+        return wishList;
+    }
+
+    public void setWishList(List<Wish> wishList) {
+        this.wishList = wishList;
+    }
 }
