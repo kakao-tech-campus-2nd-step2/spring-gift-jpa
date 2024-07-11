@@ -29,9 +29,7 @@ public class WishProductController {
     @GetMapping
     public ResponseEntity<?> getProducts() {
         List<Product> products = productService.getProducts();
-        Map<String, List<Product>> response = new HashMap<>();
-        response.put("products", products);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(products);
     }
 
     @DeleteMapping("/wishlist/{productId}")
@@ -44,9 +42,7 @@ public class WishProductController {
     @GetMapping("/wishlist")
     public ResponseEntity<?> getWishProduct(@SessionUser UserVo sessionUser) {
         List<WishProduct> wishProducts = wishProductService.getWishProducts(sessionUser.getId());
-        Map<String, List<WishProduct>> response = new HashMap<>();
-        response.put("wishlistProducts", wishProducts);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(wishProducts);
     }
 
     @Transactional
