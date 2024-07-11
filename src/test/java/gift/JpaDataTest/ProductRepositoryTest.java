@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import gift.domain.product.Product;
 import gift.domain.product.ProductService;
 import gift.domain.product.JpaProductRepository;
+
 import gift.global.exception.BusinessException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,6 +18,7 @@ import jdk.jfr.Description;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
@@ -146,5 +148,4 @@ public class ProductRepositoryTest {
     private void clear() {
         entityManager.clear();
     }
-
 }
