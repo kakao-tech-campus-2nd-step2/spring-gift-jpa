@@ -1,9 +1,10 @@
 package gift.model;
 
 import gift.common.enums.Role;
-import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 @Entity
 public class Member extends BasicEntity {
@@ -20,14 +21,11 @@ public class Member extends BasicEntity {
 
     protected Member() {}
 
-    public Member(String email, String password, Role role) {
-        this.email = email;
-        this.password = password;
-        this.role = role;
+    public Member(Long id) {
+        super(id);
     }
 
-    public Member(Long id, LocalDateTime createdAt, LocalDateTime updatedAt, String email, String password, Role role) {
-        super(id, createdAt, updatedAt);
+    public Member(String email, String password, Role role) {
         this.email = email;
         this.password = password;
         this.role = role;

@@ -21,6 +21,10 @@ public abstract class BasicEntity {
 
     protected BasicEntity() {}
 
+    protected BasicEntity(Long id) {
+        this.id = id;
+    }
+
     protected BasicEntity(Long id, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.createdAt = createdAt;
