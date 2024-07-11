@@ -1,6 +1,8 @@
 package gift.member.repository;
 
 import gift.member.domain.*;
+import gift.wish.domain.ProductCount;
+import gift.wish.domain.Wish;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,6 +54,22 @@ class MemberRepositoryTest {
 
         // then
         assertThat(foundMember).contains(member);
+    }
+
+    @Test
+    @Description("findAll 테스트")
+    void findAll() {
+        // given
+        Member member1 = new Member(null, MemberType.USER, new Email("email1"), new Password("password1"), new Nickname("nickname1"));
+        Member member2 = new Member(null, MemberType.USER, new Email("email2"), new Password("password2"), new Nickname("nickname2"));
+        member1 = memberRepository.save(member1);
+        member2 = memberRepository.save(member2);
+
+        // when
+        List<Member> members = memberRepository.findAll();
+
+        // then
+        assertThat(members).contains(member1, member2);
     }
 
     @Test

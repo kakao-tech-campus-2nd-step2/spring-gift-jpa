@@ -1,5 +1,6 @@
 package gift.product.repository;
 
+import gift.member.domain.*;
 import gift.product.domain.Product;
 import gift.product.domain.ProductName;
 import gift.product.domain.ProductPrice;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,6 +54,22 @@ class ProductRepositoryTest {
 
         // then
         assertThat(foundProduct).contains(product);
+    }
+
+    @Test
+    @Description("findAll 테스트")
+    void findAll() {
+        // given
+        Product product1 = new Product(null, new ProductName("name1"), new ProductPrice(10L), "imageUrl1");
+        Product product2 = new Product(null, new ProductName("name2"), new ProductPrice(10L), "imageUrl2");
+        product1 = productRepository.save(product1);
+        product2 = productRepository.save(product2);
+
+        // when
+        List<Product> products = productRepository.findAll();
+
+        // then
+        assertThat(products).contains(product1, product2);
     }
 
     @Test
