@@ -15,7 +15,6 @@ class ProductRepositoryTest {
     private ProductRepository productRepository;
 
 
-
     @Test
     void saveProductTest() {
         var expected = new Product("newSample", 10000, "productNew.jpg");
@@ -58,7 +57,7 @@ class ProductRepositoryTest {
 
         assertAll(
             () -> assertThat(productRepository.findById(expected.getId()).isPresent()).isFalse(),
-            ()->assertThat(productRepository.findAll().isEmpty()).isFalse()
+            () -> assertThat(productRepository.findAll().isEmpty()).isFalse()
         );
 
     }

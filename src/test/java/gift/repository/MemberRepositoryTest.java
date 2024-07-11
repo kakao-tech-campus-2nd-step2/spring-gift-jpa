@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+
 import gift.model.Member;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -12,13 +13,15 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 public class MemberRepositoryTest {
+
     @Autowired
     private MemberRepository memberRepository;
+
     @Test
     void save() {
         var expected = new Member("test@email.com", "mypassword");
         var actual = memberRepository.save(expected);
-        assertThat(actual.getId()).isEqualTo(expected.getId());
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -28,13 +31,15 @@ public class MemberRepositoryTest {
 
         var actual = memberRepository.findByEmail(savedMember.getEmail());
         assertAll(
-            () -> {assertTrue(actual.isPresent());
-            assertThat(actual.get()).isEqualTo(expected);}
+            () -> {
+                assertTrue(actual.isPresent());
+                assertThat(actual.get()).isEqualTo(expected);
+            }
         );
     }
 
     @Test
-    void deleteTest(){
+    void deleteTest() {
         var expected = new Member("test@email.com", "mypassword");
         var actual = memberRepository.save(expected);
         memberRepository.delete(actual);
