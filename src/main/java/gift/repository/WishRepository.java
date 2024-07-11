@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface WishRepository extends JpaRepository<Wish, Long> {
-    List<Wish> findByMemberId(Long memberId);
+    List<Wish> findByMember_Id(Long memberId);
 }
