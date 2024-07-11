@@ -1,6 +1,7 @@
 package gift.dto;
 
 import gift.core.exception.ValidationMessage;
+
 import gift.feat.product.contoller.dto.ProductRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

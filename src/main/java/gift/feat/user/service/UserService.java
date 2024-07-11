@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import gift.core.jwt.JwtProvider;
 import gift.feat.user.User;
 import gift.feat.user.repository.UserJpaRepository;
@@ -12,6 +13,7 @@ import gift.feat.user.repository.UserJpaRepository;
 public class UserService {
 	private final UserJpaRepository userJpaRepository;
 	private final JwtProvider jwtProvider;
+
 
 	@Autowired
 	public UserService(UserJpaRepository userJpaRepository, JwtProvider jwtProvider) {
