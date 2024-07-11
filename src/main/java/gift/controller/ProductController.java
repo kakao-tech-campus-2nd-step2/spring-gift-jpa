@@ -42,10 +42,6 @@ public class ProductController {
     public String getProducts(Model model, Pageable pageable) {
         Page<ProductDTO> productPage = productService.getProductList(pageable);
         model.addAttribute("productPage", productPage);
-        System.out.println("productPage = " + productPage);
-        System.out.println("productPage.getContent() = " + productPage.getContent());
-        System.out.println("productPage.getSize() = " + productPage.getSize());
-        System.out.println("productPage.getNumber() = " + productPage.getNumber());
         return "getProducts";
     }
 
