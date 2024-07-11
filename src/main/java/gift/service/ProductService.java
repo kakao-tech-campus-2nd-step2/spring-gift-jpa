@@ -5,7 +5,7 @@ import gift.controller.product.dto.ProductResponse;
 import gift.global.dto.PageResponse;
 import gift.model.product.Product;
 import gift.repository.ProductJpaRepository;
-import gift.validate.NotFoundException;
+import gift.global.validate.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -52,8 +52,6 @@ public class ProductService {
         var content = productPage.getContent().stream()
             .map(ProductResponse.Info::from)
             .toList();
-        return new PageResponse<>(content, productPage.getNumber(),
-            productPage.getSize(), productPage.getTotalPages(),
-            (int) productPage.getTotalElements());
+        return PageResponse.from(content, productPage);
     }
 }
