@@ -29,6 +29,25 @@ Wish - Product 다 : 일
 
 member에서 어떤식으로 해서 wish를 동작시킬 것인가? 객체지향적으로는 바로 Member가 Product를 추가 제거 하는 것이 맞다고 생각되는데
 
+controller 에서? wishlist서비스를 호출하고, 해당 서비스에서 member와 wish와 product를 사용해서, member 내부의
+
+wishlist를 제어할 수 있도록 한다.
+
+member를 상속받은 클래스가 되어서 이를 제어하는 것?
+
+4. member.delwishList(Product prod); -> 이런 식으로 하면 wish table도 자동으로 반영되어서 동작할 수 있도록?
+
+## 목표
+
+member.addWish(Product prod); 이런 식으로 하면, wish가 자동으로 처리되도록 하고 싶다.
+service에서 이것이 되도록 하고 싶은데 어떻게 해야할까?
+
+member에서 wishRepository를 직접 접근하지 않아도 fk로 연결되어있으니, 내부에서 Wish를 생성해서 사용한다하더라도
+전부 반영되지 않을까?
+
+
+
+
 
 
 ## PR

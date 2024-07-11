@@ -27,8 +27,8 @@ public class Wish {
     @JoinColumn(name="PRODUCT_ID")
     private Product product;
 
-    @Column(nullable = false)
-    private Integer productValue;
+    @Column(name = "PRODUCT_COUNT",nullable = false)
+    private Integer productCount;
 
     public Wish() {
     }
@@ -36,14 +36,14 @@ public class Wish {
     public Wish(Member member, Product product) {
         this.member = member;
         this.product = product;
-        this.productValue = 1;
+        this.productCount = 1;
     }
 
-    public Wish(Long id, Member member, Product product, Integer productValue) {
+    public Wish(Long id, Member member, Product product, Integer productCount) {
         this.id = id;
         this.member = member;
         this.product = product;
-        this.productValue = productValue;
+        this.productCount = productCount;
     }
 
     public Long getId() {
@@ -58,11 +58,37 @@ public class Wish {
         return product;
     }
 
-    public Integer getValue() {
-        return productValue;
+    public void setValue(Integer productCount) {
+        this.productCount = productCount;
     }
 
-    public void setValue(Integer productValue) {
-        this.productValue = productValue;
+    public String getProductName(){
+        return product.getName();
+    }
+
+    public int getProductCount(){
+        return this.productCount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Wish wish = (Wish) o;
+        return member.equals(wish.member) && product.equals(wish.product) && productCount.equals(
+            wish.productCount);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = member.hashCode();
+        result = 31 * result + product.hashCode();
+        result = 31 * result + productCount.hashCode();
+        return result;
     }
 }

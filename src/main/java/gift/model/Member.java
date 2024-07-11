@@ -70,12 +70,18 @@ public class Member {
         return token;
     }
 
-    public void addWish(Wish wish) {
-        wishList.add(wish);
+    public void addProduct(Product product) {
+        wishList.add(new Wish(this,product));
     }
 
-    public void delWish(Wish wish) {
-        wishList.remove(wish);
+    public void delProduct(Product product) {
+        wishList.remove(new Wish(this,product));
+    }
+
+    public void updateProductCount(Product product,int count) {
+        wishList.stream().findAny().ifPresent(wish -> {
+            wish.setValue(count);
+        });
     }
 
     public List<Wish> getWishList() {
