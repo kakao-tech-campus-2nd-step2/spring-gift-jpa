@@ -60,7 +60,7 @@ Content-Type: application/json
 }
 
 ### 위시리스트에 상품 추가
-POST {{baseUrl}}/api/wishlist/1
+POST {{baseUrl}}/api/wishlist/2
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
