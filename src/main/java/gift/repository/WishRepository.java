@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface WishRepository extends JpaRepository<WishEntity, Long> {
+
     public List<WishEntity> findAllByMemberId(Long memberId);
 }
 

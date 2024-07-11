@@ -12,19 +12,23 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
+
     private final ProductRepository productRepository;
+
     @Autowired
-    public ProductService(ProductRepository productRepository){
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    public Product find(Long id){
-        ProductEntity productEntity =productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("not found entity"));
+    public Product find(Long id) {
+        ProductEntity productEntity = productRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("not found entity"));
         return productEntity.toProduct();
     }
 
-    public List<Product> findAll(){
-        return productRepository.findAll().stream().map(ProductEntity::toProduct).collect(Collectors.toList());
+    public List<Product> findAll() {
+        return productRepository.findAll().stream().map(ProductEntity::toProduct)
+            .collect(Collectors.toList());
     }
 
     public Product createProduct(ProductRequest productRequest) {
@@ -32,7 +36,7 @@ public class ProductService {
         return productEntity.toProduct();
     }
 
-    public Product updateProduct(Long id, ProductRequest productRequest){
+    public Product updateProduct(Long id, ProductRequest productRequest) {
         ProductEntity productEntity = productRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("not found entity"));
 
@@ -40,8 +44,9 @@ public class ProductService {
         return productRepository.save(productEntity).toProduct();
 
     }
-    public void deleteProduct(Long id){
-       ProductEntity productEntity = productRepository.findById(id)
+
+    public void deleteProduct(Long id) {
+        ProductEntity productEntity = productRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("not found entity"));
         productRepository.delete(productEntity);
     }

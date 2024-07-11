@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name ="product")
+@Table(name = "product")
 public class ProductEntity {
 
     @Id
@@ -27,12 +27,17 @@ public class ProductEntity {
     @Column
     private String imageUrl;
 
-    public ProductEntity(){};
-    public ProductEntity(String name, int price, String imageUrl){
+    public ProductEntity() {
+    }
+
+    ;
+
+    public ProductEntity(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
+
     public Long getId() {
         return id;
     }
@@ -49,11 +54,11 @@ public class ProductEntity {
         return imageUrl;
     }
 
-    public Product toProduct(){
+    public Product toProduct() {
         return new Product(this.id, this.name, this.price, this.imageUrl);
     }
 
-    public void updateProductEntity(ProductRequest productRequest){
+    public void updateProductEntity(ProductRequest productRequest) {
         this.name = productRequest.getName();
         this.price = productRequest.getPrice();
         this.imageUrl = productRequest.getImageUrl();

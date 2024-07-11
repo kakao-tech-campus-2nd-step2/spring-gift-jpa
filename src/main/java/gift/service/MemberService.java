@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
 
@@ -19,9 +20,12 @@ public class MemberService {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
     }
-    public List<Member> findAllMember(){
-        return memberRepository.findAll().stream().map(MemberEntity::toMember).collect(Collectors.toList());
+
+    public List<Member> findAllMember() {
+        return memberRepository.findAll().stream().map(MemberEntity::toMember)
+            .collect(Collectors.toList());
     }
+
     public String register(MemberRequest memberRequest) {
 
         MemberEntity memberEntity = memberRepository.save(memberRequest.toMemberEntity());
@@ -30,7 +34,8 @@ public class MemberService {
     }
 
     public String login(MemberRequest memberRequest) {
-        MemberEntity memberEntity = memberRepository.findByEmail(memberRequest.getEmail()).orElseThrow(()->new EntityNotFoundException("not found Entity"));
+        MemberEntity memberEntity = memberRepository.findByEmail(memberRequest.getEmail())
+            .orElseThrow(() -> new EntityNotFoundException("not found Entity"));
         Member member = memberEntity.toMember();
 
         if (member.getPassword().equals(memberRequest.getPassword())) {
@@ -39,16 +44,18 @@ public class MemberService {
         return null;
     }
 
-    public void deleteMember(Long id){
-        MemberEntity memberEntity = memberRepository.findById(id).orElseThrow(()->new EntityNotFoundException("not found Entity"));
+    public void deleteMember(Long id) {
+        MemberEntity memberEntity = memberRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("not found Entity"));
         memberRepository.delete(memberEntity);
     }
 
     public Member getMemberFromToken(String token) {
         String email = jwtUtil.getEmailFromToken(token);
 
-        if(email != null) {
-            return memberRepository.findByEmail(email).orElseThrow(()->new EntityNotFoundException("not found Entity")).toMember();
+        if (email != null) {
+            return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("not found Entity")).toMember();
         }
         return null;
     }

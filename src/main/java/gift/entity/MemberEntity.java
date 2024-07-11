@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name ="member")
+@Table(name = "member")
 public class MemberEntity {
 
     @Id
@@ -23,9 +23,10 @@ public class MemberEntity {
     @Column
     private String password;
 
-    public MemberEntity(){}
+    public MemberEntity() {
+    }
 
-    public MemberEntity(String email, String password){
+    public MemberEntity(String email, String password) {
         this.email = email;
         this.password = password;
     }
@@ -42,7 +43,7 @@ public class MemberEntity {
         return password;
     }
 
-    public Member toMember(){
+    public Member toMember() {
         return new Member(this.id, this.email, this.password);
     }
 }

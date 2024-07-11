@@ -12,7 +12,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
+
     private final SecretKey secretKey;
+
     public JwtUtil(@Value("${jwt.secret.key}") String secret) {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
     }
@@ -41,7 +43,7 @@ public class JwtUtil {
 
     public String getEmailFromToken(String token) {
         Claims claims = getClaims(token);
-        if( claims != null){
+        if (claims != null) {
             return claims.get("email", String.class);
         }
         return null;

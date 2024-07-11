@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name ="wish")
+@Table(name = "wish")
 public class WishEntity {
 
     @Id
@@ -22,9 +22,10 @@ public class WishEntity {
     @Column
     private Long productId;
 
-    public WishEntity(){}
+    public WishEntity() {
+    }
 
-    public WishEntity(Long memberId, Long productId){
+    public WishEntity(Long memberId, Long productId) {
         this.memberId = memberId;
         this.productId = productId;
     }
@@ -41,5 +42,7 @@ public class WishEntity {
         return productId;
     }
 
-    public Wish toWish(){return new Wish(this.id, this.memberId, this.productId);}
+    public Wish toWish() {
+        return new Wish(this.id, this.memberId, this.productId);
+    }
 }

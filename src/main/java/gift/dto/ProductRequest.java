@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 public class ProductRequest {
 
     @NotBlank
-    @Size(max=15, message = "최대 15자리까지 입력하실 수 있습니다.")
+    @Size(max = 15, message = "최대 15자리까지 입력하실 수 있습니다.")
     @Pattern(regexp = "[\\w\\s\\(\\)\\[\\]\\+\\-\\&\\/가-힣]*", message = "특수 문자는 '(), [], +, -, &, /, _ '만 사용가능 합니다.")
     @Pattern(regexp = "^(?!.*카카오).*$", message = "담당 MD와 협의해 주세요.")
     private String name;
@@ -20,13 +20,15 @@ public class ProductRequest {
     @NotNull
     private String imageUrl;
 
-    public ProductRequest(){}
+    public ProductRequest() {
+    }
 
-    public ProductRequest(String name, int price, String imageUrl){
+    public ProductRequest(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
+
     public String getName() {
         return name;
     }
@@ -39,7 +41,7 @@ public class ProductRequest {
         return imageUrl;
     }
 
-    public ProductEntity toProductEntity(){
+    public ProductEntity toProductEntity() {
         return new ProductEntity(this.name, this.price, this.imageUrl);
     }
 }
