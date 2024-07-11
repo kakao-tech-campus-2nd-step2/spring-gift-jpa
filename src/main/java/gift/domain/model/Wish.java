@@ -10,9 +10,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "wishs")
+@Table(
+    name = "wishs",
+    uniqueConstraints = @UniqueConstraint(name = "UK_USER_PRODUCT"
+        , columnNames = {"user_id", "product_id"})
+)
+
 public class Wish {
 
     @Id
@@ -30,7 +36,8 @@ public class Wish {
     @Column(nullable = false)
     private Integer count = 1;
 
-    protected Wish() {}
+    protected Wish() {
+    }
 
     public Wish(User user, Product product) {
         this.user = user;

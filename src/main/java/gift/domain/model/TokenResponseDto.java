@@ -1,6 +1,7 @@
 package gift.domain.model;
 
 public class TokenResponseDto {
+
     private String token;
 
     public TokenResponseDto(String token) {

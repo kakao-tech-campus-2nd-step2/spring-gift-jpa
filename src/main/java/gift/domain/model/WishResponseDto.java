@@ -37,7 +37,8 @@ public class WishResponseDto {
     public WishResponseDto() {
     }
 
-    public WishResponseDto(Long id, Integer count, Long productId, String productName, Long productPrice,
+    public WishResponseDto(Long id, Integer count, Long productId, String productName,
+        Long productPrice,
         String productImageUrl) {
         this.id = id;
         this.count = count;
