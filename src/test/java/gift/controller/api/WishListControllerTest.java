@@ -22,12 +22,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class WishListControllerTest {
 
+    private static final String URL = "/api/wishlist";
+    private static String TOKEN;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-
-    private static String TOKEN;
 
     @BeforeAll
     public static void setup(@Autowired ProductService productService,
@@ -47,8 +47,6 @@ class WishListControllerTest {
         TokenResponse tokenResponse = tokenService.generateToken(registeredMemberId);
         return tokenResponse.token();
     }
-
-    private static final String URL = "/api/wishlist";
 
     @Test
     @Order(1)

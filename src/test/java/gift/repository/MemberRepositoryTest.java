@@ -49,9 +49,9 @@ class MemberRepositoryTest {
 
         //Then
         assertThat(foundMember).isPresent()
-                        .hasValueSatisfying(m->
-                            assertThat(m.getId()).isEqualTo(savedMemberId)
-                        );
+                .hasValueSatisfying(m ->
+                        assertThat(m.getId()).isEqualTo(savedMemberId)
+                );
     }
 
 }

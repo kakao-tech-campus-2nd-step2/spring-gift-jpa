@@ -57,7 +57,7 @@ class WishRepositoryTest {
         //Then
         assertThat(wishes).isNotEmpty()
                 .hasSize(2)
-                .containsExactly(testWish1,testWish2);
+                .containsExactly(testWish1, testWish2);
 
         assertThat(testWish1.getProduct()).isEqualTo(testProduct1);
     }
@@ -66,14 +66,14 @@ class WishRepositoryTest {
     @DisplayName("멤버, 상품으로 위시 찾기")
     void findByMemberIdAndProductId() {
         //When
-        Optional<Wish> wish = wishRepository.findByMemberAndProduct(testMember,testProduct1);
+        Optional<Wish> wish = wishRepository.findByMemberAndProduct(testMember, testProduct1);
 
         //Then
         assertThat(wish).isPresent()
-                        .hasValueSatisfying(w->{
-                            assertThat(w).isEqualTo(testWish1);
-                            assertThat(w.getProduct()).isEqualTo(testProduct1);
-                        });
+                .hasValueSatisfying(w -> {
+                    assertThat(w).isEqualTo(testWish1);
+                    assertThat(w.getProduct()).isEqualTo(testProduct1);
+                });
     }
 
 }
