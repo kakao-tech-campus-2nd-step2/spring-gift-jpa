@@ -32,7 +32,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<String> signUp(@Valid @RequestBody SignUpRequest signUpRequest) {
-        jwtUserService.signUp(signUpRequest);
+        userService.signUp(signUpRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 

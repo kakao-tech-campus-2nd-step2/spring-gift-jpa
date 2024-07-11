@@ -4,6 +4,7 @@ import gift.user.exception.ForbiddenException;
 import gift.user.model.UserRepository;
 import gift.user.model.dto.AppUser;
 import gift.user.model.dto.Role;
+import gift.user.model.dto.SignUpRequest;
 import gift.user.model.dto.UpdatePasswordRequest;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,16 @@ public class UserService {
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Transactional
+    public void signUp(SignUpRequest signUpRequest) {
+        String salt = SHA256Util.getSalt();
+        String hashedPassword = SHA256Util.encodePassword(signUpRequest.getPassword(), salt);
+        signUpRequest.setPassword(hashedPassword);
+        AppUser appUser = new AppUser(signUpRequest.getEmail(), signUpRequest.getPassword(), signUpRequest.getRole(),
+                salt);
+        userRepository.save(appUser);
     }
 
     @Transactional
