@@ -28,12 +28,12 @@ public class UserService {
 
     public String registerUser(SignupRequest signupRequest) {
         User user = new User(signupRequest.getEmail(), signupRequest.getPassword());
-        userRepository.addUser(user);
+        userRepository.save(user);
         return "Welcome, " + user.getEmail() + "!";
     }
 
     public String loginUser(LoginRequest loginRequest) throws Exception {
-        Optional<User> user = userRepository.findUserByEmail(loginRequest.getEmail()); // Email이 PK
+        Optional<User> user = userRepository.findByEmail(loginRequest.getEmail()); // Email이 PK
         if (user.isPresent() &&
             user.get().getPassword().equals(loginRequest.getPassword())) {
             return generateToken(user.get());
