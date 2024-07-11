@@ -3,7 +3,6 @@ package gift.domain;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "member")
 public class Member {
 
     @Id
@@ -16,7 +15,7 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
-    public Member() {}
+    protected Member() {}
 
     public Member(Long id, String email, String password) {
         this.id = id;
