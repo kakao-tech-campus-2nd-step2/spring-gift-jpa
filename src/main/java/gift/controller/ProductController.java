@@ -47,7 +47,7 @@ public class ProductController {
     @ResponseBody
     @GetMapping("/api/product/{id}")
     public String getProduct(@PathVariable int Id) {
-        String product = productService.getProductById(Id);
+        String product = productService.getProductByID(Id);
         return product;
     }
 }

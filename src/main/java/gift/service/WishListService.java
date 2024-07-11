@@ -3,9 +3,9 @@ package gift.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.Util.JWTUtil;
-import gift.compositeKey.WishListId;
 import gift.dto.WishDTO;
 import gift.entity.WishList;
+import gift.entity.compositeKey.WishListId;
 import gift.exception.exception.BadRequestException;
 import gift.exception.exception.NotFoundException;
 import gift.exception.exception.UnAuthException;
@@ -29,8 +29,8 @@ public class WishListService {
     JWTUtil jwtUtil;
 
     public void add(String token, int productId) {
-        int tokenUserId = JWTUtil.getIdFromToken(token);
-        if(!jwtUtil.isValidToken(token))
+        int tokenUserId = jwtUtil.getUserIdFromToken(token);
+        if(!jwtUtil.validateToken(token))
             throw new UnAuthException("로그인 만료");
         WishListId wishListId = new WishListId(tokenUserId,productId);
         if(productRepository.findById(productId).isEmpty())
@@ -41,8 +41,8 @@ public class WishListService {
     }
 
     public String getWishList(String token) throws JsonProcessingException {
-        int tokenUserId = JWTUtil.getIdFromToken(token);
-        if(!jwtUtil.isValidToken(token))
+        int tokenUserId = jwtUtil.getUserIdFromToken(token);
+        if(!jwtUtil.validateToken(token))
             throw new UnAuthException("로그인 만료");
         List<WishDTO.wishListProduct> wishlist = wishListRepository.findByUserId(tokenUserId).stream()
                 .map(array-> new WishDTO.wishListProduct(
@@ -54,9 +54,9 @@ public class WishListService {
     }
 
     public void deleteWishList(String token, int productId) {
-        if(!jwtUtil.isValidToken(token))
+        if(!jwtUtil.validateToken(token))
             throw new UnAuthException("로그인 만료");
-        int tokenUserId = JWTUtil.getIdFromToken(token);
+        int tokenUserId = jwtUtil.getUserIdFromToken(token);
         WishListId wishListId = new WishListId(tokenUserId,productId);
         wishListRepository.deleteById(wishListId);
     }
