@@ -13,19 +13,25 @@ public class Wish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long memberId;
-    private Long productId;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     @Embedded
     private ProductCount productCount;
-
 
     public Wish() {
     }
 
-    public Wish(Long id, Long memberId, Long productId, ProductCount productCount) {
+    public Wish(Long id, Member member, Product product, ProductCount productCount) {
         this.id = id;
-        this.memberId = memberId;
-        this.productId = productId;
+        this.member = member;
+        this.product = product;
         this.productCount = productCount;
     }
 
@@ -37,12 +43,12 @@ public class Wish {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Product getProduct() {
+        return product;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Member getMember() {
+        return member;
     }
 
     public ProductCount getProductCount() {
@@ -62,4 +68,5 @@ public class Wish {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

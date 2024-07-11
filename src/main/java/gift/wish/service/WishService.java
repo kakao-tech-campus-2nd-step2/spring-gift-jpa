@@ -2,6 +2,11 @@ package gift.wish.service;
 
 import gift.member.domain.Member;
 import gift.member.exception.MemberNotFoundException;
+import gift.member.repository.MemberRepository;
+import gift.member.service.MemberService;
+import gift.product.domain.Product;
+import gift.product.repository.ProductRepository;
+import gift.product.service.ProductService;
 import gift.wish.domain.Wish;
 import gift.wish.dto.WishServiceDto;
 import gift.wish.exception.WishNotFoundException;
@@ -13,9 +18,13 @@ import java.util.List;
 @Service
 public class WishService {
     private final WishRepository wishRepository;
+    private final MemberService memberService;
+    private final ProductService productService;
 
-    public WishService(WishRepository wishRepository) {
+    public WishService(WishRepository wishRepository, MemberService memberService, ProductService productService) {
         this.wishRepository = wishRepository;
+        this.memberService = memberService;
+        this.productService = productService;
     }
 
     public List<Wish> getAllWishesByMember(Member member) {
@@ -28,12 +37,12 @@ public class WishService {
     }
 
     public void createWish(WishServiceDto wishServiceDto) {
-        wishRepository.save(wishServiceDto.toWish());
+        wishRepository.save(getWishByWishServiceDto(wishServiceDto));
     }
 
     public void updateWish(WishServiceDto wishServiceDto) {
         validateWishExists(wishServiceDto.id());
-        wishRepository.save(wishServiceDto.toWish());
+        wishRepository.save(getWishByWishServiceDto(wishServiceDto));
     }
 
     public void deleteWish(Long id) {
@@ -41,9 +50,14 @@ public class WishService {
         wishRepository.deleteById(id);
     }
 
+    private Wish getWishByWishServiceDto(WishServiceDto wishServiceDto) {
+        Member member = memberService.getMemberById(wishServiceDto.memberId());
+        Product product = productService.getProductById(wishServiceDto.productId());
+        return wishServiceDto.toWish(member, product);
+    }
+
     private void validateWishExists(Long id) {
         wishRepository.findById(id)
                 .orElseThrow(MemberNotFoundException::new);
     }
-
 }
