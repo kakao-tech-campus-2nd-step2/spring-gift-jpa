@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Edit Page</title>
+    <link rel="stylesheet" th:href="@{/css/product_edit.css}">
+</head>
+<body>
+<h1>Edit Product</h1>
+<div>
+    <div>
+        <label for="name">Product Name:</label>
+        <input type="text" id="name" th:placeholder="${product.name}"/>
+        <span class="error-message" id="name-error" style="display:none; color:red;"></span>
+    </div>
+    <div>
+        <label for="price">Price:</label>
+        <input type="number" id="price" th:placeholder="${product.price}"/>
+        <span class="error-message" id="price-error" style="display:none; color:red;"></span>
+    </div>
+    <div>
+        <label for="imageUrl">Image URL:</label>
+        <input type="text" id="imageUrl" th:placeholder="${product.imageUrl}"/>
+        <span class="error-message" id="imageUrl-error" style="color:red;"></span>
+    </div>
+    <div>
+        <button type="submit" id="save-btn" th:onclick="'fetch_product(' + ${product.id} + ')'">Edit!</button>
+    </div>
+</div>
+<script type="text/javascript">
+
+    function fetch_product(productId) {
+        const name = document.getElementById("name").value || null;
+        const price = document.getElementById("price").value || null;
+        const imageUrl = document.getElementById("imageUrl").value || null;
+
+        const body_data = JSON.stringify({
+            name,
+            price,
+            imageUrl
+        });
+
+        fetch('/api/products/' + productId, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: body_data
+        }).then(response => {
+            ["name", "price", "imageUrl"].forEach((field) => {
+                let $errorSupport = document.getElementById(field + "-error");
+
+                $errorSupport.textContent = ""
+                $errorSupport.style.display = "none";
+            })
+            if (response.ok) {
+                alert("수정이 완료되었습니다.")
+                window.location.href = '/';
+            } else if (response.status === 400){
+                response.json().then(invalidDict => {
+                    Object.entries(invalidDict).forEach(([field, errmsg]) => {
+                        let $errorSupport = document.getElementById(field + "-error");
+
+                        $errorSupport.textContent += "\n" + errmsg;
+                        $errorSupport.style.display = "";
+                    })
+                })
+            } else {
+                response.text().then(errmsg => {
+                    alert(errmsg);
+                })
+            }
+        })
+    }
+</script>
+</body>
+</html>
+

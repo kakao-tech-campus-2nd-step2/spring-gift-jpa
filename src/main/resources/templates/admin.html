@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+    <h1>Admin Page</h1>
+    <div>
+        <button onclick="navigate_to_add()">
+            상품 추가
+        </button>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <th>이미지</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>수정</th>
+                <th>삭제</th>
+            </tr>
+            <tr th:each ="product : ${products}">
+                <td>
+                    <img th:src="${product.imageUrl}" th:alt="${product.name} + ' image'"/>
+                </td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.price}"></td>
+                <td>
+                   <button th:onclick="'navigate_to_edit(' + ${product.id} + ')'">수정</button>
+                </td>
+                <td>
+                    <button th:onclick="'delete_product(' + ${product.id} + ')'">삭제</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+<script>
+    function navigate_to_add() {
+        window.location.href = "/products/add";
+    }
+
+    function navigate_to_edit(id) {
+        window.location.href = "/products/" + id + "/edit";
+    }
+
+    function delete_product(id) {
+        fetch('/api/products/' + id, {
+            method: 'delete',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                alert("상품 삭제가 완료되었습니다.")
+                window.location.href = '/';
+            } else {
+                response.text().then(errmsg => {
+                    alert(errmsg);
+                })
+
+            }
+        })
+    }
+
+</script>
+</body>
+</html>
