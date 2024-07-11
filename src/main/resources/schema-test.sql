@@ -23,7 +23,7 @@ CREATE TABLE wishes (
 );
 
 alter table members
-    add constraint uk_member unique (email);
+    add constraint uk_member_email unique (email);
 
 alter table members
-    add constraint uk_member unique (nickname);
+    add constraint uk_member_nickname unique (nickname);

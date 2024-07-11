@@ -1,5 +1,7 @@
 package gift.wish.domain;
 
+import gift.member.domain.Member;
+import gift.product.domain.Product;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 
@@ -15,6 +17,7 @@ public class Wish {
     private Long productId;
     @Embedded
     private ProductCount productCount;
+
 
     public Wish() {
     }
