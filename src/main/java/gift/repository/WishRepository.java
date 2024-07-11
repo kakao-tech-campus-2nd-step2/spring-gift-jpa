@@ -1,7 +1,5 @@
 package gift.repository;
 
-import gift.domain.Member;
-import gift.domain.Product;
 import gift.domain.Wish;
 import org.springframework.data.jpa.repository.JpaRepository;
 
