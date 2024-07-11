@@ -5,8 +5,8 @@ import gift.controller.member.dto.MemberResponse;
 import gift.global.auth.jwt.JwtProvider;
 import gift.model.member.Member;
 import gift.repository.MemberJpaRepository;
-import gift.validate.InvalidAuthRequestException;
-import gift.validate.NotFoundException;
+import gift.global.validate.InvalidAuthRequestException;
+import gift.global.validate.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

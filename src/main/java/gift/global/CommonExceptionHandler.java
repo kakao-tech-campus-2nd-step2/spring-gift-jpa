@@ -1,7 +1,7 @@
 package gift.global;
 
-import gift.validate.InvalidAuthRequestException;
-import gift.validate.NotFoundException;
+import gift.global.validate.InvalidAuthRequestException;
+import gift.global.validate.NotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;

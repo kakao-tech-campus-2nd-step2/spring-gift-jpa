@@ -8,7 +8,7 @@ import gift.model.wish.Wish;
 import gift.repository.MemberJpaRepository;
 import gift.repository.ProductJpaRepository;
 import gift.repository.WishJpaRepository;
-import gift.validate.NotFoundException;
+import gift.global.validate.NotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
