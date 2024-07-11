@@ -2,6 +2,7 @@ package gift.feat.wishProduct.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,9 +22,13 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("api/v1/wishlist")
-@RequiredArgsConstructor
 public class WishProductRestController {
 	private final WishProductService wishProductService;
+
+	@Autowired
+	public WishProductRestController(WishProductService wishProductService) {
+		this.wishProductService = wishProductService;
+	}
 
 	// 위시리스트에 상품 추가
 	@PostMapping("")
@@ -39,7 +44,7 @@ public class WishProductRestController {
 	}
 
 	//로그인한 유저의 위시리스트를 페이징 해서 조회
-	@GetMapping("")
+	@GetMapping("/page")
 	public ResponseEntity<Page<WishProductResponseDto>> getWishListWithPage(
 		@RequestAttribute("USER") UserDetails userDetails,
 		@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
