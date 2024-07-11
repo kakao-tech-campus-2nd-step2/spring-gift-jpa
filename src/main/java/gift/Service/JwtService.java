@@ -2,7 +2,7 @@ package gift.Service;
 
 import gift.DTO.JwtToken;
 import gift.DTO.UserDto;
-import gift.DTO.UserEntity;
+import gift.DTO.User;
 import gift.Repository.UserDao;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -56,7 +56,7 @@ public class JwtService {
     }
   }
 
-  public Optional<UserEntity> getUserEmailFromToken(String token) {
+  public Optional<User> getUserEmailFromToken(String token) {
     JwtParser jwtParser = Jwts.parser()
       .setSigningKey(Keys.hmacShaKeyFor(key.getBytes()))
       .build();

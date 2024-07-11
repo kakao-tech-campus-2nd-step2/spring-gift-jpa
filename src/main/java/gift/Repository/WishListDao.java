@@ -1,8 +1,8 @@
 package gift.Repository;
 
-import gift.DTO.WishListEntity;
+import gift.DTO.WishList;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface WishListDao extends JpaRepository<WishListEntity, Long> {
+public interface WishListDao extends JpaRepository<WishList, Long> {
 
 }

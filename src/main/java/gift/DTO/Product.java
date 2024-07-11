@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table
-public class ProductEntity {
+public class Product {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,10 +23,10 @@ public class ProductEntity {
   private int price;
   private String imageUrl;
 
-  public ProductEntity() {
+  public Product() {
   }
 
-  public ProductEntity(Long id, String name, int price, String imageUrl) {
+  public Product(Long id, String name, int price, String imageUrl) {
     this.id = id;
     this.name = name;
     this.price = price;

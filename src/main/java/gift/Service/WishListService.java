@@ -2,7 +2,7 @@ package gift.Service;
 
 import gift.ConverterToDto;
 import gift.DTO.WishListDto;
-import gift.DTO.WishListEntity;
+import gift.DTO.WishList;
 import gift.Repository.WishListDao;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -17,9 +17,9 @@ public class WishListService {
   }
 
   public WishListDto addProductToWishList(WishListDto wishListDto) {
-    WishListEntity wishListEntity = new WishListEntity(wishListDto.getId(), wishListDto.getUserId(),
+    WishList wishList = new WishList(wishListDto.getId(), wishListDto.getUserId(),
       wishListDto.getProductId());
-    wishListDao.save(wishListEntity);
+    wishListDao.save(wishList);
     return wishListDto;
   }
 

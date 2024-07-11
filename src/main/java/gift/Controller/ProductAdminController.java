@@ -1,7 +1,7 @@
 package gift.Controller;
 
 import gift.DTO.ProductDto;
-import gift.DTO.ProductEntity;
+import gift.DTO.Product;
 import gift.Exception.ProductNotFoundException;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
@@ -31,7 +31,7 @@ public class ProductAdminController {
 
   @GetMapping("/new")
   public String newProductForm(Model model) {
-    model.addAttribute("product", new ProductEntity());
+    model.addAttribute("product", new Product());
     return "product-form";
   }
 

@@ -2,7 +2,6 @@ package gift.Controller;
 
 import gift.DTO.JwtToken;
 import gift.DTO.UserDto;
-import gift.DTO.UserEntity;
 import gift.Service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +21,15 @@ public class UserController {
   }
 
   @PostMapping("/signup")
-  public ResponseEntity<UserDto> userSignUp(@Valid @RequestBody UserDto userInfo) {
-    UserDto userDto = userService.userSignUp(userInfo);
+  public ResponseEntity<UserDto> userSignUp(@Valid @RequestBody UserDto userDtoInfo) {
+    UserDto userDto = userService.userSignUp(userDtoInfo);
     return ResponseEntity.ok(userDto);
   }
 
   @PostMapping("/login")
   public ResponseEntity<JwtToken> userLogin(
-    @Valid @RequestBody UserDto userInfo) {
-    JwtToken jwtToken = userService.userLogin(userInfo);
+    @Valid @RequestBody UserDto userDtoInfo) {
+    JwtToken jwtToken = userService.userLogin(userDtoInfo);
     return ResponseEntity.ok(jwtToken);
   }
 }

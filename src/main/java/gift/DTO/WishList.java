@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table
-public class WishListEntity {
+public class WishList {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +21,10 @@ public class WishListEntity {
   @Column(unique = true, nullable = false)
   private Long productId;
 
-  public WishListEntity() {
+  public WishList() {
   }
 
-  public WishListEntity(Long id, Long userId, Long productId) {
+  public WishList(Long id, Long userId, Long productId) {
     this.id = id;
     this.userId = userId;
     this.productId = productId;

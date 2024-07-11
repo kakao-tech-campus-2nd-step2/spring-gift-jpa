@@ -6,11 +6,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.util.Optional;
 
 @Entity
 @Table
-public class UserEntity {
+public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,11 +19,11 @@ public class UserEntity {
   @Column(nullable = false)
   private String password;
 
-  public UserEntity() {
+  public User() {
 
   }
 
-  public UserEntity(Long id, String email, String password) {
+  public User(Long id, String email, String password) {
     this.id = id;
     this.email = email;
     this.password = password;
@@ -43,9 +42,9 @@ public class UserEntity {
     return this.password;
   }
 
-  public boolean matchLoginInfo(UserDto userByEmail) {
-    return this.email.equals(userByEmail.getEmail()) && this.password.equals(
-      userByEmail.getPassword());
+  public boolean matchLoginInfo(UserDto userDtoByEmail) {
+    return this.email.equals(userDtoByEmail.getEmail()) && this.password.equals(
+      userDtoByEmail.getPassword());
   }
 
 }

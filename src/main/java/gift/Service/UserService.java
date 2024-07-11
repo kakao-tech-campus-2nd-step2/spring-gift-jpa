@@ -2,7 +2,7 @@ package gift.Service;
 
 import gift.DTO.JwtToken;
 import gift.DTO.UserDto;
-import gift.DTO.UserEntity;
+import gift.DTO.User;
 import gift.Exception.ForbiddenException;
 import gift.Exception.UnauthorizedException;
 import gift.Repository.UserDao;
@@ -21,20 +21,20 @@ public class UserService {
     this.jwtService = jwtService;
   }
 
-  public UserDto userSignUp(UserDto userInfo) {
-    UserEntity userEntity = new UserEntity(userInfo.getId(), userInfo.getEmail(),
-      userInfo.getPassword());
-    userDao.save(userEntity);
-    return userInfo;
+  public UserDto userSignUp(UserDto userDtoInfo) {
+    User user = new User(userDtoInfo.getId(), userDtoInfo.getEmail(),
+      userDtoInfo.getPassword());
+    userDao.save(user);
+    return userDtoInfo;
   }
 
-  public JwtToken userLogin(UserDto userInfo) {
-    String email = userInfo.getEmail();
-    Optional<UserEntity> userByEmail = Optional.ofNullable(userDao.findByEmail(email)
+  public JwtToken userLogin(UserDto userDtoInfo) {
+    String email = userDtoInfo.getEmail();
+    Optional<User> userByEmail = Optional.ofNullable(userDao.findByEmail(email)
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저가 없습니다.", 1)));
 
-    if (userByEmail.get().matchLoginInfo(userInfo)) {
-      JwtToken jwtToken = jwtService.createAccessToken(userInfo);
+    if (userByEmail.get().matchLoginInfo(userDtoInfo)) {
+      JwtToken jwtToken = jwtService.createAccessToken(userDtoInfo);
       if (jwtService.isValidToken(jwtToken)) { //토큰이 만료되었다면
         throw new UnauthorizedException("토큰이 유효하지 않습니다.");
       }

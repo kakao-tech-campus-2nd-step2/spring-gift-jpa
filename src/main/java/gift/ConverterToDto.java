@@ -1,27 +1,27 @@
 package gift;
 
 import gift.DTO.ProductDto;
-import gift.DTO.ProductEntity;
+import gift.DTO.Product;
 import gift.DTO.UserDto;
-import gift.DTO.UserEntity;
+import gift.DTO.User;
 import gift.DTO.WishListDto;
-import gift.DTO.WishListEntity;
+import gift.DTO.WishList;
 
 public class ConverterToDto {
 
-  public static ProductDto convertToProductDto(ProductEntity productEntity) {
-    ProductDto productDto = new ProductDto(productEntity.getId(), productEntity.getName(),
-      productEntity.getPrice(), productEntity.getImageUrl());
+  public static ProductDto convertToProductDto(Product product) {
+    ProductDto productDto = new ProductDto(product.getId(), product.getName(),
+      product.getPrice(), product.getImageUrl());
     return productDto;
   }
 
-  public static UserDto convertToUserDto(UserEntity userEntity){
-    UserDto userDto = new UserDto(userEntity.getId(),userEntity.getEmail(),userEntity.getPassword());
+  public static UserDto convertToUserDto(User user){
+    UserDto userDto = new UserDto(user.getId(), user.getEmail(), user.getPassword());
     return userDto;
   }
 
-  public static WishListDto convertToWishListDto(WishListEntity wishListEntity){
-    WishListDto wishListDto = new WishListDto(wishListEntity.getId(),wishListEntity.getUserId(),wishListEntity.getProductId());
+  public static WishListDto convertToWishListDto(WishList wishList){
+    WishListDto wishListDto = new WishListDto(wishList.getId(), wishList.getUserId(), wishList.getProductId());
     return wishListDto;
   }
 }
