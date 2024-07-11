@@ -1,5 +1,6 @@
 package gift.user.model.dto;
 
+import gift.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,7 +13,7 @@ import security.SHA256Util;
 
 @Entity
 @Table(name = "app_user")
-public class AppUser {
+public class AppUser extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

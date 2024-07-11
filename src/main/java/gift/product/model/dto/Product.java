@@ -1,6 +1,7 @@
 package gift.product.model.dto;
 
 
+import gift.BaseTimeEntity;
 import gift.user.model.dto.AppUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "product")
-public class Product {
+public class Product extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
