@@ -1,6 +1,5 @@
 package gift.wish.domain;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import gift.global.response.ErrorCode;
 import gift.product.exception.ProductValidException;
 import jakarta.persistence.Column;
@@ -29,12 +28,6 @@ public class ProductCount {
     @Override
     public String toString() {
         return Long.toString(value);
-    }
-
-    // JSON 직렬화를 위해 @JsonValue 사용
-    @JsonValue
-    public Long toJson() {
-        return value;
     }
 
     @Override

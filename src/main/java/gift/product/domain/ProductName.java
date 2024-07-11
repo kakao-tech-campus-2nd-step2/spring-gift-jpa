@@ -1,6 +1,5 @@
 package gift.product.domain;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import gift.global.response.ErrorCode;
 import gift.product.exception.ProductValidException;
 import jakarta.persistence.Column;
@@ -42,12 +41,6 @@ public class ProductName {
 
     @Override
     public String toString() {
-        return value;
-    }
-
-    // JSON 직렬화를 위해 @JsonValue 사용
-    @JsonValue
-    public String toJson() {
         return value;
     }
 
