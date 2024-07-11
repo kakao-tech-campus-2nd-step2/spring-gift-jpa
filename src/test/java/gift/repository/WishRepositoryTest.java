@@ -4,6 +4,7 @@ import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
 import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +22,28 @@ class WishRepositoryTest {
     @Autowired
     private EntityManager entityManager;
 
+    private Product expectedProduct;
+    private Member expectedMember;
+    private int expectedQuantity;
+    private Wish expected;
+
+    @BeforeEach
+    void setupWish(){
+        expectedProduct = new Product("아메리카노",2000,"http://example.com/americano");
+        entityManager.persist(expectedProduct);
+
+        expectedMember = new Member("a@a.com","1234");
+        entityManager.persist(expectedMember);
+
+        entityManager.flush();
+
+        expectedQuantity = 2;
+        expected = new Wish(expectedMember,expectedProduct,expectedQuantity);
+    }
+
     @Test
     @DisplayName("위시 저장 테스트")
     void save() {
-        // given
-        Product expectedProduct = new Product("아메리카노",2000,"http://example.com/americano");
-        Member expectedMember = new Member("a@a.com","1234");
-        int expectedQuantity = 2;
-        Wish expected = new Wish(expectedMember,expectedProduct,expectedQuantity);
-
         // when
         Wish actual = wishes.save(expected);
 
@@ -43,16 +57,9 @@ class WishRepositoryTest {
     }
 
     @Test
-    @DisplayName("위시 멤버 아이디로 조회 테스트")
+    @DisplayName("위시 멤버 아이디로 위시 조회 테스트")
     void findByMemberId() {
         // given
-        Product expectedProduct = new Product("아메리카노",2000,"http://example.com/americano");
-        entityManager.persist(expectedProduct);
-        Member expectedMember = new Member("a@a.com","1234");
-        entityManager.persist(expectedMember);
-        entityManager.flush();
-        int expectedQuantity = 2;
-        Wish expected = new Wish(expectedMember,expectedProduct,expectedQuantity);
         Wish savedWish = wishes.save(expected);
         entityManager.flush();
         entityManager.clear();
@@ -70,16 +77,9 @@ class WishRepositoryTest {
     }
 
     @Test
-    @DisplayName("위시 위시 아이디와 멤버 아이디로 조회 테스트")
+    @DisplayName("위시 아이디와 멤버 아이디로 위시 조회 테스트")
     void findByIdAndMemberId() {
         // given
-        Product expectedProduct = new Product("아메리카노",2000,"http://example.com/americano");
-        entityManager.persist(expectedProduct);
-        Member expectedMember = new Member("a@a.com","1234");
-        entityManager.persist(expectedMember);
-        entityManager.flush();
-        int expectedQuantity = 2;
-        Wish expected = new Wish(expectedMember,expectedProduct,expectedQuantity);
         Wish savedWish = wishes.save(expected);
         entityManager.flush();
         entityManager.clear();
@@ -97,12 +97,9 @@ class WishRepositoryTest {
     }
 
     @Test
+    @DisplayName("위시 아이디로 위시 삭제 테스트")
     void deleteById() {
         // given
-        Product expectedProduct = new Product("아메리카노",2000,"http://example.com/americano");
-        Member expectedMember = new Member("a@a.com","1234");
-        int expectedQuantity = 2;
-        Wish expected = new Wish(expectedMember,expectedProduct,expectedQuantity);
         Wish savedWish = wishes.save(expected);
 
         // when
