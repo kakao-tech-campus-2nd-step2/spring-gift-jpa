@@ -1,5 +1,6 @@
 package gift.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "product")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Product {
 
     @Id
@@ -34,7 +36,7 @@ public class Product {
     @Column
     private String description;
 
-    private Product() {
+    protected Product() {
     }
 
     private Product(ProductBuilder builder) {

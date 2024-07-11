@@ -17,7 +17,8 @@ public class JwtUtil {
     private final Key secretKey;
 
     public JwtUtil(@Value("${jwt.secret}") String secretKey) {
-        this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        byte[] keyBytes = java.util.Base64.getDecoder().decode(secretKey);
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String extractEmail(String token) {

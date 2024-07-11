@@ -2,6 +2,12 @@ package gift;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import gift.domain.Member;
+import gift.domain.Product;
+import gift.domain.Wish;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
+import gift.repository.WishRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;

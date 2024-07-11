@@ -21,7 +21,7 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    private Member() {
+    protected Member() {
     }
 
     private Member(MemberBuilder builder) {

@@ -3,21 +3,21 @@ package gift.service;
 import gift.domain.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import javax.crypto.SecretKey;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JwtService {
-    private static final String SECRET_KEY = "4261656C64756E67";
+    private final Key signingKey;
 
-    private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        return Keys.hmacShaKeyFor(keyBytes);
+    public JwtService(@Value("${jwt.secret}") String secretKey) {
+        byte[] keyBytes = java.util.Base64.getDecoder().decode(secretKey);
+        this.signingKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String generateToken(Member member) {
@@ -29,14 +29,14 @@ public class JwtService {
             .setClaims(claims)
             .setSubject(member.getId().toString())
             .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
-            .signWith(getSigningKey())
+            .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+            .signWith(signingKey)
             .compact();
     }
 
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
-            .setSigningKey(getSigningKey())
+            .setSigningKey(signingKey)
             .build()
             .parseClaimsJws(token)
             .getBody();

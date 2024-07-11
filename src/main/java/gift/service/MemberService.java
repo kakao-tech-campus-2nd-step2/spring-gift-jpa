@@ -2,8 +2,8 @@ package gift.service;
 
 import gift.domain.Member;
 import gift.repository.MemberRepository;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 public class MemberService {
@@ -19,7 +19,6 @@ public class MemberService {
     }
 
     public Optional<Member> getMemberByEmail(String email) {
-        Optional<Member> member = memberRepository.findByEmail(email);
-        return member;
+        return memberRepository.findByEmail(email);
     }
 }
