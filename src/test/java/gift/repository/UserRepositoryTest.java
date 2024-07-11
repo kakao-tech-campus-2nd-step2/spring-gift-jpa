@@ -29,7 +29,7 @@ class UserRepositoryTest {
     void findByEmailTest() {
         User user = new User("test@abc.com", "password");
         User actual = userRepository.save(user);
-        User expected = userRepository.findByEmail(user.getEmail());
+        User expected = userRepository.findByEmail(user.getEmail()).orElse(null);
 
         assertThat(actual.getId()).isNotNull();
         assertThat(actual.samePassword(expected.getPassword())).isTrue();

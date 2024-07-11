@@ -6,6 +6,7 @@ import gift.entity.User;
 import gift.entity.Wish;
 import gift.exception.ProductNotFoundException;
 import gift.exception.UserAuthException;
+import gift.exception.WishNotFoundException;
 import gift.repository.ProductRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishRepository;
@@ -40,11 +41,13 @@ public class WishService {
     }
 
     public List<Wish> getWishes(Long userId) {
-        return wishRepository.findByUserId(userId);
+        return wishRepository.findByUserId(userId)
+            .orElseThrow(() -> new WishNotFoundException("위시 리스트가 없습니다."));
     }
 
     public Wish getOneWish(Long userId, Long wishId) {
-        return wishRepository.findByUserIdAndId(userId, wishId);
+        return wishRepository.findByUserIdAndId(userId, wishId)
+            .orElseThrow(() -> new WishNotFoundException("위시 리스트가 없습니다."));
     }
 
     public void removeWish(Long userId, Long wishId) {

@@ -50,7 +50,7 @@ class WishRepositoryTest {
         Wish wish2 = new Wish(user, product2, 15);
         wishRepository.save(wish1);
         wishRepository.save(wish2);
-        List<Wish> wishes = wishRepository.findByUserId(user.getId());
+        List<Wish> wishes = wishRepository.findByUserId(user.getId()).orElse(null);
 
         assertThat(wishes).hasSize(2);
         assertThat(wishes.getFirst().getProduct().getName()).isEqualTo(
@@ -62,7 +62,7 @@ class WishRepositoryTest {
     void findByUserIdAndId() {
         Wish wish = new Wish(user, product1, 10);
         Wish actual = wishRepository.save(wish);
-        Wish expected = wishRepository.findByUserIdAndId(user.getId(), actual.getId());
+        Wish expected = wishRepository.findByUserIdAndId(user.getId(), actual.getId()).orElse(null);
 
         assertThat(actual.getId()).isEqualTo(expected.getId());
         assertThat(actual.getProduct().getId()).isEqualTo(expected.getProduct().getId());
@@ -77,7 +77,7 @@ class WishRepositoryTest {
         entityManager.flush();
         entityManager.clear();
 
-        Wish updatedWish = wishRepository.findByUserIdAndId(user.getId(), savedWish.getId());
+        Wish updatedWish = wishRepository.findByUserIdAndId(user.getId(), savedWish.getId()).orElse(null);
 
         assertThat(updatedWish).isNotNull();
         assertThat(updatedWish.getNumber()).isEqualTo(30);
