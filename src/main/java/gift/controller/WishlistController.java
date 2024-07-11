@@ -5,6 +5,9 @@ import gift.service.WishlistService;
 import java.security.Principal;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +29,18 @@ public class WishlistController {
     }
 
     @GetMapping
-    public String getWishlist(Principal principal, Model model) {
+    public String getWishlist(Principal principal, Model model,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "3") int size) {
         String username = principal.getName();
-        List<WishlistDTO> wishlist = wishlistService.getWishlistByUser(username);
-        model.addAttribute("wishlist", wishlist);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<WishlistDTO> wishlistPage = wishlistService.getWishlistByUser1(username, pageable);
+        model.addAttribute("wishlistPage", wishlistPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
         return "wishlist";
     }
+
 
     @PostMapping("/add")
     @ResponseBody
