@@ -1,6 +1,6 @@
 package gift.repository;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.entity.Product;
 import gift.exception.product.ProductNotFoundException;
