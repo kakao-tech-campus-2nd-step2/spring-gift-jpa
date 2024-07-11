@@ -9,11 +9,14 @@ import gift.repository.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -164,6 +167,36 @@ class ProductServiceTest {
                 () -> verify(productRepository, times(1)).delete(product)
         );
 
+    }
+
+    @Test
+    @DisplayName("상품 페이지 기능 테스트 - 가격으로 정렬")
+    void 상품_페이지_기능_테스트(){
+        //given
+        List<Product> products = new ArrayList<>();
+        for(int i=0; i<20; i++){
+            Product product = new Product.Builder()
+                    .name("테스트" + i)
+                    .price(i)
+                    .imageUrl("abc.png")
+                    .build();
+
+            products.add(product);
+        }
+
+        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "price"));
+
+        given(productRepository.findAll(pageRequest)).willReturn(new PageImpl<>(products.subList(15, 20).reversed(), pageRequest, products.size()));
+
+        //when
+        List<ProductResponseDto> productsDto = productService.findProducts(pageRequest);
+
+        //then
+        assertAll(
+                () -> assertThat(productsDto.size()).isEqualTo(5),
+                () -> assertThat(productsDto.get(0).name()).isEqualTo("테스트19"),
+                () -> assertThat(productsDto.get(0).price()).isEqualTo(19)
+        );
     }
 
 
