@@ -1,10 +1,9 @@
 package gift.authentication;
 
-import gift.domain.member.Member;
-import gift.service.MemberService;
-import gift.util.JwtUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.NotNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -16,18 +15,13 @@ import javax.security.sasl.AuthenticationException;
 
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
-    private final MemberService memberService;
-    private final JwtUtil jwtUtil;
+    @Value("${jwt.secret}")
+    private String secretKey;
     private static final int BEARER = 7;
 
-    public LoginMemberArgumentResolver(MemberService memberService, JwtUtil jwtUtil) {
-        this.memberService = memberService;
-        this.jwtUtil = jwtUtil;
-    }
-
     @Override
-    public boolean supportsParameter(MethodParameter parameter){
-        return parameter.getParameterType().equals(Member.class);
+    public boolean supportsParameter(MethodParameter parameter) {
+        return parameter.getParameterType().equals(UserDetails.class);
     }
 
     @Override
@@ -37,7 +31,18 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         if (header == null) {
             throw new AuthenticationException("로그인이 필요합니다.");
         }
-        String token = header.substring(BEARER);
-        return jwtUtil.getUserDetail(token);
+        if (header.startsWith("Bearer ")) {
+            String token = header.substring(BEARER);
+            Claims claims = Jwts.parser()
+                    .setSigningKey(secretKey).build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            Long id = claims.get("id", Long.class);
+            String email = claims.get("email", String.class);
+            System.out.println("여기가 문젠가  " + id);
+            System.out.println("이메일은??" + email);
+            return new UserDetails(id, email);
+        }
+        throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
     }
 }
