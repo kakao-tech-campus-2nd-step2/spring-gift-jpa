@@ -2,12 +2,13 @@ package gift.service;
 
 import gift.controller.wish.dto.WishRequest;
 import gift.controller.wish.dto.WishResponse;
+import gift.model.member.Member;
+import gift.model.product.Product;
 import gift.model.wish.Wish;
 import gift.repository.MemberJpaRepository;
 import gift.repository.ProductJpaRepository;
 import gift.repository.WishJpaRepository;
 import gift.validate.NotFoundException;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -29,10 +30,10 @@ public class WishService {
 
     @Transactional
     public void addWish(Long userId, WishRequest.Register request) {
-        var member = memberJpaRepository.findById(userId)
+        Member member = memberJpaRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
 
-        var product = productJpaRepository.findById(request.productId())
+        Product product = productJpaRepository.findById(request.productId())
             .orElseThrow(() -> new NotFoundException("Product not found"));
 
         wishJpaRepository.findByMemberAndProduct(member, product)
@@ -45,13 +46,13 @@ public class WishService {
 
     @Transactional
     public void updateWish(Long userId, WishRequest.Update request) {
-        var member = memberJpaRepository.findById(userId)
+        Member member = memberJpaRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
 
-        var product = productJpaRepository.findById(request.productId())
+        Product product = productJpaRepository.findById(request.productId())
             .orElseThrow(() -> new NotFoundException("Product not found"));
 
-        var wish = wishJpaRepository.findByMemberAndProduct(member, product)
+        Wish wish = wishJpaRepository.findByMemberAndProduct(member, product)
             .orElseThrow(() -> new NotFoundException("Wish not found"));
 
         wish.updateCount(request.count());

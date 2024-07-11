@@ -1,15 +1,12 @@
 package gift.controller.product;
 
-import gift.controller.member.dto.MemberResponse;
 import gift.controller.product.dto.ProductRequest;
 import gift.controller.product.dto.ProductResponse;
 import gift.global.auth.Authorization;
-
 import gift.global.dto.PageResponse;
 import gift.model.member.Role;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

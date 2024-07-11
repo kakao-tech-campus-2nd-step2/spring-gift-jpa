@@ -1,10 +1,10 @@
 package gift.controller.member;
 
-import gift.global.auth.Authorization;
-import gift.global.auth.Authenticate;
-import gift.global.auth.LoginInfo;
 import gift.controller.member.dto.MemberRequest;
 import gift.controller.member.dto.MemberResponse;
+import gift.global.auth.Authenticate;
+import gift.global.auth.Authorization;
+import gift.global.auth.LoginInfo;
 import gift.model.member.Role;
 import gift.service.MemberService;
 import jakarta.validation.Valid;

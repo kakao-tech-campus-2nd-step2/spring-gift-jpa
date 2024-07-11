@@ -1,9 +1,9 @@
 package gift.service;
 
+import gift.controller.member.dto.MemberRequest;
 import gift.controller.member.dto.MemberResponse;
 import gift.global.auth.jwt.JwtProvider;
-import gift.controller.member.dto.MemberRequest;
-import gift.controller.member.dto.MemberRequest;
+import gift.model.member.Member;
 import gift.repository.MemberJpaRepository;
 import gift.validate.InvalidAuthRequestException;
 import gift.validate.NotFoundException;
@@ -31,7 +31,7 @@ public class MemberService {
 
     @Transactional
     public String login(MemberRequest.Login request) {
-        var member = memberJpaRepository.findByEmail(request.email())
+        Member member = memberJpaRepository.findByEmail(request.email())
             .orElseThrow(() -> new NotFoundException("User not found."));
 
         if (!member.verifyPassword(request.password())) {

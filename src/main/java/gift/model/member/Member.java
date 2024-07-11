@@ -8,8 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import org.hibernate.validator.constraints.UniqueElements;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @Entity
 public class Member {
@@ -27,7 +25,7 @@ public class Member {
 
     @NotNull
     private String name;
-    
+
     @NotNull
     private Role role;
 

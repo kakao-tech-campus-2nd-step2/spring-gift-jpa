@@ -1,8 +1,5 @@
 package gift.validate;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-
 import java.util.regex.Pattern;
 
 public class ProductNameValidator {

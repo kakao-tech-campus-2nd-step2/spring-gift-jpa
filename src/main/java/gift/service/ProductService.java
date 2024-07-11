@@ -3,8 +3,10 @@ package gift.service;
 import gift.controller.product.dto.ProductRequest;
 import gift.controller.product.dto.ProductResponse;
 import gift.global.dto.PageResponse;
+import gift.model.product.Product;
 import gift.repository.ProductJpaRepository;
 import gift.validate.NotFoundException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +47,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public PageResponse<ProductResponse.Info> getProductsPaging(int page, int size) {
-        var productPage = productJpaRepository.findAllByOrderByIdDesc(
+        Page<Product> productPage = productJpaRepository.findAllByOrderByIdDesc(
             PageRequest.of(page, size));
         var content = productPage.getContent().stream()
             .map(ProductResponse.Info::from)

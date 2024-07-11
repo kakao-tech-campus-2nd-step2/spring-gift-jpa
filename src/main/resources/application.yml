@@ -25,6 +25,7 @@ spring:
     defer-datasource-initialization: true
 
 
+
 jwt:
   secret: secret!!secret!!secret!!secret!!
   expiration: 604800000  #1000 * 60 * 60 * 24 * 7; // 7일
