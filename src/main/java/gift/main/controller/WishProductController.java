@@ -36,7 +36,7 @@ public class WishProductController {
     @Transactional
     public ResponseEntity<?> deleteWishProduct(@PathVariable(name = "productId") Long productId, @SessionUser UserVo sessionUserVo) {
         wishProductService.deleteProducts(productId, sessionUserVo);
-        return ResponseEntity.ok("성공적으로 삭제 완료~!");
+        return ResponseEntity.ok("successfully deleted the item to your wishlist");
     }
 
     @GetMapping("/wishlist")
@@ -49,7 +49,7 @@ public class WishProductController {
     @PostMapping("/wishlist/{productId}")
     public ResponseEntity<?> addWishlistProduct(@PathVariable(name = "productId") Long productId, @SessionUser UserVo sessionUser){
         wishProductService.addWishlistProduct(productId, sessionUser);
-        return ResponseEntity.ok("성공적으로 등록~");
+        return ResponseEntity.ok("successfully added the item to your wishlist");
     }
 
 }
