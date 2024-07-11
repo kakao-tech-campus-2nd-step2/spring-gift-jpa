@@ -17,21 +17,21 @@ public class WishListController {
     WishListService wishListService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/wishlist/{product_id}")
+    @PostMapping("/api/wishlist/{product_id}")
     public String addWishList(@RequestHeader("Authorization") String token, @PathVariable int product_id){
         wishListService.add(token, product_id);
         return "redirect:/wishlist";
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/wishlist")
+    @GetMapping("/api/wishlist")
     @ResponseBody
     public String getWishList(@RequestHeader("Authorization") String token) throws JsonProcessingException {
         return wishListService.getWishList(token);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/wishlist/{product_id}")
+    @DeleteMapping("/api/wishlist/{product_id}")
     public String deleteWishList(@RequestHeader("Authorization") String token, @PathVariable int product_id){
         wishListService.deleteWishList(token,product_id);
         return "redirect:/wishlist";

@@ -10,7 +10,9 @@ public class Option {
     @EmbeddedId
     OptionId id;
 
+    @MapsId("id")
     @ManyToOne
+    @JoinColumn(name = "product_id")
     Product product;
 
     public void setProduct(Product product){
