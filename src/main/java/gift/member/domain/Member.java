@@ -1,8 +1,11 @@
 package gift.member.domain;
 
+import gift.wish.domain.Wish;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -19,6 +22,9 @@ public class Member {
     private Password password;
     @Embedded
     private Nickname nickName;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<Wish> wishes = new ArrayList<>();
 
     // JDBC 에서 엔티티 클래스를 인스턴스화할 때 반드시 기본 생성자와 파라미터 생성자가 필요하다
     public Member() {

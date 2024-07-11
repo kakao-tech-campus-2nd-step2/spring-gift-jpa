@@ -1,11 +1,17 @@
 ### get wish list
 GET http://localhost:8080/api/wishes
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDI2ODY0MCwiZXhwIjoxNzIwNjI4NjQwfQ.O5tifuVCD0psDiZe0OEu9FfFmKAoGRBbL1fFs8_CoqtxAWUktAB0guST5xqC29gMpbiLVxmEd-6q54lPqpT-fA
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDY3NTM1MiwiZXhwIjo0NjA1NTgwOTc4fQ.wkX4AiHs8ucCfYpWQMxduNUmX9IQWu16b64HWO3p4x0jorEWp9LjeRxDh2cRIgbi6eqnwTUzzpZGexX3ZPYVmA
 Content-Type: application/json
+
+### get wish
+GET http://localhost:8080/api/wishes/2
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDY3NTM1MiwiZXhwIjo0NjA1NTgwOTc4fQ.wkX4AiHs8ucCfYpWQMxduNUmX9IQWu16b64HWO3p4x0jorEWp9LjeRxDh2cRIgbi6eqnwTUzzpZGexX3ZPYVmA
+Content-Type: application/json
+
 
 ### create wish
 POST http://localhost:8080/api/wishes
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDE5Mzg2NCwiZXhwIjoxNzIwNTUzODY0fQ.CcDSD68i-POYge1OFupP_zIiR5k1Z0He9ZrINknEeqrq3zjGhy1esRn7_BV3-CeHU5wGWY4z-ppl5v5_UN78_g
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDY3NTM1MiwiZXhwIjo0NjA1NTgwOTc4fQ.wkX4AiHs8ucCfYpWQMxduNUmX9IQWu16b64HWO3p4x0jorEWp9LjeRxDh2cRIgbi6eqnwTUzzpZGexX3ZPYVmA
 Content-Type: application/json
 
 {
@@ -14,9 +20,9 @@ Content-Type: application/json
   "productCount": 5
 }
 
-### update product
+### update wish
 PUT http://localhost:8080/api/wishes/1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDE5Mzg2NCwiZXhwIjoxNzIwNTUzODY0fQ.CcDSD68i-POYge1OFupP_zIiR5k1Z0He9ZrINknEeqrq3zjGhy1esRn7_BV3-CeHU5wGWY4z-ppl5v5_UN78_g
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDY3NTM1MiwiZXhwIjo0NjA1NTgwOTc4fQ.wkX4AiHs8ucCfYpWQMxduNUmX9IQWu16b64HWO3p4x0jorEWp9LjeRxDh2cRIgbi6eqnwTUzzpZGexX3ZPYVmA
 Content-Type: application/json
 
 {
@@ -25,7 +31,7 @@ Content-Type: application/json
   "productCount": 10
 }
 
-### delete product
+### delete wish
 DELETE http://localhost:8080/api/wishes/1
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDE5Mzg2NCwiZXhwIjoxNzIwNTUzODY0fQ.CcDSD68i-POYge1OFupP_zIiR5k1Z0He9ZrINknEeqrq3zjGhy1esRn7_BV3-CeHU5wGWY4z-ppl5v5_UN78_g
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJtZW1iZXJfaWQiOjEsIm1lbWJlcl90eXBlIjoiVVNFUiIsImlhdCI6MTcyMDY3NTM1MiwiZXhwIjo0NjA1NTgwOTc4fQ.wkX4AiHs8ucCfYpWQMxduNUmX9IQWu16b64HWO3p4x0jorEWp9LjeRxDh2cRIgbi6eqnwTUzzpZGexX3ZPYVmA
 Content-Type: application/json

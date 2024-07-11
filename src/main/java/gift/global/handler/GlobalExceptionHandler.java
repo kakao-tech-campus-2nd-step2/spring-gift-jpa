@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ErrorResponseDto> handleJwtException(JwtException e) {
         System.out.println(e);
-        ErrorCode errorCode = ErrorCode.PRODUCT_NOT_FOUND_ERROR;
+        ErrorCode errorCode = ErrorCode.JWT_ERROR;
         return ResponseHelper.createErrorResponse(errorCode);
     }
 
