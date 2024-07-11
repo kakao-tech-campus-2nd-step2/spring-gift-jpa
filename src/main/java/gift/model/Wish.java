@@ -20,7 +20,9 @@ public class Wish {
     private Long productId;
 
     @Column(nullable = false)
+
     private Integer productValue;
+
 
     public Wish() {
     }
@@ -39,5 +41,6 @@ public class Wish {
 
     public Integer getValue() {
         return productValue;
+
     }
 }
