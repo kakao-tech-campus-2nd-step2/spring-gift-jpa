@@ -18,10 +18,10 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public void createProduct(ProductDTO productDTO) {
+    public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = new Product(productDTO.id(), productDTO.name(), productDTO.price(),
             productDTO.imageUrl());
-        productRepository.save(product);
+        return convertToDTO(productRepository.save(product));
     }
 
     public List<ProductDTO> getAllProduct() {
@@ -37,10 +37,10 @@ public class ProductService {
         return convertToDTO(product);
     }
 
-    public void updateProduct(long id, ProductDTO productDTO) {
+    public ProductDTO updateProduct(long id, ProductDTO productDTO) {
         Product product = new Product(id, productDTO.name(), productDTO.price(),
             productDTO.imageUrl());
-        productRepository.save(product);
+        return convertToDTO(productRepository.save(product));
     }
 
     public String deleteProduct(long id) {
