@@ -3,6 +3,7 @@ package gift.dto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
@@ -14,14 +15,16 @@ public class Product {
     @Id
     long id;
 
+    @Column(name = "name", length = 15, nullable = false)
     String name;
 
+    @Column(name = "price", nullable = false)
     long price;
 
     @Column(name = "imageurl")
     String imageUrl;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Wishlist> wishlist = new ArrayList<>();
 
     public Product() {
