@@ -1,10 +1,20 @@
 package gift.domain.product;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private int price;
     private String imgUrl;
+
+    public Product(){}
 
     public Product(Long id, String name, int price, String imgUrl) {
         checkName(name);
@@ -45,14 +55,6 @@ public class Product {
     public void setName(String name) {
         checkName(name);
         this.name = name;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
     }
 
     private void checkName(String name){
