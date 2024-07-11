@@ -1,11 +1,14 @@
 package gift.Service;
 
-import gift.Model.Member;
 import gift.Model.Product;
+import gift.Model.Wishlist;
 import gift.Repository.MemberRepository;
 import gift.Repository.ProductRepository;
 import gift.Repository.WishlistRepository;
+
 import java.util.List;
+
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -21,22 +24,24 @@ public class WishlistService {
         this.memberRepository = memberRepository;
     }
 
-    public List<Product> getAllWishlist() {
-        return wishlistRepository.findAllWishlist();
+    public List<Wishlist> getAllWishlist() {
+        return wishlistRepository.findAll();
     }
     public Product getProductById(long id){
-        return productRepository.findById(id);
+        return productRepository.findProductById(id);
+
     }
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
-    public void addWishlist(Product product){
-        wishlistRepository.addWishlistFromProduct(product);
+    public void addWishlist(Wishlist wishlist){
+        wishlistRepository.save(wishlist);
     }
 
     public void deleteWishlist(Long id){
-        wishlistRepository.deleteWishlistById(id);
+        wishlistRepository.deleteById(id);
+
     }
 
     public void checkUserByMemberEmail(String email){

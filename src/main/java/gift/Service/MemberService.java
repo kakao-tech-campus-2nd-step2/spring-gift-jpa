@@ -16,14 +16,7 @@ public class MemberService {
         return memberRepository.findByEmail(email);
     }
     public void signupMember(Member member){
-        memberRepository.addMember(member);
-    }
-    public boolean checkUserByMemberEmail(String email){
-        try {
-            memberRepository.findByEmail(email);
-            return true;
-        }catch (EmptyResultDataAccessException e){
-            return false;
-        }
+        memberRepository.save(member);
+
     }
 }
