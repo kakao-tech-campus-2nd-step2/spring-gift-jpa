@@ -1,14 +1,15 @@
 package gift.Controller;
 
 
+import gift.Model.Member;
 import gift.Model.Product;
 
 import gift.Model.Wishlist;
-
 import gift.Service.WishlistService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,10 +28,10 @@ public class WishListController {
     @GetMapping("/api/wishlist")
     public String getWish(HttpServletRequest request,Model model) {
         String email = (String) request.getAttribute("email");
-        System.out.println("get: "+email);
         wishlistService.checkUserByMemberEmail(email);
         model.addAttribute("products", wishlistService.getAllProducts());
-        model.addAttribute("wishlists", wishlistService.getAllWishlist());
+        model.addAttribute("wishlists", wishlistService.getAllWishlist("1234@google.com")); //테스트
+        //model.addAttribute("wishlists", wishlistService.getAllWishlist(email));
         return "wish";
     }
 
@@ -43,18 +44,25 @@ public class WishListController {
     public String editWishForm(@PathVariable(value = "id") Long id, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
+        Member member = wishlistService.getMemberByEmail(email);
         Product product = wishlistService.getProductById(id);
-        Wishlist wishlist = new Wishlist(product.getName(), product.getPrice(), product.getImageUrl());
-        wishlistService.addWishlist(wishlist);
 
+        System.out.println("member: "+member.getId()+" "+member.getEmail()+" "+member.getPassword());
+        System.out.println("product: "+product.getId()+" "+product.getName()+" "+product.getPrice()+" "+product.getImageUrl());
+
+        wishlistService.addWishlist(member.getId(), product.getId());
         return "redirect:/api/wish";
     }
 
     @PostMapping("/api/wish/delete/{id}")
     public String deleteWish(@PathVariable(value = "id") Long id, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
+        System.out.println("delete: " + email);
         wishlistService.checkUserByMemberEmail(email);
-        wishlistService.deleteWishlist(id);
+        System.out.println("check: "+"email: "+email+"id: " + id);
+        Long wishlistId = wishlistService.getWishlistId(email,id);
+        System.out.println("ID: "+wishlistId);
+        wishlistService.deleteWishlist(email, id,wishlistId);
         return "redirect:/api/wish";
     }
 }
