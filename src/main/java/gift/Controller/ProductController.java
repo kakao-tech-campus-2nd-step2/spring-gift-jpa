@@ -32,7 +32,7 @@ public class ProductController {
 
     @GetMapping("/api/products/add")
     public String newProductForm(Model model) {
-        model.addAttribute("product", new Product());
+        model.addAttribute("product", new Product(0L,"",0,""));
         return "post";
     }
 

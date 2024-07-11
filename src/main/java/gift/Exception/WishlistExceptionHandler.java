@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class WishlistExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     protected ResponseEntity<String> handleException(Exception e) {
-        return new ResponseEntity<>(e.getMessage() , HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(e.getMessage() , HttpStatus.INTERNAL_SERVER_ERROR);
     }
     @ExceptionHandler(value = IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e){
-        return new ResponseEntity<>(e.getMessage(),HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(e.getMessage(),HttpStatus.FORBIDDEN);
     }
 }

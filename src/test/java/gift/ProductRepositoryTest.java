@@ -19,8 +19,8 @@ public class ProductRepositoryTest {
 
     @Test
     void findAll(){
-        Product expected1 = new Product("A",1000,"A");
-        Product expected2 = new Product("B",2000,"B");
+        Product expected1 = new Product(1L,"A",1000,"A");
+        Product expected2 = new Product(2L,"B",2000,"B");
 
         productRepository.save(expected1);
         productRepository.save(expected2);
@@ -44,7 +44,7 @@ public class ProductRepositoryTest {
     }
     @Test
     void findProductById(){
-        Product expected = new Product("A",1000,"A");
+        Product expected = new Product(1L,"A",1000,"A");
         Product product = productRepository.save(expected);
         Product actual = productRepository.findProductById(product.getId());
         assertAll(
@@ -56,7 +56,7 @@ public class ProductRepositoryTest {
     }
     @Test
     void save(){
-        Product expected = new Product("A",1000,"A");
+        Product expected = new Product(1L,"A",1000,"A");
         Product actual = productRepository.save(expected);
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
@@ -67,7 +67,7 @@ public class ProductRepositoryTest {
     }
     @Test
     void deleteById(){
-        Product expected = new Product("A",1000,"A");
+        Product expected = new Product(1L,"A",1000,"A");
         Product product = productRepository.save(expected);
         productRepository.deleteById(product.getId());
         assertAll(
