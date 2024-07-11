@@ -30,13 +30,11 @@ public class UserService {
 
   public JwtToken userLogin(UserDto userInfo) {
     String email = userInfo.getEmail();
-    Optional<UserEntity> userByEmail = userDao.findByEmail(email);
+    Optional<UserEntity> userByEmail = Optional.ofNullable(userDao.findByEmail(email)
+      .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저가 없습니다.", 1)));
 
-    if (userByEmail == null) {
-      throw new EmptyResultDataAccessException("해당 유저가 없습니다.", 1);
-    }
     if (userByEmail.get().matchLoginInfo(userInfo)) {
-      JwtToken jwtToken = jwtService.createAccessToken(userByEmail);
+      JwtToken jwtToken = jwtService.createAccessToken(userInfo);
       if (jwtService.isValidToken(jwtToken)) { //토큰이 만료되었다면
         throw new UnauthorizedException("토큰이 유효하지 않습니다.");
       }
