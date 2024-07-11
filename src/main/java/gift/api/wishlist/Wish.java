@@ -36,7 +36,10 @@ public class Wish {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void updateQuantity(Integer quantity) {
+        if (quantity <= 0) {
+            throw new InvalidQuantityException();
+        }
         this.quantity = quantity;
     }
 }

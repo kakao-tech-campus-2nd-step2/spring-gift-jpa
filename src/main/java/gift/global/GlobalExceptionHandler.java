@@ -1,6 +1,7 @@
 package gift.global;
 
 import gift.api.member.EmailAlreadyExistsException;
+import gift.api.wishlist.InvalidQuantityException;
 import gift.global.exception.ForbiddenMemberException;
 import gift.global.exception.UnauthorizedMemberException;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UnsupportedOperationException.class)
     public ResponseEntity<String> handleUnsupportedOperationException(UnsupportedOperationException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(InvalidQuantityException.class)
+    public ResponseEntity<String> handleInvalidQuantityException(InvalidQuantityException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

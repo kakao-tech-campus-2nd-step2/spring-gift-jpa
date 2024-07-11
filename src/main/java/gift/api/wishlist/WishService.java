@@ -26,12 +26,8 @@ public class WishService {
 
     @Transactional
     public void update(Long memberId, WishRequest wishRequest) {
-        if (wishRequest.quantity() == 0) {
-            wishRepository.deleteByMemberIdAndProductId(memberId, wishRequest.productId());
-            return;
-        }
         Wish wish = entityManager.find(Wish.class, new WishId(memberId, wishRequest.productId()));
-        wish.setQuantity(wishRequest.quantity());
+        wish.updateQuantity(wishRequest.quantity());
     }
 
     public void delete(Long memberId, WishRequest wishRequest) {
