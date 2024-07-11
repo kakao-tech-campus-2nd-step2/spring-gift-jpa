@@ -1,6 +1,5 @@
 package gift.controller;
 
-import gift.model.Product;
 import gift.model.WishList;
 import gift.service.WishListService;
 import gift.service.JwtUtil;
@@ -30,9 +29,9 @@ public class WishListController {
 
     // 전체 위시리스트 조회
     @GetMapping
-    public ResponseEntity<List<Long>> getWishList(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<WishList>> getWishList(@RequestHeader("Authorization") String token) {
         Long userId = getUserId(token);
-        List<Long> productIds = wishListService.readWishList(userId);
+        List<WishList> productIds = wishListService.readWishList(userId);
         return ResponseEntity.ok(productIds);
     }
 
