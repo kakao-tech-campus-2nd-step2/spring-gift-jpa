@@ -4,12 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-public class User {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +21,9 @@ public class User {
     @NotBlank(message = "비밀번호는 공백이 될 수 없습니다.")
     private String password;
 
-    public User() {}
+    public Member() {}
 
-    public User(String email, String password) {
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
     }
@@ -45,7 +44,7 @@ public class User {
         if (this.password.equals(currentPassword)) {
             this.email = email;
         } else {
-            throw new IllegalArgumentException("Current password is incorrect.");
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
 
@@ -55,7 +54,7 @@ public class User {
         if (this.password.equals(currentPassword)) {
             this.password = newPassword;
         } else {
-            throw new IllegalArgumentException("Current password is incorrect.");
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
 

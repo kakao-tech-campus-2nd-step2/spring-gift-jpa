@@ -15,16 +15,16 @@ public class WishList {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public WishList(User user, Product product) {
-        this.user = user;
+    public WishList(Member member, Product product) {
+        this.member = member;
         this.product = product;
     }
 
@@ -35,15 +35,15 @@ public class WishList {
         return id;
     }
 
-    public String getUserEmail() {
-        return user != null ? user.getEmail() : null;
+    public String getMemberEmail() {
+        return member != null ? member.getEmail() : null;
     }
 
-    public void setUserEmail(String userEmail) {
-        if (this.user == null) {
-            this.user = new User();
+    public void setMemberEmail(String memberEmail) {
+        if (this.member == null) {
+            this.member = new Member();
         }
-        this.user.setEmail(userEmail, this.user.getPassword());
+        this.member.setEmail(memberEmail, this.member.getPassword());
     }
 
     public Long getProductId() {

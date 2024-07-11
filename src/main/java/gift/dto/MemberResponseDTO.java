@@ -1,10 +1,10 @@
 package gift.dto;
 
-public class UserResponseDTO {
+public class MemberResponseDTO {
     private Long id;
     private String email;
 
-    public UserResponseDTO(Long id, String email) {
+    public MemberResponseDTO(Long id, String email) {
         this.id = id;
         this.email = email;
     }

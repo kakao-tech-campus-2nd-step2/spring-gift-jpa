@@ -1,17 +1,17 @@
 package gift.dto;
 
-public class UserRequestDTO {
+public class MemberRequestDTO {
     private String email;
     private String password;
     private String token;
 
-    public UserRequestDTO(String email, String password, String token) {
+    public MemberRequestDTO(String email, String password, String token) {
         this.email = email;
         this.password = password;
         this.token = token;
     }
 
-    public UserRequestDTO() {
+    public MemberRequestDTO() {
     }
 
     public String getEmail() {
@@ -28,5 +28,9 @@ public class UserRequestDTO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
