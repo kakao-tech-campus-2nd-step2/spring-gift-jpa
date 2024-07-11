@@ -4,7 +4,7 @@ import gift.dto.MemberDto;
 import gift.util.JwtUtility;
 import gift.util.TokenBlacklist;
 import gift.model.Member;
-import gift.model.MemberRepository;
+import gift.repository.MemberRepository;
 import jakarta.validation.Valid;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;

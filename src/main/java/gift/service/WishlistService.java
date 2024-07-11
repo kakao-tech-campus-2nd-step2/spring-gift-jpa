@@ -1,8 +1,8 @@
 package gift.service;
 
-import gift.model.WishlistRepository;
-import gift.model.MemberRepository;
-import gift.model.ProductRepository;
+import gift.repository.WishlistRepository;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
 import gift.model.Wishlist;
 import gift.model.Member;
 import gift.model.Product;

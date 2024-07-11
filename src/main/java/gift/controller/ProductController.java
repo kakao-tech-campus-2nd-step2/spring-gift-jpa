@@ -2,7 +2,7 @@ package gift.controller;
 
 import gift.dto.ProductDto;
 import gift.model.Product;
-import gift.model.ProductRepository;
+import gift.repository.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
