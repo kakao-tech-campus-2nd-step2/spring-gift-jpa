@@ -31,6 +31,10 @@ public class ProductService {
     }
 
     public void addProduct(ProductRequest productRequest) {
+        productRepository.findByName(productRequest.getName()).ifPresent(p -> {
+            throw new RuntimeException("Product name must be unique");
+        });
+
         Product productEntity = new Product(productRequest.getName(),
                                             productRequest.getPrice(),
                                             productRequest.getImageUrl());
