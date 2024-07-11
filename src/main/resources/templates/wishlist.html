@@ -32,12 +32,35 @@
       background-color: #007bff;
       color: white;
     }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .pagination .page-btn {
+        background-color: #f1f1f1;
+        border: none;
+        padding: 10px;
+        margin: 0 5px;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 50px;
+        text-align: center;
+    }
+    .pagination .current-page {
+        background-color: #4CAF50;
+        color: white;
+        border: 2px solid #4CAF50;
+        border-radius: 5px;
+        width: 50px;
+        text-align: center;
+    }
   </style>
 </head>
 <body>
 <div class="container">
   <h1>My Wishlist
-    <a href="/web/products/list" class="btn btn-home">홈</a> <!-- 홈버튼 추가 -->
+    <a href="/web/products/list" class="btn btn-home">홈</a>
   </h1>
   <table>
     <thead>
@@ -45,34 +68,51 @@
       <th>ID</th>
       <th>Product Name</th>
       <th>Price</th>
-      <th>Quantity</th> <!-- 수량 열 추가 -->
+      <th>Quantity</th>
       <th>Image</th>
-      <th>Actions</th> <!-- 작업 열 추가 -->
+      <th>Actions</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="wishlist : ${wishlist}">
+    <tr th:each="wishlist : ${wishlistPage.content}">
       <td th:text="${wishlist.id}"></td>
       <td th:text="${wishlist.productName}"></td>
       <td th:text="${wishlist.price}"></td>
       <td>
-        <input type="number" min="1" th:value="${wishlist.quantity}" class="quantity" style="width: 60px;"> <!-- 수량 입력 -->
+        <input type="number" min="1" th:value="${wishlist.quantity}" class="quantity" style="width: 60px;">
       </td>
       <td><img th:src="${wishlist.imageUrl}" alt="product image" width="100"/></td>
       <td>
-        <button class="btn update-quantity" th:data-wishlist-id="${wishlist.id}">수량 변경</button> <!-- 수량 변경 버튼 -->
-        <button class="btn btn-secondary delete-wishlist" th:data-wishlist-id="${wishlist.id}">삭제</button> <!-- 삭제 버튼 -->
+        <button class="btn update-quantity" th:data-wishlist-id="${wishlist.id}">수량 변경</button>
+        <button class="btn btn-secondary delete-wishlist" th:data-wishlist-id="${wishlist.id}">삭제</button>
       </td>
     </tr>
     </tbody>
   </table>
+
+  <div class="pagination">
+    <a th:if="${wishlistPage.hasPrevious()}"
+       th:href="@{/web/wishlist(page=${currentPage - 1}, size=${pageSize})}"
+       class="page-btn">Prev</a>
+
+    <span th:each="i : ${#numbers.sequence(0, wishlistPage.totalPages - 1)}">
+        <a th:href="@{/web/wishlist(page=${i}, size=${pageSize})}"
+           th:text="${i + 1}"
+           th:classappend="${i == currentPage} ? 'current-page' : ''"
+           class="page-btn"></a>
+    </span>
+
+    <a th:if="${wishlistPage.hasNext()}"
+       th:href="@{/web/wishlist(page=${currentPage + 1}, size=${pageSize})}"
+       class="page-btn">Next</a>
+  </div>
 </div>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
       document.querySelectorAll('.update-quantity').forEach(function(button) {
           button.addEventListener('click', function() {
               const wishlistId = this.getAttribute('data-wishlist-id');
-              const quantityInput = this.closest('tr').querySelector('.quantity'); // 올바른 수량 입력 필드를 선택
+              const quantityInput = this.closest('tr').querySelector('.quantity');
               const quantity = quantityInput.value;
               fetch(`/web/wishlist/update/${wishlistId}`, {
                   method: 'POST',
