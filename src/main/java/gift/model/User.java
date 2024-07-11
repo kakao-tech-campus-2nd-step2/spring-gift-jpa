@@ -1,10 +1,13 @@
 package gift.model;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -25,6 +28,16 @@ public class User {
 	@NotBlank(message = "비밀번호 입력은 필수 입니다.")
 	@Column(nullable = false)
 	private String password;
+	
+	@OneToMany(mappedBy = "user")
+    private List<Wishlist> wishlists;
+	
+	public User() {}
+	
+	public User(String email, String password) {
+		this.email = email;
+		this.password = password;
+	}
 	
 	public Long getId() {
 		return id;
@@ -48,5 +61,13 @@ public class User {
 	
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public List<Wishlist> getWishlists(){
+		return wishlists;
+	}
+	
+	public void setWishlists(List<Wishlist> wishlists) {
+		this.wishlists = wishlists;
 	}
 }
