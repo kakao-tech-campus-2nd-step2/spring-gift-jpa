@@ -81,9 +81,7 @@ public class WishlistRepositoryTest {
 
   private Product createAndSaveProduct(String name, int price, String imageUrl) {
     Product product = new Product();
-    product.setName(name);
-    product.setPrice(price);
-    product.setImageUrl(imageUrl);
+    product.update(name, price, imageUrl);
     return productRepository.save(product);
   }
 }

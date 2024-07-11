@@ -30,11 +30,14 @@ public class Product {
     this.price = price;
     this.imageUrl = imageUrl;
   }
+  public void setId(Long id) {
+    this.id = id;
+  }
+
 
   public Long getId() {
     return id;
   }
-
 
   public String getName() {
     return name;
@@ -42,10 +45,6 @@ public class Product {
 
   public int getPrice() {
     return price;
-  }
-
-  public void setPrice(int price) {
-    this.price = price;
   }
 
   public String getImageUrl() {

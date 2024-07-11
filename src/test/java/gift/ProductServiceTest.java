@@ -1,15 +1,15 @@
 package gift;
 
 import gift.model.Product;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import gift.repository.ProductRepository;
 import gift.service.ProductService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -17,71 +17,72 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-@DataJpaTest
+
+@SpringBootTest
 public class ProductServiceTest {
 
-    @Autowired
-    private ProductRepository productRepository;
+  @MockBean
+  private ProductRepository productRepository;
 
-    @InjectMocks
-    private ProductService productService;
+  @Autowired
+  private ProductService productService;
 
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+  @BeforeEach
+  public void setUp() {
+    MockitoAnnotations.openMocks(this);
+  }
 
-    @Test
-    public void testFindAll() {
-        Product product1 = new Product();
-        product1.setId(1L);
-        product1.setName("Product 1");
-        product1.setPrice(1000);
-        product1.setImageUrl("http://example.com/product1.jpg");
+  @Test
+  public void testFindAll() {
+    Product product1 = new Product();
+    product1.update("아이스 카페 아메리카노 T", 4500, "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
+    product1.setId(1L);
 
-        Product product2 = new Product();
-        product2.setId(2L);
-        product2.setName("Product 2");
-        product2.setPrice(2000);
-        product2.setImageUrl("http://example.com/product2.jpg");
+    Product product2 = new Product();
+    product2.update("아이스 카페 라떼 T", 4500, "https://st.kakaocdn.net/product/gift/product.jpg");
+    product2.setId(2L);
 
-        when(productRepository.findAll()).thenReturn(Arrays.asList(product1, product2));
+    when(productRepository.findAll()).thenReturn(Arrays.asList(product1, product2));
 
-        List<Product> products = productService.findAll();
-        assertEquals(2, products.size());
-        verify(productRepository, times(1)).findAll();
-    }
+    List<Product> products = productService.findAll();
+    assertEquals(2, products.size());
+    verify(productRepository, times(1)).findAll();
+  }
 
-    @Test
-    public void testFindById() {
-        Product product = new Product();
-        product.setId(1L);
-        product.setName("Product 1");
-        product.setPrice(1000);
-        product.setImageUrl("http://example.com/product1.jpg");
+  @Test
+  public void testFindById() {
+    Product product = new Product();
+    product.update("아이스 카페 아메리카노 T", 4500, "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
+    product.setId(1L);
 
-        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+    when(productRepository.findById(1L)).thenReturn(Optional.of(product));
 
-        Optional<Product> foundProduct = productService.findById(1L);
-        assertTrue(foundProduct.isPresent());
-        assertEquals(product.getId(), foundProduct.get().getId());
-        verify(productRepository, times(1)).findById(1L);
-    }
+    Optional<Product> foundProduct = productService.findById(1L);
+    assertTrue(foundProduct.isPresent());
+    assertEquals(product.getId(), foundProduct.get().getId());
+    verify(productRepository, times(1)).findById(1L);
+  }
 
-    @Test
-    public void testSave() {
-      Product product = new Product();
-      product.setName("Product 1");
-      product.setPrice(1000);
-      product.setImageUrl("http://example.com/product1.jpg");
+  @Test
+  public void testSave() {
+    Product product = new Product();
+    product.update("Product 1", 1000, "http://example.com/product1.jpg");
 
-      Product savedProduct = productRepository.save(product);
+    Product savedProduct = new Product();
+    savedProduct.update("Product 1", 1000, "http://example.com/product1.jpg");
+    savedProduct.setId(1L);
 
-      assertAll(
-              () -> assertThat(savedProduct.getId()).isNotNull(),
-              () -> assertThat(savedProduct.getName()).isEqualTo(product.getName()),
-              () -> assertThat(savedProduct.getPrice()).isEqualTo(product.getPrice()),
-              () -> assertThat(savedProduct.getImageUrl()).isEqualTo(product.getImageUrl())
-      );
-    }
+    when(productRepository.save(any(Product.class))).thenReturn(savedProduct);
+
+    Product result = productService.save(product);
+
+    assertAll(
+            () -> assertThat(result.getId()).isNotNull(),
+            () -> assertThat(result.getName()).isEqualTo(product.getName()),
+            () -> assertThat(result.getPrice()).isEqualTo(product.getPrice()),
+            () -> assertThat(result.getImageUrl()).isEqualTo(product.getImageUrl())
+    );
+
+    verify(productRepository, times(1)).save(product);
+  }
 }
