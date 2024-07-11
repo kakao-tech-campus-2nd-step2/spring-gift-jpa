@@ -3,10 +3,10 @@ package gift.wish.service;
 import gift.product.domain.Product;
 import gift.product.exception.ProductNotFoundException;
 import gift.product.persistence.ProductRepository;
-import gift.wish.application.dto.response.WishResponse;
 import gift.wish.domain.Wish;
 import gift.wish.exception.WishNotFoundException;
 import gift.wish.persistence.WishRepository;
+import gift.wish.service.dto.WishInfo;
 import gift.wish.service.dto.WishParam;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -41,11 +41,11 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishResponse> getWishList(final Long userId) {
+    public List<WishInfo> getWishList(final Long userId) {
         List<Wish> wishes = wishRepository.findWishesByUserId(userId);
 
-        List<WishResponse> responses = wishes.stream()
-                .map(WishResponse::fromModel)
+        var responses = wishes.stream()
+                .map(WishInfo::from)
                 .toList();
 
         return responses;
@@ -53,14 +53,14 @@ public class WishService {
 
 
     @Transactional(readOnly = true)
-    public WishResponse getWish(final Long wishId, final Long userId) {
+    public WishInfo getWish(final Long wishId, final Long userId) {
         Wish wish = wishRepository.findById(wishId)
                 .orElseThrow(() -> WishNotFoundException.of(wishId));
         if (!wish.isOwner(userId)) {
             throw WishNotFoundException.of(wishId);
         }
 
-        return WishResponse.fromModel(wish);
+        return WishInfo.from(wish);
     }
 
     @Transactional

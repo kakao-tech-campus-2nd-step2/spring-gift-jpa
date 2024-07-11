@@ -68,8 +68,11 @@ public class WishController {
     })
     @GetMapping()
     public ResponseEntity<List<WishResponse>> getWishList(@LoginUser User loginUser) {
-        var responses = wishService.getWishList(loginUser.getId());
+        var wishInfos = wishService.getWishList(loginUser.getId());
 
+        var responses = wishInfos.stream()
+                .map(WishResponse::from)
+                .toList();
         return ResponseEntity.ok()
                 .body(responses);
     }
@@ -83,8 +86,9 @@ public class WishController {
     public ResponseEntity<WishResponse> getWishDetail(@PathVariable("wishId") Long wishId,
                                                       @LoginUser User loginUser
     ) {
-        var response = wishService.getWish(wishId, loginUser.getId());
+        var wishInfo = wishService.getWish(wishId, loginUser.getId());
 
+        var response = WishResponse.from(wishInfo);
         return ResponseEntity.ok()
                 .body(response);
     }
