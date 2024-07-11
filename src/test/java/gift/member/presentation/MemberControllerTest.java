@@ -7,6 +7,7 @@ import gift.member.application.command.MemberUpdateCommand;
 import gift.member.presentation.request.MemberJoinRequest;
 import gift.member.presentation.request.MemberLoginRequest;
 import gift.member.presentation.request.MemberUpdateRequest;
+import gift.wishlist.application.WishlistService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -51,11 +52,12 @@ public class MemberControllerTest {
 
     @Test
     void 회원가입_테스트() throws Exception {
+        // Given
         MemberJoinRequest request = new MemberJoinRequest(email, password);
-
         Mockito.when(memberService.join(request.toCommand())).thenReturn(memberId);
         Mockito.when(tokenService.createToken(memberId)).thenReturn(token);
 
+        // When & Then
         mockMvc.perform(post("/api/member/join")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"" + email + "\", \"password\":\"" + password + "\"}"))
@@ -65,12 +67,12 @@ public class MemberControllerTest {
 
     @Test
     void 로그인_테스트() throws Exception {
+        // Given
         MemberLoginRequest request = new MemberLoginRequest(email, password);
-
-        // Todo eq랑 그냥 넘겼을때 비교
         Mockito.when(memberService.login(request.toCommand())).thenReturn(memberId);
         Mockito.when(tokenService.createToken(memberId)).thenReturn(token);
 
+        // When & Then
         mockMvc.perform(post("/api/member/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"" + email + "\", \"password\":\"" + password + "\"}"))
@@ -80,10 +82,11 @@ public class MemberControllerTest {
 
     @Test
     void 아이디로_찾기_테스트() throws Exception {
+        // Given
         MemberResponse response = new MemberResponse(memberId, email, password);
-
         Mockito.when(memberService.findById(eq(memberId))).thenReturn(response);
 
+        // When & Then
         mockMvc.perform(get("/api/member/{id}", memberId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(email))
@@ -92,11 +95,12 @@ public class MemberControllerTest {
 
     @Test
     void 전체_회원_찾기_테스트() throws Exception {
+        // Given
         MemberResponse response1 = new MemberResponse(memberId, email, password);
         MemberResponse response2 = new MemberResponse(2L, "test2@example.com", "password2");
-
         Mockito.when(memberService.findAll()).thenReturn(Arrays.asList(response1, response2));
 
+        // When & Then
         mockMvc.perform(get("/api/member"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].email").value(email))
@@ -105,23 +109,24 @@ public class MemberControllerTest {
 
     @Test
     void 회원_업데이트_테스트() throws Exception {
+        // Given
         String newEmail = "test2@example.com";
         String newPassword = "newPassword";
-
         MemberUpdateCommand expectedCommand = new MemberUpdateCommand(memberId, newEmail, newPassword);
 
+        // When & Then
         mockMvc.perform(put("/api/member/{id}", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"" + newEmail + "\", \"password\":\"" + newPassword + "\"}"))
                 .andExpect(status().isOk());
 
-        // Mockito의 eq 매처를 사용하여 전달된 인자를 검증
         Mockito.verify(memberService).update(eq(expectedCommand));
     }
 
 
     @Test
     void 회원_삭제_테스트() throws Exception {
+        // When & Then
         mockMvc.perform(delete("/api/member/{id}", memberId))
                 .andExpect(status().isOk());
 
