@@ -6,7 +6,6 @@ import gift.dto.MemberPasswordDTO;
 import gift.exception.AlreadyExistMemberException;
 import gift.exception.InvalidPasswordException;
 import gift.exception.NoSuchMemberException;
-import gift.exception.NoSuchProductException;
 import gift.repository.MemberRepository;
 import gift.util.JwtProvider;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class MemberService {
         this.jwtProvider = jwtProvider;
     }
 
-    public MemberDTO findById(String email) {
+    public MemberDTO findMember(String email) {
         Optional<Member> foundMember = memberRepository.findById(email);
         if (foundMember.isEmpty()) {
             return null;
@@ -34,8 +33,8 @@ public class MemberService {
         return foundMember.get().toDTO();
     }
 
-    public Map<String, String> save(MemberDTO memberDTO) {
-        if (findById(memberDTO.email()) != null) {
+    public Map<String, String> register(MemberDTO memberDTO) {
+        if (findMember(memberDTO.email()) != null) {
             throw new AlreadyExistMemberException();
         }
         MemberDTO savedMemberDTO = memberRepository.save(memberDTO.toEntity()).toDTO();
@@ -43,7 +42,7 @@ public class MemberService {
     }
 
     public Map<String, String> login(MemberDTO memberDTO) {
-        MemberDTO foundMemberDTO = findById(memberDTO.email());
+        MemberDTO foundMemberDTO = findMember(memberDTO.email());
         if (foundMemberDTO == null) {
             throw new NoSuchMemberException();
         }
@@ -51,7 +50,7 @@ public class MemberService {
         return Map.of("token:", jwtProvider.createAccessToken(memberDTO));
     }
 
-    public Map<String, String> update(MemberDTO memberDTO, MemberPasswordDTO memberPasswordDTO) {
+    public Map<String, String> changePassword(MemberDTO memberDTO, MemberPasswordDTO memberPasswordDTO) {
         checkPassword(memberPasswordDTO.password(), memberDTO.password());
         Member member = new Member(memberDTO.email(), memberPasswordDTO.newPassword1());
         MemberDTO updatedMemberDTO = memberRepository.save(member).toDTO();

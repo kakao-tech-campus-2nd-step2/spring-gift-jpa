@@ -23,20 +23,20 @@ public class WishedProductService {
         this.productRepository = productDAO;
     }
 
-    public Collection<WishedProductDTO> findAll(String memberEmail) {
+    public Collection<WishedProductDTO> getWishedProducts(String memberEmail) {
         return wishedProductRepository.findByMemberEmail(memberEmail)
             .stream()
             .map(wishedProduct -> wishedProduct.toDTO())
             .collect(Collectors.toList());
     }
 
-    public WishedProductDTO save(String memberEmail, WishedProductDTO wishedProductDTO) {
+    public WishedProductDTO addWishedProduct(String memberEmail, WishedProductDTO wishedProductDTO) {
         productRepository.findById(wishedProductDTO.productId()).orElseThrow(NoSuchProductException::new);
         WishedProduct wishedProduct = new WishedProduct(memberEmail, wishedProductDTO.productId(), wishedProductDTO.amount());
         return wishedProductRepository.save(wishedProduct).toDTO();
     }
 
-    public WishedProductDTO delete(long id) {
+    public WishedProductDTO deleteWishedProduct(long id) {
         WishedProductDTO deletedWishedProductDTO = wishedProductRepository.findById(id)
             .orElseThrow(NoSuchWishedProductException::new)
             .toDTO();
@@ -44,10 +44,10 @@ public class WishedProductService {
         return deletedWishedProductDTO;
     }
 
-    public WishedProductDTO update(long id, String memberEmail, WishedProductDTO wishedProductDTO) {
+    public WishedProductDTO updateWishedProduct(long id, String memberEmail, WishedProductDTO wishedProductDTO) {
         productRepository.findById(wishedProductDTO.productId()).orElseThrow(NoSuchProductException::new);
         if (wishedProductDTO.amount() == 0) {
-            return delete(id);
+            return deleteWishedProduct(id);
         }
         WishedProduct wishedProduct = new WishedProduct(id, memberEmail, wishedProductDTO.productId(), wishedProductDTO.amount());
         return wishedProductRepository.save(wishedProduct).toDTO();
