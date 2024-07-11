@@ -1,20 +1,34 @@
 package gift.domain;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "wishlist")
 public class WishlistItem {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long memberId;
-    private String itemName;
 
-    public WishlistItem(Long id, Long memberId, String itemName) {
+    @Column(name = "member_id", nullable = false)
+    private Long memberId;
+
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
+
+    public WishlistItem(Long id, Long memberId, Long productId) {
         this.id = id;
         this.memberId = memberId;
-        this.itemName = itemName;
+        this.productId = productId;
     }
 
-    public WishlistItem(Long memberId, String itemName) {
+    public WishlistItem(Long memberId, Long productId) {
         this.memberId = memberId;
-        this.itemName = itemName;
+        this.productId = productId;
+    }
+
+    public WishlistItem() {
+
     }
 
     public Long getId() {
@@ -33,11 +47,11 @@ public class WishlistItem {
         this.memberId = memberId;
     }
 
-    public String getItemName() {
-        return itemName;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 }

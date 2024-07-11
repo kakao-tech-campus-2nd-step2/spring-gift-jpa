@@ -6,12 +6,12 @@ public class WishlistNameRequest {
 
     @NotNull(message = "Member ID를 입력하세요")
     private Long memberId;
-    @NotNull(message = "Item Name을 입력하세요")
-    private String itemName;
+    @NotNull(message = "Product ID를 입력하세요")
+    private Long productId;
 
-    public WishlistNameRequest(Long memberId, String itemName) {
+    public WishlistNameRequest(Long memberId, Long productId) {
         this.memberId = memberId;
-        this.itemName = itemName;
+        this.productId = productId;
     }
 
     public Long getMemberId() {
@@ -19,8 +19,8 @@ public class WishlistNameRequest {
     }
 
 
-    public String getItemName() {
-        return itemName;
+    public Long getProductId() {
+        return productId;
     }
 
 }

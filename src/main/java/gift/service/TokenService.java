@@ -3,7 +3,8 @@ package gift.service;
 import gift.domain.Member;
 import gift.domain.TokenAuth;
 import gift.exception.UnAuthorizationException;
-import gift.repository.TokenRepository;
+import gift.repository.token.TokenRepository;
+import gift.repository.token.TokenSpringDataJpaRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -16,10 +17,10 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class TokenService {
 
-    private final TokenRepository tokenRepository;
+    private final TokenSpringDataJpaRepository tokenRepository;
     private final String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
 
-    public TokenService(TokenRepository tokenRepository) {
+    public TokenService(TokenSpringDataJpaRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
     }
 
@@ -29,12 +30,12 @@ public class TokenService {
                 .claim("email", member.getEmail())
                 .signWith(getSecretKey())
                 .compact();
-        return tokenRepository.save(accessToken, member.getEmail());
+        return tokenRepository.save(new TokenAuth(accessToken, member.getEmail())).getToken();
     }
 
     public TokenAuth findToken(String token){
-        return tokenRepository.findTokenByToken(token)
-                .orElseThrow(()-> new UnAuthorizationException("인증되지 않은 사용자입니다. 다시 로그인 해주세요."));
+        return tokenRepository.findByToken(token)
+                .orElseThrow(() -> new UnAuthorizationException("인증되지 않은 사용자입니다. 다시 로그인 해주세요."));
     }
 
     public String getMemberIdFromToken(String token) {
@@ -53,12 +54,4 @@ public class TokenService {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public boolean validateToken(String token) {
-        try {
-            parseToken(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
 }

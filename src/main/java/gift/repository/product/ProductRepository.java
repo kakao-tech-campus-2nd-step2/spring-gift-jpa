@@ -1,4 +1,4 @@
-package gift.repository;
+package gift.repository.product;
 
 import gift.dto.request.ProductRequest;
 import gift.domain.Product;

@@ -1,7 +1,6 @@
-package gift.repository;
+package gift.repository.member;
 
 import gift.domain.Member;
-import gift.exception.MemberNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -11,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class MemberJDBCRepository implements MemberRepository {
+public class MemberJdbcTemplateRepository implements MemberRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public MemberJDBCRepository(DataSource dataSource) {
+    public MemberJdbcTemplateRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

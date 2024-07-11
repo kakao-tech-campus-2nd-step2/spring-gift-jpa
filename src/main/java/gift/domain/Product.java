@@ -2,16 +2,27 @@ package gift.domain;
 
 
 import gift.dto.request.ProductRequest;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "product")
 public class Product {
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private Integer price;
+
+    @Column(nullable = false, length = 15)
     private String name;
-    private long price;
+
+    @Column(nullable = false, name = "image_url")
     private String imageUrl;
 
     public Product(){}
 
-    public Product(long id, String name, long price, String imageUrl) {
+    public Product(long id, String name, Integer price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -19,7 +30,7 @@ public class Product {
     }
 
 
-    public Product(String name, long price, String imageUrl) {
+    public Product(String name, Integer price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -37,10 +48,10 @@ public class Product {
     public void setName(String name){
         this.name = name;
     }
-    public long getPrice(){
+    public Integer getPrice(){
         return price;
     }
-    public void setPrice(long price){
+    public void setPrice(Integer price){
         this.price = price;
     }
     public String getImageUrl(){

@@ -1,4 +1,4 @@
-package gift.repository;
+package gift.repository.member;
 
 import gift.domain.Member;
 

@@ -1,4 +1,4 @@
-package gift.repository;
+package gift.repository.wishlist;
 
 import gift.domain.WishlistItem;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,24 +9,24 @@ import javax.sql.DataSource;
 import java.util.List;
 
 @Repository
-public class WishlistJDBCRepository implements WishlistRepository {
+public class WishlistJdbcTemplateRepository implements WishlistRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public WishlistJDBCRepository(DataSource dataSource) {
+    public WishlistJdbcTemplateRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
     @Override
     public void addItem(WishlistItem item) {
-        String sql = "INSERT INTO wishlist (member_id, item_name) VALUES (?, ?)";
-        jdbcTemplate.update(sql, item.getMemberId(), item.getItemName());
+        String sql = "INSERT INTO wishlist (member_id, product_id) VALUES (?, ?)";
+        jdbcTemplate.update(sql, item.getMemberId(), item.getProductId());
         Long id = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", Long.class);
         item.setId(id); // WishlistItem 객체에 자동 생성된 id 할당
     }
     @Override
-    public void deleteItem(Long itemId) {
-        String sql = "DELETE FROM wishlist WHERE id = ?";
-        jdbcTemplate.update(sql, itemId);
+    public void deleteItem(Long productId) {
+        String sql = "DELETE FROM wishlist WHERE product_id = ?";
+        jdbcTemplate.update(sql, productId);
     }
     @Override
     public List<WishlistItem> getItemsByMemberId(Long memberId) {
@@ -38,7 +38,7 @@ public class WishlistJDBCRepository implements WishlistRepository {
         return (rs, rowNum) -> new WishlistItem(
                 rs.getLong("id"),
                 rs.getLong("member_id"),
-                rs.getString("item_name")
+                rs.getLong("product_id")
         );
     }
 }

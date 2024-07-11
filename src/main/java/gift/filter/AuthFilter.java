@@ -1,7 +1,8 @@
 package gift.filter;
 
 import gift.domain.TokenAuth;
-import gift.repository.TokenRepository;
+import gift.repository.token.TokenRepository;
+import gift.repository.token.TokenSpringDataJpaRepository;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,10 +14,10 @@ import java.io.IOException;
 @Component
 public class AuthFilter implements Filter {
 
-    private final TokenRepository tokenRepository;
+    private final TokenSpringDataJpaRepository tokenRepository;
 
     @Autowired
-    public AuthFilter(TokenRepository tokenRepository) {
+    public AuthFilter(TokenSpringDataJpaRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
     }
 
@@ -62,7 +63,6 @@ public class AuthFilter implements Filter {
     }
 
     private boolean isTokenValid(String token) {
-        TokenAuth tokenAuth = tokenRepository.findTokenByToken(token).orElse(null);
-        return tokenAuth != null;
+        return tokenRepository.findByToken(token).isPresent();
     }
 }

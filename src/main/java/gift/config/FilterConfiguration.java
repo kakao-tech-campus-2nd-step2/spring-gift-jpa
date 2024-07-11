@@ -1,8 +1,9 @@
 package gift.config;
 
-import gift.repository.TokenRepository;
+import gift.repository.token.TokenRepository;
 import gift.filter.AuthFilter;
 import gift.filter.LoginFilter;
+import gift.repository.token.TokenSpringDataJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -13,10 +14,10 @@ import jakarta.servlet.Filter;
 @Configuration
 public class FilterConfiguration {
 
-    private final TokenRepository tokenRepository;
+    private final TokenSpringDataJpaRepository tokenRepository;
 
     @Autowired
-    public FilterConfiguration(TokenRepository tokenRepository) {
+    public FilterConfiguration(TokenSpringDataJpaRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
     }
 

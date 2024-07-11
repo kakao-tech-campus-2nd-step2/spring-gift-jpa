@@ -19,11 +19,11 @@ public class ProductRequest {
 
     @NotNull(message = "가격을 입력하세요")
     @Positive(message = "가격은 양의 정수여야 합니다.")
-    private long price;
+    private Integer price;
 
     private String imageUrl;
 
-    public ProductRequest(String name, long price, String imageUrl) {
+    public ProductRequest(String name, Integer price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -35,11 +35,8 @@ public class ProductRequest {
         return name;
     }
 
-    private boolean isApprovedByMD() {
-        return false;
-    }
 
-    public long getPrice(){
+    public Integer getPrice(){
         return price;
     }
     public String getImageUrl(){

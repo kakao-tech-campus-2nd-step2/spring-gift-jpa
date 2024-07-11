@@ -1,18 +1,34 @@
 package gift.domain;
 
+import jakarta.persistence.*;
+@Entity
+@Table(name = "tokenauth")
 public class TokenAuth {
-    private final String token;
-    private final String email;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, length = 255)
+    private String token;
+
+    @Column(nullable = false, length = 255)
+    private String email;
+
     public TokenAuth(String token, String email){
         this.token = token;
         this.email = email;
     }
 
-    public String getToken() {
+    public TokenAuth() {
+
+    }
+
+    public String getToken(){
         return token;
     }
 
-    public String getEmail() {
+    public String getEmail(){
         return email;
     }
+
 }
