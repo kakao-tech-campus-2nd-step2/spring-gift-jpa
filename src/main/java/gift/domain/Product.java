@@ -21,7 +21,7 @@ public class Product extends TimeStamp {
     private int price;
     private String imageUrl;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "product")
     private List<Wish> wishList = new ArrayList<>();
 
     public Product() {
