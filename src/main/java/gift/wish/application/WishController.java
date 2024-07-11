@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.net.URI;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,11 +39,13 @@ public class WishController {
             @ApiResponse(responseCode = "404", description = "일치하는 위시리스트를 찾을 수 없음")
     })
     @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public void saveWish(@RequestBody WishRequest wishRequest,
-                         @LoginUser User loginUser
+    public ResponseEntity<Void> saveWish(@RequestBody WishRequest wishRequest,
+                                         @LoginUser User loginUser
     ) {
-        wishService.saveWish(wishRequest.toWishParam(loginUser.getId()));
+        var wishId = wishService.saveWish(wishRequest.toWishParam(loginUser.getId()));
+
+        return ResponseEntity.created(URI.create("/api/wishes/" + wishId))
+                .build();
     }
 
     @Operation(summary = "위시리스트 수정", description = "위시리스트를 수정합니다.")

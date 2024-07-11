@@ -22,12 +22,14 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
-    public void saveWish(WishParam wishRequest) {
+    public Long saveWish(WishParam wishRequest) {
         Product product = productRepository.findById(wishRequest.productId())
                 .orElseThrow(() -> ProductNotFoundException.of(wishRequest.productId()));
 
         Wish wish = wishRequest.toEntity();
         wishRepository.save(wish);
+
+        return wish.getId();
     }
 
     @Transactional
