@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WishlistJpaRepository extends JpaRepository<WishItem, Long> {
 
-    @Query("select w from WishItem w where w.user.id = :userId")
+    @Query("select distinct w from WishItem w join fetch w.user u join fetch w.product p where u.id = :userId")
     List<WishItem> findAllByUserId(@Param("userId") Long userId);
 }
