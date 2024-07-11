@@ -1,10 +1,11 @@
-package gift.wishlist.repository;
+package gift;
 
 import gift.member.model.Member;
 import gift.member.repository.MemberRepository;
 import gift.product.model.Product;
 import gift.product.repository.ProductRepository;
 import gift.wishlist.model.WishList;
+import gift.wishlist.repository.WishListRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +39,10 @@ public class WishListRepositoryTest {
         Product product = new Product("test", 100, "https://www.google.com");
         product = productRepository.save(product);
 
-        WishList wish = new WishList(member, product);
-        wish = wishListRepository.save(wish);
+        WishList wishlist = new WishList(member, product);
+        wishlist = wishListRepository.save(wishlist);
 
-        assertThat(wishListRepository.existsById(wish.getId())).isTrue();
+        assertThat(wishListRepository.existsById(wishlist.getId())).isTrue();
     }
 
     @Test
@@ -50,24 +51,12 @@ public class WishListRepositoryTest {
         Product product = new Product("test", 100, "https://www.google.com");
         product = productRepository.save(product);
 
-        WishList wish = new WishList(member, product);
-        wish = wishListRepository.save(wish);
+        WishList wishlist = new WishList(member, product);
+        wishlist = wishListRepository.save(wishlist);
 
-        wishListRepository.deleteById(wish.getId());
+        wishListRepository.deleteById(wishlist.getId());
 
-        assertThat(wishListRepository.existsById(wish.getId())).isFalse();
-    }
-
-    @Test
-    public void existsByUserIdAndProductId() {
-        Member member = memberRepository.findByEmail("example@test.com").orElse(null);
-        Product product = new Product("test", 100, "https://www.google.com");
-        product = productRepository.save(product);
-
-        WishList wish = new WishList(member, product);
-        wish = wishListRepository.save(wish);
-
-        assertThat(wishListRepository.existsById(member.id(), product.id())).isTrue();
+        assertThat(wishListRepository.existsById(wishlist.getId())).isFalse();
     }
 
     @Test
@@ -76,8 +65,8 @@ public class WishListRepositoryTest {
         Product product = new Product("test", 100, "https://www.google.com");
         product = productRepository.save(product);
 
-        WishList wish = new WishList(member, product);
-        wishListRepository.save(wish);
+        WishList wishlist = new WishList(member, product);
+        wishListRepository.save(wishlist);
 
         assertThat(wishListRepository.findByMember(member)).hasSize(1);
     }

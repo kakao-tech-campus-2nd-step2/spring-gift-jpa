@@ -1,8 +1,7 @@
-package gift.product.repository;
+package gift;
 
 import gift.product.model.Product;
 import gift.product.repository.ProductRepository;
-import gift.product.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
