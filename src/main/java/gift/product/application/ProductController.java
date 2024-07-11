@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,10 +39,12 @@ public class ProductController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "상품 등록 성공"),
     })
-    @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public void saveProduct(@RequestBody @Valid ProductRequest newProduct) {
-        productService.saveProduct(newProduct.toProductParams());
+    @PostMapping
+    public ResponseEntity<Void> saveProduct(@RequestBody @Valid ProductRequest newProduct) {
+        var createdProductId = productService.saveProduct(newProduct.toProductParams());
+
+        return ResponseEntity.created(URI.create("/api/products/" + createdProductId))
+                .build();
     }
 
     @Operation(summary = "상품 수정", description = "상품을 수정합니다.")

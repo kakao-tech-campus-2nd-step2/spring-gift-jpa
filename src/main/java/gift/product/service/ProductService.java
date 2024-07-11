@@ -17,9 +17,11 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public void saveProduct(ProductParams productRequest) {
+    public Long saveProduct(ProductParams productRequest) {
         Product product = productRequest.toEntity();
-        productRepository.save(product);
+        product = productRepository.save(product);
+
+        return product.getId();
     }
 
     @Transactional
