@@ -81,7 +81,7 @@
 <div class="container">
 
   <h1>Sign Up</h1>
-  <form th:action="@{/signup}" th:object="${newSiteUser}" method="post" class="create-form">
+  <form th:action="@{/signup}" th:object="${newMember}" method="post" class="create-form">
     <div>
       <label>Username:</label>
       <input type="text" th:field="*{username}" />
