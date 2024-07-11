@@ -45,10 +45,6 @@ public class AuthService {
         return new JwtResponse(accessToken);
     }
 
-    public boolean existsMember(LoginMember loginMember) {
-        return authRepository.existsById(loginMember.id());
-    }
-
     private String getAccessToken(Member member) {
         String EncodedSecretKey = Encoders.BASE64.encode(
             SECRET_KEY.getBytes(StandardCharsets.UTF_8));
