@@ -43,6 +43,12 @@ public class WishService {
         return wishRepository.save(wish);
     }
 
+    @Transactional
+    public void deleteWish(Long id, LoginMember loginMember) {
+        getValidatedWish(id, loginMember);
+        wishRepository.deleteById(id);
+    }
+
     private Member getMember(LoginMember loginMember) {
         Optional<Member> member = authRepository.findById(loginMember.id());
 
@@ -51,12 +57,6 @@ public class WishService {
         }
 
         return member.get();
-    }
-
-    @Transactional
-    public void deleteWish(Long id, LoginMember loginMember) {
-        getValidatedWish(id, loginMember);
-        wishRepository.deleteById(id);
     }
 
     private Wish getValidatedWish(Long id, LoginMember loginMember) {
