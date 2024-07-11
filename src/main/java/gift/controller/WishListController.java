@@ -29,7 +29,7 @@ public class WishListController {
 
     @GetMapping("/wish")
     public ResponseEntity<?> getGiftList(@RequestAttribute("user") User user,
-                                         @PageableDefault(sort="id",direction = Sort.Direction.ASC,size=5) Pageable pageable) {
+                                         @PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 5) Pageable pageable) {
         if (user != null) {
             List<GiftResponse> gifts = giftService.getAllGifts(pageable);
             return ResponseEntity.ok(gifts);
@@ -59,9 +59,13 @@ public class WishListController {
     }
 
     @GetMapping("/mywish")
-    public ResponseEntity<List<WishResponse>> getUserGifts(@RequestAttribute("user") User user) {
+    public ResponseEntity<List<WishResponse>> getUserGifts(@RequestAttribute("user") User user,
+                                                           @PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 5) Pageable pageable) {
         if (user != null) {
-            List<WishResponse> wishResponses = wishService.getGiftsForUser(user.getId()).stream().map(wish -> new WishResponse(wish.getGift().getId(), wish.getGift().getName(), wish.getGift().getPrice(), wish.getQuantity())).collect(Collectors.toList());
+            List<WishResponse> wishResponses =
+                    wishService.getGiftsForUser(user.getId(), pageable)
+                            .stream()
+                            .map(wish -> new WishResponse(wish.getGift().getId(), wish.getGift().getName(), wish.getGift().getPrice(), wish.getQuantity())).collect(Collectors.toList());
             return ResponseEntity.ok(wishResponses);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.emptyList());

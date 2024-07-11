@@ -7,6 +7,7 @@ import gift.repository.GiftRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,8 +47,8 @@ public class WishService {
         wishRepository.deleteByUserAndGift(user, gift);
     }
 
-    public List<Wish> getGiftsForUser(Long userId) {
+    public List<Wish> getGiftsForUser(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-        return wishRepository.findByUser(user);
+        return wishRepository.findByUser(user, pageable);
     }
 }
