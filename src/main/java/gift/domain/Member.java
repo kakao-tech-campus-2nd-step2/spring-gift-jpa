@@ -3,8 +3,8 @@ package gift.domain;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name="member")
@@ -28,6 +28,19 @@ public class Member {
     public void removeWish(Wish wish) {
         wish.setMember(null);
         this.wishes.remove(wish);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return Objects.equals(id, member.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     // JPA가 엔티티 객체를 생성할 때 reflection을 사용하기 때문에 필요함
