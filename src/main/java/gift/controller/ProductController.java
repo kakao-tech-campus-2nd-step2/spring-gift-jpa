@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,8 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/api/products")
+@Controller
 public class ProductController {
 
     private final ProductService productService;
@@ -30,7 +31,14 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping
+    @GetMapping("/")
+    public String getAllMyProducts(Model model) {
+        var productDto = productService.getAllProducts();
+        model.addAttribute("productDto", productDto);
+        return "getproducts";
+    }
+
+    @GetMapping("/test")
     public ResponseEntity<Map<String, Object>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
         Map<String, Object> response = new HashMap<>();
@@ -40,16 +48,16 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getProductById(@PathVariable Long id) {
+    public String getProductById(@PathVariable Long id, Model model) {
         Map<String, Object> response = new HashMap<>();
         try {
             Product product = productService.getProductById(id);
-            response.put("message", "Product retrieved successfully.");
-            response.put("product", product);
-            return ResponseEntity.ok(response);
+            model.addAttribute("productDto", product);
+            return "getproducts";
         } catch (ProductNotFoundException ex) {
             response.put("message", ex.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            model.addAttribute("errorMessage", response.get("message"));
+            return "getproducts";
         }
     }
 
@@ -67,7 +75,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
+    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable Long id,
+        @Valid @RequestBody Product product) {
         boolean success = productService.updateProduct(id, product);
         Map<String, Object> response = new HashMap<>();
         if (success) {
@@ -81,7 +90,8 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> patchProduct(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+    public ResponseEntity<Map<String, Object>> patchProduct(@PathVariable Long id,
+        @RequestBody Map<String, Object> updates) {
         boolean success = productService.patchProduct(id, updates);
         Map<String, Object> response = new HashMap<>();
         if (success) {
@@ -95,7 +105,8 @@ public class ProductController {
     }
 
     @PatchMapping
-    public ResponseEntity<Map<String, Object>> patchProducts(@RequestBody List<Map<String, Object>> updatesList) {
+    public ResponseEntity<Map<String, Object>> patchProducts(
+        @RequestBody List<Map<String, Object>> updatesList) {
         List<Optional<Product>> updatedProducts = productService.patchProducts(updatesList);
         Map<String, Object> response = new HashMap<>();
         int originalCount = updatesList.size();
