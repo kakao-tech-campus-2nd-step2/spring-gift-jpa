@@ -38,7 +38,7 @@
 - product 조회시 찜(위시) 갯수도 함께 조회한다.
 
 ### User
-- role 필드는 매직 스트링을 사용한다.
+- role 필드는 enum을 사용한다.
 
 ### WishList
 - `WishList` 엔티티에 Product와 User에 대한 연관관계를 설정한다.

@@ -2,6 +2,8 @@ package gift.user.model.dto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,8 +25,9 @@ public class User {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private String role = "USER";
+    private Role role = Role.USER;
 
     @Column(length = 255)
     private String salt;
@@ -32,7 +35,7 @@ public class User {
     public User() {
     }
 
-    public User(String email, String password, String role, String salt) {
+    public User(String email, String password, Role role, String salt) {
         this.email = email;
         this.password = password;
         this.role = role;
@@ -71,11 +74,11 @@ public class User {
         this.isActive = isActive;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
