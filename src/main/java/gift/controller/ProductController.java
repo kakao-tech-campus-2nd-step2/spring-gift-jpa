@@ -42,14 +42,12 @@ public class ProductController {
 
     @PostMapping()
     public ResponseEntity<Product> create( @RequestBody @Valid ProductRequest productRequest){
-
         Product product = productService.createProduct(productRequest);
         return new ResponseEntity<>(product,HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Product> update(@PathVariable("id") Long id, @RequestBody @Valid ProductRequest productRequest){
-
         Product product = productService.updateProduct(id, productRequest);
 
         return new ResponseEntity<>(product, HttpStatus.OK);
@@ -59,15 +57,5 @@ public class ProductController {
     public ResponseEntity<Product> delete(@PathVariable("id") Long id){
         productService.deleteProduct(id);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-    }
-
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<List<String>> handleNameException(MethodArgumentNotValidException e){
-        List<String> errorMessages = new ArrayList<>();
-        e.getBindingResult().getAllErrors().forEach(error -> {
-            String errorMessage = error.getDefaultMessage();
-            errorMessages.add(errorMessage);
-        });
-        return new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
     }
 }
