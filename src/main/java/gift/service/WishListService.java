@@ -55,7 +55,7 @@ public class WishListService {
         Product product = productService.getProductById(productId);
         Wish wish = wishListRepository.findByMemberAndProduct(member, product)
                 .orElseThrow(WishNotFoundException::new);
-        wish.setAmount(amount);
+        wish.changeAmount(amount);
     }
 
     public List<WishProductResponse> getWishProductsByMemberId(Long memberId) {

@@ -57,7 +57,7 @@ class ProductRepositoryTest {
         Product savedProduct = productRepository.save(product);
 
         // When
-        savedProduct.setName("아몬드봉봉");
+        savedProduct.changeName("아몬드봉봉");
 
         // Then
         assertThat(savedProduct.getName()).isEqualTo("아몬드봉봉");

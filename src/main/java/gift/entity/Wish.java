@@ -48,7 +48,7 @@ public class Wish {
         return member;
     }
 
-    public void setAmount(Integer amount) {
+    public void changeAmount(Integer amount) {
         this.amount = amount;
     }
 

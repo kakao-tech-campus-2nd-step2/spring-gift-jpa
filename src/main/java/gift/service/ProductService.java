@@ -42,9 +42,9 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
 
-        product.setName(name);
-        product.setPrice(price);
-        product.setImageUrl(imageUrl);
+        product.changeName(name);
+        product.changePrice(price);
+        product.changeImageUrl(imageUrl);
     }
 
     @Transactional
