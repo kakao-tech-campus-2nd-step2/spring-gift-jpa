@@ -46,6 +46,10 @@ public class User {
         return email;
     }
 
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
     public Set<Wish> wishes() {
         return wishes;
     }
