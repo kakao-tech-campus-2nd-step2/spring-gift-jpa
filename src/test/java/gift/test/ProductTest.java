@@ -49,7 +49,7 @@ public class ProductTest {
 
     @Test
     public void testGetProduct() {
-        Product product = new Product(8146027L, "아이스 아메리카노 T", 4500, "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
+        Product product = new Product("아이스 아메리카노 T", 4500, "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
 
         when(productService.getProduct(1L)).thenReturn(product);
 
@@ -61,7 +61,7 @@ public class ProductTest {
 
     @Test
     public void testAddProduct() {
-        Product product = new Product(8146027L, "아이스 아메리카노 T", 4500, "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
+        Product product = new Product("아이스 아메리카노 T", 4500, "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
 
         when(productService.createProduct(any(Product.class), any(BindingResult.class))).thenReturn(product);
 
@@ -73,7 +73,7 @@ public class ProductTest {
 
     @Test
     public void testUpdateProduct() {
-        Product product = new Product(8146027L, "아이스 아메리카노 T", 5000, "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
+        Product product = new Product("아이스 아메리카노 T", 5000, "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
 
         doNothing().when(productService).updateProduct(eq(1L), any(Product.class), any(BindingResult.class));
 
