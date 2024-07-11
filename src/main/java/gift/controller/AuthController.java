@@ -4,6 +4,7 @@ import gift.dto.request.MemberRequestDto;
 import gift.dto.response.MemberResponseDto;
 import gift.service.AuthService;
 import gift.service.TokenService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class AuthController {
 
     @ResponseBody
     @PostMapping("/members/register")
-    public ResponseEntity<Map<String, String>> memberSignUp(@RequestBody MemberRequestDto memberRequestDto){
+    public ResponseEntity<Map<String, String>> memberSignUp(@RequestBody @Valid MemberRequestDto memberRequestDto){
         authService.memberJoin(memberRequestDto);
 
         Map<String, String> response = getToken(memberRequestDto.email());
@@ -37,10 +38,9 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).contentType(MediaType.APPLICATION_JSON).body(response);
     }
 
-
     @ResponseBody
     @PostMapping("/members/login")
-    public ResponseEntity<Map<String, String>> memberLogin(@RequestBody MemberRequestDto memberRequestDto){
+    public ResponseEntity<Map<String, String>> memberLogin(@RequestBody @Valid MemberRequestDto memberRequestDto){
 
         MemberResponseDto memberResponseDto = authService.findOneByEmailAndPassword(memberRequestDto);
 
