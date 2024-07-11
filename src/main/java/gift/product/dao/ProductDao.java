@@ -9,5 +9,4 @@ import java.util.List;
 @Repository
 public interface ProductDao extends JpaRepository<Product, Long> {
     List<Product> findByName(String name);
-    Product findById(long id);
 }

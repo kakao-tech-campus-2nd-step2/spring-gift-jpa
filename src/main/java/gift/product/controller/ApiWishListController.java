@@ -1,6 +1,6 @@
 package gift.product.controller;
 
-import gift.product.model.WishProduct;
+import gift.product.model.Product;
 import gift.product.service.WishListService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -29,9 +29,9 @@ public class ApiWishListController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<WishProduct>> showProductList(HttpServletRequest request) {
+    public ResponseEntity<List<Product>> showProductList(HttpServletRequest request) {
         System.out.println("[ApiWishListController] showProductList()");
-        List<WishProduct> productList = new ArrayList<>(wishListService.getAllProducts(request));
+        List<Product> productList = new ArrayList<>(wishListService.getAllProducts(request));
         return ResponseEntity.ok(productList);
     }
 

@@ -34,7 +34,7 @@ public class JwtUtil {
             .compact();
     }
 
-    // 토큰의 서명 및 유효성 건즘
+    // 토큰의 서명 및 유효성 검증
     public boolean isValidToken(String token) {
         System.out.println("[CertifyUtil] isValidToken()");
         try {
@@ -71,7 +71,7 @@ public class JwtUtil {
             throw new UnauthorizedException("인증에 필요한 정보가 HTTP 헤더에 존재하지 않습니다.");
 
         String token = authorizationHeader.substring(7);
-        if (!isValidToken(token) || token == null)
+        if (!isValidToken(token))
             throw new UnauthorizedException("인증 토큰에 대한 정보가 존재하지 않습니다.");
 
         return token;

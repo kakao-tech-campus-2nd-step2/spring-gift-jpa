@@ -10,9 +10,9 @@ import gift.product.validation.WishListValidation;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
-import gift.product.model.WishProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,22 +35,16 @@ public class WishListService {
         this.productDao = productDao;
     }
 
-    public Collection<WishProduct> getAllProducts(HttpServletRequest request) {
+    public Collection<Product> getAllProducts(HttpServletRequest request) {
         String token = jwtUtil.checkAuthorization(request.getHeader("Authorization"));
-        Collection<Wish> wishList = wishListDao.findAllByMember(memberDao.findMEmberByEmailLike(jwtUtil.getEmailByToken(token)));
-        Collection<WishProduct> wishList2 = new ArrayList<>();
-        for(Wish wish : wishList) {
-            Product product = productDao.findById(wish.getProduct().getId()).orElse(null);
-            if(product != null) {
-                wishList2.add(new WishProduct(
-                    product.getName(),
-                    product.getPrice(),
-                    product.getImageUrl()
-                    )
-                );
-            }
-        }
-        return wishList2;
+
+        Collection<Wish> findList = wishListDao.findAllByMember(memberDao.findByEmail(jwtUtil.getEmailByToken(token)));
+
+        List<Product> responseList = new ArrayList<>();
+        for(Wish wish : findList)
+            productDao.findById(wish.getProduct().getId()).ifPresent(responseList::add);
+
+        return responseList;
     }
 
     public ResponseEntity<String> registerWishProduct(HttpServletRequest request, Map<String, Long> requestBody) {
@@ -60,7 +54,7 @@ public class WishListService {
 
         wishListDao.save(
                 new Wish(
-                        memberDao.findByEmail(jwtUtil.getEmailByToken(token)).get(),
+                        memberDao.findByEmail(jwtUtil.getEmailByToken(token)),
                         productDao.findById(requestBody.get("productId")).get()
                 )
         );
@@ -70,7 +64,7 @@ public class WishListService {
 
     public ResponseEntity<String> deleteWishProduct(HttpServletRequest request, Long id) {
         String token = jwtUtil.checkAuthorization(request.getHeader("Authorization"));
-        wishListValidation.deleteValidation(id, memberDao.findByEmail(jwtUtil.getEmailByToken(token)).get());
+        wishListValidation.deleteValidation(id, memberDao.findByEmail(jwtUtil.getEmailByToken(token)));
         wishListDao.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("delete WishProduct successfully");
     }
