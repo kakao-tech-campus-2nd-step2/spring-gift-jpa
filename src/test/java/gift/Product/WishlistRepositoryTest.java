@@ -48,10 +48,12 @@ class WishlistRepositoryTest {
 
     @Test
     void deleteById() {
-        WishList expected = new WishList(100L, 100L);
+        Member member = new Member("example100@example.com","password");
+        memberRepository.save(member);
+        WishList expected = new WishList(member, 100L);
         wishlistRepository.save(expected);
         wishlistRepository.deleteById(expected.getProductId());
-        Optional<WishList> deletedWish = wishlistRepository.findById(expected.getMemberId());
+        Optional<WishList> deletedWish = wishlistRepository.findById(expected.getProductId());
         assertThat(deletedWish).isNotPresent();
 
     }
