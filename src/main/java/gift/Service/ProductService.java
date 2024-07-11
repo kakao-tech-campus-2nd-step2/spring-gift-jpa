@@ -2,7 +2,7 @@ package gift.Service;
 
 import gift.DTO.ProductDto;
 import gift.DTO.ProductEntity;
-import gift.ProductConverter;
+import gift.ConverterToDto;
 import gift.Repository.ProductDao;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -25,7 +25,7 @@ public class ProductService {
   public List<ProductDto> getAllProducts() {
     List<ProductEntity> productEntities = productDao.findAll();
     List<ProductDto> productDtos = productEntities.stream()
-      .map(ProductConverter::convertToDto)
+      .map(ConverterToDto::convertToProductDto)
       .collect(Collectors.toList());
     return productDtos;
   }
@@ -34,7 +34,7 @@ public class ProductService {
     Optional<ProductEntity> productEntityOptional = productDao.findById(id);
 
     //Optional에 ProductConverter::convertToDto를 직접 이용 못하므로, map 이용하여 entity 뽑아낸 후에 적용
-    return productEntityOptional.map(ProductConverter::convertToDto);
+    return productEntityOptional.map(ConverterToDto::convertToProductDto);
   }
 
   public ProductDto addProduct(@Valid ProductDto productDto) {
@@ -43,7 +43,6 @@ public class ProductService {
     productDao.save(productEntity);
     return productDto;
   }
-
   public Optional<ProductDto> updateProduct(Long id, @Valid ProductDto updatedProductDto) {
     Optional<ProductEntity> existingProductEntityOptional = productDao.findById(id);
     ProductEntity newProduct = new ProductEntity(id,
@@ -51,7 +50,7 @@ public class ProductService {
       updatedProductDto.getImageUrl());
     productDao.deleteById(id);
     productDao.save(newProduct);
-    return existingProductEntityOptional.map(ProductConverter::convertToDto);
+    return existingProductEntityOptional.map(ConverterToDto::convertToProductDto);
   }
 
   public Optional<ProductDto> deleteProduct(@PathVariable Long id) {
@@ -61,7 +60,7 @@ public class ProductService {
     }
     productDao.deleteById(id);
 
-    return existingProductEntityOptional.map(ProductConverter::convertToDto);
+    return existingProductEntityOptional.map(ConverterToDto::convertToProductDto);
   }
 
 }
