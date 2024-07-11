@@ -33,9 +33,10 @@ public class AuthInterceptor implements HandlerInterceptor {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         return false;
     }
+
     public Optional<User> getUserFromToken(String authHeader) {
         String token = authHeader.replace("Bearer ", "").trim();
-        if(userService.validateToken(token)) {
+        if (userService.validateToken(token)) {
             return userService.getUserByToken(token);
         }
         return Optional.empty();

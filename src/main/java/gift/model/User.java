@@ -3,26 +3,29 @@ package gift.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "email",unique = true)
+    @Column(unique = true)
     @NotNull
     private String email;
-    @Column(name = "password")
     @NotNull
     private String password;
+
 
     public User() {
     }
 
-    public User(String email, String password){
+    public User(String email, String password) {
         this.email = email;
-        this.password =password;
+        this.password = password;
     }
+
     public Long getId() {
         return id;
     }

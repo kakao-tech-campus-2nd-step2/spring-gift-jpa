@@ -21,28 +21,28 @@ public class GiftController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addGift(@RequestBody GiftRequest giftReq){
+    public ResponseEntity<String> addGift(@RequestBody GiftRequest giftReq) {
         giftService.addGift(giftReq);
         return ResponseEntity.status(HttpStatus.CREATED).body("Gift created");
     }
 
     @GetMapping("/{id}")
-    public GiftResponse getGift(@PathVariable Long id){
+    public GiftResponse getGift(@PathVariable Long id) {
         return giftService.getGift(id);
     }
 
     @GetMapping
-    public List<GiftResponse> getAllGift(){
+    public List<GiftResponse> getAllGift() {
         return giftService.getAllGifts();
     }
 
     @PutMapping("/{id}")
-    public void updateGift(@PathVariable Long id , @RequestBody GiftRequest giftReq){
-         giftService.updateGift(giftReq,id);
+    public void updateGift(@PathVariable Long id, @RequestBody GiftRequest giftReq) {
+        giftService.updateGift(giftReq, id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteGift(@PathVariable Long id){
+    public void deleteGift(@PathVariable Long id) {
         giftService.deleteGift(id);
     }
 }
