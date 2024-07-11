@@ -52,16 +52,19 @@ public class WishJpaRepositoryTest {
         Product product = new Product(null, "product1", 1000, "product1.jpg");
         Wish wish = new Wish(null, member, product, 2L);
 
-        memberJpaRepository.save(member);
-        productJpaRepository.save(product);
-        wishJpaRepository.save(wish);
+        Member member1 = memberJpaRepository.save(member);
+        Product product1 = productJpaRepository.save(product);
+        Wish wish1 = wishJpaRepository.save(wish);
 
         // when
         assertAll(
-            () -> assertThat(wishJpaRepository.findByMemberId(1L).get(0).getMember().getEmail())
+            () -> assertThat(
+                wishJpaRepository.findByMemberId(member1.getId()).get(0).getMember().getEmail())
                 .isEqualTo("member1@asd.com"),
-            () -> assertThat(wishJpaRepository.findByMemberId(1L).get(0).getProduct().getName()),
-            () -> assertThat(wishJpaRepository.findByMemberId(1L).get(0).getCount()).isEqualTo(2L)
+            () -> assertThat(
+                wishJpaRepository.findByMemberId(member1.getId()).get(0).getProduct().getName()),
+            () -> assertThat(
+                wishJpaRepository.findByMemberId(member1.getId()).get(0).getCount()).isEqualTo(2L)
         );
     }
 }
