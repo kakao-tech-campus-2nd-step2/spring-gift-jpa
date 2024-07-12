@@ -8,7 +8,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "wish")
-@DynamicUpdate
 public class Wish {
 
     @Id
