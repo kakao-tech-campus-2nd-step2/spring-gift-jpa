@@ -18,7 +18,7 @@ public class Wish {
     @Column(nullable = false)
     private int count;
 
-    public Wish() {
+    protected Wish() {
     }
 
     public Wish(Long userId, Long productId, int count) {

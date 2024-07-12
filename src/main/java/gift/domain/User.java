@@ -20,7 +20,7 @@ public class User {
     private String password;
     private String role;
 
-    public User() {
+    protected User() {
     }
 
     public User(String email, String password, String role) {

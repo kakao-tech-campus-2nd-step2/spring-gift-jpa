@@ -19,6 +19,9 @@ public class Product {
     @Column(nullable = false)
     private String imageUrl;
 
+    protected Product() {
+    }
+
     public Product(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
@@ -30,9 +33,6 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-    }
-
-    public Product() {
     }
 
     public void update(String name, int price, String imageUrl) {
