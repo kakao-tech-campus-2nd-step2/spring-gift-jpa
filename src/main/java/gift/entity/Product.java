@@ -16,10 +16,10 @@ public class Product {
     @Embedded
     private ProductName name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "INT NOT NULL COMMENT 'Product Price'")
     private int price;
 
-    @Column(name = "image_url", nullable = false)
+    @Column(name = "image_url", nullable = false, columnDefinition = "VARCHAR(255) NOT NULL COMMENT 'Product Image URL'")
     private String imageUrl;
 
     protected Product() {
