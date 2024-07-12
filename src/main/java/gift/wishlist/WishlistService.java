@@ -64,18 +64,6 @@ public class WishlistService {
     // 상품 삭제
     @Transactional
     public HttpEntity<String> deleteWishlist(Long productId, Long memberId) {
-//        if (wishlistRepository.findByProductId(productId).isEmpty()) {
-//            throw new InvalidProduct("잘못된 접근입니다");
-//        }
-//        List<Wishlist> w1 = wishlistRepository.findByProductId(productId);
-//        List<Wishlist> w2 = wishlistRepository.findByMemberId(memberId);
-//
-//        if (w1 == w2) {
-//            wishlistRepository.deleteByProductId(productId);
-//            return ResponseEntity.ok("장바구니에서 제거되었습니다");
-//        } else {
-//            return ResponseEntity.ok("찾을 수 없습니다");
-//        }
         List<Wishlist> w1 = wishlistRepository.findByProductId(productId);
         List<Wishlist> w2 = wishlistRepository.findByMemberId(memberId);
 
