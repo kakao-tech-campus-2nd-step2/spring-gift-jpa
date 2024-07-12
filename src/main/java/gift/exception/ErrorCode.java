@@ -3,7 +3,8 @@ package gift.exception;
 import org.springframework.http.HttpStatus;
 
 public enum ErrorCode {
-    INVALID_PRODUCT(HttpStatus.BAD_REQUEST, "유효하지 않은 상품정보입니다.");
+    INVALID_PRODUCT(HttpStatus.BAD_REQUEST, "유효하지 않은 상품정보입니다."),
+    INVALID_USER(HttpStatus.BAD_REQUEST, "유효하지 않은 멤버정보입니다.");
 
     private final HttpStatus error;
 
