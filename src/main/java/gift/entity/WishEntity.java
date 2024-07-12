@@ -31,6 +31,9 @@ public class WishEntity {
     public WishEntity(MemberEntity memberEntity, ProductEntity productEntity) {
         this.memberEntity = memberEntity;
         this.productEntity = productEntity;
+
+        memberEntity.getWishEntityList().add(this);
+        productEntity.getWishEntityList().add(this);
     }
 
     public Long getId() {
@@ -46,13 +49,15 @@ public class WishEntity {
     }
 
     public void updateMemberEntity(MemberEntity memberEntity){
-        // 기존의 memberEntity의 wishEntityList에 있던 wishEntity 삭제 필요
-
+        // 기존 memberEntity에서  wishEntity 삭제
+        this.memberEntity.getWishEntityList().remove(this);
         this.memberEntity = memberEntity;
         memberEntity.getWishEntityList().add(this);
     }
 
     public void updateProductEntity(ProductEntity productEntity){
+        // 기존 productEntity에서 wishEntity 삭제
+        this.productEntity.getWishEntityList().remove(this);
         this.productEntity = productEntity;
         productEntity.getWishEntityList().add(this);
     }
