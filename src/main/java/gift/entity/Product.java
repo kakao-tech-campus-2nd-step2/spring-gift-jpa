@@ -1,8 +1,6 @@
 package gift.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +14,6 @@ public class Product {
     private String imageUrl;
 
     @OneToMany(mappedBy = "product")
-    @JsonIgnoreProperties("product")
     private List<Wish> wishes = new ArrayList<>();
 
     public Product() {}
@@ -34,7 +31,6 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    // Getters and setters
     public Long getId() {
         return id;
     }
