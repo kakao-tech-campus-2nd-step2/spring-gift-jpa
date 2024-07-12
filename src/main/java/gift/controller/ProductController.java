@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.dto.ProductRequest;
-import gift.entity.Product;
+import gift.dto.ProductResponse;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
 
@@ -27,14 +26,14 @@ public class ProductController {
 
     @GetMapping
     public String getAllProducts(Model model) {
-        List<Product> products = productService.findAll();
+        List<ProductResponse> products = productService.findAll();
         model.addAttribute("products", products);
         return "index";
     }
 
     @GetMapping("/{id}/edit")
     public String getProduct(@PathVariable long id, Model model) {
-        Product product = productService.findById(id);
+        ProductResponse product = productService.findById(id);
         model.addAttribute("product", product);
         model.addAttribute("productRequest", new ProductRequest(product.getName(), product.getPrice(), product.getImageUrl()));
         return "editForm";
@@ -63,14 +62,14 @@ public class ProductController {
     @PostMapping("/{id}")
     public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute ProductRequest productRequest, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("product", new Product(id, productRequest.name(), productRequest.price(), productRequest.imageUrl()));
+            model.addAttribute("product", new ProductResponse(id, productRequest.name(), productRequest.price(), productRequest.imageUrl(), null));
             return "editForm";
         }
         try {
             productService.update(id, productRequest);
         } catch (IllegalArgumentException e) {
             bindingResult.addError(new FieldError("productRequest", "name", e.getMessage()));
-            model.addAttribute("product", new Product(id, productRequest.name(), productRequest.price(), productRequest.imageUrl()));
+            model.addAttribute("product", new ProductResponse(id, productRequest.name(), productRequest.price(), productRequest.imageUrl(), null));
             return "editForm";
         }
         return "redirect:/api/products";
