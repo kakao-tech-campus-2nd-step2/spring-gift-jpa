@@ -6,8 +6,8 @@ public class MemberTokenDTO {
 
     private String email;
 
-    public MemberTokenDTO(MemberDTO memberDTO) {
-        this.email = memberDTO.getEmail();
+    public static MemberTokenDTO fromMemberDTO(MemberDTO memberDTO) {
+        return new MemberTokenDTO(memberDTO.getEmail());
     }
 
     public MemberTokenDTO(String email) {

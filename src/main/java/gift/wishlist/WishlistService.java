@@ -1,10 +1,14 @@
 package gift.wishlist;
 
+import static gift.exception.ErrorMessage.PRODUCT_NOT_FOUND;
+import static gift.exception.ErrorMessage.WISHLIST_ALREADY_EXISTS;
+import static gift.exception.ErrorMessage.WISHLIST_NOT_FOUND;
+
+import gift.member.Member;
 import gift.product.Product;
 import gift.product.ProductRepository;
 import gift.token.MemberTokenDTO;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,31 +26,47 @@ public class WishlistService {
     }
 
     public List<Product> getAllWishlists(MemberTokenDTO memberTokenDTO) {
-        return wishlistRepository.findAllByMemberEmail(memberTokenDTO.getEmail())
+        return wishlistRepository
+            .findAllByMember(Member.fromMemberTokenDTOWithoutBody(memberTokenDTO))
             .stream()
-            .map(e -> productRepository.findById(e.getProductId()))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+            .map(Wishlist::getProduct)
             .toList();
     }
 
     public void addWishlist(MemberTokenDTO memberTokenDTO, long productId) {
-        if (wishlistRepository.existsByMemberEmailAndProductId(memberTokenDTO.getEmail(),
-            productId)) {
-            throw new IllegalArgumentException("Wishlist already exists");
+        if (!productRepository.existsById(productId)) {
+            throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
         }
-        hasProductByProductID(productId);
-        wishlistRepository.save(new Wishlist(productId, memberTokenDTO.getEmail()));
+
+        if (isWishlistExists(memberTokenDTO, productId)) {
+            throw new IllegalArgumentException(WISHLIST_ALREADY_EXISTS);
+        }
+
+        wishlistRepository.save(
+            new Wishlist(
+                Product.fromProductIdWithoutBody(productId),
+                Member.fromMemberTokenDTOWithoutBody(memberTokenDTO)
+            )
+        );
+    }
+
+    private boolean isWishlistExists(MemberTokenDTO memberTokenDTO, long productId) {
+        return wishlistRepository.existsByMemberAndProduct(
+            Member.fromMemberTokenDTOWithoutBody(memberTokenDTO),
+            Product.fromProductIdWithoutBody(productId)
+        );
     }
 
     public void deleteWishlist(MemberTokenDTO memberTokenDTO, long productId) {
-        hasProductByProductID(productId);
-        wishlistRepository.delete(new Wishlist(productId, memberTokenDTO.getEmail()));
-    }
+        Wishlist findWishlist = wishlistRepository.findByMemberAndProduct(
+            Member.fromMemberTokenDTOWithoutBody(memberTokenDTO),
+            Product.fromProductIdWithoutBody(productId)
+        );
 
-    private void hasProductByProductID(long productId) {
-        if (!productRepository.existsById(productId)) {
-            throw new IllegalArgumentException("Product does not exist");
+        if (findWishlist == null) {
+            throw new IllegalArgumentException(WISHLIST_NOT_FOUND);
         }
+
+        wishlistRepository.delete(findWishlist);
     }
 }

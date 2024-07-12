@@ -1,5 +1,7 @@
 package gift.wishlist;
 
+import gift.member.Member;
+import gift.product.Product;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -7,7 +9,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
-    List<Wishlist> findAllByMemberEmail(String email);
+    List<Wishlist> findAllByMember(Member member);
 
-    boolean existsByMemberEmailAndProductId(String memberEmail, Long productId);
+    boolean existsByMemberAndProduct(Member member, Product product);
+
+    Wishlist findByMemberAndProduct(Member member, Product product);
 }

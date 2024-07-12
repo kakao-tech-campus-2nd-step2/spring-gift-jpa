@@ -1,5 +1,9 @@
 package gift.member;
 
+import static gift.exception.ErrorMessage.MEMBER_ALREADY_EXISTS;
+import static gift.exception.ErrorMessage.MEMBER_NOT_FOUND;
+import static gift.exception.ErrorMessage.WRONG_PASSWORD;
+
 import gift.exception.FailedLoginException;
 import gift.token.JwtProvider;
 import gift.token.MemberTokenDTO;
@@ -22,24 +26,25 @@ public class MemberService {
 
     public String register(MemberDTO memberDTO) {
         if (memberRepository.existsById(memberDTO.getEmail())) {
-            throw new IllegalArgumentException("Member already exist");
+            throw new IllegalArgumentException(MEMBER_ALREADY_EXISTS);
         }
-        memberRepository.save(new Member(memberDTO));
-        return jwtProvider.generateToken(new MemberTokenDTO(memberDTO));
+
+        memberRepository.save(Member.fromMemberDTO(memberDTO));
+
+        return jwtProvider.generateToken(MemberTokenDTO.fromMemberDTO(memberDTO));
     }
 
     public String login(MemberDTO memberDTO) {
-        authenticateMember(memberDTO);
-        return jwtProvider.generateToken(new MemberTokenDTO(memberDTO));
-    }
-
-    public void authenticateMember(MemberDTO memberDTO) {
         Optional<Member> findMember = memberRepository.findById(memberDTO.getEmail());
+
         if (findMember.isEmpty()) {
-            throw new FailedLoginException("Member does not exist");
+            throw new FailedLoginException(MEMBER_NOT_FOUND);
         }
-        if (!findMember.get().isSamePassword(new Member(memberDTO))) {
-            throw new FailedLoginException("Wrong password");
+
+        if (!findMember.get().isSamePassword(findMember.get())) {
+            throw new FailedLoginException(WRONG_PASSWORD);
         }
+
+        return jwtProvider.generateToken(MemberTokenDTO.fromMemberDTO(memberDTO));
     }
 }

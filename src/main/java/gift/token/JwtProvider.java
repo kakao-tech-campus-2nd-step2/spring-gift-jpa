@@ -30,6 +30,7 @@ public class JwtProvider {
             .build()
             .parseSignedClaims(token.replace(PREFIX, ""))
             .getPayload();
+
         return new MemberTokenDTO(claims.get("email", String.class));
     }
 }

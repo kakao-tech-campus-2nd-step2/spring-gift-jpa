@@ -1,5 +1,8 @@
 package gift.product;
 
+import static gift.exception.ErrorMessage.PRODUCT_NAME_ALLOWED_CHARACTER;
+import static gift.exception.ErrorMessage.PRODUCT_NAME_KAKAO_STRING;
+import static gift.exception.ErrorMessage.PRODUCT_NAME_LENGTH;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -64,12 +67,15 @@ class ProductControllerTest {
     @ParameterizedTest
     @DisplayName("[Unit] addProduct test")
     @MethodSource(value = "addProductTestValues")
-    void addProductTest(ProductDTO productDTO, String errorMessage, HttpStatus httpStatus)
-        throws Exception {
+    void addProductTest(
+        ProductDTO productDTO,
+        String errorMessage,
+        HttpStatus httpStatus
+    ) throws Exception {
         mockMvc.perform(post(apiUrl)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productDTO)))
-            .andExpect(status().is(httpStatus.value()))
+                .content(objectMapper.writeValueAsString(productDTO))
+            ).andExpect(status().is(httpStatus.value()))
             .andExpect(content().string(errorMessage));
     }
 
@@ -82,18 +88,21 @@ class ProductControllerTest {
             ),
             Arguments.of(
                 new ProductDTO("kakaoProduct", 100, "kakaoProduct-image-url"),
-                "if you include 'kakao' in you product name, then you must be consult with your MD",
+                PRODUCT_NAME_KAKAO_STRING,
                 HttpStatus.BAD_REQUEST
             ),
             Arguments.of(
                 new ProductDTO("Special😀", 200, "SpecialCharacter-image-url"),
-                "product name must consist of English, Korean, numbers, and special symbols (, ), [, ], +, -, &, /, _",
+                PRODUCT_NAME_ALLOWED_CHARACTER,
                 HttpStatus.BAD_REQUEST
             ),
             Arguments.of(
-                new ProductDTO("ThisSequenceIsTooLongForProductName", 300,
-                    "ThisSequenceIsTooLongForProductName-image-url"),
-                "product name's length must be between 1 and 15",
+                new ProductDTO(
+                    "ThisSequenceIsTooLongForProductName",
+                    300,
+                    "ThisSequenceIsTooLongForProductName-image-url"
+                ),
+                PRODUCT_NAME_LENGTH,
                 HttpStatus.BAD_REQUEST
             )
         );
@@ -102,8 +111,12 @@ class ProductControllerTest {
     @ParameterizedTest
     @DisplayName("[Unit] updateProduct test")
     @MethodSource("updateProductTest")
-    void updateProductTest(long id, ProductDTO productDTO, String errorMessage,
-        HttpStatus httpStatus) throws Exception {
+    void updateProductTest(
+        long id,
+        ProductDTO productDTO,
+        String errorMessage,
+        HttpStatus httpStatus
+    ) throws Exception {
         mockMvc.perform(patch(apiUrl + "/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(productDTO))
@@ -122,20 +135,23 @@ class ProductControllerTest {
             Arguments.of(
                 2L,
                 new ProductDTO("kakaoProduct", 100, "kakaoProduct-image-url"),
-                "if you include 'kakao' in you product name, then you must be consult with your MD",
+                PRODUCT_NAME_KAKAO_STRING,
                 HttpStatus.BAD_REQUEST
             ),
             Arguments.of(
                 3L,
                 new ProductDTO("Special😀", 200, "SpecialCharacter-image-url"),
-                "product name must consist of English, Korean, numbers, and special symbols (, ), [, ], +, -, &, /, _",
+                PRODUCT_NAME_ALLOWED_CHARACTER,
                 HttpStatus.BAD_REQUEST
             ),
             Arguments.of(
                 4L,
-                new ProductDTO("ThisSequenceIsTooLongForProductName", 300,
-                    "ThisSequenceIsTooLongForProductName-image-url"),
-                "product name's length must be between 1 and 15",
+                new ProductDTO(
+                    "ThisSequenceIsTooLongForProductName",
+                    300,
+                    "ThisSequenceIsTooLongForProductName-image-url"
+                ),
+                PRODUCT_NAME_LENGTH,
                 HttpStatus.BAD_REQUEST
             )
         );

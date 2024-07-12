@@ -1,15 +1,14 @@
 package gift.member;
 
+import gift.token.MemberTokenDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Email;
 
 @Entity
 public class Member {
 
     @Id
-    @Email(message = "This is not an email format")
     private String email;
 
     @Column(nullable = false)
@@ -23,13 +22,16 @@ public class Member {
         this.password = password;
     }
 
-    public Member(MemberDTO memberDTO) {
-        this.email = memberDTO.getEmail();
-        this.password = memberDTO.getPassword();
-    }
-
     public boolean isSamePassword(Member member) {
         return this.password.equals(member.password);
+    }
+
+    public static Member fromMemberTokenDTOWithoutBody(MemberTokenDTO memberTokenDTO) {
+        return new Member(memberTokenDTO.getEmail(), null);
+    }
+
+    public static Member fromMemberDTO(MemberDTO memberDTO) {
+        return new Member(memberDTO.getEmail(), memberDTO.getPassword());
     }
 
     @Override

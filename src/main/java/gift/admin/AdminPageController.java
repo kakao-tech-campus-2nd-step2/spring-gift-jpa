@@ -24,9 +24,11 @@ public class AdminPageController {
     @GetMapping(path = "/admin")
     public String adminPage(Model model, @RequestParam("page") Integer currentPage) {
         List<Product> totalProducts = productService.getAllProducts();
-        List<Product> subProducts = totalProducts.subList((currentPage - 1) *
-                                                          PAGE_SIZE.getValue(),
-            Math.min(currentPage * PAGE_SIZE.getValue(), totalProducts.size()));
+
+        List<Product> subProducts = totalProducts.subList(
+            (currentPage - 1) * PAGE_SIZE.getValue(),
+            Math.min(currentPage * PAGE_SIZE.getValue(), totalProducts.size())
+        );
 
         Integer totalProductsSize = totalProducts.size();
 
@@ -34,24 +36,26 @@ public class AdminPageController {
         model.addAttribute("page", currentPage);
         model.addAttribute("totalProductsSize", totalProductsSize);
         model.addAttribute("currentPageProductSize", subProducts.size());
-        model.addAttribute("pageList", getPageListRange(totalProductsSize,
-            currentPage));
+        model.addAttribute("pageList", getPageListRange(
+            totalProductsSize,
+            currentPage)
+        );
 
         return "adminPage";
     }
 
     private List<Integer> getPageListRange(Integer totalProductsSize, Integer page) {
-        Integer totalPage = Math.ceilDiv(totalProductsSize, PAGE_SIZE.getValue());
-        Integer endPage = Math.max(totalPage, 1); // endPage can't be 0
+        int totalPage = Math.ceilDiv(totalProductsSize, PAGE_SIZE.getValue());
+        int endPage = Math.max(totalPage, 1); // endPage can't be 0
 
         // 내림 연산이 반드시 필요하기에, 약분을 통해 나누면 안된다.
-        Integer startPage = (Math.floorDiv(page - 1, MAX_PAGE_INDEX.getValue()) + 1)
-                            * MAX_PAGE_INDEX.getValue()
-                            - (MAX_PAGE_INDEX.getValue() - 1);
+        int startPage = (Math.floorDiv(page - 1, MAX_PAGE_INDEX.getValue()) + 1)
+                        * MAX_PAGE_INDEX.getValue()
+                        - (MAX_PAGE_INDEX.getValue() - 1);
 
         return IntStream.rangeClosed(
-                startPage,
-                Math.min(startPage + (MAX_PAGE_INDEX.getValue() - 1), endPage))
-            .boxed().toList();
+            startPage,
+            Math.min(startPage + (MAX_PAGE_INDEX.getValue() - 1), endPage)
+        ).boxed().toList();
     }
 }

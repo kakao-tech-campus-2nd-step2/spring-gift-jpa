@@ -26,8 +26,12 @@ public class HandlerMemberArgumentResolver implements HandlerMethodArgumentResol
     }
 
     @Override
-    public MemberTokenDTO resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public MemberTokenDTO resolveArgument(
+        MethodParameter parameter,
+        ModelAndViewContainer mavContainer,
+        NativeWebRequest webRequest,
+        WebDataBinderFactory binderFactory
+    ) {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         return jwtProvider.getMemberTokenDTOFromToken(request.getHeader("Authorization"));
     }
