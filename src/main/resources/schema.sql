@@ -23,7 +23,8 @@ CREATE TABLE products (
 CREATE TABLE wish (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
-    product_id BIGINT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
+    product_id BIGINT NOT NULL
 );
+
+ALTER TABLE wish ADD CONSTRAINT fk_wish_user_id FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE wish ADD CONSTRAINT fk_wish_product_id FOREIGN KEY (product_id) REFERENCES products(id);

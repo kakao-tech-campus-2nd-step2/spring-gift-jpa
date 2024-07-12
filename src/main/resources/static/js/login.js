@@ -14,7 +14,6 @@ document.getElementById('login-form').addEventListener('submit', function(event)
             'Content-Type': 'application/json'
         }
     })
-
     .then(response => {
         if (!response.ok) {
             return response.json().then(errorData => {
@@ -24,15 +23,33 @@ document.getElementById('login-form').addEventListener('submit', function(event)
         }
         return response.json();
     })
-
     .then(data => {
         alert(`토큰: ${data.token}`);
         localStorage.setItem('token', data.token); // 토큰을 로컬 스토리지에 저장
 
-        window.location.href = '/wishes';
+        return fetch(`/wishes`, {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem("token")
+            }
+        });
     })
-
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(errorText => {
+                throw new Error(`Failed to fetch wishes: ${errorText}`);
+            });
+        }
+        return response.text();
+    })
+    .then(text => {
+        document.open();
+        document.write(text);
+        document.close();
+    })
     .catch(error => {
         console.error('Error:', error);
+        alert(`An error occurred: ${error.message}`);
     });
 });
