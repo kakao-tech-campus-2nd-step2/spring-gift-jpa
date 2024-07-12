@@ -16,9 +16,11 @@ public record ProductRequestDto(
     @Pattern(regexp = "^[\\(\\)\\[\\]\\+\\-\\&\\/\\_\\p{Alnum}\\s\\uAC00-\\uD7A3]+$", message = "상품명에 ( ), [ ], +, -, &, /, _를 제외한 특수문자를 사용할 수 없습니다.")
     @Pattern(regexp = "^(?!.*카카오).*$", message = "카카오라는 이름은 MD와 사전 협의 후 사용 가능합니다.")
     String name,
+
     @Min(value = 1, message = "가격은 0원보다 높아야 합니다.")
     @NotNull(message = "가격은 필수로 입력해야 합니다.")
     int price,
+
     @NotBlank(message = "잘못된 이미지입니다.")
     String imageUrl) {
 
