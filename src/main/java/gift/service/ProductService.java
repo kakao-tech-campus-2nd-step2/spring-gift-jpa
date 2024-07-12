@@ -7,9 +7,8 @@ import gift.model.product.Product;
 import gift.repository.ProductJpaRepository;
 import gift.global.validate.NotFoundException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -32,7 +31,6 @@ public class ProductService {
         productJpaRepository.save(request.toEntity());
     }
 
-    @Transactional
     public void updateProduct(Long id, ProductRequest.Update request) {
         var product = productJpaRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
@@ -46,9 +44,9 @@ public class ProductService {
     }
 
     //@Transactional(readOnly = true)
-    public PageResponse<ProductResponse.Info> getProductsPaging(int page, int size) {
+    public PageResponse<ProductResponse.Info> getProductsPaging(Pageable pageable) {
         Page<Product> productPage = productJpaRepository.findAllByOrderByIdDesc(
-            PageRequest.of(page, size));
+            pageable);
         var content = productPage.getContent().stream()
             .map(ProductResponse.Info::from)
             .toList();
