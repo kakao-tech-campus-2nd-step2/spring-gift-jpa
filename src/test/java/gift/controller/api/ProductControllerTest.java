@@ -1,13 +1,14 @@
 package gift.controller.api;
 
 import gift.service.ProductService;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -15,13 +16,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class ProductControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
-    void setup(@Autowired ProductService productService) {
+    @BeforeAll
+    static void setup(@Autowired ProductService productService) {
         for (int i = 0; i < 100; i++) {
             productService.addProduct("AmazingCoffee" + i, 59999, "a.jpg.com");
         }
