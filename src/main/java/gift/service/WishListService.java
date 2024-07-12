@@ -19,7 +19,7 @@ public class WishListService {
     }
 
     public void insertWish(WishDto wishDto) {
-        Wish wish = new Wish(wishDto.getProductId(),wishDto.getMemberId(), wishDto.getAmount());
+        Wish wish = new Wish(wishDto.getProduct(),wishDto.getMember(),wishDto.getAmount());
         wishRepository.save(wish);
     }
 
@@ -28,7 +28,7 @@ public class WishListService {
     }
 
     public void updateWish(Long id,WishDto wishDto){
-        Wish wish = new Wish(wishDto.getProductId(),wishDto.getMemberId(), wishDto.getAmount());
+        Wish wish = new Wish(wishDto.getProduct(),wishDto.getMember(),wishDto.getAmount());
         wish.setId(id);
         wishRepository.save(wish);
     }

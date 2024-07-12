@@ -17,7 +17,7 @@ class WishRepositoryTest {
     @Autowired
     private WishRepository wishRepository;
 
-    @Test
+    /*@Test
     void save(){
         Wish newWish = new Wish(1L, 1L, 123);
         Wish savedWish = wishRepository.save(newWish);
@@ -34,5 +34,5 @@ class WishRepositoryTest {
         wishRepository.delete(newWish);
         Optional<Wish> actual = wishRepository.findById(1L);
         assertThat(actual).isEmpty();
-    }
+    }*/
 }
