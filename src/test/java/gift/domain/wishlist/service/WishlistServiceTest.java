@@ -128,4 +128,24 @@ class WishlistServiceTest {
             .isInstanceOf(InvalidProductInfoException.class)
             .hasMessage("error.invalid.product.id");
     }
+
+    @Test
+    @DisplayName("위시리스트 사용자 ID로 삭제 성공")
+    void deleteAllByUserId_success() {
+        // given
+        Product product2 = new Product(2L, "아이스 카페 라떼 T", 4500, "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[110563]_20210426095937947.jpg");
+        List<WishItem> wishItemList = List.of(
+            new WishItem(1L, user, product),
+            new WishItem(2L, user, product2)
+        );
+        given(wishlistJpaRepository.findAllByUserId(user.getId())).willReturn(wishItemList);
+        willDoNothing().given(wishlistJpaRepository).deleteAllByUserId(anyLong());
+
+        // when
+        wishlistService.deleteAllByUserId(user);
+
+        // then
+        List<WishItem> wishlist = wishlistService.readAll(user);
+        assertThat(wishlist).isEmpty();
+    }
 }

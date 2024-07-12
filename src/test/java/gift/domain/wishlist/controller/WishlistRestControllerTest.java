@@ -112,4 +112,16 @@ class WishlistRestControllerTest {
             .header("Authorization", "Bearer token"))
             .andExpect(status().isNoContent());
     }
+
+    @Test
+    @DisplayName("위시리스트 사용자 ID로 삭제")
+    void deleteAllByUserId_success() throws Exception {
+        // given
+        willDoNothing().given(wishlistService).deleteAllByUserId(user);
+
+        // when & then
+        mockMvc.perform(delete(DEFAULT_URL)
+                .header("Authorization", "Bearer token"))
+            .andExpect(status().isNoContent());
+    }
 }

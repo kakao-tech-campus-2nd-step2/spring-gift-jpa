@@ -131,4 +131,29 @@ class WishlistJpaRepositoryTest {
         Optional<WishItem> deletedProduct = wishlistJpaRepository.findById(saved.getId());
         assertThat(deletedProduct).isEmpty();
     }
+
+    @Test
+    @DisplayName("위시리스트 사용자 ID로 삭제 테스트")
+    void deleteAllByUserId() {
+        // given
+        User user = new User(null, "testUser", "test@test.com", "test123", Role.USER);
+        Product product1 = new Product(null, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+        Product product2 = new Product(null, "탕종종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+
+        User savedUser = userJpaRepository.save(user);
+        Product savedProduct1 = productJpaRepository.save(product1);
+        Product savedProduct2 = productJpaRepository.save(product2);
+
+        WishItem wishItem1 = new WishItem(null, savedUser, savedProduct1);
+        WishItem saved1 = wishlistJpaRepository.save(wishItem1);
+        WishItem wishItem2 = new WishItem(null, savedUser, savedProduct2);
+        WishItem saved2 = wishlistJpaRepository.save(wishItem2);
+
+        // when
+        wishlistJpaRepository.deleteAllByUserId(savedUser.getId());
+
+        // then
+        List<WishItem> deletedProduct = wishlistJpaRepository.findAllByUserId(savedUser.getId());
+        assertThat(deletedProduct).isEmpty();
+    }
 }
