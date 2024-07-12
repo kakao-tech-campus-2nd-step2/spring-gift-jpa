@@ -1,16 +1,13 @@
 package gift.Controller;
 
-import gift.Exception.ProductNotFoundException;
-import gift.Model.Product;
+import gift.Model.DTO.ProductDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 import gift.Service.ProductService;
 import gift.Valid.NameValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,44 +35,40 @@ public class AdminController {
 
     @GetMapping
     public String getAllProducts(Model model){
-        List<Product> products = productService.getAll(token);
+        List<ProductDTO> products = productService.getAll(token);
         model.addAttribute("products", products);
         return "products";
     }
 
     @GetMapping("/add")
     public String addProductForm(Model model){
-        model.addAttribute("product", new Product());
+        model.addAttribute("product", new ProductDTO(0L, "a",0,"b"));
         return "add";
     }
 
     @PostMapping("/add")
-    public String addProduct(@ModelAttribute @Valid Product product, BindingResult bindingResult, Model model){
+    public String addProduct(@ModelAttribute("product") @Valid ProductDTO productDTO, BindingResult bindingResult, Model model){
         if(bindingResult.hasErrors()) {
             return "add";
         }
-        productService.add(token, product);
+        productService.add(token, productDTO);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/edit/{id}")
     public String updateProductForm(@PathVariable("id") Long id, Model model){
-        Optional<Product> productOptional = productService.getById(token, id);
-        if(productOptional.isEmpty()){
-            throw new ProductNotFoundException();
-        }
+        ProductDTO productDTO = productService.getById(token, id);
 
-        Product product = productOptional.get();
-        model.addAttribute("product", product);
+        model.addAttribute("product", productDTO);
         return "edit";
     }
 
     @PostMapping("edit/{id}")
-    public String updateProduct(@PathVariable("id") Long id, @ModelAttribute @Valid Product product, BindingResult bindingResult){
+    public String updateProduct(@PathVariable("id") Long id, @ModelAttribute("product") @Valid ProductDTO productDTO, BindingResult bindingResult){
         if(bindingResult.hasErrors()) {
             return "edit";
         }
-        productService.edit(token, id, product);
+        productService.edit(token, id, productDTO);
         return "redirect:/admin/products";
     }
 

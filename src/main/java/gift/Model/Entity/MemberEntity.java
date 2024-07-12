@@ -1,10 +1,16 @@
-package gift.Model;
+package gift.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import gift.Model.Role;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.List;
 
 @Entity
 @Table(name="member")
-public class Member {
+public class MemberEntity {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
@@ -18,6 +24,19 @@ public class Member {
         @Enumerated(EnumType.STRING)
         @Column(name="role")
         private Role role;
+
+        @OnDelete(action= OnDeleteAction.CASCADE)
+        @OneToMany(mappedBy = "member")
+        @JsonManagedReference
+        private List<WishEntity> wishEntities;
+
+        public MemberEntity(){}
+
+        public MemberEntity(String email, String password, Role role){
+                this.email = email;
+                this.password = password;
+                this.role = role;
+        }
 
         public Long getId() {
                 return id;
@@ -51,11 +70,11 @@ public class Member {
                 this.role = role;
         }
 
-        public Member(){}
+        public List<WishEntity> getWishes() {
+                return wishEntities;
+        }
 
-        public Member(String email, String password, Role role){
-                this.email = email;
-                this.password = password;
-                this.role = role;
+        public void setWishes(List<WishEntity> wishEntities) {
+                this.wishEntities = wishEntities;
         }
 }

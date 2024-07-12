@@ -1,6 +1,6 @@
 package gift;
 
-import gift.Model.Product;
+import gift.Model.Entity.ProductEntity;
 import gift.Repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +10,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
-public class ProductRepositoryTest {
+public class ProductEntityRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
     @Test
     void save(){
-        Product expected = new Product("a", 1000, "b");
-        Product actual = productRepository.save(expected);
+        ProductEntity expected = new ProductEntity("a", 1000, "b");
+        ProductEntity actual = productRepository.save(expected);
         assertAll(
                 () -> assertThat(actual.getId()).isNotNull(),
                 () -> assertThat(actual.getName()).isEqualTo(expected.getName())
@@ -29,7 +29,7 @@ public class ProductRepositoryTest {
         String expectedName = "a";
         int expectedPrice = 1000;
         String expectedImageUrl = "b";
-        productRepository.save(new Product(expectedName, expectedPrice, expectedImageUrl));
+        productRepository.save(new ProductEntity(expectedName, expectedPrice, expectedImageUrl));
         String actual = productRepository.findByName(expectedName).get().getName();
         assertThat(actual).isEqualTo(expectedName);
     }

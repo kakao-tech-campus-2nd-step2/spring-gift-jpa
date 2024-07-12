@@ -3,11 +3,13 @@ package gift.Service;
 import gift.Exception.AuthorizedException;
 import gift.Exception.ProductNotFoundException;
 import gift.Model.*;
+import gift.Model.Entity.MemberEntity;
+import gift.Model.Entity.ProductEntity;
+import gift.Model.Entity.WishEntity;
 import gift.Repository.ProductRepository;
 import gift.Repository.MemberRepository;
 import gift.Repository.WishRepository;
 import gift.Token.JwtTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,8 +32,8 @@ public class WishService {
 
     public void add(String token, String name){
         String email = jwtTokenProvider.getEmailFromToken(token);
-        Optional<Member> memberOptional = memberRepository.findByEmail(email);
-        Optional<Product> productOptional = productRepository.findByName(name);
+        Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
+        Optional<ProductEntity> productOptional = productRepository.findByName(name);
         if(memberOptional.isEmpty()) {
             throw new AuthorizedException();
         }
@@ -40,18 +42,18 @@ public class WishService {
             throw new ProductNotFoundException();
         }
 
-        Member member = memberOptional.get();
-        Product product = productOptional.get();
-        if(!member.getRole().equals(Role.ADMIN) && !member.getRole().equals(Role.CONSUMER))
+        MemberEntity memberEntity = memberOptional.get();
+        ProductEntity productEntity = productOptional.get();
+        if(!memberEntity.getRole().equals(Role.ADMIN) && !memberEntity.getRole().equals(Role.CONSUMER))
             throw new AuthorizedException();
 
-        wishRepository.save(new Wish(member.getId(), product.getId()));
+        wishRepository.save(new WishEntity(memberEntity, productEntity));
     }
 
     public void delete(String token, String name){
         String email = jwtTokenProvider.getEmailFromToken(token);
-        Optional<Member> memberOptional = memberRepository.findByEmail(email);
-        Optional<Product> productOptional = productRepository.findByName(name);
+        Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
+        Optional<ProductEntity> productOptional = productRepository.findByName(name);
 
         if(memberOptional.isEmpty()) {
             throw new AuthorizedException();
@@ -61,33 +63,33 @@ public class WishService {
             throw new ProductNotFoundException();
         }
 
-        Product product = productOptional.get();
-        Member member = memberOptional.get();
-        if(!member.getRole().equals(Role.ADMIN) && !member.getRole().equals(Role.CONSUMER)) {
+        ProductEntity productEntity = productOptional.get();
+        MemberEntity memberEntity = memberOptional.get();
+        if(!memberEntity.getRole().equals(Role.ADMIN) && !memberEntity.getRole().equals(Role.CONSUMER)) {
             throw new AuthorizedException();
         }
 
-        wishRepository.delete(wishRepository.findByMemberIdAndProductId(member.getId(), product.getId()));
+        wishRepository.delete(wishRepository.findByMemberIdAndProductId(memberEntity.getId(), productEntity.getId()));
     }
 
     public List<String> viewAll(String token){
         String email = jwtTokenProvider.getEmailFromToken(token);
-        Optional<Member> memberOptional = memberRepository.findByEmail(email);
+        Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
 
         if(memberOptional.isEmpty()) {
             throw new AuthorizedException();
         }
-        Member member = memberOptional.get();
+        MemberEntity memberEntity = memberOptional.get();
 
-        if(!member.getRole().equals(Role.ADMIN) && !member.getRole().equals(Role.CONSUMER)) {
+        if(!memberEntity.getRole().equals(Role.ADMIN) && !memberEntity.getRole().equals(Role.CONSUMER)) {
             throw new AuthorizedException();
         }
 
-        List<Wish> wishes = wishRepository.findByMemberId(member.getId());
+        List<WishEntity> wishEntities = wishRepository.findByMemberId(memberEntity.getId());
         List<String> productNames = new ArrayList<>();
 
-        for(Wish w : wishes){
-            productNames.add(productRepository.findById(w.getProductId()).get().getName());
+        for(WishEntity w : wishEntities){
+            productNames.add(productRepository.findById(w.getProduct().getId()).get().getName());
         }
 
         return productNames;
