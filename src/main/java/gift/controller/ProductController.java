@@ -31,7 +31,7 @@ public class ProductController {
      */
     @GetMapping("/api/products")
     public ResponseEntity<List<ProductResponse>> getProducts() {
-        List<ProductResponse> products = productService.loadAllProduct();
+        List<ProductResponse> products = productService.readAllProduct();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

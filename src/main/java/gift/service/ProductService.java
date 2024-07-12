@@ -4,6 +4,7 @@ import gift.DTO.Product.ProductRequest;
 import gift.DTO.Product.ProductResponse;
 import gift.domain.Product;
 import gift.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class ProductService {
     /*
      * DB에 저장된 모든 Product 객체를 불러와 전달해주는 로직
      */
-    public List<ProductResponse> loadAllProduct(){
+    public List<ProductResponse> readAllProduct(){
         List<ProductResponse> products = new ArrayList<>();
 
         List<Product> all = productRepository.findAll();
@@ -38,7 +39,7 @@ public class ProductService {
     /*
      * DB에 저장된 Product를 ID를 기준으로 찾아 반환
      */
-    public ProductResponse loadOneProduct(Long id){
+    public ProductResponse readOneProduct(Long id){
         Product product = productRepository.findById(id).orElseThrow(NoSuchFieldError::new);
         return new ProductResponse(
                 product.getId(),
@@ -50,6 +51,7 @@ public class ProductService {
     /*
      * 객체를 전달받아 DB에 저장
      */
+    @Transactional
     public void createProduct(ProductRequest product){
         Product productEntity = new Product(
                 product.getName(),
@@ -61,24 +63,19 @@ public class ProductService {
     /*
      * DB에 있는 특정한 ID의 객체를 삭제해주는 로직
      */
+    @Transactional
     public void deleteProduct(Long id){
         productRepository.deleteById(id);
     }
     /*
      * 현재 DB에 존재하는 Product를 새로운 Product로 대체하는 로직
      */
+    @Transactional
     public void updateProduct(ProductRequest product, Long id){
-        Optional<Product> byId = productRepository.findById(id);
-        if(byId.isEmpty()){
-            throw new NullPointerException("해당 id를 가진 객체는 존재하지 않습니다");
-        }
-        Product product1 = byId.get();
-
-        product1.setName(product.getName());
-        product1.setPrice(product.getPrice());
-        product1.setImageUrl(product.getImageUrl());
-
-        productRepository.save(product1);
+        Product savedProduct = productRepository.findById(id).orElseThrow(NullPointerException::new);
+        savedProduct.updateEntity(
+                product.getName(), product.getPrice(), product.getImageUrl()
+        );;
     }
     /*
      * 새로운 ID가 기존 ID와 중복되었는지를 확인하는 로직
