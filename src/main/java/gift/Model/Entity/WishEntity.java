@@ -1,6 +1,8 @@
 package gift.Model.Entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name="wish")
@@ -10,10 +12,12 @@ public class WishEntity {
         private Long id;
 
         @ManyToOne(fetch = FetchType.LAZY)
+        @OnDelete(action= OnDeleteAction.CASCADE)
         @JoinColumn(name="member_id")
         private MemberEntity member;
 
         @ManyToOne(fetch = FetchType.LAZY)
+        @OnDelete(action= OnDeleteAction.CASCADE)
         @JoinColumn(name="product_id")
         private ProductEntity product;
 
