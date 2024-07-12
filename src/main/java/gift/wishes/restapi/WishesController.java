@@ -1,10 +1,12 @@
 package gift.wishes.restapi;
 
 import gift.advice.LoggedInUser;
+import gift.core.PagedDto;
 import gift.core.domain.product.Product;
 import gift.core.domain.product.ProductService;
 import gift.core.domain.wishes.WishesService;
 import gift.wishes.restapi.dto.request.AddWishRequest;
+import gift.wishes.restapi.dto.response.PagedWishResponse;
 import gift.wishes.restapi.dto.response.WishResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +28,13 @@ public class WishesController {
     }
 
     @GetMapping("/api/wishes")
-    public List<WishResponse> getWishes(@LoggedInUser Long userId) {
-        return wishesService.getWishlistOfUser(userId)
-                .stream()
-                .map(WishResponse::from)
-                .toList();
+    public PagedWishResponse getWishes(
+            @LoggedInUser Long userId,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        PagedDto<Product> pagedWishes = wishesService.getWishlistOfUser(userId, page - 1, size);
+        return PagedWishResponse.from(pagedWishes);
     }
 
     @PostMapping("/api/wishes")

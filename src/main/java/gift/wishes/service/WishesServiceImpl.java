@@ -1,5 +1,6 @@
 package gift.wishes.service;
 
+import gift.core.PagedDto;
 import gift.core.domain.product.Product;
 import gift.core.domain.product.ProductRepository;
 import gift.core.domain.product.exception.ProductNotFoundException;
@@ -48,5 +49,10 @@ public class WishesServiceImpl implements WishesService {
     @Override
     public List<Product> getWishlistOfUser(Long userId) {
         return List.copyOf(wishesRepository.getWishlistOfUser(userId));
+    }
+
+    @Override
+    public PagedDto<Product> getWishlistOfUser(Long userId, Integer page, Integer size) {
+        return wishesRepository.getWishlistOfUser(userId, page, size);
     }
 }

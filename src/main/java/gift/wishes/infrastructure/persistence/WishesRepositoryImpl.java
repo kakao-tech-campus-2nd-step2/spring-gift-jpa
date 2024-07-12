@@ -1,5 +1,6 @@
 package gift.wishes.infrastructure.persistence;
 
+import gift.core.PagedDto;
 import gift.core.domain.product.Product;
 import gift.core.domain.product.exception.ProductNotFoundException;
 import gift.core.domain.user.exception.UserNotFoundException;
@@ -9,6 +10,8 @@ import gift.product.infrastructure.persistence.ProductEntity;
 import gift.user.infrastructure.persistence.JpaUserRepository;
 import gift.user.infrastructure.persistence.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -53,6 +56,7 @@ public class WishesRepositoryImpl implements WishesRepository {
 
     @Override
     public List<Product> getWishlistOfUser(Long userId) {
+        System.out.println(userId);
         UserEntity user = jpaUserRepository
                 .findById(userId)
                 .orElseThrow(UserNotFoundException::new);
@@ -60,5 +64,22 @@ public class WishesRepositoryImpl implements WishesRepository {
                 .stream()
                 .map((entity -> entity.getProduct().toDomain()))
                 .toList();
+    }
+
+    @Override
+    public PagedDto<Product> getWishlistOfUser(Long userId, Integer page, Integer size) {
+        UserEntity user = jpaUserRepository
+                .findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+        Page<Product> pagedProducts = jpaWishRepository
+                .findAllByUser(user, PageRequest.of(page, size))
+                .map((entity -> entity.getProduct().toDomain()));
+        return new PagedDto<>(
+                page,
+                size,
+                pagedProducts.getTotalElements(),
+                pagedProducts.getTotalPages(),
+                pagedProducts.getContent()
+        );
     }
 }
