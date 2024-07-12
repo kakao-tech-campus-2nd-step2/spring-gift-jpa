@@ -37,9 +37,15 @@ public class WishlistRestController {
         return ResponseEntity.status(HttpStatus.OK).body(wishlistService.readAll(user));
     }
 
-    @DeleteMapping("/{wishlistId}")
-    public ResponseEntity<Void> delete(@PathVariable("wishlistId") long wishlistId, @LoginUser User user) {
-        wishlistService.delete(wishlistId);
+    @DeleteMapping("/{wishItemId}")
+    public ResponseEntity<Void> delete(@PathVariable("wishItemId") long wishItemId, @LoginUser User user) {
+        wishlistService.delete(wishItemId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping()
+    public ResponseEntity<Void> deleteAllByUser(@LoginUser User user) {
+        wishlistService.deleteAllByUserId(user);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

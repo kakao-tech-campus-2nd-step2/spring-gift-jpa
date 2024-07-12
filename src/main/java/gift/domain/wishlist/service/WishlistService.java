@@ -38,12 +38,21 @@ public class WishlistService {
         return wishlistJpaRepository.findAllByUserId(user.getId());
     }
 
-    public void delete(long wishlistId) {
-        WishItem wishItem = wishlistJpaRepository.findById(wishlistId)
+    public void delete(long wishItemId) {
+        WishItem wishItem = wishlistJpaRepository.findById(wishItemId)
             .orElseThrow(() -> new InvalidProductInfoException("error.invalid.product.id"));
 
         User user = wishItem.getUser();
         user.removeWishItem(wishItem);
         wishlistJpaRepository.delete(wishItem);
+    }
+
+    public void deleteAllByUserId(User user) {
+        user.removeWishlist();
+        wishlistJpaRepository.deleteAllByUserId(user.getId());
+    }
+
+    public void deleteAllByProductId(long productId) {
+        wishlistJpaRepository.deleteAllByProductId(productId);
     }
 }
