@@ -12,6 +12,8 @@ public interface WishListService {
 
     void updateProduct(long memberId, long productId, int productValue);
 
+
     WishListDTO getWishList(long memberId);
+
 
 }

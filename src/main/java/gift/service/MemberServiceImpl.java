@@ -1,5 +1,6 @@
 package gift.service;
 
+
 import gift.database.JpaMemberRepository;
 import gift.dto.LoginMemberToken;
 import gift.dto.MemberDTO;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberServiceImpl implements MemberService {
 
+
     private JpaMemberRepository jpaMemberRepository;
 
     private AuthenticationTool authenticationTool;
@@ -20,6 +22,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberServiceImpl(JpaMemberRepository jpaMemberRepository,
         AuthenticationTool authenticationTool) {
         this.jpaMemberRepository = jpaMemberRepository;
+
         this.authenticationTool = authenticationTool;
     }
 
@@ -28,8 +31,10 @@ public class MemberServiceImpl implements MemberService {
         if (checkEmailDuplication(memberDTO.getEmail())) {
             throw new MemberServiceException("이메일이 중복됩니다", HttpStatus.FORBIDDEN);
         }
+
         Member member = new Member(null, memberDTO.getEmail(), memberDTO.getPassword(), memberDTO.getRole());
         jpaMemberRepository.save(member);
+
     }
 
     @Override
@@ -52,8 +57,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO getLoginUser(String token) {
         long id = authenticationTool.parseToken(token);
+
         Member member = jpaMemberRepository.findById(id).orElseThrow(()->
             new MemberServiceException("잘못된 로그인 시도입니다",HttpStatus.FORBIDDEN));
+
 
         return new MemberDTO(member.getEmail(), member.getPassword(), member.getRole());
     }
@@ -61,9 +68,11 @@ public class MemberServiceImpl implements MemberService {
 
     private boolean checkEmailDuplication(String email) {
         try {
+
             jpaMemberRepository.findByEmail(email).orElseThrow(NoSuchElementException::new);
             return true;
         } catch (NoSuchElementException e) {
+
             return false;
         }
     }
@@ -72,6 +81,7 @@ public class MemberServiceImpl implements MemberService {
         try {
             return jpaMemberRepository.findByEmail(email).orElseThrow();
         } catch (NoSuchElementException e) {
+
             throw new MemberServiceException("잘못된 로그인 시도입니다.", HttpStatus.FORBIDDEN);
         }
     }

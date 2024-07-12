@@ -1,7 +1,5 @@
 package gift.service;
 
-
-
 import gift.database.JpaMemberRepository;
 import gift.database.JpaProductRepository;
 import gift.database.JpaWishRepository;
@@ -14,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,17 +34,21 @@ public class WishListServiceImpl implements WishListService {
         Member member = jpaMemberRepository.findById(memberId).orElseThrow(MemberNoSuchException::new);
         Product product = jpaProductRepository.findById(productId).orElseThrow();
         member.addProduct(product);
+
     }
 
     @Override
     public void deleteProduct(long memberId, long productId) {
+
         Member member = jpaMemberRepository.findById(memberId).orElseThrow(MemberNoSuchException::new);
         Product product = jpaProductRepository.findById(productId).orElseThrow();
         member.delProduct(product);
+
     }
 
     @Override
     public void updateProduct(long memberId, long productId, int productValue) {
+
         Wish wish = jpaWishRepository.findByMemberIdAndProductId(memberId,productId).orElseThrow();
 
         wish.setValue(productValue);

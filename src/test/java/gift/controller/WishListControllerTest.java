@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.dto.LoginMemberToken;
 import gift.dto.MemberDTO;
+
 import gift.dto.ProductDTO;
 import gift.dto.WishListDTO;
 import gift.dto.WishListRequest;
@@ -31,6 +32,7 @@ class WishListControllerTest {
     @DisplayName("위시 리스트 아이템 추가")
     void addWishList() {
         //given
+
         //회원가입 and 로그인
         String email = "abec";
         String password = "abecdddd";

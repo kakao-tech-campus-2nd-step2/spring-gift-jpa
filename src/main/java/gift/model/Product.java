@@ -5,15 +5,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name="PRODUCT_TABLE")
+
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "PRODUCT_ID")
     private Long id;
 
@@ -24,6 +27,7 @@ public class Product {
     private Integer price;
 
     @Column(name="PRODUCT_IMAGE_URL",nullable = false)
+
     private String imageUrl;
 
     public Product(Long id, String name, Integer price, String imageUrl) {

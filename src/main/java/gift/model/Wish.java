@@ -2,6 +2,7 @@ package gift.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,10 +13,12 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "WISH_TABLE")
+
 public class Wish {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "WISH_ID")
     private Long id;
 
@@ -45,7 +48,6 @@ public class Wish {
         this.product = product;
         this.productCount = productCount;
     }
-
     public Long getId() {
         return id;
     }
@@ -90,5 +92,6 @@ public class Wish {
         result = 31 * result + product.hashCode();
         result = 31 * result + productCount.hashCode();
         return result;
+
     }
 }
