@@ -1,6 +1,7 @@
 package gift.entity;
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,7 +26,7 @@ public class Product {
     @NotNull
     private Integer price;
     private String img;
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<Wish> wishes = new ArrayList<>();
 
     public Product() {
