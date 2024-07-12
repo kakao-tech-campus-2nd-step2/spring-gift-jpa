@@ -3,6 +3,7 @@ package gift.service;
 import gift.DTO.ProductDTO;
 import gift.DTO.WishListDTO;
 import gift.aspect.CheckProductExists;
+import gift.auth.DTO.MemberDTO;
 import gift.mapper.WishListMapper;
 import gift.model.wishlist.WishListRepository;
 import java.util.List;
@@ -33,14 +34,14 @@ public class WishListService {
      * 새로운 WishList를 추가함
      *
      * @param productId WishList에 추가할 상품의 ID
-     * @param userId    WishList에 추가할 사용자의 ID
+     * @param memberDTO WishList를 추가할 사용자의 정보
      * @return 생성된 WishList 객체의 ID 리스트
      */
     @CheckProductExists
-    public List<ProductDTO> addWishList(long productId, long userId) {
-        var wishListEntity = wishListMapper.toWishListEntityById(productId, userId);
+    public List<ProductDTO> addWishList(long productId, MemberDTO memberDTO) {
+        var wishListEntity = wishListMapper.toWishListEntity(productId, memberDTO);
         wishListRepository.save(wishListEntity);
-        return getWishListsByUserId(userId);
+        return getWishListsByUserId(memberDTO.getId());
     }
 
     /**
@@ -75,7 +76,7 @@ public class WishListService {
      * @return 삭제 성공 여부
      */
     @CheckProductExists
-    public boolean deleteWishListByUserIdAndProductId(long userId, long productId) {
+    public boolean deleteWishListByUserIdAndProductId(long productId, long userId) {
         return
             wishListRepository.deleteWishListByMemberEntityIdAndProductEntityId(userId, productId)
                 > 0;

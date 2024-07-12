@@ -1,6 +1,7 @@
 package gift.mapper;
 
 import gift.DTO.WishListDTO;
+import gift.auth.DTO.MemberDTO;
 import gift.model.wishlist.WishListEntity;
 import gift.service.MemberService;
 import gift.service.ProductService;
@@ -39,14 +40,9 @@ public class WishListMapper {
         );
     }
 
-    public WishListDTO toWishListDTOById(long productId, long userId) {
-        var memberDTO = memberService.getMember(userId);
+    public WishListEntity toWishListEntity(long productId, MemberDTO memberDTO) {
         var productDTO = productService.getProduct(productId);
-        return new WishListDTO(0, productDTO, memberDTO);
-    }
-
-    public WishListEntity toWishListEntityById(long productId, long userId) {
-        var WishListDTO = toWishListDTOById(productId, userId);
-        return toWishListEntity(WishListDTO);
+        var wishListDTO = new WishListDTO(productDTO, memberDTO);
+        return toWishListEntity(wishListDTO);
     }
 }
