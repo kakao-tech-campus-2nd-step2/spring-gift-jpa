@@ -21,7 +21,7 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
-    public List<Member> findAllMember() {
+    public List<Member> getAllMember() {
         return memberRepository
             .findAll()
             .stream()

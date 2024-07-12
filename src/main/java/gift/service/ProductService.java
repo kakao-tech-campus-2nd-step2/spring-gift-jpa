@@ -20,21 +20,21 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Product find(Long id) {
+    public Product getProduct(Long id) {
         ProductEntity productEntity = productRepository
             .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("not found entity"));
         return entityToDomain(productEntity);
     }
 
-    public List<Product> findAll() {
+    public List<Product> getAllProducts() {
         return productRepository.findAll()
             .stream()
             .map(this::entityToDomain)
             .collect(Collectors.toList());
     }
 
-    public Product createProduct(ProductRequest productRequest) {
+    public Product addProduct(ProductRequest productRequest) {
         ProductEntity productEntity = productRepository.save(productRequest.toProductEntity());
         return entityToDomain(productEntity);
     }
