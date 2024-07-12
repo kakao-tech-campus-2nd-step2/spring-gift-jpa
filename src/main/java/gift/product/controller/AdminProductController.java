@@ -1,7 +1,7 @@
 package gift.product.controller;
 
 import gift.product.model.Product;
-import gift.product.service.AdminProductService;
+import gift.product.service.ProductService;
 import gift.product.validation.ProductValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,27 +16,27 @@ import java.util.concurrent.atomic.AtomicLong;
 @RequestMapping("/admin/product")
 public class AdminProductController {
 
-    private final AdminProductService adminProductService;
+    private final ProductService productService;
     private final AtomicLong idCounter = new AtomicLong();
     private final ProductValidation productValidation;
 
     @Autowired
-    public AdminProductController(AdminProductService adminProductService, ProductValidation productValidation) {
-        this.adminProductService = adminProductService;
+    public AdminProductController(ProductService productService, ProductValidation productValidation) {
+        this.productService = productService;
         this.productValidation = productValidation;
     }
 
     @GetMapping("/list")
     public String showProductList(Model model) {
         System.out.println("[ProductController] showProductList()");
-        model.addAttribute("productList", adminProductService.getAllProducts());
+        model.addAttribute("productList", productService.getAllProducts());
         return "product";
     }
 
     @GetMapping("/register")
     public String showProductForm(Model model) {
         System.out.println("[ProductController] showProductForm()");
-        model.addAttribute("product", new Product(idCounter.incrementAndGet(), "", 0, ""));
+        model.addAttribute("product", new Product("", 0, ""));
         return "product-form";
     }
 
@@ -47,41 +47,41 @@ public class AdminProductController {
             model.addAttribute("product", product);
             return "product-form";
         }
-        adminProductService.registerProduct(product);
+        productService.registerProduct(product);
         return "redirect:/admin/product/list";
     }
 
     @GetMapping("/update/{id}")
     public String updateProductForm(@PathVariable Long id, Model model) {
         System.out.println("[ProductController] updateProductForm()");
-        Product product = adminProductService.getProductById(id);
+        Product product = productService.getProductById(id);
         model.addAttribute("product", product);
         return "product-update-form";
     }
 
-    @PutMapping()
-    public String updateProduct(@ModelAttribute Product product, BindingResult bindingResult, Model model) {
+    @PutMapping("/{id}")
+    public String updateProduct(@PathVariable Long id, @ModelAttribute Product product, BindingResult bindingResult, Model model) {
         System.out.println("[ProductController] updateProduct()");
         if (bindingResult.hasErrors()) {
             model.addAttribute("product", product);
             return "product-form";
         }
-        adminProductService.updateProduct(product);
+        productService.updateProduct(id, product);
         return "redirect:/admin/product/list";
     }
 
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable Long id, Model model) {
         System.out.println("[ProductController] deleteProduct()");
-        if(productValidation.existsById(id))
-            adminProductService.deleteProduct(id);
+        if(productService.existsById(id))
+            productService.deleteProduct(id);
         return "redirect:/admin/product/list";
     }
 
     @GetMapping("/search")
     public String searchProduct(@RequestParam("keyword") String keyword, Model model) {
         System.out.println("[ProductController] searchProduct()");
-        model.addAttribute("searchResults", adminProductService.searchProducts(keyword));
+        model.addAttribute("searchResults", productService.searchProducts(keyword));
         model.addAttribute("keyword", keyword);
         return "product-search-list";
     }

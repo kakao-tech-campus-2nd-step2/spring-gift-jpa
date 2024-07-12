@@ -11,12 +11,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(InvalidProductNameException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void handleInvalidProductNameException(InvalidProductNameException ex, Model model) {
-        model.addAttribute("errorMessage", ex.getMessage());
-    }
-
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public void handleException(Exception ex, Model model) {
@@ -33,6 +27,24 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public void handleSQLException(SQLException ex, Model model) {
         model.addAttribute("errorMessage", "Database error: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public void handleDuplicateIdException(DuplicateException ex, Model model) {
+        model.addAttribute("errorMessage", "Duplicate error: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(InstanceValueException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleInstanceValueException(InstanceValueException ex, Model model) {
+        model.addAttribute("errorMessage", "Value error: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(LoginFailedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleLoginFailedException(LoginFailedException ex, Model model) {
+        model.addAttribute("errorMessage", "Login error: " + ex.getMessage());
     }
 
 }

@@ -1,60 +1,48 @@
 package gift.product.service;
 
-import gift.product.dao.MemberDao;
+import gift.product.repository.MemberRepository;
+import gift.product.exception.LoginFailedException;
 import gift.product.model.Member;
-import gift.product.util.CertifyUtil;
-import gift.product.validation.LoginValidation;
+import gift.product.util.JwtUtil;
+import gift.product.validation.MemberValidation;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
 
-    private final MemberDao memberDao;
-    private final CertifyUtil certifyUtil;
-    private final LoginValidation loginValidation;
+    private final MemberRepository memberRepository;
+    private final JwtUtil jwtUtil;
+    private final MemberValidation memberValidation;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public MemberService(MemberDao memberDao, CertifyUtil certifyUtil,
-        LoginValidation loginValidation) {
-        this.memberDao = memberDao;
-        this.certifyUtil = certifyUtil;
-        this.loginValidation = loginValidation;
-        memberDao.createMemberTable();
+    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil, MemberValidation memberValidation, PasswordEncoder passwordEncoder) {
+        this.memberRepository = memberRepository;
+        this.jwtUtil = jwtUtil;
+        this.memberValidation = memberValidation;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity<Map<String, String>> signUp(Map<String, String> request) {
-        String email = request.get("email");
-
-        if(isExistsMember(email))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        memberDao.signUp(
-            new Member(
-                email,
-                certifyUtil.encodingPassword(request.get("password")),
-                0
-            )
-        );
-
-        return new ResponseEntity<>(responseToken(certifyUtil.generateToken(email)), HttpStatus.OK);
+    public ResponseEntity<Map<String, String>> signUp(Member member) {
+        memberValidation.signUpValidation(member);
+        memberRepository.save(new Member(member.getEmail(), passwordEncoder.encode(member.getPassword())));
+        return new ResponseEntity<>(responseToken(jwtUtil.generateToken(member.getEmail())), HttpStatus.OK);
     }
 
-    public ResponseEntity<Map<String, String>> login(Map<String, String> request) {
-        String email = request.get("email");
+    public ResponseEntity<Map<String, String>> login(Member member) {
+        Member findMember = memberValidation.loginValidation(member.getEmail());
 
-        if(loginValidation.login(email, certifyUtil.encodingPassword(request.get("password"))))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if(!passwordEncoder.matches(member.getPassword(), findMember.getPassword()))
+            throw new LoginFailedException("비밀번호가 틀립니다.");
 
-        return new ResponseEntity<>(responseToken(loginValidation.getToken(email)), HttpStatus.OK);
-    }
-
-    public boolean isExistsMember(String email) {
-        return memberDao.isExistsMember(email);
+        memberValidation.login(member.getEmail());
+        return new ResponseEntity<>(responseToken(memberValidation.getToken(member.getEmail())), HttpStatus.OK);
     }
 
     public Map<String, String> responseToken(String token) {
