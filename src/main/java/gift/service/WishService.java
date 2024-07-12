@@ -1,5 +1,8 @@
 package gift.service;
 
+import gift.exception.ResourceNotFoundException;
+import gift.model.Member;
+import gift.model.Product;
 import gift.model.Wish;
 import gift.repository.WishRepository;
 import java.util.List;
@@ -14,15 +17,19 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public List<Wish> getWishesByMemberId(Long memberId) {
-        return wishRepository.findByMemberId(memberId);
+    public List<Wish> getWishesByMember(Member member) {
+        return wishRepository.findByMember(member);
+    }
+
+    public List<Wish> getWishesByProductId(Product product) {
+        return wishRepository.findByProductId(product.getId());
     }
 
     public Wish addWish(Wish wish) {
         return wishRepository.save(wish);
     }
 
-    public boolean removeWish(Long id, Long memberId) {
-        return wishRepository.deleteByIdAndMemberId(id, memberId) > 0;
+    public boolean removeWish(Long id, Member member) {
+        return wishRepository.deleteByIdAndMember(id, member) > 0;
     }
 }
