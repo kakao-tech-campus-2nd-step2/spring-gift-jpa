@@ -7,6 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.Set;
 
@@ -31,7 +33,7 @@ public class ProductServiceTest {
         productService.delete(product.getId());
 
         // then
-        Set<Product> wishlist = wishlistService.getWishlistProducts(testEmail);
-        Assertions.assertThat(wishlist).hasSize(1);
+        Page<Product> products = wishlistService.getWishlistProducts(testEmail, PageRequest.of(0, 5));
+        Assertions.assertThat(products).hasSize(1);
     }
 }

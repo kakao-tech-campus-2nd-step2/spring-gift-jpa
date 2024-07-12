@@ -4,6 +4,9 @@ import gift.model.Product;
 import gift.model.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +22,13 @@ public class ProductController {
         this.productService = productService;
     }
 
+    // http://localhost:8080/api/products?page=1&size=3
     @GetMapping()
-    public List<Product> getAllProducts() {
-        List<Product> products = productService.findAll();
-        return products;
+    public List<Product> getAllProducts(@RequestParam(required = false, defaultValue = "0", value = "page") int page,
+                                        @RequestParam(required = false, defaultValue = "5", value = "size") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.findAll(pageable);
+        return products.getContent();
     }
 
     @GetMapping("/{id}")
