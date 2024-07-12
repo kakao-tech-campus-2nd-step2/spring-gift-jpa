@@ -1,13 +1,14 @@
 package gift.service;
 
-import gift.dto.LoginUser;
-import gift.dto.WishDTO;
-import gift.entity.User;
+import gift.dto.TokenLoginRequestDTO;
+import gift.entity.Member;
+import gift.entity.Product;
 import gift.entity.Wish;
-import gift.exceptionhandler.UserException;
+import gift.exceptionhandler.WishException;
+import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
-import gift.repository.UserRepository;
 import gift.repository.WishRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,50 +20,67 @@ public class WishService {
 
     private final WishRepository wishRepository;
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     @Autowired
-    public WishService(WishRepository wishRepository, ProductRepository productRepository, UserRepository userRepository) {
+    public WishService(WishRepository wishRepository,
+                       ProductRepository productRepository,
+                       MemberRepository memberRepository) {
         this.wishRepository = wishRepository;
         this.productRepository = productRepository;
-        this.userRepository = userRepository;
+        this.memberRepository = memberRepository;
     }
 
     public Long findByEmail(String email){
-        Optional<User> user = userRepository.findByEmail(email);
-        if(user.isPresent()){
-            return user.get()
+        Optional<Member> member = memberRepository.findByEmail(email);
+        if(member.isPresent()){
+            return member.get()
                     .getId();
         }
-        throw new UserException("User not found");
+        throw new WishException("User not found");
     }
 
-    public static Wish toEntity(WishDTO dto) {
-        Wish wish = new Wish();
-        wish.setMemberId(dto.memberId());
-        wish.setProductId(dto.productId());
-        return wish;
-    }
-
-    public void addWish(long productId, LoginUser loginUser) {
+    @Transactional
+    public void addWish(Long productId, TokenLoginRequestDTO loginUser) {
         String email = loginUser.getEmail();
         Long memberId = findByEmail(email);
-        Wish wish = new Wish();
-        wish.setMemberId(memberId);
-        wish.setProductId(productId);
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new WishException("User not found"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new WishException("Product not found"));
+
+        Optional<Wish> existingWish = wishRepository.findByMemberIdAndProductId(memberId, productId);
+        if (existingWish.isPresent()) {
+            Wish wish = existingWish.get();
+            wish.incrementCount();
+            wishRepository.save(wish);
+            return;
+        }
+        Wish wish = new Wish(member, product);
         wishRepository.save(wish);
     }
 
-    public void removeWish(long productId, LoginUser loginUser) {
+    @Transactional
+    public void removeWish(long productId, TokenLoginRequestDTO loginUser) {
         String email = loginUser.getEmail();
         Long memberId = findByEmail(email);
-        Wish wish = new Wish();
-        wish.setMemberId(memberId);
-        wish.setProductId(productId);
-        wishRepository.deleteByMemberIdAndProductId(memberId, productId);
+
+        Wish wish = wishRepository.findByMemberIdAndProductId(memberId, productId)
+                .orElseThrow(() -> new WishException("Product not found"));
+
+        if (wish.getCount() > 1) {
+            wish.decrementCount();
+            wishRepository.save(wish);
+            return;
+        }
+        wishRepository.delete(wish);
+
     }
 
-    public List<Wish> getWishesByMemberId(LoginUser loginUser) {
-        return wishRepository.findAll();
+    public List<Wish> getWishesByMemberId(TokenLoginRequestDTO tokenLoginRequestDTO) {
+        Long memberId = findByEmail(tokenLoginRequestDTO.getEmail());
+        List<Wish> wishlist = wishRepository.findByMemberId(memberId);
+        return wishlist;
     }
 }

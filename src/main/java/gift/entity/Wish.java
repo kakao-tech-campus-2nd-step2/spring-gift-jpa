@@ -1,26 +1,39 @@
 package gift.entity;
 
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="wish")
+@Table(name = "wish")
 public class Wish {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long memberId;
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     @Column(nullable = false)
-    private Long productId;
+    private int count;
 
-    public Wish(){}
+    public Wish() {
+        this.count = 1; // 기본값 1로 초기화
+    }
 
-    public long getId() {
+    public Wish(Member member, Product product) {
+        this.member = member;
+        this.product = product;
+        this.count = 1; // 기본값 1로 초기화
+    }
+
+    public Long getId() {
         return id;
     }
 
@@ -28,20 +41,47 @@ public class Wish {
         this.id = id;
     }
 
-    public long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
-    public long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public void incrementCount() {
+        this.count++;
+    }
+
+    public void decrementCount() {
+        if (this.count > 1) {
+            this.count--;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Wish{" +
+                "id=" + id +
+                ", memberId=" + (member != null ? member.getId() : null) +
+                ", productId=" + (product != null ? product.getId() : null) +
+                ", count=" + count +
+                '}';
     }
 }
-

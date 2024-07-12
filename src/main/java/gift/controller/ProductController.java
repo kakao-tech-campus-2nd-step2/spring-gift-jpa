@@ -32,10 +32,12 @@ public class ProductController {
     }
 
     @Description("get product by id")
-    @GetMapping("/products/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") Long productId) {
+    @GetMapping("/products/{productId}")
+    public ResponseEntity<Product> getProductById(@PathVariable("productId") Long productId) {
         Product product = productService.getProduct(productId);
-        return ResponseEntity.ok(product);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(product);
+        //return ResponseEntity.ok(product);
     }
 
     @Description("add product : id는 자동 추가")
@@ -47,18 +49,18 @@ public class ProductController {
     }
 
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/products/{productId}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long productId) {
         productService.deleteProduct(productId);
-        return ResponseEntity.status(HttpStatus.
-                OK).body("Product deleted successfully");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Product deleted successfully");
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/products/{productId}")
     public ResponseEntity<String> updateProduct(@PathVariable Long productId, @RequestBody @Valid ProductDTO productDTO) {
         productService.updateProduct(productId, productDTO);
-        return ResponseEntity.status(HttpStatus.
-                OK).body("Product updated successfully");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("Product updated successfully");
     }
 
 }

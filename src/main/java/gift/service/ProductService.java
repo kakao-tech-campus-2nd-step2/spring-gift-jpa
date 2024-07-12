@@ -59,22 +59,20 @@ public class ProductService {
         }
     }
 
-    @Transactional
     public void deleteProduct(Long productId) {
-        try {
-            Optional<Product> existingProduct = repository.findById(productId);
-            existingProduct.orElseThrow(() -> new ProductException("상품을 찾을 수 없어서 삭제할 수 없습니다."));
-            repository.deleteById(productId);
-        }catch(Exception e){
-
-        }
+        Optional<Product> existingProduct = repository.findById(productId);
+        existingProduct.orElseThrow(() -> new ProductException("상품을 찾을 수 없어서 삭제할 수 없습니다."));
+        repository.deleteById(productId);
     }
 
     @Transactional
     public void updateProduct(Long productId, ProductDTO productDTO) {
-        Optional<Product> existingProduct = repository.findById(productId);
-        existingProduct.orElseThrow(() -> new ProductException("상품을 찾을 수 없어서 업데이트 할 수 없습니다."));
-        saveProduct(productDTO);
+        Product product = repository.findById(productId)
+                .orElseThrow(() -> new ProductException("상품을 찾을 수 없어서 업데이트 할 수 없습니다."));
+        product.setName(productDTO.name());
+        product.setPrice(productDTO.price());
+        product.setImageUrl(productDTO.imageUrl());
+        repository.save(product);
     }
 
 }

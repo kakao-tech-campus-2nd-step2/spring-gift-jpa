@@ -1,64 +1,79 @@
 package gift.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.Set;
 
 @Entity
 @Table(name = "product")
 public class Product {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        @Column(nullable = false, name = "id")
-        private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false, name = "id")
+    private Long id;
 
-        @Column(nullable = false , name = "name")
-        private String name;
+    @Column(nullable = false, name = "name")
+    private String name;
 
-        @Column(nullable = false, name = "price")
-        private int price;
+    @Column(nullable = false, name = "price")
+    private int price;
 
-        @Column(nullable = false, name = "image_url")
-        private String imageUrl;
+    @Column(nullable = false, name = "image_url")
+    private String imageUrl;
 
-        public Product() {}
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "product", orphanRemoval = true)
+    private Set<Wish> wishes;
 
-        public Product(Long id, String name, int price, String imageUrl) {
-                this.id = id;
-                this.name = name;
-                this.price = price;
-                this.imageUrl = imageUrl;
-        }
+    public Product() {}
 
-        public Long getId() {
-                return id;
-        }
+    public Product(Long id, String name, int price, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
 
-        public void setId(long id) {
-                this.id = id;
-        }
+    public Long getId() {
+        return id;
+    }
 
-        public String getName() {
-                return name;
-        }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-        public void setName(String name) {
-                this.name = name;
-        }
+    public String getName() {
+        return name;
+    }
 
-        public int getPrice() {
-                return price;
-        }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-        public void setPrice(int price) {
-                this.price = price;
-        }
+    public int getPrice() {
+        return price;
+    }
 
-        public String getImageUrl() {
-                return imageUrl;
-        }
+    public void setPrice(int price) {
+        this.price = price;
+    }
 
-        public void setImageUrl(String imageUrl) {
-                this.imageUrl = imageUrl;
-        }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Set<Wish> getWishes() {
+        return wishes;
+    }
+
+    public void setWishes(Set<Wish> wishes) {
+        this.wishes = wishes;
+    }
 }

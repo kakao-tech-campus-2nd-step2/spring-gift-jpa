@@ -43,7 +43,6 @@ public class AdminController {
         return "update";
     }
 
-
     @GetMapping("/admin/get")
     public String adminGetPage(Model model) {
         model.addAttribute("products", productService.getAllProducts());
@@ -57,13 +56,13 @@ public class AdminController {
     }
 
     @PostMapping("/admin/delete/submit")
-    public String submitDeleteProduct(@RequestParam("id") Long productId, Model model){
+    public String submitDeleteProduct(@RequestParam("productId") Long productId, Model model){
         productService.deleteProduct(productId);
         return adminGetPage(model);
     }
 
     @PostMapping("/admin/put/submit")
-    public String submitUpdateProduct(@RequestParam("id") Long productId,
+    public String submitUpdateProduct(@RequestParam("productId") Long productId,
                                       @ModelAttribute @Valid ProductDTO productDTO,
                                       Model model) {
         productService.updateProduct(productId, productDTO);

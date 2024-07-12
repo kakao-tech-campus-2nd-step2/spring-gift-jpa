@@ -1,10 +1,10 @@
 package gift.controller;
 
-import gift.dto.LoginUser;
-import gift.dto.UserDTO;
-import gift.entity.User;
+import gift.dto.TokenLoginRequestDTO;
+import gift.dto.MemberDTO;
+import gift.entity.Member;
 import gift.service.LoginMember;
-import gift.service.UserService;
+import gift.service.MemberService;
 import jdk.jfr.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class UserController {
+public class MemberController {
 
-    private final UserService userService;
+    private final MemberService memberService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @GetMapping("/signup")
@@ -39,8 +39,8 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, String>> register(@ModelAttribute("userDTO") UserDTO userDTO) {
-        String token = userService.signUp(userDTO);
+    public ResponseEntity<Map<String, String>> register(@ModelAttribute("memberDTO") MemberDTO memberDTO) {
+        String token = memberService.signUp(memberDTO);
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("token", token);
         return ResponseEntity.ok()
@@ -49,8 +49,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public  ResponseEntity<Map<String, String>> login(@ModelAttribute("userDTO") UserDTO userDTO) {
-        String token = userService.login(userDTO);
+    public ResponseEntity<Map<String, String>> login(@ModelAttribute("memberDTO") MemberDTO memberDTO) {
+        String token = memberService.login(memberDTO);
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("token", token);
         return ResponseEntity.ok()
@@ -59,17 +59,20 @@ public class UserController {
     }
 
     @PostMapping("/token-login")
-    public ResponseEntity<String> tokenLogin(@LoginMember LoginUser loginUser) {
-        userService.tokenLogin(loginUser);
-        String token = loginUser.getToken();
-        return new ResponseEntity<>(token , HttpStatus.OK);
+    public ResponseEntity<String> tokenLogin(@LoginMember TokenLoginRequestDTO tokenLoginRequestDTO) {
+        memberService.tokenLogin(tokenLoginRequestDTO);
+        String token = tokenLoginRequestDTO.getToken();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body("토큰 인증 성공");
+        //return new ResponseEntity<>(token , HttpStatus.OK);
     }
 
     @Description("임시 확인용 html form. service x ")
     @GetMapping("/user-info")
-    public ResponseEntity<List<User>> userInfoRendering() {
-        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok().body(users);
+    public ResponseEntity<List<Member>> userInfoRendering() {
+        List<Member> members = memberService.getAllUsers();
+        return ResponseEntity.status(HttpStatus.OK).
+                body(members);
     }
 
 }

@@ -1,10 +1,10 @@
 package gift.dto;
 
-public class LoginUser {
+public class TokenLoginRequestDTO {
     private String email;
     private String token;
-    public LoginUser() {}
-    public LoginUser(String email, String token) {
+    public TokenLoginRequestDTO() {}
+    public TokenLoginRequestDTO(String email, String token) {
         this.email = email;
         this.token = token;
     }

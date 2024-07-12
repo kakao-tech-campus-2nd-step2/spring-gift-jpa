@@ -1,7 +1,7 @@
 package gift.authorization;
 
-import gift.dto.LoginUser;
-import gift.entity.User;
+import gift.dto.TokenLoginRequestDTO;
+import gift.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -19,12 +19,12 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    public String generateToken(User user) {
+    public String generateToken(Member member) {
         Date now = new Date();
         Date expiration = new Date(System.currentTimeMillis() + 1 * (1000 * 60 * 60 * 24 * 365));
         String accessToken = Jwts.builder()
-                .setSubject(user.getEmail())
-                .claim("email", user.getEmail())
+                .setSubject(member.getEmail())
+                .claim("email", member.getEmail())
                 .setIssuedAt(now)
                 .setExpiration(expiration)
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
@@ -62,20 +62,24 @@ public class JwtUtil {
                     .setSigningKey(secretKey.getBytes())
                     .parseClaimsJws(jwt)
                     .getBody();
+            System.out.println("check claim");
             return true;
         }catch(ExpiredJwtException e) {   //Token이 만료된 경우 Exception이 발생한다.
+            System.out.println("expired token");
             return false;
         }catch(JwtException e) {        //Token이 변조된 경우 Exception이 발생한다.
+            System.out.println("jwt null");
             return false;
         }
     }
 
-    public boolean ValidToken(LoginUser loginUser){
-        String token = loginUser.getToken();
+    public boolean isNotValidToken(TokenLoginRequestDTO tokenLoginRequestDTO){
+        String token = tokenLoginRequestDTO.getToken();
+        System.out.println("token: " + token);
         if(checkClaim(token)){
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
 }
