@@ -11,3 +11,6 @@ public interface WishListRepository {
     List<WishListItem> findWishListByMemberId(Long memberId);
     Optional<WishListItem> findById(Long id);
 }
+
+
+

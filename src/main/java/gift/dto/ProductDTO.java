@@ -7,17 +7,17 @@ import jakarta.validation.constraints.Size;
 
 public class ProductDTO {
 
-    @Size(max = 15, message = "상품 이름은 최대 15자까지 입력할 수 있습니다.")
+    @Size(max = 15, message = "?�품 ?�름?� 최�? 15?�까지 ?�력?????�습?�다.")
     @Pattern(
             regexp = "^[a-zA-Z0-9 ()\\[\\]+,&/_-]*$",
-            message = "상품 이름에는 영문자, 숫자, 공백, (), [], +, -, &, /, _ 만 사용할 수 있습니다."
+            message = "?�품 ?�름?�는 ?�문?? ?�자, 공백, (), [], +, -, &, /, _ �??�용?????�습?�다."
     )
     public String name;
 
-    @NotNull(message = "상품 가격은 필수 항목입니다.")
+    @NotNull(message = "?�품 가격�? ?�수 ??��?�니??")
     public Integer price;
 
-    @NotEmpty(message = "이미지 URL은 필수 항목입니다.")
+    @NotEmpty(message = "?��?지 URL?� ?�수 ??��?�니??")
     public String imageUrl;
 
     public String getName() {
@@ -25,8 +25,8 @@ public class ProductDTO {
     }
 
     public void setName(String name) {
-        if (name.contains("카카오")) {
-            throw new IllegalArgumentException("상품 이름에 '카카오'가 포함된 경우 담당 MD와 협의가 필요합니다.");
+        if (name.contains("카카??)) {
+            throw new IllegalArgumentException("?�품 ?�름??'카카??가 ?�함??경우 ?�당 MD?� ?�의가 ?�요?�니??");
         }
         this.name = name;
     }
@@ -47,3 +47,4 @@ public class ProductDTO {
         this.imageUrl = imageUrl;
     }
 }
+

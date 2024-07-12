@@ -35,3 +35,4 @@ public class WishListController {
         return ResponseEntity.ok().build();
     }
 }
+
