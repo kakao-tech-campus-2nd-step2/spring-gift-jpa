@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Manage Products</title>
+    <title>Products</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container mt-5">
-    <h1>Manage <strong>Products</strong></h1>
+    <h1>Products</h1>
     <div class="mb-3">
         <button class="btn btn-success" onclick="location.href='/api/products/new'">Add New Product</button>
     </div>
@@ -20,7 +20,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="product : ${products}">
+        <tr th:each="product : ${productPage.content}">
             <td th:text="${product.name}"></td>
             <td th:text="${product.price}"></td>
             <td>
@@ -35,6 +35,23 @@
         </tr>
         </tbody>
     </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/api/products(page=${currentPage - 1}, size=${pageSize})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, productPage.totalPages - 1)}" th:classappend="${pageNum == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{/api/products(page=${pageNum}, size=${pageSize})}" th:text="${pageNum + 1}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{/api/products(page=${currentPage + 1}, size=${pageSize})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 </body>
 </html>

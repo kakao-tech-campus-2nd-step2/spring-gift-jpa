@@ -4,9 +4,9 @@ import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
