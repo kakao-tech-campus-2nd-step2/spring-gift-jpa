@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -27,14 +28,16 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @Autowired
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
     @GetMapping()
-    public ResponseEntity<List<Product>> readAll() {
-        return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
+    public ResponseEntity<List<Product>> readAll(
+        @RequestParam(defaultValue = "0") int pageNo,
+        @RequestParam(defaultValue = "10") int pageSize
+    ) {
+        return new ResponseEntity<>(productService.getAllProducts(pageNo, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
