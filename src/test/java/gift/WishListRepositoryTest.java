@@ -18,6 +18,9 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 class WishListRepositoryTest {
@@ -35,16 +38,16 @@ class WishListRepositoryTest {
         User user = new User(null, "test@example.com", "password");
         userRepository.save(user);
 
-        Product product = new Product(null, new Name("Test Product"), 100, "http://example.com/image.png");
+        Product product = new Product(null, new Name("TestProduct"), 100, "http://example.com/image.png");
         productRepository.save(product);
 
-        WishList wishList = new WishList(null, user, Arrays.asList(product));
+        WishList wishList = new WishList(null, user, product);
         WishList savedWishList = wishListRepository.save(wishList);
 
         assertAll(
             () -> assertThat(savedWishList.getId()).isNotNull(),
             () -> assertThat(savedWishList.getUser().getEmail()).isEqualTo(user.getEmail()),
-            () -> assertThat(savedWishList.getProducts()).contains(product)
+            () -> assertThat(savedWishList.getProduct()).isEqualTo(product)
         );
     }
 
@@ -53,11 +56,36 @@ class WishListRepositoryTest {
         User user = new User(null, "test@example.com", "password");
         userRepository.save(user);
 
-        WishList wishList = new WishList(null, user, new ArrayList<>());
+        Product product = new Product(null, new Name("TestProduct"), 100, "http://example.com/image.png");
+        productRepository.save(product);
+
+        WishList wishList = new WishList(null, user, product);
         wishListRepository.save(wishList);
 
-        Optional<WishList> actual = wishListRepository.findByUser(user);
-        assertTrue(actual.isPresent());
-        assertThat(actual.get().getUser().getEmail()).isEqualTo(user.getEmail());
+        List<WishList> wishLists = wishListRepository.findByUser(user);
+        assertThat(wishLists).hasSize(1);
+        assertThat(wishLists.get(0).getUser().getEmail()).isEqualTo(user.getEmail());
+    }
+
+    @Test
+    void findByUserWithPagination() {
+        User user = new User(null, "test@example.com", "password");
+        userRepository.save(user);
+
+        for (int i = 1; i <= 20; i++) {
+            Product product = new Product(null, new Name("TestProduct" + i), 100 + i, "http://example.com/image" + i + ".png");
+            productRepository.save(product);
+            WishList wishList = new WishList(null, user, product);
+            wishListRepository.save(wishList);
+        }
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<WishList> wishListPage = wishListRepository.findByUser(user, pageable);
+
+        assertAll(
+            () -> assertThat(wishListPage.getTotalElements()).isEqualTo(20),
+            () -> assertThat(wishListPage.getContent()).hasSize(10),
+            () -> assertThat(wishListPage.getTotalPages()).isEqualTo(2)
+        );
     }
 }
