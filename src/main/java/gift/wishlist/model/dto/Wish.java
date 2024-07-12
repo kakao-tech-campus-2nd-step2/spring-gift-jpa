@@ -32,7 +32,7 @@ public class Wish extends BaseTimeEntity {
     @Column(nullable = false)
     private int quantity;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
     private boolean isActive = true;
 
     public Wish() {

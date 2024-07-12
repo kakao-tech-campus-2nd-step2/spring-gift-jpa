@@ -33,7 +33,7 @@ public class Product extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private AppUser seller;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
     private boolean isActive = true; // 선물의 활성화 상태
 
     public Product(String name, int price, String imageUrl, AppUser seller) {

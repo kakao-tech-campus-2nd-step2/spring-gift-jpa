@@ -24,7 +24,7 @@ public class AppUser extends BaseTimeEntity {
     @Column(nullable = false, length = 100)
     private String password;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
     private Boolean isActive = true;
 
     @Enumerated(EnumType.STRING)
