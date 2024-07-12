@@ -7,7 +7,7 @@
 <body>
 <h1>Add Product</h1>
 
-<form th:action="@{/admin/products/add}" th:object="${product}" method="post">
+<form th:action="@{/api/admin/products/add}" th:object="${product}" method="post">
     <label for="name">Name:</label><br>
     <input type="text" id="name" th:field="*{name}"><br>
     <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div><br>
@@ -23,7 +23,7 @@
     <button type="submit">Save</button>
 </form>
 
-<a href="/admin/products">Cancel</a>
+<a href="/view/admin/products">Cancel</a>
 
 </body>
 </html>

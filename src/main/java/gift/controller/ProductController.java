@@ -42,14 +42,14 @@ public class ProductController {
             return "add-product";
         }
         productService.addProduct(product);
-        return "redirect:/admin/products";
+        return "redirect:/view/admin/products";
     }
 
     @GetMapping("/edit/{id}")
     public String showEditProductForm(@PathVariable Long id, Model model) {
         Product product = productService.getProductById(id);
         if (product == null) {
-            return "redirect:/admin/products";
+            return "redirect:/view/admin/products";
         }
         model.addAttribute("product", product);
         return "edit-product";
@@ -65,12 +65,12 @@ public class ProductController {
             return "edit-product";
         }
         productService.updateProduct(id, product);
-        return "redirect:/admin/products";
+        return "redirect:/view/admin/products";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return "redirect:/admin/products";
+        return "redirect:/view/admin/products";
     }
 }
