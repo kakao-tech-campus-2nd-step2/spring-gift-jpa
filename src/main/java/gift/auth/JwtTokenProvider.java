@@ -78,6 +78,10 @@ public class JwtTokenProvider {
 
     public String extractJwtTokenFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            return null;
+        }
+
         Optional<Cookie> cookie = Arrays.stream(cookies)
             .filter(c -> c.getName().equals("jwtToken"))
             .findFirst();

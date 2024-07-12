@@ -1,6 +1,7 @@
 package gift.auth;
 
 import gift.model.Role;
+import gift.utils.ScriptUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,6 +33,7 @@ public class AuthMvcInterceptor implements HandlerInterceptor {
             //토큰이 존재하지 않음
             if (token == null) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                ScriptUtils.alertAndMovePage(response, "로그인을 해주세요.", "/view/login");
                 return false;
             }
 
@@ -39,6 +41,7 @@ public class AuthMvcInterceptor implements HandlerInterceptor {
             Claims claims = tokenProvider.parseToken(token);
             if (claims == null) {
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                ScriptUtils.alertAndMovePage(response, "로그인을 해주세요.", "/view/login");
                 return false;
             }
 
@@ -48,6 +51,7 @@ public class AuthMvcInterceptor implements HandlerInterceptor {
                 if (!checkingRole(Role.valueOf(claims.get("member_role").toString()),
                     Role.valueOf(requiredRole))) {
                     response.setStatus(HttpStatus.FORBIDDEN.value());
+                    ScriptUtils.alertAndBackPage(response, "접근 권한이 없습니다.");
                     return false;
                 }
             }

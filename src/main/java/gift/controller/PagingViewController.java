@@ -6,7 +6,6 @@ import gift.auth.LoginMember;
 import gift.exception.wishlist.WishException;
 import gift.model.Member;
 import gift.model.Product;
-import gift.model.Wish;
 import gift.request.JoinRequest;
 import gift.request.LoginMemberDto;
 import gift.request.LoginRequest;
@@ -18,7 +17,7 @@ import gift.utils.ScriptUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.io.IOException;
-import java.util.List;
+import javax.security.auth.login.LoginException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -36,6 +35,9 @@ public class PagingViewController {
     private final MemberService memberService;
     private final WishService wishService;
     private final JwtService jwtService;
+    public static final int PRODUCTS_PER_PAGE = 10;
+    public static final int WISH_PER_PAGE = 5;
+    public static final int SHOWING_PAGE_COUNT = 10;
 
     public PagingViewController(ProductService productService, MemberService memberService,
         WishService wishService, JwtService jwtService) {
@@ -83,9 +85,10 @@ public class PagingViewController {
 
     @GetMapping("/view/products")
     public String getAllProducts(@RequestParam(defaultValue = "1") int page, Model model) {
-        PageRequest pageRequest = PageRequest.of(page-1, 10);
+        PageRequest pageRequest = PageRequest.of(page - 1, PRODUCTS_PER_PAGE);
         Page<Product> productsInPage = productService.getPagedAllProducts(pageRequest);
-        ArticlePage articlePage = new ArticlePage(productsInPage, page, 10, 10);
+        ArticlePage articlePage = new ArticlePage(productsInPage, page, PRODUCTS_PER_PAGE,
+            SHOWING_PAGE_COUNT);
 
         model.addAttribute("products", productsInPage.getContent());
         model.addAttribute("pagingInfo", articlePage);
@@ -94,13 +97,18 @@ public class PagingViewController {
 
     @CheckRole("ROLE_USER")
     @GetMapping("/view/wish")
-    public String getWishes(@RequestParam(defaultValue = "1") int page, @LoginMember LoginMemberDto loginMemberDto, Model model) {
-        PageRequest pageRequest = PageRequest.of(page-1, 5);
-        Page<Product> wishListInPage = wishService.getPagedWishList(loginMemberDto.id(), pageRequest);
-        ArticlePage articlePage = new ArticlePage(wishListInPage, page, 5, 10);
+    public String getWishes(@RequestParam(defaultValue = "1") int page,
+        @LoginMember LoginMemberDto loginMemberDto, Model model) {
+
+        PageRequest pageRequest = PageRequest.of(page - 1, WISH_PER_PAGE);
+        Page<Product> wishListInPage = wishService.getPagedWishList(loginMemberDto.id(),
+            pageRequest);
+        ArticlePage articlePage = new ArticlePage(wishListInPage, page, WISH_PER_PAGE,
+            SHOWING_PAGE_COUNT);
 
         model.addAttribute("products", wishListInPage.getContent());
         model.addAttribute("pagingInfo", articlePage);
+
         return "wish";
     }
 
