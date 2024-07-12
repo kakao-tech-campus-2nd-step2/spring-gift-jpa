@@ -1,8 +1,8 @@
 package gift.Service;
 
 import gift.DTO.JwtToken;
-import gift.DTO.MemberDto;
 import gift.DTO.Member;
+import gift.DTO.MemberDto;
 import gift.Exception.ForbiddenException;
 import gift.Exception.UnauthorizedException;
 import gift.Repository.MemberRepository;

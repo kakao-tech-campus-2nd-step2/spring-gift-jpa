@@ -27,8 +27,8 @@ public class Product {
   private int price;
   private String imageUrl;
 
-  @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
-  private List<WishList> wishlists = new ArrayList<>();
+  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+  private final List<WishList> wishlists = new ArrayList<>();
 
   public Product() {
   }

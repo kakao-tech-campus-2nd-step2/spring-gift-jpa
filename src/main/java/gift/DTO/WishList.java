@@ -41,7 +41,6 @@ public class WishList {
   }
 
 
-
   public Long getId() {
     return this.id;
   }

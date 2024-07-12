@@ -3,11 +3,10 @@ package gift.Service;
 import gift.ConverterToDto;
 import gift.DTO.Member;
 import gift.DTO.Product;
-import gift.DTO.WishListDto;
 import gift.DTO.WishList;
-import gift.LoginUser;
-import gift.Repository.ProductRepository;
+import gift.DTO.WishListDto;
 import gift.Repository.MemberRepository;
+import gift.Repository.ProductRepository;
 import gift.Repository.WishListRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -19,10 +18,11 @@ public class WishListService {
   private final MemberRepository memberRepository;
   private final ProductRepository productRepository;
 
-  public WishListService(WishListRepository wishListRepository,ProductRepository productRepository, MemberRepository memberRepository) {
+  public WishListService(WishListRepository wishListRepository, ProductRepository productRepository,
+    MemberRepository memberRepository) {
     this.wishListRepository = wishListRepository;
     this.memberRepository = memberRepository;
-    this.productRepository=productRepository;
+    this.productRepository = productRepository;
   }
 
   public WishListDto addProductToWishList(WishListDto wishListDto) {
@@ -30,7 +30,7 @@ public class WishListService {
     Long productId = wishListDto.getProductDto().getId();
     Member member = memberRepository.getById(memberId);
     Product product = productRepository.getById(productId);
-    WishList wishList = new WishList(member,product);
+    WishList wishList = new WishList(member, product);
     wishListRepository.save(wishList);
     return wishListDto;
   }

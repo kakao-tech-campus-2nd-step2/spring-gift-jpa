@@ -1,8 +1,8 @@
 package gift.Service;
 
-import gift.DTO.ProductDto;
-import gift.DTO.Product;
 import gift.ConverterToDto;
+import gift.DTO.Product;
+import gift.DTO.ProductDto;
 import gift.Repository.ProductRepository;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -43,6 +43,7 @@ public class ProductService {
     productRepository.save(product);
     return productDto;
   }
+
   public ProductDto updateProduct(Long id, @Valid ProductDto updatedProductDto) {
     Optional<Product> existingProductOptional = productRepository.findById(id);
     Product newProduct = new Product(id,

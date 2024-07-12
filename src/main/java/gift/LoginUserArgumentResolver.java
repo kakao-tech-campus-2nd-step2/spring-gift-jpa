@@ -15,8 +15,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
-  private final JwtService jwtService;
   public static final String TOKEN_TYPE = "Bearer ";
+  private final JwtService jwtService;
 
   public LoginUserArgumentResolver(JwtService jwtService) {
     this.jwtService = jwtService;

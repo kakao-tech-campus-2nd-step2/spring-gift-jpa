@@ -1,8 +1,8 @@
 package gift.Service;
 
 import gift.DTO.JwtToken;
-import gift.DTO.MemberDto;
 import gift.DTO.Member;
+import gift.DTO.MemberDto;
 import gift.Repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -22,13 +22,12 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
   private final MemberRepository memberRepository;
+  @Value("${jwt.secret}")
+  private String key;
 
   public JwtService(MemberRepository memberRepository) {
     this.memberRepository = memberRepository;
   }
-
-  @Value("${jwt.secret}")
-  private String key;
 
   public JwtToken createAccessToken(MemberDto memberDto) {
     Instant now = Instant.now();
