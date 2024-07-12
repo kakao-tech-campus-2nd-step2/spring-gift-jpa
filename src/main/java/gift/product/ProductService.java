@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -22,16 +21,18 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Page<ProductDTO> getAllProducts(int page, int size, String sortDirection, String sortBy) {
+    public Page<ProductDTO> getAllProducts(int page, int size, String sortDirection,
+        String sortBy) {
         Direction direction = Direction.ASC;
-        if(!(sortBy.equalsIgnoreCase("id")||sortBy.equalsIgnoreCase("name"))){
+        if (!(sortBy.equals("id") || sortBy.equals("name"))) {
             sortBy = "id";
         }
-        if(sortDirection.equalsIgnoreCase("desc")||sortDirection.equals("내림차순")){
+        if (sortDirection.equals("desc") || sortDirection.equals("내림차순")) {
             direction = Direction.DESC;
         }
-        Pageable pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        List<ProductDTO> products = productRepository.findAll().stream()
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageRequest = PageRequest.of(page, size, sort);
+        List<ProductDTO> products = productRepository.findAll(sort).stream()
             .map(ProductDTO::fromProduct)
             .toList();
         int start = (int) pageRequest.getOffset();
@@ -59,7 +60,8 @@ public class ProductService {
     public void updateProduct(ProductDTO productDTO) throws NotFoundException {
         Product product = productRepository.findById(productDTO.getId())
             .orElseThrow(NotFoundException::new);
-        if (productRepository.existsByName(productDTO.getName())&&product.getId()!=productDTO.getId()) {
+        if (productRepository.existsByName(productDTO.getName())
+            && product.getId() != productDTO.getId()) {
             throw new IllegalArgumentException("존재하는 이름입니다.");
         }
         product.update(productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());

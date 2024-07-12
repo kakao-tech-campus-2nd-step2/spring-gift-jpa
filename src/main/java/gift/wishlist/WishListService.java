@@ -42,15 +42,16 @@ public class WishListService {
     public Page<WishListDTO> getWishListsByUserId(long id, int page, int size, String sortDirection,
         String sortBy) {
         Direction direction = Direction.ASC;
-        if (!(sortBy.equalsIgnoreCase("id") || sortBy.equalsIgnoreCase("productId")
-            || sortBy.equalsIgnoreCase("num"))) {
+        if (!(sortBy.equals("id") || sortBy.equals("productId")
+            || sortBy.equals("num"))) {
             sortBy = "id";
         }
-        if (sortDirection.equalsIgnoreCase("desc") || sortDirection.equals("내림차순")) {
+        if (sortDirection.equals("desc") || sortDirection.equals("내림차순")) {
             direction = Direction.DESC;
         }
-        Pageable pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        List<WishListDTO> wishLists = wishListRepository.findAllByUserId(id).stream()
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageRequest = PageRequest.of(page, size, sort);
+        List<WishListDTO> wishLists = wishListRepository.findAllByUserId(id, sort).stream()
             .map(WishListDTO::fromWishList)
             .toList();
         int start = (int) pageRequest.getOffset();
