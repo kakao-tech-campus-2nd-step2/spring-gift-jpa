@@ -33,14 +33,12 @@ public class ProductController {
   public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
     ProductDto productDTO = productService.getProductById(id);
 
-    if (productDTO == null) {
-      return ResponseEntity.notFound().build();
-    }
     return ResponseEntity.ok(productDTO);
   }
 
   @PostMapping
   public ProductDto addProduct(@Valid @RequestBody ProductDto productDto) {
+
     return productService.addProduct(productDto);
   }
 
@@ -49,9 +47,7 @@ public class ProductController {
     @RequestBody ProductDto updatedProductDto) {
     ProductDto existingProductDto = productService.updateProduct(id,
       updatedProductDto);
-    if (existingProductDto == null) {
-      return ResponseEntity.notFound().build();
-    }
+
     return ResponseEntity.ok(updatedProductDto);
 
   }
@@ -59,6 +55,7 @@ public class ProductController {
   @DeleteMapping("/{id}")
   public ResponseEntity<ProductDto> deleteProduct(@PathVariable Long id) {
     ProductDto existingProductDto = productService.deleteProduct(id);
+
     return ResponseEntity.ok(existingProductDto);
   }
 }

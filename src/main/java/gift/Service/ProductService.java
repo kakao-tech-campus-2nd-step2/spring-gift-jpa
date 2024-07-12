@@ -4,9 +4,7 @@ import gift.ConverterToDto;
 import gift.DTO.Product;
 import gift.DTO.ProductDto;
 import gift.Repository.ProductRepository;
-import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -26,40 +24,43 @@ public class ProductService {
     List<ProductDto> productDtos = product.stream()
       .map(ConverterToDto::convertToProductDto)
       .collect(Collectors.toList());
+
     return productDtos;
   }
 
   public ProductDto getProductById(Long id) {
-    Optional<Product> productOptional = productRepository.findById(id);
+    Product product = (productRepository.findById(id)
+      .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다.", 1)));
 
-    // Optional에 ProductConverter::convertToDto를 직접 이용 못하므로, map 이용하여 entity 뽑아낸 후에
-    // 적용
-    return productOptional.map(ConverterToDto::convertToProductDto).get();
+    return ConverterToDto.convertToProductDto(product);
   }
 
-  public ProductDto addProduct(@Valid ProductDto productDto) {
+  public ProductDto addProduct(ProductDto productDto) {
     Product product = new Product(productDto.getId(), productDto.getName(),
       productDto.getPrice(), productDto.getImageUrl());
     productRepository.save(product);
+
     return productDto;
   }
 
-  public ProductDto updateProduct(Long id, @Valid ProductDto updatedProductDto) {
-    Optional<Product> existingProductOptional = productRepository.findById(id);
+  public ProductDto updateProduct(Long id, ProductDto updatedProductDto) {
+    Product existingProduct = productRepository.findById(id)
+      .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다.", 1));
     Product newProduct = new Product(id,
       updatedProductDto.getName(), updatedProductDto.getPrice(),
       updatedProductDto.getImageUrl());
     productRepository.deleteById(id);
     productRepository.save(newProduct);
-    return existingProductOptional.map(ConverterToDto::convertToProductDto).get();
+
+    return ConverterToDto.convertToProductDto(newProduct);
   }
 
   public ProductDto deleteProduct(@PathVariable Long id) {
-    Optional<Product> existingProductOptional = Optional.ofNullable(productRepository.findById(id)
-      .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1)));
+    Product existingProduct = productRepository.findById(id)
+      .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
     productRepository.deleteById(id);
 
-    return existingProductOptional.map(ConverterToDto::convertToProductDto).get();
+    return ConverterToDto.convertToProductDto(existingProduct);
   }
 
 }
