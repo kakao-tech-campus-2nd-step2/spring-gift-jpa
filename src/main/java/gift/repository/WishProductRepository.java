@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WishProductJpaRepository extends JpaRepository<WishProduct, Long> {
+public interface WishProductRepository extends JpaRepository<WishProduct, Long> {
 
     List<WishProduct> findByMemberId(Long memberId);
 
