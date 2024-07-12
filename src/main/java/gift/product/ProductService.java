@@ -19,15 +19,17 @@ public class ProductService {
     }
 
     public void addProduct(ProductDTO productDTO) {
-        productRepository.save(Product.fromProductDTO(productDTO));
+        productRepository.save(productDTO.toEntity());
     }
 
     public void updateProduct(long id, ProductDTO productDTO) {
-        if (!productRepository.existsById(id)) {
-            throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
-        }
-
-        productRepository.save(Product.fromProductIdAndProductDTO(id, productDTO));
+        productRepository.findById(id)
+            .ifPresentOrElse(
+                e -> productRepository.save(productDTO.toEntity(id)),
+                () -> {
+                    throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
+                }
+            );
     }
 
     public void deleteProduct(long id) {
