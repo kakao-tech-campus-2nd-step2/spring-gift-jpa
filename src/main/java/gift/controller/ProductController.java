@@ -1,14 +1,17 @@
 package gift.controller;
 
+import gift.dto.ProductDTO;
 import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import jdk.jfr.Description;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -21,31 +24,41 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @Description("get all products")
     @GetMapping("/products")
     public ResponseEntity<Collection<Product>> getProducts() {
-        return productService.selectAllProducts();
+        List<Product> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
     }
 
+    @Description("get product by id")
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") long id) {
-        return productService.selectProductById(id);
+        Product product = productService.getProduct(id);
+        return ResponseEntity.ok(product);
     }
 
-
+    @Description("add product : id는 자동 추가")
     @PostMapping("/products")
-    public ResponseEntity<String> addProduct(@RequestBody @Valid Product product) {
-        return productService.saveProduct(product);
+    public ResponseEntity<String> addProduct(@RequestBody @Valid ProductDTO productDTO) {
+        productService.saveProduct(productDTO);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Product added successfully");
     }
 
 
     @DeleteMapping("/products/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable long id) {
-        return productService.deleteProduct(id);
+        productService.deleteProduct(id);
+        return ResponseEntity.status(HttpStatus.
+                OK).body("Product deleted successfully");
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestBody @Valid Product updateProduct) {
-        return productService.updateProduct(id, updateProduct);
+    public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductDTO productDTO) {
+        productService.updateProduct(id, productDTO);
+        return ResponseEntity.status(HttpStatus.
+                OK).body("Product updated successfully");
     }
 
 }

@@ -1,5 +1,6 @@
 package gift.exceptionhandler;
 
+import gift.dto.ErrorResponse;
 import io.jsonwebtoken.JwtException;
 import jdk.jfr.Description;
 import org.springframework.dao.DataAccessException;
@@ -19,6 +20,13 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @Description("Product-service error")
+    @ExceptionHandler(value = ProductException.class)
+    public ResponseEntity<ErrorResponse> handleProductNotFound(ProductException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
 
     @Description("api exception")
     @ExceptionHandler(value = ApiException.class)

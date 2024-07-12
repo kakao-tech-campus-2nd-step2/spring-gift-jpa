@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.entity.LoginUser;
+import gift.dto.LoginUser;
 import gift.entity.Wish;
 import gift.service.LoginMember;
 import gift.service.WishService;

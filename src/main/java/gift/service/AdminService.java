@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.entity.Product;
-import gift.repository.JdbcProductRepository;
+import gift.repository.JpaProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +11,10 @@ import java.util.Optional;
 @Service
 public class AdminService {
 
-    private final JdbcProductRepository repository;
+    private final JpaProductRepository repository;
 
     @Autowired
-    public AdminService(JdbcProductRepository repository) {
+    public AdminService(JpaProductRepository repository) {
         this.repository = repository;
     }
 
