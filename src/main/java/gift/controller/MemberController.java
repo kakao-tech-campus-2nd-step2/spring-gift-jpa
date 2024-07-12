@@ -33,12 +33,8 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         LoginResponse loginResponse = memberService.login(loginRequest);
-        if (loginResponse.getToken() != null) {
-            return ResponseEntity.ok(loginResponse);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .header(AUTHENTICATE_HEADER, "Bearer")
-                    .body(loginResponse);
-        }
+        return ResponseEntity.status(loginResponse.getToken() != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED)
+                .header(AUTHENTICATE_HEADER, "Bearer")
+                .body(loginResponse);
     }
 }

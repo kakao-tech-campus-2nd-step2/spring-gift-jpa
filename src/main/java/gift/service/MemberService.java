@@ -35,7 +35,8 @@ public class MemberService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        Member member = findByEmail(loginRequest.getEmail());
+        Member member = memberRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new RuntimeException("일치하는 이메일이 없습니다."));
         if (member != null && member.getPassword().equals(loginRequest.getPassword())) {
             String token = jwtTokenProvider.generateToken(member);
             return new LoginResponse(token);
