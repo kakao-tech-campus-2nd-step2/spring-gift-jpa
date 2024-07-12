@@ -4,7 +4,7 @@ import gift.authentication.token.JwtProvider;
 import gift.authentication.token.Token;
 import gift.domain.Member;
 import gift.domain.vo.Email;
-import gift.repository.MemberJpaRepository;
+import gift.repository.MemberRepository;
 import gift.web.dto.request.LoginRequest;
 import gift.web.dto.request.member.CreateMemberRequest;
 import gift.web.dto.response.LoginResponse;
@@ -18,23 +18,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class MemberService {
 
-    private final MemberJpaRepository memberJpaRepository;
+    private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
 
-    public MemberService(MemberJpaRepository memberJpaRepository,
+    public MemberService(MemberRepository memberRepository,
         JwtProvider jwtProvider) {
-        this.memberJpaRepository = memberJpaRepository;
+        this.memberRepository = memberRepository;
         this.jwtProvider = jwtProvider;
     }
 
     @Transactional
     public CreateMemberResponse createMember(CreateMemberRequest request) {
         Member member = request.toEntity();
-        return CreateMemberResponse.fromEntity(memberJpaRepository.save(member));
+        return CreateMemberResponse.fromEntity(memberRepository.save(member));
     }
 
     public ReadMemberResponse readMember(Long id) {
-        Member member = memberJpaRepository.findById(id)
+        Member member = memberRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. id: " + id));
 
         return ReadMemberResponse.fromEntity(member);
@@ -42,7 +42,7 @@ public class MemberService {
 
     public LoginResponse login(LoginRequest request) {
         Email email = Email.from(request.getEmail());
-        Member member = memberJpaRepository.findByEmail(email).orElseThrow(IncorrectEmailException::new);
+        Member member = memberRepository.findByEmail(email).orElseThrow(IncorrectEmailException::new);
 
         member.matchPassword(request.getPassword());
 

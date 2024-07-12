@@ -1,20 +1,20 @@
 package gift.service;
 
-import gift.repository.MemberJpaRepository;
+import gift.repository.MemberRepository;
 import gift.web.dto.MemberDetails;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MemberDetailsService {
 
-    private final MemberJpaRepository memberJpaRepository;
+    private final MemberRepository memberRepository;
 
-    public MemberDetailsService(MemberJpaRepository memberJpaRepository) {
-        this.memberJpaRepository = memberJpaRepository;
+    public MemberDetailsService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     public MemberDetails loadUserById(Long id) {
-        return MemberDetails.from(memberJpaRepository.findById(id)
+        return MemberDetails.from(memberRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다. id: " + id)));
     }
 }

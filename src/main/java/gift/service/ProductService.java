@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.domain.Product;
-import gift.repository.ProductJpaRepository;
+import gift.repository.ProductRepository;
 import gift.web.dto.request.product.CreateProductRequest;
 import gift.web.dto.request.product.UpdateProductRequest;
 import gift.web.dto.response.product.CreateProductResponse;
@@ -17,26 +17,26 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class ProductService {
 
-    private final ProductJpaRepository productJpaRepository;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductJpaRepository productJpaRepository) {
-        this.productJpaRepository = productJpaRepository;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
     @Transactional
     public CreateProductResponse createProduct(CreateProductRequest request) {
         Product product = request.toEntity();
-        return CreateProductResponse.fromEntity(productJpaRepository.save(product));
+        return CreateProductResponse.fromEntity(productRepository.save(product));
     }
 
     public ReadProductResponse searchProduct(Long id) {
-        Product product = productJpaRepository.findById(id)
+        Product product = productRepository.findById(id)
             .orElseThrow(NoSuchElementException::new);
         return ReadProductResponse.fromEntity(product);
     }
 
     public ReadAllProductsResponse readAllProducts() {
-        List<ReadProductResponse> products = productJpaRepository.findAll()
+        List<ReadProductResponse> products = productRepository.findAll()
             .stream()
             .map(ReadProductResponse::fromEntity)
             .toList();
@@ -45,7 +45,7 @@ public class ProductService {
 
     @Transactional
     public UpdateProductResponse updateProduct(Long id, UpdateProductRequest request) {
-        Product product = productJpaRepository.findById(id)
+        Product product = productRepository.findById(id)
             .orElseThrow(NoSuchElementException::new);
 
         product.update(request);
@@ -54,6 +54,6 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(Long id) {
-        productJpaRepository.deleteById(id);
+        productRepository.deleteById(id);
     }
 }
