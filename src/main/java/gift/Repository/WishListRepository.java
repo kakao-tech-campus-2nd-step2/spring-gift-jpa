@@ -16,6 +16,4 @@ public interface WishListRepository extends JpaRepository<WishList, Long> {
     List<ResponseWishListDTO> findWishListsByEmail(@Param("email")String email);
     
     Optional<WishList> findByEmailAndProductId(String email, Long productId);
-
-    void deleteWishListByEmailAndProductId(String email, Long productId);
 }
