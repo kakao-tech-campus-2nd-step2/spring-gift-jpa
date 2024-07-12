@@ -2,6 +2,7 @@ package gift.product.domain;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,7 +18,7 @@ public class WishList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long userId;
-    @OneToMany(mappedBy = "wishList", cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "wishList", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
     private ArrayList<Product> products;
 
 
