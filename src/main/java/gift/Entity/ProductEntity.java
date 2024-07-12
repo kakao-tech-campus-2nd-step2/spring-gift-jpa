@@ -1,11 +1,9 @@
 package gift.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 public class ProductEntity {
@@ -20,6 +18,9 @@ public class ProductEntity {
     private String name;
     private int price;
     private String imageUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WishEntity> wishes;
 
     public ProductEntity(long l, String product1, double v) {}
 
@@ -62,5 +63,13 @@ public class ProductEntity {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public List<WishEntity> getWishes() {
+        return wishes;
+    }
+
+    public void setWishes(List<WishEntity> wishes) {
+        this.wishes = wishes;
     }
 }
