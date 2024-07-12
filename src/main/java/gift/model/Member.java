@@ -8,13 +8,13 @@ import java.util.Objects;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "EMAIL", unique = true)
+    @Column(name = "email", columnDefinition = "varchar(255) not null unique")
     private String email;
 
-    @Column(name = "PASSWORD")
+    @Column(name = "PASSWORD", columnDefinition = "varchar(255) not null")
     private String password;
 
     public Member(Long id, String email, String password){

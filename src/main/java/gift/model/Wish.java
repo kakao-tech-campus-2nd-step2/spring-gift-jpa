@@ -8,15 +8,15 @@ import java.util.Objects;
 public class Wish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "MEMBER_ID", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "member_id"), nullable = false)
     private Member member;
 
-    @ManyToOne
-    @JoinColumn(name = "PRODUCT_ID", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "product_id"), nullable = false)
     private Product product;
 
     public Wish(long id, Member member, Product product) {
