@@ -57,7 +57,7 @@
                             '</td>' +
                             '</tr>';
                     });
-                    $('#wishProducts').html(html);
+                    $('#productList').html(html);
                 },
                 error: function (error) {
                     alert(error);
@@ -72,7 +72,7 @@
             var productId = $(this).data('id');
             $.ajax({
                 type: 'DELETE',
-                url: '/spring-gift/wishlist/' + productId,
+                url: '/spring-gift/wishlist' + productId,
                 success: function (response) {
                     alert('상품을 삭제하였습니다.');
                     loadProducts();
