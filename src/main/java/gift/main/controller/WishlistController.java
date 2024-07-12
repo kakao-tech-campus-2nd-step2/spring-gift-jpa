@@ -1,7 +1,6 @@
 package gift.main.controller;
 
 import gift.main.annotation.SessionUser;
-import gift.main.dto.ProductResponce;
 import gift.main.dto.UserVo;
 import gift.main.entity.WishProduct;
 import gift.main.service.ProductService;
@@ -13,21 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/product")
-public class WishProductController {
+public class WishlistController {
 
     private final WishProductService wishProductService;
     private final ProductService productService;
 
-    public WishProductController(WishProductService wishProductService, ProductService productService) {
+    public WishlistController(WishProductService wishProductService, ProductService productService) {
         this.wishProductService = wishProductService;
         this.productService = productService;
-    }
-
-    @GetMapping
-    public ResponseEntity<?> getProducts() {
-        List<ProductResponce> products = productService.getProducts();
-        return ResponseEntity.ok(products);
     }
 
     @DeleteMapping("/wishlist/{productId}")
@@ -37,7 +29,7 @@ public class WishProductController {
         return ResponseEntity.ok("successfully deleted the item to your wishlist");
     }
 
-    @GetMapping("/wishlist")
+    @GetMapping("/wishlists")
     public ResponseEntity<?> getWishProduct(@SessionUser UserVo sessionUser) {
         List<WishProduct> wishProducts = wishProductService.getWishProducts(sessionUser.getId());
         return ResponseEntity.ok(wishProducts);
