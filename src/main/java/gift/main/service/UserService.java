@@ -30,6 +30,7 @@ public class UserService {
             throw new CustomException(ErrorCode.ALREADY_EMAIL);
         }
         User userdto = new User(userJoinRequest);
+
         User user = userRepository.save(userdto);
         return jwtUtil.createToken(user);
 

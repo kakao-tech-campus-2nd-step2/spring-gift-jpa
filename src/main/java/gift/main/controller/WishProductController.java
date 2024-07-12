@@ -3,6 +3,7 @@ package gift.main.controller;
 import gift.main.annotation.SessionUser;
 import gift.main.dto.ProductResponce;
 import gift.main.dto.UserVo;
+import gift.main.entity.Product;
 import gift.main.entity.WishProduct;
 import gift.main.service.ProductService;
 import gift.main.service.WishProductService;
@@ -40,8 +41,7 @@ public class WishProductController {
     @GetMapping("/wishlist")
     public ResponseEntity<?> getWishProduct(@SessionUser UserVo sessionUser) {
         List<WishProduct> wishProducts = wishProductService.getWishProducts(sessionUser.getId());
-        return ResponseEntity.ok(wishProducts);
-    }
+        return ResponseEntity.ok(wishProducts);    }
 
     @Transactional
     @PostMapping("/wishlist/{productId}")

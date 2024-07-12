@@ -8,5 +8,4 @@ public record ProductRequest(
         @IsValidName String name,
         @PositiveOrZero(message = "상품 가격은 음수일 수 없습니다.") int price,
         @NotBlank(message = "이미지주소를 등록해주세요.") String imageUrl) {
-
 }
