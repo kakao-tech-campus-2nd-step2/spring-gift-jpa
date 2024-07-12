@@ -10,26 +10,26 @@ public class WishlistItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @ManyToOne
+    @JoinColumn(name = "member", nullable = false)
+    private Member member;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product", nullable = false)
+    private Product product;
 
-    public WishlistItem(Long id, Long memberId, Long productId) {
+    public WishlistItem(Long id, Member member, Product product) {
         this.id = id;
-        this.memberId = memberId;
-        this.productId = productId;
+        this.member = member;
+        this.product = product;
     }
 
-    public WishlistItem(Long memberId, Long productId) {
-        this.memberId = memberId;
-        this.productId = productId;
+    public WishlistItem(Member member, Product product) {
+        this.member = member;
+        this.product = product;
     }
 
-    public WishlistItem() {
-
-    }
+    public WishlistItem() { }
 
     public Long getId() {
         return id;
@@ -39,19 +39,19 @@ public class WishlistItem {
         this.id = id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

@@ -4,6 +4,8 @@ package gift.domain;
 import gift.dto.request.ProductRequest;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "product")
 public class Product {
@@ -20,14 +22,10 @@ public class Product {
     @Column(nullable = false, name = "image_url")
     private String imageUrl;
 
-    public Product(){}
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WishlistItem> wishlistItems;
 
-    public Product(long id, String name, Integer price, String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
+    public Product() { }
 
 
     public Product(String name, Integer price, String imageUrl) {
@@ -36,32 +34,40 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public long getId(){
+    public long getId() {
         return id;
     }
-    public void setId(long id){
-        this.id = id;
-    }
-    public String getName(){
+
+    public String getName() {
         return name;
     }
-    public void setName(String name){
+
+    public void setName(String name) {
         this.name = name;
     }
-    public Integer getPrice(){
+
+    public Integer getPrice() {
         return price;
     }
-    public void setPrice(Integer price){
+
+    public void setPrice(Integer price) {
         this.price = price;
     }
-    public String getImageUrl(){
+
+    public String getImageUrl() {
         return imageUrl;
     }
-    public void setImageUrl(String imageUrl){
+
+    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
-    public static Product RequestToEntity(ProductRequest productRequest){
+    public List<WishlistItem> getWishlistItems() {
+        return wishlistItems;
+    }
+
+
+    public static Product RequestToEntity(ProductRequest productRequest) {
         return new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
     }
 }
