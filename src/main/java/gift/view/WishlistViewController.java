@@ -44,8 +44,10 @@ public class WishlistViewController {
     }
 
     @GetMapping("{id}")
-    public String showWishlist(@PathVariable("id") Long userId, Model model) {
-        List<WishlistItem> wishlists = wishlistController.getWishlist(userId).getBody();
+    public String showWishlist(@PathVariable("id") Long userId, Model model,
+                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "10") int size) {
+        Page<WishlistItem> wishlists = wishlistController.getWishlist(userId, page, size).getBody();
         model.addAttribute("wishlists", wishlists);
         model.addAttribute("id", userId);
         return "wishlist";
@@ -73,7 +75,6 @@ public class WishlistViewController {
             wishlistItem.setProduct(productService.getProductById(productId).get());
 
             wishlistItem.setAmount(wishlistDTO.getAmount());
-
             wishlistItemList.add(wishlistItem);
         }
         wishlistService.saveWishlistItems(wishlistItemList);
