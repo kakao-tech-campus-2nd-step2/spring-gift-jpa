@@ -44,9 +44,6 @@ public class WishListController {
         Claims claims = jwtUtil.extractAllClaims(token);
         Number memberId = (Number) claims.get("id");
 
-        System.out.println(claims);
-        System.out.println(memberId);
-
         if (page != null && size != null) {
             //쿼리 파라미터로 page와 size가 들어온 경우 페이지 네이션 서비스
             Page<WishList> wishLists = wishListService.getWishListItems(memberId.longValue(), page, size);
