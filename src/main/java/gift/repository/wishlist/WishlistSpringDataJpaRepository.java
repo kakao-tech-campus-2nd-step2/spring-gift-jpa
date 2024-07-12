@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface WishlistSpringDataJpaRepository extends JpaRepository<WishlistItem, Long> {
     List<WishlistItem> findByMemberId(Long memberId);
+    void deleteByMemberIdAndProductId(Long memberId, Long productId);
 }

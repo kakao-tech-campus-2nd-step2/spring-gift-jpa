@@ -8,6 +8,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -17,17 +18,18 @@ import java.nio.charset.StandardCharsets;
 public class TokenService {
 
     private final TokenSpringDataJpaRepository tokenRepository;
-    private final String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
+    private final SecretKey secretKey;
 
-    public TokenService(TokenSpringDataJpaRepository tokenRepository) {
+    public TokenService(TokenSpringDataJpaRepository tokenRepository, @Value("${jwt.secretKey}") String secretKey) {
         this.tokenRepository = tokenRepository;
+        this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
     public String saveToken(Member member) {
         String accessToken = Jwts.builder()
                 .setSubject(member.getId().toString())
                 .claim("email", member.getEmail())
-                .signWith(getSecretKey())
+                .signWith(secretKey)
                 .compact();
         return tokenRepository.save(new TokenAuth(accessToken, member)).getToken();
     }
@@ -43,13 +45,9 @@ public class TokenService {
     }
 
     public Claims parseToken(String token) {
-        SecretKey key = getSecretKey();
-        JwtParser parser = (JwtParser) Jwts.parser().setSigningKey(key);
+        JwtParser parser = (JwtParser) Jwts.parser().setSigningKey(secretKey);
         return parser.parseClaimsJws(token).getBody();
     }
-
-    private SecretKey getSecretKey() {
-        return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-    }
+    
 }
 
