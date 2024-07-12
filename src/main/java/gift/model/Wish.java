@@ -30,7 +30,7 @@ public class Wish {
         this.product = product;
     }
 
-    public Wish() {
+    protected Wish() {
     }
 
     public long getId() {

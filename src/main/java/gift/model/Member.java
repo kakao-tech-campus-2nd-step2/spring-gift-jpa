@@ -28,7 +28,7 @@ public class Member {
         this.password = password;
     }
 
-    public Member() {
+    protected Member() {
     }
 
     public Long getId() {

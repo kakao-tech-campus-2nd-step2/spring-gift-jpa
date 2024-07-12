@@ -46,7 +46,7 @@ public class Product {
         return this;
     }
 
-    public Product() {
+    protected Product() {
     }
 
     public String getImageUrl() {
