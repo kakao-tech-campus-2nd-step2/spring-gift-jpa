@@ -13,8 +13,6 @@ public class ProductDto {
     private int price;
     private String imageUrl;
 
-    public ProductDto() {}
-
     public int getPrice() {
         return price;
     }

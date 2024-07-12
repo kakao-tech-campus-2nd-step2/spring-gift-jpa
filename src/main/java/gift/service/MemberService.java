@@ -25,7 +25,7 @@ public class MemberService {
                 .ifPresent(existingMember -> {
                     throw new DuplicateKeyException("이미 존재하는 이메일입니다.");
                 });
-        Member member = new Member(null, memberDto.getEmail(), memberDto.getPassword(), null);
+        Member member = new Member(memberDto.getEmail(), memberDto.getPassword());
         Member savedMember = memberRepository.save(member);
         String token = JwtUtility.generateToken(savedMember.getEmail());
         Member updatedMember = new Member(savedMember, token);
@@ -48,7 +48,7 @@ public class MemberService {
     public void logout(String token) {
         Member member = memberRepository.findByActiveToken(token)
                 .orElseThrow(() -> new NoSuchElementException("유효하지 않은 토큰입니다."));
-        Member updatedMember = new Member(member, null);
+        Member updatedMember = new Member(member);
         memberRepository.save(updatedMember);
         tokenBlacklist.add(token);
     }

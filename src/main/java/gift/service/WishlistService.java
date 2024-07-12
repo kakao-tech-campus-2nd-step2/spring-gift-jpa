@@ -35,7 +35,7 @@ public class WishlistService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
-        Wishlist wishlist = new Wishlist(null, member, product);
+        Wishlist wishlist = new Wishlist(member, product);
         wishlistRepository.save(wishlist);
     }
 

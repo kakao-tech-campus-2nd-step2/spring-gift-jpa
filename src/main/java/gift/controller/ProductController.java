@@ -47,7 +47,7 @@ public class ProductController {
 
     @PostMapping("/add")
     public String addProduct(@ModelAttribute @Valid ProductDto productDto) {
-        Product product = new Product(null, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+        Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
         productService.addProduct(product);
         return "redirect:/api/products";
     }

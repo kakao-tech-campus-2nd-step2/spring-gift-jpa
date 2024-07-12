@@ -36,6 +36,17 @@ public class Member {
         this.activeToken = activeToken;
     }
 
+    public Member(Member member) {
+        this.id = member.id;
+        this.email = member.email;
+        this.password = member.password;
+    }
+
+    public Member(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public Long getId() {
         return id;
     }

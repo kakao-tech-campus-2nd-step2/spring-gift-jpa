@@ -9,7 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 
 @Entity
-@Table(name = "wish_lists")
+@Table(name = "wishlists")
 public class Wishlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +25,11 @@ public class Wishlist {
 
     public Wishlist(Long id, Member member, Product product) {
         this.id = id;
+        this.member = member;
+        this.product = product;
+    }
+
+    public Wishlist(Member member, Product product) {
         this.member = member;
         this.product = product;
     }
