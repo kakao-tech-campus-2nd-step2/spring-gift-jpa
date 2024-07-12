@@ -29,15 +29,12 @@ public class ProductService {
     }
 
     public Product putProduct(Long id, ProductRequestDto productRequestDto) {
-        Optional<Product> product = productRepository.findById(id);
-        if (product.isPresent()) {
-            Product pd = product.get();
-            pd.update(productRequestDto.name(), productRequestDto.price(), productRequestDto.url());
+        Product product = productRepository.findById(id)
+            .orElseThrow(() -> new InvalidProduct("유효하지 않은 상품입니다"));
 
-            return pd;
-        } else {
-            throw new InvalidProduct("유효하지 않은 상품입니다");
-        }
+        product.update(productRequestDto.name(), productRequestDto.price(), productRequestDto.url());
+
+        return product;
     }
 
     public HttpEntity<String> deleteProductById(Long id) {
