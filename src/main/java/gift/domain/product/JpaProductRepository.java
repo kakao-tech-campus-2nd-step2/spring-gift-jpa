@@ -14,7 +14,6 @@ public interface JpaProductRepository extends JpaRepository<Product, Long> {
     boolean existsByName(String name);
 
     @Transactional
-    @Modifying
     void deleteAllByIdIn(List<Long> productIds);
 
     List<Product> findAll();

@@ -48,18 +48,7 @@ public class ProductService {
     }
 
     /**
-     * 전체 싱픔 목록 조회
-     */
-    public List<Product> getProducts() {
-        List<Product> products = productRepository.findAll();
-        System.out.println("products = " + products);
-
-        return products;
-    }
-
-
-    /**
-     * 전체 싱픔 목록 조회 - 페이징(매개변수별)
+     * 전체 싱픔 목록 조회 - 페이징
      */
     public Page<Product> getProductsByPageAndSort(int page, int size, Sort sort) {
         PageRequest pageRequest = PageRequest.of(page, size, sort);

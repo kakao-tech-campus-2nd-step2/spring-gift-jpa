@@ -43,20 +43,9 @@ public class ProductController {
     }
 
     /**
-     * 전체 상품 조회 - 페이징 X
+     * 전체 상품 조회 - 페이징
      */
     @GetMapping
-    public ResponseEntity<ResultResponseDto<List<Product>>> getProducts() {
-        List<Product> products = productService.getProducts();
-        // 성공 시
-        return ResponseMaker.createResponse(HttpStatus.OK, "전체 목록 상품을 조회했습니다.", products);
-    }
-
-
-    /**
-     * 전체 상품 조회 - 페이징(매개변수별)
-     */
-    @GetMapping(params = {"page"})
     public ResponseEntity<ResultResponseDto<Page<Product>>> getProductsByPageAndSort(
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "sort", defaultValue = "id_asc") String sort
