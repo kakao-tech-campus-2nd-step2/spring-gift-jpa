@@ -20,14 +20,6 @@ public class ProductRepositoryTest {
     @Autowired
     private ProductRepository products;
 
-    @BeforeEach
-    void setUp(){
-        products.deleteAll();
-        products.save(new Product("Product1", 1000, "1.img"));
-        products.save(new Product("Product2", 5000, "2.img"));
-        products.save(new Product("Product3", 15000, "3.img"));
-    }
-
     @DisplayName("새로운 상품 저장")
     @Test
     void save(){
@@ -39,6 +31,9 @@ public class ProductRepositoryTest {
     @DisplayName("모든 상품 리스트 반환")
     @Test
     void getAllProduct(){
+        products.save(new Product("Product1", 1000, "1.img"));
+        products.save(new Product("Product2", 5000, "2.img"));
+        products.save(new Product("Product3", 15000, "3.img"));
         List<Product> actual = products.findAll();
         List<Product> expected = List.of(new Product("Product1", 1000, "1.img"),
                 new Product("Product2", 5000, "2.img"),
@@ -50,6 +45,7 @@ public class ProductRepositoryTest {
     @Test
     void getProductByName(){
         Product expected = new Product("Product1", 1000, "1.img");
+        products.save(expected);
         Product actual = products.findByName("Product1").orElseThrow();
         assertThat(actual).isEqualTo(expected);
     }
@@ -57,6 +53,7 @@ public class ProductRepositoryTest {
     @DisplayName("ID로 상품 반환")
     @Test
     void getProductByID(){
+        products.save(new Product("Product1", 1000, "1.img"));
         Product expected = products.findByName("Product1").orElseThrow();
         Product actual = products.findById(expected.getId()).orElseThrow();
         assertThat(actual).isEqualTo(expected);
@@ -65,6 +62,7 @@ public class ProductRepositoryTest {
     @DisplayName("ID로 상품 삭제")
     @Test
     void deleteByID(){
+        products.save(new Product("Product1", 1000, "1.img"));
         Product product = products.findByName("Product1").orElseThrow();
         products.deleteById(product.getId());
         assertThat(products.existsById(product.getId())).isFalse();

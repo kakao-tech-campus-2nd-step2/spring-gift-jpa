@@ -14,11 +14,6 @@ public class MemberRepositoryTest {
     @Autowired
     private MemberRepository members;
 
-    @BeforeEach
-    void setUp(){
-        members.deleteAll();
-    }
-
     @DisplayName("member 저장")
     @Test
     void save(){
