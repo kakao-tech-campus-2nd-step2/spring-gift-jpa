@@ -77,7 +77,8 @@
             var productId = $(this).data('id');
             $.ajax({
                 type: 'POST',
-                url: '/spring-gift/wishlist' + productId,
+                url: '/spring-gift/wishlist/' + productId,
+                ///spring-gift/wishlist
                 success: function (response) {
                     alert('상품이 위시리스트에 담겼습니다.');
                     loadProducts();
