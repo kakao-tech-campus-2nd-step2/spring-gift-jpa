@@ -42,7 +42,7 @@ public class WebProductController {
     }
 
     @GetMapping("/showUpdateProducts/{id}")
-    public String showUpdateProducts(@PathVariable(value = "id") long id, Model model) {
+    public String showUpdateProducts(@PathVariable(value = "id") Long id, Model model) {
         Optional<Product> product = productService.findById(id);
         if (product.isEmpty()) {
             return "redirect:/products";
@@ -52,7 +52,7 @@ public class WebProductController {
     }
 
     @GetMapping("/deleteProduct/{id}")
-    public String deleteProduct(@PathVariable long id) {
+    public String deleteProduct(@PathVariable Long id) {
         if (productService.findById(id).isEmpty()) {
             return "redirect:/products";
         }

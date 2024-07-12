@@ -32,7 +32,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProduct(@PathVariable long id) {
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long id) {
         Optional<Product> product = productService.findById(id);
         if (product.isPresent()) {
             ProductResponse productResponse = ProductResponse.from(product.get());
@@ -51,7 +51,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable long id,
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id,
         @Valid @RequestBody ProductRequest updatedProductRequest) {
         if (!productService.findById(id).isPresent()) {
             return ResponseEntity.status(204).build();
@@ -64,7 +64,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         if (!productService.findById(id).isPresent()) {
             return ResponseEntity.status(204).build();
         }

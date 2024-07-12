@@ -4,23 +4,23 @@ import gift.product.model.Product;
 
 public class ProductResponse {
 
-    private long id;
+    private Long id;
     private String name;
     private int price;
     private String imgUrl;
 
-    public ProductResponse(long id, String name, int price, String imgUrl) {
+    public ProductResponse(Long id, String name, int price, String imgUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

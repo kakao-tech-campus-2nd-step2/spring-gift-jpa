@@ -26,7 +26,7 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Optional<Product> findById(long id) {
+    public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
     }
 
@@ -35,7 +35,7 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         productRepository.deleteById(id);
     }
 
