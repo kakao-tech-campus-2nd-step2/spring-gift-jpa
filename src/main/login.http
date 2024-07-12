@@ -1,0 +1,90 @@
+### GET request to example server
+POST /members/register HTTP/1.1
+content-type: application/json
+host: localhost:8080
+
+{
+  "email": "admin8@email.com",
+  "password": "passwrod",
+  "name": "Admin8",
+  "role": "admin8"
+}
+###
+POST /members/login HTTP/1.1
+content-type: application/json
+host: localhost:8080
+
+{
+  "email": "admin8@email.com",
+  "password": "passwrod"
+}
+###
+POST /wishlist/add HTTP/1.1
+Authorization: Bearer POST /wishlist/add HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwibmFtZSI6IkFkbWluOCIsInJvbGUiOiJhZG1pbjgiLCJpYXQiOjE3MjA0MTI0ODYsImV4cCI6MTcyMDQxNDg4Nn0.YSAzqbqUqY27iCG7SiV56twqjZ4o8_8cikvthVT_72w
+content-type: application/json
+host: localhost:8080
+
+{
+  "member_id": 74,
+  "product_id": 77,
+  "product_name": "아메리카노",
+  "product_price": 10003
+}
+####
+POST /wishlist/add HTTP/1.1
+Authorization: Bearer POST /wishlist/add HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwibmFtZSI6IkFkbWluOCIsInJvbGUiOiJhZG1pbjgiLCJpYXQiOjE3MjA0MTI0ODYsImV4cCI6MTcyMDQxNDg4Nn0.YSAzqbqUqY27iCG7SiV56twqjZ4o8_8cikvthVT_72w
+content-type: application/json
+host: localhost:8080
+
+{
+  "member_id": 75,
+  "product_id": 78,
+  "product_name": "라떼",
+  "product_price": 0
+}
+####
+POST /wishlist/add HTTP/1.1
+Authorization: Bearer POST /wishlist/add HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwibmFtZSI6IkFkbWluOCIsInJvbGUiOiJhZG1pbjgiLCJpYXQiOjE3MjAyODk0NzUsImV4cCI6MTcyMDI5MTg3NX0.szKqd0WCaBlkF-fNi2LMkU6wvdyn-y5APpI3Ed9omYk
+content-type: application/json
+host: localhost:8080
+
+{
+  "member_id": 74,
+  "product_id": 77,
+  "product_name": "아메리가",
+  "product_price": 10003
+}
+####
+content-type: application/json
+host: localhost:8080
+
+{
+  "member_id": 74,
+  "product_id": 77,
+  "product_name": "아메리가",
+  "product_price": 10003
+}
+####
+# @no-redirect
+GET /wishlist/items HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwibmFtZSI6IkFkbWluOCIsInJvbGUiOiJhZG1pbjgiLCJpYXQiOjE3MjA0MTI0ODYsImV4cCI6MTcyMDQxNDg4Nn0.YSAzqbqUqY27iCG7SiV56twqjZ4o8_8cikvthVT_72w
+content-type: application/json
+host: localhost:8080
+
+{
+
+}
+#######
+
+DELETE /wishlist/delete/1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwibmFtZSI6IkFkbWluOCIsInJvbGUiOiJhZG1pbjgiLCJpYXQiOjE3MjAyODk0NzUsImV4cCI6MTcyMDI5MTg3NX0.szKqd0WCaBlkF-fNi2LMkU6wvdyn-y5APpI3Ed9omYk
+content-type: application/json
+host: localhost:8080
+
+{
+
+}
+###
