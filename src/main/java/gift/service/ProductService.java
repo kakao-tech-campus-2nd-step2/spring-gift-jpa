@@ -7,7 +7,8 @@ import gift.entity.Product;
 import gift.exception.product.ProductNotFoundException;
 import gift.repository.ProductRepository;
 import gift.util.mapper.ProductMapper;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,11 +20,9 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-            .map(ProductMapper::toResponse)
-            .toList();
+    public Page<ProductResponse> getAllProducts(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.map(ProductMapper::toResponse);
     }
 
     public Product getProductById(Long id) {
