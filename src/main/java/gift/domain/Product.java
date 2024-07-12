@@ -1,28 +1,35 @@
 package gift.domain;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class Product {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    @Column(nullable = false)
-    String name;
-    @Column(nullable = false)
-    Long price;
-    String imageUrl;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    public Product() {}
+    @Column(nullable = false)
+    private String name;
 
-    public Product(Long id, String name, Long price, String imageUrl) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    @Column(nullable = false)
+    private Long price;
+
+    private String imageUrl;
+
+    @OneToMany(mappedBy = "product",  cascade = CascadeType.REMOVE)
+    private List<Wish> wishes = new LinkedList<>();
+
+    public Product() {
     }
 
     public Product(String name, Long price, String imageUrl) {
@@ -31,27 +38,30 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
-    public void setId(Long id) {
-        this.id = id;
-    }
+
     public String getName() {
         return name;
     }
-    public void setName(String name) {
-        this.name = name;
-    }
+
     public Long getPrice() {
         return price;
     }
-    public void setPrice(Long price) {
-        this.price = price;
-    }
+
     public String getImageUrl() {
         return imageUrl;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
+    }
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
