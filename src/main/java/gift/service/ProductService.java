@@ -7,7 +7,8 @@ import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,16 +16,13 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    public List<ProductDTO> findAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-            .map(ProductConverter::convertToDTO)
-            .collect(Collectors.toList());
+    public Page<ProductDTO> findAllProducts(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.map(ProductConverter::convertToDTO);
     }
 
     public Long addProduct(ProductDTO productDTO) {

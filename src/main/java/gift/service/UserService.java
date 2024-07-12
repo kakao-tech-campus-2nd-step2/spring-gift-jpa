@@ -6,7 +6,6 @@ import gift.dto.UserDTO;
 import gift.model.User;
 import gift.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.security.Keys;
