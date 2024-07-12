@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>상품정보 수정</h1>
-<form action="#" th:action="@{/api/products/update/{id}(id=${productDTO.id})}" th:object="${productDTO}" method="post">
+<form action="#" th:action="@{/products/update/{id}(id=${productDTO.id})}" th:object="${productDTO}" method="post">
   <label>이름: <input type="text" th:field="*{name}" /></label></br>
   <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
   <label>가격: <input type="number" th:field="*{price}" /></label><br>
@@ -15,6 +15,6 @@
   <div th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}">imageUrl Error</div>
   <button type="submit">수정하기</button>
 </form>
-<a href="/api/products">돌아가기</a>
+<a href="/products">돌아가기</a>
 </body>
 </html>
