@@ -7,7 +7,8 @@ import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +33,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
+    public ResponseEntity<Page<ProductResponse>> getAllProducts(Pageable pageable) {
         try {
-            List<ProductResponse> products = productService.getAllProducts();
+            Page<ProductResponse> products = productService.getAllProducts(pageable);
             return ResponseEntity.ok(products);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -55,14 +56,14 @@ public class ProductController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity updateProduct(@PathVariable Long id, @RequestBody @Valid
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody @Valid
     UpdateProductRequest request) {
         productService.updateProduct(id, request);
         return ResponseEntity.ok(null);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok(null);
     }

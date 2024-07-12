@@ -3,7 +3,8 @@ package gift.controller;
 import gift.dto.product.ProductResponse;
 import gift.entity.Product;
 import gift.service.ProductService;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +22,11 @@ public class ProductViewController {
     }
 
     @GetMapping
-    public String products(Model model) {
-        List<ProductResponse> products = productService.getAllProducts();
+    public String products(Pageable pageable, Model model) {
+        Page<ProductResponse> products = productService.getAllProducts(pageable);
 
-        model.addAttribute("products", products);
+        model.addAttribute("productPage", products);
+        model.addAttribute("maxPage", 10);
         return "product_list";
     }
 

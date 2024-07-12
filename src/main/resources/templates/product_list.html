@@ -17,7 +17,7 @@
   </tr>
   </thead>
   <tbody th:remove="all-but-first">
-  <tr th:each="product : ${products}">
+  <tr th:each="product : ${productPage}">
     <td class="productId" th:text="${product.id}">1</td>
     <td class="productName" th:text="${product.name}">테스트 상품 이름</td>
     <td class="productPrice" th:text="${product.price}">12345</td>
@@ -52,6 +52,29 @@
   </tr>
   </tbody>
 </table>
+
+<nav style="text-align: center;">
+  <ul class="pagination"
+      th:with="start=${(productPage.number/maxPage) * maxPage + 1}, end=(${(productPage.totalPages == 0) ? 1 : (start + (maxPage - 1) < productPage.totalPages ? start + (maxPage - 1) : productPage.totalPages)})">
+    <li th:if="${start > 1}">
+      <a th:href="@{/products(page=0)}" th:text="'<<'"></a>
+    </li>
+    <li th:if="${start > 1}">
+      <a th:href="@{/products(page=${start - maxPage})}" th:text="'<'"></a>
+    </li>
+
+    <li th:each="page: ${#numbers.sequence(start, end)}">
+      <a th:text="${page}" th:href="@{/products(page=${page - 1})}"></a>
+    </li>
+
+    <li th:if="${end < productPage.totalPages}">
+      <a th:href="@{/products(page=${start + maxPage})}" th:text="'>'"></a>
+    </li>
+    <li th:if="${end < productPage.totalPages}">
+      <a th:href="@{/products(page=${productPage.totalPages - 1})}" th:text="'>>'"></a>
+    </li>
+  </ul>
+</nav>
 
 <script>
   document.querySelectorAll('.delete-button').forEach(button => {
