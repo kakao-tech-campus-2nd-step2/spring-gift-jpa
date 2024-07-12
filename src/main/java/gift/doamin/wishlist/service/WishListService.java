@@ -1,5 +1,8 @@
 package gift.doamin.wishlist.service;
 
+import gift.doamin.product.entity.Product;
+import gift.doamin.product.exception.ProductNotFoundException;
+import gift.doamin.product.repository.JpaProductRepository;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.exception.UserNotFoundException;
 import gift.doamin.user.repository.JpaUserRepository;
@@ -18,11 +21,16 @@ public class WishListService {
 
     private final JpaWishListRepository wishListRepository;
     private final JpaUserRepository jpaUserRepository;
+    private final JpaProductRepository productRepository;
+    private final JpaProductRepository jpaProductRepository;
 
     public WishListService(JpaWishListRepository wishListRepository,
-        JpaUserRepository jpaUserRepository) {
+        JpaUserRepository jpaUserRepository, JpaProductRepository productRepository,
+        JpaProductRepository jpaProductRepository) {
         this.wishListRepository = wishListRepository;
         this.jpaUserRepository = jpaUserRepository;
+        this.productRepository = productRepository;
+        this.jpaProductRepository = jpaProductRepository;
     }
 
     public void create(Long userId, WishForm wishForm) {
@@ -36,10 +44,10 @@ public class WishListService {
         }
 
         User user = jpaUserRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        Product product = productRepository.findById(productId).orElseThrow(
+            ProductNotFoundException::new);
 
-        var wishList = new Wish(user, wishForm.getProductId(),
-            wishForm.getQuantity());
-        wishListRepository.save(wishList);
+        wishListRepository.save(new Wish(user, product, wishForm.getQuantity()));
     }
 
     public List<WishParam> read(Long userId) {

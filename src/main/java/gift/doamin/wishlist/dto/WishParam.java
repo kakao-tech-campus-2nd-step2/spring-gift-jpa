@@ -8,7 +8,7 @@ public class WishParam {
     private Integer quantity;
 
     public WishParam(Wish wish) {
-        this.productId = wish.getProductId();
+        this.productId = wish.getProduct().getId();
         this.quantity = wish.getQuantity();
     }
 
