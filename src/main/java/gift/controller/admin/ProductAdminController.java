@@ -4,6 +4,8 @@ import gift.dto.request.ProductRequest;
 import gift.dto.response.ProductResponse;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +25,8 @@ public class ProductAdminController {
     }
 
     @GetMapping("/")
-    public String getProducts(Model model) {
-        model.addAttribute("products", productService.getProductResponses());
+    public String getProducts(Model model, @PageableDefault(sort = "id") Pageable pageable) {
+        model.addAttribute("products", productService.getProductResponses(pageable));
         return "version-SSR/index";
     }
 
