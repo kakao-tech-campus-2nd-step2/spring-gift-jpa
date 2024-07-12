@@ -27,9 +27,10 @@ public class WishListController {
     }
 
     @GetMapping("api/wishlist")
-    public Page<WishProductResponse> getWishProducts(@MemberId Long memberId,
-                                                     @PageableDefault(sort = "productId") Pageable pageable) {
-        return wishListService.getWishProductsByMemberId(memberId, pageable);
+    public ResponseEntity<Page<WishProductResponse>> getWishProducts(@MemberId Long memberId,
+                                                                     @PageableDefault(sort = "productId") Pageable pageable) {
+        Page<WishProductResponse> wishProducts = wishListService.getWishProductsByMemberId(memberId, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(wishProducts);
     }
 
     @PutMapping("api/wishlist")
