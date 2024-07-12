@@ -14,8 +14,8 @@ public class WishService {
     @Autowired
     private WishRepository wishRepository;
 
-    public void save(Wish wish) {
-        wishRepository.save(wish);
+    public Wish save(Wish wish) {
+        return wishRepository.save(wish);
     }
 
     public List<Wish> findByMember(Member member) {
