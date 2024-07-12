@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,8 +26,10 @@ public class WishController {
     }
 
     @GetMapping
-    public List<WishResponseDto> getWishList(@LoginMember LoginMemberDto loginMemberDto) {
-        return wishService.getWishList(loginMemberDto);
+    public List<WishResponseDto> getWishList(@LoginMember LoginMemberDto loginMemberDto,
+        @RequestParam(required = false, defaultValue = "0", value = "pageNo") int pageNo,
+        @RequestParam(required = false, defaultValue = "product", value = "criteria") String criteria) {
+        return wishService.getWishList(loginMemberDto, pageNo, criteria);
     }
 
     @PostMapping
