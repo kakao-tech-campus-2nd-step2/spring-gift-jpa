@@ -1,5 +1,6 @@
 package gift.service;
 
+import ch.qos.logback.classic.spi.IThrowableProxy;
 import gift.model.CreateJwtToken;
 import gift.model.Member;
 import gift.repository.MemberRepository;
@@ -27,26 +28,32 @@ public class MemberService {
             memberRepository.save(member);
             return createJwtToken.createJwt(member.getId(), member.getEmail());
         }
-        else {
-            throw new IllegalArgumentException("이미 가입한 이메일 입니다.");
-        }
+        throw new IllegalArgumentException("이미 가입한 이메일 입니다.");
     }
 
-    public String login(Member member) throws IllegalAccessException {
-        if(!memberRepository.existsByEmail(member.getEmail())){
-            throw new IllegalAccessException("이메일을 확인해주세요.");
-        }
-        Member loginMember = memberRepository.findByEmail(member.getEmail());
-        return getTokenWhenCorrectPW(loginMember, member);
-    }
-
-    private String getTokenWhenCorrectPW(Member member, Member inputMember) throws IllegalAccessException {
-        if(member.equals(inputMember)){
+    public String login(Member member) {
+        //1. 이메일 확인
+        Member loginMember = comfirmEmail(member.getEmail());
+        //2. 패스워드 확인
+        if(comfirmPW(member, loginMember)){
+            //3. 토큰 발급
             return createJwtToken.createJwt(member.getId(), member.getEmail());
         }
-        else {
-            throw new IllegalAccessException("비밀번호가 일치하지 않습니다.");
+        throw new IllegalStateException("로그인에 실패했습니다.");
+    }
+
+    private Member comfirmEmail(String email){
+        if(!memberRepository.existsByEmail(email)){
+            throw new IllegalStateException("이메일을 확인해주세요.");
         }
+        return memberRepository.findByEmail(email);
+    }
+
+    private boolean comfirmPW(Member member, Member inputMember){
+        if(member.equals(inputMember)){
+            return true;
+        }
+        throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
     }
 
     // 토큰으로 멤버 id 가져옴

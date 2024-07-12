@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
 
     //로그인, 실패
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    @ExceptionHandler(IllegalAccessException.class)
-    public String handleIllegalAccessException(IllegalAccessException e) {
+    @ExceptionHandler(IllegalStateException.class)
+    public String handleIllegalStateException(IllegalStateException e) {
         return e.getMessage();
     }
 
