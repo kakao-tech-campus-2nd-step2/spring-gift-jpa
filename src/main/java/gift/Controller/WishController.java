@@ -21,34 +21,34 @@ public class WishController {
         this.WishService = WishService;
     }
 
-    @PostMapping("/Wish")
+    @PostMapping("/wishList")
     public void addWish(@ValidUser Member member, @RequestBody RequestWishDTO requestWishDTO) {
         WishService.addWish(member, requestWishDTO);
     }
 
-    @GetMapping("/Wish")
+    @GetMapping("/wishList")
     public ResponseEntity<Map<String, List<ResponseWishDTO>>> getWish(@ValidUser Member member) {
         List<ResponseWishDTO> list = WishService.getWish(member);
         Map<String, List<ResponseWishDTO>> response = new HashMap<>();
-        response.put("Wish", list);
+        response.put("wish", list);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/Wish")
+    @PutMapping("/wishList")
     public ResponseEntity<Map<String, List<ResponseWishDTO>>> editWish(@ValidUser Member member, @RequestBody RequestWishDTO requestWishDTO) {
         List<ResponseWishDTO> list = WishService.editWish(member, requestWishDTO);
         Map<String, List<ResponseWishDTO>> response = new HashMap<>();
-        response.put("Wish", list);
+        response.put("wish", list);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/Wish")
+    @DeleteMapping("/wishList")
     public ResponseEntity<Map<String, List<ResponseWishDTO>>> deleteWish(@ValidUser Member member, @RequestBody RequestWishDTO requestWishDTO) {
         List<ResponseWishDTO> list = WishService.deleteWish(member, requestWishDTO);
         Map<String, List<ResponseWishDTO>> response = new HashMap<>();
-        response.put("Wish", list);
+        response.put("wish", list);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
