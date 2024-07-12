@@ -44,7 +44,7 @@ public class WishlistServiceImpl implements WishlistService {
 
         Wishlist wishlist = new Wishlist();
         wishlist.setUser(user);
-        wishlist.setProduct(product);
+        wishlist.setPrice(product.getPrice());
         wishlist.setQuantity(quantity);
         wishlistRepository.save(wishlist);
     }
@@ -68,7 +68,7 @@ public class WishlistServiceImpl implements WishlistService {
             wishlist.getUser().getUsername(),
             wishlist.getQuantity(),
             wishlist.getProduct().getName(),
-            wishlist.getProduct().getPrice(),
+            wishlist.getPrice(),
             wishlist.getProduct().getImageUrl()
         );
     }
