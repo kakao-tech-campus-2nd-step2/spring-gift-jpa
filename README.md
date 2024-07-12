@@ -74,3 +74,18 @@
   - [x] 사용하지 않는 로직 삭제
 - [x] MemberController header key 변경
 - [x] 공통 Exception을 ControllerAdvice로 고치기
+
+# 2단계 과제
+
+## 기능 오구 사항
+- 지금까지 작성한 JdbcTemplate 기반 코드를 JPA로 리팩터링하고 실제 도메인 모델을 어떻게 구성하고 객체와 테이블을 어떻게 매핑해야 하는지 알아본다.
+- 객체의 참조와 테이블의 외래 키를 매핑해서 객체에서는 참조를 사용하고 테이블에서는 외래 키를 사용할 수 있도록 한다.
+
+## 구현할 기능 목록
+- [ ] 엔티티 구현
+  - [ ] Member에 wish 참조키 설정 (1 : N)
+  - [ ] Product에 wish 참조키 설정 (1 : N)
+  - [ ] Wish에 Member와 Product의 참조키 설정 (N : 1)
+  - [ ] Member가 삭제되면 wish도 삭제되도록 cascade
+  - [ ] Product가 삭제되면 wish도 삭제되도록 cascade
+- [ ] 서비스 계층 수정 사항 수정
