@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
-import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -51,5 +50,4 @@ public class Wish {
     public void setProductName(String productName) {
         this.productName = productName;
     }
-
 }
