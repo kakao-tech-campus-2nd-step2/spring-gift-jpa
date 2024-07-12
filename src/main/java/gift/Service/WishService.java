@@ -77,7 +77,7 @@ public class WishService {
         wishRepository.delete(wishRepository.findByMemberIdAndProductId(memberEntity.getId(), productEntity.getId()));
     }
 
-    public List<String> viewAll(String token){
+    public List<String> getAll(String token){
         String email = jwtTokenProvider.getEmailFromToken(token);
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
 
@@ -100,7 +100,8 @@ public class WishService {
         return productNames;
     }
 
-    public Page<String> transferListToPage(List<String> dtoList, int page){
+    public Page<String> getPage(String token, int page){
+        List<String> dtoList = getAll(token);
         Pageable pageable = PageRequest.of(page, 10);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), dtoList.size());
