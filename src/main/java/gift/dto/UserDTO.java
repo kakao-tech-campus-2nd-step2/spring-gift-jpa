@@ -2,9 +2,8 @@ package gift.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import java.io.Serializable;
 
-public class UserDTO implements Serializable {
+public class UserDTO {
 
     @Email
     @NotBlank
