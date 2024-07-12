@@ -44,8 +44,9 @@ public class ProductController {
 
     //Product Pagination
     @GetMapping("/page/{page}")
-    public Page<Product> getProductPage(@PathVariable("page") int page){
-        return productService.getProductPage(page);
+    public ResponseEntity<Page<Product>> getProductPage(@PathVariable("page") int page){
+        Page<Product> products = productService.getProductPage(page);
+        return new ResponseEntity<>(products,HttpStatus.OK);
     }
 
     //product 추가
