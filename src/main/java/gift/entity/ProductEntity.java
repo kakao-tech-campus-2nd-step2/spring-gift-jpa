@@ -20,7 +20,7 @@ public class ProductEntity {
     @Column(nullable = false)
     private int price;
 
-    @Column(nullable = false, columnDefinition = "varchar(255)")
+    @Column(nullable = false)
     private String imageUrl;
 
     public ProductEntity() {}
