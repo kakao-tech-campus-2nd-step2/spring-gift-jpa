@@ -1,24 +1,26 @@
 package gift.service;
 
 import gift.domain.model.dto.ProductAddRequestDto;
-import gift.domain.model.dto.ProductCursorResponseDto;
 import gift.domain.model.dto.ProductResponseDto;
 import gift.domain.model.dto.ProductUpdateRequestDto;
+import gift.domain.model.enums.ProductSortBy;
 import gift.domain.repository.ProductRepository;
 import gift.domain.model.entity.Product;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private static final int PAGE_SIZE = 10;
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -32,26 +34,34 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductCursorResponseDto getAllProducts(Long cursor, int limit) {
-        List<Product> products;
-        if (cursor == null) {
-            products = productRepository.findByOrderByIdDesc(PageRequest.of(0, limit));
+    public Page<ProductResponseDto> getAllProducts(int page, ProductSortBy sortBy) {
+        String sortField = getSortField(sortBy);
+        Sort.Direction direction = getSortDirection(sortBy);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+
+        Page<Product> productPage;
+        if (direction == Sort.Direction.ASC) {
+            productPage = productRepository.findAllWithSortAsc(sortField, pageable);
         } else {
-            products = productRepository.findByIdLessThanOrderByIdDesc(cursor, PageRequest.of(0, limit));
+            productPage = productRepository.findAllWithSortDesc(sortField, pageable);
         }
 
-        List<ProductResponseDto> productDtos = products.stream()
-            .map(this::convertToResponseDto)
-            .collect(Collectors.toList());
+        return productPage.map(this::convertToResponseDto);
+    }
 
-        Long nextCursor = null;
-        boolean hasNext = false;
-        if (!products.isEmpty()) {
-            nextCursor = products.getLast().getId();
-            hasNext = productRepository.existsByIdLessThan(nextCursor);
-        }
+    private String getSortField(ProductSortBy sortBy) {
+        return switch (sortBy) {
+            case PRICE_DESC, PRICE_ASC -> "price";
+            case NAME_DESC, NAME_ASC -> "name";
+            default -> "id";
+        };
+    }
 
-        return new ProductCursorResponseDto(productDtos, nextCursor, hasNext);
+    private Sort.Direction getSortDirection(ProductSortBy sortBy) {
+        return switch (sortBy) {
+            case ID_ASC, PRICE_ASC, NAME_ASC -> Sort.Direction.ASC;
+            default -> Sort.Direction.DESC;
+        };
     }
 
     @Transactional
