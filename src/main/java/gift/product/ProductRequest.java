@@ -1,13 +1,10 @@
 package gift.product;
 
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class ProductRequest {
-    @NotNull(message = "id는 필수 값 입니다.")
-    @Id
     private Long id;
 
     @NotNull(message = "상품 명은 필수 값 입니다.")
@@ -20,11 +17,10 @@ public class ProductRequest {
 
     private String imageUrl;
 
-
     public Long getId() {
         return id;
     }
-
+  
     public void setId(Long id) {
         this.id = id;
     }
@@ -54,12 +50,6 @@ public class ProductRequest {
     }
 
     public Product toEntity(){
-        Product product = new Product();
-        product.setId(this.id);
-        product.setName(this.name);
-        product.setPrice(this.price);
-        product.setImageUrl(this.imageUrl);
-
-        return product;
+        return new Product(this.id, this.name, this.price, this.imageUrl);
     }
 }

@@ -1,7 +1,6 @@
 package gift.member;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,9 +15,8 @@ public class MemberService {
     public List<Member> findAllMember(){
         return memberRepository.findAll();
     }
-
-    public Optional<Member> findById(Long id) {
-        return memberRepository.findById(id);
+    public Member findById(Long id) {
+        return memberRepository.findById(id).orElseThrow();
     }
 
     public Member findByEmailAndPassword(String email, String password) {
@@ -26,10 +24,7 @@ public class MemberService {
     }
 
     public void createMember(String username, String email, String password){
-        Member user = new Member();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(password);
+        Member user = new Member(null, username, email, password);
         this.memberRepository.save(user);
     }
 }
