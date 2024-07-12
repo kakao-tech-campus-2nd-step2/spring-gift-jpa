@@ -1,6 +1,6 @@
 package gift.auth.security;
 
-import gift.auth.error.AuthenticationFailedException;
+import gift.error.CustomException;
 import gift.error.ErrorCode;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -52,7 +52,7 @@ public class JwtFilter extends OncePerRequestFilter  {
 
         try {
             request.setAttribute(REQUEST_ATTRIBUTE_NAME, jwtUtil.extractId(token));
-        } catch (AuthenticationFailedException exception) {
+        } catch (CustomException exception) {
             sendErrorCodeToResponse(response, exception.getCode());
             return;
         }

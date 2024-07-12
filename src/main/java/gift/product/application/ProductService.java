@@ -1,15 +1,16 @@
 package gift.product.application;
 
-import gift.product.error.ProductNotFoundException;
+import gift.error.CustomException;
+import gift.error.ErrorCode;
 import gift.product.dao.ProductRepository;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
 import gift.product.entity.Product;
 import gift.product.util.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ProductService {
@@ -21,17 +22,15 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        return productRepository.findAll()
-                .stream()
-                .map(ProductMapper::toResponseDto)
-                .toList();
+    public Page<ProductResponse> getPagedProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(ProductMapper::toResponseDto);
     }
 
     public ProductResponse getProductByIdOrThrow(Long id) {
         return productRepository.findById(id)
                 .map(ProductMapper::toResponseDto)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     public ProductResponse createProduct(ProductRequest request) {
@@ -51,7 +50,7 @@ public class ProductService {
 
     public Long updateProduct(Long id, ProductRequest request) {
         Product product = productRepository.findById(id)
-                .orElseThrow(ProductNotFoundException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
         product.update(request);
 

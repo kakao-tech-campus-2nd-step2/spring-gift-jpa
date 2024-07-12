@@ -21,6 +21,8 @@ public class FilterConfig {
 
         registrationBean.addUrlPatterns("/members/*");
         registrationBean.addUrlPatterns("/api/*");
+        registrationBean.addUrlPatterns("/wishes/*");
+        registrationBean.addUrlPatterns("/products/*");
 
         return registrationBean;
     }

@@ -1,11 +1,16 @@
 package gift.product.entity;
 
 import gift.product.dto.ProductRequest;
+import gift.wishlist.entity.Wish;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -19,6 +24,9 @@ public class Product {
     private int price;
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
+
+    @OneToMany(mappedBy = "product", orphanRemoval = true)
+    private final List<Wish> wishList = new ArrayList<>();
 
     public Product(String name, int price, String imageUrl) {
         this.name = name;

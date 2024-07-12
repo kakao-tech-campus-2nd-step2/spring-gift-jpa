@@ -1,7 +1,7 @@
 package gift.auth.security;
 
-import gift.auth.error.AuthenticationExpiredException;
-import gift.auth.error.AuthenticationFailedException;
+import gift.error.CustomException;
+import gift.error.ErrorCode;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -45,9 +45,9 @@ public class JwtUtil {
                     .getPayload()
                     .getSubject());
         } catch (ExpiredJwtException exception) {
-            throw new AuthenticationExpiredException();
+            throw new CustomException(ErrorCode.AUTHENTICATION_EXPIRED);
         } catch (JwtException exception) {
-            throw new AuthenticationFailedException();
+            throw new CustomException(ErrorCode.AUTHENTICATION_FAILED);
         }
 
     }

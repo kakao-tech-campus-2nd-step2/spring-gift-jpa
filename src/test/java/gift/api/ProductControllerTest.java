@@ -3,12 +3,13 @@ package gift.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.auth.security.JwtFilter;
 import gift.auth.security.JwtUtil;
+import gift.error.CustomException;
+import gift.error.ErrorCode;
 import gift.product.api.ProductController;
 import gift.product.application.ProductService;
 import gift.product.dto.ProductRequest;
 import gift.product.dto.ProductResponse;
 import gift.product.entity.Product;
-import gift.product.error.ProductNotFoundException;
 import gift.product.util.ProductMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -52,17 +55,19 @@ class ProductControllerTest {
     @Test
     @DisplayName("상품 전체 조회 기능 테스트")
     void getAllProducts() throws Exception {
-        List<ProductResponse> response = new ArrayList<>();
+        List<ProductResponse> products = new ArrayList<>();
         ProductResponse productResponse1 = ProductMapper.toResponseDto(
                 new Product("product1", 1000, "https://testshop.com")
         );
         ProductResponse productResponse2 = ProductMapper.toResponseDto(
                 new Product("product2", 3000, "https://testshop.com")
         );
-        response.add(productResponse1);
-        response.add(productResponse2);
+        products.add(productResponse1);
+        products.add(productResponse2);
+
+        Page<ProductResponse> response = new PageImpl<>(products);
         String responseJson = objectMapper.writeValueAsString(response);
-        when(productService.getAllProducts()).thenReturn(response);
+        when(productService.getPagedProducts(any())).thenReturn(response);
 
         mockMvc.perform(get("/api/products")
                         .header(HttpHeaders.AUTHORIZATION, bearerToken))
@@ -70,7 +75,7 @@ class ProductControllerTest {
                 .andExpect(content().json(responseJson))
                 .andDo(print());
 
-        verify(productService).getAllProducts();
+        verify(productService).getPagedProducts(any());
     }
 
     @Test
@@ -100,7 +105,7 @@ class ProductControllerTest {
     @DisplayName("상품 상세 조회 실패 테스트")
     void getProductFailed() throws Exception {
         Long productId = 1L;
-        Throwable exception = new ProductNotFoundException();
+        Throwable exception = new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
         when(productService.getProductByIdOrThrow(productId)).thenThrow(exception);
 
         mockMvc.perform(get("/api/products/{id}", productId)
@@ -156,7 +161,7 @@ class ProductControllerTest {
     @DisplayName("단일 상품 삭제 실패 테스트")
     void deleteProductFailed() throws Exception {
         Long productId = 1L;
-        Throwable exception = new ProductNotFoundException();
+        Throwable exception = new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
         when(productService.deleteProductById(productId)).thenThrow(exception);
 
         mockMvc.perform(delete("/api/products/{id}", productId)
