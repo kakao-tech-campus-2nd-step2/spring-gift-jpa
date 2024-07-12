@@ -1,14 +1,15 @@
 package gift.service;
 
+import gift.dto.WishResponse;
 import gift.entity.Product;
 import gift.entity.Wish;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class WishlistService {
@@ -36,8 +37,11 @@ public class WishlistService {
         }
     }
 
-    public List<Wish> getWishesByMemberId(Long memberId) {
-        return wishlistRepository.findByMemberId(memberId);
+    public List<WishResponse> getWishesByMemberId(Long memberId) {
+        List<Wish> wishes = wishlistRepository.findByMemberId(memberId);
+        return wishes.stream()
+                .map(wish -> new WishResponse(wish.getId(), wish.getProduct().getId(), wish.getProduct().getName(), wish.getProductNumber()))
+                .collect(Collectors.toList());
     }
 
     public void deleteItem(Long wishId) {
