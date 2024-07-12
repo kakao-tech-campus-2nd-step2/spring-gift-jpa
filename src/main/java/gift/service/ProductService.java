@@ -2,8 +2,10 @@ package gift.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.dto.product.ProductWithOptionDTO;
+import gift.dto.product.SaveProductDTO;
+import gift.dto.product.ShowProductDTO;
 import gift.entity.compositeKey.OptionId;
-import gift.dto.ProductDTO;
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.exception.exception.BadRequestException;
@@ -13,12 +15,13 @@ import gift.repository.OptionRepository;
 import gift.repository.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 
@@ -30,45 +33,54 @@ public class ProductService {
     @Autowired
     private OptionRepository optionRepository;
 
-    public List<ProductDTO.WithOptionDTO> getAllProducts() {
-        return optionRepository.findAllWithOption()
-                .stream()
-                .map(array -> new ProductDTO.WithOptionDTO(
-                        (Integer) array[0],
-                        (String) array[1],
-                        (Integer) array[2],
-                        (String) array[3],
-                        (String) array[4]))
-                .collect(Collectors.toList());
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    public Page<ProductWithOptionDTO> getAllProductsWithOption(Pageable pageable) {
+        Page<Object[]> result = optionRepository.findAllWithOption(pageable);
+        return result.map(this::convertToWithOptionDTO);
+    }
+    private ProductWithOptionDTO convertToWithOptionDTO(Object[] array) {
+        return new ProductWithOptionDTO(
+                (Integer) array[0],
+                (String) array[1],
+                (Integer) array[2],
+                (String) array[3],
+                (String) array[4]
+        );
     }
 
-    public String getJsonAllProducts(){
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<Product> products = productRepository.findAll();
-        String jsonProduct="";
-        try {
-             jsonProduct = objectMapper.writeValueAsString(products);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return jsonProduct;
+    public Page<ShowProductDTO> getAllProducts(Pageable pageable) {
+        Page<Product> result = productRepository.findAll(pageable);
+        return result.map(this::convertToShowProductDTO);
+
     }
 
-    public void saveProduct(ProductDTO.SaveDTO product) {
+    private ShowProductDTO convertToShowProductDTO(Product product) {
+        return new ShowProductDTO(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl()
+        );
+    }
+
+    public void saveProduct(SaveProductDTO product) {
         if(product.option() == null)
             throw new BadRequestException("하나의 옵션은 필요합니다.");
 
         Product saveProduct = new Product(product.name(), product.price(), product.imageUrl());
 
         if(isValidProduct(saveProduct)){
-            productRepository.save(saveProduct);
+            saveProduct = productRepository.save(saveProduct);
         }
+
         List<String> optionList = stream(product.option().split(",")).toList();
         for(String str : optionList){
             OptionId optionId = new OptionId(saveProduct.getId(), str);
             Option option = new Option(optionId);
             if(isValidOption(optionId)) {
-                optionRepository.save(option);
+                option.setProduct(saveProduct);
+                option = optionRepository.save(option);
                 saveProduct.addOptions(option);
             }
 

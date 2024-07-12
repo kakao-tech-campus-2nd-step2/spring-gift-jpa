@@ -26,7 +26,6 @@ public class User {
 
     public void addWishlist(WishList wishlist){
         this.wishlist.add(wishlist);
-        wishlist.setUser(this);
     }
 
     public int getId() {

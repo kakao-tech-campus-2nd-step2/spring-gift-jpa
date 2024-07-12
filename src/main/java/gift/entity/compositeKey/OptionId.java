@@ -13,6 +13,10 @@ public class OptionId implements Serializable {
     int id;
     String option;
 
+    public int getId() {
+        return id;
+    }
+
     public String getOption() {
         return option;
     }

@@ -36,11 +36,9 @@ public class Product {
 
     public void addOptions(Option option){
         options.add(option);
-        option.setProduct(this);
     }
     public void addWishlist(WishList wishlist){
         wishlists.add(wishlist);
-        wishlist.setProduct(this);
     }
 
     public int getId() {
