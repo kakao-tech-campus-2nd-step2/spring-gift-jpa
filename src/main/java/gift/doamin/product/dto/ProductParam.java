@@ -7,8 +7,6 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 public class ProductParam {
 
-    private Long id;
-
     private Long userId;
 
     @Pattern(regexp = "^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9 ()\\[\\]+\\-&/_]{1,15}$", message = "영문, 한글, 숫자, 공백, 특수문자 ()[]+-&/_ 1자 이상 15자 미만으로 입력해야 합니다.")
@@ -27,10 +25,6 @@ public class ProductParam {
         this.imageUrl = imageUrl;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public Long getUserId() {
         return userId;
     }
@@ -47,15 +41,11 @@ public class ProductParam {
         return imageUrl;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setUserId(Long userId) {
         this.userId = userId;
     }
 
     public Product toProduct() {
-        return new Product(this.id, this.userId, this.name, this.price, this.imageUrl);
+        return new Product(this.userId, this.name, this.price, this.imageUrl);
     }
 }

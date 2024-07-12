@@ -15,7 +15,6 @@ public class MemoryWishListRepository implements WishListRepository {
     @Override
     public WishList save(WishList wishList) {
         Long id = sequence.getAndIncrement();
-        wishList.setId(id);
         wishLists.put(id, wishList);
         return wishList;
     }

@@ -55,9 +55,9 @@ public class ProductsController {
         Long userId = Long.valueOf(authentication.getName());
         boolean isSeller = authentication.getAuthorities()
             .contains(new SimpleGrantedAuthority(UserRole.SELLER.getValue()));
-        productParam.setId(id);
+        productParam.setUserId(userId);
 
-        return productService.update(userId, productParam, isSeller);
+        return productService.update(id, productParam, isSeller);
     }
 
     @DeleteMapping("/{id}")

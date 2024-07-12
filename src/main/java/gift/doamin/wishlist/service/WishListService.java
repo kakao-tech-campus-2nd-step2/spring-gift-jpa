@@ -46,16 +46,17 @@ public class WishListService {
         }
 
         // 해당 위시리스트가 존재하지 않으면(사용자의 위시리스트에 해당 상품이 없으면) 새로 생성
-        Optional<WishList> wishList = wishListRepository.findByUserIdAndProductId(userId,
+        Optional<WishList> target = wishListRepository.findByUserIdAndProductId(userId,
             productId);
-        if (wishList.isEmpty()) {
+        if (target.isEmpty()) {
             create(userId, wishListForm);
             return;
         }
 
-        WishList updatedWishList = new WishList(userId, productId, wishListForm.getQuantity());
-        updatedWishList.setId(wishList.get().getId());
-        wishListRepository.save(updatedWishList);
+        WishList wishList = target.get();
+
+        wishList.updateQuantity(wishListForm.getQuantity());
+        wishListRepository.save(wishList);
     }
 
     public void delete(Long userId, Long productId) {

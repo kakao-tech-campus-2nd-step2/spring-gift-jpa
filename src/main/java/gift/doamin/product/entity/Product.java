@@ -1,5 +1,6 @@
 package gift.doamin.product.entity;
 
+import gift.doamin.product.dto.ProductParam;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,11 +36,6 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Product(Long id, Long userId, String name, Integer price, String imageUrl) {
-        this(userId, name, price, imageUrl);
-        this.id = id;
-    }
-
     protected Product() {
 
     }
@@ -62,5 +58,11 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public void updateAll(ProductParam productParam) {
+        this.name = productParam.getName();
+        this.price = productParam.getPrice();
+        this.imageUrl = productParam.getImageUrl();
     }
 }

@@ -48,7 +48,7 @@ public class WishList {
         return quantity;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void updateQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }

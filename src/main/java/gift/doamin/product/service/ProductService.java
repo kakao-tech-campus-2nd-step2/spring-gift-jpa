@@ -34,18 +34,19 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
     }
 
-    public Product update(Long userId, ProductParam productParam, boolean isSeller) {
-        Long id = productParam.getId();
+    public Product update(Long id, ProductParam productParam, boolean isSeller) {
 
         Optional<Product> target = productRepository.findById(id);
         if (target.isEmpty()) {
             return create(productParam);
         }
 
-        checkAuthority(userId, target.get(), isSeller);
+        Product product = target.get();
 
-        productParam.setUserId(target.get().getUserId());
-        return productRepository.save(productParam.toProduct());
+        checkAuthority(productParam.getUserId(), product, isSeller);
+
+        product.updateAll(productParam);
+        return productRepository.save(product);
     }
 
     public void delete(Long userId, Long id, boolean isSeller) {
