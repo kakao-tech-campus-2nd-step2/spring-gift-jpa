@@ -48,10 +48,6 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public static Product fromProductIdWithoutBody(long id) {
-        return new Product(id, null, -1, null);
-    }
-
     public static Product fromProductDTO(ProductDTO productDTO) {
         return new Product(-1, productDTO.name(), productDTO.price(), productDTO.imageUrl());
     }

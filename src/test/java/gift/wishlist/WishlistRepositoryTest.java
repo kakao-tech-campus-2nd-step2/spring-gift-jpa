@@ -79,7 +79,7 @@ class WishlistRepositoryTest {
         );
 
         //when
-        List<Wishlist> actual = wishlistRepository.findAllByMember(member);
+        List<Wishlist> actual = wishlistRepository.findAllByMemberEmail("aaa@email.com");
 
         //then
         assertAll(
@@ -129,7 +129,7 @@ class WishlistRepositoryTest {
     @DisplayName("[Unit] existWishlist test")
     void existWishlistTest() {
         //given
-        Wishlist expect = wishlistRepository.save(
+        wishlistRepository.save(
             new Wishlist(
                 productRepository.findById(1L).get(),
                 memberRepository.findById("aaa@email.com").get()
@@ -137,14 +137,13 @@ class WishlistRepositoryTest {
         );
 
         //when
-        Boolean trueCase = wishlistRepository.existsByMemberAndProduct(
-            expect.getMember(),
-            expect.getProduct()
+        Boolean trueCase = wishlistRepository.existsByMemberEmailAndProductId(
+            "aaa@email.com", 1L
         );
 
-        Boolean falseCase = wishlistRepository.existsByMemberAndProduct(
-            expect.getMember(),
-            new Product(2L, "product-2", 200, "product-2-image")
+        Boolean falseCase = wishlistRepository.existsByMemberEmailAndProductId(
+            "aaa@email.com",
+            2L
         );
 
         //then
