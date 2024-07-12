@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>wishlist List</title>
+</head>
+<body>
+<h1>wishlist List</h1>
+<a th:href="@{'/wishlist/' + ${id} + '/new'}">Add Product</a>
+<table>
+  <thead>
+  <tr>
+    <th>USER ID</th>
+    <th>PRODUCT ID</th>
+    <th>NAME</th>
+    <th>AMOUNT</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="wishlist : ${wishlists.content}">
+    <td th:text="${wishlist.user.id}"></td>
+    <td th:text="${wishlist.product.id}"></td>
+    <td th:text="${wishlist.product.name}"></td>
+    <td th:text="${wishlist.amount}"></td>
+  </tr>
+  </tbody>
+</table>
+<div th:if="${wishlists.totalPages > 1}">
+  <ul class="pagination">
+    <li th:class="${wishlists.first ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{id}(id=${id}, page=0, size=${wishlists.size})}">First</a>
+    </li>
+    <li th:class="${wishlists.first ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{id}(id=${id}, page=${wishlists.number - 1}, size=${wishlists.size})}" th:text="Previous"></a>
+    </li>
+    <li th:each="pageNumber : ${#numbers.sequence(0, wishlists.totalPages - 1)}" th:class="${pageNumber == wishlists.number ? 'active' : ''}">
+      <a th:href="@{/wishlist/{id}(id=${id}, page=${pageNumber}, size=${wishlists.size})}" th:text="${pageNumber + 1}"></a>
+    </li>
+    <li th:class="${wishlists.last ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{id}(id=${id}, page=${wishlists.number + 1}, size=${wishlists.size})}" th:text="Next"></a>
+    </li>
+    <li th:class="${wishlists.last ? 'disabled' : ''}">
+      <a th:href="@{/wishlist/{id}(id=${id}, page=${wishlists.totalPages - 1}, size=${wishlists.size})}">Last</a>
+    </li>
+  </ul>
+</div>
+</body>
+</html>
