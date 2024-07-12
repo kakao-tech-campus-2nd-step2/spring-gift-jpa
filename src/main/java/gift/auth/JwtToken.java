@@ -1,10 +1,9 @@
 package gift.auth;
 
-import gift.DTO.UserDTO;
+import gift.entity.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.servlet.http.HttpServletRequest;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Base64;
@@ -19,12 +18,12 @@ public class JwtToken {
     private long tokenExpTime;
 
     public JwtToken(@Value("${jwt.secretKey}") String secretKey,
-        @Value("${jwt.tokenExpTime:3600}") long tokenExpTime) {
+        @Value("${jwt.tokenExpTime}") long tokenExpTime) {
         this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
         this.tokenExpTime = tokenExpTime;
     }
 
-    public Token createToken(UserDTO user) {
+    public Token createToken(UserEntity user) {
         Claims claims = Jwts.claims();
         claims.put("id", user.getId());
         claims.put("email", user.getEmail());

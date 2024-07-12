@@ -1,22 +1,38 @@
 package gift.mapper;
 
-import gift.DTO.ProductDTO;
+import gift.domain.Product.CreateProduct;
 import gift.domain.Product.ProductSimple;
-import java.util.ArrayList;
+import gift.domain.Product.UpdateProduct;
+import gift.entity.ProductEntity;
 import java.util.List;
-
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductMapper {
 
-    public List<ProductSimple> productSimpleList(List<ProductDTO> li) {
-        List<ProductSimple> list = new ArrayList<>();
+    public Page<ProductSimple> toSimpleList(Page<ProductEntity> all) {
+        List<ProductSimple> simpleList = all.stream()
+            .map(entity -> new ProductSimple(
+                entity.getId(),
+                entity.getName()
+            ))
+            .collect(Collectors.toList());
 
-        for (ProductDTO p : li) {
-            list.add(new ProductSimple(p.getId(), p.getName()));
-        }
-        return list;
+        return new PageImpl<>(simpleList, all.getPageable(), all.getTotalElements());
+    }
+
+    public ProductEntity toEntity(CreateProduct create) {
+        return new ProductEntity(create.getName(), create.getPrice(), create.getImageUrl());
+    }
+
+    public ProductEntity toUpdate(UpdateProduct update, ProductEntity entity) {
+        entity.setPrice(update.getPrice());
+        entity.setName(update.getName());
+        entity.setImageUrl(update.getImageUrl());
+        return entity;
     }
 
 }

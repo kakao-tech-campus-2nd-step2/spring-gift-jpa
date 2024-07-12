@@ -1,10 +1,15 @@
 package gift.domain;
 
+import gift.util.page.PageParam;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class User {
+
+    public static class getList extends PageParam {
+
+    }
 
     public static class CreateUser {
 
@@ -38,8 +43,9 @@ public class User {
         }
     }
 
-    public static class UpdateUser{
-        @Size(min = 4,max = 30, message = "비밀번호는 4자 이상 30자 미만 입니다.")
+    public static class UpdateUser {
+
+        @Size(min = 4, max = 30, message = "비밀번호는 4자 이상 30자 미만 입니다.")
         @NotNull
         private String password;
 
@@ -59,7 +65,8 @@ public class User {
         }
     }
 
-    public static class UserSimple{
+    public static class UserSimple {
+
         private String email;
         private String password;
 
