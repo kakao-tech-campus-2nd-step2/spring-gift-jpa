@@ -12,6 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 class WishlistRepositoryTest {
@@ -66,11 +69,12 @@ class WishlistRepositoryTest {
 
     @Test
     public void testFindListByUserId() {
+        Pageable pageable = PageRequest.of(0, 10);
         // then
-        List<WishlistItem> user1Wishlist = wishlistRepository.findListByUserId(1L);
+        Page<WishlistItem> user1Wishlist = wishlistRepository.findListByUserId(1L, pageable);
         assertThat(user1Wishlist).hasSize(2);
 
-        List<WishlistItem> user2Wishlist = wishlistRepository.findListByUserId(2L);
+        Page<WishlistItem> user2Wishlist = wishlistRepository.findListByUserId(2L, pageable);
         assertThat(user2Wishlist).hasSize(1);
     }
 }
