@@ -38,8 +38,13 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+    public boolean deleteProduct(Long id) {
+        try {
+            productRepository.deleteById(id);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     public void checkForDuplicateProduct(Product product) {

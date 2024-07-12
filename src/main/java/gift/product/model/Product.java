@@ -1,6 +1,6 @@
 package gift.product.model;
 
-import gift.Login.validation.NoKaKao;
+import gift.product.validation.NoKaKao;
 import jakarta.validation.constraints.*;
 import java.util.Objects;
 

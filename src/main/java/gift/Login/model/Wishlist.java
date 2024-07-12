@@ -1,24 +1,50 @@
 package gift.Login.model;
 
+import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+@Entity
+@Table(name = "wish")
 public class Wishlist {
-    private UUID memberId;
-    private List<Product> products;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private Long memberId;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "wishlist", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products = new ArrayList<>();
+
+
+    // 생성자
     public Wishlist() {}
 
-    public Wishlist(UUID memberId, List<Product> products) {
+    public Wishlist(Long memberId) {
+        this.memberId = memberId;
+    }
+
+    public Wishlist(Long memberId, List<Product> products) {
         this.memberId = memberId;
         this.products = products;
     }
 
-    public UUID getMemberId() {
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(UUID memberId) {
+    public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
 

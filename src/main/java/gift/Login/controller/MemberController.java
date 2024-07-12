@@ -1,13 +1,9 @@
 package gift.Login.controller;
 
-import gift.Login.model.Member;
-import gift.Login.model.ResponseToken;
-import gift.Login.model.Wishlist;
 import gift.Login.service.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -15,38 +11,31 @@ import java.util.Map;
 public class MemberController {
 
     private final MemberService memberService;
-
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
 
+    // 회원가입
     @PostMapping("/register")
-    public ResponseEntity<ResponseToken> register(@RequestBody Map<String, String> request) {
+    public ResponseEntity<String> register(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String password = request.get("password");
 
-        Member existingMember = memberService.findMemberByEmail(email);
-        if (existingMember != null) {
-            return ResponseEntity.status(409).build();
-        }
-
-        Member newMember = memberService.registerMember(email, password);
-        String token = memberService.generateToken(newMember);
-        ResponseToken responseToken = new ResponseToken(token);
-        return ResponseEntity.ok(responseToken);
+        memberService.registerMember(email, password);
+        return ResponseEntity.ok(memberService.login(email, password));
     }
 
+    // 로그인
     @PostMapping("/login")
-    public ResponseEntity<ResponseToken> login(@RequestBody Map<String, String> request) {
+    public ResponseEntity<String> login(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String password = request.get("password");
         String token = memberService.login(email, password);
 
-        if (token != null) {
-            ResponseToken responseToken = new ResponseToken(token);
-            return ResponseEntity.ok(responseToken);
-        } else {
+        if (token == null) {
             return ResponseEntity.status(401).build(); // Unauthorized
         }
+
+        return ResponseEntity.ok(token);
     }
 }

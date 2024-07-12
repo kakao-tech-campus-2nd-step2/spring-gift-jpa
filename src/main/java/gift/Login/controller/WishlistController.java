@@ -12,30 +12,29 @@ import org.springframework.web.bind.annotation.*;
 public class WishlistController {
 
     private final WishlistService wishlistService;
-
     public WishlistController(WishlistService wishlistService) {
         this.wishlistService = wishlistService;
     }
 
-    // 위시리스트에 상품 추가
+    // 1. 위시리스트에 상품 추가
     @PostMapping
     public void addProductToWishlist(@LoginMember Member member, @RequestBody Product product) {
         wishlistService.addProductToWishlist(member.getId(), product);
     }
 
-    // 위시리시트 조회
+    // 2. 위시리스트 조회
     @GetMapping
     public Wishlist getWishlist(@LoginMember Member member) {
         return wishlistService.getWishlistByMemberId(member.getId());
     }
 
-    // 위시리스트에 상품 수정
+    // 3. 위시리스트에 있는 상품 수정
     @PutMapping("/{productId}")
     public void updateProductInWishlist(@LoginMember Member member, @PathVariable Long productId, @RequestBody Product product) {
         wishlistService.updateProductInWishlist(member.getId(), productId, product);
     }
 
-    // 위시리스트에서 상품 삭제
+    // 4. 위시리스트에 있는 상품 삭제
     @DeleteMapping("/{productId}")
     public void removeProductFromWishlist(@LoginMember Member member, @PathVariable Long productId) {
         wishlistService.removeProductFromWishlist(member.getId(), productId);

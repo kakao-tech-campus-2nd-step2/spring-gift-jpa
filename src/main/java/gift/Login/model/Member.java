@@ -1,27 +1,35 @@
 package gift.Login.model;
 
-import java.util.UUID;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "members")
 public class Member {
-    private UUID id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String password;
 
-    // Constructors, Getters and Setters
+    // Constructors, Getters, and Setters
     public Member() {
     }
 
     public Member(String email, String password) {
-        this.id = UUID.randomUUID(); // id 값을 생성자에서 설정
         this.email = email;
         this.password = password;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -1,6 +1,19 @@
-# [구현할 기능 목록] 0단계 - 기본 코드 준비
-- [x] jpa 리스트 저장소를 포크한 후 클론하여 로컬로 가져온다.
-- [x] 이전 주차 과제를 수행한 저장소인 spring-gift-wishlist를 원격 레포지토리 추가한다.
-- [x] spring-gift-wishlist의 pykido 브랜치를 spring-gift-jpa의 ste0 브랜치로 병합한다.
-- [x] 병합 후 spring-gift-wishlist 원격 레포지토리 제거한다.
-- [x] 리소스 파일, 프로퍼티 파일, 테스트 코드 등이 함꼐 이동되었는지 확인한다.
+# [구현할 기능 목록] 1단계 - 엔티티 매핑
+### 1. spring data jpa 의존성 추가
+- [x] `implementation 'org.springframework.boot:spring-boot-starter-data-jpa'`
+
+### 2. 지금까지 작성한 JdbcTemplate 기반 코드를 JPA 기반 코드로 리팩토링
+- [x] Login/repository 리팩토링
+- [x] Login/model 리팩토링
+### 3. 테스트해보기
+- [x] E2E Test
+  - [x] 회원가입 테스트
+  - [x] 로그인 테스트
+- [x] @DataJpaTest
+  - [x] wishlist CRUD 테스트
+
+- [x] 전체적인 리팩토링
+  - [x] 멤버 서비스 인터페이스 생성
+  - [x] 2주차 PR 리뷰 반영
+    - [x] 시크릿키 암호화
+  - [x] Deprecated API 최신형 API로 변경
