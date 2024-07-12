@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

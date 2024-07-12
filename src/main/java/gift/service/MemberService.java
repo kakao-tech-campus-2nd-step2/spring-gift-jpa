@@ -1,11 +1,11 @@
 package gift.service;
 
 import gift.constants.ErrorMessage;
-import gift.dto.Member;
-import gift.dto.Product;
 import gift.dto.ProductDto;
-import gift.dto.Wishlist;
 import gift.dto.WishlistRequest;
+import gift.entity.Member;
+import gift.entity.Product;
+import gift.entity.Wishlist;
 import gift.jwt.JwtUtil;
 import gift.repository.MemberJpaDao;
 import gift.repository.ProductJpaDao;

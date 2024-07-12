@@ -1,9 +1,9 @@
 package gift.controller;
 
 import gift.constants.SuccessMessage;
-import gift.dto.Member;
 import gift.dto.ProductDto;
 import gift.dto.WishlistRequest;
+import gift.entity.Member;
 import gift.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;

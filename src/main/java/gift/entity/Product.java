@@ -1,5 +1,6 @@
-package gift.dto;
+package gift.entity;
 
+import gift.dto.ProductDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

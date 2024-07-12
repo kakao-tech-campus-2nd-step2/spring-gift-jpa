@@ -2,9 +2,9 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.dto.Member;
-import gift.dto.Product;
-import gift.dto.Wishlist;
+import gift.entity.Member;
+import gift.entity.Product;
+import gift.entity.Wishlist;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -2,6 +2,7 @@ package gift.dto;
 
 import gift.constants.ErrorMessage;
 import gift.constants.RegularExpression;
+import gift.entity.Product;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

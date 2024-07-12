@@ -1,8 +1,8 @@
 package gift.service;
 
 import gift.constants.ErrorMessage;
-import gift.dto.Product;
 import gift.dto.ProductDto;
+import gift.entity.Product;
 import gift.repository.ProductJpaDao;
 import java.util.List;
 import java.util.NoSuchElementException;
