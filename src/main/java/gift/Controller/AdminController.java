@@ -8,6 +8,7 @@ import gift.Service.ProductService;
 import gift.Valid.NameValidator;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,19 +24,24 @@ public class AdminController {
 
     public AdminController(ProductService productService){
         this.productService = productService;
+        //페이지네이션 테스트용 데이터 추가
+        for(int i = 1; i <= 100; i++){
+            productService.add(token, new ProductDTO(0L, "test"+i, 1000, "https://i.namu.wiki/i/OgK0X2DAdO0K6vIBGUDvE8fR2jP0dmTu3z6mAM0JVGw310C7H3c9DmsQ_SyBc-s835u5kwHxVpe0HutSHIqo7Q.webp"));
+        }
     }
 
     @Autowired
     public void setNameValidator(NameValidator nameValidator){this.nameValidator = nameValidator;}
 
-    @InitBinder
+    @InitBinder("product")
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(nameValidator);
     }
 
     @GetMapping
-    public String getAllProducts(Model model){
-        List<ProductDTO> products = productService.getAll(token);
+    public String getAllProducts(@RequestParam(value = "page", defaultValue = "0") int page, Model model){
+        List<ProductDTO> dtoList = productService.getAll(token);
+        Page<ProductDTO> products = productService.transferListToPage(dtoList, page);
         model.addAttribute("products", products);
         return "products";
     }
