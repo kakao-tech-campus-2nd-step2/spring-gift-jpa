@@ -43,7 +43,7 @@ public class ProductController {
     }
 
     /**
-     * 전체 상품 조회
+     * 전체 상품 조회 - 페이징 X
      */
     @GetMapping
     public ResponseEntity<ResultResponseDto<List<Product>>> getProducts() {
@@ -52,30 +52,18 @@ public class ProductController {
         return ResponseMaker.createResponse(HttpStatus.OK, "전체 목록 상품을 조회했습니다.", products);
     }
 
-    /**
-     * 전체 상품 조회 - 페이징(id_asc)
-     */
-    @GetMapping(params = "page")
-    public ResponseEntity<ResultResponseDto<Page<Product>>> getProductsPage(
-        @RequestParam(value = "page", defaultValue = "10") int page
-    ) {
-        int size = 10; // default
-        Page<Product> products = productService.getProductsPage(page, size);
-        // 성공 시
-        return ResponseMaker.createResponse(HttpStatus.OK, "전체 목록 상품을 조회했습니다.", products);
-    }
 
     /**
      * 전체 상품 조회 - 페이징(매개변수별)
      */
-    @GetMapping(params = {"page", "sort"})
-    public ResponseEntity<ResultResponseDto<Page<Product>>> getProductsPage(
-        @RequestParam(value = "page", defaultValue = "10") int page,
+    @GetMapping(params = {"page"})
+    public ResponseEntity<ResultResponseDto<Page<Product>>> getProductsByPageAndSort(
+        @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "sort", defaultValue = "id_asc") String sort
     ) {
         int size = 10; // default
         Sort sortObj = getSortObject(sort);
-        Page<Product> products = productService.getProductsPageSort(page, size, sortObj);
+        Page<Product> products = productService.getProductsByPageAndSort(page, size, sortObj);
         // 성공 시
         return ResponseMaker.createResponse(HttpStatus.OK, "전체 목록 상품을 조회했습니다.", products);
     }

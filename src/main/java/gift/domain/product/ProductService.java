@@ -57,23 +57,13 @@ public class ProductService {
         return products;
     }
 
-    /**
-     * 전체 싱픔 목록 조회 - 기본 페이징(id_asc)
-     */
-    public Page<Product> getProductsPage(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Order.asc("id")));
-
-        Page<Product> products = productRepository.findAll(pageRequest);
-
-        return products;
-    }
 
     /**
      * 전체 싱픔 목록 조회 - 페이징(매개변수별)
      */
-    public Page<Product> getProductsPageSort(int page, int size, Sort sort) {
+    public Page<Product> getProductsByPageAndSort(int page, int size, Sort sort) {
         PageRequest pageRequest = PageRequest.of(page, size, sort);
-
+        System.out.println("pageRequest = " + pageRequest);
         Page<Product> products = productRepository.findAll(pageRequest);
 
         return products;
