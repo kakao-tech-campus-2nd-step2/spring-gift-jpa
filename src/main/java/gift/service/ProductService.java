@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.NoSuchElementException;
 
 @Service
@@ -22,15 +21,15 @@ public class ProductService {
         return productRepository.findAll(pageable);
     }
 
-    public Product addProduct(Product product) {
-        return productRepository.save(product);
+    public void addProduct(Product product) {
+        productRepository.save(product);
     }
 
-    public Product updateProduct(Long id, Product product) {
+    public void updateProduct(Long id, Product product) {
         productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
         Product updateProduct = new Product(id,product.getName(), product.getPrice(), product.getImageUrl());
-        return productRepository.save(updateProduct);
+        productRepository.save(updateProduct);
     }
 
     public void deleteProduct(Long id) {

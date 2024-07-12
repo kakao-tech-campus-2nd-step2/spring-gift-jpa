@@ -1,11 +1,9 @@
 package gift.controller;
 
-import gift.model.Product;
 import gift.model.Wishlist;
 import gift.service.MemberService;
 import gift.service.WishlistService;
 import gift.util.JwtUtility;
-import jakarta.validation.Valid;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,7 +36,7 @@ public class WishlistController {
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, page = 0, size = 10) Pageable pageable) {
         String email = JwtUtility.extractEmail(authHeader, memberService);
-        Page<Wishlist> wishlistPage = wishlistService.getWishList(email, pageable);
+        Page<Wishlist> wishlistPage = wishlistService.getWishlist(email, pageable);
         return ResponseEntity.ok(wishlistPage);
     }
 

@@ -24,7 +24,7 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    public Page<Wishlist> getWishList(String email, Pageable pageable) {
+    public Page<Wishlist> getWishlist(String email, Pageable pageable) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
         return wishlistRepository.findByMemberId(member.getId(), pageable);
