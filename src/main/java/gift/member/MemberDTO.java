@@ -1,5 +1,7 @@
 package gift.member;
 
+import gift.token.MemberTokenDTO;
+
 public class MemberDTO {
 
     private String email;
@@ -16,5 +18,13 @@ public class MemberDTO {
 
     public String getPassword() {
         return password;
+    }
+
+    public Member toEntity() {
+        return new Member(email, password);
+    }
+
+    public MemberTokenDTO toTokenDTO() {
+        return new MemberTokenDTO(email);
     }
 }

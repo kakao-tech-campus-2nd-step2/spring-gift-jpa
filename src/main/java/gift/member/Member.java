@@ -25,10 +25,6 @@ public class Member {
         return this.password.equals(member.password);
     }
 
-    public static Member fromMemberDTO(MemberDTO memberDTO) {
-        return new Member(memberDTO.getEmail(), memberDTO.getPassword());
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Member member) {

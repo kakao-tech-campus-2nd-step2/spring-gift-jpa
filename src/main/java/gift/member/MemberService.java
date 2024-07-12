@@ -6,8 +6,6 @@ import static gift.exception.ErrorMessage.WRONG_PASSWORD;
 
 import gift.exception.FailedLoginException;
 import gift.token.JwtProvider;
-import gift.token.MemberTokenDTO;
-import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,26 +23,32 @@ public class MemberService {
     }
 
     public String register(MemberDTO memberDTO) {
-        if (memberRepository.existsById(memberDTO.getEmail())) {
-            throw new IllegalArgumentException(MEMBER_ALREADY_EXISTS);
-        }
+        memberRepository.findById(memberDTO.getEmail())
+            .ifPresentOrElse(
+                e -> {
+                    throw new IllegalArgumentException(MEMBER_ALREADY_EXISTS);
+                },
+                () -> memberRepository.save(memberDTO.toEntity())
+            );
 
-        memberRepository.save(Member.fromMemberDTO(memberDTO));
-
-        return jwtProvider.generateToken(MemberTokenDTO.fromMemberDTO(memberDTO));
+        return jwtProvider.generateToken(memberDTO.toTokenDTO());
     }
 
     public String login(MemberDTO memberDTO) {
-        Optional<Member> findMember = memberRepository.findById(memberDTO.getEmail());
+        memberRepository.findById(memberDTO.getEmail())
+            .ifPresentOrElse(
+                findMember -> verifyPassword(findMember, memberDTO),
+                () -> {
+                    throw new FailedLoginException(MEMBER_NOT_FOUND);
+                }
+            );
 
-        if (findMember.isEmpty()) {
-            throw new FailedLoginException(MEMBER_NOT_FOUND);
+        return jwtProvider.generateToken(memberDTO.toTokenDTO());
+    }
+
+    private void verifyPassword(Member member, MemberDTO memberDTO) {
+        if (!member.isSamePassword(memberDTO.toEntity())) {
+            throw new IllegalArgumentException(WRONG_PASSWORD);
         }
-
-        if (!findMember.get().isSamePassword(findMember.get())) {
-            throw new FailedLoginException(WRONG_PASSWORD);
-        }
-
-        return jwtProvider.generateToken(MemberTokenDTO.fromMemberDTO(memberDTO));
     }
 }
