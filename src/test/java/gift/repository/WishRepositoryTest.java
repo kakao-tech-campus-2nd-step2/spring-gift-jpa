@@ -24,7 +24,6 @@ class WishRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
-    @Order(1)
     @Test
     void save() {
         Member expectedMember = saveMember("member1@example.com", "password1", "member1", "user");
