@@ -84,4 +84,13 @@ public class Member {
     public int hashCode() {
         return Objects.hash(getEmail(), getPassword(), wishList);
     }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+            "email='" + email + '\'' +
+            ", password='" + password + '\'' +
+            ", wishList=" + wishList +
+            '}';
+    }
 }

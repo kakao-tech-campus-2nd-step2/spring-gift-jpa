@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Entity
 @Table(name = "wish")
@@ -36,6 +37,11 @@ public class Wish {
         this.productName = productName;
     }
 
+    public Wish(Product product, Member member) {
+        this.productName = product.getName();
+        this.product = product;
+        this.member = member;
+    }
 
     public Long getId() {
         return id;
@@ -61,4 +67,21 @@ public class Wish {
         this.productName = productName;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Wish wish = (Wish) o;
+        return Objects.equals(product, wish.product) && Objects.equals(member,
+            wish.member);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, member);
+    }
 }
