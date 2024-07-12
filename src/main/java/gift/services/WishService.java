@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,11 +23,15 @@ public class WishService {
     private ProductRepository productRepository;
     private MemberRepository memberRepository;
 
-    public WishService(WishRepository wishRepository) {
+    @Autowired
+    public WishService(WishRepository wishRepository, ProductRepository productRepository,
+        MemberRepository memberRepository) {
         this.wishRepository = wishRepository;
+        this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
     }
 
-//    Wishlist 조회
+    //    Wishlist 조회
     @Transactional
     public List<WishDto> getWishListById(Long memberId) {
         List<Wish> wishList = wishRepository.findAllByMemberId(memberId);
@@ -42,19 +47,13 @@ public class WishService {
     @Transactional
     public void addWish(MemberDto memberDto, Long productId){
         Member member = memberRepository.findByEmail(memberDto.getEmail());
-        Optional<Product> optionalProduct = productRepository.findById(productId);
+        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductException("Product with ID " + productId + " not found"));;
 
-        if (optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
+        Wish wish = new Wish();
+        wish.setMember(member);
+        wish.setProduct(product);
+        wishRepository.save(wish);
 
-            Wish wish = new Wish();
-            wish.setMember(member);
-            wish.setProduct(product);
-            wishRepository.save(wish);
-        } else {
-            // 제품이 존재하지 않는 경우에 대한 예외 처리
-            throw new ProductException("Product with ID " + productId + " not found");
-        }
     }
 
 //    Wish 삭제
