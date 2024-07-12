@@ -25,7 +25,7 @@ public class WishlistService {
     }
 
     public List<Product> getAllWishlist(String email) {
-        return wishlistRepository.findAllByEmail(email);
+        return wishlistRepository.findAllProductInWishlistByEmail(email);
     }
     public Product getProductById(long id){
         return productRepository.findProductById(id);
@@ -39,7 +39,7 @@ public class WishlistService {
     }
 
     public Long getWishlistId(String email, long id){
-        return wishlistRepository.getWishlistId(email, id);
+        return wishlistRepository.getWishlistIdByMemberEmailAndProductId(email, id);
     }
 
     public void deleteWishlist(String email, Long productId, Long wishlistId){

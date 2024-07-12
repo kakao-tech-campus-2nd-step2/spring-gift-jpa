@@ -46,10 +46,6 @@ public class WishListController {
         wishlistService.checkUserByMemberEmail(email);
         Member member = wishlistService.getMemberByEmail(email);
         Product product = wishlistService.getProductById(id);
-
-        System.out.println("member: "+member.getId()+" "+member.getEmail()+" "+member.getPassword());
-        System.out.println("product: "+product.getId()+" "+product.getName()+" "+product.getPrice()+" "+product.getImageUrl());
-
         wishlistService.addWishlist(member.getId(), product.getId());
         return "redirect:/api/wish";
     }

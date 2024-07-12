@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.beans.ConstructorProperties;
 
 
 @Entity
@@ -27,7 +28,12 @@ public class Wishlist {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Wishlist(Member member, Product product) {
+    protected Wishlist(){
+
+    }
+    @ConstructorProperties({"id","member","product"})
+    public Wishlist(Long id, Member member, Product product) {
+        this.id = id;
         this.member = member;
         this.product = product;
     }
