@@ -6,7 +6,8 @@ import java.util.regex.Pattern;
 
 public class ProductNameValidator implements ConstraintValidator<ValidProductName, String> {
 
-    private static final Pattern SYMBOL_PATTERN = Pattern.compile("^[\\w가-힣ㄱ-ㅎㅏ-ㅣ()\\[\\]+\\-&/_]*$");
+    private static final Pattern SYMBOL_PATTERN = Pattern.compile(
+        "^[\\w가-힣ㄱ-ㅎㅏ-ㅣ()\\[\\]+\\-&/_]*$");
 
     @Override
     public boolean isValid(String name, ConstraintValidatorContext context) {

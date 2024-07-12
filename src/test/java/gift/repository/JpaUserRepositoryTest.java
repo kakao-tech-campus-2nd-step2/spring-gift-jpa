@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.domain.User;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +17,13 @@ class JpaUserRepositoryTest {
     private JpaUserRepository jpaUserRepository;
 
     private User user;
-    private Long insertUser(User user){
+
+    private Long insertUser(User user) {
         return jpaUserRepository.save(user).getId();
     }
 
     @BeforeEach
-    void setUser(){
+    void setUser() {
         user = new User("www.naver.com", "1234", "일반");
     }
 
@@ -38,8 +38,9 @@ class JpaUserRepositoryTest {
             () -> assertThat(findUser).isEqualTo(user)
         );
     }
+
     @Test
-    void 회원_조회(){
+    void 회원_조회() {
         //given
         Long insertUserId = insertUser(user);
         //when
@@ -55,7 +56,7 @@ class JpaUserRepositoryTest {
     }
 
     @Test
-    void 이메일_회원_조회(){
+    void 이메일_회원_조회() {
         //given
         Long insertUserId = insertUser(user);
         //when

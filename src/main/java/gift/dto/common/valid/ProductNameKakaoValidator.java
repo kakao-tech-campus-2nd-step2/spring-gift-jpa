@@ -1,10 +1,5 @@
 package gift.dto.common.valid;
 
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /*
 쓰지 않는 클래스
 public class ProductNameKakaoValidator implements ConstraintValidator<ValidProductNameKakao, String> {

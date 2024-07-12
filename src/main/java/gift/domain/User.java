@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "user_table")
@@ -33,6 +32,7 @@ public class User {
     public Long getId() {
         return id;
     }
+
     public String getEmail() {
         return email;
     }
@@ -40,11 +40,12 @@ public class User {
     public String getPassword() {
         return password;
     }
+
     public String getRole() {
         return role;
     }
 
-    public void updateRole(Role role){
+    public void updateRole(Role role) {
         this.role = role.name();
     }
 }

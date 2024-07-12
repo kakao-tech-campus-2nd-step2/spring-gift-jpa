@@ -19,16 +19,17 @@ class JpaProductRepositoryTest {
 
     private Product product;
 
-    private Long insertProduct(Product product){
-        return jpaProductRepository.save(product).getId(); 
+    private Long insertProduct(Product product) {
+        return jpaProductRepository.save(product).getId();
     }
+
     @BeforeEach
-    void setProduct(){
+    void setProduct() {
         product = new Product("사과", 12000, "www.naver.com");
     }
 
     @Test
-    void 상품_저장(){
+    void 상품_저장() {
         //given
         //when
         Long insertProductId = insertProduct(product);
@@ -40,7 +41,7 @@ class JpaProductRepositoryTest {
     }
 
     @Test
-    void 상품_단일_조회(){
+    void 상품_단일_조회() {
         //given
         Long insertProductId = insertProduct(product);
         //when
@@ -56,7 +57,7 @@ class JpaProductRepositoryTest {
     }
 
     @Test
-    void 상품_전체_조회(){
+    void 상품_전체_조회() {
         //given
         Product product1 = new Product("사과", 12000, "www.naver.com");
         Product product2 = new Product("바나나", 15000, "www.daum.net");
@@ -71,11 +72,11 @@ class JpaProductRepositoryTest {
     }
 
     @Test
-    void 상품_수정(){
+    void 상품_수정() {
         //given
         insertProduct(product);
         //when
-        product.update("바나나", 15000,"www.daum.net");
+        product.update("바나나", 15000, "www.daum.net");
         //then
         assertAll(
             () -> assertThat(product.getName()).isEqualTo("바나나"),
@@ -85,7 +86,7 @@ class JpaProductRepositoryTest {
     }
 
     @Test
-    void 상품_삭제(){
+    void 상품_삭제() {
         //given
         Long insertProductId = insertProduct(product);
         //when

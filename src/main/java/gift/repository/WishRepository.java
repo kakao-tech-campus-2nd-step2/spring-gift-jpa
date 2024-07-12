@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 
 /*
  * @deprecated Replaced by JpaWishRepository
@@ -19,7 +18,7 @@ public class WishRepository {
         this.jdbcClient = jdbcClient;
     }
 
-    public Long insertWish(Wish wish){
+    public Long insertWish(Wish wish) {
         String sql = "insert into wish (userId, productId, count) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -30,7 +29,7 @@ public class WishRepository {
         return keyHolder.getKey().longValue();
     }
 
-    public Optional<Wish> selectWish(Long wishId){
+    public Optional<Wish> selectWish(Long wishId) {
         String sql = "select id, userId, productId, count from wish where id = ?";
         return jdbcClient.sql(sql)
             .param(wishId)
@@ -38,7 +37,7 @@ public class WishRepository {
             .optional();
     }
 
-    public List<Wish> selectAllWish(Long userId){
+    public List<Wish> selectAllWish(Long userId) {
         String sql = "select id, userId, productId, count from wish where userId = ?";
         return jdbcClient.sql(sql)
             .param(userId)
@@ -46,14 +45,14 @@ public class WishRepository {
             .list();
     }
 
-    public void updateWish(Wish wish){
+    public void updateWish(Wish wish) {
         String sql = "update wish set count = ? where id = ?";
         jdbcClient.sql(sql)
             .params(wish.getCount(), wish.getId())
             .update();
     }
 
-    public void deleteWish(Long wishId){
+    public void deleteWish(Long wishId) {
         String sql = "delete from wish where id = ?";
         jdbcClient.sql(sql)
             .param(wishId)

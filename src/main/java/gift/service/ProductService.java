@@ -5,14 +5,10 @@ import gift.dto.requestDTO.ProductRequestDTO;
 import gift.dto.responseDTO.ProductListResponseDTO;
 import gift.dto.responseDTO.ProductResponseDTO;
 import gift.repository.JpaProductRepository;
-import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Service
@@ -25,7 +21,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductListResponseDTO getAllProducts(){
+    public ProductListResponseDTO getAllProducts() {
         List<ProductResponseDTO> productResponseDTOList = jpaProductRepository.findAll()
             .stream()
             .map(ProductResponseDTO::of)
@@ -35,19 +31,19 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductResponseDTO getOneProduct(Long productId){
+    public ProductResponseDTO getOneProduct(Long productId) {
         Product product = jpaProductRepository.findById(productId)
             .orElseThrow(() -> new NoSuchElementException("id가 잘못되었습니다."));
         return ProductResponseDTO.of(product);
     }
 
-    public Long addProduct(ProductRequestDTO productRequestDTO){
+    public Long addProduct(ProductRequestDTO productRequestDTO) {
         Product product = new Product(productRequestDTO.name(),
             productRequestDTO.price(), productRequestDTO.imageUrl());
         return jpaProductRepository.save(product).getId();
     }
 
-    public Long updateProduct(Long productId, ProductRequestDTO productRequestDTO){
+    public Long updateProduct(Long productId, ProductRequestDTO productRequestDTO) {
         Product product = jpaProductRepository.findById(productId)
             .orElseThrow(() -> new NoSuchElementException("id가 잘못되었습니다."));
 
@@ -56,7 +52,7 @@ public class ProductService {
         return product.getId();
     }
 
-    public Long deleteProduct(Long productId){
+    public Long deleteProduct(Long productId) {
         Product product = jpaProductRepository.findById(productId)
             .orElseThrow(() -> new NoSuchElementException("id가 잘못되었습니다."));
         jpaProductRepository.delete(product);

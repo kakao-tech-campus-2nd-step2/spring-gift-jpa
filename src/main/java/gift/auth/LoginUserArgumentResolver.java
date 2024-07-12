@@ -2,7 +2,6 @@ package gift.auth;
 
 import gift.domain.User;
 import gift.repository.JpaUserRepository;
-import gift.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.NoSuchElementException;
@@ -28,7 +27,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     public boolean supportsParameter(MethodParameter parameter) {
         boolean hasLoginUserAnnotation = parameter.hasParameterAnnotation(LoginUser.class);
         boolean isUserType = User.class.isAssignableFrom(parameter.getParameterType());
-        return  hasLoginUserAnnotation && isUserType;
+        return hasLoginUserAnnotation && isUserType;
     }
 
     @Override
@@ -36,15 +35,15 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String token = request.getHeader("Authorization");
-        if (token == null){
+        if (token == null) {
             return null;
         }
-        if(token.startsWith("Bearer ")) {
+        if (token.startsWith("Bearer ")) {
             token = token.substring(7).trim();
         }
         Claims claims = jwtUtil.decodeToken(token);
         String email = claims.get("email", String.class);
         return jpaUserRepository.findByEmail(email)
-            .orElseThrow(()-> new NoSuchElementException("회원의 정보가 일치하지 않습니다."));
+            .orElseThrow(() -> new NoSuchElementException("회원의 정보가 일치하지 않습니다."));
     }
 }

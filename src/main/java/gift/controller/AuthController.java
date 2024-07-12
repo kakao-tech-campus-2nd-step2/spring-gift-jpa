@@ -27,14 +27,16 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<SuccessBody<UserResponseDTO>> signUp(@Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO){
+    public ResponseEntity<SuccessBody<UserResponseDTO>> signUp(
+        @Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO) {
         userService.join(userSignupRequestDTO);
         UserResponseDTO userResponseDTO = authService.register(userSignupRequestDTO);
         return ApiResponseGenerator.success(HttpStatus.CREATED, "회원가입에 성공했습니다.", userResponseDTO);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SuccessBody<UserResponseDTO>> login(@Valid @RequestBody UserLoginRequestDTO userLoginRequestDTO){
+    public ResponseEntity<SuccessBody<UserResponseDTO>> login(
+        @Valid @RequestBody UserLoginRequestDTO userLoginRequestDTO) {
         userService.findByEmail(userLoginRequestDTO);
         UserResponseDTO userResponseDTO = authService.login(userLoginRequestDTO);
         return ApiResponseGenerator.success(HttpStatus.ACCEPTED, "로그인에 성공했습니다.", userResponseDTO);

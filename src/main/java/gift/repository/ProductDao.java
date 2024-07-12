@@ -15,12 +15,13 @@ public class ProductDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insertProduct(Product product){
+    public void insertProduct(Product product) {
         var sql = "insert into product (id, name, price, imageUrl) values (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        jdbcTemplate.update(sql, product.getId(), product.getName(), product.getPrice(),
+            product.getImageUrl());
     }
 
-    public Product selectProduct(Long id){
+    public Product selectProduct(Long id) {
         var sql = "select id, name, price, imageUrl from product where id = ?";
         Product product = jdbcTemplate.queryForObject(
             sql,
@@ -36,7 +37,7 @@ public class ProductDao {
         return product;
     }
 
-    public List<Product> selectAllProduct(){
+    public List<Product> selectAllProduct() {
         var sql = "select id, name, price, imageUrl from product";
         List<Product> productList = jdbcTemplate.query(
             sql,

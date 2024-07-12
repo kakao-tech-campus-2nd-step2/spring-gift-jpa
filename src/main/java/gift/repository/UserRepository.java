@@ -3,7 +3,6 @@ package gift.repository;
 import gift.domain.User;
 import java.util.Optional;
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.stereotype.Repository;
 
 /*
  * @deprecated Replaced by JpaUserRepository
@@ -16,14 +15,14 @@ public class UserRepository {
         this.jdbcClient = jdbcClient;
     }
 
-    public void insertUser(User user){
+    public void insertUser(User user) {
         String sql = "insert into user_table (email, password, role) values (?, ?, ?)";
         jdbcClient.sql(sql)
             .params(user.getEmail(), user.getPassword(), user.getRole())
             .update();
     }
 
-    public Optional<User> selectUserById(Long id){
+    public Optional<User> selectUserById(Long id) {
         String sql = "select id, email, password, role from user_table where id = ?";
         return jdbcClient.sql(sql)
             .param(id)
@@ -31,7 +30,7 @@ public class UserRepository {
             .optional();
     }
 
-    public Optional<User> selectUserByEmail(String email){
+    public Optional<User> selectUserByEmail(String email) {
         String sql = "select id, email, password, role from user_table where email = ?";
         return jdbcClient.sql(sql)
             .param(email)

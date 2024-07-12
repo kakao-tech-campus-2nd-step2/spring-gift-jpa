@@ -19,16 +19,17 @@ class JpaWishRepositoryTest {
     private JpaWishRepository jpaWishRepository;
     private Wish wish;
 
-    private Long insertWish(Wish wish){
-        return  jpaWishRepository.save(wish).getId();
+    private Long insertWish(Wish wish) {
+        return jpaWishRepository.save(wish).getId();
     }
 
     @BeforeEach
-    void setWish(){
+    void setWish() {
         wish = new Wish(1L, 1L, 10);
     }
+
     @Test
-    void 위시_추가(){
+    void 위시_추가() {
         //given
         //when
         Long insertWishId = insertWish(wish);
@@ -40,7 +41,7 @@ class JpaWishRepositoryTest {
     }
 
     @Test
-    void 위시_조회(){
+    void 위시_조회() {
         //given
         Long insertWishId = insertWish(wish);
         //when
@@ -56,7 +57,7 @@ class JpaWishRepositoryTest {
     }
 
     @Test
-    void 위시리스트_조회(){
+    void 위시리스트_조회() {
         //given
         // userId = 1L
         Wish wish1 = new Wish(1L, 1L, 10);
@@ -82,7 +83,7 @@ class JpaWishRepositoryTest {
     }
 
     @Test
-    void 위시_삭제(){
+    void 위시_삭제() {
         //given
         Long insertWishId = insertWish(wish);
         //when
@@ -96,7 +97,7 @@ class JpaWishRepositoryTest {
     }
 
     @Test
-    void 상품_삭제(){
+    void 상품_삭제() {
         //given
         Long insertWishId = insertWish(wish);
         //when

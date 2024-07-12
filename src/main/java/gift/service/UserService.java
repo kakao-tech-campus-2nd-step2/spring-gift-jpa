@@ -4,7 +4,6 @@ import gift.domain.User;
 import gift.dto.requestDTO.UserLoginRequestDTO;
 import gift.dto.requestDTO.UserSignupRequestDTO;
 import gift.repository.JpaUserRepository;
-import gift.repository.UserRepository;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +15,18 @@ public class UserService {
         this.jpaUserRepository = jpaUserRepository;
     }
 
-    public void join(UserSignupRequestDTO userSignupRequestDTO){
+    public void join(UserSignupRequestDTO userSignupRequestDTO) {
         User user = UserSignupRequestDTO.toEntity(userSignupRequestDTO);
         jpaUserRepository.save(user);
     }
 
-    public User findById(Long id){
+    public User findById(Long id) {
         return jpaUserRepository.findById(id)
-            .orElseThrow(()-> new NoSuchElementException("회원의 정보가 일치하지 않습니다."));
+            .orElseThrow(() -> new NoSuchElementException("회원의 정보가 일치하지 않습니다."));
     }
 
-    public User findByEmail(UserLoginRequestDTO userLoginRequestDTO){
+    public User findByEmail(UserLoginRequestDTO userLoginRequestDTO) {
         return jpaUserRepository.findByEmail(userLoginRequestDTO.email())
-            .orElseThrow(()-> new NoSuchElementException("회원의 정보가 일치하지 않습니다."));
+            .orElseThrow(() -> new NoSuchElementException("회원의 정보가 일치하지 않습니다."));
     }
 }
