@@ -1,8 +1,6 @@
 package gift.DTO.Wish;
 
-import gift.DTO.Product.ProductRequest;
 import gift.DTO.Product.ProductResponse;
-import gift.DTO.User.UserRequest;
 import gift.DTO.User.UserResponse;
 
 public class WishProductRequest {

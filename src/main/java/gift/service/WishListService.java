@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WishListService {
@@ -32,35 +33,12 @@ public class WishListService {
         this.userRepository = userRepository;
     }
     /*
-     * 특정 상품을 위시리스트에 추가하는 로직
-     */
-    public void addWishList(WishProductRequest wishProductRequest){
-        UserResponse userRes = wishProductRequest.getUser();
-        ProductResponse productRes = wishProductRequest.getProduct();
-
-        User user = userRepository.findByUserId(userRes.getUserId());
-        Product product = productRepository.findById(productRes.getId()).orElseThrow(NullPointerException::new);
-
-        if(wishListRepository.existsByUserIdAndProductId(user.getId(), product.getId())){
-            WishProduct wishProduct = wishListRepository.findByUserIdAndProductId(user.getId(), product.getId());
-            wishProduct.changeCount(wishProduct.getCount() + 1);
-
-            wishListRepository.save(wishProduct);
-            return;
-        }
-
-        WishProduct wishProduct = new WishProduct(user, product);
-        wishListRepository.save(wishProduct);
-    }
-    /*
      * 특정 유저의 위시리스트를 반환하는 로직
      */
-    public List<WishProductResponse> loadWishList(String userId){
+    public List<WishProductResponse> loadWishList(Long id){
         List<WishProductResponse> list = new ArrayList<>();
 
-        User byUserId = userRepository.findByUserId(userId);
-
-        List<WishProduct> wishes = wishListRepository.findByUserId(byUserId.getId());
+        List<WishProduct> wishes = wishListRepository.findByUserId(id);
         for (WishProduct wishProduct : wishes) {
             User userEntity = wishProduct.getUser();
             Product productEntity = wishProduct.getProduct();
@@ -71,6 +49,7 @@ public class WishListService {
                     userEntity.getEmail(),
                     userEntity.getPassword()
             );
+
             ProductResponse product = new ProductResponse(
                     productEntity.getId(),
                     productEntity.getName(),
@@ -84,14 +63,36 @@ public class WishListService {
                     product,
                     wishProduct.getCount()
             );
+
             list.add(wishProductResponse);
         }
 
         return list;
     }
     /*
+     * 특정 상품을 위시리스트에 추가하는 로직
+     */
+    @Transactional
+    public void addWishList(WishProductRequest wishProductRequest){
+        Long id = wishProductRequest.getUser().getId();
+        Long productId = wishProductRequest.getProduct().getId();
+
+        if(wishListRepository.existsByUserIdAndProductId(id, productId)){
+            WishProduct wishProduct = wishListRepository.findByUserIdAndProductId(id, productId);
+            wishProduct.changeCount(wishProduct.getCount() + 1);
+
+            return;
+        }
+
+        User byId = userRepository.findById(id).orElseThrow(NullPointerException::new);
+        Product byProductId = productRepository.findById(productId).orElseThrow(NullPointerException::new);
+        WishProduct wishProduct = new WishProduct(byId, byProductId);
+        wishListRepository.save(wishProduct);
+    }
+    /*
      * 특정 유저의 특정 위시리스트 물품의 수량을 변경하는 로직
      */
+    @Transactional
     public void updateWishProduct(Long userId, Long productId, int count){
         WishProduct wish = wishListRepository.findByUserIdAndProductId(userId, productId);
         wish.changeCount(count);
@@ -102,7 +103,12 @@ public class WishListService {
      */
     @Transactional
     public void deleteWishProduct(Long userId, Long productId){
-        wishListRepository.deleteByUserIdAndProductId(userId, productId);
+        WishProduct wish = wishListRepository.findByUserIdAndProductId(userId, productId);
+        if(wish.getCount() == 1) {
+            wishListRepository.deleteByUserIdAndProductId(userId, productId);
+            return;
+        }
+        wish.changeCount(wish.getCount() - 1);
     }
 
 }

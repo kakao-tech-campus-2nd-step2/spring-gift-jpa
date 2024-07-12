@@ -35,10 +35,9 @@ public class WishListController {
      */
     @PostMapping("api/wishes/{productId}")
     public ResponseEntity<Void> addWishList(
-            @PathVariable("productId") Long id, @AuthenticateMember UserRequest user
+            @PathVariable("productId") Long id, @AuthenticateMember UserResponse userRes
     ){
         ProductResponse productRes = ps.readOneProduct(id);
-        UserResponse userRes = us.loadOneUser(user.getUserId());
 
         WishProductRequest wishProduct = new WishProductRequest(userRes, productRes);
         wishListService.addWishList(wishProduct);
@@ -52,8 +51,8 @@ public class WishListController {
      * 실패 시 : Exception Handler에서 처리
      */
     @GetMapping("api/wishes")
-    public ResponseEntity<List<WishProductResponse>> getWishList(@AuthenticateMember UserRequest user){
-        List<WishProductResponse> wishList = wishListService.loadWishList(user.getUserId());
+    public ResponseEntity<List<WishProductResponse>> getWishList(@AuthenticateMember UserResponse user){
+        List<WishProductResponse> wishList = wishListService.loadWishList(user.getId());
 
         return new ResponseEntity<>(wishList, HttpStatus.OK);
     }
@@ -63,10 +62,10 @@ public class WishListController {
     @PutMapping("api/wishes/{productId}")
     public ResponseEntity<Void> updateWishProduct(
             @PathVariable("productId") Long productId,
-            @AuthenticateMember UserRequest user,
+            @AuthenticateMember UserResponse user,
             @RequestParam int count
     ){
-        Long id = us.loadOneUser(user.getUserId()).getId();
+        Long id = user.getId();
         wishListService.updateWishProduct(id, productId, count);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -80,9 +79,9 @@ public class WishListController {
     @DeleteMapping("api/wishes/{productId}")
     public ResponseEntity<Void> deleteWishProduct(
             @PathVariable("productId") Long productId,
-            @AuthenticateMember UserRequest user
+            @AuthenticateMember UserResponse user
     ){
-        Long id = us.loadOneUser(user.getUserId()).getId();
+        Long id = user.getId();
         wishListService.deleteWishProduct(id, productId);
 
         return new ResponseEntity<>(HttpStatus.OK);
