@@ -1,13 +1,13 @@
 package gift.Model;
 
-public class RequestWishListDTO {
+public class RequestWishDTO {
     private Long productId;
     private int count;
 
-    public RequestWishListDTO() {
+    public RequestWishDTO() {
     }
 
-    public RequestWishListDTO(Long productId, int count) {
+    public RequestWishDTO(Long productId, int count) {
         this.productId = productId;
         this.count = count;
     }

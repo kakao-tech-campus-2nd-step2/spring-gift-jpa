@@ -7,6 +7,8 @@ import gift.Repository.MemberRepository;
 import gift.Util.JwtUtil;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
@@ -24,7 +26,7 @@ public class MemberService {
     }
 
     public String loginUser(RequestMember requestMember) throws ForbiddenException {
-        Member member = memberRepository.findByEmail(requestMember.email());
+        Member member = memberRepository.findByEmail(requestMember.email()).orElseThrow(() -> new NoSuchElementException("매칭되는 멤버가 없습니다."));
         String temp = member.getPassword();
         if (!(temp.equals(requestMember.password())))
             throw new ForbiddenException("잘못된 로그인입니다");
@@ -33,7 +35,6 @@ public class MemberService {
     }
 
     public Member getUserByToken(String token) {
-        Member member = memberRepository.findByEmail(jwtUtil.getSubject(token));
-        return member;
+        return memberRepository.findByEmail(jwtUtil.getSubject(token)).orElseThrow(()-> new NoSuchElementException("매칭되는 멤버가 없습니다"));
     }
 }

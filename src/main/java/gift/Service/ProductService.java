@@ -7,7 +7,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
 public class ProductService {
@@ -29,22 +29,22 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public Optional<Product> selectProduct(long id) {
-        Optional<Product> product = productRepository.findById(id);
+    public Product selectProduct(long id) {
+        Product product = productRepository.findById(id).orElseThrow(()->new NoSuchElementException("매칭되는 product가 없습니다"));
         return product;
     }
 
     @Transactional
     public void editProduct(long id, RequestProduct requestProduct) {
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        Product product = optionalProduct.get();
+        Product product = productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("매칭되는 product가 없습니다"));
         product.setName(requestProduct.name());
         product.setPrice(requestProduct.price());
         product.setImageUrl(requestProduct.imageUrl());
     }
 
     public void deleteProduct(long id) {
-        productRepository.deleteById(id);
+        Product product = productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("매칭되는 product가 없습니다"));
+        productRepository.deleteById(product.getId());
     }
 
 

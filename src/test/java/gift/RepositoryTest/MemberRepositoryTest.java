@@ -1,0 +1,49 @@
+package gift.RepositoryTest;
+
+import gift.Model.Member;
+import gift.Repository.MemberRepository;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+@DataJpaTest
+public class MemberRepositoryTest {
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Test
+    void saveAndFindByEmailTest() {
+        Member member = new Member("woo6388@naver.com", "12345678");
+        assertThat(member.getId()).isNull();
+        var actual = memberRepository.save(member);
+        assertThat(actual.getId()).isNotNull();
+
+        Optional<Member> actual2 = memberRepository.findByEmail(member.getEmail());
+        assertThat(actual2.get().getEmail()).isEqualTo("woo6388@naver.com");
+    }
+
+    @Test
+    void updateTest() {
+        Member member1 = memberRepository.save(new Member("woo6388@naver.com", "12345678"));
+        Optional<Member> optionalMember = memberRepository.findByEmail(member1.getEmail());
+        Member member = optionalMember.get();
+        member.setPassword("0000");
+
+        var actual = memberRepository.findByEmail(member1.getEmail());
+        assertThat(actual.get().getPassword()).isEqualTo("0000");
+    }
+
+    @Test
+    void deleteTest() {
+        Member member1 = memberRepository.save(new Member("woo6388@naver.com", "12345678"));
+        Optional<Member> optionalMember = memberRepository.findByEmail(member1.getEmail());
+        assertThat(optionalMember).isPresent();
+        memberRepository.deleteById(optionalMember.get().getId());
+        var actual = memberRepository.findByEmail(member1.getEmail());
+        assertThat(actual).isEmpty();
+    }
+}

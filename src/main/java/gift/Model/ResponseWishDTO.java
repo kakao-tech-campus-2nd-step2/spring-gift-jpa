@@ -1,12 +1,13 @@
 package gift.Model;
 
-public class ResponseWishListDTO {
+public class ResponseWishDTO {
     private String name;
     private int count;
 
-    public ResponseWishListDTO(){}
+    public ResponseWishDTO() {
+    }
 
-    public ResponseWishListDTO(String name, int count) {
+    public ResponseWishDTO(String name, int count) {
         this.name = name;
         this.count = count;
     }
