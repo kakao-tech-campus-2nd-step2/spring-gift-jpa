@@ -5,6 +5,7 @@ import gift.domain.MemberDTO;
 import gift.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -26,6 +27,7 @@ public class MemberService {
         return foundMember;
     }
 
+    @Transactional
     public MemberServiceStatus save(MemberDTO memberDTO) {
         if (existsByEmail(memberDTO.getEmail())) {
             return MemberServiceStatus.EMAIL_ALREADY_EXISTS;

@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -51,6 +52,7 @@ public class ProductService {
     }
 
     // Create(생성) - addProduct()
+    @Transactional
     public ProductServiceStatus createProduct(ProductDTO productDTO) {
         try {
             ProductEntity productEntity = toProductEntity(productDTO);
@@ -62,6 +64,7 @@ public class ProductService {
     }
 
     // Update(수정) - updateProduct()
+    @Transactional
     public ProductServiceStatus editProduct(Long id, ProductDTO productDTO) {
         try {
             Optional<ProductEntity> existingProductEntityOpt = productRepository.findById(id);
@@ -78,6 +81,7 @@ public class ProductService {
         }
     }
 
+    @Transactional
     public ProductServiceStatus deleteProduct(Long id) {
         try {
             if (productRepository.existsById(id)) {
