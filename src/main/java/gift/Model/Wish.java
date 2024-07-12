@@ -7,24 +7,24 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    @Column(nullable = false)
-    String email;
-    @Column(nullable = false)
+    @Column(name= "member_id", nullable = false)
+    Long memberId;
+    @Column(name= "product_id",nullable = false)
     Long productId;
     @Column(nullable = false)
     int count;
 
     protected Wish(){}
 
-    public Wish(String email, Long id, Long productId, int count) {
-        this.email = email;
+    public Wish(Long id, Long memberId, Long productId, int count) {
+        this.memberId = memberId;
         this.id = id;
         this.productId = productId;
         this.count = count;
     }
 
-    public Wish(String email, Long productId, int count) {
-        this.email = email;
+    public Wish(Long memberId, Long productId, int count) {
+        this.memberId = memberId;
         this.productId = productId;
         this.count = count;
     }
@@ -33,8 +33,8 @@ public class Wish {
         return id;
     }
 
-    public String getEmail() {
-        return email;
+    public Long getMemberId() {
+        return memberId;
     }
 
     public Long getProductId() {
@@ -49,8 +49,8 @@ public class Wish {
         this.id = id;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 
     public void setProductId(Long productId) {
