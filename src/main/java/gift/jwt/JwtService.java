@@ -1,8 +1,10 @@
 package gift.jwt;
 
+import gift.member.UserDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import javax.crypto.SecretKey;
@@ -23,12 +25,24 @@ public class JwtService {
             .compact();
     }
 
+    public String extractToken(HttpServletRequest httpServletRequest){
+        return httpServletRequest.getHeader("Authorization");
+    }
+
     public Claims extractClaims(String token){
         return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
     }
 
     public Long getUserId(String token){
         return extractClaims(token).get("userId", Long.class);
+    }
+
+    public String getUserName(String token){
+        return extractClaims(token).get("username", String.class);
+    }
+
+    public UserDTO getUserDTO(String token){
+        return new UserDTO(getUserId(token), getUserName(token));
     }
 
     public boolean isTokenExpired(String token) {
