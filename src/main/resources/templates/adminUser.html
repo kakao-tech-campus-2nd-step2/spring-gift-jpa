@@ -23,13 +23,13 @@
     <input type="text" id="email" name="email" required>
 
     <label for="password">Password:</label>
-    <input type="number" id="password" name="password" required>
+    <input type="password" id="password" name="password" required>
 
     <input type="button" id="post" value="추가">
 </div>
 <div class="form-inline">
     <<label for="p_id">Id:</label>
-    <input type="text" id="p_id" name="p_id" disabled>
+    <input type="text" id="p_id" name="p_id" required>
 
     <label for="p_userId">UserId:</label>
     <input type="text" id="p_userId" name="p_userId" required>
@@ -38,11 +38,11 @@
     <input type="text" id="p_email" name="p_email" required>
 
     <label for="p_password">Password:</label>
-    <input type="number" id="p_password" name="p_password" required>
+    <input type="password" id="p_password" name="p_password" required>
 
     <input type="button" id="put" value="수정">
 </div>
-<table id="product-table">
+<table id="user-table">
     <thead>
     <tr>
         <th scope="col">Id</th>
@@ -107,7 +107,7 @@
 
         $.ajax({
             type : "POST",
-            url : "api/users",
+            url : "register",
             contentType: "application/json",
             datatype : "json",
             data : JSON.stringify(user),
@@ -115,14 +115,7 @@
                 location.reload();
             },
             error : function(err){
-                var text = err.responseText;
-                if(text) {
-                    var errors = JSON.parse(text);
-                    alert("[Name error : " + err.status + "]");
-                }
-                else {
-                    alert("[Id error : " + err.status + ", 중복된 ID는 사용할 수 없습니다]");
-                }
+                alert("유저 정보 생성 실패");
             }
         })
     });
@@ -132,8 +125,8 @@
             type: "DELETE",
             url: "api/users/" + id,
             success : function(res){
-                $('#product-table').find('tr[data-id="' + id + '"]').remove();
-                alert("상품 ID : " + id + "가 삭제되었습니다.");
+                $('#user-table').find('tr[data-id="' + id + '"]').remove();
+                alert("유저 ID : " + id + "가 삭제되었습니다.");
                 location.reload();
             },
             error : function(error){
@@ -159,14 +152,7 @@
                 location.reload();
             },
             error : function(err){
-                var text = err.responseText;
-                if(text) {
-                    var errors = JSON.parse(text);
-                    alert("[Name error : " + errors.name + "]");
-                }
-                else {
-                    alert("[Id error : " + err.status + ", 등록되지 않은 상품을 수정할 수 없습니다]");
-                }
+                alert("유저 정보 수정에 실패했습니다" + err.status);
             }
         })
     })
