@@ -1,5 +1,6 @@
 package gift.product.service;
 
+import gift.core.PagedDto;
 import gift.core.domain.product.Product;
 import gift.core.domain.product.ProductRepository;
 import gift.core.domain.product.ProductService;
@@ -52,6 +53,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findAll() {
         return productRepository.findAll();
+    }
+
+    @Override
+    public PagedDto<Product> findAll(int page, int size) {
+        return productRepository.findAll(page, size);
     }
 
     @Override

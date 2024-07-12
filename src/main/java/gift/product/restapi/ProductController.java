@@ -1,10 +1,12 @@
 package gift.product.restapi;
 
+import gift.core.PagedDto;
 import gift.core.domain.product.Product;
 import gift.core.domain.product.ProductService;
 import gift.core.domain.product.exception.ProductNotFoundException;
 import gift.product.restapi.dto.request.ProductCreateRequest;
 import gift.product.restapi.dto.request.ProductUpdateRequest;
+import gift.product.restapi.dto.response.PagedProductResponse;
 import gift.product.restapi.dto.response.ProductResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +24,12 @@ public class ProductController {
     }
 
     @GetMapping("/api/products")
-    public List<ProductResponse> getAllProducts() {
-        return productService
-                .findAll()
-                .stream()
-                .map(ProductResponse::from)
-                .toList();
+    public PagedProductResponse getAllProducts(
+            @RequestParam(required = false, defaultValue = "1") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        PagedDto<Product> pagedProducts = productService.findAll(page - 1, size);
+        return PagedProductResponse.from(pagedProducts);
     }
 
     @GetMapping("/api/products/{id}")

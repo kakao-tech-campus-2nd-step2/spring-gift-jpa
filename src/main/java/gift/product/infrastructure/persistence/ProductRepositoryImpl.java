@@ -1,11 +1,12 @@
 package gift.product.infrastructure.persistence;
 
+import gift.core.PagedDto;
 import gift.core.domain.product.Product;
 import gift.core.domain.product.ProductRepository;
 import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -49,6 +50,20 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .stream()
                 .map(ProductEntity::toDomain)
                 .toList();
+    }
+
+    public PagedDto<Product> findAll(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Product> pagedProducts = jpaProductRepository
+                .findAll(pageRequest)
+                .map(ProductEntity::toDomain);
+        return new PagedDto<>(
+                page,
+                size,
+                pagedProducts.getTotalElements(),
+                pagedProducts.getTotalPages(),
+                pagedProducts.getContent()
+        );
     }
 
     @Override
