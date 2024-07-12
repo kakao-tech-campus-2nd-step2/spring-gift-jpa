@@ -1,7 +1,13 @@
-INSERT INTO products (id, name, price, image_url) VALUES (2,'Sample1', 1000, 'http://image1.jpg');
-INSERT INTO products (id, name, price, image_url) VALUES (3,'Sample2', 2000, 'http://image2.jpg');
-INSERT INTO products (id, name, price, image_url) VALUES (4,'Sample3', 3000, 'http://image3.jpg');
+INSERT INTO products (name, price, image_url) VALUES ('Sample1', 1000, 'http://image1.jpg');
+INSERT INTO products (name, price, image_url) VALUES ('Sample2', 2000, 'http://image2.jpg');
+INSERT INTO products (name, price, image_url) VALUES ('Sample3', 3000, 'http://image3.jpg');
 
---INSERT INTO members (id, email, password) VALUES (3, 'admin3@example.com','3333');
+INSERT INTO members (email, password)
+VALUES ('admin1@kakao.com', '1111');
+INSERT INTO members (email, password)
+VALUES ('admin2@kakao.com', '2222');
 
---INSERT INTO wish_lists (member_id, product_id) VALUES (1, 2);
+INSERT INTO wish_lists (product_id, member_id) VALUES (1, 1);
+INSERT INTO wish_lists (product_id, member_id) VALUES (2, 1);
+INSERT INTO wish_lists (product_id, member_id) VALUES (1, 2);
+INSERT INTO wish_lists (product_id, member_id) VALUES (3, 2);
