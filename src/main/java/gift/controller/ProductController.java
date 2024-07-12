@@ -6,6 +6,8 @@ import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,6 +41,11 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
+
+    //Product Pagination
+    @GetMapping
+    public Page<Product> getProductPage()
+
     //product 추가
     @PostMapping
     public ResponseEntity<String> addProduct(@RequestBody @Valid ProductDTO productDTO) {
@@ -47,6 +54,7 @@ public class ProductController {
         return new ResponseEntity<>("OK", HttpStatus.CREATED);
 
     }
+
 
     //product 수정
     @PatchMapping("/{id}")

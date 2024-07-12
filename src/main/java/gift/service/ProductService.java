@@ -7,17 +7,21 @@ import gift.exception.DataNotFoundException;
 import gift.exception.DuplicateUserEmailException;
 import gift.repository.ProductRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final int PAGE_SIZE = 5;
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -71,7 +75,10 @@ public class ProductService {
         return product.get();
     }
 
-    public Page<Product> getProductPage(Pageable pageable){
+    public Page<Product> getProductPage(int page){
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.asc("id"));
+        Pageable pageable = PageRequest.of(page,PAGE_SIZE,Sort.by(sorts));
         return productRepository.findAll(pageable);
     }
 
