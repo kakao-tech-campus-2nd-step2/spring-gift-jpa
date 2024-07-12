@@ -2,9 +2,11 @@ package gift.service;
 
 import gift.model.Product;
 import gift.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -17,8 +19,9 @@ public class ProductService {
     }
 
     //전체 조회
-    public List<Product> getAllProducts(){
-        return productRepository.findAll();
+    public Page<Product> getAllProducts(int page){
+        Pageable pageable = PageRequest.of(page, 10);
+        return productRepository.findAll(pageable);
     }
 
     //하나 조회
