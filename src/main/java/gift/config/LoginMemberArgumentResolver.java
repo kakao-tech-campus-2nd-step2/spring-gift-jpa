@@ -1,5 +1,6 @@
 package gift.config;
 
+import gift.exception.InvalidTokenException;
 import gift.exception.MissingTokenException;
 import gift.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,7 +37,9 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
         token = token.replace(jwtProvider.PREFIX, "");
 
-        jwtProvider.verify(token);
+        if (!jwtProvider.isVerified(token)) {
+            throw new InvalidTokenException();
+        }
 
         Long memberId = Long.parseLong(jwtProvider.getClaims(token).getSubject());
 

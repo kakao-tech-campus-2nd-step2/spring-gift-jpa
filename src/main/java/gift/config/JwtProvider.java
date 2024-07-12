@@ -1,17 +1,15 @@
 package gift.config;
 
-import static java.lang.System.currentTimeMillis;
-
 import gift.domain.member.Member;
-import gift.exception.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-
-import java.util.Date;
-import javax.crypto.SecretKey;
-
 import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.util.Date;
+
+import static java.lang.System.currentTimeMillis;
 
 @Component
 public class JwtProvider {
@@ -37,11 +35,12 @@ public class JwtProvider {
                 .getPayload();
     }
 
-    public void verify(String jwt) {
+    public boolean isVerified(String jwt) {
         try {
             Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(jwt);
+            return true;
         } catch (JwtException e) {
-            throw new InvalidTokenException();
+            return false;
         }
     }
 
