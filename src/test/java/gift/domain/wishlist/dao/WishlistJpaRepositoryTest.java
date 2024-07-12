@@ -16,6 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -73,7 +76,7 @@ class WishlistJpaRepositoryTest {
         WishItem savedWishItem2 = wishlistJpaRepository.save(wishItem2);
 
         // when
-        List<WishItem> wishlist = wishlistJpaRepository.findAllByUserId(savedUser.getId());
+        List<WishItem> wishlist = wishlistJpaRepository.findAllByUserId(savedUser.getId(), PageRequest.of(0, 5)).getContent();
 
         // then
         assertAll(
@@ -153,7 +156,7 @@ class WishlistJpaRepositoryTest {
         wishlistJpaRepository.deleteAllByUserId(savedUser.getId());
 
         // then
-        List<WishItem> deletedProduct = wishlistJpaRepository.findAllByUserId(savedUser.getId());
+        List<WishItem> deletedProduct = wishlistJpaRepository.findAllByUserId(savedUser.getId(), PageRequest.of(0, 5)).getContent();
         assertThat(deletedProduct).isEmpty();
     }
 
@@ -178,7 +181,7 @@ class WishlistJpaRepositoryTest {
         wishlistJpaRepository.deleteAllByProductId(savedProduct2.getId());
 
         // then
-        List<WishItem> deletedProduct = wishlistJpaRepository.findAllByUserId(savedUser.getId());
+        List<WishItem> deletedProduct = wishlistJpaRepository.findAllByUserId(savedUser.getId(), PageRequest.of(0, 5)).getContent();
         assertThat(deletedProduct.size()).isEqualTo(1);
     }
 }
