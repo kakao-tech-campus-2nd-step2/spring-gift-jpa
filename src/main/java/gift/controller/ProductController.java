@@ -1,55 +1,75 @@
 package gift.controller;
 
+import gift.dto.ProductRequest;
+import gift.dto.ProductResponse;
 import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.core.Response;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/api/products")
 public class ProductController {
+    private final ProductService productService;
 
     @Autowired
-    private ProductService productService;
-
-    @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.ok(productService.findAll());
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
-    @PostMapping
-    public ResponseEntity<?> addProduct(@Valid @RequestBody Product product, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+    @GetMapping
+    public ResponseEntity<?> getAllProducts(Pageable pageable) {
+        Page<Product> products = productService.findAll(pageable);
+        Page<ProductResponse> response = products.map(product -> new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl()
+        ));
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
             String errors = bindingResult.getAllErrors().stream()
                     .map(error -> error.getDefaultMessage())
                     .collect(Collectors.joining(", "));
             return ResponseEntity.badRequest().body(errors);
         }
+        Product product = new Product();
+        product.setName(productRequest.getName());
+        product.setPrice(productRequest.getPrice());
+        product.setImageUrl(productRequest.getImageUrl());
         return ResponseEntity.ok(productService.save(product));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id,@Valid @RequestBody Product product, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
             String errors = bindingResult.getAllErrors().stream()
                     .map(error -> error.getDefaultMessage())
                     .collect(Collectors.joining(", "));
             return ResponseEntity.badRequest().body(errors);
         }
+        Product product = new Product();
         product.setId(id);
+        product.setName(productRequest.getName());
+        product.setPrice(productRequest.getPrice());
+        product.setImageUrl(productRequest.getImageUrl());
         return ResponseEntity.ok(productService.save(product));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }
