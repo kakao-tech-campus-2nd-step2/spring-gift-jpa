@@ -10,7 +10,10 @@ import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import jakarta.persistence.EntityNotFoundException;
+
 import java.util.List;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,11 +31,12 @@ public class WishService {
 
     }
 
-    public List<Wish> getWishesByMember(Member member) {
+    public List<Wish> getWishesByMember(Member member, int pageNo, int pageSize) {
         MemberEntity memberEntity = memberRepository.findById(member.getId())
             .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
         return wishRepository
-            .findAllByMemberEntity(memberEntity)
+            .findAllByMemberEntity(memberEntity, pageable)
             .stream()
             .map(this::entityToDomain)
             .toList();

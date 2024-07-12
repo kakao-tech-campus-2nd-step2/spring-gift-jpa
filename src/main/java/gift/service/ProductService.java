@@ -8,6 +8,8 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,8 +29,9 @@ public class ProductService {
         return entityToDomain(productEntity);
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll()
+    public List<Product> getAllProducts(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        return productRepository.findAll(pageable)
             .stream()
             .map(this::entityToDomain)
             .collect(Collectors.toList());
