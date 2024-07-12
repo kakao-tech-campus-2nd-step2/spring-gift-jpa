@@ -1,6 +1,5 @@
 package gift.domain.product;
 
-import gift.global.annotation.NotContainsValue;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -47,6 +46,7 @@ public class ProductDTO {
     public String getImageUrl() {
         return imageUrl;
     }
+
 
     public void setPrice(Integer price) {
         this.price = price;

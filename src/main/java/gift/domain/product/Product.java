@@ -6,7 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.hibernate.validator.constraints.UniqueElements;
+import java.util.Objects;
+
 
 @Entity
 public class Product {
@@ -35,7 +36,6 @@ public class Product {
         return this.id;
     }
 
-
     public String getName() {
         return name;
     }
@@ -51,11 +51,27 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" +
-            "id=" + id +
-            ", name='" + name + '\'' +
-            ", price=" + price +
-            ", imageUrl='" + imageUrl + '\'' +
-            '}';
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", price=" + price +
+               ", imageUrl='" + imageUrl + '\'' +
+               '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id &&
+               price == product.price &&
+               Objects.equals(name, product.name) &&
+               Objects.equals(imageUrl, product.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, imageUrl);
     }
 
     public void update(String name, int price, String imageUrl) {

@@ -1,6 +1,5 @@
-package gift.domain.product.repository;
+package gift.domain.product;
 
-import gift.domain.product.Product;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,8 +15,6 @@ public interface JpaProductRepository extends JpaRepository<Product, Long> {
 
     @Transactional
     @Modifying
-    @Query("DELETE FROM Product p WHERE p.id IN :productIds")
-    void deleteByIds(@Param("productIds") List<Long> productIds);
+    void deleteAllByIdIn(List<Long> productIds);
 
-    Product findByName(String name);
 }

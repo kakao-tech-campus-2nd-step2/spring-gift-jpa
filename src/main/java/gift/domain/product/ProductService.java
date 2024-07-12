@@ -1,6 +1,5 @@
 package gift.domain.product;
 
-import gift.domain.product.repository.JpaProductRepository;
 import gift.global.exception.BusinessException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -21,7 +20,8 @@ public class ProductService {
     private final Validator validator;
 
     @Autowired
-    public ProductService(JdbcTemplate jdbcTemplate, JpaProductRepository jpaProductRepository, Validator validator) {
+    public ProductService(JdbcTemplate jdbcTemplate, JpaProductRepository jpaProductRepository,
+        Validator validator) {
         this.jdbcTemplate = jdbcTemplate;
         this.productRepository = jpaProductRepository;
         this.validator = validator;
@@ -49,7 +49,7 @@ public class ProductService {
     public List<Product> getProducts() {
         List<Product> products = productRepository.findAll();
         System.out.println("products = " + products);
-        
+
         return products;
     }
 
@@ -64,7 +64,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND, "수정할 상품이 존재하지 않습니다."));
 
-        product.update(productDTO.getName(), productDTO.getPrice(),productDTO.getImageUrl());
+        product.update(productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
 
         validateProduct(product);
 
@@ -86,13 +86,13 @@ public class ProductService {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "삭제할 상품을 선택하세요.");
         }
 
-        productRepository.deleteByIds(productIds);
+        productRepository.deleteAllByIdIn(productIds);
     }
 
     /**
      * 비즈니스 제약 사항 검사
      */
-     public void validateProduct(Product product) {
+    public void validateProduct(Product product) {
         Set<ConstraintViolation<Product>> violations = validator.validate(product);
         if (!violations.isEmpty()) {
             String message = violations.stream()

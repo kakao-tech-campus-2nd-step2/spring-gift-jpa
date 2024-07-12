@@ -1,8 +1,9 @@
 package gift.domain.cart;
 
-import gift.domain.cart.repository.JpaCartItemRepository;
+import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
-import gift.domain.product.repository.JpaProductRepository;
+import gift.domain.user.JpaUserRepository;
+import gift.domain.user.User;
 
 import gift.global.exception.BusinessException;
 import java.util.List;
@@ -17,11 +18,15 @@ public class CartItemService {
     private final JdbcTemplate jdbcTemplate;
     private final JpaProductRepository productRepository;
     private final JpaCartItemRepository cartItemRepository;
+    private final JpaUserRepository userRepository;
+
     public CartItemService(
         JdbcTemplate jdbcTemplate,
         JpaProductRepository jpaProductRepository,
-        JpaCartItemRepository jpaCartItemRepository
+        JpaCartItemRepository jpaCartItemRepository,
+        JpaUserRepository jpaUserRepository
     ) {
+        this.userRepository = jpaUserRepository;
         this.jdbcTemplate = jdbcTemplate;
         this.cartItemRepository = jpaCartItemRepository;
         this.productRepository = jpaProductRepository;
@@ -31,11 +36,16 @@ public class CartItemService {
      * 장바구니에 상품 ID 추가
      */
     public void addCartItem(Long userId, Long productId) {
-        if (cartItemRepository.existsByUserIdAndProductId(userId, productId)) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, "사용자를 찾을 수 없습니다"));
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, "상품을 찾을 수 없습니다"));
+
+        if (cartItemRepository.existsByUserAndProduct(user, product)) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "해당 상품이 장바구니에 이미 존재합니다.");
         }
 
-        CartItem cartItem = new CartItem(userId, productId);
+        CartItem cartItem = new CartItem(user, product);
         cartItemRepository.save(cartItem);
     }
 
@@ -43,14 +53,11 @@ public class CartItemService {
      * 장바구니 상품 조회
      */
     public List<Product> getProductsInCartByUserId(Long userId) {
-        List<Long> productIds = cartItemRepository.findAllByUserId(userId)
-            .stream()
-            .map(CartItem::getProductId)
-            .collect(Collectors.toList());
+        List<CartItem> cartItems = cartItemRepository.findAllByUserId(userId);
 
-        System.out.println("userId = " + userId);
-        List<Product> products = productRepository.findAllById(productIds);
-        return products;
+        return cartItems.stream()
+            .map(CartItem::getProduct)
+            .collect(Collectors.toList());
     }
 
     /**
