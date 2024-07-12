@@ -4,9 +4,9 @@ import gift.controller.dto.ProductDTO;
 import gift.domain.Product;
 import gift.repository.ProductRepository;
 import gift.utils.error.NotpermitNameException;
-import gift.utils.error.ProductAlreadyExistException;
 import gift.utils.error.ProductNotFoundException;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,12 +23,8 @@ public class GiftService {
             orElseThrow(() -> new ProductNotFoundException("Product NOT FOUND"));
     }
 
-    public List<Product> getAllProduct() {
-        List<Product> ALL = productRepository.findAll();
-        if (ALL.isEmpty()) {
-            throw new ProductNotFoundException("Product NOT FOUND");
-        }
-        return ALL;
+    public Page<Product> getAllProduct(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     public ProductDTO postProducts(ProductDTO productDTO) {

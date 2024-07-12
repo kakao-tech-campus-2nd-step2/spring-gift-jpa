@@ -6,12 +6,13 @@ import gift.domain.Product;
 import gift.domain.UserInfo;
 import gift.domain.Wish;
 import java.util.Arrays;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 public class WishRepositoryTest {
@@ -33,12 +34,20 @@ public class WishRepositoryTest {
 
         Wish wish = new Wish(product, userInfo, 1L);
         wishRepository.save(wish);
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(0, pageSize);
 
-        List<Wish> byUserId = wishRepository.findByUserInfoId(wish.getUserInfo().getId());
+        Page<Wish> byUserId = wishRepository.findByUserInfoId(wish.getUserInfo().getId(), pageable);
 
         assertThat(byUserId).isNotEmpty();
-        assertThat(byUserId.getFirst().getUserInfo()).isEqualTo(wish.getUserInfo());
-        assertThat(byUserId.getFirst().getProduct()).isEqualTo(wish.getProduct());
+        assertThat(byUserId.getContent().get(0))
+            .extracting(Wish::getUserInfo, Wish::getProduct, Wish::getQuantity)
+            .containsExactly(wish.getUserInfo(), wish.getProduct(), 1L);
+
+        assertThat(byUserId.getSize()).isEqualTo(pageSize);
+        assertThat(byUserId.getTotalElements()).isEqualTo(1);
+        assertThat(byUserId.getTotalPages()).isEqualTo(1);
+        assertThat(byUserId.getNumber()).isZero();
     }
 
     @Test
@@ -57,7 +66,9 @@ public class WishRepositoryTest {
         Wish updatedWish = wishRepository.findByUserInfoIdAndProductId(wish.getUserInfo().getId(),
             wish.getProduct().getId());
 
-        assertThat(updatedWish.getQuantity()).isEqualTo(5L);
+        assertThat(updatedWish)
+            .extracting(Wish::getQuantity)
+            .isEqualTo(5L);
     }
 
     @Test
@@ -86,26 +97,28 @@ public class WishRepositoryTest {
 
         wishRepository.saveAll(Arrays.asList(wish1, wish2, wish3));
 
+        Pageable pageable = PageRequest.of(0, 10);
+
         // When
-        List<Wish> wishesForUser1 = wishRepository.findByUserInfoId(wish1.getUserInfo().getId());
-        List<Wish> wishesForUser2 = wishRepository.findByUserInfoId(wish2.getUserInfo().getId());
-        List<Wish> wishesForUser3 = wishRepository.findByUserInfoId(wish3.getUserInfo().getId());
+        Page<Wish> wishesForUser1 = wishRepository.findByUserInfoId(wish1.getUserInfo().getId(),
+            pageable);
+        Page<Wish> wishesForUser2 = wishRepository.findByUserInfoId(wish2.getUserInfo().getId(),
+            pageable);
+        Page<Wish> wishesForUser3 = wishRepository.findByUserInfoId(wish3.getUserInfo().getId(),
+            pageable);
 
         // Then
-        assertThat(wishesForUser1).hasSize(1);
-        assertThat(wishesForUser1.getFirst().getUserInfo()).isEqualTo(wish1.getUserInfo());
-        assertThat(wishesForUser1.getFirst().getProduct()).isEqualTo(wish1.getProduct());
-        assertThat(wishesForUser1.getFirst().getQuantity()).isEqualTo(1L);
+        assertThat(wishesForUser1.getContent().get(0))
+            .extracting(Wish::getUserInfo, Wish::getProduct, Wish::getQuantity)
+            .containsExactly(wish1.getUserInfo(), wish1.getProduct(), 1L);
 
-        assertThat(wishesForUser2).hasSize(1);
-        assertThat(wishesForUser2.getFirst().getUserInfo()).isEqualTo(wish2.getUserInfo());
-        assertThat(wishesForUser2.getFirst().getProduct()).isEqualTo(wish2.getProduct());
-        assertThat(wishesForUser2.getFirst().getQuantity()).isEqualTo(2L);
+        assertThat(wishesForUser2.getContent().get(0))
+            .extracting(Wish::getUserInfo, Wish::getProduct, Wish::getQuantity)
+            .containsExactly(wish2.getUserInfo(), wish2.getProduct(), 2L);
 
-        assertThat(wishesForUser3).hasSize(1);
-        assertThat(wishesForUser3.getFirst().getUserInfo()).isEqualTo(wish3.getUserInfo());
-        assertThat(wishesForUser3.getFirst().getProduct()).isEqualTo(wish3.getProduct());
-        assertThat(wishesForUser3.getFirst().getQuantity()).isEqualTo(3L);
+        assertThat(wishesForUser3.getContent().get(0))
+            .extracting(Wish::getUserInfo, Wish::getProduct, Wish::getQuantity)
+            .containsExactly(wish3.getUserInfo(), wish3.getProduct(), 3L);
 
         // 전체 Wish 개수 검증
         assertThat(wishRepository.findAll()).hasSize(3);
@@ -120,7 +133,9 @@ public class WishRepositoryTest {
         userInfoRepository.save(userInfo);
         Wish wish = new Wish(product, userInfo, 1L);
         wishRepository.save(wish);
-        List<Wish> byUserId = wishRepository.findByUserInfoId(wish.getUserInfo().getId());
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Page<Wish> byUserId = wishRepository.findByUserInfoId(wish.getUserInfo().getId(), pageable);
 
         assertThat(byUserId).isNotNull();
         assertThat(wishRepository.existsByUserInfoIdAndProductId(wish.getUserInfo().getId(),
@@ -129,7 +144,7 @@ public class WishRepositoryTest {
         wishRepository.deleteByProductIdAndUserInfoId(wish.getProduct().getId(),
             wish.getUserInfo().getId());
 
-        assertThat(wishRepository.findByUserInfoId(wish.getUserInfo().getId())).isEmpty();
+        assertThat(wishRepository.findByUserInfoId(wish.getUserInfo().getId(), pageable)).isEmpty();
         assertThat(wishRepository.existsByUserInfoIdAndProductId(wish.getUserInfo().getId(),
             wish.getProduct().getId())).isFalse();
     }
@@ -147,12 +162,9 @@ public class WishRepositoryTest {
         Wish byUserIdAndProductId = wishRepository.findByUserInfoIdAndProductId(
             wish.getUserInfo().getId(), wish.getProduct().getId());
 
-        assertThat(byUserIdAndProductId).isNotNull();
-        assertThat(byUserIdAndProductId.getProduct().getId()).isEqualTo(wish.getProduct().getId());
-        assertThat(byUserIdAndProductId.getUserInfo().getId()).isEqualTo(
-            wish.getUserInfo().getId());
-        assertThat(byUserIdAndProductId.getQuantity()).isEqualTo(1L);
-
+        assertThat(byUserIdAndProductId)
+            .extracting(Wish::getProduct, Wish::getUserInfo, Wish::getQuantity)
+            .containsExactly(wish.getProduct(), wish.getUserInfo(), 1L);
     }
 
     @Test
@@ -169,7 +181,5 @@ public class WishRepositoryTest {
         wishRepository.deleteByProductIdAndUserInfoId(product.getId(), userInfo.getId());
         assertThat(wishRepository.findByUserInfoIdAndProductId(product.getId(),
             userInfo.getId())).isNull();
-
     }
-
 }
