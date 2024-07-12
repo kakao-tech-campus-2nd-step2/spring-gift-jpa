@@ -1,16 +1,18 @@
 package gift.entity;
 
-import gift.domain.Member;
-import gift.service.MemberService;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name ="member")
+@Table(name = "member")
 public class MemberEntity {
 
     @Id
@@ -23,11 +25,16 @@ public class MemberEntity {
     @Column
     private String password;
 
-    public MemberEntity(){}
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL)
+    private List<WishEntity> wishEntityList;
 
-    public MemberEntity(String email, String password){
+    public MemberEntity() {
+    }
+
+    public MemberEntity(String email, String password) {
         this.email = email;
         this.password = password;
+        this.wishEntityList = new ArrayList<>();
     }
 
     public Long getId() {
@@ -42,7 +49,16 @@ public class MemberEntity {
         return password;
     }
 
-    public Member toMember(){
-        return new Member(this.id, this.email, this.password);
+    public List<WishEntity> getWishEntityList() {
+        return wishEntityList;
+    }
+
+    public void addWishEntity(WishEntity wishEntity) {
+        this.wishEntityList.add(wishEntity);
+        wishEntity.updateMemberEntity(this);
+    }
+
+    public void removeWishEntity(WishEntity wishEntity) {
+        this.wishEntityList.remove(wishEntity);
     }
 }

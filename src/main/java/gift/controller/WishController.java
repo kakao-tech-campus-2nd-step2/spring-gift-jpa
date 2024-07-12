@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/wishes")
 public class WishController {
+
     private final WishService wishService;
 
     public WishController(WishService wishService) {
@@ -28,16 +29,18 @@ public class WishController {
     }
 
     @PostMapping
-    public ResponseEntity<Wish> createWish(@RequestBody ProductIdRequest productIdRequest, @LoginMember Member member) {
+    public ResponseEntity<Wish> createWish(@RequestBody ProductIdRequest productIdRequest,
+        @LoginMember Member member) {
         WishRequest wishRequest = new WishRequest(member.getId(), productIdRequest.getProductId());
-        Wish wish =wishService.addWish(wishRequest);
+        Wish wish = wishService.addWish(wishRequest);
 
         return new ResponseEntity<>(wish, HttpStatus.CREATED);
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Wish> deleteWish(@PathVariable("id") Long id, @LoginMember Member member) {
+    public ResponseEntity<Wish> deleteWish(@PathVariable("id") Long id,
+        @LoginMember Member member) {
         wishService.deleteWish(id, member);
 
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);

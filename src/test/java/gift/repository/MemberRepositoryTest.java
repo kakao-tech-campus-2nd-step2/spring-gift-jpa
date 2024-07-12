@@ -20,7 +20,7 @@ class MemberRepositoryTest {
     void findByEmail() {
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        MemberEntity expected = memberRepository.save(request.toMemberEntity());
+        MemberEntity expected = memberRepository.save(new MemberEntity(request.getEmail(), request.getPassword()));
 
         // when
         MemberEntity actual = memberRepository.findByEmail(request.getEmail()).orElseThrow();
@@ -34,7 +34,7 @@ class MemberRepositoryTest {
     void findById(){
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        MemberEntity expected = memberRepository.save(request.toMemberEntity());
+        MemberEntity expected = memberRepository.save(new MemberEntity(request.getEmail(), request.getPassword()));
 
         // when
         MemberEntity actual = memberRepository.findById(expected.getId()).orElseThrow();
@@ -48,7 +48,7 @@ class MemberRepositoryTest {
     void save(){
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        MemberEntity expected = request.toMemberEntity();
+        MemberEntity expected = new MemberEntity(request.getEmail(), request.getPassword());
 
         // when
         MemberEntity actual = memberRepository.save(expected);
@@ -66,7 +66,7 @@ class MemberRepositoryTest {
     void delete(){
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        MemberEntity savedMember = memberRepository.save(request.toMemberEntity());
+        MemberEntity savedMember = memberRepository.save(new MemberEntity(request.getEmail(), request.getPassword()));
 
         // when
         memberRepository.delete(savedMember);

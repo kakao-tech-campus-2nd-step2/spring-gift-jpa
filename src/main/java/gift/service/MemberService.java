@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
 
@@ -19,19 +20,27 @@ public class MemberService {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
     }
-    public List<Member> findAllMember(){
-        return memberRepository.findAll().stream().map(MemberEntity::toMember).collect(Collectors.toList());
+
+    public List<Member> getAllMember() {
+        return memberRepository
+            .findAll()
+            .stream()
+            .map(this::entityToDomain)
+            .toList();
     }
+
     public String register(MemberRequest memberRequest) {
 
-        MemberEntity memberEntity = memberRepository.save(memberRequest.toMemberEntity());
+        MemberEntity memberEntity = memberRepository.save(dtoToEntity(memberRequest));
 
-        return jwtUtil.generateToken(memberEntity.toMember());
+        return jwtUtil.generateToken(entityToDomain(memberEntity));
     }
 
     public String login(MemberRequest memberRequest) {
-        MemberEntity memberEntity = memberRepository.findByEmail(memberRequest.getEmail()).orElseThrow(()->new EntityNotFoundException("not found Entity"));
-        Member member = memberEntity.toMember();
+        MemberEntity memberEntity = memberRepository
+            .findByEmail(memberRequest.getEmail())
+            .orElseThrow(() -> new EntityNotFoundException("not found Entity"));
+        Member member = entityToDomain(memberEntity);
 
         if (member.getPassword().equals(memberRequest.getPassword())) {
             return jwtUtil.generateToken(member);
@@ -39,17 +48,31 @@ public class MemberService {
         return null;
     }
 
-    public void deleteMember(Long id){
-        MemberEntity memberEntity = memberRepository.findById(id).orElseThrow(()->new EntityNotFoundException("not found Entity"));
+    public void deleteMember(Long id) {
+        MemberEntity memberEntity = memberRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("not found Entity"));
         memberRepository.delete(memberEntity);
     }
 
     public Member getMemberFromToken(String token) {
         String email = jwtUtil.getEmailFromToken(token);
 
-        if(email != null) {
-            return memberRepository.findByEmail(email).orElseThrow(()->new EntityNotFoundException("not found Entity")).toMember();
+        if (email != null) {
+            return entityToDomain(memberRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("not found Entity"))
+            );
         }
         return null;
+    }
+
+    private Member entityToDomain(MemberEntity memberEntity) {
+        return new Member(memberEntity.getId(), memberEntity.getEmail(),
+            memberEntity.getPassword());
+    }
+
+    private MemberEntity dtoToEntity(MemberRequest memberRequest) {
+        return new MemberEntity(memberRequest.getEmail(), memberRequest.getPassword());
     }
 }

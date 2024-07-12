@@ -13,18 +13,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlbalExceptionHandler {
 
-    @ExceptionHandler(value= MemberAuthorizationException.class)
-    public ResponseEntity<String> handleMemberException(Exception e){
+    @ExceptionHandler(value = MemberAuthorizationException.class)
+    public ResponseEntity<String> handleMemberException(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException e){
+    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<List<String>> handleNameException(MethodArgumentNotValidException e){
+    public ResponseEntity<List<String>> handleNameException(MethodArgumentNotValidException e) {
         List<String> errorMessages = new ArrayList<>();
         e.getBindingResult().getAllErrors().forEach(error -> {
             String errorMessage = error.getDefaultMessage();

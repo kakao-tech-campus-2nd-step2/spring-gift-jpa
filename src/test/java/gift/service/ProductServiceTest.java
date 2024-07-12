@@ -1,12 +1,12 @@
 package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.spy;
 
 import gift.domain.Product;
 import gift.dto.ProductRequest;
@@ -36,18 +36,19 @@ class ProductServiceTest {
         // given
         Long id = 1L;
         ProductEntity productEntity = new ProductEntity("test", 1000, "test.jpg");
-        ProductEntity spyProductEntity = spy(productEntity);
+        Product expected = entityToDomain(productEntity);
 
-        Product expected = spyProductEntity.toProduct();
-
-        doReturn(Optional.of(spyProductEntity)).when(productRepository).findById(id);
-        doReturn(expected).when(spyProductEntity).toProduct();
+        doReturn(Optional.of(productEntity)).when(productRepository).findById(id);
 
         // when
-        Product actual = productService.find(id);
+        Product actual = productService.getProduct(id);
 
         // then
-        assertThat(actual).isEqualTo(expected);
+        assertAll(
+            () -> assertThat(actual.getName()).isEqualTo(expected.getName()),
+            () -> assertThat(actual.getPrice()).isEqualTo(expected.getPrice()),
+            () -> assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl())
+        );
     }
 
     @Test
@@ -57,21 +58,19 @@ class ProductServiceTest {
         ProductEntity product1 = new ProductEntity("test1", 1000, "test1.jpg");
         ProductEntity product2 = new ProductEntity("test2", 2000, "test2.jpg");
 
-        ProductEntity spyProduct1 = spy(product1);
-        ProductEntity spyProduct2 = spy(product2);
-
-        List<ProductEntity> productList = Arrays.asList(spyProduct1, spyProduct2);
-        List<Product> expected = productList.stream().map(ProductEntity::toProduct).toList();
+        List<ProductEntity> productList = Arrays.asList(product1, product2);
+        List<Product> expected = productList.stream().map(this::entityToDomain).toList();
 
         doReturn(productList).when(productRepository).findAll();
-        doReturn(expected.get(0)).when(spyProduct1).toProduct();
-        doReturn(expected.get(1)).when(spyProduct2).toProduct();
 
         // when
-        List<Product> actual = productService.findAll();
+        List<Product> actual = productService.getAllProducts();
 
         // then
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isNotNull();
+        assertThat(actual).hasSize(2);
+        assertThat(actual).containsExactlyInAnyOrder(expected.get(0), expected.get(1));
+
     }
 
     @Test
@@ -81,17 +80,20 @@ class ProductServiceTest {
         ProductRequest productRequest = new ProductRequest("test", 1000, "test.jpg");
         ProductEntity savedProduct = new ProductEntity(productRequest.getName(), productRequest.getPrice(),
             productRequest.getImageUrl());
-        ProductEntity spySavedProduct = spy(savedProduct);
-        Product expected = spySavedProduct.toProduct();
+        
+        Product expected = entityToDomain(savedProduct);
 
-        doReturn(spySavedProduct).when(productRepository).save(any(ProductEntity.class));
-        doReturn(expected).when(spySavedProduct).toProduct();
+        doReturn(savedProduct).when(productRepository).save(any(ProductEntity.class));
 
         // when
-        Product actual = productService.createProduct(productRequest);
+        Product actual = productService.addProduct(productRequest);
 
         // then
-        assertThat(actual).isEqualTo(expected);
+        assertAll(
+            () -> assertThat(actual.getName()).isEqualTo(expected.getName()),
+            () -> assertThat(actual.getPrice()).isEqualTo(expected.getPrice()),
+            () -> assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl())
+        );
     }
 
     @Test
@@ -99,20 +101,25 @@ class ProductServiceTest {
     void update() {
         // given
         Long id = 1L;
-        ProductRequest productRequest = new ProductRequest("test", 1000, "test.jpg");
-        ProductEntity savedProductEntity = new ProductEntity("preTest", 2000, "preTest.jpg");
-        ProductEntity spySavedProductEntity = spy(savedProductEntity);
-        Product expect = spySavedProductEntity.toProduct();
+        ProductRequest productRequest = new ProductRequest("update", 1000, "update.jpg");
+        ProductEntity savedProductEntity = new ProductEntity("saved", 2000, "preTest.jpg");
+        ProductEntity updatedProductEntity = new ProductEntity("update", 1000, "update.jpg");
 
-        doReturn(Optional.of(spySavedProductEntity)).when(productRepository).findById(id);
-        doNothing().when(spySavedProductEntity).updateProductEntity(any(ProductRequest.class));
-        doReturn(spySavedProductEntity).when(productRepository).save(any(ProductEntity.class));
-        doReturn(expect).when(spySavedProductEntity).toProduct();
+        Product expected = entityToDomain(updatedProductEntity);
+
+        doReturn(Optional.of(savedProductEntity)).when(productRepository).findById(id);
+        doNothing().when(savedProductEntity).update(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        doReturn(updatedProductEntity).when(productRepository).save(any(ProductEntity.class));
+
         // when
         Product actual = productService.updateProduct(id, productRequest);
 
         // then
-        assertThat(actual).isEqualTo(expect);
+        assertAll(
+            () -> assertThat(actual.getName()).isEqualTo(expected.getName()),
+            () -> assertThat(actual.getPrice()).isEqualTo(expected.getPrice()),
+            () -> assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl())
+        );
     }
 
     @Test
@@ -129,5 +136,9 @@ class ProductServiceTest {
 
         // then
         verify(productRepository, times(1)).delete(savedProduct);
+    }
+
+    private Product entityToDomain(ProductEntity productEntity){
+        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(),productEntity.getImageUrl());
     }
 }

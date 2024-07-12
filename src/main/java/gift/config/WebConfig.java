@@ -9,6 +9,7 @@ import java.util.List;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
     private final LoginMemberArgumentResolver loginMemberArgumentResolver;
 
     public WebConfig(LoginMemberArgumentResolver loginMemberArgumentResolver) {

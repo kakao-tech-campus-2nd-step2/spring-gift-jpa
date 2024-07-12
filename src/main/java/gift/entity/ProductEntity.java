@@ -2,16 +2,19 @@ package gift.entity;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-import gift.domain.Product;
-import gift.dto.ProductRequest;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name ="product")
+@Table(name = "product")
 public class ProductEntity {
 
     @Id
@@ -27,12 +30,19 @@ public class ProductEntity {
     @Column
     private String imageUrl;
 
-    public ProductEntity(){};
-    public ProductEntity(String name, int price, String imageUrl){
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL)
+    private List<WishEntity> wishEntityList;
+
+    public ProductEntity() {
+    }
+
+    public ProductEntity(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.wishEntityList = new ArrayList<>();
     }
+
     public Long getId() {
         return id;
     }
@@ -49,13 +59,22 @@ public class ProductEntity {
         return imageUrl;
     }
 
-    public Product toProduct(){
-        return new Product(this.id, this.name, this.price, this.imageUrl);
+    public List<WishEntity> getWishEntityList() {
+        return wishEntityList;
     }
 
-    public void updateProductEntity(ProductRequest productRequest){
-        this.name = productRequest.getName();
-        this.price = productRequest.getPrice();
-        this.imageUrl = productRequest.getImageUrl();
+    public void update(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    public void addWishEntity(WishEntity wishEntity) {
+        this.wishEntityList.add(wishEntity);
+        wishEntity.updateProductEntity(this);
+    }
+
+    public void removeWishEntity(WishEntity wishEntity) {
+        this.wishEntityList.remove(wishEntity);
     }
 }

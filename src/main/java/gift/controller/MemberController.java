@@ -18,27 +18,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/members")
 public class MemberController {
+
     private final MemberService memberService;
 
-    public MemberController(MemberService memberService){
+    public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
 
     @GetMapping()
-    public ResponseEntity<List<Member>> getAllMember(){
-        List<Member> memberList = memberService.findAllMember();
+    public ResponseEntity<List<Member>> getAllMember() {
+        List<Member> memberList = memberService.getAllMember();
         return new ResponseEntity<>(memberList, HttpStatus.OK);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<JwtResponse> register(@RequestBody MemberRequest memberDto){
+    public ResponseEntity<JwtResponse> register(@RequestBody MemberRequest memberDto) {
         String token = memberService.register(memberDto);
 
         return new ResponseEntity<>(new JwtResponse(token), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody MemberRequest memberRequest){
+    public ResponseEntity<JwtResponse> login(@RequestBody MemberRequest memberRequest) {
 
         String token = memberService.login(memberRequest);
 
@@ -49,7 +50,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Long id){
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         memberService.deleteMember(id);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }

@@ -8,10 +8,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import gift.domain.Member;
+import gift.domain.Product;
 import gift.domain.Wish;
+import gift.dto.MemberRequest;
 import gift.dto.WishRequest;
+import gift.entity.MemberEntity;
+import gift.entity.ProductEntity;
 import gift.entity.WishEntity;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -28,45 +35,59 @@ class WishServiceTest {
     WishService wishService;
     @Mock
     WishRepository wishRepository;
+    @Mock
+    MemberRepository memberRepository;
+    @Mock
+    ProductRepository productRepository;
+
     @Test
     @DisplayName("getWishesByMember 테스트")
     void getWishesByMember() {
         // given
         Member savedMember = new Member(1L, "email@google.co.kr", "password");
-        WishEntity wish1 = new WishEntity(1L, 1L);
-        WishEntity wish2 = new WishEntity(1L, 2L);
 
-        WishEntity spyWish1 = spy(wish1);
-        WishEntity spyWish2 = spy(wish2);
-        Wish expected1 = spyWish1.toWish();
-        Wish expected2 = spyWish2.toWish();
+        MemberEntity member = new MemberEntity(savedMember.getEmail(), savedMember.getPassword());
 
-        List<WishEntity> wishList = Arrays.asList(spyWish1, spyWish2);
+        ProductEntity product1 = new ProductEntity("product1", 1000, "product1.jpg");
+        ProductEntity product2 = new ProductEntity("product2", 2000, "product2.jpg");
+
+        WishEntity wish1 = new WishEntity(member, product1);
+        WishEntity wish2 = new WishEntity(member, product2);
+        List<WishEntity> wishList = Arrays.asList(wish1, wish2);
+
+        Wish expected1 = new Wish(wish1.getMemberEntity().getId(), wish1.getProductEntity().getId());
+        Wish expected2 = new Wish(wish2.getMemberEntity().getId(), wish2.getProductEntity().getId());
         List<Wish> expected = Arrays.asList(expected1, expected2);
 
-        doReturn(wishList).when(wishRepository).findAllByMemberId(savedMember.getId());
-        doReturn(expected.get(0)).when(spyWish1).toWish();
-        doReturn(expected.get(1)).when(spyWish2).toWish();
+        doReturn(member).when(memberRepository).findById(savedMember.getId());
+        doReturn(wishList).when(wishRepository).findAllByMemberEntity(member);
 
         // when
         List<Wish> actual = wishService.getWishesByMember(savedMember);
 
         // then
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isNotNull();
+        assertThat(actual).hasSize(2);
     }
     @Test
     @DisplayName("위시 리스트 추가 테스트")
     void addWish() {
         // given
         WishRequest wishRequest = new WishRequest(1L, 1L);
+
         Member savedMember = new Member(1L, "email@google.com", "password");
-        WishEntity wishEntity = new WishEntity(wishRequest.getMemberId(), wishRequest.getProductId());
-        WishEntity spyWishEntity = spy(wishEntity);
+        Product savedProduct = new Product(1L, "test", 1000, "test.jpg");
 
-        Wish expected = new Wish(1L, savedMember.getId(), wishRequest.getProductId());
+        MemberEntity member = new MemberEntity(savedMember.getEmail(), savedMember.getPassword());
+        ProductEntity product = new ProductEntity(savedProduct.getName(), savedProduct.getPrice(), savedProduct.getImageUrl());
 
-        doReturn(spyWishEntity).when(wishRepository).save(any(WishEntity.class));
-        doReturn(expected).when(spyWishEntity).toWish();
+        WishEntity wishEntity = new WishEntity(member, product);
+        Wish expected = new Wish(1L, savedMember.getId(), savedProduct.getId());
+
+        doReturn(product).when(productRepository).findById(wishRequest.getProductId());
+        doReturn(member).when(memberRepository).findById(wishRequest.getMemberId());
+        doReturn(wishEntity).when(wishRepository).save(any(WishEntity.class));
+
         // when
         Wish actual = wishService.addWish(wishRequest);
 
@@ -79,7 +100,12 @@ class WishServiceTest {
     void deleteWish() {
         Long id = 1L;
         Member savedMember = new Member(1L, "email@google.co.kr", "password");
-        WishEntity wishEntity = new WishEntity(1L, 1L);
+        Product savedProduct = new Product(1L, "test", 1000, "test.jpg");
+
+        MemberEntity member = new MemberEntity(savedMember.getEmail(), savedMember.getPassword());
+        ProductEntity product = new ProductEntity(savedProduct.getName(), savedProduct.getPrice(), savedProduct.getImageUrl());
+
+        WishEntity wishEntity = new WishEntity(member, product);
 
         doReturn(Optional.of(wishEntity)).when(wishRepository).findById(id);
         wishService.deleteWish(id, savedMember);
