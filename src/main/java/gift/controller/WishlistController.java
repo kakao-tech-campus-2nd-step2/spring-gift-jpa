@@ -1,46 +1,61 @@
 package gift.controller;
 
+import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wish;
 import gift.service.WishlistService;
 import gift.util.JwtUtil;
 import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/wishes")
 public class WishlistController {
+
     private final WishlistService wishlistService;
     private final JwtUtil jwtUtil;
 
+    @Autowired
     public WishlistController(WishlistService wishlistService, JwtUtil jwtUtil) {
         this.wishlistService = wishlistService;
         this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addItem(@RequestHeader("Authorization") String token, @RequestBody Wish product) {
+    public ResponseEntity<?> addItem(@RequestHeader("Authorization") String token, @RequestBody Map<String, Object> requestBody) {
         Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
         Long memberId = Long.parseLong(claims.getSubject());
-        product.setMemberId(memberId);
-        Wish addedProduct = wishlistService.addProduct(product);
-        return ResponseEntity.ok(addedProduct);
+
+        Long productId = Long.valueOf(requestBody.get("productId").toString());
+        int productNumber = Integer.parseInt(requestBody.get("productNumber").toString());
+
+        Member member = new Member();
+        member.setId(memberId);
+        Product product = new Product();
+        product.setId(productId);
+
+        Wish wish = new Wish();
+        wish.setMember(member);
+        wish.setProduct(product);
+        wish.setProductNumber(productNumber);
+
+        Wish addedWish = wishlistService.addProduct(wish);
+        return ResponseEntity.ok(addedWish);
     }
 
     @GetMapping("/items")
     public ResponseEntity<?> getItems(@RequestHeader("Authorization") String token) {
         Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
         Long memberId = Long.parseLong(claims.getSubject());
-        List<Wish> products = wishlistService.getProductsByMemberId(memberId);
-        if (products == null || products.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.OK).body("목록이 비었습니다.");
-        }
-        return ResponseEntity.ok(products);
+
+        List<Wish> wishes = wishlistService.getWishesByMemberId(memberId);
+        return ResponseEntity.ok(wishes);
     }
 
     @GetMapping("/item-details/{productId}")
