@@ -6,7 +6,7 @@ import gift.product.persistence.repository.ProductRepository;
 import gift.product.business.dto.ProductDto;
 import gift.product.business.dto.ProductRegisterDto;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,9 +51,8 @@ public class ProductService {
         productRepository.deleteProductByIdList(productIds);
     }
 
-    public ProductPagingDto getProductsByPage(int page) {
-        PageRequest pageRequest = PageRequest.of(page, 20);
-        Page<Product> products = productRepository.getProductsByPage(pageRequest);
+    public ProductPagingDto getProductsByPage(Pageable pageable) {
+        Page<Product> products = productRepository.getProductsByPage(pageable);
         return ProductPagingDto.from(products);
     }
 }

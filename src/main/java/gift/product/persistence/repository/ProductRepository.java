@@ -5,7 +5,7 @@ import gift.product.persistence.entity.Product;
 import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductRepository {
 
@@ -25,5 +25,5 @@ public interface ProductRepository {
 
     Product getReferencedProduct(Long productId);
 
-    Page<Product> getProductsByPage(PageRequest pageRequest);
+    Page<Product> getProductsByPage(Pageable pageRequest);
 }

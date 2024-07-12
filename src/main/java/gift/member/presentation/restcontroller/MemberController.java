@@ -8,6 +8,9 @@ import gift.member.presentation.dto.RequestMemberDto;
 import gift.member.presentation.dto.RequestWishlistDto;
 import gift.member.presentation.dto.ResponsePagingWishlistDto;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +21,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -55,9 +57,11 @@ public class MemberController {
     }
 
     @GetMapping("/wishlists")
-    public ResponseEntity<ResponsePagingWishlistDto> getWishlistsByPage(@MemberId Long memberId,
-        @RequestParam("page") int page) {
-        var wishListPagingDto = wishlistService.getWishListsByPage(memberId, page);
+    public ResponseEntity<ResponsePagingWishlistDto> getWishlistsByPage(
+        @MemberId Long memberId,
+        @PageableDefault(size = 20, sort = "modifiedDate", direction = Sort.Direction.DESC) Pageable pageable)
+    {
+        var wishListPagingDto = wishlistService.getWishListsByPage(memberId, pageable);
         var responseWishlistPagingDto = ResponsePagingWishlistDto.from(wishListPagingDto);
         return ResponseEntity.ok(responseWishlistPagingDto);
     }

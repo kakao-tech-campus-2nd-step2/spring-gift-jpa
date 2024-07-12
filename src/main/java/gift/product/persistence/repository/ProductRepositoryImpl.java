@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -75,7 +75,7 @@ public class ProductRepositoryImpl implements ProductRepository{
     }
 
     @Override
-    public Page<Product> getProductsByPage(PageRequest pageRequest) {
+    public Page<Product> getProductsByPage(Pageable pageRequest) {
         return productJpaRepository.findAll(pageRequest);
     }
 }

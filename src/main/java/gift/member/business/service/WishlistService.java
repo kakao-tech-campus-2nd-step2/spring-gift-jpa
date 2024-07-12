@@ -7,7 +7,7 @@ import gift.member.persistence.repository.WishlistRepository;
 import gift.member.business.dto.WishlistUpdateDto;
 import gift.product.persistence.repository.ProductRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +24,8 @@ public class WishlistService {
         this.memberRepository = memberRepository;
     }
 
-    public WishlistPagingDto getWishListsByPage(Long memberId, int page) {
-        PageRequest pageRequest = PageRequest.of(page, 20);
-        Page<Wishlist> wishlists = wishlistRepository.getWishListByPage(memberId, pageRequest);
+    public WishlistPagingDto getWishListsByPage(Long memberId, Pageable pageable) {
+        Page<Wishlist> wishlists = wishlistRepository.getWishListByPage(memberId, pageable);
         return WishlistPagingDto.from(wishlists);
     }
 

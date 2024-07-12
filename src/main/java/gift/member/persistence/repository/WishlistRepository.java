@@ -2,7 +2,7 @@ package gift.member.persistence.repository;
 
 import gift.member.persistence.entity.Wishlist;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 public interface WishlistRepository {
 
@@ -16,5 +16,5 @@ public interface WishlistRepository {
 
     void deleteAll();
 
-    Page<Wishlist> getWishListByPage(Long memberId, PageRequest pageRequest);
+    Page<Wishlist> getWishListByPage(Long memberId, Pageable pageRequest);
 }
