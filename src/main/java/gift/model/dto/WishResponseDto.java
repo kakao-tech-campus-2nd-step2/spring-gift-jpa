@@ -4,19 +4,19 @@ import gift.model.Wish;
 
 public class WishResponseDto {
 
-    private String productName;
+    private Long productId;
     private Integer count;
 
     public WishResponseDto() {
     }
 
-    public WishResponseDto(String productName, Integer count) {
-        this.productName = productName;
+    public WishResponseDto(Long productId, Integer count) {
+        this.productId = productId;
         this.count = count;
     }
 
-    public String getProductName() {
-        return productName;
+    public Long getProductId() {
+        return productId;
     }
 
     public Integer getCount() {
@@ -25,7 +25,7 @@ public class WishResponseDto {
 
     public static WishResponseDto from(Wish wish) {
         return new WishResponseDto(
-            wish.getProductName(),
+            wish.getProduct().getId(),
             wish.getCount()
         );
     }

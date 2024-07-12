@@ -6,13 +6,13 @@ public class ProductResponseDto {
 
     private Long id;
     private String name;
-    private int price;
+    private Integer price;
     private String imageUrl;
 
     public ProductResponseDto() {
     }
 
-    public ProductResponseDto(Long id, String name, int price, String imageUrl) {
+    public ProductResponseDto(Long id, String name, Integer price, String imageUrl) {
         this.imageUrl = imageUrl;
         this.price = price;
         this.name = name;

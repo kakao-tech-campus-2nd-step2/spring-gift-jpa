@@ -1,27 +1,31 @@
 package gift.service;
 
-import gift.model.Member;
 import gift.model.dto.LoginMemberDto;
 import gift.model.dto.MemberRequestDto;
-import gift.repository.MemberDao;
+import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
 
-    public MemberService(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
-    public LoginMemberDto selectLoginMemberById(Long id) {
-        Member member = memberDao.selectMemberById(id);
-        return new LoginMemberDto(member.getId(), member.getName(), member.getEmail(),
-            member.getRole());
+    @Transactional(readOnly = true)
+    public LoginMemberDto selectLoginMemberById(Long id) throws IllegalArgumentException {
+        return memberRepository.findById(id)
+            .map(member ->
+                LoginMemberDto.of(member.getId(), member.getName(), member.getEmail(),
+                    member.getRole()))
+            .orElseThrow(() -> new IllegalArgumentException("Member Not Found"));
     }
 
+    @Transactional
     public void insertMember(MemberRequestDto memberRequestDto) {
-        memberDao.insertMember(memberRequestDto.toEntity());
+        memberRepository.save(memberRequestDto.toEntity());
     }
 }

@@ -1,7 +1,5 @@
 package gift.model.dto;
 
-import gift.exception.ProductErrorCode;
-import gift.exception.ProductException;
 import gift.model.Product;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -26,6 +24,12 @@ public class ProductRequestDto {
     private String imageUrl;
 
     public ProductRequestDto() {
+    }
+
+    public ProductRequestDto(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     private ProductRequestDto(Long id, String name, int price, String imageUrl) {
@@ -63,10 +67,8 @@ public class ProductRequestDto {
         return imageUrl;
     }
 
-    public Product toEntity() throws ProductException {
-        validateKakaoWord(name);
+    public Product toEntity() {
         return new Product(
-            id,
             name,
             price,
             imageUrl
@@ -80,11 +82,5 @@ public class ProductRequestDto {
             productResponseDto.getPrice(),
             productResponseDto.getImageUrl()
         );
-    }
-
-    private void validateKakaoWord(String name) throws ProductException {
-        if (name.contains("카카오")) {
-            throw new ProductException(ProductErrorCode.HAS_KAKAO_WORD);
-        }
     }
 }

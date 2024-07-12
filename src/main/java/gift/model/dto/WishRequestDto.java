@@ -4,25 +4,35 @@ import gift.model.Wish;
 
 public class WishRequestDto {
 
-    private String productName;
+    private Long productId;
     private Integer count;
 
     public WishRequestDto() {
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public void setCount(Integer count) {
         this.count = count;
     }
 
-    public Wish toEntity(Long memberId) {
+    public Long getProductId() {
+        return productId;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public Wish toEntity() {
         return new Wish(
-            memberId,
-            productName,
             count
         );
+    }
+
+    public boolean isCountZero() {
+        return count == 0;
     }
 }
