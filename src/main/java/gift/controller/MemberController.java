@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.model.LogInMemberDTO;
 import gift.model.Member;
 import gift.service.MemberService;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String loginController(@RequestBody Member member) {
-        return memberService.login(member);
+    public String loginController(@RequestBody LogInMemberDTO LonInMember) {
+        return memberService.login(LonInMember);
     }
 }

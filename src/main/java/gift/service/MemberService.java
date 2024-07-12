@@ -1,7 +1,7 @@
 package gift.service;
 
-import ch.qos.logback.classic.spi.IThrowableProxy;
 import gift.model.CreateJwtToken;
+import gift.model.LogInMemberDTO;
 import gift.model.Member;
 import gift.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
@@ -31,13 +31,13 @@ public class MemberService {
         throw new IllegalArgumentException("이미 가입한 이메일 입니다.");
     }
 
-    public String login(Member member) {
+    public String login(LogInMemberDTO member) {
         //1. 이메일 확인
         Member loginMember = comfirmEmail(member.getEmail());
         //2. 패스워드 확인
-        if(comfirmPW(member, loginMember)){
+        if(comfirmPW(loginMember.getPassword(), member.getPassword())){
             //3. 토큰 발급
-            return createJwtToken.createJwt(member.getId(), member.getEmail());
+            return createJwtToken.createJwt(loginMember.getId(), loginMember.getEmail());
         }
         throw new IllegalStateException("로그인에 실패했습니다.");
     }
@@ -49,8 +49,8 @@ public class MemberService {
         return memberRepository.findByEmail(email);
     }
 
-    private boolean comfirmPW(Member member, Member inputMember){
-        if(member.equals(inputMember)){
+    private boolean comfirmPW(String memberPassword, String inputPassword){
+        if(memberPassword.equals(inputPassword)){
             return true;
         }
         throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
