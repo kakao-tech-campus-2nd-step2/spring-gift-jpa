@@ -24,8 +24,7 @@ public class WishListService {
 
 
     public WishList getProductsInWishList(Long userId) {
-        WishList wishList = wishListRepository.findByUserId(userId);
-        return wishList;
+        return wishListRepository.findByUserId(userId);
     }
 
 
@@ -36,10 +35,9 @@ public class WishListService {
 
         if (wishList == null) {
             wishList = new WishList();
-            wishList.setUserId(userId);
             wishList = wishListRepository.save(wishList);
         }
-        product.setWishList(wishList);  // Set the wishlist reference in the product
+        product.setWishList(wishList);
         wishList.getProducts().add(product);
         wishListRepository.save(wishList);
     }

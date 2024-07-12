@@ -12,7 +12,11 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND("해당 상품을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST),
 
     // User ErrorMessage
+    DUPLICATE_USER("이미 존재하는 회원입니다.", HttpStatus.BAD_REQUEST),
+
+    // User ErrorMessage
     LOGIN_FAILED("로그인에 실패하였습니다.", HttpStatus.UNAUTHORIZED),
+
     USER_NOT_FOUND("유저를 찾을 수 없습니다.", HttpStatus.UNAUTHORIZED),
 
 

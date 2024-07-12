@@ -9,8 +9,10 @@ import gift.util.ErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -22,12 +24,24 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public User registerUser(UserRegisterRequest request) {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
+        // 중복회원 검증
+        validateDuplicateUser(request.getEmail());
+
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(encodedPassword);
         return userRepository.save(user);
+    }
+
+    private void validateDuplicateUser(String email) {
+        userRepository.findByEmail(email).ifPresent(
+            user -> {
+                throw new UserException(ErrorCode.DUPLICATE_USER);
+            }
+        );
     }
 
     public User authenticateUser(String email, String password) {
