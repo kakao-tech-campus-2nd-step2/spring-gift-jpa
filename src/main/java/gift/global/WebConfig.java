@@ -1,11 +1,10 @@
 package gift.global;
 
 import gift.domain.annotation.ValidAdminUserArgumentResolver;
-import gift.domain.service.UserService;
 import gift.domain.annotation.ValidUserArgumentResolver;
+import gift.domain.service.UserService;
 import gift.global.util.JwtUtil;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

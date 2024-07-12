@@ -8,7 +8,9 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Wish {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long productId;
     private Long userId;

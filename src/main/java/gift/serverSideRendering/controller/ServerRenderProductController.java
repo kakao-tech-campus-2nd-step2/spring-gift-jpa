@@ -1,8 +1,8 @@
 package gift.serverSideRendering.controller;
 
-import gift.domain.service.ProductService;
 import gift.domain.dto.request.ProductRequest;
 import gift.domain.dto.response.ProductResponse;
+import gift.domain.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.stereotype.Controller;

@@ -18,7 +18,7 @@ public class SuccessApiResponse {
             .body(new BasicApiResponse(statusCode));
     }
 
-    public static ResponseEntity<BasicApiResponse> of (final HttpHeaders headers, final HttpStatusCode statusCode) {
+    public static ResponseEntity<BasicApiResponse> of(final HttpHeaders headers, final HttpStatusCode statusCode) {
         return ResponseEntity
             .status(statusCode)
             .headers(headers)
@@ -50,9 +50,7 @@ public class SuccessApiResponse {
     }
 
     // HTTP code 201에 대한 응답 생성 (with header/Location, data)
-    public static <DTO> ResponseEntity<DTO> created(final DTO dto,
-                                                    final String url,
-                                                    final Object... uriVariableValues) {
+    public static <DTO> ResponseEntity<DTO> created(final DTO dto, final String url, final Object... uriVariableValues) {
         // Header에 생성된 리소스의 Location 정보 추가
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(UriComponentsBuilder
