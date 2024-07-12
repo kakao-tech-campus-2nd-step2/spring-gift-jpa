@@ -21,7 +21,7 @@ public class Product {
     @Column(nullable = false)
     String imageUrl;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes = new ArrayList<>();
 
 
