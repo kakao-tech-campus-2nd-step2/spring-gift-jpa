@@ -11,6 +11,9 @@ import gift.repository.WishListRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +31,7 @@ public class WishListService {
         this.productRepository = productRepository;
     }
 
-    //해당 사용자의 위시리스트 조회
+    //해당 사용자의 위시리스트 조회(기존)
     @Transactional(readOnly = true)
     public List<WishList> getWishListItems(Long memberId) {
         Optional<MemberEntity> memberEntity = memberRepository.findById(memberId);
@@ -39,6 +42,17 @@ public class WishListService {
         return wishListEntities.stream()
             .map(this::entityToDto)
             .collect(Collectors.toList());
+    }
+
+    //해당 사용자의 위시리스트 조회(페이지 네이션)
+    @Transactional(readOnly = true)
+    public Page<WishList> getWishListItems(Long memberId, int page, int size) {
+        MemberEntity memberEntity = memberRepository.findById(memberId)
+            .orElseThrow(() -> new NotFoundException("멤버가 존재하지 않습니다."));
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<WishListEntity> wishListEntities = wishListRepository.findByMemberEntity(memberEntity, pageable);
+        return wishListEntities.map(this::entityToDto);
     }
 
     //위시리스트 추가
