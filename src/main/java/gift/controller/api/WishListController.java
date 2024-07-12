@@ -6,6 +6,7 @@ import gift.interceptor.MemberId;
 import gift.service.WishListService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class WishListController {
 
     @GetMapping("api/wishlist")
     public ResponseEntity<Page<WishProductResponse>> getWishProducts(@MemberId Long memberId,
-                                                                     @PageableDefault(sort = "productId") Pageable pageable) {
+                                                                     @PageableDefault(sort = "createdTime", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<WishProductResponse> wishProducts = wishListService.getWishProductsByMemberId(memberId, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(wishProducts);
     }
