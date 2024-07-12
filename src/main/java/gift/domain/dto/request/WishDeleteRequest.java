@@ -5,7 +5,7 @@ import gift.domain.entity.Wish;
 
 public record WishDeleteRequest(Long productId) {
 
-    public static Wish toEntity(WishDeleteRequest dto, User user) {
-        return new Wish(0L, dto.productId, user.id(), 0L);
+    public Wish toEntity(User user) {
+        return new Wish(productId, user.getId(), 0L);
     }
 }

@@ -9,6 +9,7 @@ import gift.domain.repository.ProductRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -19,6 +20,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(Long id) {
         //존재하지 않는 상품 참조 시도시 예외 발생
         Optional<Product> product = productRepository.findById(id);
@@ -27,36 +29,39 @@ public class ProductService {
         return ProductResponse.of(product.get());
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> getAllProducts() {
         return productRepository.findAll().stream()
             .map(ProductResponse::of)
             .toList();
     }
 
+    @Transactional
     public ProductResponse addProduct(ProductRequest requestDto) {
         //이미 존재하는 상품 등록 시도시 예외 발생
         productRepository.findByContents(requestDto).ifPresent((p) -> {
             throw new ProductAlreadyExistsException();
         });
 
-
         //상품 등록
-        return ProductResponse.of(productRepository.save(requestDto));
+        return ProductResponse.of(productRepository.save(requestDto.toEntity()));
     }
 
+    @Transactional
     public ProductResponse updateProductById(Long id, ProductRequest requestDto) {
         //존재하지 않는 상품 업데이트 시도시 예외 발생
-        productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
-
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
+        product.set(requestDto);
         //상품 업데이트
-        return ProductResponse.of(productRepository.update(id, requestDto));
+        return ProductResponse.of(productRepository.save(product));
     }
 
+    @Transactional
     public void deleteProduct(Long id) {
         //존재하지 않는 상품 삭제 시도시 예외 발생
-        productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         //상품 삭제
-        productRepository.deleteById(id);
+        productRepository.delete(product);
     }
 }

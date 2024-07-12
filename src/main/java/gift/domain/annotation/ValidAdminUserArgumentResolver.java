@@ -42,7 +42,7 @@ public class ValidAdminUserArgumentResolver implements HandlerMethodArgumentReso
 
         String userEmail = jwtUtil.getSubject(authorizationHeader);
         User user = userService.findByEmail(userEmail);
-        if (!user.permission().equals("admin")) {
+        if (!user.getPermission().equals("admin")) {
             throw new UserNotAdminException();
         }
         return user;

@@ -19,7 +19,7 @@ public record ProductRequest(
     @NotNull
     String imageUrl) {
 
-    public static Product toEntity(Long id, ProductRequest requestDto) {
-        return new Product(id, requestDto.name(), requestDto.price(), requestDto.imageUrl());
+    public Product toEntity() {
+        return new Product(name, price, imageUrl);
     }
 }

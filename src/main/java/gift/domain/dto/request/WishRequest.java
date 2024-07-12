@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotNull;
 public record WishRequest(@NotNull Long productId, @NotNull Long quantity) {
 
     public static WishRequest of(Wish wish) {
-        return new WishRequest(wish.productId(), wish.quantity());
+        return new WishRequest(wish.getProductId(), wish.getQuantity());
     }
 
-    public static Wish toEntity(WishRequest dto, User user) {
-        return new Wish(0L, dto.productId, user.id(), dto.quantity);
+    public Wish toEntity(User user) {
+        return new Wish(productId, user.getId(), quantity);
     }
 }

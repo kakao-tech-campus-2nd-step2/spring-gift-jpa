@@ -10,6 +10,6 @@ public record WishResponse(
     Long quantity) {
 
     public static WishResponse of(Long quantity, Product product) {
-        return new WishResponse(product.id(), product.name(), product.price(), product.imageUrl(), quantity);
+        return new WishResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), quantity);
     }
 }
