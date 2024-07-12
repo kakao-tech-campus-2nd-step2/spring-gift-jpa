@@ -34,7 +34,7 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<ResponsePagingProductDto> getProductsByPage(
         @PageableDefault(size = 20, sort = "modifiedDate", direction = Sort.Direction.DESC) Pageable pageable,
-        @RequestParam(required = false) Integer size) {
+        @RequestParam(name = "size", required = false) Integer size) {
         if (size != null) {
             if (size < 1 || size > 100) {
                 throw new IllegalArgumentException("size는 1~100 사이의 값이어야 합니다.");
