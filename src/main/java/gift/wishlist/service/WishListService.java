@@ -11,6 +11,8 @@ import gift.wishlist.model.dto.WishListResponse;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +44,18 @@ public class WishListService {
                         w.getProduct().getImageUrl(),
                         w.getQuantity()))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<WishListResponse> getWishList(Long userId, Pageable pageable) {
+        Page<Wish> wishes = wishListRepository.findWishesByAppUserIdAndIsActiveTrue(userId, pageable);
+        return wishes.map(w -> new WishListResponse(
+                w.getId(),
+                w.getProduct().getId(),
+                w.getProduct().getName(),
+                w.getProduct().getPrice(),
+                w.getProduct().getImageUrl(),
+                w.getQuantity()));
     }
 
     @Transactional
