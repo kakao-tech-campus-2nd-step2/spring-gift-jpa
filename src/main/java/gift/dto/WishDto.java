@@ -6,8 +6,8 @@ import java.util.Base64;
 
 public class WishDto {
     private Long id;
-    private Long productId;
-    private String tokenValue;
+    private final Long productId;
+    private final String tokenValue;
 
     public WishDto(Long id, Long productId, String tokenValue) {
         this.id = id;
@@ -44,9 +44,9 @@ public class WishDto {
     }
 
     public static class Request {
-        private Long id;
-        private Long productId;
-        private String tokenValue;
+        private final Long id;
+        private final Long productId;
+        private final String tokenValue;
 
         public Request(Long id, Long productId, String tokenValue) {
             this.id = id;

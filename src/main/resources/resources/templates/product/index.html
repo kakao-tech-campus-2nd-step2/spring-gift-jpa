@@ -10,6 +10,7 @@
             margin: 0;
             padding: 20px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -17,11 +18,13 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
+
         th, td {
             padding: 12px;
             text-align: center;
             border-bottom: 1px solid #ddd;
         }
+
         th {
             background-color: #4CAF50;
             color: white;
@@ -101,10 +104,10 @@
 </head>
 <body>
 <p>
-<H1 id = "tableTitle" th:text="'상품 목록 조회'">상품관리 페이지</H1>
-<button  onclick="showAddProductForm()">상품 추가</button>
+<H1 id="tableTitle" th:text="'상품 목록 조회'">상품관리 페이지</H1>
+<button onclick="showAddProductForm()">상품 추가</button>
 <button onclick="editProduct()">상품 수정</button>
-<button onclick="deleteProducts()" type="submit" >상품 삭제</button>
+<button onclick="deleteProducts()" type="submit">상품 삭제</button>
 </p>
 <div id="addProductForm" style="display: none;">
     <h2>상품 추가</h2>
@@ -160,7 +163,7 @@
     <td>
         <input type="checkbox" name="selectedProductIds" th:value="${entry.key}">
     </td>
-    <td class="productId" th:text="${entry.key}" >1</td>
+    <td class="productId" th:text="${entry.key}">1</td>
     <td class="productName" th:text="${entry.value.name}">테스트 이름</td>
     <td class="productPrice" th:text="${entry.value.price}">1000</td>
     <td class="productImgURL" th:text="${entry.value.url}">"테스트 경로"</td>

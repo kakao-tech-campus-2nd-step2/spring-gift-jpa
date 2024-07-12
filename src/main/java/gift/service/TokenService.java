@@ -9,7 +9,7 @@ import java.util.Base64;
 
 @Service
 public class TokenService {
-    private TokenRepositoryInterface tokenRepositoryInterface;
+    private final TokenRepositoryInterface tokenRepositoryInterface;
 
     public TokenService(TokenRepositoryInterface tokenRepositoryInterface) {
         this.tokenRepositoryInterface = tokenRepositoryInterface;

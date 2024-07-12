@@ -11,9 +11,9 @@ import java.util.List;
 
 @Service
 public class WishService {
-    private WishRepositoryInterface wishRepositoryInterface;
-    private ProductRepositoryInterface productRepositoryInterface;
-    private TokenService tokenService;
+    private final WishRepositoryInterface wishRepositoryInterface;
+    private final ProductRepositoryInterface productRepositoryInterface;
+    private final TokenService tokenService;
 
     public WishService(WishRepositoryInterface wishRepositoryInterface,
                        ProductRepositoryInterface productRepositoryInterface,

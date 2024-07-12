@@ -30,7 +30,7 @@ public class UserRepository {
             );
             Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
             Long id = newId.longValue();
-            return new User(id, user.getEmail(),user.getPassword());
+            return new User(id, user.getEmail(), user.getPassword());
         } catch (DataAccessException e) {
             return null;
         }

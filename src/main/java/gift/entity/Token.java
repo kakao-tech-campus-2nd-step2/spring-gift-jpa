@@ -21,7 +21,7 @@ public class Token {
 
     public Token(Long newId, String tokenValue) {
         this.id = newId;
-        this.tokenValue= tokenValue;
+        this.tokenValue = tokenValue;
     }
 
     public Long getId() {

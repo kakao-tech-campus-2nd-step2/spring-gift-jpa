@@ -1,15 +1,11 @@
 package gift.repository;
 
-import gift.entity.Product;
 import gift.entity.Token;
-import gift.entity.User;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -30,11 +26,11 @@ public class TokenRepository {
         );
         Number newId = simpleJdbcInsert.executeAndReturnKey(parameters);
         Long id = newId.longValue();
-        return id ;
+        return id;
     }
 
     public void delete(Token token) {
-            var sql = "delete from tokens where id= ?";
-            jdbcTemplate.update(sql,token.getId());
+        var sql = "delete from tokens where id= ?";
+        jdbcTemplate.update(sql, token.getId());
     }
 }

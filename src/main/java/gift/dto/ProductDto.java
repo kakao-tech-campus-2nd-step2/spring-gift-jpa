@@ -72,14 +72,11 @@ public class ProductDto {
     }
 
     private boolean checkSpecialCharacter(char word) {
-        boolean result = true;
-        if ((word >= 'a' && word <= 'z') ||
-                (word >= 'A' && word <= 'Z') ||
-                (word >= '0' && word <= '9') ||
-                (word >= '가' && word <= '힣') ||
-                (word == ' ')) {
-            result = false;
-        }
+        boolean result = (word < 'a' || word > 'z') &&
+                (word < 'A' || word > 'Z') &&
+                (word < '0' || word > '9') &&
+                (word < '가' || word > '힣') &&
+                (word != ' ');
         return result;
     }
 

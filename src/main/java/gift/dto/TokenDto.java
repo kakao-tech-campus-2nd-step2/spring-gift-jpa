@@ -1,6 +1,5 @@
 package gift.dto;
 
-import gift.entity.Product;
 import gift.entity.Token;
 
 public class TokenDto {
