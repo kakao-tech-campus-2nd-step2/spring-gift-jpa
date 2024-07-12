@@ -9,6 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -221,6 +225,28 @@ class ProductRepositoryTest {
         assertAll(
                 () -> assertThat(wishes.size()).isEqualTo(1),
                 () -> assertThat(wishes.get(0)).isEqualTo(expectedWish)
+        );
+    }
+
+    @Test
+    @DisplayName("상품 페이지 조회 테스트")
+    void testFindAll() {
+        // given
+        products.save(new Product("상품1", 1000, "http://product1"));
+        products.save(new Product("상품2", 2000, "http://product2"));
+        products.save(new Product("상품3", 3000, "http://product3"));
+
+        // when
+        Pageable pageable = PageRequest.of(0,2, Sort.by("id").descending());
+        Page<Product> page = products.findAll(pageable);
+
+        // then
+        assertAll(
+                () -> assertThat(page).isNotNull(),
+                () -> assertThat(page.getContent().size()).isEqualTo(2),
+                () -> assertThat(page.getContent().get(0).getName()).isEqualTo("상품3"),
+                () -> assertThat(page.getTotalElements()).isEqualTo(3),
+                () -> assertThat(page.getTotalPages()).isEqualTo(2)
         );
     }
 }
