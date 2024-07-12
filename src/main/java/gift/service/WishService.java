@@ -1,13 +1,18 @@
 package gift.service;
 
+import gift.dto.PageResponse;
 import gift.model.gift.Gift;
 import gift.model.user.User;
 import gift.model.wish.Wish;
+import gift.model.wish.WishResponse;
 import gift.repository.GiftRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,8 +52,11 @@ public class WishService {
         wishRepository.deleteByUserAndGift(user, gift);
     }
 
-    public List<Wish> getGiftsForUser(Long userId, Pageable pageable) {
+    public PageResponse<Wish> getGiftsForUser(Long userId, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("id").ascending());
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-        return wishRepository.findByUser(user, pageable);
+        Page<Wish> wishes = wishRepository.findByUser(user,pageRequest);
+
+        return new PageResponse<>(page,wishes.getContent(),size,wishes.getTotalElements(),wishes.getTotalPages());
     }
 }
