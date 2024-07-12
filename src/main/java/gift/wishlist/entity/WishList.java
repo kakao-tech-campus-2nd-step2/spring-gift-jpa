@@ -11,11 +11,32 @@ import jakarta.persistence.Table;
 public class WishList {
 
     @EmbeddedId
-    private WishListId wishId;
+    private WishListId wishListId;
 
     @Column(nullable = false)
     private int quantity;
 
     public WishList() {
+    }
+
+    public WishList(WishListId wishListId, int quantity) {
+        this.wishListId = wishListId;
+        this.quantity = quantity;
+    }
+
+    public WishListId getWishListId() {
+        return wishListId;
+    }
+
+    public void setWishListId(WishListId wishListId) {
+        this.wishListId = wishListId;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }
