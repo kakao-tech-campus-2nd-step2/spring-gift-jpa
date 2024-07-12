@@ -1,10 +1,9 @@
 package gift.domain.repository;
 
-import gift.domain.dto.ProductRequestDto;
+import gift.domain.dto.request.ProductRequest;
 import gift.domain.entity.Product;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -42,7 +41,7 @@ public class ProductRepository {
         }
     }
 
-    public Optional<Product> findByContents(ProductRequestDto requestDto) {
+    public Optional<Product> findByContents(ProductRequest requestDto) {
         try {
             String sql = "SELECT * FROM products WHERE name = ? AND price = ? AND image_url = ?";
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql, getRowMapper(),
@@ -54,19 +53,19 @@ public class ProductRepository {
         }
     }
 
-    public Product update(Long id, ProductRequestDto requestDto) {
+    public Product update(Long id, ProductRequest requestDto) {
         String sql = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, requestDto.name(), requestDto.price(), requestDto.imageUrl(), id);
-        return ProductRequestDto.toEntity(id, requestDto);
+        return ProductRequest.toEntity(id, requestDto);
     }
 
-    public Product save(ProductRequestDto requestDto) {
+    public Product save(ProductRequest requestDto) {
         String sql = "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, requestDto.name(), requestDto.price(), requestDto.imageUrl());
 
         // Retrieve the generated id
         Long id = jdbcTemplate.queryForObject("SELECT MAX(id) FROM products", Long.class);
-        return ProductRequestDto.toEntity(id, requestDto);
+        return ProductRequest.toEntity(id, requestDto);
     }
 
     public void deleteById(Long id) {

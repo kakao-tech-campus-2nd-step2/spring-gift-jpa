@@ -1,27 +1,26 @@
-package gift.global.response;
+package gift.global.apiResponse;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import org.springframework.http.HttpStatusCode;
 
 /**
  * ResponseEntity의 body에 담길 기본 객체(Map<String, Object)를 생성하는 유틸리티 클래스
  */
-public class BasicResponse {
+public class BasicApiResponse {
 
     private final LocalDateTime timestamp;
     private final Integer status;
 
-    public BasicResponse(LocalDateTime timestamp, Integer status) {
+    public BasicApiResponse(LocalDateTime timestamp, Integer status) {
         this.timestamp = timestamp;
         this.status = status;
     }
 
-    public BasicResponse(Integer status) {
+    public BasicApiResponse(Integer status) {
         this(LocalDateTime.now(), status);
     }
 
-    public BasicResponse(HttpStatusCode statusCode) {
+    public BasicApiResponse(HttpStatusCode statusCode) {
         this(statusCode.value());
     }
 

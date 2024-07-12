@@ -1,7 +1,7 @@
 package gift.domain.service;
 
-import gift.domain.dto.UserRequestDto;
-import gift.domain.dto.UserResponseDto;
+import gift.domain.dto.request.UserRequest;
+import gift.domain.dto.response.UserResponse;
 import gift.domain.entity.User;
 import gift.domain.exception.UserAlreadyExistsException;
 import gift.domain.exception.UserIncorrectLoginInfoException;
@@ -11,7 +11,6 @@ import gift.global.util.HashUtil;
 import gift.global.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,17 +25,17 @@ public class UserService {
         this.jwtUtil = jwtUtil;
     }
 
-    public UserResponseDto registerUser(UserRequestDto requestDto) {
+    public UserResponse registerUser(UserRequest requestDto) {
 
         // 기존 회원인 경우 예외
         userRepository.findByEmail(requestDto.email()).ifPresent(p -> {
             throw new UserAlreadyExistsException();
         });
 
-        return new UserResponseDto(jwtUtil.generateToken(userRepository.save(requestDto)));
+        return new UserResponse(jwtUtil.generateToken(userRepository.save(requestDto)));
     }
 
-    public UserResponseDto loginUser(UserRequestDto requestDto) {
+    public UserResponse loginUser(UserRequest requestDto) {
         // 존재하지 않은 이메일을 가진 유저로 로그인 시도
         // 존재한 경우 user 참조 반환
         User user = userRepository.findByEmail(requestDto.email())
@@ -47,7 +46,7 @@ public class UserService {
             throw new UserIncorrectLoginInfoException();
         }
 
-        return new UserResponseDto(jwtUtil.generateToken(user));
+        return new UserResponse(jwtUtil.generateToken(user));
     }
 
     public User findById(Long id) {

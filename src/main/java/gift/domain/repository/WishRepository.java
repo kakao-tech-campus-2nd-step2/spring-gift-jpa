@@ -1,11 +1,10 @@
 package gift.domain.repository;
 
-import gift.domain.dto.WishResponseDto;
+import gift.domain.dto.response.WishResponse;
 import gift.domain.entity.User;
 import gift.domain.entity.Wish;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,8 +28,8 @@ public class WishRepository {
         );
     }
 
-    private RowMapper<WishResponseDto> getWishlistResponseDtoRowMapper() {
-        return (resultSet, rowNum) -> new WishResponseDto(
+    private RowMapper<WishResponse> getWishlistResponseDtoRowMapper() {
+        return (resultSet, rowNum) -> new WishResponse(
             resultSet.getLong("product_id"),
             resultSet.getString("name"),
             resultSet.getLong("price"),
@@ -57,7 +56,7 @@ public class WishRepository {
         }
     }
 
-    public List<WishResponseDto> findWishlistByUser(User user) {
+    public List<WishResponse> findWishlistByUser(User user) {
         String sql = "SELECT product_id, name, price, image_url, quantity "
             + "FROM wishes INNER JOIN products ON products.id = wishes.product_id "
             + "WHERE user_id = ?";

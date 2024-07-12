@@ -1,18 +1,17 @@
 package gift.domain.service;
 
-import gift.domain.dto.WishResponseDto;
+import gift.domain.dto.response.WishResponse;
 import gift.domain.entity.Wish;
 import gift.domain.repository.ProductRepository;
 import gift.domain.exception.ProductNotFoundException;
 import gift.domain.entity.User;
-import gift.domain.dto.WishAddResult;
-import gift.domain.dto.WishDeleteRequestDto;
-import gift.domain.dto.WishRequestDto;
+import gift.domain.dto.response.WishAddResponse;
+import gift.domain.dto.request.WishDeleteRequest;
+import gift.domain.dto.request.WishRequest;
 import gift.domain.exception.ProductNotIncludedInWishlistException;
 import gift.domain.repository.WishRepository;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,50 +30,50 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
-    public List<WishResponseDto> getWishlist(User user) {
+    public List<WishResponse> getWishlist(User user) {
         return wishRepository.findWishlistByUser(user);
     }
 
-    public WishAddResult addWishlist(User user, WishRequestDto wishRequestDto) {
-        checkProductExists(wishRequestDto.productId());
-        Optional<Wish> search = wishRepository.findByUserEmailAndProductId(user.id(), wishRequestDto.productId());
+    public WishAddResponse addWishlist(User user, WishRequest wishRequest) {
+        checkProductExists(wishRequest.productId());
+        Optional<Wish> search = wishRepository.findByUserEmailAndProductId(user.id(), wishRequest.productId());
 
         //아이템이 없고 수량이 1 이상일 때 새 데이터 삽입
         if (search.isEmpty()) {
-            if (wishRequestDto.quantity() <= 0) {
+            if (wishRequest.quantity() <= 0) {
                 // 0 이하인 경우 아무 작업 하지 않음
-                return new WishAddResult("nope", 0L);
+                return new WishAddResponse("nope", 0L);
             }
-            wishRepository.save(WishRequestDto.toEntity(wishRequestDto, user));
-            return new WishAddResult("create", wishRequestDto.quantity());
+            wishRepository.save(WishRequest.toEntity(wishRequest, user));
+            return new WishAddResponse("create", wishRequest.quantity());
         }
 
         //수량은 최소한 0 이상이어야 함
-        WishRequestDto newWishRequestDto = new WishRequestDto(wishRequestDto.productId(),
-            wishRequestDto.quantity() + search.get().quantity());
+        WishRequest newWishRequest = new WishRequest(wishRequest.productId(),
+            wishRequest.quantity() + search.get().quantity());
 
         //업데이트 후 수량이 음수면 delete 수행
-        if (newWishRequestDto.quantity() <= 0) {
-            wishRepository.delete(WishRequestDto.toEntity(newWishRequestDto, user));
-            return new WishAddResult("delete", 0L);
+        if (newWishRequest.quantity() <= 0) {
+            wishRepository.delete(WishRequest.toEntity(newWishRequest, user));
+            return new WishAddResponse("delete", 0L);
         }
 
         // 아이템이 이미 존재하므로 업데이트 수행
-        wishRepository.update(WishRequestDto.toEntity(newWishRequestDto, user));
-        return new WishAddResult("add", newWishRequestDto.quantity());
+        wishRepository.update(WishRequest.toEntity(newWishRequest, user));
+        return new WishAddResponse("add", newWishRequest.quantity());
     }
 
-    public WishResponseDto updateWishlist(User user, WishRequestDto wishRequestDto) {
-        checkProductExists(wishRequestDto.productId());
-        wishRepository.findByUserEmailAndProductId(user.id(), wishRequestDto.productId())
+    public WishResponse updateWishlist(User user, WishRequest wishRequest) {
+        checkProductExists(wishRequest.productId());
+        wishRepository.findByUserEmailAndProductId(user.id(), wishRequest.productId())
             .orElseThrow(ProductNotIncludedInWishlistException::new);
-        wishRepository.update(WishRequestDto.toEntity(wishRequestDto, user));
-        return WishResponseDto.of(
-            wishRequestDto.quantity(), productRepository.findById(wishRequestDto.productId()).get());
+        wishRepository.update(WishRequest.toEntity(wishRequest, user));
+        return WishResponse.of(
+            wishRequest.quantity(), productRepository.findById(wishRequest.productId()).get());
     }
 
-    public void deleteWishlist(User user, WishDeleteRequestDto deleteRequestDto) {
+    public void deleteWishlist(User user, WishDeleteRequest deleteRequestDto) {
         checkProductExists(deleteRequestDto.productId());
-        wishRepository.delete(WishDeleteRequestDto.toEntity(deleteRequestDto, user));
+        wishRepository.delete(WishDeleteRequest.toEntity(deleteRequestDto, user));
     }
 }

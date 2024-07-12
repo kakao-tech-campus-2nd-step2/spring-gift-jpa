@@ -1,15 +1,12 @@
 package gift.domain.controller;
 
-import gift.domain.dto.ProductAddResponseDto;
-import gift.domain.dto.ProductListResponseDto;
-import gift.domain.dto.ProductRequestDto;
-import gift.domain.dto.ProductResponseDto;
+import gift.domain.controller.apiResponse.ProductAddApiResponse;
+import gift.domain.controller.apiResponse.ProductListApiResponse;
+import gift.domain.dto.request.ProductRequest;
 import gift.domain.service.ProductService;
-import gift.global.response.BasicResponse;
-import gift.global.response.SuccessResponse;
+import gift.global.apiResponse.BasicApiResponse;
+import gift.global.apiResponse.SuccessApiResponse;
 import jakarta.validation.Valid;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,29 +29,29 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductListResponseDto> getProducts() {
-        return SuccessResponse.ok(new ProductListResponseDto(HttpStatus.OK, productService.getAllProducts()));
+    public ResponseEntity<ProductListApiResponse> getProducts() {
+        return SuccessApiResponse.ok(new ProductListApiResponse(HttpStatus.OK, productService.getAllProducts()));
     }
 
     @PostMapping
-    public ResponseEntity<ProductAddResponseDto> addProduct(@Valid @RequestBody ProductRequestDto requestDto) {
+    public ResponseEntity<ProductAddApiResponse> addProduct(@Valid @RequestBody ProductRequest requestDto) {
         var result = productService.addProduct(requestDto);
-        return SuccessResponse.created(
-            new ProductAddResponseDto(HttpStatus.CREATED, result),
+        return SuccessApiResponse.created(
+            new ProductAddApiResponse(HttpStatus.CREATED, result),
             "/api/products/{id}",
             result.id());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BasicResponse> updateProduct(@PathVariable("id") Long id,
-                                                             @Valid @RequestBody ProductRequestDto requestDto) {
+    public ResponseEntity<BasicApiResponse> updateProduct(@PathVariable("id") Long id,
+                                                             @Valid @RequestBody ProductRequest requestDto) {
         productService.updateProductById(id, requestDto);
-        return SuccessResponse.ok();
+        return SuccessApiResponse.ok();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<BasicResponse> deleteProduct(@PathVariable("id") Long id) {
+    public ResponseEntity<BasicApiResponse> deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
-        return SuccessResponse.ok();
+        return SuccessApiResponse.ok();
     }
 }

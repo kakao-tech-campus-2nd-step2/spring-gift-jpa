@@ -1,20 +1,17 @@
 package gift.domain.controller;
 
-import gift.domain.dto.WishAddResponseDto;
-import gift.domain.dto.WishListResponseDto;
-import gift.domain.dto.WishUpdateResponseDto;
+import gift.domain.controller.apiResponse.WishAddApiResponse;
+import gift.domain.controller.apiResponse.WishListApiResponse;
+import gift.domain.controller.apiResponse.WishUpdateApiResponse;
 import gift.domain.entity.User;
 import gift.domain.annotation.ValidUser;
-import gift.domain.dto.WishDeleteRequestDto;
-import gift.domain.dto.WishRequestDto;
+import gift.domain.dto.request.WishDeleteRequest;
+import gift.domain.dto.request.WishRequest;
 import gift.domain.service.WishService;
-import gift.global.response.BasicResponse;
-import gift.global.response.SuccessResponse;
+import gift.global.apiResponse.BasicApiResponse;
+import gift.global.apiResponse.SuccessApiResponse;
 import jakarta.validation.Valid;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,23 +32,25 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<WishListResponseDto> getWishlist(@ValidUser User user) {
-        return SuccessResponse.ok(new WishListResponseDto(HttpStatus.OK, wishService.getWishlist(user)));
+    public ResponseEntity<WishListApiResponse> getWishlist(@ValidUser User user) {
+        return SuccessApiResponse.ok(new WishListApiResponse(HttpStatus.OK, wishService.getWishlist(user)));
     }
 
     @PostMapping
-    public ResponseEntity<WishAddResponseDto> addWish(@ValidUser User user, @Valid @RequestBody WishRequestDto wishRequestDto) {
-        return SuccessResponse.ok(new WishAddResponseDto(HttpStatus.OK, wishService.addWishlist(user, wishRequestDto)));
+    public ResponseEntity<WishAddApiResponse> addWish(@ValidUser User user, @Valid @RequestBody WishRequest wishRequest) {
+        return SuccessApiResponse.ok(new WishAddApiResponse(HttpStatus.OK, wishService.addWishlist(user,
+            wishRequest)));
     }
 
     @PutMapping
-    public ResponseEntity<WishUpdateResponseDto> updateWish(@ValidUser User user, @Valid @RequestBody WishRequestDto wishRequestDto) {
-        return SuccessResponse.ok(new WishUpdateResponseDto(HttpStatus.OK, wishService.updateWishlist(user, wishRequestDto)));
+    public ResponseEntity<WishUpdateApiResponse> updateWish(@ValidUser User user, @Valid @RequestBody WishRequest wishRequest) {
+        return SuccessApiResponse.ok(new WishUpdateApiResponse(HttpStatus.OK, wishService.updateWishlist(user,
+            wishRequest)));
     }
 
     @DeleteMapping
-    public ResponseEntity<BasicResponse> deleteWish(@ValidUser User user, @RequestBody WishDeleteRequestDto wishDeleteRequestDto) {
-        wishService.deleteWishlist(user, wishDeleteRequestDto);
-        return SuccessResponse.of(HttpStatus.NO_CONTENT);
+    public ResponseEntity<BasicApiResponse> deleteWish(@ValidUser User user, @RequestBody WishDeleteRequest wishDeleteRequest) {
+        wishService.deleteWishlist(user, wishDeleteRequest);
+        return SuccessApiResponse.of(HttpStatus.NO_CONTENT);
     }
 }

@@ -1,11 +1,10 @@
 package gift.domain.repository;
 
-import gift.domain.dto.UserPermissionChangeRequestDto;
-import gift.domain.dto.UserRequestDto;
+import gift.domain.dto.request.UserPermissionChangeRequest;
+import gift.domain.dto.request.UserRequest;
 import gift.domain.entity.User;
 import gift.global.util.HashUtil;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,7 +28,7 @@ public class UserRepository {
         );
     }
 
-    public User save(UserRequestDto requestDto) {
+    public User save(UserRequest requestDto) {
         String sql = "INSERT INTO users (email, password, permission) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(sql, requestDto.email(), HashUtil.hashCode(requestDto.password()), "user");
@@ -54,13 +53,13 @@ public class UserRepository {
         }
     }
 
-    public Optional<User> updatePassword(UserRequestDto requestDto) {
+    public Optional<User> updatePassword(UserRequest requestDto) {
         String sql = "UPDATE users SET password = ? WHERE email = ?";
         jdbcTemplate.update(sql, HashUtil.hashCode(requestDto.password()), requestDto.email());
         return findByEmail(requestDto.email());
     }
 
-    public Optional<User> updatePermission(UserPermissionChangeRequestDto requestDto) {
+    public Optional<User> updatePermission(UserPermissionChangeRequest requestDto) {
         String sql = "UPDATE users SET permission = ? WHERE email = ?";
         jdbcTemplate.update(sql, requestDto.permission(), requestDto.email());
         return findByEmail(requestDto.email());

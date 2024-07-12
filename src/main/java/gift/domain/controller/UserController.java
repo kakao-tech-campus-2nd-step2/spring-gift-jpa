@@ -1,14 +1,11 @@
 package gift.domain.controller;
 
-import gift.domain.dto.UserLoginResponseDto;
-import gift.domain.dto.UserRegisterResponseDto;
-import gift.domain.dto.UserRequestDto;
+import gift.domain.controller.apiResponse.UserLoginApiResponse;
+import gift.domain.controller.apiResponse.UserRegisterApiResponse;
+import gift.domain.dto.request.UserRequest;
 import gift.domain.service.UserService;
-import gift.global.response.SuccessResponse;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
+import gift.global.apiResponse.SuccessApiResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,12 +23,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserRegisterResponseDto> registerUser(@RequestBody UserRequestDto requestDto) {
-        return SuccessResponse.ok(new UserRegisterResponseDto(HttpStatus.OK, userService.registerUser(requestDto).token()));
+    public ResponseEntity<UserRegisterApiResponse> registerUser(@RequestBody UserRequest requestDto) {
+        return SuccessApiResponse.ok(new UserRegisterApiResponse(HttpStatus.OK, userService.registerUser(requestDto).token()));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponseDto> loginUser(@RequestBody UserRequestDto requestDto) {
-        return SuccessResponse.ok(new UserLoginResponseDto(HttpStatus.OK, userService.loginUser(requestDto).token()));
+    public ResponseEntity<UserLoginApiResponse> loginUser(@RequestBody UserRequest requestDto) {
+        return SuccessApiResponse.ok(new UserLoginApiResponse(HttpStatus.OK, userService.loginUser(requestDto).token()));
     }
 }

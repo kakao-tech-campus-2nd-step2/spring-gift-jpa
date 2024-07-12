@@ -1,11 +1,11 @@
-package gift.domain.dto;
+package gift.domain.dto.request;
 
 import gift.domain.entity.Product;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record ProductRequestDto(
+public record ProductRequest(
     @NotNull
     @Size(min = 1, max = 15,
         message = "상품 이름은 공백을 포함하여 최대 15자까지 입력할 수 있습니다.")
@@ -19,7 +19,7 @@ public record ProductRequestDto(
     @NotNull
     String imageUrl) {
 
-    public static Product toEntity(Long id, ProductRequestDto requestDto) {
+    public static Product toEntity(Long id, ProductRequest requestDto) {
         return new Product(id, requestDto.name(), requestDto.price(), requestDto.imageUrl());
     }
 }
