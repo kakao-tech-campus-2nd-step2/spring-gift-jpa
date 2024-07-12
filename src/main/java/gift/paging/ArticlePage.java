@@ -1,6 +1,7 @@
 package gift.paging;
 
 import gift.model.Product;
+import gift.model.Wish;
 import org.springframework.data.domain.Page;
 
 public class ArticlePage {
@@ -15,7 +16,7 @@ public class ArticlePage {
     private boolean hasNext;
     private boolean hasPrevious;
 
-    public ArticlePage(Page<Product> paging, int page) {
+    public ArticlePage(Page<?> paging, int page, int docsPerPage, int pagingCount) {
         this.totalDocs = (int) paging.getTotalElements();
         this.currentPage = page;
         this.docsPerPage = 10;

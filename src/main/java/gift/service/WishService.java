@@ -12,6 +12,8 @@ import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,10 @@ public class WishService {
 
     public List<Product> getMyWishList(Long memberId) {
         return wishRepository.findAllByMemberId(memberId);
+    }
+
+    public Page<Product> getPagedWishList(Long memberId, Pageable pageable) {
+        return wishRepository.findPageBy(memberId, pageable);
     }
 
     @Transactional

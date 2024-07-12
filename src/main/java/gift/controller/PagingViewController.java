@@ -6,6 +6,7 @@ import gift.auth.LoginMember;
 import gift.exception.wishlist.WishException;
 import gift.model.Member;
 import gift.model.Product;
+import gift.model.Wish;
 import gift.request.JoinRequest;
 import gift.request.LoginMemberDto;
 import gift.request.LoginRequest;
@@ -84,19 +85,22 @@ public class PagingViewController {
     public String getAllProducts(@RequestParam(defaultValue = "1") int page, Model model) {
         PageRequest pageRequest = PageRequest.of(page-1, 10);
         Page<Product> productsInPage = productService.getPagedAllProducts(pageRequest);
-        ArticlePage articlePage = new ArticlePage(productsInPage, page);
+        ArticlePage articlePage = new ArticlePage(productsInPage, page, 10, 10);
 
         model.addAttribute("products", productsInPage.getContent());
         model.addAttribute("pagingInfo", articlePage);
-
         return "pagingProducts";
     }
 
     @CheckRole("ROLE_USER")
     @GetMapping("/view/wish")
-    public String getWishes(@LoginMember LoginMemberDto loginMemberDto, Model model) {
-        List<Product> wishes = wishService.getMyWishList(loginMemberDto.id());
-        model.addAttribute("products", wishes);
+    public String getWishes(@RequestParam(defaultValue = "1") int page, @LoginMember LoginMemberDto loginMemberDto, Model model) {
+        PageRequest pageRequest = PageRequest.of(page-1, 5);
+        Page<Product> wishListInPage = wishService.getPagedWishList(loginMemberDto.id(), pageRequest);
+        ArticlePage articlePage = new ArticlePage(wishListInPage, page, 5, 10);
+
+        model.addAttribute("products", wishListInPage.getContent());
+        model.addAttribute("pagingInfo", articlePage);
         return "wish";
     }
 

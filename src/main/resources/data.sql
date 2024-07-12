@@ -126,3 +126,5 @@ INSERT INTO WISH(member_id, product_id) VALUES (1, 12);
 INSERT INTO WISH(member_id, product_id) VALUES (1, 13);
 INSERT INTO WISH(member_id, product_id) VALUES (1, 14);
 INSERT INTO WISH(member_id, product_id) VALUES (1, 15);
+INSERT INTO WISH(member_id, product_id) VALUES (1, 16);
+INSERT INTO WISH(member_id, product_id) VALUES (1, 17);

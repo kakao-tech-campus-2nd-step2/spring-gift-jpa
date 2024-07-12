@@ -40,12 +40,47 @@
         <td>
           <button class="btn btn-secondary"
                   onclick="location.href='wish.html'"
-                  th:onclick="|deleteConfirm([[${product.id}]])|" type="button">삭제
+                  th:onclick="|deleteConfirm([[${product.id}]])|" type="button">✕
           </button>
         </td>
       </tr>
       </tbody>
     </table>
+
+    <div th:if="${!products.isEmpty()}">
+      <ul class="pagination"
+          th:with="
+                pageNumber = ${pagingInfo.currentPage},
+                pageSize = ${pagingInfo.docsPerPage},
+                totalPages = ${pagingInfo.totalPages},
+                startPage = ${pagingInfo.startPage},
+                endPage = ${pagingInfo.endPage},
+                hasPrevious = ${pagingInfo.hasPrevious},
+                hasNext = ${pagingInfo.hasNext}
+      ">
+
+        <li th:classappend="${hasPrevious}==false ? 'disabled'" class="page-item">
+          <a class="page-link"
+             th:href="${pageNumber}==1 ? '#' : @{wish(page=${pageNumber - 1})}">
+            <span aria-hidden="true">&lt</span>
+          </a>
+        </li>
+
+        <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+            th:classappend="${page == pageNumber} ? 'active'" class="page-item">
+          <a th:text="${page}" class="page-link" th:href="@{wish(page=${page})}"></a>
+        </li>
+
+        <li th:classappend="${hasNext}==false ? 'disabled'" class="page-item">
+          <a class="page-link"
+             th:href="${pageNumber}==${totalPages} ? '#' : @{wish(page=${pageNumber + 1})}"
+             aria-label="Next">
+            <span aria-hidden="true">&gt</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
   </div>
 </div>
 </body>
