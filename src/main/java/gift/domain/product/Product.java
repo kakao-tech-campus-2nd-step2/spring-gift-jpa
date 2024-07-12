@@ -22,11 +22,26 @@ public class Product {
     private int price;
     private String imageUrl;
 
+    public static Product createProductFromProxy(Product proxyProduct) {
+        return new Product(
+            proxyProduct.getId(),
+            proxyProduct.getName(),
+            proxyProduct.getPrice(),
+            proxyProduct.getImageUrl());
+    }
+
     public Product() {
 
     }
 
     public Product(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    public Product(Long id, String name, int price, String imageUrl) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -80,6 +95,12 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    public void proxyInitialize(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -91,4 +112,5 @@ public class Product {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
 }

@@ -8,9 +8,13 @@ import gift.domain.user.User;
 import gift.global.exception.BusinessException;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartItemService {
@@ -50,14 +54,25 @@ public class CartItemService {
     }
 
     /**
-     * 장바구니 상품 조회
+     * 장바구니 상품 조회 - 페이징 X
      */
+    @Transactional(readOnly = true)
     public List<Product> getProductsInCartByUserId(Long userId) {
         List<CartItem> cartItems = cartItemRepository.findAllByUserId(userId);
 
-        return cartItems.stream()
-            .map(CartItem::getProduct)
-            .collect(Collectors.toList());
+        return convertItemsToProducts(cartItems);
+    }
+
+
+    /**
+     * 장바구니 상품 조회 - 페이징
+     */
+    public List<Product> getProductsInCartByUserIdAndPageAndSort(Long userId, int page, int size, Sort sort) {
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+
+        Page<CartItem> cartItems = cartItemRepository.findAllByUserId(userId, pageRequest);
+
+        return convertItemsToProducts(cartItems.getContent());
     }
 
     /**
@@ -66,4 +81,19 @@ public class CartItemService {
     public void deleteCartItem(Long userId, Long productId) {
         cartItemRepository.deleteByUserIdAndProductId(userId, productId);
     }
+
+    /**
+     * 장바구니 상품들에서 실제 상품들 추출
+     */
+    private List<Product> convertItemsToProducts(List<CartItem> cartItems) {
+        return cartItems.stream()
+            .map(cartItem -> {
+                Product proxyProduct = cartItem.getProduct();
+                Product product = Product.createProductFromProxy(proxyProduct);
+                return product;
+            })
+            .collect(Collectors.toList());
+    }
+
+
 }
