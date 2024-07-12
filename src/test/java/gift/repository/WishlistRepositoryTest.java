@@ -44,35 +44,35 @@ class WishlistRepositoryTest {
     @Test
     public void testSaveWishlist() {
 
-        Wishlist wishlist = new Wishlist(1L, savedMember.getEmail(), savedProduct.getId());
+        Wishlist wishlist = new Wishlist(1L, savedMember, savedProduct);
 
         Wishlist saved = wishlistRepository.save(wishlist);
 
         assertAll(
             () -> assertThat(saved.getId()).isNotNull(),
-            () -> assertThat(saved.getMemberEmail()).isEqualTo("kbm@kbm"),
-            () -> assertThat(saved.getProductId()).isEqualTo(1L)
+            () -> assertThat(saved.getMember().getEmail()).isEqualTo("kbm@kbm"),
+            () -> assertThat(saved.getProduct().getId()).isEqualTo(1L)
         );
     }
 
     @Test
     public void testFindByMemberEmail() {
-        Wishlist wishlist = new Wishlist(1L, savedMember.getEmail(), savedProduct.getId());
+        Wishlist wishlist = new Wishlist(1L, savedMember, savedProduct);
         wishlistRepository.save(wishlist);
-        List<Wishlist> found = wishlistRepository.findByMemberEmail(savedMember.getEmail());
+        List<Wishlist> found = wishlistRepository.findByMember(savedMember);
         assertAll(
             () -> assertThat(found.size()).isEqualTo(1),
-            () -> assertThat(found.get(0).getMemberEmail()).isEqualTo(savedMember.getEmail())
+            () -> assertThat(found.get(0).getMember().getEmail()).isEqualTo(savedMember.getEmail())
         );
     }
 
     @Test
     void testDeleteByMemberEmailAndProductId() {
-        Wishlist wishlist = new Wishlist(1L, savedMember.getEmail(), savedProduct.getId());
+        Wishlist wishlist = new Wishlist(1L, savedMember, savedProduct);
         wishlistRepository.save(wishlist);
-        wishlistRepository.deleteByMemberEmailAndProductId(savedMember.getEmail(),
-            savedProduct.getId());
-        List<Wishlist> result = wishlistRepository.findByMemberEmail(savedMember.getEmail());
+        wishlistRepository.deleteByMemberAndProduct(savedMember,
+            savedProduct);
+        List<Wishlist> result = wishlistRepository.findByMember(savedMember);
         assertThat(result.size()).isEqualTo(0);
     }
 }
