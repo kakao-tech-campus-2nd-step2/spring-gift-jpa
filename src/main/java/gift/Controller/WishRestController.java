@@ -26,6 +26,6 @@ public class WishRestController {
 
     @GetMapping()
     public List<String> viewAllWish(@RequestHeader("Bearer") String token){
-        return wishService.viewAll(token);
+        return wishService.getAll(token);
     }
 }
