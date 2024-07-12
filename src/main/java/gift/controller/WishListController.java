@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.domain.ProductDTO;
 import gift.domain.WishListDTO;
 import gift.service.WishListService;
 import gift.service.JwtUtil;
@@ -38,9 +39,9 @@ public class WishListController {
     // 위시리스트 추가
     @PostMapping("/add/{productId}")
     public ResponseEntity<String> addWishList(@RequestHeader("Authorization") String token,
-        @PathVariable Long productId) {
+       @RequestBody ProductDTO product) throws Exception {
         Long userId = getUserId(token);
-        wishListService.addProductToWishList(userId, productId);
+        wishListService.addProductToWishList(userId, product);
         return new ResponseEntity<>("Product added to wishlist", HttpStatus.CREATED);
     }
 
