@@ -10,6 +10,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -42,7 +45,7 @@ public class JpaWishTest {
     }
 
     @Test
-    @DisplayName("위시 리스트 ")
+    @DisplayName("위시 리스트 - 페이징")
     public void testFindAllByMemberId() {
         Long memberId = 1L;
         Member member = new Member(1L, "asdfasdf@naver.com", "asdfasdf");
@@ -57,10 +60,12 @@ public class JpaWishTest {
         wishRepository.save(wish1);
         wishRepository.save(wish2);
 
-        List<Product> products = wishRepository.findAllByMemberId(memberId);
+        Pageable pageable = PageRequest.of(0, 2);
+
+        Page<Product> products = wishRepository.findAllByMemberId(memberId, pageable);
 
         assertThat(products).isNotNull();
-        assertThat(products.size()).isEqualTo(2);
+        assertThat(products.getTotalElements()).isEqualTo(2);
 
         for (Product product : products) {
             assertThat(product.getId()).isNotNull();
