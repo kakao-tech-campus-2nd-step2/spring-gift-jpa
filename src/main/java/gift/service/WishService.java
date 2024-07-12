@@ -29,7 +29,7 @@ public class WishService {
         this.productJpaRepository = productJpaRepository;
     }
 
-    @Transactional
+    //@Transactional
     public void addWish(Long userId, WishRequest.Register request) {
         Member member = memberJpaRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
@@ -45,7 +45,7 @@ public class WishService {
         wishJpaRepository.save(request.toEntity(member, product));
     }
 
-    @Transactional
+    //@Transactional
     public void updateWish(Long userId, WishRequest.Update request) {
         Member member = memberJpaRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
@@ -59,7 +59,7 @@ public class WishService {
         wish.updateCount(request.count());
     }
 
-    @Transactional
+    //@Transactional
     public void deleteWish(Long memberId, Long wishId) {
         Wish wish = wishJpaRepository.findById(wishId)
             .orElseThrow(() -> new NotFoundException("Wish not found"));
@@ -72,7 +72,7 @@ public class WishService {
         throw new IllegalArgumentException("본인의 위시리스트만 삭제 가능합니다.");
     }
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public PageResponse<WishResponse.Info> getWishesPaging(Long memberId, Pageable pageable) {
         Page<Wish> wishPage = wishJpaRepository.findAllByMemberByIdDesc(memberId, pageable);
         var content = wishPage.getContent().stream()
