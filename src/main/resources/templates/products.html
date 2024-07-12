@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Manage Products</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Manage <strong>Products</strong></h1>
+    <div class="mb-3">
+        <button class="btn btn-success" onclick="location.href='/api/products/new'">Add New Product</button>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td>
+                <img th:src="${product.imageUrl}" alt="Product Image" style="width: 100px; height: auto;">
+            </td>
+            <td>
+                <button class="btn btn-warning" th:onclick="'location.href=\'/api/products/edit/' + ${product.id} + '\';'">Edit</button>
+                <form th:action="@{/api/products/delete/{id}(id=${product.id})}" method="post" style="display:inline;">
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
