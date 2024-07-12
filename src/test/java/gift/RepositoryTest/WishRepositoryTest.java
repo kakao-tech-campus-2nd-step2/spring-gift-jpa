@@ -20,7 +20,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @DataJpaTest
 public class WishRepositoryTest {
     @Autowired
-    WishRepository WishRepository;
+    WishRepository wishRepository;
 
     @Autowired
     ProductRepository productRepository;
@@ -29,29 +29,29 @@ public class WishRepositoryTest {
     MemberRepository memberRepository;
 
     private Member member;
+    private Product product1;
+    private Product product2;
 
     @BeforeEach
     void beforEach(){
-        productRepository.save(new Product("아메리카노", 4000, "아메리카노url"));
-        productRepository.save(new Product("카푸치노", 4500, "카푸치노url"));
+        product1 = productRepository.save(new Product("아메리카노", 4000, "아메리카노url"));
+        product2 = productRepository.save(new Product("카푸치노", 4500, "카푸치노url"));
         member = memberRepository.save(new Member("woo6388@naver.com", "12345678"));
     }
 
     @Test
     void saveTest() {
-        Long memberId=member.getId();
-        Wish wish = new Wish(memberId, 1L, 5);
+        Wish wish = new Wish(member, product1, 5);
         assertThat(wish.getId()).isNull();
-        var actual = WishRepository.save(wish);
+        var actual = wishRepository.save(wish);
         assertThat(actual.getId()).isNotNull();
     }
 
     @Test
-    void findWishsByEmailTest (){
-        Long memberId = member.getId();
-        Wish wish1 = WishRepository.save(new Wish(memberId, 1L, 1));
-        Wish wish2 = WishRepository.save(new Wish(memberId, 2L, 2));
-        List<ResponseWishDTO> actual = WishRepository.findWishsByMemberId(memberId);
+    void findByMemberTest() {
+        Wish wish1 = wishRepository.save(new Wish(member, product1, 1));
+        Wish wish2 = wishRepository.save(new Wish(member, product2, 2));
+        List<ResponseWishDTO> actual = wishRepository.findWishListByMember(member);
         assertThat(actual.get(0).getName()).isEqualTo("아메리카노");
         assertThat(actual.get(0).getCount()).isEqualTo(1);
         assertThat(actual.get(1).getName()).isEqualTo("카푸치노");
@@ -59,41 +59,34 @@ public class WishRepositoryTest {
     }
 
     @Test
-    void findByEmailAndProductIdTest(){
-        Long memberId = member.getId();
-        Wish wish1 = WishRepository.save(new Wish(memberId, 1L, 1));
-        Wish wish2 = WishRepository.save(new Wish(memberId, 2L, 2));
-        Optional<Wish> actual = WishRepository.findByMemberIdAndProductId(memberId, 1L);
+    void findByMemberAndProductTest() {
+        Wish wish1 = wishRepository.save(new Wish(member, product1, 1));
+        Wish wish2 = wishRepository.save(new Wish(member, product2, 2));
+        Optional<Wish> actual = wishRepository.findByMemberAndProduct(member, product1);
         assertThat(actual).isPresent();
         assertThat(actual.get().getCount()).isEqualTo(1);
         assertThat(actual.get().getId()).isEqualTo(wish1.getId());
     }
 
-
     @Test
     void updateTest() {
-        Long memberId = member.getId();
-        Wish wish1 = WishRepository.save(new Wish(memberId, 1L, 1));
-        Optional<Wish> optionalWish = WishRepository.findById(wish1.getId());
+        Wish wish1 = wishRepository.save(new Wish(member, product1, 1));
+        Optional<Wish> optionalWish = wishRepository.findById(wish1.getId());
+        assertThat(optionalWish).isPresent();
         Wish wish = optionalWish.get();
         wish.setCount(5);
 
-        var actual = WishRepository.findById(wish.getId());
+        var actual = wishRepository.findById(wish.getId());
         assertThat(actual.get().getCount()).isEqualTo(5);
     }
 
-
-
     @Test
     void deleteTest() {
-        Long memberId = member.getId();
-        Wish wish1 = WishRepository.save(new Wish(memberId, 1L, 1));
-        Optional<Wish> optionalWish = WishRepository.findById(wish1.getId());
+        Wish wish1 = wishRepository.save(new Wish(member, product1, 1));
+        Optional<Wish> optionalWish = wishRepository.findById(wish1.getId());
         assertThat(optionalWish).isPresent();
-        WishRepository.deleteById(optionalWish.get().getId());
-        Optional<Wish> actual = WishRepository.findById(optionalWish.get().getId());
+        wishRepository.deleteById(optionalWish.get().getId());
+        Optional<Wish> actual = wishRepository.findById(optionalWish.get().getId());
         assertThat(actual).isEmpty();
     }
-
-
 }
