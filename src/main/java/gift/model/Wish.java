@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -49,5 +50,23 @@ public class Wish {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Wish wish = (Wish) o;
+        return Objects.equals(getMemberId(), wish.getMemberId()) && Objects.equals(
+            getProductName(), wish.getProductName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMemberId(), getProductName());
     }
 }
