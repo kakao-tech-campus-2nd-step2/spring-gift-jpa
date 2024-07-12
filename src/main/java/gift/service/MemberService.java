@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.dto.MemberDTO;
-import gift.util.JwtUtil;
+import gift.util.JwtUtility;
 import gift.util.TokenBlacklist;
 import gift.model.Member;
 import gift.model.MemberRepository;
@@ -21,30 +21,35 @@ public class MemberService {
     }
 
     public String register(@Valid MemberDTO memberDTO) {
-        memberRepository.findMemberByEmail(memberDTO.getEmail())
+        memberRepository.findByEmail(memberDTO.getEmail())
                 .ifPresent(existingMember -> {
                     throw new DuplicateKeyException("이미 존재하는 이메일입니다.");
                 });
         Member member = new Member(null, memberDTO.getEmail(), memberDTO.getPassword(), null);
-        Member savedMember = memberRepository.saveMember(member);
-        String token = JwtUtil.generateToken(savedMember.getEmail());
-        memberRepository.updateActiveToken(savedMember.getId(), token);
+        Member savedMember = memberRepository.save(member);
+        String token = JwtUtility.generateToken(savedMember.getEmail());
+        Member updatedMember = new Member(savedMember, token);
+        memberRepository.save(updatedMember);
         return token;
     }
 
     public String login(MemberDTO memberDTO) {
-        Member existingMember = memberRepository.findMemberByEmail(memberDTO.getEmail())
+        Member existingMember = memberRepository.findByEmail(memberDTO.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 이메일 또는 잘못된 비밀번호입니다."));
         if (!existingMember.getPassword().equals(memberDTO.getPassword())) {
             throw new NoSuchElementException("존재하지 않는 이메일 또는 잘못된 비밀번호입니다.");
         }
-        String token = JwtUtil.generateToken(existingMember.getEmail());
-        memberRepository.updateActiveToken(existingMember.getId(), token);
+        String token = JwtUtility.generateToken(existingMember.getEmail());
+        Member updatedMember = new Member(existingMember, token);
+        memberRepository.save(updatedMember);
         return token;
     }
 
     public void logout(String token) {
-        memberRepository.invalidateToken(token);
+        Member member = memberRepository.findByActiveToken(token)
+                .orElseThrow(() -> new NoSuchElementException("유효하지 않은 토큰입니다."));
+        Member updatedMember = new Member(member, null);
+        memberRepository.save(updatedMember);
         tokenBlacklist.add(token);
     }
 

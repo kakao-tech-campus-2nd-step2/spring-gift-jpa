@@ -1,26 +1,38 @@
 package gift.model;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Column;
+import jakarta.persistence.GenerationType;
 
+@Entity
+@Table(name = "members")
 public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
     private String password;
+    @Column
     private String activeToken;
 
     public Member() {}
-
-    public Member(Long id, String email, String password) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-    }
 
     public Member(Long id, String email, String password, String activeToken) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.activeToken = activeToken;
+    }
+
+    public Member(Member member, String activeToken) {
+        this.id = member.id;
+        this.email = member.email;
+        this.password = member.password;
         this.activeToken = activeToken;
     }
 
@@ -38,9 +50,5 @@ public class Member {
 
     public String getActiveToken() {
         return activeToken;
-    }
-
-    public void setActiveToken(String activeToken) {
-        this.activeToken = activeToken;
     }
 }

@@ -4,7 +4,6 @@ import gift.dto.ProductDTO;
 import gift.model.Product;
 import gift.model.ProductRepository;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,6 @@ import java.util.NoSuchElementException;
 public class ProductController {
     private final ProductRepository productRepository;
 
-    @Autowired
     public ProductController(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
@@ -39,8 +37,8 @@ public class ProductController {
 
     @PostMapping("/add")
     public String addProduct(@ModelAttribute @Valid ProductDTO productDTO) {
-        Product savedProduct = productRepository.save(productDTO);
-        productRepository.validateKaKaoName(savedProduct.getName());
+        Product product = new Product(null, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
+        productRepository.save(product);
         return "redirect:/api/products";
     }
 
@@ -54,8 +52,10 @@ public class ProductController {
 
     @PostMapping("/edit/{id}")
     public String updateProduct(@PathVariable Long id, @ModelAttribute @Valid ProductDTO productDTO) {
-        productRepository.update(id, productDTO);
-        productRepository.validateKaKaoName(productDTO.getName());
+        productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
+        Product updatedProduct = new Product(id, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
+        productRepository.save(updatedProduct);
         return "redirect:/api/products";
     }
 
