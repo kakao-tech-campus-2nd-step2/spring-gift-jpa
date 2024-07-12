@@ -1,0 +1,24 @@
+### DELETE request with path valiable
+DELETE http://localhost:8080/api/products/5
+#Accept: application/json
+
+###
+POST http://localhost:8080/api/member/signUp
+Content-Type: application/json
+
+{
+  "email": "asdf@gmail.com",
+  "password": "1234"
+}
+
+###
+POST http://localhost:8080/api/member/login
+Content-Type: application/json
+
+{
+  "email": "asdf@gmail.com",
+  "password": "1234"
+}
+
+###
+POST http://localhost:8080/api/member/test

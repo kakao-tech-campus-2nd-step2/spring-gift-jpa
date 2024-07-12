@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Products</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h2>Manage Products</h2>
+    </div>
+    <div class="card-body">
+      <div class="mb-3">
+        <button class="btn btn-danger" th:onclick="deleteSelectedProducts()">Delete</button>
+        <a class="btn btn-success" href="/api/products/new-form">Add New Product</a>
+      </div>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th scope="col"><input type="checkbox" id="selectAll"></th>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Price</th>
+          <th scope="col">Image URL</th>
+          <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+          <td><input type="checkbox" class="product-checkbox" th:value="${product.id}"></td>
+          <td th:text="${product.id}">ID</td>
+          <td th:text="${product.name}">Name</td>
+          <td th:text="${product.price}">Price</td>
+          <td th:text="${product.imageUrl}">Image URL</td>
+          <td>
+            <a class="btn btn-warning btn-sm" th:href="@{/api/products/edit/{id}(id=${product.id})}">Edit</a>
+            <button class="btn btn-danger btn-sm" th:onclick="deleteProduct( [[${product.id}]] )">Delete</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script th:inline="javascript">
+  $(document).ready(function () {
+    $('#selectAll').click(function () {
+      $('.product-checkbox').prop('checked', this.checked);
+    });
+  });
+
+  function deleteSelectedProducts() {
+    const selectedIds = $('.product-checkbox:checked').map(function() {
+      return $(this).val();
+    }).get();
+
+    if (selectedIds.length > 0) {
+      $.ajax({
+        url: '/api/products/delete-selected',
+        type: 'DELETE',
+        contentType: 'application/json',
+        data: JSON.stringify(selectedIds),
+        success: function () {
+          // location.reload();
+          window.location.href = "/api/products";
+        },
+        error: function (xhr, status, error) {
+          alert('An error occurred: ' + error);
+        }
+      });
+    } else {
+      alert('Please select at least one product to delete.');
+    }
+  }
+  function deleteProduct(id) {
+    $.ajax({
+      url: '/api/products/' + id,
+      type: 'DELETE',
+      success: function (){
+        location.reload();
+      },
+      error: function (xhr, status, error) {
+        alert("An error occurred" + error);
+      }
+    });
+  }
+</script>
+</body>
+</html>
