@@ -37,7 +37,7 @@ public class WishlistDao {
 
     public List<Product> findByEmail(String email) {
         String sql = """
-            SELECT id, name, price, imageUrl
+            SELECT product.id, name, price, imageUrl
             FROM product, wishlist
             WHERE wishlist.email = :email AND wishlist.productId = product.id;
             """;
@@ -49,7 +49,7 @@ public class WishlistDao {
 
     public Optional<Product> findByEmailAndProductId(String email, Long productId) {
         String sql = """
-            SELECT id, name, price, imageUrl
+            SELECT product.id, name, price, imageUrl
             FROM product, wishlist
             WHERE wishlist.email = :email AND wishlist.productId = product.id AND product.id = :productId;
             """;

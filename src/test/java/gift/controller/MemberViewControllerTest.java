@@ -19,14 +19,14 @@ class MemberViewControllerTest {
     @Test
     @DisplayName("회원가입 폼 가져오기 테스트")
     void registerMemberForm() throws Exception {
-        mockMvc.perform(get("/api/member/register"))
+        mockMvc.perform(get("/api/members/register"))
             .andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("로그인 폼 가져오기 테스트")
     void loginForm() throws Exception {
-        mockMvc.perform(get("/api/member/login"))
+        mockMvc.perform(get("/api/members/login"))
             .andExpect(status().isOk());
     }
 }

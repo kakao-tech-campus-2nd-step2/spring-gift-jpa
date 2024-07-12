@@ -25,7 +25,7 @@ class MemberControllerTest {
     private @Autowired MockMvc mockMvc;
 
     void registerMember(String member) throws Exception {
-        mockMvc.perform(post("/api/member/register")
+        mockMvc.perform(post("/api/members/register")
             .contentType(MediaType.APPLICATION_JSON)
             .content(member));
     }
@@ -37,7 +37,7 @@ class MemberControllerTest {
     }
 
     String loginAndGetToken(String member) throws Exception {
-        MvcResult mvcResult = mockMvc.perform(post("/api/member/login")
+        MvcResult mvcResult = mockMvc.perform(post("/api/members/login")
             .contentType(MediaType.APPLICATION_JSON)
             .content(member)).andReturn();
         return mvcResult.getResponse().getHeader("token");
@@ -49,7 +49,7 @@ class MemberControllerTest {
         String member = """
             {"email": "sgoh", "password": "sgohpass"}
             """;
-        mockMvc.perform(post("/api/member/register")
+        mockMvc.perform(post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(member))
             .andExpect(status().isOk());
@@ -63,7 +63,7 @@ class MemberControllerTest {
             """;
         registerMember(member);
 
-        mockMvc.perform(post("/api/member/login")
+        mockMvc.perform(post("/api/members/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(member))
             .andExpect(status().isOk());
@@ -82,10 +82,10 @@ class MemberControllerTest {
         addProduct(product);
         String token = loginAndGetToken(member);
 
-        mockMvc.perform(post("/api/member/wishlist/10")
+        mockMvc.perform(post("/api/members/wishlist/10")
             .header("Authorization", "Bearer " + token));
 
-        mockMvc.perform(get("/api/member/wishlist")
+        mockMvc.perform(get("/api/members/wishlist")
                 .header("Authorization", "Bearer " + token))
             .andExpect(jsonPath("$", hasSize(1)));
     }
@@ -99,7 +99,7 @@ class MemberControllerTest {
         registerMember(member);
         String token = loginAndGetToken(member);
 
-        mockMvc.perform(post("/api/member/wishlist/10")
+        mockMvc.perform(post("/api/members/wishlist/10")
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk());
     }
@@ -117,9 +117,9 @@ class MemberControllerTest {
         addProduct(product);
         String token = loginAndGetToken(member);
 
-        mockMvc.perform(post("/api/member/wishlist/10")
+        mockMvc.perform(post("/api/members/wishlist/10")
             .header("Authorization", "Bearer " + token));
-        mockMvc.perform(delete("/api/member/wishlist/10")
+        mockMvc.perform(delete("/api/members/wishlist/10")
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk());
     }

@@ -8,7 +8,7 @@ function register() {
     };
 
     $.ajax({
-        url: '/api/member/register',
+        url: '/api/members/register',
         method: 'POST',
         data: JSON.stringify(formData),
         contentType: 'application/json',
@@ -44,7 +44,7 @@ function login() {
     };
 
     $.ajax({
-        url: '/api/member/login',
+        url: '/api/members/login',
         method: 'POST',
         data: JSON.stringify(formData),
         contentType: 'application/json',
@@ -82,7 +82,7 @@ function updateUI(isLoggedIn) {
 
 function getWishlist() {
     $.ajax({
-        url: "/api/member/wishlist",
+        url: "/api/members/wishlist",
         type: "GET",
         headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -121,7 +121,7 @@ $(document).on('click', '.delete-button', function() {
 
 function deleteWishlist(productId) {
     $.ajax({
-        url: `/api/member/wishlist/${productId}`,
+        url: `/api/members/wishlist/${productId}`,
         type: 'DELETE',
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem('token')

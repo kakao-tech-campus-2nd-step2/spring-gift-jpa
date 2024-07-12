@@ -7,7 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Member {
+public class Wishlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,26 +16,22 @@ public class Member {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+    @Column(name = "productid", nullable = false)
+    private long productId;
 
-    public Member() {
+    public Wishlist() {
     }
 
-    public Member(String email, String password) {
+    public Wishlist(String email, long productId) {
         this.email = email;
-        this.password = password;
+        this.productId = productId;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public boolean isCorrectPassword(String password) {
-        return this.password.equals(password);
+    public long getProductId() {
+        return productId;
     }
 }

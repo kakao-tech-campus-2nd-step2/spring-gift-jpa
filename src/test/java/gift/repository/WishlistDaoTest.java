@@ -65,6 +65,6 @@ class WishlistDaoTest {
         wishlistDao.insertProduct("sgoh", 7L);
 
         Product product = wishlistDao.findByEmailAndProductId("sgoh", 7L).get();
-        assertThat(product.id()).isEqualTo(7L);
+        assertThat(product.getId()).isEqualTo(7L);
     }
 }

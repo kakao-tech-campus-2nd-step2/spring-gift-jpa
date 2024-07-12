@@ -69,7 +69,7 @@ function addWishlist(productId) {
     event.preventDefault();
 
     $.ajax({
-        url: `/api/member/wishlist/${productId}`,
+        url: `/api/members/wishlist/${productId}`,
         method: 'POST',
         headers: {
             'Authorization': 'Bearer ' + localStorage.getItem('token')

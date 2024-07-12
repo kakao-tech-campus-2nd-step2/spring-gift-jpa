@@ -44,7 +44,7 @@ class ProductDaoTest {
         productDao.insertNewProduct(newProduct);
 
         Product products = productDao.selectOneProduct(7L).get();
-        assertThat(products.id()).isEqualTo(7L);
+        assertThat(products.getId()).isEqualTo(7L);
     }
 
     @Test
