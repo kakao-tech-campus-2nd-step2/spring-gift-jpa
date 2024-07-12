@@ -2,6 +2,8 @@ package gift.Controller;
 
 import gift.Entity.WishEntity;
 import gift.Service.WishService;
+import gift.Service.UserService;
+import gift.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,12 @@ public class WishController {
 
     @Autowired
     private WishService wishService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ProductService productService;
 
     @GetMapping
     public List<WishEntity> getAllWishes() {
