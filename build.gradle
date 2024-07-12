@@ -39,8 +39,7 @@ tasks.named('test') {
 }
 
 
-
-
 //war {
 //    archiveName 'jakarta-ee-getting-started.war'
 //}
+

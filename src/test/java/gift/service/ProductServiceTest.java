@@ -19,11 +19,6 @@ class ProductServiceTest {
     @Autowired
     private ProductService productService;
 
-    @BeforeEach
-    void setUp() {
-        // 데이터 초기화 코드가 필요할 경우 추가
-    }
-
     @Test
     void getAllProducts() {
         List<Product> products = productService.getAllProducts();
