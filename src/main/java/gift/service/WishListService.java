@@ -3,7 +3,7 @@ package gift.service;
 import gift.DTO.ProductDTO;
 import gift.DTO.WishListDTO;
 import gift.aspect.CheckProductExists;
-import gift.model.wishlist.WishListEntity;
+import gift.mapper.WishListMapper;
 import gift.model.wishlist.WishListRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,44 +17,17 @@ public class WishListService {
 
     private final WishListRepository wishListRepository;
 
-    private final ProductService productService;
-
-    private final MemberService memberService;
+    private final WishListMapper wishListMapper;
 
     /**
-     * WhishListService 생성자
+     * WhishListService 생성자W
      *
      * @param wishListRepository WishListDAO 객체
      */
-    public WishListService(WishListRepository wishListRepository, ProductService productService,
-        MemberService memberService) {
+    public WishListService(WishListRepository wishListRepository, WishListMapper wishListMapper) {
         this.wishListRepository = wishListRepository;
-        this.productService = productService;
-        this.memberService = memberService;
+        this.wishListMapper = wishListMapper;
     }
-
-    private WishListEntity toWishListEntity(WishListDTO wishListDTO) {
-        var wishListEntity = new WishListEntity();
-        wishListEntity.setId(wishListDTO.id());
-        wishListEntity.setMemberDTO(wishListDTO.memberDTO());
-        wishListEntity.setProductDTO(wishListDTO.productDTO());
-        return wishListEntity;
-    }
-
-    private WishListDTO toWishListDTO(WishListEntity wishListEntity) {
-        return new WishListDTO(
-            wishListEntity.getId(),
-            wishListEntity.getProductDTO(),
-            wishListEntity.getMemberDTO()
-        );
-    }
-
-    private WishListDTO wishListDTOmaker(long productId, long userId) {
-        var ProductEntity = productService.getProduct(productId);
-        var MemberEntity = memberService.getMember(userId);
-        return new WishListDTO(ProductEntity, MemberEntity);
-    }
-
 
     /**
      * 새로운 WishList를 추가함
@@ -65,9 +38,7 @@ public class WishListService {
      */
     @CheckProductExists
     public List<ProductDTO> addWishList(long productId, long userId) {
-        var wishListEntity = toWishListEntity(
-            wishListDTOmaker(productId, userId)
-        );
+        var wishListEntity = wishListMapper.toWishListEntityById(productId, userId);
         wishListRepository.save(wishListEntity);
         return getWishListsByUserId(userId);
     }
@@ -79,9 +50,10 @@ public class WishListService {
      * @return 지정된 사용자의 모든 WishList 객체의 productId 리스트
      */
     public List<ProductDTO> getWishListsByUserId(long userId) {
-        var wishListEntities = wishListRepository.findAllByUserId(userId);
+        var wishListEntities = wishListRepository.findAllByMemberEntityId(userId);
         return wishListEntities.stream()
-            .map(WishListEntity::getProductDTO)
+            .map(wishListMapper::toWishListDTO)
+            .map(WishListDTO::productDTO)
             .collect(Collectors.toList());
     }
 
@@ -92,7 +64,7 @@ public class WishListService {
      * @return 삭제 성공 여부
      */
     public boolean deleteWishListsByUserId(long userId) {
-        return wishListRepository.deleteWishListsByUserId(userId) > 0;
+        return wishListRepository.deleteWishListsByMemberEntityId(userId) > 0;
     }
 
     /**
@@ -104,6 +76,8 @@ public class WishListService {
      */
     @CheckProductExists
     public boolean deleteWishListByUserIdAndProductId(long userId, long productId) {
-        return wishListRepository.deleteWishListByUserIdAndProductId(userId, productId) > 0;
+        return
+            wishListRepository.deleteWishListByMemberEntityIdAndProductEntityId(userId, productId)
+                > 0;
     }
 }

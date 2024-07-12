@@ -1,10 +1,7 @@
 package gift.model.wishlist;
 
-import gift.DTO.ProductDTO;
-import gift.auth.DTO.MemberDTO;
 import gift.model.member.MemberEntity;
 import gift.model.product.ProductEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -20,15 +17,13 @@ public class WishListEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     @JoinColumn(name = "product_id")
     @ManyToOne(targetEntity = ProductEntity.class, fetch = FetchType.LAZY)
-    private ProductDTO productDTO;
+    private ProductEntity productEntity;
 
-    @Column(nullable = false)
     @JoinColumn(name = "user_id")
     @ManyToOne(targetEntity = MemberEntity.class, fetch = FetchType.LAZY)
-    private MemberDTO memberDTO;
+    private MemberEntity memberEntity;
 
     public Long getId() {
         return id;
@@ -38,19 +33,19 @@ public class WishListEntity {
         this.id = id;
     }
 
-    public ProductDTO getProductDTO() {
-        return productDTO;
+    public ProductEntity getProductEntity() {
+        return productEntity;
     }
 
-    public void setProductDTO(ProductDTO productDTO) {
-        this.productDTO = productDTO;
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
     }
 
-    public MemberDTO getMemberDTO() {
-        return memberDTO;
+    public MemberEntity getMemberEntity() {
+        return memberEntity;
     }
 
-    public void setMemberDTO(MemberDTO memberDTO) {
-        this.memberDTO = memberDTO;
+    public void setMemberEntity(MemberEntity memberEntity) {
+        this.memberEntity = memberEntity;
     }
 }

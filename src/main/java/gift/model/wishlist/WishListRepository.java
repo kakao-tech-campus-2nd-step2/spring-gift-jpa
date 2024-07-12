@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WishListRepository extends JpaRepository<WishListEntity, Long> {
 
-    List<WishListEntity> findAllByUserId(Long userId);
+    List<WishListEntity> findAllByMemberEntityId(Long userId);
 
-    int deleteWishListsByUserId(Long userId);
+    int deleteWishListsByMemberEntityId(Long userId);
 
-    int deleteWishListByUserIdAndProductId(Long userId, Long productId);
+    int deleteWishListByMemberEntityIdAndProductEntityId(Long userId, Long productId);
 }

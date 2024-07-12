@@ -2,7 +2,7 @@ package gift.service;
 
 import gift.DTO.ProductDTO;
 import gift.aspect.CheckProductExists;
-import gift.model.product.ProductEntity;
+import gift.mapper.ProductMapper;
 import gift.model.product.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -12,26 +12,11 @@ public class ProductService {
 
     ProductRepository productRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    ProductMapper productMapper;
+
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
-    }
-
-    private ProductDTO toProductDTO(ProductEntity productEntity) {
-        return new ProductDTO(
-            productEntity.getId(),
-            productEntity.getName(),
-            productEntity.getPrice(),
-            productEntity.getImageUrl()
-        );
-    }
-
-    private ProductEntity toProductEntity(ProductDTO productDTO) {
-        var productEntity = new ProductEntity();
-        productEntity.setId(productDTO.id());
-        productEntity.setName(productDTO.name());
-        productEntity.setPrice(productDTO.price());
-        productEntity.setImageUrl(productDTO.imageUrl());
-        return productEntity;
+        this.productMapper = productMapper;
     }
 
     /**
@@ -40,9 +25,9 @@ public class ProductService {
      * @param productDTO 저장할 상품 객체
      */
     public ProductDTO createProduct(ProductDTO productDTO) {
-        var productEntity = toProductEntity(productDTO);
+        var productEntity = productMapper.toProductEntity(productDTO);
         productRepository.save(productEntity);
-        return toProductDTO(productEntity);
+        return productMapper.toProductDTO(productEntity);
     }
 
     /**
@@ -53,7 +38,7 @@ public class ProductService {
     @CheckProductExists
     public ProductDTO getProduct(Long id) {
         var productEntity = productRepository.findById(id).get();
-        return toProductDTO(productEntity);
+        return productMapper.toProductDTO(productEntity);
     }
 
     /**
@@ -61,7 +46,7 @@ public class ProductService {
      */
     public List<ProductDTO> getAllProducts() {
         var productEntities = productRepository.findAll();
-        return productEntities.stream().map(this::toProductDTO).toList();
+        return productEntities.stream().map(productMapper::toProductDTO).toList();
     }
 
     /**
@@ -81,10 +66,10 @@ public class ProductService {
      */
     @CheckProductExists
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
-        var productEntity = toProductEntity(productDTO);
+        var productEntity = productMapper.toProductEntity(productDTO);
         productEntity.setId(id);
         productRepository.save(productEntity);
-        return toProductDTO(productEntity);
+        return productMapper.toProductDTO(productEntity);
     }
 
 }
