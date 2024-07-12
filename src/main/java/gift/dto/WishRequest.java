@@ -4,9 +4,9 @@ import gift.entity.WishEntity;
 
 public class WishRequest {
 
-    private Long productId;
-
     private Long memberId;
+
+    private Long productId;
 
     public WishRequest() {
     }
@@ -22,9 +22,5 @@ public class WishRequest {
 
     public Long getProductId() {
         return productId;
-    }
-
-    public WishEntity toWishEntity() {
-        return new WishEntity(this.memberId, this.productId);
     }
 }
