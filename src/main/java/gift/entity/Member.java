@@ -1,8 +1,6 @@
 package gift.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +13,9 @@ public class Member {
     private String password;
 
     @OneToMany(mappedBy = "member")
-    @JsonManagedReference
     private List<Wish> wishes = new ArrayList<>();
 
-    public Member() {
-    }
+    public Member() {}
 
     public Member(String email, String password) {
         this.email = email;
