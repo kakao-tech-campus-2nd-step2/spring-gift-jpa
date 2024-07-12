@@ -21,8 +21,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Page<ProductDTO> getAllProducts(int page, int size, String sortDirection,
-        String sortBy) {
+    public Page<ProductDTO> getAllProducts(int page, int size, String sortBy, String sortDirection) {
         Direction direction = Direction.ASC;
         if (!(sortBy.equals("id") || sortBy.equals("name"))) {
             sortBy = "id";
@@ -32,13 +31,11 @@ public class ProductService {
         }
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageRequest = PageRequest.of(page, size, sort);
-        List<ProductDTO> products = productRepository.findAll(sort).stream()
+        Page<Product> productPage = productRepository.findAll(pageRequest);
+        List<ProductDTO> products = productPage.stream()
             .map(ProductDTO::fromProduct)
             .toList();
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), products.size());
-        List<ProductDTO> pageContent = products.subList(start, end);
-        return new PageImpl<>(pageContent, pageRequest, products.size());
+        return new PageImpl<>(products, pageRequest, productPage.getTotalElements());
     }
 
     public ProductDTO getProductById(long id) throws NotFoundException {

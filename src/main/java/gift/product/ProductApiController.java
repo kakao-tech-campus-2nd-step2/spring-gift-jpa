@@ -34,7 +34,7 @@ public class ProductApiController {
         @RequestParam(value = "sortDirection", required = false, defaultValue = "asc") String sortDirection) {
         Page<ProductDTO> productPage = productService.getAllProducts(page, size, sortBy,
             sortDirection);
-        return ResponseEntity.ok().body(productPage);
+        return ResponseEntity.ok(productPage);
     }
 
     @GetMapping("/{id}")
