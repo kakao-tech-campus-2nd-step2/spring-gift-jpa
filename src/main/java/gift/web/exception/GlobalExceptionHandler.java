@@ -15,6 +15,12 @@ public class GlobalExceptionHandler {
                 ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage()));
     }
 
+    @ExceptionHandler(WishProductNotFoundException.class)
+    public ResponseEntity<?> handleWishProductNotFoundException(WishProductNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage()));
+    }
+
     @ExceptionHandler(MemberNotFoundException.class)
     public ResponseEntity<?> handleMemberNotFoundException(MemberNotFoundException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
