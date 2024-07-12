@@ -8,13 +8,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 
 @Entity
 @IdClass(WishId.class)
 public class Wish {
     @Id
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
     @Id
