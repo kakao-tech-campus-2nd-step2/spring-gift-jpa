@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "products")
+@Table(name = "PRODUCTS")
 public class Product {
 
 
@@ -32,6 +32,10 @@ public class Product {
             message = "Invalid image URL format"
     )
     private String imageUrl;
+
+    public Product() {
+    }
+
 
     // getters와 setters 추가
     public Long getId() {

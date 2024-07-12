@@ -18,6 +18,10 @@ public class Wishlist {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    public Wishlist() {
+    }
+
+
     // Getters와 Setters
     public Long getId() {
         return id;
