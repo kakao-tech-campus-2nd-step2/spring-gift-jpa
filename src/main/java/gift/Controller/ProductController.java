@@ -1,9 +1,11 @@
 package gift.Controller;
 
+import gift.DTO.ProductDto;
 import gift.DTO.ProductEntity;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +32,8 @@ public class ProductController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Optional<ProductEntity>> getProductById(@PathVariable Long id) {
-    Optional<ProductEntity> productDTO = productService.getProductById(id);
+  public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+    ProductDto productDTO = productService.getProductById(id);
 
     if (productDTO == null) {
       return ResponseEntity.notFound().build();
@@ -52,13 +54,13 @@ public class ProductController {
     if (existingProductDto == null) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok(updatedProductEntity);
+    return ResponseEntity.ok(updatedProductDto);
 
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Optional<ProductEntity>> deleteProduct(@PathVariable Long id) {
-    Optional<ProductEntity> existingProductDto = productService.deleteProduct(id);
+  public ResponseEntity<ProductDto> deleteProduct(@PathVariable Long id) {
+    ProductDto existingProductDto = productService.deleteProduct(id);
     return ResponseEntity.ok(existingProductDto);
   }
 }
