@@ -6,7 +6,6 @@ import gift.model.product.Product;
 import gift.repository.product.ProductRepository;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +16,6 @@ class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
-
-    private Product product1;
-    private Product product2;
 
     private Product createProduct(String name, int price, String url) {
         return new Product(name, price, url);
