@@ -74,7 +74,7 @@ public class WishService {
 
     @Transactional(readOnly = true)
     public PageResponse<WishResponse.Info> getWishesPaging(Long memberId, Pageable pageable) {
-        Page<Wish> wishPage = wishJpaRepository.findAllByMemberId(memberId, pageable);
+        Page<Wish> wishPage = wishJpaRepository.findAllByMemberByIdDesc(memberId, pageable);
         var content = wishPage.getContent().stream()
             .map(WishResponse.Info::from)
             .toList();
