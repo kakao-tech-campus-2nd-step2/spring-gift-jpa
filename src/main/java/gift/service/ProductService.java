@@ -1,9 +1,10 @@
 package gift.service;
 
 import gift.entity.ProductEntity;
-import gift.model.Product;
+import gift.domain.ProductDTO;
 import gift.repository.ProductRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,8 @@ public class ProductService {
         ERROR
     }
 
-    private Product toProductDTO(ProductEntity productEntity) {
-        return new Product(
+    private ProductDTO toProductDTO(ProductEntity productEntity) {
+        return new ProductDTO(
             productEntity.getId(),
             productEntity.getName(),
             productEntity.getPrice(),
@@ -28,15 +29,15 @@ public class ProductService {
         );
     }
 
-    private ProductEntity toProductEntity(Product product) {
+    private ProductEntity toProductEntity(ProductDTO productDTO) {
         return new ProductEntity(
-            product.getName(),
-            product.getPrice(),
-            product.getImageUrl()
+            productDTO.getName(),
+            productDTO.getPrice(),
+            productDTO.getImageUrl()
         );
     }
 
-    public List<Product> getAllProducts() {
+    public List<ProductDTO> getAllProducts() {
         List<ProductEntity> response = productRepository.findAll();
         return response.stream()
             .map(this::toProductDTO)
@@ -44,15 +45,15 @@ public class ProductService {
     }
 
     // Read(단일 상품) - getProduct()
-    public Product getProduct(Long id) {
-        ProductEntity response = productRepository.findById(id).orElse(null);
-        return response != null ? toProductDTO(response) : null;
+    public Optional<ProductDTO> getProduct(Long id) {
+        return productRepository.findById(id)
+            .map(this::toProductDTO);
     }
 
     // Create(생성) - addProduct()
-    public ProductServiceStatus createProduct(Product product) {
+    public ProductServiceStatus createProduct(ProductDTO productDTO) {
         try {
-            ProductEntity productEntity = toProductEntity(product);
+            ProductEntity productEntity = toProductEntity(productDTO);
             productRepository.save(productEntity);
             return ProductServiceStatus.SUCCESS;
         } catch (Exception e) {
@@ -61,11 +62,13 @@ public class ProductService {
     }
 
     // Update(수정) - updateProduct()
-    public ProductServiceStatus editProduct(Long id, Product product) {
+    public ProductServiceStatus editProduct(Long id, ProductDTO productDTO) {
         try {
-            ProductEntity existingProductEntity = productRepository.findById(id).orElse(null);
-            if (existingProductEntity != null) {
-                existingProductEntity.update(product.getName(), product.getPrice(), product.getImageUrl());
+            Optional<ProductEntity> existingProductEntityOpt = productRepository.findById(id);
+            if (existingProductEntityOpt.isPresent()) {
+                ProductEntity existingProductEntity = existingProductEntityOpt.get();
+                existingProductEntity.update(
+                    productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
                 productRepository.save(existingProductEntity);
                 return ProductServiceStatus.SUCCESS;
             }
@@ -77,7 +80,7 @@ public class ProductService {
 
     public ProductServiceStatus deleteProduct(Long id) {
         try {
-            if (productRepository.findById(id).orElse(null) != null) {
+            if (productRepository.existsById(id)) {
                 productRepository.deleteById(id);
                 return ProductServiceStatus.SUCCESS;
             }

@@ -74,16 +74,16 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:each="product : ${products}">
-    <td th:text="${product.id}">ID</td>
-    <td th:text="${product.name}">Name</td>
-    <td th:text="${product.price}">Price</td>
-    <td><img th:src="${product.imageUrl}" alt="Product Image"></td>
+  <tr th:each="productDTO : ${products}">
+    <td th:text="${productDTO.id}">ID</td>
+    <td th:text="${productDTO.name}">Name</td>
+    <td th:text="${productDTO.price}">Price</td>
+    <td><img th:src="${productDTO.imageUrl}" alt="Product Image"></td>
     <td>
       <!-- 수정 링크 -->
-      <a th:href="@{/admin/products/update/{id}(id=${product.id})}" class="btn">Edit</a>
+      <a th:href="@{/admin/products/update/{id}(id=${productDTO.id})}" class="btn">Edit</a>
       <!-- 삭제 폼 -->
-      <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post" style="display: inline;">
+      <form th:action="@{/admin/products/delete/{id}(id=${productDTO.id})}" method="post" style="display: inline;">
         <input type="submit" value="Delete" class="btn btn-warning">
       </form>
     </td>

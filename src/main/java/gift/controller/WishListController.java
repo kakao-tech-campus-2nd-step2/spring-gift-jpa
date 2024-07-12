@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.model.WishList;
+import gift.domain.WishListDTO;
 import gift.service.WishListService;
 import gift.service.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +29,9 @@ public class WishListController {
 
     // 전체 위시리스트 조회
     @GetMapping
-    public ResponseEntity<List<WishList>> getWishList(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<WishListDTO>> getWishList(@RequestHeader("Authorization") String token) {
         Long userId = getUserId(token);
-        List<WishList> productIds = wishListService.readWishList(userId);
+        List<WishListDTO> productIds = wishListService.readWishList(userId);
         return ResponseEntity.ok(productIds);
     }
 

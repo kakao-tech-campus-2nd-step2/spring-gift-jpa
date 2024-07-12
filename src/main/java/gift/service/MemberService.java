@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.entity.MemberEntity;
-import gift.model.Member;
+import gift.domain.MemberDTO;
 import gift.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,23 +16,23 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public MemberEntity authenticateToken(Member member) {
-        MemberEntity foundMember = memberRepository.findByEmail(member.getEmail());
+    public MemberEntity authenticateToken(MemberDTO memberDTO) {
+        MemberEntity foundMember = memberRepository.findByEmail(memberDTO.getEmail());
 
-        if (foundMember == null || !member.getPassword().equals(foundMember.getPassword())) {
+        if (foundMember == null || !memberDTO.getPassword().equals(foundMember.getPassword())) {
             return null;
         }
 
         return foundMember;
     }
 
-    public MemberServiceStatus save(Member member) {
-        if (existsByEmail(member.getEmail())) {
+    public MemberServiceStatus save(MemberDTO memberDTO) {
+        if (existsByEmail(memberDTO.getEmail())) {
             return MemberServiceStatus.EMAIL_ALREADY_EXISTS;
         }
 
         // DTO to Entity
-        MemberEntity memberEntity = new MemberEntity(member.getEmail(), member.getPassword());
+        MemberEntity memberEntity = new MemberEntity(memberDTO.getEmail(), memberDTO.getPassword());
         memberRepository.save(memberEntity);
         return MemberServiceStatus.SUCCESS;
     }

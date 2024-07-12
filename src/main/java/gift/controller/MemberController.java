@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.entity.MemberEntity;
-import gift.model.Member;
+import gift.domain.MemberDTO;
 import gift.service.JwtUtil;
 import gift.service.MemberService;
 import gift.service.MemberServiceStatus;
@@ -27,8 +27,8 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody Member member) {
-        MemberServiceStatus status = memberService.save(member);
+    public ResponseEntity<?> registerUser(@RequestBody MemberDTO memberDTO) {
+        MemberServiceStatus status = memberService.save(memberDTO);
 
         if (status == MemberServiceStatus.EMAIL_ALREADY_EXISTS) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap("error", "Email already exists"));
@@ -38,8 +38,8 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody Member member) {
-        MemberEntity authenticatedMember = memberService.authenticateToken(member);
+    public ResponseEntity<?> loginUser(@RequestBody MemberDTO memberDTO) {
+        MemberEntity authenticatedMember = memberService.authenticateToken(memberDTO);
 
         if (authenticatedMember == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "Invalid email or password"));
