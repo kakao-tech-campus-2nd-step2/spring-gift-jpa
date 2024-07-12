@@ -44,7 +44,8 @@ public class ProductService {
             .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("not found entity"));
 
-        productEntity.update(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        productEntity.update(productRequest.getName(), productRequest.getPrice(),
+            productRequest.getImageUrl());
 
         return entityToDomain(productRepository.save(productEntity));
 
@@ -57,11 +58,13 @@ public class ProductService {
         productRepository.delete(productEntity);
     }
 
-    private Product entityToDomain(ProductEntity productEntity){
-        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(),productEntity.getImageUrl());
+    private Product entityToDomain(ProductEntity productEntity) {
+        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(),
+            productEntity.getImageUrl());
     }
 
-    private ProductEntity dtoToEntity(ProductRequest productRequest){
-        return new ProductEntity(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+    private ProductEntity dtoToEntity(ProductRequest productRequest) {
+        return new ProductEntity(productRequest.getName(), productRequest.getPrice(),
+            productRequest.getImageUrl());
     }
 }

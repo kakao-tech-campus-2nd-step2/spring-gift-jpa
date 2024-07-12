@@ -33,7 +33,8 @@ public class ProductEntity {
     @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL)
     private List<WishEntity> wishEntityList;
 
-    public ProductEntity() {};
+    public ProductEntity() {
+    }
 
     public ProductEntity(String name, int price, String imageUrl) {
         this.name = name;
@@ -58,22 +59,22 @@ public class ProductEntity {
         return imageUrl;
     }
 
-    public List<WishEntity> getWishEntityList(){
+    public List<WishEntity> getWishEntityList() {
         return wishEntityList;
     }
 
-    public void update(String name, int price, String imageUrl){
+    public void update(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public void addWishEntity(WishEntity wishEntity){
+    public void addWishEntity(WishEntity wishEntity) {
         this.wishEntityList.add(wishEntity);
         wishEntity.updateProductEntity(this);
     }
 
-    public void removeWishEntity(WishEntity wishEntity){
+    public void removeWishEntity(WishEntity wishEntity) {
         this.wishEntityList.remove(wishEntity);
     }
 }

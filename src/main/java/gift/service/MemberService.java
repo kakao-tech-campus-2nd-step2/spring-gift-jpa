@@ -67,11 +67,12 @@ public class MemberService {
         return null;
     }
 
-    private Member entityToDomain(MemberEntity memberEntity){
-        return new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
+    private Member entityToDomain(MemberEntity memberEntity) {
+        return new Member(memberEntity.getId(), memberEntity.getEmail(),
+            memberEntity.getPassword());
     }
 
-    private MemberEntity dtoToEntity(MemberRequest memberRequest){
+    private MemberEntity dtoToEntity(MemberRequest memberRequest) {
         return new MemberEntity(memberRequest.getEmail(), memberRequest.getPassword());
     }
 }

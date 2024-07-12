@@ -48,14 +48,14 @@ public class WishEntity {
         return productEntity;
     }
 
-    public void updateMemberEntity(MemberEntity memberEntity){
+    public void updateMemberEntity(MemberEntity memberEntity) {
         // 기존 memberEntity에서  wishEntity 삭제
         this.memberEntity.getWishEntityList().remove(this);
         this.memberEntity = memberEntity;
         memberEntity.getWishEntityList().add(this);
     }
 
-    public void updateProductEntity(ProductEntity productEntity){
+    public void updateProductEntity(ProductEntity productEntity) {
         // 기존 productEntity에서 wishEntity 삭제
         this.productEntity.getWishEntityList().remove(this);
         this.productEntity = productEntity;

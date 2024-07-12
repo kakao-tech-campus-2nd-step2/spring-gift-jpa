@@ -53,12 +53,12 @@ public class MemberEntity {
         return wishEntityList;
     }
 
-    public void addWishEntity(WishEntity wishEntity){
+    public void addWishEntity(WishEntity wishEntity) {
         this.wishEntityList.add(wishEntity);
         wishEntity.updateMemberEntity(this);
     }
 
-    public void removeWishEntity(WishEntity wishEntity){
+    public void removeWishEntity(WishEntity wishEntity) {
         this.wishEntityList.remove(wishEntity);
     }
 }

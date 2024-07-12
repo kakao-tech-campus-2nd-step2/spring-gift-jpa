@@ -20,7 +20,8 @@ public class WishService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
 
-    public WishService(WishRepository wishRepository, MemberRepository memberRepository, ProductRepository productRepository) {
+    public WishService(WishRepository wishRepository, MemberRepository memberRepository,
+        ProductRepository productRepository) {
         this.wishRepository = wishRepository;
         this.memberRepository = memberRepository;
         this.productRepository = productRepository;
@@ -28,7 +29,8 @@ public class WishService {
     }
 
     public List<Wish> getWishesByMember(Member member) {
-        MemberEntity memberEntity = memberRepository.findById(member.getId()).orElseThrow(()-> new EntityNotFoundException("멤버가 없습니다."));
+        MemberEntity memberEntity = memberRepository.findById(member.getId())
+            .orElseThrow(() -> new EntityNotFoundException("멤버가 없습니다."));
         return wishRepository
             .findAllByMemberEntity(memberEntity)
             .stream()
@@ -38,8 +40,10 @@ public class WishService {
 
     public Wish addWish(WishRequest wishRequest) {
         WishEntity wishEntity = DtoToEntity(wishRequest);
-        MemberEntity memberEntity = memberRepository.findById(wishRequest.getMemberId()).orElseThrow(() -> new EntityNotFoundException("[Wish 추가 실패] 해당하는 멤버가 존재하지 않습니다."));
-        ProductEntity productEntity = productRepository.findById(wishRequest.getProductId()).orElseThrow(() -> new EntityNotFoundException("[Wish 추가 실패] 해당하는 상품이 존재하지 않습니다."));
+        MemberEntity memberEntity = memberRepository.findById(wishRequest.getMemberId())
+            .orElseThrow(() -> new EntityNotFoundException("[Wish 추가 실패] 해당하는 멤버가 존재하지 않습니다."));
+        ProductEntity productEntity = productRepository.findById(wishRequest.getProductId())
+            .orElseThrow(() -> new EntityNotFoundException("[Wish 추가 실패] 해당하는 상품이 존재하지 않습니다."));
 
         wishEntity.updateMemberEntity(memberEntity);
         wishEntity.updateProductEntity(productEntity);
@@ -51,24 +55,26 @@ public class WishService {
             .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("not found entity"));
 
-        if (wishEntity.getMemberEntity().getId().equals( member.getId())) {
+        if (wishEntity.getMemberEntity().getId().equals(member.getId())) {
             wishEntity.getMemberEntity().removeWishEntity(wishEntity);
             wishEntity.getProductEntity().removeWishEntity(wishEntity);
             wishRepository.delete(wishEntity);
         }
     }
 
-    private Wish entityToDomain(WishEntity wishEntity){
-        return new Wish(wishEntity.getId(), wishEntity.getMemberEntity().getId(), wishEntity.getProductEntity().getId());
+    private Wish entityToDomain(WishEntity wishEntity) {
+        return new Wish(wishEntity.getId(), wishEntity.getMemberEntity().getId(),
+            wishEntity.getProductEntity().getId());
     }
-    private WishEntity DtoToEntity(WishRequest wishRequest){
+
+    private WishEntity DtoToEntity(WishRequest wishRequest) {
         MemberEntity memberEntity = memberRepository
             .findById(wishRequest.getMemberId())
-            .orElseThrow(()->new EntityNotFoundException("not found entity"));
+            .orElseThrow(() -> new EntityNotFoundException("not found entity"));
 
         ProductEntity productEntity = productRepository
             .findById(wishRequest.getProductId())
-            .orElseThrow(()->new EntityNotFoundException("not found entity"));
+            .orElseThrow(() -> new EntityNotFoundException("not found entity"));
 
         return new WishEntity(memberEntity, productEntity);
     }
