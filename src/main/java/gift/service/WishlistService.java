@@ -7,8 +7,9 @@ import gift.model.Wishlist;
 import gift.model.Member;
 import gift.model.Product;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 public class WishlistService {
@@ -23,10 +24,10 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    public List<Wishlist> getWishList(String email) {
+    public Page<Wishlist> getWishList(String email, Pageable pageable) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
-        return wishlistRepository.findByMemberId(member.getId());
+        return wishlistRepository.findByMemberId(member.getId(), pageable);
     }
 
     public void addProductToWishlist(String email, Long productId) {

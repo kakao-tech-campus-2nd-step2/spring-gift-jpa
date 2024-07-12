@@ -9,6 +9,10 @@ import gift.repository.WishlistRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,8 +35,10 @@ public class WishlistRepositoryTests {
         Wishlist wishList = new Wishlist(null, member, product);
         wishListRepository.save(wishList);
 
-        List<Wishlist> foundWishLists = wishListRepository.findByMemberId(member.getId());
-        assertThat(foundWishLists).hasSize(1);
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Wishlist> foundWishLists = wishListRepository.findByMemberId(member.getId(), pageable);
+
+        assertThat(foundWishLists.getContent()).hasSize(1);
     }
 
     @Test
@@ -45,7 +51,10 @@ public class WishlistRepositoryTests {
         wishListRepository.save(wishList);
 
         wishListRepository.deleteByMemberIdAndProductId(member.getId(), product.getId());
-        List<Wishlist> foundWishLists = wishListRepository.findByMemberId(member.getId());
-        assertThat(foundWishLists).isEmpty();
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Wishlist> foundWishLists = wishListRepository.findByMemberId(member.getId(), pageable);
+
+        assertThat(foundWishLists.getContent()).isEmpty();
     }
+
 }
