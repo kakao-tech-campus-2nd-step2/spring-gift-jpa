@@ -40,8 +40,9 @@ public class WishRepositoryTest {
         Page<Wish> byUserId = wishRepository.findByUserInfoId(wish.getUserInfo().getId(), pageable);
 
         assertThat(byUserId).isNotEmpty();
-        assertThat(byUserId.getContent().getFirst().getUserInfo()).isEqualTo(wish.getUserInfo());
-        assertThat(byUserId.getContent().getFirst().getProduct()).isEqualTo(wish.getProduct());
+        assertThat(byUserId.getContent().get(0))
+            .extracting(Wish::getUserInfo, Wish::getProduct, Wish::getQuantity)
+            .containsExactly(wish.getUserInfo(), wish.getProduct(), 1L);
 
         assertThat(byUserId.getSize()).isEqualTo(pageSize);
         assertThat(byUserId.getTotalElements()).isEqualTo(1);
@@ -65,7 +66,9 @@ public class WishRepositoryTest {
         Wish updatedWish = wishRepository.findByUserInfoIdAndProductId(wish.getUserInfo().getId(),
             wish.getProduct().getId());
 
-        assertThat(updatedWish.getQuantity()).isEqualTo(5L);
+        assertThat(updatedWish)
+            .extracting(Wish::getQuantity)
+            .isEqualTo(5L);
     }
 
     @Test
@@ -105,26 +108,17 @@ public class WishRepositoryTest {
             pageable);
 
         // Then
-        assertThat(wishesForUser1).hasSize(1);
-        assertThat(wishesForUser1.getContent().getFirst().getUserInfo()).isEqualTo(
-            wish1.getUserInfo());
-        assertThat(wishesForUser1.getContent().getFirst().getProduct()).isEqualTo(
-            wish1.getProduct());
-        assertThat(wishesForUser1.getContent().getFirst().getQuantity()).isEqualTo(1L);
+        assertThat(wishesForUser1.getContent().get(0))
+            .extracting(Wish::getUserInfo, Wish::getProduct, Wish::getQuantity)
+            .containsExactly(wish1.getUserInfo(), wish1.getProduct(), 1L);
 
-        assertThat(wishesForUser2).hasSize(1);
-        assertThat(wishesForUser2.getContent().getFirst().getUserInfo()).isEqualTo(
-            wish2.getUserInfo());
-        assertThat(wishesForUser2.getContent().getFirst().getProduct()).isEqualTo(
-            wish2.getProduct());
-        assertThat(wishesForUser2.getContent().getFirst().getQuantity()).isEqualTo(2L);
+        assertThat(wishesForUser2.getContent().get(0))
+            .extracting(Wish::getUserInfo, Wish::getProduct, Wish::getQuantity)
+            .containsExactly(wish2.getUserInfo(), wish2.getProduct(), 2L);
 
-        assertThat(wishesForUser3).hasSize(1);
-        assertThat(wishesForUser3.getContent().getFirst().getUserInfo()).isEqualTo(
-            wish3.getUserInfo());
-        assertThat(wishesForUser3.getContent().getFirst().getProduct()).isEqualTo(
-            wish3.getProduct());
-        assertThat(wishesForUser3.getContent().getFirst().getQuantity()).isEqualTo(3L);
+        assertThat(wishesForUser3.getContent().get(0))
+            .extracting(Wish::getUserInfo, Wish::getProduct, Wish::getQuantity)
+            .containsExactly(wish3.getUserInfo(), wish3.getProduct(), 3L);
 
         // 전체 Wish 개수 검증
         assertThat(wishRepository.findAll()).hasSize(3);
@@ -168,12 +162,9 @@ public class WishRepositoryTest {
         Wish byUserIdAndProductId = wishRepository.findByUserInfoIdAndProductId(
             wish.getUserInfo().getId(), wish.getProduct().getId());
 
-        assertThat(byUserIdAndProductId).isNotNull();
-        assertThat(byUserIdAndProductId.getProduct().getId()).isEqualTo(wish.getProduct().getId());
-        assertThat(byUserIdAndProductId.getUserInfo().getId()).isEqualTo(
-            wish.getUserInfo().getId());
-        assertThat(byUserIdAndProductId.getQuantity()).isEqualTo(1L);
-
+        assertThat(byUserIdAndProductId)
+            .extracting(Wish::getProduct, Wish::getUserInfo, Wish::getQuantity)
+            .containsExactly(wish.getProduct(), wish.getUserInfo(), 1L);
     }
 
     @Test
@@ -190,7 +181,5 @@ public class WishRepositoryTest {
         wishRepository.deleteByProductIdAndUserInfoId(product.getId(), userInfo.getId());
         assertThat(wishRepository.findByUserInfoIdAndProductId(product.getId(),
             userInfo.getId())).isNull();
-
     }
-
 }

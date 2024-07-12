@@ -1,10 +1,12 @@
 package gift.controller;
 
+import gift.controller.dto.PaginationDTO;
 import gift.controller.dto.WishRequestDTO;
 import gift.domain.Product;
 import gift.domain.Wish;
 import gift.service.WishService;
 import gift.utils.JwtTokenProvider;
+import gift.utils.PaginationUtils;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -57,22 +60,9 @@ public class WishController {
     @GetMapping
     public ResponseEntity<Page<Wish>> getWishlist(
         @RequestHeader("Authorization") String token,
-        @RequestParam(defaultValue = "id") String sortBy,
-        @RequestParam(defaultValue = "desc") String sortDirection,
-        @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "0") int page) {
+        @ModelAttribute PaginationDTO paginationDTO) {
 
-        final int MAX_SIZE = 20;
-        size = Math.min(size, MAX_SIZE);
-
-        Sort.Direction direction = sortDirection.equalsIgnoreCase("asc")
-            ? Sort.Direction.ASC : Sort.Direction.DESC;
-
-        List<String> validSortFields = Arrays.asList("id", "quantity");
-        if (!validSortFields.contains(sortBy)) {
-            sortBy = "id";
-        }
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        Pageable pageable = PaginationUtils.createPageable(paginationDTO, "wishlist");
 
         String email = jwtTokenProvider.getEmailFromToken(token.substring(7));
         Page<Wish> wishlistProducts = wishlistService.getWishlistProducts(email, pageable);
