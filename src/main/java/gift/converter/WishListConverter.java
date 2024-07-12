@@ -1,14 +1,7 @@
 package gift.converter;
 
-import gift.dto.ProductDTO;
-import gift.dto.UserDTO;
 import gift.dto.WishListDTO;
-import gift.model.Product;
-import gift.model.User;
 import gift.model.WishList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class WishListConverter {
 
     public static WishListDTO convertToDTO(WishList wishList) {
