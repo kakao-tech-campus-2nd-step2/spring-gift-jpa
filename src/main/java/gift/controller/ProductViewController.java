@@ -5,6 +5,7 @@ import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -41,10 +42,21 @@ public class ProductViewController {
     return "product-form";
   }
 
+  @GetMapping("/{id}")
+  public String getProduct(@PathVariable Long id, Model model) {
+    Product product = productService.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + id));
+    model.addAttribute("product", product);
+    return "product";
+  }
+
   @PostMapping("/{id}")
-  public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute Product product, RedirectAttributes redirectAttributes) {
-    product.setId(id);
-    productService.save(product);
+  public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute Product productDetails, RedirectAttributes redirectAttributes) {
+    boolean isUpdated = productService.updateProduct(id, productDetails);
+    if (isUpdated) {
+      redirectAttributes.addFlashAttribute("message", "Product updated successfully.");
+    } else {
+      redirectAttributes.addFlashAttribute("error", "Product update failed.");
+    }
     return "redirect:/products";
   }
 
