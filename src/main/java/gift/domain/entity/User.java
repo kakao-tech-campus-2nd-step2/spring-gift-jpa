@@ -15,7 +15,11 @@ public class User {
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     String password;
+
+    @Column(nullable = false)
     String permission;
 
     public User(String email, String password, String permission) {

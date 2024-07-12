@@ -36,13 +36,13 @@ public class WishService {
     @Transactional(readOnly = true)
     public List<WishResponse> getWishlist(User user) {
         return wishRepository.findWishesByUserId(user.getId()).stream()
-            .map(wish -> WishResponse.of(wish.getQuantity(), getProductByIdOrThrow(wish.getProductId())))
+            .map(wish -> WishResponse.of(wish.getQuantity(), wish.getProduct()))
             .toList();
     }
 
     @Transactional
     public WishAddResponse addWishlist(User user, WishRequest wishRequest) {
-        getProductByIdOrThrow(wishRequest.productId());
+        Product product = getProductByIdOrThrow(wishRequest.productId());
         Optional<Wish> search = wishRepository.findWishByUserIdAndProductId(user.getId(), wishRequest.productId());
 
         //아이템이 없고 수량이 1 이상일 때 새 데이터 삽입
@@ -51,7 +51,7 @@ public class WishService {
                 // 0 이하인 경우 아무 작업 하지 않음
                 return new WishAddResponse("nope", 0L);
             }
-            wishRepository.save(wishRequest.toEntity(user));
+            wishRepository.save(new Wish(product, user, wishRequest.quantity()));
             return new WishAddResponse("create", wishRequest.quantity());
         }
 

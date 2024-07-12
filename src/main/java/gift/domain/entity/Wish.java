@@ -1,10 +1,13 @@
 package gift.domain.entity;
 
 import gift.domain.dto.request.WishRequest;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Wish {
@@ -12,13 +15,21 @@ public class Wish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long productId;
-    private Long userId;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Product product;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private User user;
+
+    @Column(nullable = false)
     private Long quantity;
 
-    public Wish(Long productId, Long userId, Long quantity) {
-        this.productId = productId;
-        this.userId = userId;
+    public Wish(Product product, User user, Long quantity) {
+        this.product = product;
+        this.user = user;
         this.quantity = quantity;
     }
 
@@ -29,28 +40,28 @@ public class Wish {
         return id;
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public Long getQuantity() {
-        return quantity;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Long getQuantity() {
+        return quantity;
     }
 
     public void setQuantity(Long quantity) {
