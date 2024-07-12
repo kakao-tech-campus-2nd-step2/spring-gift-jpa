@@ -1,6 +1,5 @@
 package gift.config;
 
-import gift.repository.token.TokenRepository;
 import gift.filter.AuthFilter;
 import gift.filter.LoginFilter;
 import gift.repository.token.TokenSpringDataJpaRepository;

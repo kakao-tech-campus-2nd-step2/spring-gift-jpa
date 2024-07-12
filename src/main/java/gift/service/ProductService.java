@@ -4,7 +4,6 @@ import gift.dto.request.ProductRequest;
 import gift.domain.Product;
 import gift.exception.InvalidProductDataException;
 import gift.exception.ProductNotFoundException;
-import gift.repository.product.ProductRepository;
 import gift.repository.product.ProductSpringDataJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;

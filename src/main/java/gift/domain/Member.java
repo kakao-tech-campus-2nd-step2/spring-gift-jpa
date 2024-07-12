@@ -25,12 +25,6 @@ public class Member {
 
     public Member() { }
 
-    public Member(Long id, String email, String password) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-    }
-
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
@@ -48,31 +42,19 @@ public class Member {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public List<WishlistItem> getWishlistItems() {
         return wishlistItems;
     }
 
-    public void setWishlistItems(List<WishlistItem> wishlistItems) {
-        this.wishlistItems = wishlistItems;
-    }
 
     public List<TokenAuth> getTokenAuths() {
         return tokenAuths;
     }
 
-    public void setTokenAuths(List<TokenAuth> tokenAuths) {
-        this.tokenAuths = tokenAuths;
-    }
 }
