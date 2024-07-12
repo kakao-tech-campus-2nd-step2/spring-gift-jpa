@@ -5,6 +5,7 @@
     <style>
         table{
             margin-top: 5px;
+            margin-bottom: 5px;
             border: 2px solid;
             border-collapse: collapse;
             width: 80%;
@@ -75,6 +76,15 @@
         </tr>
         </tbody>
     </table>
+
+    <div>
+    <span th:if="${previousPage != null}">
+        <a th:href="@{/products(page=${previousPage})}">◀ Previous</a>
+    </span>
+    <span th:if="${nextPage != null}">
+        <a th:href="@{/products(page=${nextPage})}">Next ▶</a>
+    </span>
+    </div>
 </div>
 </body>
 </html>

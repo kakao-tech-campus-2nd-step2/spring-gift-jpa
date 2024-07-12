@@ -3,6 +3,7 @@ package gift.controller;
 import gift.service.ProductService;
 import gift.model.Product;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,16 @@ public class ProductController {
     public String getAllProducts(@RequestParam(defaultValue = "0") int page, Model model) {
         Page<Product> productPage = productService.getAllProducts(page);
         model.addAttribute("productList", productPage.getContent());
+        if (productPage.hasPrevious()) {
+            Pageable previousPageable = productPage.previousPageable();
+            int previousPageNumber = previousPageable.getPageNumber();
+            model.addAttribute("previousPage", previousPageNumber);
+        }
+        if (productPage.hasNext()) {
+            Pageable nextPageable = productPage.nextPageable();
+            int nextPageNumber = nextPageable.getPageNumber();
+            model.addAttribute("nextPage", nextPageNumber);
+        }
         return "index";
     }
 
