@@ -3,6 +3,7 @@ package gift.service;
 import gift.dto.ProductResponseDto;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
+import gift.dto.WishPageResponseDto;
 import gift.entity.User;
 import gift.entity.Product;
 import gift.entity.Wish;
@@ -40,10 +41,9 @@ public class WishService {
         return WishMapper.toWishResponseDto(createdWish, ProductMapper.toProductResponseDTO(product));
     }
 
-    public Page<WishResponseDto> getWishesByUserId(Long userId, Pageable pageable) {
+    public WishPageResponseDto getWishesByUserId(Long userId, Pageable pageable) {
         User user = userService.getUserEntityById(userId);
         Page<Wish> wishes = wishRepository.findByUser(user, pageable);
-
         List<Long> productIds = wishes.stream()
                 .map(wish -> wish.getProduct().getId())
                 .collect(Collectors.toList());
@@ -52,10 +52,12 @@ public class WishService {
         Map<Long, ProductResponseDto> productMap = products.stream()
                 .collect(Collectors.toMap(ProductResponseDto::getId, product -> product));
 
-        return wishes.map(wish -> {
+        Page<WishResponseDto> wishResponseDtos = wishes.map(wish -> {
             ProductResponseDto product = productMap.get(wish.getProduct().getId());
             return WishMapper.toWishResponseDto(wish, product);
         });
+
+        return WishPageResponseDto.fromPage(wishResponseDtos);
     }
 
     public void deleteWish(Long wishId) {

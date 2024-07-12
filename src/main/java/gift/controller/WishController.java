@@ -3,11 +3,11 @@ package gift.controller;
 import gift.annotation.LoginMember;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
+import gift.dto.WishPageResponseDto;
 import gift.entity.User;
 import gift.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +32,8 @@ public class WishController {
 
     @GetMapping
     @Operation(summary = "위시리스트 조회", description = "사용자의 모든 위시리스트 항목을 조회합니다.")
-    public ResponseEntity<Page<WishResponseDto>> getWishesByUserId(@LoginMember User loginUser, Pageable pageable) {
-        Page<WishResponseDto> wishList = wishService.getWishesByUserId(loginUser.getId(), pageable);
+    public ResponseEntity<WishPageResponseDto> getWishesByUserId(@LoginMember User loginUser, Pageable pageable) {
+        WishPageResponseDto wishList = wishService.getWishesByUserId(loginUser.getId(), pageable);
         return new ResponseEntity<>(wishList, HttpStatus.OK);
     }
 

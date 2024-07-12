@@ -1,11 +1,9 @@
 package gift.controller;
 
+import gift.dto.ProductPageResponseDto;
 import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
 import gift.service.ProductService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +21,7 @@ public class ProductViewController {
     public String getAllProducts(Model model,
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ProductResponseDto> productPage = productService.getAllProducts(pageable);
+        ProductPageResponseDto productPage = productService.getAllProducts(page, size);
 
         model.addAttribute("productPage", productPage);
         model.addAttribute("currentPage", page);
