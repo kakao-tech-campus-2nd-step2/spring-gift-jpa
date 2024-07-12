@@ -10,9 +10,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -90,9 +90,9 @@ class WishesRepositoryTest {
         wishesRepository.save(wish2);
         wishesRepository.save(wish3);
 
-        List<Wish> wishList = wishesRepository.findByMember_Id(member1.getId());
+        Page<Wish> wishesPage = wishesRepository.findByMember_Id(member1.getId(), PageRequest.of(0, 10));
 
-        assertThat(wishList.size()).isEqualTo(2);
+        assertThat(wishesPage.getTotalElements()).isEqualTo(2);
     }
 
     @Test
@@ -118,9 +118,9 @@ class WishesRepositoryTest {
         wishesRepository.save(wish2);
         wishesRepository.save(wish3);
 
-        List<Wish> productIdList = wishesRepository.findByMember_Id(987654321L);
+        Page<Wish> wishPage = wishesRepository.findByMember_Id(987654321L, PageRequest.of(0, 10));
 
-        assertThat(productIdList).isEmpty();
+        assertThat(wishPage).isEmpty();
     }
 
     @Test
