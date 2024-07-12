@@ -19,7 +19,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Wishlist> wishlists;
 
-    public User() {}
+    protected User() {}
 
     public User(String email, String password) {
         this.email = email;
