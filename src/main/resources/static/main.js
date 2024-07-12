@@ -113,7 +113,7 @@ function deleteProductFromWishlist(productId) {
 
 function moveProductListPage(page) {
     const token = localStorage.getItem('token');
-    const url = `/members/wishlist/products?` + new URLSearchParams({ page: page });
+    const url = `/products/list?` + new URLSearchParams({ page: page });
     fetch(url, {
         method: 'GET',
         headers: {
@@ -139,7 +139,7 @@ function moveProductListPage(page) {
 
 function moveWishlistPage(page) {
     const token = localStorage.getItem('token');
-    const url = `/members/wishlist/wishes?` + new URLSearchParams({ page: page });
+    const url = `/wishes/list?` + new URLSearchParams({ page: page });
     fetch(url, {
         method: 'GET',
         headers: {
