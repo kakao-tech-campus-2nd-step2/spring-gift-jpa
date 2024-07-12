@@ -28,6 +28,9 @@ public class Wishlist {
     @Column(name = "quantity", nullable = false)
     private int quantity; // 수량 추가
 
+    @Column(name = "price", nullable = false)
+    private int price; // 가격 추가
+
     public Long getId() {
         return id;
     }
@@ -58,5 +61,12 @@ public class Wishlist {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 }
