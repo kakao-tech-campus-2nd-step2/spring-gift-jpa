@@ -34,7 +34,7 @@ public class JwtService {
     }
 
     public Long getUserId(String token){
-        return extractClaims(token).get("userId", Long.class);
+        return extractClaims(token).get("userId", Double.class).longValue();
     }
 
     public String getUserName(String token){

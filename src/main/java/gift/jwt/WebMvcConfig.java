@@ -17,7 +17,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new JwtInterceptor(new JwtService()))
-            .addPathPatterns("/products/test"); // 필요한 경로 설정
+            .addPathPatterns("/wish"); // 필요한 경로 설정
         //.excludePathPatterns("/signup", "/login"); // 회원가입과 로그인은 토큰 없어도 됨
     }
 }

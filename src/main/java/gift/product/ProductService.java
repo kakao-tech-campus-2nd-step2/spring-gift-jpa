@@ -33,4 +33,8 @@ public class ProductService {
 
         return HttpStatus.OK;
     }
+
+    public Product findById(Long productId) {
+        return productRepository.findById(productId).orElseThrow();
+    }
 }
