@@ -6,6 +6,7 @@ import gift.auth.LoginMember;
 import gift.exception.wishlist.WishException;
 import gift.model.Member;
 import gift.model.Product;
+import gift.paging.PagingService;
 import gift.request.JoinRequest;
 import gift.request.LoginMemberDto;
 import gift.request.LoginRequest;
@@ -17,7 +18,6 @@ import gift.utils.ScriptUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.io.IOException;
-import javax.security.auth.login.LoginException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -35,16 +35,18 @@ public class PagingViewController {
     private final MemberService memberService;
     private final WishService wishService;
     private final JwtService jwtService;
+    private final PagingService pagingService;
     public static final int PRODUCTS_PER_PAGE = 10;
     public static final int WISH_PER_PAGE = 5;
     public static final int SHOWING_PAGE_COUNT = 10;
 
     public PagingViewController(ProductService productService, MemberService memberService,
-        WishService wishService, JwtService jwtService) {
+        WishService wishService, JwtService jwtService, PagingService pagingService) {
         this.productService = productService;
         this.memberService = memberService;
         this.wishService = wishService;
         this.jwtService = jwtService;
+        this.pagingService = pagingService;
     }
 
     @GetMapping("/view/join")
@@ -84,14 +86,16 @@ public class PagingViewController {
     }
 
     @GetMapping("/view/products")
-    public String getAllProducts(@RequestParam(defaultValue = "1") int page, Model model) {
-        PageRequest pageRequest = PageRequest.of(page - 1, PRODUCTS_PER_PAGE);
+    public String getAllProducts(@RequestParam(defaultValue = "id") String sortOption,
+        @RequestParam(defaultValue = "1") int page, Model model) {
+        PageRequest pageRequest = pagingService.makePageRequest(page, sortOption);
         Page<Product> productsInPage = productService.getPagedAllProducts(pageRequest);
         ArticlePage articlePage = new ArticlePage(productsInPage, page, PRODUCTS_PER_PAGE,
             SHOWING_PAGE_COUNT);
 
         model.addAttribute("products", productsInPage.getContent());
         model.addAttribute("pagingInfo", articlePage);
+        model.addAttribute("sortOption", sortOption);
         return "pagingProducts";
     }
 
