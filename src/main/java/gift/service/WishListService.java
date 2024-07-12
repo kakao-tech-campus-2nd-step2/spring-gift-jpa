@@ -38,13 +38,13 @@ public class WishListService {
             .collect(Collectors.toList());
     }
 
-    public void addToWishList(Long userId, Long itemId) {
+    public Long addToWishList(Long userId, Long itemId) {
         Item item = itemRepository.findById(itemId)
             .orElseThrow(() -> new ItemNotFoundException(ErrorCode.ITEM_NOT_FOUND));
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND));
         WishItem wishItem = new WishItem(0L, user, item);
-        wishListRepository.save(wishItem);
+        return wishListRepository.save(wishItem).getId();
     }
 
     public void deleteFromWishList(Long id) {

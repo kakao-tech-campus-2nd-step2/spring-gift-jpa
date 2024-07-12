@@ -6,7 +6,7 @@ import gift.service.ItemService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,35 +30,36 @@ public class ItemController {
     }
 
     @GetMapping("/list")
-    public List<ItemDTO> getItemList(Model model) {
-        return itemService.getList();
+    public ResponseEntity<List<ItemDTO>> getItemList(Model model) {
+        List<ItemDTO> list = itemService.getList();
+        return ResponseEntity.ok(list);
     }
 
     @PostMapping("/")
-    public HttpStatus createItem(@Valid @RequestBody ItemForm form, BindingResult result,
+    public ResponseEntity<Long> createItem(@Valid @RequestBody ItemForm form, BindingResult result,
         HttpServletResponse response) throws MethodArgumentNotValidException {
         if (result.hasErrors()) {
             throw new MethodArgumentNotValidException(null, result);
         }
-        itemService.insertItem(form);
-        return HttpStatus.CREATED;
+        Long itemId = itemService.insertItem(form);
+        return ResponseEntity.ok(itemId);
     }
 
 
     @PutMapping("/{id}")
-    public HttpStatus updateItem(@PathVariable Long id, @Valid @RequestBody ItemForm form,
+    public ResponseEntity<Long> updateItem(@PathVariable Long id, @Valid @RequestBody ItemForm form,
         BindingResult result) throws MethodArgumentNotValidException {
         if (result.hasErrors()) {
             throw new MethodArgumentNotValidException(null, result);
         }
         ItemDTO itemDTO = new ItemDTO(id, form.getName(), form.getPrice(), form.getImgUrl());
-        itemService.updateItem(itemDTO);
-        return HttpStatus.OK;
+        Long itemId = itemService.updateItem(itemDTO);
+        return ResponseEntity.ok(itemId);
     }
 
     @DeleteMapping("/{id}")
-    public HttpStatus deleteItem(@PathVariable Long id) {
+    public ResponseEntity<Long> deleteItem(@PathVariable Long id) {
         itemService.deleteItem(id);
-        return HttpStatus.OK;
+        return ResponseEntity.ok(id);
     }
 }

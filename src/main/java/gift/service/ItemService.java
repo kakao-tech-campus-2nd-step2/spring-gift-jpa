@@ -21,9 +21,9 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public void insertItem(ItemForm form) {
+    public Long insertItem(ItemForm form) {
         Item item = new Item(0L, form.getName(), form.getPrice(), form.getImgUrl());
-        itemRepository.save(item);
+        return itemRepository.save(item).getId();
     }
 
     public ItemDTO findItem(Long id) {
@@ -39,10 +39,10 @@ public class ItemService {
             .collect(Collectors.toList());
     }
 
-    public void updateItem(ItemDTO itemDTO) {
+    public Long updateItem(ItemDTO itemDTO) {
         Item item = new Item(itemDTO.getId(), itemDTO.getName(), itemDTO.getPrice(),
             itemDTO.getImgUrl());
-        itemRepository.save(item);
+        return itemRepository.save(item).getId();
     }
 
     public void deleteItem(Long id) {

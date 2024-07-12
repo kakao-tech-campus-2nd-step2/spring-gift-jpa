@@ -3,6 +3,7 @@ package gift.controller;
 import gift.model.wishList.WishListResponse;
 import gift.service.WishListService;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,14 +26,16 @@ public class WishListController {
     }
 
     @PostMapping("/wishes/{id}")
-    public void addToWishList(@PathVariable("id") Long itemId,
+    public ResponseEntity<Long> addToWishList(@PathVariable("id") Long itemId,
         @RequestAttribute("userId") Long userId) {
-        wishListService.addToWishList(userId, itemId);
+        Long wishId = wishListService.addToWishList(userId, itemId);
+        return ResponseEntity.ok(wishId);
     }
 
     @DeleteMapping("/wishes/{id}")
-    public void deleteFromWishList(@PathVariable("id") Long id,
+    public ResponseEntity<Long> deleteFromWishList(@PathVariable("id") Long id,
         @RequestAttribute("userId") Long userId) {
         wishListService.deleteFromWishList(id);
+        return ResponseEntity.ok(id);
     }
 }
