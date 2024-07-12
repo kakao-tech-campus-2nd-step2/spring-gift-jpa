@@ -37,7 +37,7 @@ public class WishListController {
     public ResponseEntity<Void> addWishList(
             @PathVariable("productId") Long id, @AuthenticateMember UserRequest user
     ){
-        ProductResponse productRes = ps.loadOneProduct(id);
+        ProductResponse productRes = ps.readOneProduct(id);
         UserResponse userRes = us.loadOneUser(user.getUserId());
 
         WishProductRequest wishProduct = new WishProductRequest(userRes, productRes);
