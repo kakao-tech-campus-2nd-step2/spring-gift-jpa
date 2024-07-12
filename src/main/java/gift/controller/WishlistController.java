@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,12 +42,12 @@ public class WishlistController {
         return ResponseEntity.ok(wishlistPage);
     }
 
-    @PostMapping
+    @PostMapping("/{productId}")
     public ResponseEntity<Void> addProductToWishlist(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
-                                                     @RequestBody @Valid Product product) {
+                                                     @PathVariable Long productId) {
         String email = JwtUtility.extractEmail(authHeader, memberService);
-        wishlistService.addProductToWishlist(email, product.getId());
-        URI location = URI.create("/api/wishlist/" + product.getId());
+        wishlistService.addProductToWishlist(email, productId);
+        URI location = URI.create("/api/wishlist/" + productId);
         return ResponseEntity.created(location).build();
     }
 
