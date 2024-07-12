@@ -12,8 +12,8 @@ import java.util.Optional;
 public interface WishRepository extends JpaRepository<Wish, Long> {
     @Query("SELECT new gift.Model.ResponseWishDTO(p.name, w.count) " +
             "FROM Wish w INNER JOIN Product p ON w.productId = p.id " +
-            "WHERE w.email = :email")
-    List<ResponseWishDTO> findWishsByEmail(@Param("email") String email);
+            "WHERE w.memberId = :memberId")
+    List<ResponseWishDTO> findWishsByMemberId(@Param("memberId") Long memberId);
 
-    Optional<Wish> findByEmailAndProductId(String email, Long productId);
+    Optional<Wish> findByMemberIdAndProductId(Long memberId, Long productId);
 }
