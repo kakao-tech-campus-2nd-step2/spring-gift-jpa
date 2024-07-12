@@ -18,8 +18,10 @@ public class Member {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
   @Column(nullable = false, unique = true)
   private String email;
+
   @Column(nullable = false)
   private String password;
 
@@ -48,7 +50,6 @@ public class Member {
   public String getPassword() {
     return this.password;
   }
-
 
   public boolean matchLoginInfo(MemberDto memberDtoByEmail) {
     return this.email.equals(memberDtoByEmail.getEmail()) && this.password.equals(

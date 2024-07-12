@@ -17,7 +17,6 @@ public class WishList {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "product_id")
   private Product product;
