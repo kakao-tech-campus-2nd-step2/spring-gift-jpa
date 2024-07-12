@@ -28,15 +28,22 @@ public class WishService {
     }
 
     public List<Wish> getWishesByMember(Member member) {
+        MemberEntity memberEntity = memberRepository.findById(member.getId()).orElseThrow(()-> new EntityNotFoundException("멤버가 없습니다."));
         return wishRepository
-            .findAllByMemberEntity(new MemberEntity(member.getId(),member.getEmail(), member.getPassword()))
+            .findAllByMemberEntity(memberEntity)
             .stream()
             .map(this::entityToDomain)
             .toList();
     }
 
     public Wish addWish(WishRequest wishRequest) {
-        return entityToDomain(wishRepository.save(DtoToEntity(wishRequest)));
+        WishEntity wishEntity = DtoToEntity(wishRequest);
+        MemberEntity memberEntity = memberRepository.findById(wishRequest.getMemberId()).orElseThrow(() -> new EntityNotFoundException("[Wish 추가 실패] 해당하는 멤버가 존재하지 않습니다."));
+        ProductEntity productEntity = productRepository.findById(wishRequest.getProductId()).orElseThrow(() -> new EntityNotFoundException("[Wish 추가 실패] 해당하는 상품이 존재하지 않습니다."));
+
+        wishEntity.updateMemberEntity(memberEntity);
+        wishEntity.updateProductEntity(productEntity);
+        return entityToDomain(wishRepository.save(wishEntity));
     }
 
     public void deleteWish(Long id, Member member) {
@@ -45,6 +52,8 @@ public class WishService {
             .orElseThrow(() -> new EntityNotFoundException("not found entity"));
 
         if (wishEntity.getMemberEntity().getId().equals( member.getId())) {
+            wishEntity.getMemberEntity().removeWishEntity(wishEntity);
+            wishEntity.getProductEntity().removeWishEntity(wishEntity);
             wishRepository.delete(wishEntity);
         }
     }
