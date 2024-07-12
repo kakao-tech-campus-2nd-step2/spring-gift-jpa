@@ -55,6 +55,29 @@
         width: 50px;
         text-align: center;
     }
+    .sort-buttons {
+        display: flex;
+        align-items: center;
+        margin-left: 20px;
+    }
+    .sort-buttons .sort-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 40px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-left: 10px;
+        text-align: center;
+        text-decoration: none;
+    }
+    .sort-buttons .sort-btn span {
+        margin-left: 5px;
+    }
   </style>
 </head>
 <body>
@@ -62,10 +85,20 @@
   <h1>My Wishlist
     <a href="/web/products/list" class="btn btn-home">홈</a>
   </h1>
+  <div class="sort-buttons">
+    <a th:href="@{'/web/wishlist'(sort='productName', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize})}" class="sort-btn">
+      Name<span th:text="${sort == 'productName' ? (direction == 'asc' ? '↑' : '↓') : ''}"></span>
+    </a>
+    <a th:href="@{'/web/wishlist'(sort='price', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize})}" class="sort-btn">
+      Price<span th:text="${sort == 'price' ? (direction == 'asc' ? '↑' : '↓') : ''}"></span>
+    </a>
+    <a th:href="@{'/web/wishlist'(sort='quantity', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize})}" class="sort-btn">
+      Quantity<span th:text="${sort == 'quantity' ? (direction == 'asc' ? '↑' : '↓') : ''}"></span>
+    </a>
+  </div>
   <table>
     <thead>
     <tr>
-      <th>ID</th>
       <th>Product Name</th>
       <th>Price</th>
       <th>Quantity</th>
@@ -75,16 +108,15 @@
     </thead>
     <tbody>
     <tr th:each="wishlist : ${wishlistPage.content}">
-      <td th:text="${wishlist.id}"></td>
-      <td th:text="${wishlist.productName}"></td>
-      <td th:text="${wishlist.price}"></td>
+      <td th:text="${wishlist.productName}"></td> <!-- WishlistDTO의 productName -->
+      <td th:text="${wishlist.price}"></td> <!-- WishlistDTO의 price -->
       <td>
-        <input type="number" min="1" th:value="${wishlist.quantity}" class="quantity" style="width: 60px;">
+        <input type="number" min="1" th:value="${wishlist.quantity}" class="quantity" style="width: 60px;"> <!-- WishlistDTO의 quantity -->
       </td>
-      <td><img th:src="${wishlist.imageUrl}" alt="product image" width="100"/></td>
+      <td><img th:src="${wishlist.imageUrl}" alt="product image" width="100"/> <!-- WishlistDTO의 imageUrl -->
       <td>
-        <button class="btn update-quantity" th:data-wishlist-id="${wishlist.id}">수량 변경</button>
-        <button class="btn btn-secondary delete-wishlist" th:data-wishlist-id="${wishlist.id}">삭제</button>
+        <button class="btn update-quantity" th:data-wishlist-id="${wishlist.id}">수량 변경</button> <!-- WishlistDTO의 id -->
+        <button class="btn btn-secondary delete-wishlist" th:data-wishlist-id="${wishlist.id}">삭제</button> <!-- WishlistDTO의 id -->
       </td>
     </tr>
     </tbody>
@@ -92,18 +124,18 @@
 
   <div class="pagination">
     <a th:if="${wishlistPage.hasPrevious()}"
-       th:href="@{/web/wishlist(page=${currentPage - 1}, size=${pageSize})}"
+       th:href="@{'/web/wishlist'(page=${currentPage - 1}, size=${pageSize}, sort=${sort}, direction=${direction})}"
        class="page-btn">Prev</a>
 
     <span th:each="i : ${#numbers.sequence(0, wishlistPage.totalPages - 1)}">
-        <a th:href="@{/web/wishlist(page=${i}, size=${pageSize})}"
+        <a th:href="@{'/web/wishlist'(page=${i}, size=${pageSize}, sort=${sort}, direction=${direction})}"
            th:text="${i + 1}"
            th:classappend="${i == currentPage} ? 'current-page' : ''"
            class="page-btn"></a>
     </span>
 
     <a th:if="${wishlistPage.hasNext()}"
-       th:href="@{/web/wishlist(page=${currentPage + 1}, size=${pageSize})}"
+       th:href="@{'/web/wishlist'(page=${currentPage + 1}, size=${pageSize}, sort=${sort}, direction=${direction})}"
        class="page-btn">Next</a>
   </div>
 </div>
