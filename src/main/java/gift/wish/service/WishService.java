@@ -44,7 +44,10 @@ public class WishService {
         Wish wish = wishRepository.findById(wishId)
                 .orElseThrow(() -> WishNotFoundException.of(wishId));
 
-        wish.modify(wishRequest.userId(), wishRequest.productId(), wishRequest.amount());
+        User user = userRepository.getReferenceById(wishRequest.userId());
+        Product product = productRepository.getReferenceById(wishRequest.productId());
+
+        wish.modify(wishRequest.amount(), product, user);
     }
 
     @Transactional(readOnly = true)

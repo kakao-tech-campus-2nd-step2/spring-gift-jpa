@@ -52,29 +52,31 @@ public class Wish {
         return amount;
     }
 
-    public void modify(final Long userId, final Long productId, final int amount) {
-        checkOwner(userId);
-        checkProduct(productId);
+    public Product getProduct() {
+        return product;
+    }
+
+    public void modify(final int amount, final Product product, final User user) {
+        checkOwner(user);
+        checkProduct(product);
         this.amount = amount;
     }
 
-    private void checkOwner(final Long userId) {
-        if (!this.user.getId().equals(userId)) {
+    private void checkOwner(final User user) {
+        if (!this.user.getId()
+                .equals(user.getId())) {
             throw new WishCanNotModifyException();
         }
     }
 
-    private void checkProduct(final Long productId) {
-        if (!this.product.getId().equals(productId)) {
+    private void checkProduct(final Product product) {
+        if (!this.product.getId()
+                .equals(product.getId())) {
             throw new WishCanNotModifyException();
         }
     }
 
     public boolean isOwner(final Long userId) {
         return this.user.getId().equals(userId);
-    }
-
-    public Product getProduct() {
-        return product;
     }
 }
