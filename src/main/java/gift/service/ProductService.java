@@ -24,19 +24,19 @@ public class ProductService {
         ProductEntity productEntity = productRepository
             .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("not found entity"));
-        return productEntity.toProduct();
+        return entityToDomain(productEntity);
     }
 
     public List<Product> findAll() {
         return productRepository.findAll()
             .stream()
-            .map(ProductEntity::toProduct)
+            .map(this::entityToDomain)
             .collect(Collectors.toList());
     }
 
     public Product createProduct(ProductRequest productRequest) {
         ProductEntity productEntity = productRepository.save(productRequest.toProductEntity());
-        return productEntity.toProduct();
+        return entityToDomain(productEntity);
     }
 
     public Product updateProduct(Long id, ProductRequest productRequest) {
@@ -44,8 +44,9 @@ public class ProductService {
             .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("not found entity"));
 
-        productEntity.updateProductEntity(productRequest);
-        return productRepository.save(productEntity).toProduct();
+        productEntity.update(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+
+        return entityToDomain(productRepository.save(productEntity));
 
     }
 
@@ -54,5 +55,13 @@ public class ProductService {
             .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("not found entity"));
         productRepository.delete(productEntity);
+    }
+
+    private Product entityToDomain(ProductEntity productEntity){
+        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(),productEntity.getImageUrl());
+    }
+
+    private ProductEntity dtoToEntity(ProductRequest productRequest){
+        return new ProductEntity(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
     }
 }

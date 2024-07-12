@@ -25,22 +25,22 @@ public class MemberService {
         return memberRepository
             .findAll()
             .stream()
-            .map(MemberEntity::toMember)
+            .map(this::entityToDomain)
             .toList();
     }
 
     public String register(MemberRequest memberRequest) {
 
-        MemberEntity memberEntity = memberRepository.save(memberRequest.toMemberEntity());
+        MemberEntity memberEntity = memberRepository.save(dtoToEntity(memberRequest));
 
-        return jwtUtil.generateToken(memberEntity.toMember());
+        return jwtUtil.generateToken(entityToDomain(memberEntity));
     }
 
     public String login(MemberRequest memberRequest) {
         MemberEntity memberEntity = memberRepository
             .findByEmail(memberRequest.getEmail())
             .orElseThrow(() -> new EntityNotFoundException("not found Entity"));
-        Member member = memberEntity.toMember();
+        Member member = entityToDomain(memberEntity);
 
         if (member.getPassword().equals(memberRequest.getPassword())) {
             return jwtUtil.generateToken(member);
@@ -59,10 +59,19 @@ public class MemberService {
         String email = jwtUtil.getEmailFromToken(token);
 
         if (email != null) {
-            return memberRepository
+            return entityToDomain(memberRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("not found Entity")).toMember();
+                .orElseThrow(() -> new EntityNotFoundException("not found Entity"))
+            );
         }
         return null;
+    }
+
+    private Member entityToDomain(MemberEntity memberEntity){
+        return new Member(memberEntity.getId(), memberEntity.getEmail(), memberEntity.getPassword());
+    }
+
+    private MemberEntity dtoToEntity(MemberRequest memberRequest){
+        return new MemberEntity(memberRequest.getEmail(), memberRequest.getPassword());
     }
 }
