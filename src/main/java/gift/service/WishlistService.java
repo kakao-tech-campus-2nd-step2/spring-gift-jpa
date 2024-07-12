@@ -28,6 +28,8 @@ public class WishlistService {
     }
 
     public void addWishlist(String email, Long productId) {
+        productService.getProductById(productId)
+            .orElseThrow(() -> new RuntimeException("Invalid Product ID"));
         // 사용자 이메일과 제품 ID를 사용하여 위시리스트에 추가
         Wishlist wish = new Wishlist(email, productId);
         wishlistRepository.save(wish);
