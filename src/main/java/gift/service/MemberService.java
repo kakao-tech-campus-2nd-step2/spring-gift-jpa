@@ -8,19 +8,16 @@ import gift.dto.MemberResponse;
 import gift.repository.MemberRepository;
 import gift.security.JwtTokenProvider;
 import gift.security.SecurityService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final SecurityService securityService;
 
-    public MemberService(MemberRepository memberRepository, BCryptPasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, SecurityService securityService) {
+    public MemberService(MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider, SecurityService securityService) {
         this.memberRepository = memberRepository;
-        this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
         this.securityService = securityService;
 }
@@ -30,7 +27,7 @@ public class MemberService {
             throw new IllegalArgumentException("이메일이 이미 존재합니다.");
         }
 
-        Member member = new Member(requestDto.getEmail(), passwordEncoder.encode(requestDto.getPassword()));
+        Member member = new Member(requestDto.getEmail(), requestDto.getPassword());
         memberRepository.save(member);
 
         String token = securityService.generateJwtToken(member);
@@ -39,7 +36,7 @@ public class MemberService {
 
     public LoginResponse login(LoginRequest loginRequest) {
         Member member = findByEmail(loginRequest.getEmail());
-        if (member != null && passwordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {
+        if (member != null && member.getPassword().equals(loginRequest.getPassword())) {
             String token = jwtTokenProvider.generateToken(member);
             return new LoginResponse(token);
         } else {
