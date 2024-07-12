@@ -1,6 +1,6 @@
 package gift.api.product;
 
-import jakarta.persistence.EntityManager;
+import gift.global.exception.NoSuchIdException;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -8,11 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
-    private final EntityManager entityManager;
     private final ProductRepository productRepository;
 
-    public ProductService(EntityManager entityManager, ProductRepository productRepository) {
-        this.entityManager = entityManager;
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
@@ -28,7 +26,8 @@ public class ProductService {
 
     @Transactional
     public void update(Long id, ProductRequest productRequest) {
-        Product product = entityManager.find(Product.class, id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchIdException("product"));
         product.update(productRequest.getName(), productRequest.getPrice(),
                 productRequest.getImageUrl());
     }
