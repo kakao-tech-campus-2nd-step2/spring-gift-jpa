@@ -9,8 +9,11 @@ import gift.repository.MemberRepository;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import gift.service.WishlistService;
+
 import java.util.List;
+
 import org.apache.juli.logging.Log;
+import org.hibernate.query.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +33,7 @@ public class WishlistController {
     MemberService memberService;
     ProductService productService;
 
-    public WishlistController(WishlistService wishlistService, MemberService memberService,ProductService productService) {
+    public WishlistController(WishlistService wishlistService, MemberService memberService, ProductService productService) {
         this.wishlistService = wishlistService;
         this.memberService = memberService;
         this.productService = productService;
@@ -42,18 +45,24 @@ public class WishlistController {
         return new ResponseEntity<>(wishlist, HttpStatus.OK);
     }
 
+    @GetMapping("/page/{page}")
+    public ResponseEntity<Page<Wish>> getWishlistPage(@PathVariable("page") int page, @LoginUser String email) {
+        Page<Wish> wishes = wishlistService.getWishPage(email,page);
+        return new ResponseEntity<>(wishes,HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<String> addWishlist(@RequestBody WishDTO wishDTO, @LoginUser String email) {
         Member member = memberService.findById(wishDTO.getMemberId());
-        Product product =productService.findById(wishDTO.getProductId());
-        Wish wish = wishDTO.toEntity(member,product);
+        Product product = productService.findById(wishDTO.getProductId());
+        Wish wish = wishDTO.toEntity(member, product);
         wishlistService.addWishlist(wish, email);
         return new ResponseEntity<>("위시리스트 상품 추가 완료", HttpStatus.OK);
     }
 
     @DeleteMapping("/{wishId}")
     public ResponseEntity<String> deleteWishlist(@PathVariable("wishId") long wishId,
-        @LoginUser String email) {
+                                                 @LoginUser String email) {
         wishlistService.deleteWishlist(wishId, email);
         return new ResponseEntity<>("위시리스트 상품 삭제 완료", HttpStatus.NO_CONTENT);
     }
