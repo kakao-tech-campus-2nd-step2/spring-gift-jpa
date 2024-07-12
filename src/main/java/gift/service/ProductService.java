@@ -35,6 +35,10 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductResponseDto> getAllProducts(int page, ProductSortBy sortBy) {
+        if (page < 0) {
+            throw new IllegalArgumentException("페이지 번호는 양수이어야 합니다.");
+        }
+
         String sortField = getSortField(sortBy);
         Sort.Direction direction = getSortDirection(sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
@@ -44,6 +48,16 @@ public class ProductService {
             productPage = productRepository.findAllWithSortAsc(sortField, pageable);
         } else {
             productPage = productRepository.findAllWithSortDesc(sortField, pageable);
+        }
+
+        // 존재하지 않는 페이지를 요청한 경우 처리
+        if (page > productPage.getTotalPages() - 1 && page != 0) {
+            pageable = PageRequest.of(productPage.getTotalPages() - 1, PAGE_SIZE);
+            if (direction == Sort.Direction.ASC) {
+                productPage = productRepository.findAllWithSortAsc(sortField, pageable);
+            } else {
+                productPage = productRepository.findAllWithSortDesc(sortField, pageable);
+            }
         }
 
         return productPage.map(this::convertToResponseDto);
