@@ -51,10 +51,12 @@
         <th>가격</th>
         <th>이미지-URL</th>
         <th><label>
-          <select th:attr="onchange=|location.href='/view/products?page=${pagingInfo.currentPage}&sortOption=' + this.value|">
+          <select
+              th:attr="onchange=|location.href='/view/products?page=${pagingInfo.currentPage}&sortOption=' + this.value|">
             <option th:value="id" th:selected="${sortOption == 'id'}" th:text="아이디순">아이디순</option>
             <option th:value="name" th:selected="${sortOption == 'name'}" th:text="이름순">이름순</option>
-            <option th:value="price" th:selected="${sortOption == 'price'}" th:text="가격순">가격순</option>
+            <option th:value="price" th:selected="${sortOption == 'price'}" th:text="가격순">가격순
+            </option>
           </select>
         </label>
         </th>
@@ -97,7 +99,8 @@
 
         <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
             th:classappend="${page == pageNumber} ? 'active'" class="page-item">
-          <a th:text="${page}" class="page-link" th:href="@{/view/products(page=${page}, sortOption=${sortOption})}"></a>
+          <a th:text="${page}" class="page-link"
+             th:href="@{/view/products(page=${page}, sortOption=${sortOption})}"></a>
         </li>
 
         <li th:classappend="${hasNext}==false ? 'disabled'" class="page-item">
@@ -136,13 +139,4 @@
   }
 </script>
 
-
-<script th:inline="javascript">
-  var pageNum = [[${pagingInfo.currentPage}]];
-
-  function changeSortOption(newOption) {
-    fetch("/view/products?sortOption=" + newOption + "&page=" + pageNum)
-    .catch(e => {console.log(e)});
-  }
-</script>
 </html>

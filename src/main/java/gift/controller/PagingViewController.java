@@ -88,7 +88,7 @@ public class PagingViewController {
     @GetMapping("/view/products")
     public String getAllProducts(@RequestParam(defaultValue = "id") String sortOption,
         @RequestParam(defaultValue = "1") int page, Model model) {
-        PageRequest pageRequest = pagingService.makePageRequest(page, sortOption);
+        PageRequest pageRequest = pagingService.makeProductsPageRequest(page, sortOption);
         Page<Product> productsInPage = productService.getPagedAllProducts(pageRequest);
         ArticlePage articlePage = new ArticlePage(productsInPage, page, PRODUCTS_PER_PAGE,
             SHOWING_PAGE_COUNT);
@@ -101,10 +101,11 @@ public class PagingViewController {
 
     @CheckRole("ROLE_USER")
     @GetMapping("/view/wish")
-    public String getWishes(@RequestParam(defaultValue = "1") int page,
-        @LoginMember LoginMemberDto loginMemberDto, Model model) {
+    public String getWishes(@RequestParam(defaultValue = "id") String sortOption,
+        @RequestParam(defaultValue = "1") int page, @LoginMember LoginMemberDto loginMemberDto,
+        Model model) {
 
-        PageRequest pageRequest = PageRequest.of(page - 1, WISH_PER_PAGE);
+        PageRequest pageRequest = pagingService.makeWishPageRequest(page, sortOption);
         Page<Product> wishListInPage = wishService.getPagedWishList(loginMemberDto.id(),
             pageRequest);
         ArticlePage articlePage = new ArticlePage(wishListInPage, page, WISH_PER_PAGE,
@@ -112,7 +113,7 @@ public class PagingViewController {
 
         model.addAttribute("products", wishListInPage.getContent());
         model.addAttribute("pagingInfo", articlePage);
-
+        model.addAttribute("sortOption", sortOption);
         return "wish";
     }
 

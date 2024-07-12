@@ -29,6 +29,16 @@
         <th>상품명</th>
         <th>가격</th>
         <th>이미지-URL</th>
+        <th><label>
+          <select
+              th:attr="onchange=|location.href='/view/wish?page=${pagingInfo.currentPage}&sortOption=' + this.value|">
+            <option th:value="id" th:selected="${sortOption == 'id'}" th:text="아이디순">아이디순</option>
+            <option th:value="name" th:selected="${sortOption == 'name'}" th:text="이름순">이름순</option>
+            <option th:value="price" th:selected="${sortOption == 'price'}" th:text="가격순">가격순
+            </option>
+          </select>
+        </label>
+        </th>
       </tr>
       </thead>
       <tbody>
@@ -61,19 +71,20 @@
 
         <li th:classappend="${hasPrevious}==false ? 'disabled'" class="page-item">
           <a class="page-link"
-             th:href="${pageNumber}==1 ? '#' : @{wish(page=${pageNumber - 1})}">
+             th:href="${pageNumber}==1 ? '#' : @{/view/wish(page=${pageNumber - 1}, sortOption=${sortOption})}">
             <span aria-hidden="true">&lt</span>
           </a>
         </li>
 
         <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
             th:classappend="${page == pageNumber} ? 'active'" class="page-item">
-          <a th:text="${page}" class="page-link" th:href="@{wish(page=${page})}"></a>
+          <a th:text="${page}" class="page-link"
+             th:href="@{/view/wish(page=${page}, sortOption=${sortOption})}"></a>
         </li>
 
         <li th:classappend="${hasNext}==false ? 'disabled'" class="page-item">
           <a class="page-link"
-             th:href="${pageNumber}==${totalPages} ? '#' : @{wish(page=${pageNumber + 1})}"
+             th:href="${pageNumber}==${totalPages} ? '#' : @{/view/wish(page=${pageNumber + 1}, sortOption=${sortOption})}"
              aria-label="Next">
             <span aria-hidden="true">&gt</span>
           </a>
