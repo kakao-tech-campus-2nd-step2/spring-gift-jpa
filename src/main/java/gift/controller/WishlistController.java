@@ -5,15 +5,14 @@ import gift.dto.WishDTO;
 import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wish;
-import gift.repository.MemberRepository;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import gift.service.WishlistService;
-
+import org.springframework.data.domain.Page;
 import java.util.List;
 
 import org.apache.juli.logging.Log;
-import org.hibernate.query.Page;
+g
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
