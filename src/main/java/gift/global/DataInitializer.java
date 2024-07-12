@@ -1,9 +1,12 @@
 package gift.global;
 
 import gift.domain.entity.Product;
+import gift.domain.entity.User;
+import gift.domain.entity.Wish;
 import gift.domain.repository.ProductRepository;
 import gift.domain.repository.UserRepository;
 import gift.domain.repository.WishRepository;
+import gift.global.util.HashUtil;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +17,7 @@ public class DataInitializer {
 
     @Bean
     ApplicationRunner init(ProductRepository product, UserRepository user, WishRepository wish) {
-        return args -> {
-            insertInitialData(product, user, wish);
-        };
+        return args -> insertInitialData(product, user, wish);
     }
 
     @Transactional
@@ -26,5 +27,14 @@ public class DataInitializer {
         product.save(new Product("오예스 12개입 360g", 3700L, "https://img.danawa.com/prod_img/500000/965/117/img/10117965_1.jpg?shrink=330:*&_v=20191210171250"));
         product.save(new Product("농심 육개장 사발면 소", 990L, "https://i.namu.wiki/i/ydm9GPPnZldqoMbVcl-pVaodrUu6VBedp_vyZnrnn2WrYBvESNYo1BB2g7cK_w8b2Mw-C66pRScUfEJT3sIMrw.webp"));
         product.save(new Product("바나나맛 우유 240ml", 1700L, "https://img.danawa.com/prod_img/500000/107/815/img/3815107_1.jpg?_v=20231212093346"));
+
+        user.save(new User("admin@example.com", HashUtil.hashCode("admin"), "admin"));
+        user.save(new User("user@example.com", HashUtil.hashCode("user"), "user"));
+        user.save(new User("user2@example.com", HashUtil.hashCode("user"), "user"));
+
+        wish.save(new Wish(4L, 2L, 5L));
+        wish.save(new Wish(1L, 2L, 2L));
+        wish.save(new Wish(3L, 3L, 4L));
+        wish.save(new Wish(5L, 3L, 1L));
     }
 }
