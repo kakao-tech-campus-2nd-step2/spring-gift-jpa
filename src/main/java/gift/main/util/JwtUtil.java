@@ -15,6 +15,7 @@ import java.util.Date;
 public class JwtUtil {
     private final SecretKey secretKey;
     private final String BEARER = "Bearer ";
+    private final String AUTHORIZATION = "Authorization";
 
     public JwtUtil(@Value("${spring.jwt.secret}") String secret) {
         this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
@@ -62,7 +63,7 @@ public class JwtUtil {
                 .signWith(secretKey) // 시그니처~!
                 .compact();
 
-        return "Bearer " + token;
+        return BEARER + token;
 
     }
 

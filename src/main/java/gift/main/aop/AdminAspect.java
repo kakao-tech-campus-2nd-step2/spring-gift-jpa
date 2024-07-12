@@ -16,8 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 public class AdminAspect {
-
-//    @Before("execution(* gift.main.controller.ProductController.*(..))")
+    //@Before("execution(* gift.main.controller.AdminProductController.*(..))")
     public void checkAdmin(@SessionUser UserVo userVo) {
         System.out.println("실행된다.");
         if (!Role.ADMIN.equals(userVo.getRole())) {

@@ -55,10 +55,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> handleUserException(CustomException e) {
         System.out.println("e.getMessage() = " + e.getMessage());
-        Map<String, Object> responseBody = new HashMap<>();
-        responseBody.put("errorMessage", e.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(responseBody);
+        return ResponseEntity.status(e.getHttpStatus())
+                .body(e.getMessage());
     }
 
 
