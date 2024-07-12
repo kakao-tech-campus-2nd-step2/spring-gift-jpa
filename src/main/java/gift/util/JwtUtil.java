@@ -1,5 +1,7 @@
 package gift.util;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Base64;
 import java.util.Date;
 import javax.crypto.Mac;
@@ -8,6 +10,7 @@ import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class JwtUtil {
     private static final String SECRET_KEY = "your_secret_key";
     private static final long EXPIRATION_TIME = 86400000; // 1 day

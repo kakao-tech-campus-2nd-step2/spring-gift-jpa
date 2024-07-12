@@ -1,38 +1,68 @@
 package gift.controller;
 
-import gift.dto.MemberDTO;
-import gift.archived_model.Member;
-import gift.service.MemberService;
+import gift.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import gift.service.MemberService;
+import gift.util.JwtUtil;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
-@Controller
-@RequestMapping("/members")
+
+@RestController
+@RequestMapping("/member")
 public class MemberController {
-
     @Autowired
     private MemberService memberService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<String> signUp(@RequestBody MemberDTO memberDto) {
-        Member member = new Member();
-        member.setEmail(memberDto.getEmail());
-        member.setPassword(memberDto.getPassword());
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, String>> register(@RequestBody Member member) {
         memberService.save(member);
-        return ResponseEntity.ok("User registered successfully");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "success");
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody MemberDTO memberDto, HttpSession session) {
-        boolean success = memberService.login(memberDto.getEmail(), memberDto.getPassword(), session);
-        if (success) {
-            return ResponseEntity.ok("Login successful");
-        } else {
-            return ResponseEntity.status(401).body("Invalid email or password");
+    public ResponseEntity<Map<String, String>> login(@RequestBody Member loginRequest) {
+        Optional<Member> memberOpt = memberService.findByEmail(loginRequest.getEmail());
+        if(memberOpt.isPresent() && memberOpt.get().getPassword().equals(loginRequest.getPassword())) {
+            String token = jwtUtil.generateToken(memberOpt.get().getEmail());
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "success");
+            response.put("token", token);
+            return ResponseEntity.ok(response);
         }
+        return  ResponseEntity.status(401).body(null);
+    }
+
+    // endpoint that checking member information
+    @GetMapping("/me")
+    public ResponseEntity<Member> getCurrentMember(HttpServletRequest request) {
+        String email = getEmailFromRequest(request);
+        if(email != null) {
+            Optional<Member> memberOpt = memberService.findByEmail(email);
+            if(memberOpt.isPresent()) {
+                return ResponseEntity.ok(memberOpt.get());
+            }
+        }
+        return ResponseEntity.status(401).body(null);
+    }
+
+    // Extracting email from token using HttpServletRequest
+    private String getEmailFromRequest(HttpServletRequest request) {
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            return jwtUtil.extractEmail(token);
+        }
+        return null;
     }
 }
