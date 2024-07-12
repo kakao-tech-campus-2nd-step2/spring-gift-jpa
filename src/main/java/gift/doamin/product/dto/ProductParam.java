@@ -1,28 +1,29 @@
 package gift.doamin.product.dto;
 
 import gift.doamin.product.entity.Product;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.PositiveOrZero;
 
 public class ProductParam {
 
+    private Long id;
+
     private Long userId;
 
-    @Pattern(regexp = "^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣0-9 ()\\[\\]+\\-&/_]{1,15}$", message = "영문, 한글, 숫자, 공백, 특수문자 ()[]+-&/_ 1자 이상 15자 미만으로 입력해야 합니다.")
     private String name;
 
-    @NotNull
-    @PositiveOrZero
     private Integer price;
 
-    @NotNull
     private String imageUrl;
 
-    public ProductParam(String name, Integer price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    public ProductParam(Product product) {
+        this.id = product.getId();
+        this.userId = product.getUser().getId();
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.imageUrl = product.getImageUrl();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Long getUserId() {
@@ -39,13 +40,5 @@ public class ProductParam {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Product toProduct() {
-        return new Product(this.userId, this.name, this.price, this.imageUrl);
     }
 }

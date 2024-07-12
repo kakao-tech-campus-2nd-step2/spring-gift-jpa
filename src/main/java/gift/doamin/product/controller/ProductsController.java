@@ -1,5 +1,6 @@
 package gift.doamin.product.controller;
 
+import gift.doamin.product.dto.ProductForm;
 import gift.doamin.product.dto.ProductParam;
 import gift.doamin.product.entity.Product;
 import gift.doamin.product.service.ProductService;
@@ -32,32 +33,32 @@ public class ProductsController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Product addNewProduct(@Valid @RequestBody ProductParam productParam,
+    public ProductParam addNewProduct(@Valid @RequestBody ProductForm productForm,
         Principal principal) {
         Long userId = Long.valueOf(principal.getName());
-        productParam.setUserId(userId);
-        return productService.create(productParam);
+        productForm.setUserId(userId);
+        return productService.create(productForm);
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<ProductParam> getAllProducts() {
         return productService.readAll();
     }
 
     @GetMapping("/{id}")
-    public Product getOneProduct(@PathVariable Long id) {
+    public ProductParam getOneProduct(@PathVariable Long id) {
         return productService.readOne(id);
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody ProductParam productParam,
+    public ProductParam updateProduct(@PathVariable Long id, @RequestBody ProductForm productForm,
         Authentication authentication) {
         Long userId = Long.valueOf(authentication.getName());
         boolean isSeller = authentication.getAuthorities()
             .contains(new SimpleGrantedAuthority(UserRole.SELLER.getValue()));
-        productParam.setUserId(userId);
+        productForm.setUserId(userId);
 
-        return productService.update(id, productParam, isSeller);
+        return productService.update(id, productForm, isSeller);
     }
 
     @DeleteMapping("/{id}")

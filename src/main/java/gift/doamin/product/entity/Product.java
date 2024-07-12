@@ -1,14 +1,14 @@
 package gift.doamin.product.entity;
 
-import gift.doamin.product.dto.ProductParam;
+import gift.doamin.product.dto.ProductForm;
+import gift.doamin.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Product {
@@ -17,8 +17,9 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private String name;
@@ -29,8 +30,8 @@ public class Product {
     @Column(nullable = false)
     private String imageUrl;
 
-    public Product(Long userId, String name, Integer price, String imageUrl) {
-        this.userId = userId;
+    public Product(User user, String name, Integer price, String imageUrl) {
+        this.user = user;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -44,8 +45,8 @@ public class Product {
         return id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
     public String getName() {
@@ -60,9 +61,9 @@ public class Product {
         return imageUrl;
     }
 
-    public void updateAll(ProductParam productParam) {
-        this.name = productParam.getName();
-        this.price = productParam.getPrice();
-        this.imageUrl = productParam.getImageUrl();
+    public void updateAll(ProductForm productForm) {
+        this.name = productForm.getName();
+        this.price = productForm.getPrice();
+        this.imageUrl = productForm.getImageUrl();
     }
 }

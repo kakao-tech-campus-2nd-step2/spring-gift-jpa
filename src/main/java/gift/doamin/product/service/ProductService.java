@@ -1,10 +1,14 @@
 package gift.doamin.product.service;
 
+import gift.doamin.product.dto.ProductForm;
 import gift.doamin.product.dto.ProductParam;
 import gift.doamin.product.entity.Product;
 import gift.doamin.product.exception.NotEnoughAutorityException;
 import gift.doamin.product.exception.ProductNotFoundException;
 import gift.doamin.product.repository.JpaProductRepository;
+import gift.doamin.user.entity.User;
+import gift.doamin.user.exception.UserNotFoundException;
+import gift.doamin.user.repository.JpaUserRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -13,40 +17,53 @@ import org.springframework.stereotype.Service;
 public class ProductService {
 
     private final JpaProductRepository productRepository;
+    private final JpaUserRepository userRepository;
 
-    public ProductService(JpaProductRepository productRepository) {
+    public ProductService(JpaProductRepository productRepository,
+        JpaUserRepository userRepository) {
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
-    public Product create(ProductParam productParam) {
-        if (productParam.getName().contains("카카오")) {
+    public ProductParam create(ProductForm productForm) {
+        if (productForm.getName().contains("카카오")) {
             throw new NotEnoughAutorityException("'카카오'가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.");
         }
 
-        return productRepository.save(productParam.toProduct());
+        User user = userRepository.findById(productForm.getUserId()).orElseThrow(
+            UserNotFoundException::new);
+
+        Product product = productRepository.save(
+            new Product(user, productForm.getName(), productForm.getPrice(),
+                productForm.getImageUrl()));
+
+        return new ProductParam(product);
     }
 
-    public List<Product> readAll() {
-        return productRepository.findAll();
+    public List<ProductParam> readAll() {
+        List<Product> productList = productRepository.findAll();
+        return productList.stream().map(ProductParam::new).toList();
     }
 
-    public Product readOne(Long id) {
-        return productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
+    public ProductParam readOne(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
+
+        return new ProductParam(product);
     }
 
-    public Product update(Long id, ProductParam productParam, boolean isSeller) {
+    public ProductParam update(Long id, ProductForm productForm, boolean isSeller) {
 
         Optional<Product> target = productRepository.findById(id);
         if (target.isEmpty()) {
-            return create(productParam);
+            return create(productForm);
         }
 
         Product product = target.get();
 
-        checkAuthority(productParam.getUserId(), product, isSeller);
+        checkAuthority(productForm.getUserId(), product, isSeller);
 
-        product.updateAll(productParam);
-        return productRepository.save(product);
+        product.updateAll(productForm);
+        return new ProductParam(productRepository.save(product));
     }
 
     public void delete(Long userId, Long id, boolean isSeller) {
@@ -58,7 +75,7 @@ public class ProductService {
     }
 
     private void checkAuthority(Long userId, Product target, boolean isSeller) {
-        if (isSeller && !target.getUserId().equals(userId)) {
+        if (isSeller && !target.getUser().getId().equals(userId)) {
             throw new NotEnoughAutorityException();
         }
 
