@@ -15,12 +15,6 @@ public class ProductDTO {
 
     public ProductDTO() {}
 
-    public ProductDTO(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
     public int getPrice() {
         return price;
     }

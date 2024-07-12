@@ -12,11 +12,6 @@ public class MemberDTO {
 
     public MemberDTO() {}
 
-    public MemberDTO(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -32,5 +27,4 @@ public class MemberDTO {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }
