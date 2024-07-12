@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.MemberDto;
 import gift.dto.WishDto;
 import gift.model.member.LoginMember;
 import gift.model.member.Member;
@@ -23,26 +24,26 @@ public class WishListController {
     }
 
     @GetMapping
-    public String getAllWishes(@LoginMember Member Member, Model model) {
+    public String getAllWishes(@LoginMember MemberDto memberDto, Model model) {
         List<Wish> wishes = wishListService.getAllWishes();
         model.addAttribute("wishes",wishes);
         return "manageWishList";
     }
 
     @PostMapping
-    public ResponseEntity<Void> insertWish(@LoginMember Member Member, @RequestBody WishDto wishDto) {
+    public ResponseEntity<Void> insertWish(@LoginMember MemberDto memberDto, @RequestBody WishDto wishDto) {
         wishListService.insertWish(wishDto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeWish(@LoginMember Member Member, @PathVariable Long id) {
+    public ResponseEntity<Void> removeWish(@LoginMember MemberDto memberDto, @PathVariable Long id) {
         wishListService.deleteWish(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateWish(@LoginMember Member Member, @PathVariable Long id, @RequestBody WishDto wishDto) {
+    public ResponseEntity<Void> updateWish(@LoginMember MemberDto memberDto, @PathVariable Long id, @RequestBody WishDto wishDto) {
         wishListService.updateWish(id,wishDto);
         return ResponseEntity.ok().build();
     }

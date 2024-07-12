@@ -1,5 +1,6 @@
 package gift.config;
 
+import gift.dto.MemberDto;
 import gift.jwt.JwtTokenProvider;
 import gift.model.member.LoginMember;
 import gift.model.member.Member;
@@ -38,12 +39,13 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     }
 
     @Override
-    public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+    public MemberDto resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         AuthorizationHeader authHeader = new AuthorizationHeader(request.getHeader("Authorization"));
+        Member authMember =  getAuthenticatedMember(authHeader);
 
-        return getAuthenticatedMember(authHeader);
+        return new MemberDto(authMember.getEmail(),authMember.getPassword());
     }
 
     private Member getAuthenticatedMember(AuthorizationHeader authHeader) {
@@ -58,7 +60,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
         String email = jwtTokenProvider.getEmailFromToken(token);
         Optional<Member> member = memberService.findByEmail(email);
-
         return member.orElseThrow(() -> new IllegalStateException("Authenticated member not found in the database."));
     }
 }
