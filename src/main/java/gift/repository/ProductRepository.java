@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.archived_model.Product;
+import gift.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

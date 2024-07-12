@@ -1,72 +1,55 @@
-@Controller
-@RequestMapping("/products")
-@Validated
+package gift.controller;
+
+import gift.entity.Product;
+import gift.service.ProductService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/api/product")
 public class ProductController {
 
-    private final ProductService productService;
-
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
+    @Autowired
+    private ProductService productService;
 
     @GetMapping
-    public String getAllProducts(Model model) {
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
-        return "products";
-    }
-
-    @GetMapping("/add")
-    public String showAddProductForm(Model model) {
-        model.addAttribute("product", new Product.Builder().build());
-        return "addProduct";
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return ResponseEntity.ok(productService.findAll());
     }
 
     @PostMapping
-    public String addProduct(@Valid @ModelAttribute("product") ProductDTO productDto, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            return "addProduct";
+    public ResponseEntity<?> addProduct(@Valid @RequestBody Product product, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errors = bindingResult.getAllErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .collect(Collectors.joining(", "));
+            return ResponseEntity.badRequest().body(errors);
         }
-        try {
-            Product product = new Product.Builder()
-                    .name(productDto.getName())
-                    .price(productDto.getPrice())
-                    .imageUrl(productDto.getImageUrl())
-                    .build();
-            productService.addProduct(product);
-            return "redirect:/products";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("errorMessage", e.getMessage());
-            return "addProduct";
-        }
+        return ResponseEntity.ok(productService.save(product));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO productDto, BindingResult result) {
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body("Invalid product data");
+    public ResponseEntity<?> updateProduct(@PathVariable Long id,@Valid @RequestBody Product product, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String errors = bindingResult.getAllErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .collect(Collectors.joining(", "));
+            return ResponseEntity.badRequest().body(errors);
         }
-        try {
-            Product updatedProduct = new Product.Builder()
-                    .id(id)
-                    .name(productDto.getName())
-                    .price(productDto.getPrice())
-                    .imageUrl(productDto.getImageUrl())
-                    .build();
-            productService.updateProduct(id, updatedProduct);
-            return ResponseEntity.ok("Product updated successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        product.setId(id);
+        return ResponseEntity.ok(productService.save(product));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
-        try {
-            productService.deleteProduct(id);
-            return ResponseEntity.ok("Product deleted successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.archived_model.Product;
-import gift.service.ProductService;
+import gift.archived_service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

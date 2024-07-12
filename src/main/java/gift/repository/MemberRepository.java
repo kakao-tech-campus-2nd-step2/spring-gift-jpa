@@ -1,9 +1,9 @@
 package gift.repository;
 
-import gift.archived_model.Member;
+import gift.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    Optional<Member> findByEmail(String email);
+    Optional<gift.entity.Member> findByEmail(String email);
 }

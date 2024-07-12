@@ -1,25 +1,34 @@
 package gift.entity;
 
+import org.aspectj.lang.annotation.Pointcut;
+
+import javax.persistence.GenerationType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Product {
-    @Column(nullable = false)
-    private int price;
+   @Positive(message = "price must be positive")
+   @Column(nullable = false)
+   private int price;
 
-    @Id
-    @GeneratedValue
-    private Long id;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Long id;
 
-    @Column(nullable = false, length = 15)
-    private String name;
+   @NotBlank(message = "name must not be blank")
+   @Size(max = 15, message = "name must be less than 15 characters")
+   @Column(nullable = false, length = 15)
+   private String name;
 
-    @Column(nullable = false, length = 255)
-    private String imageUrl;
-
+   @NotBlank(message = "image url must not be blank")
+   @Column(nullable = false, length = 255)
+   private String imageUrl;
 
     public int getPrice() {
         return price;

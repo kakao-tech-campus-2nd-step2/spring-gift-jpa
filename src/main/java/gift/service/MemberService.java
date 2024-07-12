@@ -1,29 +1,26 @@
 package gift.service;
 
-import gift.archived_model.Member;
+import gift.entity.Member;
 import gift.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 @Service
 public class MemberService {
-
     @Autowired
     private MemberRepository memberRepository;
+
+    public Optional<Member> findByEmail(String email) {
+        return memberRepository.findByEmail(email);
+    }
 
     public Member save(Member member) {
         return memberRepository.save(member);
     }
 
-    public boolean login(String email, String password, HttpSession session) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
-        if (member.getPassword().equals(password)) {
-            session.setAttribute("member", member);
-            return true;
-        }
-        throw new IllegalArgumentException("Invalid email or password");
+    public void delete(Member member) {
+        memberRepository.delete(member);
     }
 }
