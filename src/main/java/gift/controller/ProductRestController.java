@@ -1,12 +1,11 @@
 package gift.controller;
 
-import gift.dto.ErrorResponse;
-import gift.dto.ProductRequestDto;
-import gift.dto.ProductResponseDto;
-import gift.exception.ProductNotFoundException;
+import gift.dto.*;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,8 +35,9 @@ public class ProductRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> getAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.findAll());
+    public ResponseEntity<List<ProductResponseDto>> getPagedProducts(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(productService.getPagedProducts(pageable));
     }
 
     @DeleteMapping("/{id}")
