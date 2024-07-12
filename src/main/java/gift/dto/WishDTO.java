@@ -8,7 +8,6 @@ public class WishDTO {
     private int productPrice;
     private String productImageUrl;
 
-    // Getters and setters
     public Long getId() {
         return id;
     }
