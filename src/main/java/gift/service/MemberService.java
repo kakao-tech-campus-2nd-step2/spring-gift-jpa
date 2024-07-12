@@ -28,7 +28,7 @@ public class MemberService {
 
 
     public Long login(String email, String password) {
-        Member registeredMember = memberRepository.findMemberByEmailAndPassword(email, password)
+        Member registeredMember = memberRepository.findByEmailAndPassword(email, password)
                 .orElseThrow(MemberNotFoundException::new);
         return registeredMember.getId();
     }

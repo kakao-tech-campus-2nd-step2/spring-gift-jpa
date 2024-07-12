@@ -27,7 +27,7 @@ class MemberRepositoryTest {
         memberRepository.save(member);
 
         //When
-        Optional<Member> foundMember = memberRepository.findMemberByEmailAndPassword(EMAIL, PASSWORD);
+        Optional<Member> foundMember = memberRepository.findByEmailAndPassword(EMAIL, PASSWORD);
 
         //Then
         assertThat(foundMember).isPresent()
