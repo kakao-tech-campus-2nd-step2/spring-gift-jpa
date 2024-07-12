@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface JpaWishListRepository extends JpaRepository<WishList, Long>{
+public interface JpaWishListRepository extends JpaRepository<WishList, Long> {
 
     boolean existsByUserIdAndProductId(Long userId, Long productId);
 

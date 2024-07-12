@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class SignUpForm {
+
     @NotBlank
     @Email
     private String email;
@@ -15,7 +16,7 @@ public class SignUpForm {
     private String password;
 
 
-    @Size(min=1, max=15)
+    @Size(min = 1, max = 15)
     @NotBlank
     private String name;
 

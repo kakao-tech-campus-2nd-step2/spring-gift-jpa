@@ -32,7 +32,6 @@ public class AuthService {
             throw new InvalidSignUpFormException("중복된 이메일은 사용할 수 없습니다");
         }
 
-
         UserRole role = signUpForm.getRole();
         if (UserRole.ADMIN == role) {
             throw new InvalidSignUpFormException("ADMIN으로 가입하실 수 없습니다.");

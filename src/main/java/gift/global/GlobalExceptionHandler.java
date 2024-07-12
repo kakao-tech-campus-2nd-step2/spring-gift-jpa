@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleNotValidMethodArgument(
         MethodArgumentNotValidException exception) {
@@ -29,7 +30,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("status", exception.getStatusCode().value());
         responseBody.put("error", exception.getStatusCode().toString());
-        if(exception.getReason() != null) {
+        if (exception.getReason() != null) {
             responseBody.put("message", exception.getReason());
         }
         return ResponseEntity.status(exception.getStatusCode())

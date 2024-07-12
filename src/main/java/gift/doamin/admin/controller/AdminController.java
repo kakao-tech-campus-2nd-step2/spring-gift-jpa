@@ -10,6 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 public class AdminController {
+
     JpaProductRepository productRepository;
 
     public AdminController(JpaProductRepository productRepository) {
