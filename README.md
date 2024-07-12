@@ -401,7 +401,7 @@ create table wish
   {
     "timestamp": "2024-01-01T00:00:00.0000000",
     "status": 201,
-    "createdProduct": {
+    "created-product": {
       "id": 23,
       "name": "Product name",
       "price": 10000,
