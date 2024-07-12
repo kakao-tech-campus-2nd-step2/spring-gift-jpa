@@ -45,3 +45,33 @@ tr:nth-child(even) {
 img {
     max-width: 100px;
 }
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-top: 20px;
+}
+
+.pagination-container button {
+    padding: 10px 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination-container button:hover {
+    background-color: #0056b3;
+}
+
+.pagination-container button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.pagination-container .active {
+    background-color: #0056b3;
+}
