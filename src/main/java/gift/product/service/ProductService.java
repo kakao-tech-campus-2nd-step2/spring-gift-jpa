@@ -32,6 +32,7 @@ public class ProductService {
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findProductWithWishCount(Long id) {
         Optional<Tuple> result = productRepository.findProductByIdWithWishCount(id);
         return result.map(
@@ -39,6 +40,7 @@ public class ProductService {
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
     }
 
+    @Transactional(readOnly = true)
     public List<ProductResponse> findAllProductWithWishCount() {
         List<Tuple> results = productRepository.findAllActiveProductsWithWishCount();
         return results.stream()
@@ -47,6 +49,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public Page<ProductResponse> findAllProductWithWishCountPageable(Pageable pageable) {
         Page<Tuple> results = productRepository.findAllActiveProductsWithWishCountPageable(pageable);
         return results.map(tuple -> new ProductResponse(
