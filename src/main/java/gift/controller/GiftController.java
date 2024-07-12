@@ -1,19 +1,14 @@
 package gift.controller;
 
-import gift.dto.PageResponse;
+import gift.dto.PagingRequest;
+import gift.dto.PagingResponse;
 import gift.model.gift.GiftRequest;
 import gift.model.gift.GiftResponse;
 import gift.service.GiftService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/gifts")
@@ -38,9 +33,8 @@ public class GiftController {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponse<GiftResponse>> getAllGift(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                                 @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
-        PageResponse<GiftResponse> response = giftService.getAllGifts(page, size);
+    public ResponseEntity<PagingResponse<GiftResponse>> getAllGift(PagingRequest pagingRequest) {
+        PagingResponse<GiftResponse> response = giftService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
         return ResponseEntity.ok(response);
     }
 

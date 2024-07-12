@@ -2,14 +2,14 @@ package gift.dto;
 
 import java.util.List;
 
-public class PageResponse<T> {
+public class PagingResponse<T> {
     private List<T> content;
     private int page;
     private int size;
     private long totalElements;
     private int totalPages;
 
-    public PageResponse(int page, List<T> content, int size, long totalElements, int totalPages) {
+    public PagingResponse(int page, List<T> content, int size, long totalElements, int totalPages) {
         this.page = page;
         this.content = content;
         this.size = size;

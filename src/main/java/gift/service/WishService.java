@@ -1,6 +1,6 @@
 package gift.service;
 
-import gift.dto.PageResponse;
+import gift.dto.PagingResponse;
 import gift.exception.WishItemNotFoundException;
 import gift.model.gift.Gift;
 import gift.model.user.User;
@@ -48,12 +48,12 @@ public class WishService {
         wishRepository.deleteByUserAndGift(user, gift);
     }
 
-    public PageResponse<Wish> getGiftsForUser(Long userId, int page, int size) {
+    public PagingResponse<Wish> getGiftsForUser(Long userId, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("id").ascending());
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
         Page<Wish> wishes = wishRepository.findByUser(user, pageRequest);
 
-        return new PageResponse<>(page, wishes.getContent(), size, wishes.getTotalElements(), wishes.getTotalPages());
+        return new PagingResponse<>(page, wishes.getContent(), size, wishes.getTotalElements(), wishes.getTotalPages());
     }
 
     @Transactional

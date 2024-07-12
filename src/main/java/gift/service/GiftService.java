@@ -1,7 +1,7 @@
 package gift.service;
 
 
-import gift.dto.PageResponse;
+import gift.dto.PagingResponse;
 import gift.model.gift.*;
 import gift.repository.GiftRepository;
 import jakarta.transaction.Transactional;
@@ -23,13 +23,13 @@ public class GiftService {
         this.giftRepository = giftRepository;
     }
 
-    public PageResponse<GiftResponse> getAllGifts(int page, int size) {
+    public PagingResponse<GiftResponse> getAllGifts(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("id").ascending());
         Page<Gift> gifts = giftRepository.findAll(pageRequest);
         List<GiftResponse> giftResponses = gifts.stream()
                 .map(GiftResponse::from)
                 .collect(Collectors.toList());
-        return new PageResponse<>(page, giftResponses, size, gifts.getTotalElements(), gifts.getTotalPages());
+        return new PagingResponse<>(page, giftResponses, size, gifts.getTotalElements(), gifts.getTotalPages());
     }
 
     public GiftResponse getGift(Long id) {

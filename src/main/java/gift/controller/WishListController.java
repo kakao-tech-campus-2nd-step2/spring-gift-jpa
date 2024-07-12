@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.dto.PageResponse;
+import gift.dto.PagingResponse;
 import gift.model.gift.GiftResponse;
 import gift.model.user.User;
 import gift.model.wish.Wish;
@@ -8,10 +8,6 @@ import gift.model.wish.WishResponse;
 import gift.service.GiftService;
 import gift.service.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +33,7 @@ public class WishListController {
                                          @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                          @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
         if (user != null) {
-            PageResponse<GiftResponse> gifts = giftService.getAllGifts(page, size);
+            PagingResponse<GiftResponse> gifts = giftService.getAllGifts(page, size);
             return ResponseEntity.ok(gifts);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
@@ -76,19 +72,19 @@ public class WishListController {
     }
 
     @GetMapping("/mywish")
-    public ResponseEntity<PageResponse<WishResponse>> getUserGifts(@RequestAttribute("user") User user,
-                                                                   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                                   @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+    public ResponseEntity<PagingResponse<WishResponse>> getUserGifts(@RequestAttribute("user") User user,
+                                                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                                     @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
         if (user != null) {
-            PageResponse<Wish> userWishes = wishService.getGiftsForUser(user.getId(), page, size);
+            PagingResponse<Wish> userWishes = wishService.getGiftsForUser(user.getId(), page, size);
             List<WishResponse> wishResponses =
                     userWishes.getContent()
                             .stream()
                             .map(wish -> new WishResponse(wish.getGift().getId(), wish.getGift().getName(), wish.getGift().getPrice(), wish.getQuantity())).collect(Collectors.toList());
-            PageResponse<WishResponse> pageResponse = new PageResponse<>(page, wishResponses, size, userWishes.getTotalElements(), userWishes.getTotalPages());
-            return ResponseEntity.ok(pageResponse);
+            PagingResponse<WishResponse> pagingResponse = new PagingResponse<>(page, wishResponses, size, userWishes.getTotalElements(), userWishes.getTotalPages());
+            return ResponseEntity.ok(pagingResponse);
         }
-        PageResponse<WishResponse> emptyPageResponse = new PageResponse<>(page, Collections.emptyList(), size, 0, 0);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(emptyPageResponse);
+        PagingResponse<WishResponse> emptyPagingResponse = new PagingResponse<>(page, Collections.emptyList(), size, 0, 0);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(emptyPagingResponse);
     }
 }

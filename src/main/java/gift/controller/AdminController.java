@@ -1,20 +1,14 @@
 package gift.controller;
 
 
-import gift.dto.PageResponse;
+import gift.dto.PagingResponse;
 import gift.model.gift.GiftRequest;
 import gift.model.gift.GiftResponse;
 import gift.service.GiftService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
 
 @Controller
 public class AdminController {
@@ -32,9 +26,9 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String adminHome(Model model,
-                            @RequestParam(value = "page",required = false,defaultValue = "1") int page,
-                            @RequestParam(value = "size",required = false,defaultValue = "5") int size) {
-        PageResponse<GiftResponse> giftlist = giftService.getAllGifts(page,size);
+                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+        PagingResponse<GiftResponse> giftlist = giftService.getAllGifts(page, size);
         model.addAttribute("giftlist", giftlist);
         return "admin";
     }
