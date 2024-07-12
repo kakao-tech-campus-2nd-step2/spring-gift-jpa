@@ -1,6 +1,6 @@
 package gift.Annotation;
 
-import gift.Model.User;
+import gift.Entity.Users;
 import gift.Service.UserService;
 import gift.Utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -13,6 +13,8 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
+import java.util.Optional;
 
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
@@ -27,7 +29,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return methodParameter.getParameterType().equals(User.class);
+        return methodParameter.getParameterType().equals(Users.class);
     }
 
     @Override
@@ -51,6 +53,12 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
         Claims claims = jwtUtil.decodeToken(token); //decode
         String userEmail = claims.getSubject(); // subject를 email로 설정했기 때문에 userEmail로 사용
-        return userService.findByEmail(userEmail); //null이라면 인증된 것이 아닐 것이고 null이 아니라면 인증된 것
+        Optional<Users> users = userService.findByEmail(userEmail); //null이라면 인증된 것이 아닐 것이고 null이 아니라면 인증된 것
+
+        if (!users.isPresent()) {
+            throw new IllegalArgumentException("User not found with email: " + userEmail);
+        }
+        return users.get();
+
     }
 }

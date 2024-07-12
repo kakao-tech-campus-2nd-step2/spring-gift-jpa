@@ -1,7 +1,8 @@
 package gift.Service;
 
+import gift.Entity.Wishlist;
 import gift.Model.WishListItem;
-import gift.Repository.WishListRepository;
+import gift.Repository.WishListJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,28 +11,33 @@ import java.util.List;
 @Service
 public class WishListService {
 
-    private final WishListRepository wishListRepository;
+    private final WishListJpaRepository wishListJpaRepository;
 
     @Autowired
-    public WishListService(WishListRepository wishListRepository) {
-        this.wishListRepository = wishListRepository;
+    public WishListService(WishListJpaRepository wishListJpaRepository) {
+        this.wishListJpaRepository = wishListJpaRepository;
     }
 
-    public List<WishListItem> getWishlist(int userId) {
-        return wishListRepository.getWishlist(userId);
+    public List<Wishlist> getWishlist(long userId) {
+        return wishListJpaRepository.findByIdUserId(userId);
     }
 
     public void addWishlistItem(WishListItem wishlistItem) {
-        wishListRepository.addWishlistItem(wishlistItem);
+        wishlistItem.setPrice(wishlistItem.getPrice() * wishlistItem.getCount());
+        Wishlist wishlist = Wishlist.createWishlist(wishlistItem);
+        wishListJpaRepository.save(wishlist);
     }
 
-    public void removeWishlistItem(WishListItem wishListItem) {
-        //값만 줄일건지
-        if(wishListItem.getCount() - wishListItem.getQuantity() > 0) {
-            wishListRepository.reduceWishlistItem(wishListItem);
+    public void removeWishlistItem(WishListItem wishListItem, Wishlist wishlistOptional) {
+
+        int newCount = wishListItem.getCount() - wishListItem.getQuantity();
+
+        if (newCount > 0) {
+            wishlistOptional.setCount(newCount);
+            wishlistOptional.setPrice(wishlistOptional.getPrice() / wishListItem.getCount() * newCount);
+            wishListJpaRepository.save(wishlistOptional);
             return;
         }
-        wishListRepository.removeWishlistItem(wishListItem);
     }
 
 }

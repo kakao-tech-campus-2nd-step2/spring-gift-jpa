@@ -1,6 +1,6 @@
 package gift.Utils;
 
-import gift.Model.User;
+import gift.Entity.Users;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -21,12 +21,12 @@ public class JwtUtil {
     @Value("${jwt.expiredMs}")
     private long validityInMilliseconds; // 1 hour
 
-    public String generateToken(User user, boolean isAdmin) {
+    public String generateToken(Users users, boolean isAdmin) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", user.getId());
-        claims.put("email", user.getEmail());
-        claims.put("name", user.getName());
-        claims.put("password", user.getPassword());
+        claims.put("userId", users.getId());
+        claims.put("email", users.getEmail());
+        claims.put("name", users.getName());
+        claims.put("password", users.getPassword());
         claims.put("isAdmin", isAdmin);
 
         Date now = new Date();
@@ -34,7 +34,7 @@ public class JwtUtil {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(user.getEmail()) // 사용자 email을 subject로 설정
+                .setSubject(users.getEmail()) // 사용자 email을 subject로 설정
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))

@@ -1,5 +1,6 @@
 package gift.Controller;
 
+import gift.Entity.Users;
 import gift.Model.User;
 import gift.Service.UserService;
 import gift.Utils.JwtUtil;
@@ -37,7 +38,7 @@ public class UserController {
         boolean isAuthenticated = userService.authenticate(email, password);
         if (isAuthenticated) {
             boolean isAdmin = userService.isAdmin(email);
-            User authenticatedUser = userService.findByEmail(email);
+            Users authenticatedUser = userService.findByEmail(email).get();
             String token = jwtUtil.generateToken(authenticatedUser, isAdmin);
             // Set token in HttpOnly cookie
             Cookie cookie = new Cookie("token", token);

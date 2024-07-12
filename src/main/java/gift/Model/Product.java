@@ -1,11 +1,13 @@
 package gift.Model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class Product {
-
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @Size(min = 1, max = 15, message = "글자 수는 1자 이상, 15자 이하여야 합니다.")
     @Pattern(regexp = "^[\\w\\s()+\\-/&_\\[\\]가-힣]*$", message = "( ), [ ], +, -, &, /, _" +
             "외의 다른 특수 문자 사용 불가")
@@ -19,7 +21,7 @@ public class Product {
 
     }
 
-    public Product(Long id, String name, int price, String imageUrl, boolean isDeleted) {
+    public Product(long id, String name, int price, String imageUrl, boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -62,11 +64,12 @@ public class Product {
         this.name = name;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
+
 }

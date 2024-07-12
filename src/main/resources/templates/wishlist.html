@@ -28,6 +28,7 @@
                 <input type="hidden" name="productId" th:value="${item.productId}"/>
                 <input type="hidden" name="productName" th:value="${item.productName}"/>
                 <input type="hidden" name="count" th:value="${item.count}"/>
+                <input type="hidden" name="price" th:value="${item.price}"/>
                 <input type="number" name="quantity" min="1" value="1" style="width: 50px;"/>
                 <button type="submit">Remove</button>
             </form>
@@ -41,8 +42,9 @@
         var productId = form.querySelector('input[name="productId"]').value;
         var count = form.querySelector('input[name="count"]').value;
         var quantity = form.querySelector('input[name="quantity"]').value;
+        var price = form.querySelector('input[name="price"]').value;
 
-        fetch(`/wishlist/remove/${productId}`, {
+        fetch('/wishlist/remove', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,13 +55,13 @@
                 productName: productName,
                 count: parseInt(count, 10),
                 quantity: parseInt(quantity, 10),
-                price: 0
+                price: price
             }),
             credentials: 'include'
         })
             .then(response => {
                 if (response.ok) {
-                    window.location.reload(); // 성공 시 페이지 새로고침
+                    window.location.reload();
                 } else {
                     alert('Error: ' + response.statusText);
                 }
