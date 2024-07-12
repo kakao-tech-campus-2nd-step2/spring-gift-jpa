@@ -43,8 +43,10 @@ public class ProductController {
 
 
     //Product Pagination
-    @GetMapping
-    public Page<Product> getProductPage()
+    @GetMapping("/page/{page}")
+    public Page<Product> getProductPage(@PathVariable("page") int page){
+        return productService.getProductPage(page);
+    }
 
     //product 추가
     @PostMapping
