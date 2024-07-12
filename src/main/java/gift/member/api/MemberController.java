@@ -67,12 +67,15 @@ public class MemberController {
                                            sort = "id",
                                            direction = Sort.Direction.DESC)
                                    Pageable pageable) {
-        Page<ProductResponse> pagedProducts = productController.getPagedProducts(pageable);
-        PageResponse productPageInfo = new PageResponse(pagedProducts);
+        Page<ProductResponse> products = productController.getPagedProducts(pageable);
+        PageResponse productPageInfo = new PageResponse(products);
+        Page<ProductResponse> wishes = wishesController.getPagedWishes(memberId, pageable);
+        PageResponse wishlistPageInfo = new PageResponse(wishes);
 
-        model.addAttribute("productList", pagedProducts.getContent());
+        model.addAttribute("productList", products.getContent());
         model.addAttribute("productPageInfo", productPageInfo);
-        model.addAttribute("wishlist", wishesController.getAllWishes(memberId));
+        model.addAttribute("wishlist", wishes.getContent());
+        model.addAttribute("wishlistPageInfo", wishlistPageInfo);
         return "wishlist";
     }
 
