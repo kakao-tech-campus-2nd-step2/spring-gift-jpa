@@ -16,21 +16,17 @@ import java.util.List;
 @Table
 public class Product {
 
+  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+  private final List<WishList> wishlists = new ArrayList<>();
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
   @Column(nullable = false, unique = true)
   private String name;
-
   @Column(nullable = false)
   private int price;
-
   @Column(nullable = false)
   private String imageUrl;
-
-  @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-  private final List<WishList> wishlists = new ArrayList<>();
 
   public Product() {
   }

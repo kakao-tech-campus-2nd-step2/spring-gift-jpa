@@ -14,6 +14,7 @@ import java.util.Optional;
 @Entity
 @Table
 public class UserEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -25,6 +26,7 @@ public class UserEntity {
   @Size(min = 5, max = 15)
   @Column(nullable = false)
   private String password;
+
   public UserEntity() {
 
   }

@@ -33,16 +33,17 @@ public class WishController {
   }
 
   @PostMapping
-  public ResponseEntity<WishListDto> addProductToWishList(@RequestBody WishListDto wishListDto, @LoginUser
+  public ResponseEntity<WishListDto> addProductToWishList(@RequestBody WishListDto wishListDto,
+    @LoginUser
     Optional<MemberDto> memberDto) {
 
     WishListDto addedWishProduct = wishListService.addProductToWishList(wishListDto);
 
     // 생성된 리소스의 URI를 빌드
     var location = ServletUriComponentsBuilder.fromCurrentRequest()
-        .path("/{id}")
-        .buildAndExpand(addedWishProduct.getId())
-        .toUri();
+      .path("/{id}")
+      .buildAndExpand(addedWishProduct.getId())
+      .toUri();
 
     return ResponseEntity.created(location).body(addedWishProduct);
   }

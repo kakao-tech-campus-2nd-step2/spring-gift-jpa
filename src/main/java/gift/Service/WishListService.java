@@ -19,7 +19,7 @@ public class WishListService {
   private final ProductRepository productRepository;
 
   public WishListService(WishListRepository wishListRepository, ProductRepository productRepository,
-      MemberRepository memberRepository) {
+    MemberRepository memberRepository) {
     this.wishListRepository = wishListRepository;
     this.memberRepository = memberRepository;
     this.productRepository = productRepository;
@@ -37,7 +37,7 @@ public class WishListService {
 
   public List<WishListDto> getWishList() {
     List<WishListDto> wishListDtos = wishListRepository.findAll().stream()
-        .map(ConverterToDto::convertToWishListDto).toList();
+      .map(ConverterToDto::convertToWishListDto).toList();
     return wishListDtos;
   }
 

@@ -15,18 +15,15 @@ import java.util.List;
 @Table
 public class Member {
 
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+  private final List<WishList> wishLists = new ArrayList<>();
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
   @Column(nullable = false, unique = true)
   private String email;
-
   @Column(nullable = false)
   private String password;
-
-  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-  private final List<WishList> wishLists = new ArrayList<>();
 
   public Member() {
 
