@@ -14,6 +14,7 @@ import gift.repository.WishRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishService {
@@ -27,7 +28,7 @@ public class WishService {
         this.memberRepository = memberRepository;
     }
 
-    public void update(WishPatchRequest request, Long memberId) {
+    public void update(Long id, WishPatchRequest request, Long memberId) {
         checkProductByProductIdAndMemberId(request.productId(), memberId);
         if (request.productCount() == 0) {
             deleteByProductId(request.productId(), memberId);
