@@ -8,6 +8,9 @@ import gift.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * WishListMapper 클래스는 WishListEntity와 WishListDTO 간의 변환을 담당합니다.
+ */
 @Component
 public class WishListMapper {
 
@@ -24,6 +27,12 @@ public class WishListMapper {
     MemberService memberService;
 
 
+    /**
+     * WishListDTO를 WishListEntity로 변환하는 메서드
+     *
+     * @param wishListDTO 변환할 WishListDTO 객체
+     * @return 변환된 WishListEntity 객체
+     */
     public WishListEntity toWishListEntity(WishListDTO wishListDTO) {
         var wishListEntity = new WishListEntity();
         wishListEntity.setId(wishListDTO.id());
@@ -32,6 +41,12 @@ public class WishListMapper {
         return wishListEntity;
     }
 
+    /**
+     * WishListEntity를 WishListDTO로 변환하는 메서드
+     *
+     * @param wishListEntity 변환할 WishListEntity 객체
+     * @return 변환된 WishListDTO 객체
+     */
     public WishListDTO toWishListDTO(WishListEntity wishListEntity) {
         return new WishListDTO(
             wishListEntity.getId(),
@@ -40,6 +55,13 @@ public class WishListMapper {
         );
     }
 
+    /**
+     * ProductId와 MemberDTO를 이용하여 WishListEntity를 생성하는 메서드
+     *
+     * @param productId 상품 ID
+     * @param memberDTO 사용자 정보
+     * @return 생성된 WishListEntity 객체
+     */
     public WishListEntity toWishListEntity(long productId, MemberDTO memberDTO) {
         var productDTO = productService.getProduct(productId);
         var wishListDTO = new WishListDTO(productDTO, memberDTO);

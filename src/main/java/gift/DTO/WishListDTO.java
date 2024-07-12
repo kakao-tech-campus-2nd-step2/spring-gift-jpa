@@ -4,7 +4,7 @@ import gift.auth.DTO.MemberDTO;
 import jakarta.validation.constraints.NotNull;
 
 public record WishListDTO(
-    @NotNull
+
     Long id,
 
     @NotNull
@@ -18,10 +18,10 @@ public record WishListDTO(
 ) {
 
     public WishListDTO(ProductDTO productDTO, MemberDTO memberDTO) {
-        this(-1, productDTO, memberDTO);
+        this(null, productDTO, memberDTO);
     }
 
-    public WishListDTO(long id, ProductDTO productDTO, MemberDTO memberDTO) {
+    public WishListDTO(Long id, ProductDTO productDTO, MemberDTO memberDTO) {
         this(id, productDTO.id(), memberDTO.getId(), productDTO, memberDTO);
     }
 }

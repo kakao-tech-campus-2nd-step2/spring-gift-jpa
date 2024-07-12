@@ -23,7 +23,8 @@ public record ProductDTO(
     @Pattern(regexp = "https?://.*", message = "이미지 URL은 http 또는 https로 시작해야 합니다.")
     String imageUrl
 ) {
-    public ProductDTO (String name, long price, String imageUrl) {
+
+    public ProductDTO(String name, long price, String imageUrl) {
         this(null, name, price, imageUrl);
     }
 }
