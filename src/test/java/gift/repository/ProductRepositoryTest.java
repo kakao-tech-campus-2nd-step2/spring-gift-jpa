@@ -4,7 +4,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.model.Product;
-import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +32,7 @@ class ProductRepositoryTest {
 
     @Test
     void testSave() {
+        product1.validate();
         Product savedProduct = productRepository.save(product1);
         assertAll(
             () -> assertThat(savedProduct.getId()).isNotNull(),
@@ -44,6 +44,8 @@ class ProductRepositoryTest {
 
     @Test
     void testFindAll() {
+        product1.validate();
+        product2.validate();
         productRepository.save(product1);
         productRepository.save(product2);
         List<Product> products = productRepository.findAll();
@@ -56,6 +58,7 @@ class ProductRepositoryTest {
 
     @Test
     void testFindById() {
+        product1.validate();
         Product savedProduct = productRepository.save(product1);
         assertAll(
             () -> assertThat(savedProduct).isNotNull(),
@@ -65,6 +68,7 @@ class ProductRepositoryTest {
 
     @Test
     void testDelete() {
+        product1.validate();
         Product savedProduct = productRepository.save(product1);
         productRepository.deleteById(savedProduct.getId());
         boolean exists = productRepository.existsById(savedProduct.getId());
@@ -73,82 +77,89 @@ class ProductRepositoryTest {
 
     @Test
     void testSaveWithNullName() {
-        invalidProduct = new Product(1L, null, "100", "https://kakao");
         try {
+            invalidProduct = new Product(1L, null, "100", "https://kakao");
+            invalidProduct.validate();
             productRepository.save(invalidProduct);
-        } catch (ConstraintViolationException e) {
-            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
     void testSaveWithLengthName() {
-        invalidProduct = new Product(1L, "aaaaaaaaa aaaa aa", "100", "https://kakao");
         try {
+            invalidProduct = new Product(1L, "aaaaaaaaa aaaa aa", "100", "https://kakao");
+            invalidProduct.validate();
             productRepository.save(invalidProduct);
-        } catch (ConstraintViolationException e) {
-            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
     void testSaveWithSpecial() {
-        invalidProduct = new Product(1L, ".@", "100", "https://kakao");
         try {
+            invalidProduct = new Product(1L, ".@", "100", "https://kakao");
+            invalidProduct.validate();
             productRepository.save(invalidProduct);
-        } catch (ConstraintViolationException e) {
-            assertThat(e).isInstanceOf(ConstraintViolationException.class);
-            return;
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
     void testSaveWithKaKaoName() {
-        invalidProduct = new Product(1L, "카카오상품","100","https://kakao");
         try {
+            invalidProduct = new Product(1L, "카카오상품","100","https://kakao");
+            invalidProduct.validate();
             productRepository.save(invalidProduct);
-        } catch (ConstraintViolationException e) {
-            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
     void testSaveWithNullPrice() {
-        invalidProduct = new Product(1L, "상품", null, "https://kakao");
         try {
+            invalidProduct = new Product(1L, "상품", null, "https://kakao");
+            invalidProduct.validate();
             productRepository.save(invalidProduct);
-        } catch (ConstraintViolationException e) {
-            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
     void testSaveWithInvalidPrice() {
-        invalidProduct = new Product(1L, "상품", "가격", "https://kakao");
         try {
+            invalidProduct = new Product(1L, "상품", "가격", "https://kakao");
+            invalidProduct.validate();
             productRepository.save(invalidProduct);
-        } catch (ConstraintViolationException e) {
-            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
     void testSaveWithNullImageUrl() {
-        invalidProduct = new Product(1L, "상품", "100", null);
         try {
+            invalidProduct = new Product(1L, "상품", "100", null);
+            invalidProduct.validate();
             productRepository.save(invalidProduct);
-        } catch (ConstraintViolationException e) {
-            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
     void testSaveWithInvalidImageUrl() {
-        Product invalidProduct = new Product(1L, "상품", "100", "kakao");
         try {
+            Product invalidProduct = new Product(1L, "상품", "100", "kakao");
+            invalidProduct.validate();
             productRepository.save(invalidProduct);
-        } catch (ConstraintViolationException e) {
-            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 

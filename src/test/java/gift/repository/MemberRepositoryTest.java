@@ -4,7 +4,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.model.Member;
-import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,7 @@ class MemberRepositoryTest {
 
     @Test
     void testSave() {
+        member.validate();
         Member savedMember = memberRepository.save(member);
         assertAll(
             () -> assertThat(savedMember.getId()).isNotNull(),
@@ -43,50 +43,56 @@ class MemberRepositoryTest {
 
     @Test
     void testFindByEmail() {
+        member.validate();
         Member savedMember = memberRepository.save(member);
+        Member foundMember = memberRepository.findByEmail(member.getEmail());
         assertAll(
-            () -> assertThat(savedMember).isNotNull(),
-            () -> assertThat(savedMember.getId()).isEqualTo(member.getId())
+            () -> assertThat(foundMember).isNotNull(),
+            () -> assertThat(foundMember.getId()).isEqualTo(savedMember.getId())
         );
     }
 
     @Test
     void testSaveWithNullName() {
-        invalidMember = new Member(1L, null, "kbm@kbm", "mbk", "user");
         try {
+            invalidMember = new Member(1L, null, "kbm@kbm", "mbk", "user");
+            invalidMember.validate();
             memberRepository.save(invalidMember);
-        } catch (ConstraintViolationException e) {
-            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
     void testSaveWithNullEmail() {
-        invalidMember = new Member(1L, "kbm", null, "mbk", "user");
         try {
+            invalidMember = new Member(1L, "kbm", null, "mbk", "user");
+            invalidMember.validate();
             memberRepository.save(invalidMember);
-        } catch (ConstraintViolationException e) {
-            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
     void testSaveWithInvalidEmail() {
-        invalidMember = new Member(1L, "kbm", "invalid", "mbk", "user");
         try {
+            invalidMember = new Member(1L, "kbm", "invalid", "mbk", "user");
+            invalidMember.validate();
             memberRepository.save(invalidMember);
-        } catch (ConstraintViolationException e) {
-            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
     void testSaveWithNullPassword() {
-        invalidMember = new Member(1L, "kbm", "kbm@kbm", null, "user");
         try {
+            invalidMember = new Member(1L, "kbm", "kbm@kbm", null, "user");
+            invalidMember.validate();
             memberRepository.save(invalidMember);
-        } catch (ConstraintViolationException e) {
-            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 }
