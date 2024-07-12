@@ -10,7 +10,6 @@ spring:
   sql:
     init:
       mode: always
-      data-locations: classpath:static/sql/data.sql
   jpa:
     properties:
       hibernate:
