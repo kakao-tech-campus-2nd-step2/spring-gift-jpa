@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,7 +25,7 @@ public class Item {
     private String imgUrl;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    private List<WishItem> wishes;
+    private List<WishItem> wishes = new ArrayList<>();
 
     public Item() {
     }

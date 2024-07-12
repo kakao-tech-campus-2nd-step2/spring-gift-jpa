@@ -24,7 +24,7 @@ public class User {
     @Column(nullable = false)
     private String password;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<WishItem> wishItemList;
+    private List<WishItem> wishItemList = new ArrayList<>();
 
 
     public User() {
@@ -53,4 +53,7 @@ public class User {
         return new UserDTO(id, password, email);
     }
 
+    public List<WishItem> getWishItemList() {
+        return wishItemList;
+    }
 }
