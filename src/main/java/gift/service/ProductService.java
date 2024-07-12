@@ -39,7 +39,7 @@ public class ProductService {
 
     public Long addProduct(ProductRequestDTO productRequestDTO) {
         Product product = new Product(productRequestDTO.name(),
-            productRequestDTO.price(), productRequestDTO.imageUrl());
+            productRequestDTO.price(), productRequestDTO.imageUrl(), null);
         return jpaProductRepository.save(product).getId();
     }
 
