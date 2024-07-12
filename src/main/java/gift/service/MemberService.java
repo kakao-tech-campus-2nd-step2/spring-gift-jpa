@@ -46,7 +46,8 @@ public class MemberService {
         if(!memberRepository.existsByEmail(email)){
             throw new IllegalStateException("이메일을 확인해주세요.");
         }
-        return memberRepository.findByEmail(email);
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("해당 멤버가 없습니다."));
     }
 
     private boolean comfirmPW(String memberPassword, String inputPassword){

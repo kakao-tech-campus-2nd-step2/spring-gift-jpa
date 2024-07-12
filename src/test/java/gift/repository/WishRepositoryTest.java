@@ -37,8 +37,8 @@ public class WishRepositoryTest {
     @DisplayName("wish 저장")
     @Test
     void save(){
-        Member member = members.findByEmail("test.gamil.com");
-        Product product = products.findByName("Product1");
+        Member member = members.findByEmail("test.gamil.com").orElseThrow();
+        Product product = products.findByName("Product1").orElseThrow();
         Wish expected = new Wish(member, product);
         Wish actual = wishs.save(expected);
         assertThat(actual).isEqualTo(expected);
@@ -47,9 +47,9 @@ public class WishRepositoryTest {
     @DisplayName("해당 memberId를 가진 Wishlist 반환")
     @Test
     void getWishsbyMemberId(){
-        Member member = members.findByEmail("test.gamil.com");
-        Product product1 = products.findByName("Product1");
-        Product product2 = products.findByName("Product2");
+        Member member = members.findByEmail("test.gamil.com").orElseThrow();
+        Product product1 = products.findByName("Product1").orElseThrow();
+        Product product2 = products.findByName("Product2").orElseThrow();
         Wish wish1 = new Wish(member, product1);
         Wish wish2 = new Wish(member, product2);
         wishs.save(wish1);

@@ -4,10 +4,12 @@ import gift.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -46,28 +48,24 @@ public class ProductRepositoryTest {
 
     @DisplayName("이름(unique하다고가정)으로 해당하는 객체 반환")
     @Test
-    void getProductbyName(){
+    void getProductByName(){
         Product expected = new Product("Product1", 1000, "1.img");
-        Product actual = products.findByName("Product1");
+        Product actual = products.findByName("Product1").orElseThrow();
         assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("ID로 상품 반환")
     @Test
-    void getProductbyID(){
-        Product expected = products.findByName("Product1");
-        Optional<Product> actualOptional = products.findById(expected.getId());
-        Product actual = null;
-        if (actualOptional.isPresent()){
-            actual = actualOptional.get();
-        }
+    void getProductByID(){
+        Product expected = products.findByName("Product1").orElseThrow();
+        Product actual = products.findById(expected.getId()).orElseThrow();
         assertThat(actual).isEqualTo(expected);
     }
 
     @DisplayName("ID로 상품 삭제")
     @Test
     void deleteByID(){
-        Product product = products.findByName("Product1");
+        Product product = products.findByName("Product1").orElseThrow();
         products.deleteById(product.getId());
         assertThat(products.existsById(product.getId())).isFalse();
     }

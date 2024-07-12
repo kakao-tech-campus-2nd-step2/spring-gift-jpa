@@ -32,7 +32,8 @@ public class MemberRepositoryTest {
     void getMemberByEmail(){
         Member expected = new Member("test.gamil.com", "test1234");
         members.save(expected);
-        Member actual = members.findByEmail("test.gamil.com");
+
+        Member actual = members.findByEmail("test.gamil.com").orElseThrow();
         assertThat(actual).isEqualTo(expected);
     }
 }
