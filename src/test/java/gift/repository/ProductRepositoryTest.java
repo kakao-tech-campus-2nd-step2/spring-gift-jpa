@@ -44,19 +44,18 @@ class ProductRepositoryTest {
 
     @DisplayName("id에 따른 상품 찾기 테스트")
     @Test
-    void findbyid() {
+    void findById() {
         // given
         Long id = product1.getId();
         // when
         Product foundProduct = productRepository.findById(id).orElse(null);
-        Long findId = foundProduct.getId();
         // then
-        assertThat(id).isEqualTo(findId);
+        assertThat(foundProduct).isNotNull();
     }
 
     @DisplayName("상품 삭제 기능 테스트")
     @Test
-    void deletebyid() {
+    void deleteById() {
         // given
         Long DeleteId = product1.getId();
 

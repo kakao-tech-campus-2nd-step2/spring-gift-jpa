@@ -70,7 +70,7 @@ public class WishListRepositoryTest {
 
     @DisplayName("id에 따른 위시 리스트 찾기 테스트")
     @Test
-    void findbyid() {
+    void findById() {
         // given
         Long id = wish1.getId();
 
@@ -83,7 +83,7 @@ public class WishListRepositoryTest {
 
     @DisplayName("위시 리스트 삭제 기능 테스트")
     @Test
-    void deletebyid() {
+    void deleteById() {
         // given
         Long deleteId = wish2.getId();
         // when

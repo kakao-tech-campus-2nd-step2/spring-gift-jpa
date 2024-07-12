@@ -43,7 +43,7 @@ public class UserRepositoryTest {
 
     @DisplayName("id에 따른 회원 찾기 테스트")
     @Test
-    void findbyid() {
+    void findById() {
         // given
         Long id = user2.getId();
 
