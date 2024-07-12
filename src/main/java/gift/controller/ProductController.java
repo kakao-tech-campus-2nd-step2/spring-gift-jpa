@@ -34,17 +34,17 @@ public class ProductController {
 
     @GetMapping()
     public ResponseEntity<List<Product>> readAll() {
-        return new ResponseEntity<>(productService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> read(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(productService.find(id), HttpStatus.OK);
+        return new ResponseEntity<>(productService.getProduct(id), HttpStatus.OK);
     }
 
     @PostMapping()
     public ResponseEntity<Product> create(@RequestBody @Valid ProductRequest productRequest) {
-        Product product = productService.createProduct(productRequest);
+        Product product = productService.addProduct(productRequest);
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 

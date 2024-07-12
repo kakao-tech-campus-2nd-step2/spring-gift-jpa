@@ -30,7 +30,7 @@ public class ProductViewController {
     @GetMapping("/")
     public String index(Model model) {
 
-        model.addAttribute("products", productService.findAll());
+        model.addAttribute("products", productService.getAllProducts());
         return "index";
     }
 
@@ -42,7 +42,7 @@ public class ProductViewController {
     @PostMapping("/create-product")
     public String create(@ModelAttribute @Valid ProductRequest productRequest) {
 
-        productService.createProduct(productRequest);
+        productService.addProduct(productRequest);
         return "redirect:/";
     }
 

@@ -27,7 +27,7 @@ public class MemberController {
 
     @GetMapping()
     public ResponseEntity<List<Member>> getAllMember() {
-        List<Member> memberList = memberService.findAllMember();
+        List<Member> memberList = memberService.getAllMember();
         return new ResponseEntity<>(memberList, HttpStatus.OK);
     }
 
