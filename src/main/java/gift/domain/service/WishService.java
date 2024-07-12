@@ -22,15 +22,15 @@ public class WishService {
     private final WishRepository wishRepository;
     private final ProductRepository productRepository;
 
+    public WishService(WishRepository wishRepository, ProductRepository productRepository) {
+        this.wishRepository = wishRepository;
+        this.productRepository = productRepository;
+    }
+
     @Transactional
     protected Product getProductByIdOrThrow(Long productId) {
         //존재하지 않는 상품이면 예외 발생
         return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
-    }
-
-    public WishService(WishRepository wishRepository, ProductRepository productRepository) {
-        this.wishRepository = wishRepository;
-        this.productRepository = productRepository;
     }
 
     @Transactional(readOnly = true)
@@ -66,8 +66,6 @@ public class WishService {
             return new WishAddResponse("delete", 0L);
         }
 
-        // 아이템이 이미 존재하므로 업데이트 수행
-        wishRepository.save(wish);
         return new WishAddResponse("add", wish.getQuantity());
     }
 
@@ -77,8 +75,7 @@ public class WishService {
         Wish wish = wishRepository.findWishByMemberAndProduct(member, product)
             .orElseThrow(ProductNotIncludedInWishlistException::new);
         wish.set(wishRequest);
-        wishRepository.save(wish);
-        return WishResponse.of(wishRequest.quantity(), product);
+        return WishResponse.of(wish.getQuantity(), product);
     }
 
     @Transactional

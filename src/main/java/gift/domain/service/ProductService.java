@@ -7,7 +7,6 @@ import gift.domain.exception.ProductAlreadyExistsException;
 import gift.domain.exception.ProductNotFoundException;
 import gift.domain.repository.ProductRepository;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +21,9 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse getProductById(Long id) {
-        //존재하지 않는 상품 참조 시도시 예외 발생
-        Optional<Product> product = productRepository.findById(id);
-        product.orElseThrow(ProductNotFoundException::new);
-
-        return ProductResponse.of(product.get());
+        return ProductResponse.of(productRepository.findById(id)
+            //존재하지 않는 상품 참조 시도시 예외 발생
+            .orElseThrow(ProductNotFoundException::new));
     }
 
     @Transactional(readOnly = true)
@@ -40,10 +37,8 @@ public class ProductService {
     public ProductResponse addProduct(ProductRequest requestDto) {
         //이미 존재하는 상품 등록 시도시 예외 발생
         productRepository.findByContents(requestDto).ifPresent((p) -> {
-            throw new ProductAlreadyExistsException();
-        });
+            throw new ProductAlreadyExistsException();});
 
-        //상품 등록
         return ProductResponse.of(productRepository.save(requestDto.toEntity()));
     }
 
@@ -53,15 +48,13 @@ public class ProductService {
         Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
         product.set(requestDto);
         //상품 업데이트
-        return ProductResponse.of(productRepository.save(product));
+        return ProductResponse.of(product);
     }
 
     @Transactional
     public void deleteProduct(Long id) {
-        //존재하지 않는 상품 삭제 시도시 예외 발생
-        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
-
-        //상품 삭제
-        productRepository.delete(product);
+        productRepository.delete(productRepository.findById(id)
+            //존재하지 않는 상품 삭제 시도시 예외 발생
+            .orElseThrow(ProductNotFoundException::new));
     }
 }
