@@ -2,13 +2,12 @@ package gift.config;
 
 import gift.auth.AuthInterceptor;
 import gift.auth.LoginMemberArgumentResolver;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.List;
 
 /**
  * WebConfig 클래스는 웹 애플리케이션에 대한 설정을 구성합니다. 여기에는 요청 및 응답을 처리할 인터셉터와, 어노테이션 기반 인자 해결기를 등록하는 작업이 포함됩니다.

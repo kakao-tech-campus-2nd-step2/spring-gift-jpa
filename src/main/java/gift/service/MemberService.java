@@ -19,7 +19,8 @@ public class MemberService {
      * @return 사용자 존재 여부
      */
     public boolean isExist(MemberDTO memberDTO) {
-        return memberRepository.existsByEmailAndPasswordAndDeleteFalse(memberDTO.getEmail(), memberDTO.getPassword());
+        return memberRepository.existsByEmailAndPasswordAndDeleteFalse(memberDTO.getEmail(),
+            memberDTO.getPassword());
     }
 
     /**
@@ -43,7 +44,8 @@ public class MemberService {
      * @return 사용자 ID
      */
     public long getUserId(MemberDTO memberDTO) {
-        MemberEntity member = memberRepository.findByEmailAndPasswordAndDeleteFalse(memberDTO.getEmail(), memberDTO.getPassword());
+        MemberEntity member = memberRepository.findByEmailAndPasswordAndDeleteFalse(
+            memberDTO.getEmail(), memberDTO.getPassword());
         return member != null ? member.getId() : -1;
     }
 }

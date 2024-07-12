@@ -2,10 +2,16 @@ package gift.controller;
 
 import gift.DTO.ProductDTO;
 import gift.service.ProductService;
-import org.springframework.web.bind.annotation.*;
-
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/products")
@@ -58,11 +64,12 @@ public class ProductController {
     /**
      * 주어진 ID에 해당하는 상품을 갱신함
      *
-     * @param id      갱신할 상품의 ID
+     * @param id         갱신할 상품의 ID
      * @param productDTO 갱신할 상품 객체
      */
     @PutMapping("/{id}")
-    public ProductDTO updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO productDTO) {
+    public ProductDTO updateProduct(@PathVariable Long id,
+        @Valid @RequestBody ProductDTO productDTO) {
         return productService.updateProduct(id, productDTO);
     }
 }

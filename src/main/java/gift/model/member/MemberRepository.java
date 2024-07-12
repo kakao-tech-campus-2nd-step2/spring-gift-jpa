@@ -12,7 +12,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     /**
      * 사용자 존재 여부 확인 메서드
      *
-     * @param email 이메일
+     * @param email    이메일
      * @param password 비밀번호
      * @return 사용자 존재 여부
      */
@@ -21,7 +21,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     /**
      * 사용자 ID 조회 메서드
      *
-     * @param email 이메일
+     * @param email    이메일
      * @param password 비밀번호
      * @return 사용자 엔터티
      */

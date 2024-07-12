@@ -2,8 +2,8 @@ package gift.auth.service;
 
 import gift.auth.DTO.MemberDTO;
 import gift.auth.DTO.TokenDTO;
-import gift.auth.utill.JwtToken;
 import gift.auth.exception.AuthException;
+import gift.auth.utill.JwtToken;
 import gift.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

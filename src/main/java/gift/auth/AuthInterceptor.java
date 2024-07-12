@@ -1,7 +1,7 @@
 package gift.auth;
 
-import gift.auth.utill.JwtToken;
 import gift.auth.exception.AuthException;
+import gift.auth.utill.JwtToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -15,7 +15,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
 
-    private JwtToken jwtToken = new JwtToken();
+    private final JwtToken jwtToken = new JwtToken();
 
     /**
      * Authorization 헤더를 검증합니다.
