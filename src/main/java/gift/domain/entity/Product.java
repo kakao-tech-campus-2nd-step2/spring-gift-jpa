@@ -18,12 +18,12 @@ public class Product {
     private String name;
 
     @Column(nullable = false)
-    private Long price;
+    private Integer price;
 
     @Column(nullable = false)
     private String imageUrl;
 
-    public Product(String name, Long price, String imageUrl) {
+    public Product(String name, Integer price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -40,7 +40,7 @@ public class Product {
         return name;
     }
 
-    public Long getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
@@ -56,7 +56,7 @@ public class Product {
         this.name = name;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 

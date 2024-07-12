@@ -5,7 +5,7 @@ import gift.domain.entity.Product;
 public record WishResponse(
     Long productId,
     String productName,
-    Long productPrice,
+    Integer productPrice,
     String productImageUrl,
     Long quantity) {
 

@@ -15,7 +15,7 @@ public record ProductRequest(
         message = "상품 이름에 '카카오'가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.")
     String name,
     @NotNull
-    Long price,
+    Integer price,
     @NotNull
     String imageUrl) {
 

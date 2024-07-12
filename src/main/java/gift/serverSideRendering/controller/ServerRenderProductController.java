@@ -33,7 +33,7 @@ public class ServerRenderProductController {
 
     @GetMapping("/add")
     public String showAddProductForm(Model model) {
-        model.addAttribute("productRequestDto", new ProductRequest("", 0L, ""));
+        model.addAttribute("productRequestDto", new ProductRequest("", 0, ""));
         return "addProduct";
     }
 
