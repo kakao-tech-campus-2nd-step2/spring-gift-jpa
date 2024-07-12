@@ -90,6 +90,10 @@ public class MemberService {
     }
 
     // Mapper methods
+    public Member convertToEntity(MemberResponse memberResponse) {
+        return new Member(memberResponse.id(), memberResponse.email(), null);
+    }
+
     private static MemberResponse convertToDTO(Member member) {
         return new MemberResponse(member.getId(), member.getEmail(), null);
     }

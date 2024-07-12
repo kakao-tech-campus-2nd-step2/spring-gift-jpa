@@ -51,11 +51,10 @@ public class WishController {
         @RequestAttribute("memberId") Long memberId) {
 
         MemberResponse memberResponse = memberService.getMemberById(memberId);
-        Member member = new Member(memberResponse.id(), memberResponse.email(), null);
+        Member member = memberService.convertToEntity(memberResponse);
 
         ProductResponse productResponse = productService.getProductById(wishRequestDTO.productId());
-        Product product = new Product(productResponse.id(), productResponse.name(),
-            productResponse.price(), productResponse.imageUrl());
+        Product product = productService.convertToEntity(productResponse);
 
         WishRequest wishRequest = new WishRequest(member, product);
         WishResponse createdWish = wishService.addWish(wishRequest);

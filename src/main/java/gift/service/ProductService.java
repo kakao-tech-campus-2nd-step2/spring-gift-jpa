@@ -77,4 +77,9 @@ public class ProductService {
         return new Product(productDTO.id(), productDTO.name(), productDTO.price(),
             productDTO.imageUrl());
     }
+
+    public Product convertToEntity(ProductResponse productResponse) {
+        return new Product(productResponse.id(), productResponse.name(),
+            productResponse.price(), productResponse.imageUrl());
+    }
 }
