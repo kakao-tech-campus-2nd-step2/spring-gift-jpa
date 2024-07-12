@@ -1,10 +1,10 @@
 package gift.service;
 
-import gift.dto.MemberDTO;
+import gift.dto.MemberDto;
 import gift.util.JwtUtility;
 import gift.util.TokenBlacklist;
 import gift.model.Member;
-import gift.model.MemberRepository;
+import gift.repository.MemberRepository;
 import jakarta.validation.Valid;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,12 @@ public class MemberService {
         this.tokenBlacklist = tokenBlacklist;
     }
 
-    public String register(@Valid MemberDTO memberDTO) {
-        memberRepository.findByEmail(memberDTO.getEmail())
+    public String register(@Valid MemberDto memberDto) {
+        memberRepository.findByEmail(memberDto.getEmail())
                 .ifPresent(existingMember -> {
                     throw new DuplicateKeyException("이미 존재하는 이메일입니다.");
                 });
-        Member member = new Member(null, memberDTO.getEmail(), memberDTO.getPassword(), null);
+        Member member = new Member(null, memberDto.getEmail(), memberDto.getPassword(), null);
         Member savedMember = memberRepository.save(member);
         String token = JwtUtility.generateToken(savedMember.getEmail());
         Member updatedMember = new Member(savedMember, token);
@@ -33,10 +33,10 @@ public class MemberService {
         return token;
     }
 
-    public String login(MemberDTO memberDTO) {
-        Member existingMember = memberRepository.findByEmail(memberDTO.getEmail())
+    public String login(MemberDto memberDto) {
+        Member existingMember = memberRepository.findByEmail(memberDto.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 이메일 또는 잘못된 비밀번호입니다."));
-        if (!existingMember.getPassword().equals(memberDTO.getPassword())) {
+        if (!existingMember.getPassword().equals(memberDto.getPassword())) {
             throw new NoSuchElementException("존재하지 않는 이메일 또는 잘못된 비밀번호입니다.");
         }
         String token = JwtUtility.generateToken(existingMember.getEmail());

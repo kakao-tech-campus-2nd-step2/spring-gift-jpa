@@ -3,9 +3,9 @@ package gift.repositoryTest;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wishlist;
-import gift.model.MemberRepository;
-import gift.model.ProductRepository;
-import gift.model.WishlistRepository;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
+import gift.repository.WishlistRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -28,7 +28,7 @@ public class WishlistRepositoryTests {
         memberRepository.save(member);
         Product product = new Product(null, "지우", 1000, "http://example.com/image.jpg");
         productRepository.save(product);
-        Wishlist wishList = new Wishlist(null, member.getId(), product.getId());
+        Wishlist wishList = new Wishlist(null, member, product);
         wishListRepository.save(wishList);
 
         List<Wishlist> foundWishLists = wishListRepository.findByMemberId(member.getId());
@@ -41,7 +41,7 @@ public class WishlistRepositoryTests {
         memberRepository.save(member);
         Product product = new Product(null, "지우", 1000, "http://example.com/image.jpg");
         productRepository.save(product);
-        Wishlist wishList = new Wishlist(null, member.getId(), product.getId());
+        Wishlist wishList = new Wishlist(null, member, product);
         wishListRepository.save(wishList);
 
         wishListRepository.deleteByMemberIdAndProductId(member.getId(), product.getId());

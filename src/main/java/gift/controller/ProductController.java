@@ -1,8 +1,8 @@
 package gift.controller;
 
-import gift.dto.ProductDTO;
+import gift.dto.ProductDto;
 import gift.model.Product;
-import gift.model.ProductRepository;
+import gift.repository.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import java.util.NoSuchElementException;
 
 @Controller
@@ -36,8 +35,8 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public String addProduct(@ModelAttribute @Valid ProductDTO productDTO) {
-        Product product = new Product(null, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
+    public String addProduct(@ModelAttribute @Valid ProductDto productDto) {
+        Product product = new Product(null, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
         productRepository.save(product);
         return "redirect:/api/products";
     }
@@ -51,10 +50,10 @@ public class ProductController {
     }
 
     @PostMapping("/edit/{id}")
-    public String updateProduct(@PathVariable Long id, @ModelAttribute @Valid ProductDTO productDTO) {
+    public String updateProduct(@PathVariable Long id, @ModelAttribute @Valid ProductDto productDto) {
         productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 상품입니다."));
-        Product updatedProduct = new Product(id, productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
+        Product updatedProduct = new Product(id, productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
         productRepository.save(updatedProduct);
         return "redirect:/api/products";
     }
