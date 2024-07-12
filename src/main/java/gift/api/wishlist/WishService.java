@@ -24,7 +24,9 @@ public class WishService {
     }
 
     public List<Wish> getItems(Long memberId) {
-        return wishRepository.findByMemberId(memberId);
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new NoSuchIdException("member"));
+        return wishRepository.findByMemberId(member);
     }
 
     public void add(Long memberId, WishRequest wishRequest) {
