@@ -1,6 +1,6 @@
 package gift.user.service.dto;
 
-public record UserInfoParams(
+public record UserInfoParam(
         String username,
         String password
 ) {

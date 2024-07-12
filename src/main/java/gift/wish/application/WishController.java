@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.net.URI;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,11 +39,13 @@ public class WishController {
             @ApiResponse(responseCode = "404", description = "일치하는 위시리스트를 찾을 수 없음")
     })
     @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public void saveWish(@RequestBody WishRequest wishRequest,
-                         @LoginUser User loginUser
+    public ResponseEntity<Void> saveWish(@RequestBody WishRequest wishRequest,
+                                         @LoginUser User loginUser
     ) {
-        wishService.saveWish(wishRequest, loginUser.getId());
+        var wishId = wishService.saveWish(wishRequest.toWishParam(loginUser.getId()));
+
+        return ResponseEntity.created(URI.create("/api/wishes/" + wishId))
+                .build();
     }
 
     @Operation(summary = "위시리스트 수정", description = "위시리스트를 수정합니다.")
@@ -56,7 +59,7 @@ public class WishController {
                            @RequestBody WishRequest wishRequest,
                            @LoginUser User loginUser
     ) {
-        wishService.updateWish(wishId, wishRequest, loginUser.getId());
+        wishService.updateWish(wishRequest.toWishParam(loginUser.getId()), wishId);
     }
 
     @Operation(summary = "위시리스트 목록 조회", description = "위시리스트 목록을 조회합니다.")
@@ -65,8 +68,11 @@ public class WishController {
     })
     @GetMapping()
     public ResponseEntity<List<WishResponse>> getWishList(@LoginUser User loginUser) {
-        var responses = wishService.getWishList(loginUser.getId());
+        var wishInfos = wishService.getWishList(loginUser.getId());
 
+        var responses = wishInfos.stream()
+                .map(WishResponse::from)
+                .toList();
         return ResponseEntity.ok()
                 .body(responses);
     }
@@ -80,8 +86,9 @@ public class WishController {
     public ResponseEntity<WishResponse> getWishDetail(@PathVariable("wishId") Long wishId,
                                                       @LoginUser User loginUser
     ) {
-        var response = wishService.getWish(wishId, loginUser.getId());
+        var wishInfo = wishService.getWish(wishId, loginUser.getId());
 
+        var response = WishResponse.from(wishInfo);
         return ResponseEntity.ok()
                 .body(response);
     }

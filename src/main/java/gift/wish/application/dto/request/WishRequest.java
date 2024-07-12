@@ -1,6 +1,6 @@
 package gift.wish.application.dto.request;
 
-import gift.wish.domain.Wish;
+import gift.wish.service.dto.WishParam;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,11 +11,7 @@ public record WishRequest(
         @Min(value = 1, message = "수량은 1개 이상이어야 합니다.")
         Integer amount
 ) {
-    public Wish toModel(Long userId) {
-        return new Wish(productId(), userId, amount());
-    }
-
-    public Wish toModel(Long wishId, Long userId) {
-        return new Wish(wishId, productId, userId, amount());
+    public WishParam toWishParam(final Long userId) {
+        return new WishParam(productId, userId, amount);
     }
 }

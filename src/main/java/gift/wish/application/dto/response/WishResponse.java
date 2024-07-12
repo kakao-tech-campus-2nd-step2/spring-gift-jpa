@@ -1,13 +1,13 @@
 package gift.wish.application.dto.response;
 
-import gift.wish.domain.Wish;
+import gift.wish.service.dto.WishInfo;
 
 public record WishResponse(
         Long id,
         Long productId,
         int amount
 ) {
-    public static WishResponse fromModel(Wish wish) {
-        return new WishResponse(wish.getId(), wish.getProductId(), wish.getAmount());
+    public static WishResponse from(WishInfo wishInfo) {
+        return new WishResponse(wishInfo.id(), wishInfo.productId(), wishInfo.amount());
     }
 }

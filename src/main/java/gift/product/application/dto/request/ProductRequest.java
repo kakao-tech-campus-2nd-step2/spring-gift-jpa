@@ -2,7 +2,7 @@ package gift.product.application.dto.request;
 
 import gift.common.validation.ProductNamePattern;
 import gift.common.validation.ValidateErrorMessage;
-import gift.product.domain.Product;
+import gift.product.service.dto.ProductParam;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
@@ -21,11 +21,7 @@ public record ProductRequest(
         @URL(message = ValidateErrorMessage.INVALID_PRODUCT_IMG_URL_FORMAT)
         String imgUrl
 ) {
-    public Product toModel() {
-        return new Product(null, name(), price(), imgUrl());
-    }
-
-    public Product toModel(final Long id) {
-        return new Product(id, name(), price(), imgUrl());
+    public ProductParam toProductParam() {
+        return new ProductParam(name(), price(), imgUrl());
     }
 }
