@@ -53,7 +53,12 @@ class MemberApiControllerTest {
 
     @BeforeEach
     void setUp() {
-        member = new Member(1L, Email.from("member01@gmail.com"), Password.from("member010101"), "member01");
+        member = new Member.Builder()
+            .id(1L)
+            .email(Email.from("member01@gmail.com"))
+            .password(Password.from("member010101"))
+            .name("member01")
+            .build();
         String email = member.getEmail().getValue();
         String password = member.getPassword().getValue();
 
@@ -134,7 +139,7 @@ class MemberApiControllerTest {
         String url = "http://localhost:" + port + "/api/members/wishlist/" + wishProductId;
         HttpHeaders httpHeaders = getHttpHeaders();
 
-        UpdateWishProductRequest request = new UpdateWishProductRequest(wishProductId, 3);
+        UpdateWishProductRequest request = new UpdateWishProductRequest(3);
 
         HttpEntity httpEntity = new HttpEntity(request, httpHeaders);
 
