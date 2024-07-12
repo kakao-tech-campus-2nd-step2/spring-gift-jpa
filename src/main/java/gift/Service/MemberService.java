@@ -30,10 +30,10 @@ public class MemberService {
 
   public JwtToken userLogin(MemberDto memberDtoInfo) {
     String email = memberDtoInfo.getEmail();
-    Optional<Member> userByEmail = Optional.ofNullable(memberRepository.findByEmail(email)
-      .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저가 없습니다.", 1)));
+    Member userByEmail = memberRepository.findByEmail(email)
+      .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저가 없습니다.", 1));
 
-    if (userByEmail.get().matchLoginInfo(memberDtoInfo)) {
+    if (userByEmail.matchLoginInfo(memberDtoInfo)) {
       JwtToken jwtToken = jwtService.createAccessToken(memberDtoInfo);
       if (jwtService.isValidToken(jwtToken)) { //토큰이 만료되었다면
         throw new UnauthorizedException("토큰이 유효하지 않습니다.");
