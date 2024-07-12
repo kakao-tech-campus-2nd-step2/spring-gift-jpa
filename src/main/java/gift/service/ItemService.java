@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @Service
 public class ItemService {
 
@@ -21,17 +20,20 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
+    @Transactional
     public Long insertItem(ItemForm form) {
         Item item = new Item(0L, form.getName(), form.getPrice(), form.getImgUrl());
         return itemRepository.save(item).getId();
     }
 
+    @Transactional(readOnly = true)
     public ItemDTO findItem(Long id) {
         Item item = itemRepository.findById(id).orElseThrow(() -> new ItemNotFoundException(
             ErrorCode.ITEM_NOT_FOUND));
         return new ItemDTO(item.getId(), item.getName(), item.getPrice(), item.getImgUrl());
     }
 
+    @Transactional(readOnly = true)
     public List<ItemDTO> getList() {
         return itemRepository.findAll().stream()
             .map(item -> new ItemDTO(item.getId(), item.getName(), item.getPrice(),
@@ -39,12 +41,14 @@ public class ItemService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public Long updateItem(ItemDTO itemDTO) {
         Item item = new Item(itemDTO.getId(), itemDTO.getName(), itemDTO.getPrice(),
             itemDTO.getImgUrl());
         return itemRepository.save(item).getId();
     }
 
+    @Transactional
     public void deleteItem(Long id) {
         itemRepository.deleteById(id);
     }

@@ -30,14 +30,14 @@ public class WishListService {
         this.wishListRepository = wishListRepository;
         this.userRepository = userRepository;
     }
-
+    @Transactional(readOnly = true)
     public List<WishListResponse> getWishList(Long userId) {
         List<WishItem> list = wishListRepository.findAllByUserId(userId);
         return list.stream()
             .map(o -> new WishListResponse(o.getId(), o.getItem().toItemDTO()))
             .collect(Collectors.toList());
     }
-
+    @Transactional
     public Long addToWishList(Long userId, Long itemId) {
         Item item = itemRepository.findById(itemId)
             .orElseThrow(() -> new ItemNotFoundException(ErrorCode.ITEM_NOT_FOUND));
@@ -46,7 +46,7 @@ public class WishListService {
         WishItem wishItem = new WishItem(0L, user, item);
         return wishListRepository.save(wishItem).getId();
     }
-
+    @Transactional
     public void deleteFromWishList(Long id) {
         wishListRepository.deleteById(id);
     }
