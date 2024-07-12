@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,25 +26,39 @@ public class WishRepositoryTest {
     @Autowired
     private WishRepository wishRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
     @Test
     @DisplayName("위시 추가 성공")
     void addWish() {
-        Wish wish = new Wish(1L,1L);
+        Member member = new Member("testemail@email", "testpassword");
+        Member savedMember = memberRepository.save(member);
+        Product product = new Product("Test", 1000, "test.jpg");
+        Product savedProduct = productRepository.save(product);
+        Wish wish = new Wish(savedMember, savedProduct);
 
         Wish savedWish = wishRepository.save(wish);
-        Long wishMemberID = savedWish.getMemberId();
+        Member wishMember = savedWish.getMember();
 
-        List<Wish> addedWishes = wishRepository.findByMemberId(wishMemberID);
+        List<Wish> addedWishes = wishRepository.findByMember(wishMember);
         Wish addedWish = addedWishes.get(0);
 
-        assertThat(addedWish.getMemberId()).isEqualTo(1L);
-        assertThat(addedWish.getProductId()).isEqualTo(1L);
+        assertThat(addedWish.getMember()).isEqualTo(member);
+        assertThat(addedWish.getProduct()).isEqualTo(product);
     }
 
     @Test
     @DisplayName("위시 삭제 성공")
     void deleteWish() {
-        Wish wish = new Wish(1L,1L);
+        Member member = new Member("testemail@email", "testpassword");
+        Member savedMember = memberRepository.save(member);
+        Product product = new Product("Test", 1000, "test.jpg");
+        Product savedProduct = productRepository.save(product);
+        Wish wish = new Wish(savedMember, savedProduct);
         Wish savedWish = wishRepository.save(wish);
         Long wishID = savedWish.getId();
 
