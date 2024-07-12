@@ -10,17 +10,18 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -29,14 +30,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/")
-    public String getAllMyProducts(Model model) {
-        var productList = productService.getAllProducts();
-        model.addAttribute("productList", productList);
-        return "getproducts";
-    }
-
-    @GetMapping("/test")
+    @GetMapping
     public ResponseEntity<Map<String, Object>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
         Map<String, Object> response = new HashMap<>();
@@ -46,49 +40,51 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public String getProductById(@PathVariable(name = "id") Long id, Model model) {
+    public ResponseEntity<Map<String, Object>> getProductById(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
             Product product = productService.getProductById(id);
-            model.addAttribute("productDto", product);
-            return "getproducts";
+            response.put("message", "Product retrieved successfully.");
+            response.put("product", product);
+            return ResponseEntity.ok(response);
         } catch (ProductNotFoundException ex) {
             response.put("message", ex.getMessage());
-            model.addAttribute("errorMessage", response.get("message"));
-            return "getproducts";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 
-    @GetMapping("/product/add")
-    public String showAddProductForm(Model model) {
-        model.addAttribute("product", new Product());
-        return "addproductform";
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestBody Product product) {
+        boolean success = productService.createProduct(product);
+        Map<String, Object> response = new HashMap<>();
+        if (success) {
+            response.put("message", "Product created successfully.");
+            response.put("product", product);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        }
+        response.put("message", "Failed to create product.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
-    @PostMapping("/product/add")
-    public String createProduct(@Valid @ModelAttribute(name = "product") Product product) {
-        productService.createProduct(product);
-        return "redirect:/";
-    }
-
-    @GetMapping(value = "/product/update/{id}")
-    public String showUPdateProductForm(@PathVariable("id") Long id, Model model) {
-        var product = productService.getProductById(id);
-        model.addAttribute("product", product);
-        return "updateproductform";
-    }
-
-    @PostMapping(value = "/product/update")
-    public String updateProduct(@Valid @ModelAttribute(name = "product") Product product) {
-        var updatedProduct = productService.updateProduct(product);
-        return "redirect:/";
+    @PutMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
+        boolean success = productService.updateProduct(id, product);
+        Map<String, Object> response = new HashMap<>();
+        if (success) {
+            Product updatedProduct = productService.getProductById(id);
+            response.put("message", "Product updated successfully.");
+            response.put("product", updatedProduct);
+            return ResponseEntity.ok(response);
+        }
+        response.put("message", "Failed to update product.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> patchProduct(@PathVariable Long id,
-        @RequestBody Map<String, Object> updates) {
+    public ResponseEntity<Map<String, Object>> patchProduct(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        boolean success = productService.patchProduct(id, updates);
         Map<String, Object> response = new HashMap<>();
-        if (productService.patchProduct(id, updates) != null) {
+        if (success) {
             Product updatedProduct = productService.getProductById(id);
             response.put("message", "Product patched successfully.");
             response.put("product", updatedProduct);
@@ -99,8 +95,7 @@ public class ProductController {
     }
 
     @PatchMapping
-    public ResponseEntity<Map<String, Object>> patchProducts(
-        @RequestBody List<Map<String, Object>> updatesList) {
+    public ResponseEntity<Map<String, Object>> patchProducts(@RequestBody List<Map<String, Object>> updatesList) {
         List<Optional<Product>> updatedProducts = productService.patchProducts(updatesList);
         Map<String, Object> response = new HashMap<>();
         int originalCount = updatesList.size();
@@ -120,14 +115,6 @@ public class ProductController {
 
         response.put("message", "No products patched.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-    }
-
-    @GetMapping("/product/delete/{id}")
-    public String showDeleteProductForm(@PathVariable("id") Long id, Model model) {
-        if (!productService.deleteProduct(id)) {
-            model.addAttribute("errorMessage", "잘못됨");
-        }
-        return "redirect:/";
     }
 
     @DeleteMapping("/{id}")

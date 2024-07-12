@@ -29,15 +29,14 @@ public class WishController {
 
     @GetMapping
     public ResponseEntity<Map<String, Object>> getWishes(@LoginMember Member member) {
-        List<Wish> wishes = wishService.getWishesByMember(member);
+        List<Wish> wishes = wishService.getWishesByMemberId(member.getId());
         Map<String, Object> response = new HashMap<>();
         response.put("wishes", wishes);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> addWish(@RequestBody Wish wish,
-        @LoginMember Member member) {
+    public ResponseEntity<Map<String, Object>> addWish(@RequestBody Wish wish, @LoginMember Member member) {
         wish.setMemberId(member.getId());
         Wish savedWish = wishService.addWish(wish);
         Map<String, Object> response = new HashMap<>();
@@ -46,20 +45,10 @@ public class WishController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> removeWish(@PathVariable Long id,
-        @LoginMember Member member) {
-        boolean removed = wishService.removeWish(id, member);
+    public ResponseEntity<Map<String, Object>> removeWish(@PathVariable Long id, @LoginMember Member member) {
+        boolean removed = wishService.removeWish(id, member.getId());
         Map<String, Object> response = new HashMap<>();
         response.put("removed", removed);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> getWishesById(@PathVariable Long productId,
-        @LoginMember Member member) {
-        List<Wish> wishes = wishService.getWishesByMember(member);
-        Map<String, Object> response = new HashMap<>();
-        response.put("wishes", wishes);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

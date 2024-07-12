@@ -11,11 +11,11 @@
 </div>
 
 <h1>Add New Product</h1>
-<form action="#" th:action="@{/product/add}" th:object="${product}" method="post">
-<!--  <div>-->
-<!--    <label for="id">ID:</label>-->
-<!--    <input type="text" id="id" th:field="*{id}" placeholder="Enter product ID"/>-->
-<!--  </div>-->
+<form action="#" th:action="@{/product/add}" th:object="${productDto}" method="post">
+  <div>
+    <label for="id">ID:</label>
+    <input type="text" id="id" th:field="*{id}" placeholder="Enter product ID"/>
+  </div>
   <div>
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" placeholder="Enter product name"/>
