@@ -1,11 +1,7 @@
 package gift.admin;
 
-import static gift.admin.AdminPageConfigure.MAX_PAGE_INDEX;
-import static gift.admin.AdminPageConfigure.PAGE_SIZE;
-
 import gift.product.Product;
 import gift.product.ProductService;
-import java.util.List;
 import java.util.stream.IntStream;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

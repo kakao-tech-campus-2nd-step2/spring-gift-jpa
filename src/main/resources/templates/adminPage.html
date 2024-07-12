@@ -81,6 +81,14 @@
 
   <!-- CONTENT -->
   <div class="content">
+    <div class="page-size-selector-container">
+      Page Size :
+      <select id="page-size" onchange="pageSizeSelected()">
+        <option value=5 th:selected="${products.getSize()} == 5">5</option>
+        <option value=10 th:selected="${products.getSize()} == 10">10</option>
+        <option value=20 th:selected="${products.getSize()} == 20">20</option>
+      </select>
+    </div>
     <table>
       <tr>
         <th>

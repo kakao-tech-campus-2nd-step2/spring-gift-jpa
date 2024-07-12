@@ -1,4 +1,9 @@
-import {addProduct, deleteProduct, editProduct} from './productAPI.js';
+import {
+  addProduct,
+  deleteProduct,
+  editProduct,
+  pagination
+} from './productAPI.js';
 
 const modal = document.getElementById('productModal');
 const closeButton = document.getElementsByClassName('close')[0];
@@ -31,8 +36,7 @@ export function editProductbtnOnClick(id) {
 window.editProductbtnOnClick = editProductbtnOnClick;
 
 closeButton.onclick = function () {
-  modal.
-  modal.style.display = 'none';
+  modal.modal.style.display = 'none';
 };
 
 window.onclick = function (event) {
@@ -77,3 +81,10 @@ export function deleteCheckedProductsOnClick() {
 }
 
 window.deleteCheckedProductsOnClick = deleteCheckedProductsOnClick;
+
+export function pageSizeSelected() {
+  const pageSizeSelector = document.getElementById("page-size");
+  pagination(1, pageSizeSelector.value, "")
+}
+
+window.pageSizeSelected = pageSizeSelected
