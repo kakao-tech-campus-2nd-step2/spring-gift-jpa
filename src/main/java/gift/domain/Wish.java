@@ -10,7 +10,7 @@ public class Wish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -68,26 +68,10 @@ public class Wish {
     }
 
     public void setMember(Member member) {
-        if (this.member != null) {
-            this.member.getWishes().remove(this);
-        }
-
         this.member = member;
-
-        if (member != null) {
-            member.getWishes().add(this);
-        }
     }
 
     public void setProduct(Product product) {
-        if (this.product != null) {
-            this.product.getWishes().remove(this);
-        }
-
         this.product = product;
-
-        if (product != null) {
-            product.getWishes().add(this);
-        }
     }
 }
