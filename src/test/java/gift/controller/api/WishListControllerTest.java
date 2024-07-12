@@ -3,7 +3,6 @@ package gift.controller.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.request.WishListRequest;
 import gift.dto.response.TokenResponse;
-import gift.dto.response.WishProductResponse;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import gift.service.TokenService;
@@ -14,45 +13,37 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class WishListControllerTest {
 
     private static final String URL = "/api/wishlist";
-    private static String TOKEN;
+    private static final Long FIRST_PRODUCT_ID = 1L;
+    private static final Long MEMBER_ID = 1L;
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
     @Autowired
     private WishListService wishListService;
     @Autowired
     private ProductService productService;
     @Autowired
-    TokenService tokenService;
+    private TokenService tokenService;
     @Autowired
-    MemberService memberService;
-    @Autowired
-    private ObjectMapper objectMapper;
+    private MemberService memberService;
 
-    private Long START_PRODUCT_ID;
-
-    @BeforeEach
-    void setup() {
-        START_PRODUCT_ID = addProduct30();
-        TOKEN = getTokenByRegister(memberService, tokenService);
-    }
+    private String token;
 
     private static String getTokenByRegister(MemberService memberService, TokenService tokenService) {
         Long registeredMemberId = memberService.registerMember("test@gmail.com", "1234");
@@ -60,27 +51,27 @@ class WishListControllerTest {
         return tokenResponse.token();
     }
 
-    private Long addProduct30() {
-        Long startId = 0L;
-        for (int i = 1; i <= 30; i++) {
-            if (i == 1) {
-                startId = productService.addProduct("testProduct" + i, 100, "ImageUrl").id();
-            }
+    @BeforeEach
+    void setup() {
+        //상품 15개 등록
+        for (int i = 0; i < 15; i++) {
             productService.addProduct("testProduct" + i, 100, "ImageUrl");
         }
-        return startId;
+
+        token = getTokenByRegister(memberService, tokenService);
+        tokenService.getMemberIdByToken(token);
     }
 
     @Test
     @DisplayName("위시리스트에 상품 추가")
     void wishListAdd() throws Exception {
         //Given
-        WishListRequest newWishRequest = new WishListRequest(START_PRODUCT_ID, 100);
+        WishListRequest newWishRequest = new WishListRequest(FIRST_PRODUCT_ID, 100);
         String json = objectMapper.writeValueAsString(newWishRequest);
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 //Then
@@ -93,22 +84,21 @@ class WishListControllerTest {
     @DisplayName("위시리스트에 저장된 상품 추가 요청시 예외 던짐")
     void duplicatedProductAddThrowException() throws Exception {
         //Given
-        Long memberId = tokenService.getMemberIdByToken(TOKEN);
-        wishListService.addProductToWishList(memberId, START_PRODUCT_ID, 10);
+        wishListService.addProductToWishList(MEMBER_ID, FIRST_PRODUCT_ID, 10);
 
-        WishListRequest sameProductRequest = new WishListRequest(START_PRODUCT_ID, 100);
+        WishListRequest sameProductRequest = new WishListRequest(FIRST_PRODUCT_ID, 80);
         String json = objectMapper.writeValueAsString(sameProductRequest);
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 //Then
                 .andExpectAll(
                         status().isConflict(),
                         content().contentType(MediaType.APPLICATION_PROBLEM_JSON),
-                        jsonPath("title").value("ProductId: " + START_PRODUCT_ID + " already exist in your wishlist")
+                        jsonPath("title").value("ProductId: " + FIRST_PRODUCT_ID + " already exist in your wishlist")
                 );
     }
 
@@ -116,12 +106,12 @@ class WishListControllerTest {
     @DisplayName("저장하려는 상품ID가 상품DB에 없을시 예외 던짐")
     void noProductThrowException() throws Exception {
         //Given
-        WishListRequest noExistProductRequest = new WishListRequest(START_PRODUCT_ID - 1, 100);
+        WishListRequest noExistProductRequest = new WishListRequest(FIRST_PRODUCT_ID - 1, 100);
         String json = objectMapper.writeValueAsString(noExistProductRequest);
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 //Then
@@ -137,43 +127,34 @@ class WishListControllerTest {
     @DisplayName("위시리스트에 저장된 수량 수정")
     void updateProductAmount() throws Exception {
         //Given
-        Long memberId = tokenService.getMemberIdByToken(TOKEN);
-        wishListService.addProductToWishList(memberId, START_PRODUCT_ID, 10);
+        wishListService.addProductToWishList(MEMBER_ID, FIRST_PRODUCT_ID, 999);
 
-        WishListRequest amountUpdateRequest = new WishListRequest(START_PRODUCT_ID, 99999);
+        WishListRequest amountUpdateRequest = new WishListRequest(FIRST_PRODUCT_ID, 2080);
         String json = objectMapper.writeValueAsString(amountUpdateRequest);
 
         //When
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(URL)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+        mockMvc.perform(MockMvcRequestBuilders.put(URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 //Then
-                .andExpect(
+                .andExpectAll(
                         status().isOk()
-                ).andReturn();
-        Page<WishProductResponse> wishProductsByMemberId = wishListService.getWishProductsByMemberId(tokenService.getMemberIdByToken(TOKEN), PageRequest.of(0, 10));
-        for (WishProductResponse wishProductResponse : wishProductsByMemberId) {
-            System.out.println(wishProductResponse.toString());
-        }
-
-        System.out.println(mvcResult.getResponse().getContentAsString());
-
+                );
     }
 
     @Test
     @DisplayName("위시리스트에 저장된 상품 삭제")
     void deleteProduct() throws Exception {
         //Given
-        Long memberId = tokenService.getMemberIdByToken(TOKEN);
-        wishListService.addProductToWishList(memberId, START_PRODUCT_ID, 10);
+        wishListService.addProductToWishList(MEMBER_ID, FIRST_PRODUCT_ID, 999);
 
-        WishListRequest deleteRequest = new WishListRequest(START_PRODUCT_ID, 0);
+        WishListRequest deleteRequest = new WishListRequest(FIRST_PRODUCT_ID, 0);
         String json = objectMapper.writeValueAsString(deleteRequest);
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.delete(URL)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -187,15 +168,14 @@ class WishListControllerTest {
     @DisplayName("위시리스트에 없는 상품 수정 요청시 예외 던짐")
     void updateThrow() throws Exception {
         //Given
-        Long memberId = tokenService.getMemberIdByToken(TOKEN);
-        wishListService.addProductToWishList(memberId, START_PRODUCT_ID, 10);
+        wishListService.addProductToWishList(MEMBER_ID, FIRST_PRODUCT_ID, 999);
 
-        WishListRequest notExistRequest = new WishListRequest(START_PRODUCT_ID + 1, 0);
-        String json = objectMapper.writeValueAsString(notExistRequest);
+        WishListRequest notExistAtWishRequest = new WishListRequest(FIRST_PRODUCT_ID + 1, 0);
+        String json = objectMapper.writeValueAsString(notExistAtWishRequest);
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.put(URL)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -211,15 +191,14 @@ class WishListControllerTest {
     @DisplayName("위시리스트에 없는 상품 삭제 요청시 예외 던짐")
     void deleteThrow() throws Exception {
         //Given
-        Long memberId = tokenService.getMemberIdByToken(TOKEN);
-        wishListService.addProductToWishList(memberId, START_PRODUCT_ID, 10);
+        wishListService.addProductToWishList(MEMBER_ID, FIRST_PRODUCT_ID, 999);
 
-        WishListRequest notExistRequest = new WishListRequest(START_PRODUCT_ID + 1, 0);
-        String json = objectMapper.writeValueAsString(notExistRequest);
+        WishListRequest notExistAtWishRequest = new WishListRequest(FIRST_PRODUCT_ID + 1, 0);
+        String json = objectMapper.writeValueAsString(notExistAtWishRequest);
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.delete(URL)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -235,11 +214,11 @@ class WishListControllerTest {
     @DisplayName("위시리스트 페이지네이션 확인")
     void wishPagination() throws Exception {
         //Given
-        addProduct30ToWish(START_PRODUCT_ID);
+        addProduct15ToWish();
 
         //When
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(URL)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+        mockMvc.perform(MockMvcRequestBuilders.get(URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .param("page", "0")
                         .param("size", "5")
                         .param("sort", "productName,desc"))
@@ -250,14 +229,12 @@ class WishListControllerTest {
                         jsonPath("$.size").value(5),
                         jsonPath("$.sort.sorted").value(true),
                         jsonPath("number").value(0)
-                ).andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
+                );
     }
 
-    private void addProduct30ToWish(Long startProductId) {
-        Long memberId = tokenService.getMemberIdByToken(TOKEN);
-        for (Long productId = startProductId; productId <= 30; productId++) {
-            wishListService.addProductToWishList(memberId, productId, 10);
+    private void addProduct15ToWish() {
+        for (long productId = 1L; productId <= 15; productId++) {
+            wishListService.addProductToWishList(MEMBER_ID, productId, 10);
         }
     }
 
