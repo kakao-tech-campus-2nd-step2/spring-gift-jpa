@@ -23,11 +23,11 @@ public class ProductViewController {
     }
 
     @GetMapping
-    public String moveProductListPage(Model model,
-                                      @PageableDefault(
-                                              sort = "id",
-                                              direction = Sort.Direction.DESC)
-                                      Pageable pageable) {
+    public String getProductListView(Model model,
+                                     @PageableDefault(
+                                             sort = "id",
+                                             direction = Sort.Direction.DESC)
+                                     Pageable pageable) {
         Page<ProductResponse> products = productService.getPagedProducts(pageable);
 
         model.addAttribute("productList", products.getContent());

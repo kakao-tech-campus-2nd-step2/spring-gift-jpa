@@ -25,7 +25,7 @@ public class WishesViewController {
     }
 
     @GetMapping
-    public String getWishListPage(@LoginMember Long memberId,
+    public String getWishListView(@LoginMember Long memberId,
                                   Model model,
                                   @PageableDefault(
                                           sort = "id",
