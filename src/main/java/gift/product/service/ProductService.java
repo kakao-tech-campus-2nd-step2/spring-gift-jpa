@@ -4,6 +4,8 @@ import gift.product.repository.ProductRepository;
 import gift.product.model.Product;
 import gift.product.validation.ProductValidation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,16 +40,16 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public Collection<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
     }
 
-    public Collection<Product> searchProducts(String keyword) {
-        return productRepository.findByName(keyword);
+    public Page<Product> searchProducts(String keyword, Pageable pageable) {
+        return productRepository.findByName(keyword, pageable);
     }
 
     public boolean existsById(Long id) {

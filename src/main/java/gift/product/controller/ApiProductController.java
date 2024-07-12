@@ -5,6 +5,8 @@ import gift.product.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +25,9 @@ public class ApiProductController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Product>> showProductList() {
+    public Page<Product> showProductList(Pageable pageable) {
         System.out.println("[ProductController] showProductList()");
-        List<Product> productList = new ArrayList<>(productService.getAllProducts());
-        return ResponseEntity.ok(productList);
+        return productService.getAllProducts(pageable);
     }
 
     @PostMapping()
@@ -52,9 +53,8 @@ public class ApiProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Product>> searchProduct(@RequestParam("keyword") String keyword) {
+    public Page<Product> searchProduct(@RequestParam("keyword") String keyword, Pageable pageable) {
         System.out.println("[ProductController] searchProduct()");
-        List<Product> searchResults = new ArrayList<>(productService.searchProducts(keyword));
-        return ResponseEntity.ok(searchResults);
+        return productService.searchProducts(keyword, pageable);
     }
 }

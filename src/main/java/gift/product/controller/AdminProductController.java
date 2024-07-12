@@ -2,34 +2,29 @@ package gift.product.controller;
 
 import gift.product.model.Product;
 import gift.product.service.ProductService;
-import gift.product.validation.ProductValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 @RequestMapping("/admin/product")
 public class AdminProductController {
 
     private final ProductService productService;
-    private final AtomicLong idCounter = new AtomicLong();
-    private final ProductValidation productValidation;
 
     @Autowired
-    public AdminProductController(ProductService productService, ProductValidation productValidation) {
+    public AdminProductController(ProductService productService) {
         this.productService = productService;
-        this.productValidation = productValidation;
     }
 
     @GetMapping("/list")
-    public String showProductList(Model model) {
+    public String showProductList(Model model, Pageable pageable) {
         System.out.println("[ProductController] showProductList()");
-        model.addAttribute("productList", productService.getAllProducts());
+        model.addAttribute("productList", productService.getAllProducts(pageable));
         return "product";
     }
 
@@ -79,9 +74,9 @@ public class AdminProductController {
     }
 
     @GetMapping("/search")
-    public String searchProduct(@RequestParam("keyword") String keyword, Model model) {
+    public String searchProduct(@RequestParam("keyword") String keyword, Model model, Pageable pageable) {
         System.out.println("[ProductController] searchProduct()");
-        model.addAttribute("searchResults", productService.searchProducts(keyword));
+        model.addAttribute("searchResults", productService.searchProducts(keyword, pageable));
         model.addAttribute("keyword", keyword);
         return "product-search-list";
     }
