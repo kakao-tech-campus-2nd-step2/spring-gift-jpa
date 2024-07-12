@@ -61,13 +61,39 @@ public class WishlistService {
         wishlistRepository.saveAndFlush(new Wishlist(member, product.get()));
     }
 
+    // 상품 삭제
     @Transactional
-    public HttpEntity<String> deleteWishlist(Long productId) {
-        if (wishlistRepository.findByProductId(productId).isEmpty()) {
+    public HttpEntity<String> deleteWishlist(Long productId, Long memberId) {
+//        if (wishlistRepository.findByProductId(productId).isEmpty()) {
+//            throw new InvalidProduct("잘못된 접근입니다");
+//        }
+//        List<Wishlist> w1 = wishlistRepository.findByProductId(productId);
+//        List<Wishlist> w2 = wishlistRepository.findByMemberId(memberId);
+//
+//        if (w1 == w2) {
+//            wishlistRepository.deleteByProductId(productId);
+//            return ResponseEntity.ok("장바구니에서 제거되었습니다");
+//        } else {
+//            return ResponseEntity.ok("찾을 수 없습니다");
+//        }
+        List<Wishlist> w1 = wishlistRepository.findByProductId(productId);
+        List<Wishlist> w2 = wishlistRepository.findByMemberId(memberId);
+
+        // 특정 회원이 담은 특정 상품이 있는지 확인
+        Wishlist wishlistItem = null;
+        for (Wishlist item : w1) {
+            if (w2.contains(item)) {
+                wishlistItem = item;
+                break;
+            }
+        }
+
+        if (wishlistItem != null) {
+            wishlistRepository.delete(wishlistItem);
+            return ResponseEntity.ok("장바구니에서 제거되었습니다");
+        } else {
             throw new InvalidProduct("잘못된 접근입니다");
         }
-        wishlistRepository.deleteByProductId(productId);
-        return ResponseEntity.ok("장바구니에서 제거되었습니다");
     }
 
 }
