@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,19 +23,16 @@ public class ProductController {
     }
 
     @GetMapping
-    public String getAllProducts(Model model, @RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id,asc") String[] sort) {
-        String sortField = sort[0];
-        String sortDirection = sort[1].equalsIgnoreCase("desc") ? "DESC" : "ASC";
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.by(sortField).with(Sort.Direction.fromString(sortDirection))));
+    public String getAllProducts(Model model,
+                                 @PageableDefault(size = 10, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable) {
         Page<Product> productPage = productService.getProducts(pageable);
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("currentPage", productPage.getNumber());
         model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("totalItems", productPage.getTotalElements());
-        model.addAttribute("pageSize", size);
-        model.addAttribute("sortField", sortField);
-        model.addAttribute("sortDirection", sortDirection);
+        model.addAttribute("pageSize", pageable.getPageSize());
+        model.addAttribute("sortField", pageable.getSort().iterator().next().getProperty());
+        model.addAttribute("sortDirection", pageable.getSort().iterator().next().getDirection().toString());
         return "index";
     }
 
