@@ -19,7 +19,7 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public Member getMemberByEmail(String userEmail) {
+    public Optional<Member> getMemberByEmail(String userEmail) {
         return memberRepository.findByEmail(userEmail);
     }
 
