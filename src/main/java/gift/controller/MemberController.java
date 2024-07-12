@@ -25,7 +25,7 @@ public class MemberController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerMember(@Valid @RequestBody MemberDTO memberDTO) {
-        Member savedMember = memberService.register(memberDTO.getEmail(), memberDTO.getPassword());
+        MemberDTO savedMember = memberService.register(memberDTO);
         String token = jwtUtil.generateToken(savedMember.getEmail());
         return ResponseEntity.ok().body("{\"token\":\"" + token + "\"}");
     }

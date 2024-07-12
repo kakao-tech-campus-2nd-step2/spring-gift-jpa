@@ -47,11 +47,4 @@ public class Member {
     public String getPassword() {
         return password;
     }
-
-    public void setId(Long id) {
-        if (this.id != null) {
-            throw new IllegalStateException("ID가 이미 존재합니다");
-        }
-        this.id = id;
-    }
 }
