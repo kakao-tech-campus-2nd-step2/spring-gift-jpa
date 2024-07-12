@@ -4,7 +4,6 @@ import gift.model.gift.Gift;
 import gift.model.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "wish")
