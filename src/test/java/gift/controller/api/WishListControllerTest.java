@@ -24,21 +24,23 @@ class WishListControllerTest {
 
     private static final String URL = "/api/wishlist";
     private static String TOKEN;
+    private static Long PRODUCT_ID;
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeAll
-    public static void setup(@Autowired ProductService productService,
-                             @Autowired MemberService memberService,
-                             @Autowired TokenService tokenService) {
+    static void setup(@Autowired ProductService productService,
+                      @Autowired MemberService memberService,
+                      @Autowired TokenService tokenService) {
         dummyProductAdd(productService);
         TOKEN = getTokenByRegister(memberService, tokenService);
     }
 
     private static void dummyProductAdd(ProductService productService) {
-        productService.addProduct("SoySource", 1000, "soyImage");
+        PRODUCT_ID = productService.addProduct("SoySource", 1000, "soyImage").id();
         productService.addProduct("Carrot", 200, "carrotImage");
     }
 
@@ -53,7 +55,7 @@ class WishListControllerTest {
     @DisplayName("위시리스트에 상품 추가")
     void wishListAdd() throws Exception {
         //Given
-        WishListRequest wishListRequest = new WishListRequest(1L, 100);
+        WishListRequest wishListRequest = new WishListRequest(PRODUCT_ID, 100);
         String json = objectMapper.writeValueAsString(wishListRequest);
 
         //When
@@ -72,7 +74,7 @@ class WishListControllerTest {
     @DisplayName("위시리스트에 저장된 상품 추가 요청시 예외 던짐")
     void duplicatedProductAddThrowException() throws Exception {
         //Given
-        WishListRequest sameProductRequest = new WishListRequest(1L, 100);
+        WishListRequest sameProductRequest = new WishListRequest(PRODUCT_ID, 100);
         String json = objectMapper.writeValueAsString(sameProductRequest);
 
         //When
@@ -84,7 +86,7 @@ class WishListControllerTest {
                 .andExpectAll(
                         status().isConflict(),
                         content().contentType(MediaType.APPLICATION_PROBLEM_JSON),
-                        jsonPath("title").value("ProductId: 1 already exist in your wishlist")
+                        jsonPath("title").value("ProductId: " + PRODUCT_ID + " already exist in your wishlist")
                 );
     }
 
@@ -93,7 +95,7 @@ class WishListControllerTest {
     @DisplayName("저장하려는 상품ID가 상품DB에 없을시 예외 던짐")
     void noProductThrowException() throws Exception {
         //Given
-        WishListRequest noExistProductRequest = new WishListRequest(100L, 100);
+        WishListRequest noExistProductRequest = new WishListRequest(-1L, 100);
         String json = objectMapper.writeValueAsString(noExistProductRequest);
 
         //When
@@ -131,7 +133,7 @@ class WishListControllerTest {
     @DisplayName("위시리스트에 저장된 수량 수정")
     void updateProductAmount() throws Exception {
         //Given
-        WishListRequest amountUpdateRequest = new WishListRequest(1L, 99999);
+        WishListRequest amountUpdateRequest = new WishListRequest(PRODUCT_ID, 99999);
         String json = objectMapper.writeValueAsString(amountUpdateRequest);
 
         //When
@@ -168,7 +170,7 @@ class WishListControllerTest {
     @DisplayName("위시리스트에 저장된 상품 삭제")
     void deleteProduct() throws Exception {
         //Given
-        WishListRequest amountUpdateRequest = new WishListRequest(1L, 0);
+        WishListRequest amountUpdateRequest = new WishListRequest(PRODUCT_ID, 0);
         String json = objectMapper.writeValueAsString(amountUpdateRequest);
 
         //When
@@ -187,7 +189,7 @@ class WishListControllerTest {
     @DisplayName("위시리스트에 없는 상품 수정 요청시 예외 던짐")
     void updateThrow() throws Exception {
         //Given
-        WishListRequest amountUpdateRequest = new WishListRequest(1L, 99999);
+        WishListRequest amountUpdateRequest = new WishListRequest(PRODUCT_ID, 99999);
         String json = objectMapper.writeValueAsString(amountUpdateRequest);
 
         //When
@@ -208,7 +210,7 @@ class WishListControllerTest {
     @DisplayName("위시리스트에 없는 상품 삭제 요청시 예외 던짐")
     void deleteThrow() throws Exception {
         //Given
-        WishListRequest amountUpdateRequest = new WishListRequest(1L, 0);
+        WishListRequest amountUpdateRequest = new WishListRequest(PRODUCT_ID, 0);
         String json = objectMapper.writeValueAsString(amountUpdateRequest);
 
         //When

@@ -19,10 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @BeforeAll
-    public static void setup(@Autowired ProductService productService) {
+    static void setup(@Autowired ProductService productService) {
         for (int i = 0; i < 100; i++) {
             productService.addProduct("AmazingCoffee" + i, 59999, "a.jpg.com");
         }
@@ -55,11 +55,12 @@ class ProductControllerTest {
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         jsonPath("$.size").value(5),
-                        jsonPath("content[0].id").value(95),
+                        jsonPath("$.sort.sorted").value(true),
                         jsonPath("number").value(1)
                 )
                 .andReturn();
 
         System.out.println(mvcResult.getResponse().getContentAsString());
     }
+
 }
