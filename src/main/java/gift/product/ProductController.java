@@ -47,15 +47,13 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
-        Product product = new Product(productRequestDto.name(), productRequestDto.price(), productRequestDto.url());
-        return productService.postProduct(product);
+    public ProductResponseDto addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
+        return productService.postProduct(productRequestDto);
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequestDto productRequestDto) {
-        Product product = productService.putProduct(id, productRequestDto);
-        return productService.postProduct(product);
+    public ProductResponseDto updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequestDto productRequestDto) {
+        return productService.putProduct(id, productRequestDto);
     }
 
     @DeleteMapping("/{id}")

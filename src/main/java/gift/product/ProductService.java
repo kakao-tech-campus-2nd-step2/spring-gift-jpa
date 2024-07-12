@@ -24,17 +24,33 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    public Product postProduct(Product product) {
-        return productRepository.saveAndFlush(product);
+    public ProductResponseDto postProduct(ProductRequestDto productRequestDto) {
+        Product product = productRepository.saveAndFlush(new Product(
+            productRequestDto.name(),
+            productRequestDto.price(),
+            productRequestDto.url()
+        ));
+        return new ProductResponseDto(
+            product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl()
+        );
     }
 
-    public Product putProduct(Long id, ProductRequestDto productRequestDto) {
+    public ProductResponseDto putProduct(Long id, ProductRequestDto productRequestDto) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new InvalidProduct("유효하지 않은 상품입니다"));
 
         product.update(productRequestDto.name(), productRequestDto.price(), productRequestDto.url());
+        productRepository.saveAndFlush(product);
 
-        return product;
+        return new ProductResponseDto(
+            product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl()
+        );
     }
 
     public HttpEntity<String> deleteProductById(Long id) {
