@@ -36,9 +36,6 @@ public class WishController {
     @PutMapping()
     public ResponseEntity<Void> update(@RequestBody WishRequest wishRequest, @LoginMember Long memberId) {
         wishService.update(memberId, wishRequest);
-        if (wishRequest.quantity() == 0) {
-            return ResponseEntity.noContent().build();
-        }
         return ResponseEntity.ok().build();
     }
 
