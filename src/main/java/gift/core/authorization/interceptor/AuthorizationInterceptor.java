@@ -21,7 +21,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
 		String rawToken = request.getHeader("Authorization");
 		request.setAttribute("USER", UserDetails.from(jwtProvider.getClaims(rawToken)));
 
-		//
 		// TODO: 이후 인터셉터에서 Controller의 필요한 권한과 유저의 권한을 비교하는 로직을 구현한다.
 		return true;
 	}

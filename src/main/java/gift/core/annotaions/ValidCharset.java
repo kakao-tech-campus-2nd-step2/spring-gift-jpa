@@ -21,5 +21,5 @@ public @interface ValidCharset {
 
 	Class<? extends Payload>[] payload() default {};
 
-	String pattern() default "^[a-zA-Z0-9가-힣\\(\\)\\[\\]\\+\\-\\&\\/\\_]*$";
+	String pattern() default "^[a-zA-Z0-9가-힣\\(\\)\\[\\]\\+\\-\\&\\/\\_\\s]*$";
 }
