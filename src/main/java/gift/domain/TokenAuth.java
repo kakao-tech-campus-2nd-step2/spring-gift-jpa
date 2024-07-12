@@ -1,8 +1,9 @@
 package gift.domain;
 
 import jakarta.persistence.*;
+
 @Entity
-@Table(name = "tokenauth")
+@Table(name = "token_auth")
 public class TokenAuth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,24 +12,30 @@ public class TokenAuth {
     @Column(nullable = false, length = 255)
     private String token;
 
-    @Column(nullable = false, length = 255)
-    private String email;
+    @ManyToOne
+    @JoinColumn(name = "member", nullable = false)
+    private Member member;
 
-    public TokenAuth(String token, String email){
+    public TokenAuth(String token, Member member) {
         this.token = token;
-        this.email = email;
+        this.member = member;
     }
 
-    public TokenAuth() {
+    public TokenAuth() { }
 
-    }
-
-    public String getToken(){
+    public String getToken() {
         return token;
     }
 
-    public String getEmail(){
-        return email;
+    public void setToken(String token) {
+        this.token = token;
     }
 
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 }
