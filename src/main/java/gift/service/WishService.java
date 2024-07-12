@@ -47,7 +47,7 @@ public class WishService {
         }
         Wish wish = wishRepository.findByMemberIdAndProductId(loginMemberDto.getId(),
             wishRequestDto.getProductId());
-        wish.setCount(wishRequestDto.getCount());
+        wish.changeCount(wishRequestDto.getCount());
     }
 
     @Transactional
