@@ -7,13 +7,13 @@ import jakarta.persistence.*;
 public class WishProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    User user;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    Product product;
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
     @Column(nullable = false)
     int count;
 

@@ -51,4 +51,10 @@ public class Product {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public void updateEntity(String name, int price, String imageUrl){
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
 }
