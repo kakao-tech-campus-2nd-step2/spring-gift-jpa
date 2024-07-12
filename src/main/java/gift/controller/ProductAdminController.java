@@ -32,10 +32,11 @@ public class ProductAdminController {
     public String getAllProducts(Model model,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "name") String sortBy) {
+        @RequestParam(defaultValue = "id") String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         Page<Product> productPage = productService.getAllProducts(pageable);
         model.addAttribute("productPage", productPage);
+        model.addAttribute("sortBy", sortBy);
         return "product-list";
     }
 
