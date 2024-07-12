@@ -4,6 +4,10 @@ import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.entity.Wishlist;
 import gift.repository.WishlistRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,14 +26,22 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    public List<Wishlist> getAllWishlist(String token) {
+    public Page<Wishlist> getAllWishlist(String token, int page, int size) {
+        Pageable pageRequest = createPageRequestUsing(page, size);
+
         var member_id = memberRepository.searchIdByToken(token);
 
-        try {
-            return wishlistRepository.findByMember_id(member_id);
-        } catch(Exception e) {
-            return null;
-        }
+        List<Wishlist> allWishlist = wishlistRepository.findByMember_id(member_id);
+
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), allWishlist.size());
+
+        List<Wishlist> pageContent = allWishlist.subList(start, end);
+        return new PageImpl<>(pageContent, pageRequest, allWishlist.size());
+    }
+
+    private Pageable createPageRequestUsing(int page, int size) {
+        return PageRequest.of(page, size);
     }
   
     public void deleteItem(String token, int product_id) {
