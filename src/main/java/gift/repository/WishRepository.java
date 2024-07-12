@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface WishRepository extends JpaRepository<Wish, Long> {
     List<Wish> findByMemberId(Long memberId);
     Optional<Wish> findByMemberIdAndProductId(Long memberId, Long productId);
-    Page<Wish> findAll(Pageable pageable);
+    Page<Wish> findByMemberId(Long memberId, Pageable pageable);
 }

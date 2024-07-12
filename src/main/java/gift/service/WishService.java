@@ -60,7 +60,7 @@ public class WishService {
         return false;
     }
 
-    public Page<Wish> findAll(Pageable pageable) {
-        return wishRepository.findAll(pageable);
+    public Page<Wish> findByMemberId(Long memberId, Pageable pageable) {
+        return wishRepository.findByMemberId(memberId, pageable);
     }
 }
