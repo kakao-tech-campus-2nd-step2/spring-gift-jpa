@@ -66,5 +66,5 @@ JPA 테스트
 - [X] Product
 
 테스트 코드 작성
-- [ ] WishController
-- [ ] ProductController
+- [X] 상품 페이지 조회 테스트 (ProductRepository)
+- [X] 위시 페이지 조회 테스트 (WishRepository)
