@@ -8,7 +8,7 @@ public class Wishlist {
 
     @EmbeddedId
     private WishlistId id;
-
+  
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @MapsId("userId")
     @JoinColumn(name = "userId", referencedColumnName = "userId")
@@ -18,7 +18,6 @@ public class Wishlist {
     @MapsId("productId")
     @JoinColumn(name = "productId", referencedColumnName = "productId")
     private Products products;
-
     private String productName;
     private int count;
     private int price;

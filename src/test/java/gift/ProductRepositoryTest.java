@@ -55,7 +55,6 @@ public class ProductRepositoryTest {
 
         assertThat(productJpaRepository.findById(products.getId())).contains(products);
 
-
     }
 
     @Test

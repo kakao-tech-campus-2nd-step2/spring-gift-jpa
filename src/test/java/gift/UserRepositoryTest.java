@@ -76,5 +76,4 @@ public class UserRepositoryTest {
         usersJpaRepository.save(users1);
     }
 
-
 }
