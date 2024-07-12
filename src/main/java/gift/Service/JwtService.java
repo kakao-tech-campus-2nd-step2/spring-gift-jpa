@@ -1,5 +1,6 @@
 package gift.Service;
 
+import gift.ConverterToDto;
 import gift.DTO.JwtToken;
 import gift.DTO.Member;
 import gift.DTO.MemberDto;
@@ -55,14 +56,15 @@ public class JwtService {
     }
   }
 
-  public Optional<Member> getUserEmailFromToken(String token) {
+  public MemberDto getUserEmailFromToken(String token) {
     JwtParser jwtParser = Jwts.parser()
       .setSigningKey(Keys.hmacShaKeyFor(key.getBytes()))
       .build();
 
     Jws<Claims> claims = jwtParser.parseClaimsJws(token);
     String email = claims.getBody().get("email", String.class);
-
-    return memberRepository.findByEmail(email);
+    Member member = memberRepository.findByEmail(email).get();
+    MemberDto memberDto = ConverterToDto.convertToUserDto(member);
+    return memberDto;
   }
 }
