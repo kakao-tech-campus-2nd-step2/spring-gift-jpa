@@ -17,7 +17,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:each="product : ${products}">
+  <tr th:each="product : ${products.content}">
     <td th:text="${product.getId()}"></td>
     <td th:text="${product.getName()}"></td>
     <td th:text="${product.getPrice()}"></td>
@@ -31,5 +31,24 @@
   </tr>
   </tbody>
 </table>
+<div th:if="${products.totalPages > 1}">
+  <ul class="pagination">
+    <li th:class="${products.first ? 'disabled' : ''}">
+      <a th:href="@{/admin/products(page=0, size=${products.size})}">First</a>
+    </li>
+    <li th:class="${products.first ? 'disabled' : ''}">
+      <a th:href="@{/admin/products(page=${products.number - 1}, size=${products.size})}" th:text="Previous"></a>
+    </li>
+    <li th:each="pageNumber : ${#numbers.sequence(0, products.totalPages - 1)}" th:class="${pageNumber == products.number ? 'active' : ''}">
+      <a th:href="@{/admin/products(page=${pageNumber}, size=${products.size})}" th:text="${pageNumber + 1}"></a>
+    </li>
+    <li th:class="${products.last ? 'disabled' : ''}">
+      <a th:href="@{/admin/products(page=${products.number + 1}, size=${products.size})}" th:text="Next"></a>
+    </li>
+    <li th:class="${products.last ? 'disabled' : ''}">
+      <a th:href="@{/admin/products(page=${products.totalPages - 1}, size=${products.size})}">Last</a>
+    </li>
+  </ul>
+</div>
 </body>
 </html>
