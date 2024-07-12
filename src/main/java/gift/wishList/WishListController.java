@@ -4,6 +4,8 @@ import gift.annotation.LoginUser;
 import gift.product.Product;
 import gift.product.ProductRepository;
 import gift.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +52,14 @@ public class WishListController {
     public WishListDTO deleteWishes(@PathVariable long id) {
         wishListService.deleteByID(id);
         return null;
+    }
+
+    @GetMapping("/pages")
+    @Transactional
+    public ResponseEntity<Page<WishListDTO>> getWishListsPage(@RequestParam(required = false, defaultValue = "0", value = "page") int page,
+                                                              @RequestParam(required = false, defaultValue = "10", value = "size") int size) {
+
+        return ResponseEntity.ok(wishListService.getWishListsPages(page, size));
     }
 
 }
