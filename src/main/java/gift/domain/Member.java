@@ -1,9 +1,8 @@
 package gift.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "member")
@@ -13,6 +12,9 @@ public class Member {
 
     @Column(name = "password",nullable = false)
     private String password;
+
+    @OneToMany
+    private List<WishList> wishList;
 
     public Member(){}
     public Member(String id, String password) {

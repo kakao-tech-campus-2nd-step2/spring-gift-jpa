@@ -14,6 +14,9 @@ public class WishList {
     @Column(nullable = false)
     private Long menuId;
 
+    @OneToOne
+    private Menu menu;
+
     public WishList() {}
 
     public WishList(String memberId,Long menuId){

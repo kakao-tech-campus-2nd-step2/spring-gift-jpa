@@ -25,11 +25,10 @@ public class MenuRestController {
             @ModelAttribute @Valid MenuRequest request,
             BindingResult result
     ) {
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(result.getFieldError().getDefaultMessage());
-        }
-        else{
-            MenuResponse menuResponse =  menuService.save(request);
+        } else {
+            MenuResponse menuResponse = menuService.save(request);
             return ResponseEntity.ok().body(menuResponse);
         }
     }
