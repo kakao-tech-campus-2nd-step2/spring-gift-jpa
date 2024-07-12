@@ -8,6 +8,7 @@ import gift.repository.WishlistRepository;
 import gift.repository.UserRepository;
 import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public void addWishlist(WishlistDTO wishlistDTO){
         User user = userRepository.findByEmail(wishlistDTO.getUserId());
         Product product = productRepository.findById(wishlistDTO.getProductId())
@@ -33,6 +35,7 @@ public class WishlistService {
         wishlistRepository.save(wishlist);
     }
 
+    @Transactional(readOnly = true)
     public List<WishlistDTO> loadWishlist(String userId){
         return wishlistRepository.findByUserEmail(userId)
                 .stream()
@@ -40,10 +43,12 @@ public class WishlistService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void deleteWishlist(String userId, Long productId){
         wishlistRepository.deleteByUserEmailAndProductId(userId, productId);
     }
 
+    @Transactional(readOnly = true)
     public List<Product> getProductsFromWishlist(List<WishlistDTO> wishlist) {
         return wishlist.stream()
                 .map(item -> productRepository.findById(item.getProductId())
