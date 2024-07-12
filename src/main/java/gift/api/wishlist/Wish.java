@@ -15,20 +15,20 @@ public class Wish {
     @Id
     @ManyToOne
     @JoinColumn(name = "member_id")
-    private Member member;
+    private Member memberId;
     @Id
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private Product productId;
     @Column(nullable = false)
     private Integer quantity;
 
     protected Wish() {
     }
 
-    public Wish(Member member, Product product, Integer quantity) {
-        this.member = member;
-        this.product = product;
+    public Wish(Member memberId, Product productId, Integer quantity) {
+        this.memberId = memberId;
+        this.productId = productId;
         this.quantity = quantity;
     }
 
@@ -39,12 +39,12 @@ public class Wish {
         this.quantity = quantity;
     }
 
-    public Member getMember() {
-        return member;
+    public Member getMemberId() {
+        return memberId;
     }
 
-    public Product getProduct() {
-        return product;
+    public Product getProductId() {
+        return productId;
     }
 
     public Integer getQuantity() {
