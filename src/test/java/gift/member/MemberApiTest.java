@@ -45,9 +45,6 @@ public class MemberApiTest {
     private MemberRepository memberRepository;
 
     @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
     private WishlistRepository wishlistRepository;
 
     private static String accessToken;

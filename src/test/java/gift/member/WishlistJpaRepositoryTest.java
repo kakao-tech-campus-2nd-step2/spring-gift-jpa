@@ -23,12 +23,6 @@ public class WishlistJpaRepositoryTest {
     @Autowired
     private WishlistJpaRepository wishlistRepository;
 
-    @Autowired
-    private MemberJpaRepository memberRepository;
-
-    @Autowired
-    private ProductJpaRepository productRepository;
-
     private static Member member;
     private static Product product;
 
