@@ -53,7 +53,7 @@ class WishRepositoryTest {
 
         List<Wish> actual = wishRepository.findAllByMemberId(expectedMember.getId());
 
-        assertThat(actual).isEqualTo(List.of(expected1, expected2));
+        assertThat(actual).containsExactly(expected1, expected2);
     }
 
     @Test
