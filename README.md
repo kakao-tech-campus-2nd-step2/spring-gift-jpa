@@ -62,8 +62,8 @@ JPA 테스트
 
 ### 구현할 기능 목록
 페이지네이션 적용
-- [ ] Wish
-- [ ] Product
+- [X] Wish
+- [X] Product
 
 테스트 코드 작성
 - [ ] WishController
