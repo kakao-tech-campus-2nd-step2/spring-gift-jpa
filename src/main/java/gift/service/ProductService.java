@@ -44,7 +44,7 @@ public class ProductService {
 
     public ProductDTO deleteProduct(long id) {
         ProductDTO deletedProductDTO = getProduct(id);
-        productRepository.deleteById(id);
+        productRepository.delete(deletedProductDTO.toEntity());
         return deletedProductDTO;
     }
 }
