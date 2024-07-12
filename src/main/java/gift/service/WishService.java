@@ -7,6 +7,7 @@ import gift.domain.Wish;
 import gift.dto.*;
 import gift.exception.WishNotFoundException;
 import gift.repository.WishRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,14 @@ public class WishService {
                 .map(WishResponseDto::from)
                 .toList();
 
+    }
+
+    @Transactional(readOnly = true)
+    public List<WishResponseDto> getPagedMemberWishesByMemberId(Long memberId, Pageable pageable){
+        return wishRepository.findByMemberId(memberId,pageable)
+                .stream()
+                .map(WishResponseDto::from)
+                .toList();
     }
 
     @Transactional
