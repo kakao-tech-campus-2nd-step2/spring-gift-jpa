@@ -44,7 +44,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void 회원_가입() {
+    public void 회원_가입_성공() {
         UserRegisterDto userRegisterDto = new UserRegisterDto("user@example.com", "password");
 
         given()
@@ -58,7 +58,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void 모든_사용자_조회() {
+    public void 모든_사용자_조회_성공() {
         UserRegisterDto userRegisterDto = new UserRegisterDto("user@example.com", "password");
         userService.registerUser(userRegisterDto);
 
@@ -71,7 +71,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void 사용자_삭제() {
+    public void 사용자_삭제_성공() {
         UserRegisterDto userRegisterDto = new UserRegisterDto("user@example.com", "password");
         UserResponseDto userResponseDto = userService.registerUser(userRegisterDto);
         Long userId = userResponseDto.getId();

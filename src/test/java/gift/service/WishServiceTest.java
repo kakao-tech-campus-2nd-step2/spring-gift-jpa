@@ -4,6 +4,7 @@ import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
+import gift.dto.WishPageResponseDto;
 import gift.entity.Product;
 import gift.entity.ProductName;
 import gift.entity.User;
@@ -16,9 +17,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,7 +52,7 @@ public class WishServiceTest {
 
     @Test
     @Rollback
-    public void 위시리스트_추가() {
+    public void 위시리스트_추가_성공() {
         User user = userRepository.save(new User("user@example.com", "password"));
         Product product = productRepository.save(new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg"));
         ProductResponseDto productResponseDto = productService.getProductById(product.getId());
@@ -71,17 +70,16 @@ public class WishServiceTest {
 
     @Test
     @Rollback
-    public void 위시리스트_조회() {
+    public void 위시리스트_조회_성공() {
         User user = userRepository.save(new User("user@example.com", "password"));
         Product product = productRepository.save(new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg"));
         wishRepository.save(new Wish(user, product));
 
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<WishResponseDto> wishList = wishService.getWishesByUserId(user.getId(), pageable);
+        WishPageResponseDto wishPage = wishService.getWishesByUserId(user.getId(), PageRequest.of(0, 10));
 
-        assertNotNull(wishList);
-        assertEquals(1, wishList.getTotalElements());
-        WishResponseDto retrievedWish = wishList.getContent().get(0);
+        assertNotNull(wishPage);
+        assertEquals(1, wishPage.getTotalItems());
+        WishResponseDto retrievedWish = wishPage.getWishes().get(0);
         assertEquals(product.getId(), retrievedWish.getProductId());
         assertEquals(product.getName().getValue(), retrievedWish.getProductName());
         assertEquals(product.getPrice(), retrievedWish.getProductPrice());
@@ -90,39 +88,49 @@ public class WishServiceTest {
 
     @Test
     @Rollback
-    public void 위시리스트_삭제() {
+    public void 위시리스트_삭제_성공() {
         User user = userRepository.save(new User("user@example.com", "password"));
         Product product = productRepository.save(new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg"));
         Wish wish = wishRepository.save(new Wish(user, product));
 
         wishService.deleteWish(wish.getId());
 
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<WishResponseDto> wishList = wishService.getWishesByUserId(user.getId(), pageable);
-        assertTrue(wishList.isEmpty());
+        WishPageResponseDto wishPage = wishService.getWishesByUserId(user.getId(), PageRequest.of(0, 10));
+        assertTrue(wishPage.getWishes().isEmpty());
     }
 
     @Test
     @Rollback
-    public void 위시리스트_삭제_없는위시() {
+    public void 없는_위시리스트_삭제_예외_발생() {
         assertThrows(BusinessException.class, () -> wishService.deleteWish(999L));
     }
 
     @Test
     @Rollback
-    public void 위시리스트_목록_페이지네이션() {
+    public void 위시리스트_목록_페이지네이션_성공() {
         User user = userRepository.save(new User("user@example.com", "password"));
         for (int i = 1; i <= 25; i++) {
             Product product = productRepository.save(new Product(new ProductName("상품 " + i), 10000, "https://example.com/product" + i + ".jpg"));
             wishRepository.save(new Wish(user, product));
         }
 
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<WishResponseDto> wishList = wishService.getWishesByUserId(user.getId(), pageable);
+        WishPageResponseDto wishPage = wishService.getWishesByUserId(user.getId(), PageRequest.of(0, 10));
 
-        assertNotNull(wishList);
-        assertEquals(10, wishList.getSize());
-        assertEquals(25, wishList.getTotalElements());
-        assertEquals(3, wishList.getTotalPages());
+        assertNotNull(wishPage);
+        assertEquals(10, wishPage.getWishes().size());
+        assertEquals(25, wishPage.getTotalItems());
+        assertEquals(3, wishPage.getTotalPages());
+
+        WishPageResponseDto wishPage2 = wishService.getWishesByUserId(user.getId(), PageRequest.of(1, 10));
+
+        assertNotNull(wishPage2);
+        assertEquals(10, wishPage2.getWishes().size());
+        assertEquals(25, wishPage2.getTotalItems());
+
+        WishPageResponseDto wishPage3 = wishService.getWishesByUserId(user.getId(), PageRequest.of(2, 10));
+
+        assertNotNull(wishPage3);
+        assertEquals(5, wishPage3.getWishes().size());
+        assertEquals(25, wishPage3.getTotalItems());
     }
 }

@@ -12,9 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import static io.restassured.RestAssured.given;
@@ -44,7 +42,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void 상품_추가() {
+    public void 상품_추가_성공() {
         ProductRequestDto productRequestDto = new ProductRequestDto("오둥이 입니다만", 29800, "https://example.com/product2.jpg");
 
         given()
@@ -60,7 +58,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void 상품_수정() {
+    public void 상품_수정_성공() {
         ProductResponseDto productResponseDto = productService.addProduct(new ProductRequestDto("오둥이 입니다만", 29800, "https://example.com/product2.jpg"));
         Long productId = productResponseDto.getId();
 
@@ -79,30 +77,25 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void 모든_상품_조회() {
+    public void 모든_상품_조회_성공() {
         ProductResponseDto productResponseDto = productService.addProduct(new ProductRequestDto("오둥이 입니다만", 29800, "https://example.com/product2.jpg"));
-
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<ProductResponseDto> productPage = productService.getAllProducts(pageable);
 
         given()
                 .when()
                 .get("/api/products?page=0&size=10")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("content[0].id", equalTo(productResponseDto.getId().intValue()))
-                .body("content[0].name", equalTo("오둥이 입니다만"))
-                .body("content[0].price", equalTo(29800))
-                .body("content[0].imageUrl", equalTo("https://example.com/product2.jpg"))
-                .body("pageable", notNullValue())
+                .body("products[0].id", equalTo(productResponseDto.getId().intValue()))
+                .body("products[0].name", equalTo("오둥이 입니다만"))
+                .body("products[0].price", equalTo(29800))
+                .body("products[0].imageUrl", equalTo("https://example.com/product2.jpg"))
+                .body("currentPage", equalTo(0))
                 .body("totalPages", equalTo(1))
-                .body("totalElements", equalTo(1))
-                .body("size", equalTo(10))
-                .body("number", equalTo(0));
+                .body("totalItems", equalTo(1));
     }
 
     @Test
-    public void 상품_삭제() {
+    public void 상품_삭제_성공() {
         ProductResponseDto productResponseDto = productService.addProduct(new ProductRequestDto("오둥이 입니다만", 29800, "https://example.com/product2.jpg"));
         Long productId = productResponseDto.getId();
 
@@ -111,6 +104,5 @@ public class ProductControllerTest {
                 .delete("/api/products/{id}", productId)
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
-
     }
 }

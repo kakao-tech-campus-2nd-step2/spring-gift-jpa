@@ -36,7 +36,7 @@ public class WishRepositoryTest {
     }
 
     @Test
-    public void 위시리스트_저장_조회() {
+    public void 위시리스트_저장_후_조회_성공() {
         Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
         productRepository.save(product);
 
@@ -55,7 +55,7 @@ public class WishRepositoryTest {
     }
 
     @Test
-    public void 위시리스트_삭제() {
+    public void 위시리스트_삭제_성공() {
         Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
         productRepository.save(product);
 

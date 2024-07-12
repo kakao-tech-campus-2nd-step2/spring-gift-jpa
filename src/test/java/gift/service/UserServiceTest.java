@@ -31,7 +31,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void 사용자_등록() {
+    public void 사용자_등록_성공() {
         UserRegisterDto registerDto = new UserRegisterDto("test@example.com", "password");
         UserResponseDto createdUser = userService.registerUser(registerDto);
 
@@ -41,7 +41,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void 사용자_조회() {
+    public void 사용자_조회_성공() {
         User user = new User("test@example.com", "password");
         userRepository.save(user);
 
@@ -53,7 +53,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void 사용자_수정() {
+    public void 사용자_수정_성공() {
         User originalUser = new User("test@example.com", "password");
         userRepository.save(originalUser);
 
@@ -66,7 +66,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void 사용자_삭제() {
+    public void 사용자_삭제_성공() {
         User user = new User("test@example.com", "password");
         userRepository.save(user);
 
@@ -76,7 +76,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void 로그인_성공() {
+    public void 로그인_성공_토큰_발급() {
         User user = new User("test@example.com", "password");
         userRepository.save(user);
 
@@ -87,7 +87,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void 로그인_실패() {
+    public void 잘못된_비밀번호_로그인_실패_예외_발생() {
         User user = new User("test@example.com", "password");
         userRepository.save(user);
 

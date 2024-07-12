@@ -16,7 +16,7 @@ public class UserRepositoryTest {
     private UserRepository userRepository;
 
     @Test
-    public void 사용자_저장_조회() {
+    public void 사용자_저장_조회_성공() {
         User user = new User("test@example.com", "password");
         userRepository.save(user);
 
@@ -26,7 +26,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void 사용자_삭제() {
+    public void 사용자_삭제_성공() {
         User user = new User("test@example.com", "password");
         userRepository.save(user);
 
