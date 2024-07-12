@@ -32,8 +32,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -44,8 +43,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
                 .parseSignedClaims(token)
                 .getPayload();
             Long memberId = Long.parseLong(claims.getSubject());
-            return memberService.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+            return memberService.findById(memberId).orElseThrow(() -> new RuntimeException("Member not found"));
         }
         throw new RuntimeException("Invalid token");
     }

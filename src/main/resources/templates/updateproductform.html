@@ -12,12 +12,12 @@
 </div>
 <body>
 <h1>Update Product</h1>
-<form th:action="@{/product/update}" th:object="${product}" method="post">
+<form th:action="@{/product/update}" th:object="${productDto}" method="post">
   <input type="hidden" name="_method" value="put"/>
 
   <div>
     <label for="id">Product ID:</label>
-    <input type="hidden" id="id" th:field="*{id}" placeholder="Enter product ID"/>
+    <input type="number" id="id" th:field="*{id}" placeholder="Enter product ID"/>
   </div>
   <div>
     <label for="name">New Name:</label>
@@ -37,4 +37,3 @@
 </form>
 </body>
 </html>
-

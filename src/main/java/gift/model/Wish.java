@@ -4,43 +4,27 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import java.util.Objects;
+import java.util.UUID;
 
 @Entity
-@Table(name = "wish")
 public class Wish {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
+    private Long memberId;
+
+    @NotNull
     private String productName;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
 
     public Wish() {
     }
 
-    public Wish(Member member, String productName) {
-        this.member = member;
+    public Wish(Long memberId, String productName) {
+        this.memberId = memberId;
         this.productName = productName;
-    }
-
-    public Wish(Product product, Member member) {
-        this.productName = product.getName();
-        this.product = product;
-        this.member = member;
     }
 
     public Long getId() {
@@ -52,11 +36,11 @@ public class Wish {
     }
 
     public Long getMemberId() {
-        return this.member.getId();
+        return memberId;
     }
 
     public void setMemberId(Long memberId) {
-        this.member.setId(memberId);
+        this.memberId = memberId;
     }
 
     public String getProductName() {
@@ -65,23 +49,5 @@ public class Wish {
 
     public void setProductName(String productName) {
         this.productName = productName;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Wish wish = (Wish) o;
-        return Objects.equals(product, wish.product) && Objects.equals(member,
-            wish.member);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(product, member);
     }
 }
