@@ -15,6 +15,7 @@ import gift.member.presentation.dto.ResponsePagingWishlistDto;
 import gift.member.presentation.dto.ResponseWishListDto;
 import gift.product.persistence.entity.Product;
 import gift.product.persistence.repository.ProductRepository;
+import gift.product.presentation.dto.RequestProductDto;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -223,5 +224,26 @@ public class MemberApiTest {
         assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThrows(NotFoundException.class,
             () -> wishlistRepository.getWishListByMemberIdAndProductId(1L, 1L));
+    }
+
+    @Test
+    void testAddAndGetWishLists_Fail() {
+        //given
+        String url = "http://localhost:" + port + "/api/members/wishlists?page=0&size=101";
+
+        // when
+        var headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        var entity = new HttpEntity<>(headers);
+        var response = restTemplate.exchange(
+            url,
+            HttpMethod.GET,
+            entity,
+            String.class
+        );
+
+        //then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().contains("size는 1~100 사이의 값이어야 합니다.")).isTrue();
     }
 }
