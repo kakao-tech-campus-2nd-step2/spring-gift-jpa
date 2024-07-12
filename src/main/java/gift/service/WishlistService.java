@@ -5,8 +5,15 @@ import gift.entity.Wish;
 import gift.exception.DataNotFoundException;
 import gift.repository.MemberRepository;
 import gift.repository.WishRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +23,7 @@ public class WishlistService {
 
     private final WishRepository wishRepository;
     private final MemberRepository memberRepository;
+    private final int PAGE_SIZE = 5;
 
     public WishlistService(WishRepository wishRepository, MemberRepository memberRepository) {
         this.wishRepository = wishRepository;
@@ -52,5 +60,12 @@ public class WishlistService {
         return wishRepository.findByMemberId(member.getId());
     }
 
+    public Page<Wish> getWishPage(String email, int page){
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.asc("id"));
+        Pageable pageable = PageRequest.of(page,PAGE_SIZE,Sort.by(sorts));
+        Member member = memberRepository.findByEmail(email);
+        return wishRepository.findByMemberId(member.getId(),pageable);
 
+    }
 }
