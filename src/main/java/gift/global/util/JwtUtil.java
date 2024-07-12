@@ -1,6 +1,6 @@
 package gift.global.util;
 
-import gift.domain.entity.User;
+import gift.domain.entity.Member;
 import gift.domain.exception.TokenExpiredException;
 import gift.domain.exception.TokenNotFoundException;
 import gift.domain.exception.TokenStringInvalidException;
@@ -38,9 +38,9 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public String generateToken(User user) {
+    public String generateToken(Member member) {
         return Jwts.builder()
-            .setSubject(user.getEmail())
+            .setSubject(member.getEmail())
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) //1시간
             .signWith(key, SignatureAlgorithm.HS256)

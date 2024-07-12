@@ -1,12 +1,12 @@
 package gift.domain.controller;
 
-import gift.domain.annotation.ValidUser;
+import gift.domain.annotation.ValidMember;
 import gift.domain.controller.apiResponse.WishAddApiResponse;
 import gift.domain.controller.apiResponse.WishListApiResponse;
 import gift.domain.controller.apiResponse.WishUpdateApiResponse;
 import gift.domain.dto.request.WishDeleteRequest;
 import gift.domain.dto.request.WishRequest;
-import gift.domain.entity.User;
+import gift.domain.entity.Member;
 import gift.domain.service.WishService;
 import gift.global.apiResponse.BasicApiResponse;
 import gift.global.apiResponse.SuccessApiResponse;
@@ -32,25 +32,25 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<WishListApiResponse> getWishlist(@ValidUser User user) {
-        return SuccessApiResponse.ok(new WishListApiResponse(HttpStatus.OK, wishService.getWishlist(user)));
+    public ResponseEntity<WishListApiResponse> getWishlist(@ValidMember Member member) {
+        return SuccessApiResponse.ok(new WishListApiResponse(HttpStatus.OK, wishService.getWishlist(member)));
     }
 
     @PostMapping
-    public ResponseEntity<WishAddApiResponse> addWish(@ValidUser User user, @Valid @RequestBody WishRequest wishRequest) {
-        return SuccessApiResponse.ok(new WishAddApiResponse(HttpStatus.OK, wishService.addWishlist(user,
+    public ResponseEntity<WishAddApiResponse> addWish(@ValidMember Member member, @Valid @RequestBody WishRequest wishRequest) {
+        return SuccessApiResponse.ok(new WishAddApiResponse(HttpStatus.OK, wishService.addWishlist(member,
             wishRequest)));
     }
 
     @PutMapping
-    public ResponseEntity<WishUpdateApiResponse> updateWish(@ValidUser User user, @Valid @RequestBody WishRequest wishRequest) {
-        return SuccessApiResponse.ok(new WishUpdateApiResponse(HttpStatus.OK, wishService.updateWishlist(user,
+    public ResponseEntity<WishUpdateApiResponse> updateWish(@ValidMember Member member, @Valid @RequestBody WishRequest wishRequest) {
+        return SuccessApiResponse.ok(new WishUpdateApiResponse(HttpStatus.OK, wishService.updateWishlist(member,
             wishRequest)));
     }
 
     @DeleteMapping
-    public ResponseEntity<BasicApiResponse> deleteWish(@ValidUser User user, @RequestBody WishDeleteRequest wishDeleteRequest) {
-        wishService.deleteWishlist(user, wishDeleteRequest);
+    public ResponseEntity<BasicApiResponse> deleteWish(@ValidMember Member member, @RequestBody WishDeleteRequest wishDeleteRequest) {
+        wishService.deleteWishlist(member, wishDeleteRequest);
         return SuccessApiResponse.of(HttpStatus.NO_CONTENT);
     }
 }

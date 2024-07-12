@@ -233,7 +233,7 @@ create table wish
     - password: string
       - 해시함수를 한번 거친다.
     - permission: string
-      - `user`, `admin` 중 하나가 가능
+      - `member`, `admin` 중 하나가 가능
 - [x] 유저를 저장하는 데이터베이스 연동
   - [x] 데이터베이스 접근 Repository
   - [x] 스키마 SQL 및 예제 데이터 삽입 SQL 구비
@@ -700,7 +700,7 @@ create table wish
     "list": [
       {
         "email": "example@example.com",
-        "permission": "user"
+        "permission": "member"
       }, {}, {}
     ]
   }

@@ -1,8 +1,8 @@
 package gift.domain.annotation;
 
-import gift.domain.entity.User;
-import gift.domain.exception.UserNotAdminException;
-import gift.domain.service.UserService;
+import gift.domain.entity.Member;
+import gift.domain.exception.MemberNotAdminException;
+import gift.domain.service.MemberService;
 import gift.global.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,22 +15,22 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class ValidAdminUserArgumentResolver implements HandlerMethodArgumentResolver {
+public class ValidAdminMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final UserService userService;
+    private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
     @Autowired
-    public ValidAdminUserArgumentResolver(UserService userService, JwtUtil jwtUtil) {
-        this.userService = userService;
+    public ValidAdminMemberArgumentResolver(MemberService memberService, JwtUtil jwtUtil) {
+        this.memberService = memberService;
         this.jwtUtil = jwtUtil;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(ValidAdminUser.class) &&
-            User.class.isAssignableFrom(parameter.getParameterType());
+        return parameter.hasParameterAnnotation(ValidAdminMember.class) &&
+            Member.class.isAssignableFrom(parameter.getParameterType());
     }
 
     @Override
@@ -41,10 +41,10 @@ public class ValidAdminUserArgumentResolver implements HandlerMethodArgumentReso
         log.info("Header/Authorization: \"{}\"", authorizationHeader);
 
         String userEmail = jwtUtil.getSubject(authorizationHeader);
-        User user = userService.findByEmail(userEmail);
-        if (!user.getPermission().equals("admin")) {
-            throw new UserNotAdminException();
+        Member member = memberService.findByEmail(userEmail);
+        if (!member.getPermission().equals("admin")) {
+            throw new MemberNotAdminException();
         }
-        return user;
+        return member;
     }
 }

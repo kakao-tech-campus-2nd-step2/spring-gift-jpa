@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.global.apiResponse.BasicApiResponse;
 import org.springframework.http.HttpStatusCode;
 
-public class UserRegisterApiResponse extends BasicApiResponse {
+public class MemberRegisterApiResponse extends BasicApiResponse {
 
     private final String token;
 
     @JsonCreator
-    public UserRegisterApiResponse(
+    public MemberRegisterApiResponse(
         @JsonProperty(value = "status", required = true) HttpStatusCode statusCode,
         @JsonProperty(value = "token", required = true) String token
     ) {

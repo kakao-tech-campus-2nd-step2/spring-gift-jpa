@@ -1,7 +1,7 @@
 package gift.domain.annotation;
 
-import gift.domain.entity.User;
-import gift.domain.service.UserService;
+import gift.domain.entity.Member;
+import gift.domain.service.MemberService;
 import gift.global.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,22 +14,22 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
-public class ValidUserArgumentResolver implements HandlerMethodArgumentResolver {
+public class ValidMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final UserService userService;
+    private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
     @Autowired
-    public ValidUserArgumentResolver(UserService userService, JwtUtil jwtUtil) {
-        this.userService = userService;
+    public ValidMemberArgumentResolver(MemberService memberService, JwtUtil jwtUtil) {
+        this.memberService = memberService;
         this.jwtUtil = jwtUtil;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(ValidUser.class) &&
-            User.class.isAssignableFrom(parameter.getParameterType());
+        return parameter.hasParameterAnnotation(ValidMember.class) &&
+            Member.class.isAssignableFrom(parameter.getParameterType());
     }
 
     @Override
@@ -40,6 +40,6 @@ public class ValidUserArgumentResolver implements HandlerMethodArgumentResolver 
         log.info("Header/Authorization: \"{}\"", authorizationHeader);
 
         String userEmail = jwtUtil.getSubject(authorizationHeader);
-        return userService.findByEmail(userEmail);
+        return memberService.findByEmail(userEmail);
     }
 }

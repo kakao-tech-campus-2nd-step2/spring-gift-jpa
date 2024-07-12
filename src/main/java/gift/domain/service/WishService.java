@@ -4,8 +4,8 @@ import gift.domain.dto.request.WishDeleteRequest;
 import gift.domain.dto.request.WishRequest;
 import gift.domain.dto.response.WishAddResponse;
 import gift.domain.dto.response.WishResponse;
+import gift.domain.entity.Member;
 import gift.domain.entity.Product;
-import gift.domain.entity.User;
 import gift.domain.entity.Wish;
 import gift.domain.exception.ProductNotFoundException;
 import gift.domain.exception.ProductNotIncludedInWishlistException;
@@ -34,16 +34,16 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishResponse> getWishlist(User user) {
-        return wishRepository.findWishesByUserId(user.getId()).stream()
+    public List<WishResponse> getWishlist(Member member) {
+        return wishRepository.findWishesByMember(member).stream()
             .map(wish -> WishResponse.of(wish.getQuantity(), wish.getProduct()))
             .toList();
     }
 
     @Transactional
-    public WishAddResponse addWishlist(User user, WishRequest wishRequest) {
+    public WishAddResponse addWishlist(Member member, WishRequest wishRequest) {
         Product product = getProductByIdOrThrow(wishRequest.productId());
-        Optional<Wish> search = wishRepository.findWishByUserIdAndProductId(user.getId(), wishRequest.productId());
+        Optional<Wish> search = wishRepository.findWishByMemberAndProduct(member, product);
 
         //아이템이 없고 수량이 1 이상일 때 새 데이터 삽입
         if (search.isEmpty()) {
@@ -51,7 +51,7 @@ public class WishService {
                 // 0 이하인 경우 아무 작업 하지 않음
                 return new WishAddResponse("nope", 0L);
             }
-            wishRepository.save(new Wish(product, user, wishRequest.quantity()));
+            wishRepository.save(new Wish(product, member, wishRequest.quantity()));
             return new WishAddResponse("create", wishRequest.quantity());
         }
 
@@ -72,9 +72,9 @@ public class WishService {
     }
 
     @Transactional
-    public WishResponse updateWishlist(User user, WishRequest wishRequest) {
+    public WishResponse updateWishlist(Member member, WishRequest wishRequest) {
         Product product = getProductByIdOrThrow(wishRequest.productId());
-        Wish wish = wishRepository.findWishByUserIdAndProductId(user.getId(), wishRequest.productId())
+        Wish wish = wishRepository.findWishByMemberAndProduct(member, product)
             .orElseThrow(ProductNotIncludedInWishlistException::new);
         wish.set(wishRequest);
         wishRepository.save(wish);
@@ -82,8 +82,8 @@ public class WishService {
     }
 
     @Transactional
-    public void deleteWishlist(User user, WishDeleteRequest deleteRequestDto) {
-        getProductByIdOrThrow(deleteRequestDto.productId());
-        wishRepository.deleteByProductIdAndUserId(deleteRequestDto.productId(), user.getId());
+    public void deleteWishlist(Member member, WishDeleteRequest deleteRequestDto) {
+        Product product = getProductByIdOrThrow(deleteRequestDto.productId());
+        wishRepository.deleteByMemberAndProduct(member, product);
     }
 }

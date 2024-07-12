@@ -22,14 +22,14 @@ public class Wish {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private User user;
+    private Member member;
 
     @Column(nullable = false)
     private Long quantity;
 
-    public Wish(Product product, User user, Long quantity) {
+    public Wish(Product product, Member member, Long quantity) {
         this.product = product;
-        this.user = user;
+        this.member = member;
         this.quantity = quantity;
     }
 
@@ -52,12 +52,12 @@ public class Wish {
         this.product = product;
     }
 
-    public User getUser() {
-        return user;
+    public Member getMember() {
+        return member;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
     public Long getQuantity() {

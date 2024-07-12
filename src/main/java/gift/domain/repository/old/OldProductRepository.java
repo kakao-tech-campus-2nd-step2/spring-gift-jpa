@@ -1,16 +1,7 @@
-package gift.domain.repository;
-
-import gift.domain.dto.request.ProductRequest;
-import gift.domain.entity.OldProduct;
-import gift.domain.entity.Product;
-import java.util.List;
-import java.util.Optional;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
+package gift.domain.repository.old;
 
 //@Repository
+@Deprecated
 public class OldProductRepository {
 
 //    private final JdbcTemplate jdbcTemplate;

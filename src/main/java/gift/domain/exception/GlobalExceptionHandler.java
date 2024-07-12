@@ -31,23 +31,23 @@ public class GlobalExceptionHandler {
         return ErrorApiResponse.conflict(e);
     }
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ErrorApiResponse> handleUUserAlreadyExistsException(UserAlreadyExistsException e) {
+    @ExceptionHandler(MemberAlreadyExistsException.class)
+    public ResponseEntity<ErrorApiResponse> handleUUserAlreadyExistsException(MemberAlreadyExistsException e) {
         return ErrorApiResponse.conflict(e);
     }
 
-    @ExceptionHandler(UserIncorrectLoginInfoException.class)
-    public ResponseEntity<ErrorApiResponse> handleUUserAlreadyExistsException(UserIncorrectLoginInfoException e) {
+    @ExceptionHandler(MemberIncorrectLoginInfoException.class)
+    public ResponseEntity<ErrorApiResponse> handleUUserAlreadyExistsException(MemberIncorrectLoginInfoException e) {
         return ErrorApiResponse.of(e, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(UserNotAdminException.class)
-    public ResponseEntity<ErrorApiResponse> handleExpiredJwtException(UserNotAdminException e) {
+    @ExceptionHandler(MemberNotAdminException.class)
+    public ResponseEntity<ErrorApiResponse> handleExpiredJwtException(MemberNotAdminException e) {
         return ErrorApiResponse.of(e, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorApiResponse> handleUserNotFoundException(UserNotFoundException e) {
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<ErrorApiResponse> handleUserNotFoundException(MemberNotFoundException e) {
         return ErrorApiResponse.notFound(e);
     }
 

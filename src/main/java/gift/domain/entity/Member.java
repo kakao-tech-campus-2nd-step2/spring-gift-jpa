@@ -6,8 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-@Entity(name = "`User`")
-public class User {
+@Entity
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +22,13 @@ public class User {
     @Column(nullable = false)
     String permission;
 
-    public User(String email, String password, String permission) {
+    public Member(String email, String password, String permission) {
         this.email = email;
         this.password = password;
         this.permission = permission;
     }
 
-    protected User() {
+    protected Member() {
     }
 
     public Long getId() {

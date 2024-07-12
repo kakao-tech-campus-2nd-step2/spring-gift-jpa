@@ -1,6 +1,5 @@
 package gift.domain.dto.request;
 
-import gift.domain.entity.User;
 import gift.domain.entity.Wish;
 import jakarta.validation.constraints.NotNull;
 

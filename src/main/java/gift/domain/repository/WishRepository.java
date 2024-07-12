@@ -1,5 +1,7 @@
 package gift.domain.repository;
 
+import gift.domain.entity.Member;
+import gift.domain.entity.Product;
 import gift.domain.entity.Wish;
 import java.util.List;
 import java.util.Optional;
@@ -9,9 +11,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
-    List<Wish> findWishesByUserId(Long userId);
+    List<Wish> findWishesByMember(Member member);
 
-    Optional<Wish> findWishByUserIdAndProductId(Long userId, Long productId);
+    Optional<Wish> findWishByMemberAndProduct(Member member, Product product);
 
-    void deleteByProductIdAndUserId(Long productId, Long userId);
+    void deleteByMemberAndProduct(Member member, Product product);
 }
