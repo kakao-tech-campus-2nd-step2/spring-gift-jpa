@@ -1,6 +1,7 @@
 package gift.doamin.user.entity;
 
 import gift.doamin.product.entity.Product;
+import gift.doamin.wishlist.entity.Wish;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -35,6 +36,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Product> products;
 
+    @OneToMany(mappedBy = "user")
+    private List<Wish> wishList;
+
     public User(String email, String password, String name, UserRole role) {
         this.email = email;
         this.password = password;
@@ -68,6 +72,10 @@ public class User {
 
     public List<Product> getProducts() {
         return products;
+    }
+
+    public List<Wish> getWishList() {
+        return wishList;
     }
 
     public void setId(Long id) {

@@ -1,8 +1,12 @@
 package gift.doamin.wishlist.service;
 
-import gift.doamin.wishlist.dto.WishListForm;
-import gift.doamin.wishlist.entity.WishList;
-import gift.doamin.wishlist.exception.InvalidWishListFormException;
+import gift.doamin.user.entity.User;
+import gift.doamin.user.exception.UserNotFoundException;
+import gift.doamin.user.repository.JpaUserRepository;
+import gift.doamin.wishlist.dto.WishForm;
+import gift.doamin.wishlist.dto.WishParam;
+import gift.doamin.wishlist.entity.Wish;
+import gift.doamin.wishlist.exception.InvalidWishFormException;
 import gift.doamin.wishlist.exception.WishListNotFoundException;
 import gift.doamin.wishlist.repository.JpaWishListRepository;
 import java.util.List;
@@ -13,56 +17,64 @@ import org.springframework.stereotype.Service;
 public class WishListService {
 
     private final JpaWishListRepository wishListRepository;
+    private final JpaUserRepository jpaUserRepository;
 
-    public WishListService(JpaWishListRepository wishListRepository) {
+    public WishListService(JpaWishListRepository wishListRepository,
+        JpaUserRepository jpaUserRepository) {
         this.wishListRepository = wishListRepository;
+        this.jpaUserRepository = jpaUserRepository;
     }
 
-    public WishList create(Long userId, WishListForm wishListForm) {
-        Long productId = wishListForm.getProductId();
+    public void create(Long userId, WishForm wishForm) {
+        Long productId = wishForm.getProductId();
         if (wishListRepository.existsByUserIdAndProductId(userId, productId)) {
-            throw new InvalidWishListFormException("동일한 상품을 위시리스트에 또 넣을수는 없습니다");
+            throw new InvalidWishFormException("동일한 상품을 위시리스트에 또 넣을수는 없습니다");
         }
         // 수량 0개는 등록 불가
-        if (wishListForm.isZeroQuantity()) {
-            throw new InvalidWishListFormException("위시리스트에 상품 0개를 넣을수는 없습니다");
+        if (wishForm.isZeroQuantity()) {
+            throw new InvalidWishFormException("위시리스트에 상품 0개를 넣을수는 없습니다");
         }
-        var wishList = new WishList(userId, wishListForm.getProductId(),
-            wishListForm.getQuantity());
-        return wishListRepository.save(wishList);
+
+        User user = jpaUserRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        var wishList = new Wish(user, wishForm.getProductId(),
+            wishForm.getQuantity());
+        wishListRepository.save(wishList);
     }
 
-    public List<WishList> read(Long userId) {
-        return wishListRepository.findAllByUserId(userId);
+    public List<WishParam> read(Long userId) {
+        return wishListRepository.findAllByUserId(userId)
+            .stream().map(WishParam::new)
+            .toList();
     }
 
-    public void update(Long userId, WishListForm wishListForm) {
-        Long productId = wishListForm.getProductId();
+    public void update(Long userId, WishForm wishForm) {
+        Long productId = wishForm.getProductId();
 
         // 수량을 지정하지 않았거나 0으로 수정하는 경우 위시리스트에서 삭제
-        if (wishListForm.isZeroQuantity()) {
+        if (wishForm.isZeroQuantity()) {
             delete(userId, productId);
             return;
         }
 
         // 해당 위시리스트가 존재하지 않으면(사용자의 위시리스트에 해당 상품이 없으면) 새로 생성
-        Optional<WishList> target = wishListRepository.findByUserIdAndProductId(userId,
+        Optional<Wish> target = wishListRepository.findByUserIdAndProductId(userId,
             productId);
         if (target.isEmpty()) {
-            create(userId, wishListForm);
+            create(userId, wishForm);
             return;
         }
 
-        WishList wishList = target.get();
+        Wish wish = target.get();
 
-        wishList.updateQuantity(wishListForm.getQuantity());
-        wishListRepository.save(wishList);
+        wish.updateQuantity(wishForm.getQuantity());
+        wishListRepository.save(wish);
     }
 
     public void delete(Long userId, Long productId) {
-        WishList wishList = wishListRepository.findByUserIdAndProductId(userId, productId)
+        Wish wish = wishListRepository.findByUserIdAndProductId(userId, productId)
             .orElseThrow(() -> new WishListNotFoundException("위시리스트에 삭제할 상품이 존재하지 않습니다."));
 
-        wishListRepository.deleteById(wishList.getId());
+        wishListRepository.deleteById(wish.getId());
     }
 }

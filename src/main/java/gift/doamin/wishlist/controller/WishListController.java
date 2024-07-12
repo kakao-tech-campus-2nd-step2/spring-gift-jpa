@@ -1,7 +1,8 @@
 package gift.doamin.wishlist.controller;
 
-import gift.doamin.wishlist.dto.WishListForm;
-import gift.doamin.wishlist.entity.WishList;
+import gift.doamin.wishlist.dto.WishForm;
+import gift.doamin.wishlist.dto.WishParam;
+import gift.doamin.wishlist.entity.Wish;
 import gift.doamin.wishlist.service.WishListService;
 import jakarta.validation.Valid;
 import java.security.Principal;
@@ -9,8 +10,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,28 +29,28 @@ public class WishListController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createWishList(@Valid @RequestBody WishListForm wishListForm, Principal principal) {
+    public void addWish(@Valid @RequestBody WishForm wishForm, Principal principal) {
         Long userId = Long.parseLong(principal.getName());
-        wishListService.create(userId, wishListForm);
+        wishListService.create(userId, wishForm);
     }
 
     @GetMapping
-    public List<WishList> getWishList(Principal principal) {
+    public List<WishParam> getWishList(Principal principal) {
         Long userId = Long.parseLong(principal.getName());
         return wishListService.read(userId);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateWishList(@Valid @RequestBody WishListForm wishListForm, Principal principal) {
+    public void updateWish(@Valid @RequestBody WishForm wishForm, Principal principal) {
         Long userId = Long.parseLong(principal.getName());
-        wishListService.update(userId, wishListForm);
+        wishListService.update(userId, wishForm);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteWishList(@Valid @RequestBody WishListForm wishListForm, Principal principal) {
+    public void deleteWish(@Valid @RequestBody WishForm wishForm, Principal principal) {
         Long userId = Long.parseLong(principal.getName());
-        wishListService.update(userId, wishListForm);
+        wishListService.update(userId, wishForm);
     }
 }

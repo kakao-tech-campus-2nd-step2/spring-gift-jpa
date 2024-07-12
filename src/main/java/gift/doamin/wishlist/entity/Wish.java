@@ -1,20 +1,24 @@
 package gift.doamin.wishlist.entity;
 
+import gift.doamin.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-public class WishList {
+public class Wish {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private User user;
 
     @Column(nullable = false)
     private Long productId;
@@ -22,13 +26,14 @@ public class WishList {
     @Column(nullable = false)
     private Integer quantity;
 
-    public WishList(Long userId, Long productId, Integer quantity) {
-        this.userId = userId;
+
+    public Wish(User user, Long productId, Integer quantity) {
+        this.user = user;
         this.productId = productId;
         this.quantity = quantity;
     }
 
-    protected WishList() {
+    protected Wish() {
 
     }
 
@@ -36,8 +41,8 @@ public class WishList {
         return id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
     public Long getProductId() {

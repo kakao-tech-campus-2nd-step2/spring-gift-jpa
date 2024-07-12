@@ -1,17 +1,17 @@
 package gift.doamin.wishlist.repository;
 
-import gift.doamin.wishlist.entity.WishList;
+import gift.doamin.wishlist.entity.Wish;
 import java.util.List;
 
 public interface WishListRepository {
 
-    WishList save(WishList wishList);
+    Wish save(Wish wish);
 
-    List<WishList> findByUserId(Long userId);
+    List<Wish> findByUserId(Long userId);
 
-    WishList findByUserIdAndProductId(Long userId, Long productId);
+    Wish findByUserIdAndProductId(Long userId, Long productId);
 
-    void update(WishList wishList);
+    void update(Wish wish);
 
     void deleteById(Long id);
 

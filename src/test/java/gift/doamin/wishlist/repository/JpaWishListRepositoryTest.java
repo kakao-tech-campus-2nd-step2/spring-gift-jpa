@@ -3,7 +3,7 @@ package gift.doamin.wishlist.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import gift.doamin.wishlist.entity.WishList;
+import gift.doamin.wishlist.entity.Wish;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -18,17 +18,17 @@ class JpaWishListRepositoryTest {
 
     @Test
     void save() {
-        WishList wishList = new WishList(1L, 1L, 3);
+        Wish wish = new Wish(1L, 1L, 3);
 
-        WishList savedWishList = jpaWishListRepository.save(wishList);
+        Wish savedWish = jpaWishListRepository.save(wish);
 
-        assertThat(savedWishList.getId()).isNotNull();
+        assertThat(savedWish.getId()).isNotNull();
     }
 
     @Test
     void existsByUserIdAndProductId() {
-        WishList wishList = new WishList(1L, 1L, 3);
-        jpaWishListRepository.save(wishList);
+        Wish wish = new Wish(1L, 1L, 3);
+        jpaWishListRepository.save(wish);
 
         assertAll(
             () -> assertThat(jpaWishListRepository.existsByUserIdAndProductId(1L, 1L)).isTrue(),
@@ -38,33 +38,33 @@ class JpaWishListRepositoryTest {
 
     @Test
     void findAllByUserId() {
-        WishList wishList1 = new WishList(1L, 1L, 1);
-        jpaWishListRepository.save(wishList1);
-        WishList wishList2 = new WishList(1L, 2L, 2);
-        jpaWishListRepository.save(wishList2);
+        Wish wish1 = new Wish(1L, 1L, 1);
+        jpaWishListRepository.save(wish1);
+        Wish wish2 = new Wish(1L, 2L, 2);
+        jpaWishListRepository.save(wish2);
 
-        List<WishList> wishLists = jpaWishListRepository.findAllByUserId(1L);
+        List<Wish> wishes = jpaWishListRepository.findAllByUserId(1L);
 
-        assertThat(wishLists.size()).isEqualTo(2);
+        assertThat(wishes.size()).isEqualTo(2);
     }
 
     @Test
     void findByUserIdAndProductId() {
-        WishList wishList = new WishList(1L, 1L, 3);
-        WishList savedWishList = jpaWishListRepository.save(wishList);
+        Wish wish = new Wish(1L, 1L, 3);
+        Wish savedWish = jpaWishListRepository.save(wish);
 
         var foundWishList = jpaWishListRepository.findByUserIdAndProductId(1L,1L);
 
-        assertThat(foundWishList.get()).isEqualTo(savedWishList);
+        assertThat(foundWishList.get()).isEqualTo(savedWish);
     }
 
     @Test
     void deleteById() {
-        WishList wishList = new WishList(1L, 1L, 3);
-        WishList savedWishList = jpaWishListRepository.save(wishList);
+        Wish wish = new Wish(1L, 1L, 3);
+        Wish savedWish = jpaWishListRepository.save(wish);
 
-        jpaWishListRepository.deleteById(savedWishList.getId());
-        Optional<WishList> foundWishList = jpaWishListRepository.findById(savedWishList.getId());
+        jpaWishListRepository.deleteById(savedWish.getId());
+        Optional<Wish> foundWishList = jpaWishListRepository.findById(savedWish.getId());
 
         assertThat(foundWishList.isEmpty()).isTrue();
 

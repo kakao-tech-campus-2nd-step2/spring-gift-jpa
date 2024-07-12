@@ -1,6 +1,6 @@
 package gift.doamin.wishlist.repository;
 
-import gift.doamin.wishlist.entity.WishList;
+import gift.doamin.wishlist.entity.Wish;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,23 +9,23 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class MemoryWishListRepository implements WishListRepository {
 
-    private final Map<Long, WishList> wishLists = new ConcurrentHashMap<>();
+    private final Map<Long, Wish> wishLists = new ConcurrentHashMap<>();
     private final AtomicLong sequence = new AtomicLong();
 
     @Override
-    public WishList save(WishList wishList) {
+    public Wish save(Wish wish) {
         Long id = sequence.getAndIncrement();
-        wishLists.put(id, wishList);
-        return wishList;
+        wishLists.put(id, wish);
+        return wish;
     }
 
     @Override
-    public List<WishList> findByUserId(Long userId) {
-        List<WishList> result = new ArrayList<>();
+    public List<Wish> findByUserId(Long userId) {
+        List<Wish> result = new ArrayList<>();
 
-        for (WishList wishList : wishLists.values()) {
-            if (wishList.getUserId().equals(userId)) {
-                result.add(wishList);
+        for (Wish wish : wishLists.values()) {
+            if (wish.getUser().getId().equals(userId)) {
+                result.add(wish);
             }
         }
 
@@ -33,18 +33,18 @@ public class MemoryWishListRepository implements WishListRepository {
     }
 
     @Override
-    public WishList findByUserIdAndProductId(Long userId, Long productId) {
-        for (WishList wishList : wishLists.values()) {
-            if (wishList.getUserId().equals(userId) && wishList.getProductId().equals(productId)) {
-                return wishList;
+    public Wish findByUserIdAndProductId(Long userId, Long productId) {
+        for (Wish wish : wishLists.values()) {
+            if (wish.getUser().getId().equals(userId) && wish.getProductId().equals(productId)) {
+                return wish;
             }
         }
         return null;
     }
 
     @Override
-    public void update(WishList wishList) {
-        wishLists.put(wishList.getId(), wishList);
+    public void update(Wish wish) {
+        wishLists.put(wish.getId(), wish);
     }
 
     @Override
@@ -54,8 +54,8 @@ public class MemoryWishListRepository implements WishListRepository {
 
     @Override
     public boolean existsByUserIdAndProductId(Long userId, Long productId) {
-        for (WishList wishList : wishLists.values()) {
-            if (wishList.getUserId().equals(userId) && wishList.getProductId().equals(productId)) {
+        for (Wish wish : wishLists.values()) {
+            if (wish.getUser().getId().equals(userId) && wish.getProductId().equals(productId)) {
                 return true;
             }
         }
