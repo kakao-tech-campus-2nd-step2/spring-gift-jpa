@@ -26,8 +26,7 @@ public class Wish {
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    protected Wish () {
-    }
+    protected Wish () {}
 
     public Wish(Member member, Product product, int quantity) {
         this.member = member;
