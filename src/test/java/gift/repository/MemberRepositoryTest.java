@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.model.Member;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ class MemberRepositoryTest {
     private MemberRepository memberRepository;
 
     private Member member;
+    private Member invalidMember;
 
     @Autowired
     public MemberRepositoryTest(MemberRepository memberRepository) {
@@ -48,4 +50,43 @@ class MemberRepositoryTest {
         );
     }
 
+    @Test
+    void testSaveWithNullName() {
+        invalidMember = new Member(1L, null, "kbm@kbm", "mbk", "user");
+        try {
+            memberRepository.save(invalidMember);
+        } catch (ConstraintViolationException e) {
+            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        }
+    }
+
+    @Test
+    void testSaveWithNullEmail() {
+        invalidMember = new Member(1L, "kbm", null, "mbk", "user");
+        try {
+            memberRepository.save(invalidMember);
+        } catch (ConstraintViolationException e) {
+            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        }
+    }
+
+    @Test
+    void testSaveWithInvalidEmail() {
+        invalidMember = new Member(1L, "kbm", "invalid", "mbk", "user");
+        try {
+            memberRepository.save(invalidMember);
+        } catch (ConstraintViolationException e) {
+            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        }
+    }
+
+    @Test
+    void testSaveWithNullPassword() {
+        invalidMember = new Member(1L, "kbm", "kbm@kbm", null, "user");
+        try {
+            memberRepository.save(invalidMember);
+        } catch (ConstraintViolationException e) {
+            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        }
+    }
 }

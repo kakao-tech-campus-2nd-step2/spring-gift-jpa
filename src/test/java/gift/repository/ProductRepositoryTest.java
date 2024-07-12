@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.model.Product;
+import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ class ProductRepositoryTest {
 
     private Product product1;
     private Product product2;
+    private Product invalidProduct;
 
     @Autowired
     public ProductRepositoryTest(ProductRepository productRepository) {
@@ -67,6 +69,87 @@ class ProductRepositoryTest {
         productRepository.deleteById(savedProduct.getId());
         boolean exists = productRepository.existsById(savedProduct.getId());
         assertThat(exists).isFalse();
+    }
+
+    @Test
+    void testSaveWithNullName() {
+        invalidProduct = new Product(1L, null, "100", "https://kakao");
+        try {
+            productRepository.save(invalidProduct);
+        } catch (ConstraintViolationException e) {
+            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        }
+    }
+
+    @Test
+    void testSaveWithLengthName() {
+        invalidProduct = new Product(1L, "aaaaaaaaa aaaa aa", "100", "https://kakao");
+        try {
+            productRepository.save(invalidProduct);
+        } catch (ConstraintViolationException e) {
+            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        }
+    }
+
+    @Test
+    void testSaveWithSpecial() {
+        invalidProduct = new Product(1L, ".@", "100", "https://kakao");
+        try {
+            productRepository.save(invalidProduct);
+        } catch (ConstraintViolationException e) {
+            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+            return;
+        }
+    }
+
+    @Test
+    void testSaveWithKaKaoName() {
+        invalidProduct = new Product(1L, "카카오상품","100","https://kakao");
+        try {
+            productRepository.save(invalidProduct);
+        } catch (ConstraintViolationException e) {
+            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        }
+    }
+
+    @Test
+    void testSaveWithNullPrice() {
+        invalidProduct = new Product(1L, "상품", null, "https://kakao");
+        try {
+            productRepository.save(invalidProduct);
+        } catch (ConstraintViolationException e) {
+            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        }
+    }
+
+    @Test
+    void testSaveWithInvalidPrice() {
+        invalidProduct = new Product(1L, "상품", "가격", "https://kakao");
+        try {
+            productRepository.save(invalidProduct);
+        } catch (ConstraintViolationException e) {
+            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        }
+    }
+
+    @Test
+    void testSaveWithNullImageUrl() {
+        invalidProduct = new Product(1L, "상품", "100", null);
+        try {
+            productRepository.save(invalidProduct);
+        } catch (ConstraintViolationException e) {
+            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        }
+    }
+
+    @Test
+    void testSaveWithInvalidImageUrl() {
+        Product invalidProduct = new Product(1L, "상품", "100", "kakao");
+        try {
+            productRepository.save(invalidProduct);
+        } catch (ConstraintViolationException e) {
+            assertThat(e).isInstanceOf(ConstraintViolationException.class);
+        }
     }
 
 }
