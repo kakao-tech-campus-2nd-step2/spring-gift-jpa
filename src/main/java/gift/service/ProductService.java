@@ -1,60 +1,49 @@
 package gift.service;
 
-import gift.dao.ProductDao;
 import gift.model.Product;
+import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ProductService {
 
-    private final ProductDao productDao;
-    private final CatchError catchError = new CatchError();
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDao productDao) {
-        this.productDao = productDao;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts() {
-        return productDao.selectAllProduct();
+    //전체 조회
+    public List<Product> getAllProducts(){
+        return productRepository.findAll();
     }
 
+    //하나 조회
     public Product getProductById(Long id) {
-        return productDao.selectProduct(id);
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당 상품이 없습니다."));
     }
 
-    public void postProduct(Product product) {
-        validateProduct(product);
-        productDao.insertProduct(product);
+    //저장
+    public void saveProduct(Product product) {
+        productRepository.save(product);
     }
 
+    //삭제
     public void deleteProduct(Long id) {
-        productDao.deleteProduct(id);
+        productRepository.deleteById(id);
     }
 
     public void updateProduct(Long id, Product newProduct) {
-        Product oldProduct = productDao.selectProduct(id);
-        if(newProduct.getName() == null){
-            validateProduct(newProduct);
-        }
-
-        Product updatedProduct = new Product(
-                oldProduct.getId(),
-                newProduct.getName() != null && !newProduct.getName().isEmpty() ? newProduct.getName() : oldProduct.getName(),
-                newProduct.getPrice() != null ? newProduct.getPrice() : oldProduct.getPrice(),
-                newProduct.getImageUrl() != null && !newProduct.getImageUrl().isEmpty() ? newProduct.getImageUrl() : oldProduct.getImageUrl()
-        );
-
-        productDao.updateProduct(updatedProduct);
-    }
-
-    private void validateProduct(Product product) {
-        if (!catchError.isCorrectName(product.getName())) {
-            throw new IllegalArgumentException("이름은 최대 15자 이내이어야 하며, 특수문자로는 (),[],+,-,&,/,_만 사용 가능합니다.");
-        }
-        if (catchError.isContainsKakao(product.getName())) {
-            throw new IllegalArgumentException("\"카카오\"는 MD와 협의 후에 사용 가능합니다.");
-        }
+        Product oldProduct = productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("해당 상품이 없습니다."));
+        Product updatedProduct = oldProduct.update(
+                newProduct.getName(),
+                newProduct.getPrice(),
+                newProduct.getImageUrl());
+        productRepository.save(updatedProduct);
     }
 }

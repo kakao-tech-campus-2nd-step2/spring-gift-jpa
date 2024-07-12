@@ -1,38 +1,34 @@
 package gift.service;
 
-import gift.dao.MemberDao;
-import gift.model.CreatJwtToken;
+import gift.model.CreateJwtToken;
 import gift.model.Member;
+import gift.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.naming.AuthenticationException;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
 public class MemberService {
-    TokenInterceptor interceptor = new TokenInterceptor();
-    CreatJwtToken jwtUtil = new CreatJwtToken();
-    private final MemberDao memberDao;
+    private final TokenInterceptor tokenInterceptor;
+    private final CreateJwtToken createJwtToken;
+    private final MemberRepository memberRepository;
 
-    @Autowired
-    public MemberService(MemberDao memberDao) {
-        this.memberDao = memberDao;
+    public MemberService(TokenInterceptor tokenInterceptor, CreateJwtToken createJwtToken, MemberRepository memberRepository) {
+        this.tokenInterceptor = tokenInterceptor;
+        this.createJwtToken = createJwtToken;
+        this.memberRepository = memberRepository;
     }
 
     public String signin(Member member){
-        Optional<Member> memberOptional = Optional.ofNullable(memberDao.selectMember(member.getEmail()));
-        if (!memberOptional.isPresent()) {
-            memberDao.insertMember(member);
-            return jwtUtil.createJwt(member.getId(), member.getEmail());
+        if(!memberRepository.existsByEmail(member.getEmail())){
+            memberRepository.save(member);
+            return createJwtToken.createJwt(member.getId(), member.getEmail());
         }
         else {
             throw new IllegalArgumentException("이미 가입한 이메일 입니다.");
@@ -40,14 +36,16 @@ public class MemberService {
     }
 
     public String login(Member member){
-        Optional<Member> memberOptional = Optional.ofNullable(memberDao.selectMember(member.getEmail()));
-        if (!memberOptional.isPresent()) {
+        if(!memberRepository.existsByEmail(member.getEmail())){
             throw new IllegalArgumentException("이메일을 확인해주세요.");
         }
-        Member loginMember = memberDao.selectMember(member.getEmail());
+        Member loginMember = memberRepository.findByEmail(member.getEmail());
+        return getTokenWhenCorrectPW(loginMember, member);
+    }
 
-        if(Objects.equals(member.getPassword(), loginMember.getPassword())){
-            return jwtUtil.createJwt(loginMember.getId(), member.getEmail());
+    public String getTokenWhenCorrectPW(Member member, Member inputMember){
+        if(member.equals(inputMember)){
+            return createJwtToken.createJwt(member.getId(), member.getEmail());
         }
         else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
@@ -56,10 +54,14 @@ public class MemberService {
 
     // 토큰으로 멤버 id 가져옴
     public Long getIdByToken(HttpServletRequest request) throws AuthenticationException {
-        Long id = 0L;
-        Claims claims = interceptor.getClaims(request);
-        id = claims.get("id", Long.class);
-        return id;
+        Claims claims = tokenInterceptor.getClaims(request);
+        return claims.get("id", Long.class);
+    }
+
+    public Member getMemberByAuth(HttpServletRequest request) throws AuthenticationException {
+        Long memberId = getIdByToken(request);
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new NoSuchElementException("해당 멤버가 없습니다."));
     }
 
     @ResponseStatus(value = HttpStatus.FORBIDDEN)

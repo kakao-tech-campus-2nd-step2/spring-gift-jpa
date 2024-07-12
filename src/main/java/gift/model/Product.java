@@ -1,19 +1,49 @@
 package gift.model;
 
-import org.springframework.stereotype.Component;
+import jakarta.persistence.*;
 
-@Component
+import java.util.Objects;
+
+@Entity
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private long id;
+
+    @Column(name = "NAME")
     private String name;
+
+    @Column(name = "PRICE")
     private Integer price;
+
+    @Column(name = "IMAGE_URL")
     private String imageUrl;
 
     public Product(long id, String name, int price, String imageUrl) {
         this.id = id;
-        this.name = name;
+        this.setName(name);
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public Product(String name, int price, String imageUrl) {
+        this.setName(name);
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    public Product update(String name, Integer price, String imageUrl){
+        if(!name.isEmpty()){
+            this.setName(name);
+        }
+        if(price != null){
+            this.price = price;
+        }
+        if(!imageUrl.isEmpty()){
+            this.imageUrl = imageUrl;
+        }
+        return this;
     }
 
     public Product() {
@@ -35,12 +65,13 @@ public class Product {
         this.price = price;
     }
 
-    public String getName() {
-        return name;
+    public String getName(){
+        return this.name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        ProductName productName = new ProductName(name);
+        this.name = productName.getName();
     }
 
     public long getId() {
@@ -49,5 +80,18 @@ public class Product {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(name, product.name) && Objects.equals(price, product.price) && Objects.equals(imageUrl, product.imageUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, price, imageUrl);
     }
 }

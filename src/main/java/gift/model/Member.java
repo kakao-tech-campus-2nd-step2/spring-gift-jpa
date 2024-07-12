@@ -1,15 +1,29 @@
 package gift.model;
 
-import org.springframework.stereotype.Component;
+import jakarta.persistence.*;
 
-@Component
+import java.util.Objects;
+
+@Entity
 public class Member {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
+
+    @Column(name = "EMAIL", unique = true)
     private String email;
+
+    @Column(name = "PASSWORD")
     private String password;
 
     public Member(Long id, String email, String password){
         this.id = id;
+        this.email = email;
+        this.password = password;
+    }
+
+    public Member(String email, String password){
         this.email = email;
         this.password = password;
     }
@@ -27,5 +41,18 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return Objects.equals(email, member.email) && Objects.equals(password, member.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, password);
     }
 }

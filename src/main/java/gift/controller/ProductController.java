@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/products")
 public class ProductController {
-
     private final ProductService productService;
 
     public ProductController(ProductService productService) {
@@ -31,7 +30,7 @@ public class ProductController {
     @PostMapping
     public String postProduct(@ModelAttribute Product product, Model model) {
         try{
-            productService.postProduct(product);
+            productService.saveProduct(product);
             return "redirect:/products";
         } catch (IllegalArgumentException e) {
         model.addAttribute("error", e.getMessage());

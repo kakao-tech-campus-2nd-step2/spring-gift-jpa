@@ -1,46 +1,27 @@
 package gift.service;
 
+import gift.model.BearerToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.stereotype.Component;
 
 import javax.naming.AuthenticationException;
 
+@Component
 public class TokenInterceptor {
     static String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
 
 //    @Value("${secret_key}")
 //    private String secretKey;
 
-    public String getToken(HttpServletRequest request) throws AuthenticationException {
-        // 요청 헤더에서 Authorization 헤더 값을 가져옴
+    public Claims getClaims(HttpServletRequest request) throws AuthenticationException {
         String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            // Authorization 헤더에서 Bearer 토큰을 추출
-            String token = authHeader.substring(7);
-            return token;
-        }
-        else{
-            throw new AuthenticationException("헤더 혹은 토큰이 유효하지 않습니다.");
-        }
-    }
-
-    public Claims getClaims(HttpServletRequest request) throws AuthenticationException{
-        String token = getToken(request);
-        System.out.println(token);
+        BearerToken token = new BearerToken(authHeader);
         Claims claims = Jwts.parser()
                 .setSigningKey(secretKey)
-                .parseClaimsJws(token)
+                .parseClaimsJws(token.getToken())
                 .getBody();
         return claims;
-    }
-
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(AuthenticationException.class)
-    public String handleAuthenticationException(AuthenticationException e) {
-        return e.getMessage();
     }
 }

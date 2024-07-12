@@ -1,17 +1,17 @@
 package gift.controller;
 
 import gift.model.Product;
-import gift.dao.ProductDao;
+import gift.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class IndexController {
-    private final ProductDao ProductDao;
+    private final ProductService productService;
 
-    public IndexController(gift.dao.ProductDao productDao) {
-        ProductDao = productDao;
+    public IndexController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/")
@@ -26,7 +26,7 @@ public class IndexController {
 
     @PostMapping("/editform/{id}")
     public String editform(@PathVariable Long id, Model model){
-        Product product = ProductDao.selectProduct(id);
+        Product product = productService.getProductById(id);
         model.addAttribute("product", product);
         return "editform";
     }
