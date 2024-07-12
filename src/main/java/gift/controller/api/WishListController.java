@@ -4,11 +4,12 @@ import gift.dto.request.WishListRequest;
 import gift.dto.response.WishProductResponse;
 import gift.interceptor.MemberId;
 import gift.service.WishListService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 public class WishListController {
@@ -26,8 +27,9 @@ public class WishListController {
     }
 
     @GetMapping("api/wishlist")
-    public List<WishProductResponse> getWishProducts(@MemberId Long memberId) {
-        return wishListService.getWishProductsByMemberId(memberId);
+    public Page<WishProductResponse> getWishProducts(@MemberId Long memberId,
+                                                     @PageableDefault(sort = "productId") Pageable pageable) {
+        return wishListService.getWishProductsByMemberId(memberId, pageable);
     }
 
     @PutMapping("api/wishlist")
