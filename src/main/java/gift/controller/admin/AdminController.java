@@ -1,6 +1,6 @@
 package gift.controller.admin;
 
-import gift.DTO.Product;
+import gift.domain.Product;
 import gift.DTO.ProductRequest;
 import gift.service.ProductService;
 import jakarta.validation.Valid;

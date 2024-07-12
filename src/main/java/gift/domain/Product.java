@@ -1,4 +1,4 @@
-package gift.DTO;
+package gift.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

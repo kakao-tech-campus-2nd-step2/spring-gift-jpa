@@ -4,7 +4,7 @@ import gift.DTO.LoginRequest;
 import gift.DTO.LoginResponse;
 import gift.DTO.SignupRequest;
 import gift.DTO.SignupResponse;
-import gift.DTO.User;
+import gift.domain.User;
 import gift.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

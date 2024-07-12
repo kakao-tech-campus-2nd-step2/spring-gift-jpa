@@ -1,6 +1,6 @@
 package gift.controller.wishlist;
 
-import gift.DTO.Product;
+import gift.domain.Product;
 import gift.service.UserService;
 import gift.service.WishlistService;
 import java.util.List;

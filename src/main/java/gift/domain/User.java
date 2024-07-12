@@ -1,4 +1,4 @@
-package gift.DTO;
+package gift.domain;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Column;

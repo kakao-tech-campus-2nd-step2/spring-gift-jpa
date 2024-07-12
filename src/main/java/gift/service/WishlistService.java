@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.DTO.Product;
-import gift.DTO.Wishlist;
+import gift.domain.Product;
+import gift.domain.Wishlist;
 import gift.repository.WishlistRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
