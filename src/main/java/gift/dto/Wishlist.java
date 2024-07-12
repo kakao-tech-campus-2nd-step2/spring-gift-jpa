@@ -7,6 +7,8 @@ public class Wishlist {
         private String productName;
         private int quantity;
 
+        public Request(){}
+
         public Request(String productName, int quantity) {
             this.productName = productName;
             this.quantity = quantity;

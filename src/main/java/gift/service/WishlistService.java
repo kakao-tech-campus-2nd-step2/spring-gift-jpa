@@ -1,11 +1,9 @@
 package gift.service;
 
-import gift.domain.Product;
 import gift.domain.User;
 import gift.domain.Wish;
 import gift.dto.Wishlist;
 import gift.dto.Wishlist.Request;
-import gift.dto.Wishlist.Response;
 import gift.exception.ProductException;
 import gift.exception.UserErrorCode;
 import gift.exception.UserException;
@@ -13,17 +11,15 @@ import gift.exception.UserException.BadRequest;
 import gift.exception.UserException.BadToken;
 import gift.exception.WishErrorCode;
 import gift.exception.WishException;
-import gift.repository.ProductJdbcRepository;
 import gift.repository.ProductJpaRepository;
 import gift.repository.UserJpaRepository;
-import gift.repository.UserRepository;
 import gift.repository.WishJpaRepository;
-import gift.repository.WishlistRepository;
 import gift.util.JwtTokenProvider;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -51,12 +47,13 @@ public class WishlistService {
             .getId();
     }
 
-    public List<Wishlist.Response> getAllWishlistItems(long userId) {
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new BadRequest(UserErrorCode.ID_NOT_EXISTS));
-        List<Wish> wishList = wishlistRepository.findByUser(user);
+    public List<Wishlist.Response> getAllWishlistItems(String accessToken, Pageable pageable) {
+        User user = userRepository.findByAccessToken(accessToken)
+            .orElseThrow(() -> new BadRequest(UserErrorCode.INVALID_TOKEN));
+//        List<Wish> wishList = wishlistRepository.findByUser(user);
+        Page<Wish> wishPage = wishlistRepository.findByUser(user, pageable);
 
-        return wishList.stream()
+        return wishPage.getContent().stream()
             .map(wish -> new Wishlist.Response(wish.getProductName(), wish.getQuantity()))
             .collect(Collectors.toList());
     }
@@ -65,7 +62,8 @@ public class WishlistService {
         User user = userRepository.findByAccessToken(accessToken)
             .orElseThrow(() -> new BadToken(UserErrorCode.INVALID_TOKEN));
 
-        Wish wish = new Wish();
+        Wish wish = wishlistRepository.findByProductName(request.getProductName())
+            .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NAME_NOT_EXISTS));
         wish.setProductName(request.getProductName());
         wish.setQuantity(request.getQuantity());
         wish.setUser(user);
