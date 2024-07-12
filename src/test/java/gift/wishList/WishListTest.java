@@ -45,8 +45,6 @@ public class WishListTest {
         HttpEntity<Member> requestEntity = new HttpEntity<>(member, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url + "/members/login", member, String.class);
 
-        System.out.println(responseEntity);
-
         int startIndex = responseEntity.getBody().indexOf("\"token\":\"") + "\"token\":\"".length();
         int endIndex = responseEntity.getBody().indexOf("\"", startIndex);
         token = responseEntity.getBody().substring(startIndex, endIndex);
@@ -66,8 +64,6 @@ public class WishListTest {
         ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/wishlist", HttpMethod.POST,
             requestEntity, String.class);
 
-        System.out.println(responseEntity);
-
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
@@ -83,7 +79,20 @@ public class WishListTest {
         ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/wishlist", HttpMethod.GET,
             requestEntity, String.class);
 
-        System.out.println(responseEntity);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("위시리스트 삭제")
+    @DirtiesContext
+    void deleteWishList() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(token);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url + "/wishlist/4", HttpMethod.DELETE,
+            requestEntity, String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }

@@ -43,7 +43,6 @@ public class MemberTest {
         HttpEntity<Member> requestEntity = new HttpEntity<>(member);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url + "/members/register", member, String.class);
 
-
         int startIndex = responseEntity.getBody().indexOf("\"token\":\"") + "\"token\":\"".length();
         int endIndex = responseEntity.getBody().indexOf("\"", startIndex);
         token = responseEntity.getBody().substring(startIndex, endIndex);
