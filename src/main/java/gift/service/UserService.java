@@ -50,6 +50,10 @@ public class UserService {
         throw new Exception("Invalid email or password");
     }
 
+    public Optional<User> getUserByEmail(String email) {
+       return userRepository.findByEmail(email);
+    }
+
     private String generateToken(User user) {
         long now = System.currentTimeMillis();
         return Jwts.builder()

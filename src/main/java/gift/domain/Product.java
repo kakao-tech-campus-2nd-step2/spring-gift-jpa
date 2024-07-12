@@ -5,7 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -23,6 +26,9 @@ public class Product {
 
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
+
+    @OneToMany(mappedBy = "product")
+    private List<Wishlist> wishes = new ArrayList<>();
 
     public Product() {
     }

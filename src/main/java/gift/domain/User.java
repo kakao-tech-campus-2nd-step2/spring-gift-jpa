@@ -1,5 +1,6 @@
 package gift.domain;
 
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +9,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
@@ -29,6 +32,9 @@ public class User {
 
     @NotNull
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Wishlist> wishes =  new ArrayList<>();
 
     public User() {
     }

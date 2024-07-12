@@ -2,17 +2,20 @@ package gift.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "wishlist", uniqueConstraints = {
     @UniqueConstraint(
-        name = "email_productID_UNIQUE",
-        columnNames = {"email", "product_id"}
+        name = "USER_PRODUCT_ID_UNIQUE",
+        columnNames = {"user_id", "product_id"}
     )
 })
 public class Wishlist {
@@ -21,25 +24,27 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email", nullable = false)
-    private String email;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
+    private Product product;
 
     public Wishlist() {
     }
 
-    public Wishlist(String email, Long productId) {
-        this.email = email;
-        this.productId = productId;
+    public Wishlist(User user, Product product) {
+        this.user = user;
+        this.product = product;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUserEmail() {
+        return user.getEmail();
     }
 
     public Long getProductId() {
-        return productId;
+        return product.getId();
     }
 }
