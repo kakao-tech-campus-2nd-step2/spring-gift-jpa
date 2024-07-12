@@ -71,10 +71,7 @@ public class ProductApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        boolean isSuccessful = productService.deleteProduct(id);
-        if (isSuccessful) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
 }
