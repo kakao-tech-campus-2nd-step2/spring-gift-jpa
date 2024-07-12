@@ -2,6 +2,7 @@ package gift.product.application;
 
 import gift.product.domain.Product;
 import gift.product.domain.WishList;
+import gift.product.domain.WishListProduct;
 import gift.product.infra.ProductRepository;
 import gift.product.infra.WishListRepository;
 import jakarta.transaction.Transactional;
@@ -38,7 +39,10 @@ public class WishListService {
             wishList = wishListRepository.save(wishList);
         }
         product.setWishList(wishList);
-        wishList.getProducts().add(product);
+
+        WishListProduct wishListProduct = new WishListProduct(product, wishList);
+        wishList.addWishListProduct(wishListProduct);
+
         wishListRepository.save(wishList);
     }
 
@@ -46,8 +50,7 @@ public class WishListService {
     public void deleteProductFromWishList(Long userId, Long productId) {
         WishList wishList = wishListRepository.findByUserId(userId);
         if (wishList != null) {
-            wishList.getProducts().removeIf(product -> product.getId().equals(productId));
-            wishListRepository.save(wishList);
+            wishList.removeWishListProduct(productId);
         }
     }
 }

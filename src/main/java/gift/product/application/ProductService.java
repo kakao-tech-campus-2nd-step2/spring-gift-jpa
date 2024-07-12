@@ -8,8 +8,10 @@ import gift.util.ErrorCode;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -21,8 +23,8 @@ public class ProductService {
     private static final int MAX_PRODUCT_NAME_LENGTH = 15;
     private static final String RESERVED_KEYWORD = "카카오";
 
-
-    public Long addProduct(CreateProductRequestDTO createProductRequestDTO) {
+    @Transactional
+    public Long saveProduct(CreateProductRequestDTO createProductRequestDTO) {
         Product product = new Product(createProductRequestDTO.getName(), createProductRequestDTO.getPrice(),
             createProductRequestDTO.getImageUrl());
         validateProduct(product);

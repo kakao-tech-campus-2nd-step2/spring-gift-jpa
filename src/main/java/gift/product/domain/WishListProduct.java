@@ -1,5 +1,6 @@
 package gift.product.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 public class WishListProduct {
 
     @Id
+    @Column(name = "wishlist_product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -24,8 +26,13 @@ public class WishListProduct {
     @JoinColumn(name = "wishlist_id")
     private WishList wishList;
 
-    private int orderPrice;
-    private int count;
+    public WishListProduct() {
+    }
+
+    public WishListProduct(Product product, WishList wishList) {
+        this.product = product;
+        this.wishList = wishList;
+    }
 
     public Long getId() {
         return id;
@@ -49,21 +56,5 @@ public class WishListProduct {
 
     public void setWishList(WishList wishList) {
         this.wishList = wishList;
-    }
-
-    public int getOrderPrice() {
-        return orderPrice;
-    }
-
-    public void setOrderPrice(int orderPrice) {
-        this.orderPrice = orderPrice;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
     }
 }

@@ -2,6 +2,7 @@ package gift.product.domain;
 
 import gift.user.domain.User;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,13 +19,14 @@ import java.util.ArrayList;
 public class WishList {
 
     @Id
+    @Column(name = "wishlist_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "wishList", cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "wishList", cascade = CascadeType.ALL, orphanRemoval = true)
     private ArrayList<WishListProduct> wishListProducts = new ArrayList<>();
 
     private LocalDateTime createdAt;
@@ -52,14 +54,26 @@ public class WishList {
 
     public void setUser(User user) {
         this.user = user;
+        user.getWishLists().add(this);
     }
 
     public ArrayList<WishListProduct> getWishListProducts() {
         return wishListProducts;
     }
 
-    public void setWishListProducts(ArrayList<WishListProduct> wishListProducts) {
-        this.wishListProducts = wishListProducts;
+    public void addWishListProduct(WishListProduct wishListProduct) {
+        wishListProducts.add(wishListProduct);
+        wishListProduct.setWishList(this);
+    }
+
+    public void removeWishListProduct(Long wishListProductId) {
+        for (WishListProduct wishListProduct : wishListProducts) {
+            if (wishListProduct.getId().equals(wishListProductId)) {
+                wishListProducts.remove(wishListProduct);
+                wishListProduct.setWishList(null);
+                break;
+            }
+        }
     }
 
     public LocalDateTime getCreatedAt() {
