@@ -20,7 +20,7 @@ public class WishService {
         return wishRepository.findAll()
             .stream()
             .map(WishDto::from)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     public WishDto createWish(String email, WishDto wishDto) {

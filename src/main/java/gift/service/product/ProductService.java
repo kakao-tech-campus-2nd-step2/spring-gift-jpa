@@ -20,7 +20,7 @@ public class ProductService {
         return productReposiotory.findAll()
             .stream()
             .map(ProductDto::from)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     public ProductDto getProductById(Long id) {

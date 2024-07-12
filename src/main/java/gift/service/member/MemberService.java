@@ -21,7 +21,7 @@ public class MemberService {
         return memberRepository.findAll()
             .stream()
             .map(MemberDto::from)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     public MemberDto getMemberByEmail(String email) {
