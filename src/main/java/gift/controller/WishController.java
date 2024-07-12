@@ -4,6 +4,7 @@ import gift.dto.LoginUser;
 import gift.entity.Wish;
 import gift.service.LoginMember;
 import gift.service.WishService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +19,10 @@ public class WishController {
     }
 
     @PostMapping("/{productId}")
-    public void create(@PathVariable("productId") long productId, @LoginMember LoginUser loginUser) {
+    public ResponseEntity<String> addWish(@PathVariable("productId") Long productId, @LoginMember LoginUser loginUser) {
         System.out.println("post");
         wishService.addWish(productId, loginUser);
+        return ResponseEntity.ok("Wish added");
     }
 
     @GetMapping
@@ -30,9 +32,10 @@ public class WishController {
     }
 
     @DeleteMapping("/{productId}")
-    public void delete(@PathVariable("productId") long productId, @LoginMember LoginUser loginUser) {
+    public ResponseEntity<String> deleteWish(@PathVariable("productId") Long productId, @LoginMember LoginUser loginUser) {
         System.out.println("delete");
         wishService.removeWish(productId, loginUser);
+        return ResponseEntity.ok("Wish deleted");
     }
 
 }

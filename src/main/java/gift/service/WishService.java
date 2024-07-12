@@ -1,47 +1,68 @@
 package gift.service;
 
-import gift.authorization.JwtUtil;
 import gift.dto.LoginUser;
+import gift.dto.WishDTO;
+import gift.entity.User;
 import gift.entity.Wish;
-import gift.repository.JdbcWishRepository;
+import gift.exceptionhandler.UserException;
+import gift.repository.ProductRepository;
+import gift.repository.UserRepository;
+import gift.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.NativeWebRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WishService {
 
-    private final JdbcWishRepository repository;
-    private final JwtUtil jwtUtil;
+    private final WishRepository wishRepository;
+    private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public WishService(JdbcWishRepository repository, JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-        this.repository = repository;
+    public WishService(WishRepository wishRepository, ProductRepository productRepository, UserRepository userRepository) {
+        this.wishRepository = wishRepository;
+        this.productRepository = productRepository;
+        this.userRepository = userRepository;
+    }
+
+    public Long findByEmail(String email){
+        Optional<User> user = userRepository.findByEmail(email);
+        if(user.isPresent()){
+            return user.get()
+                    .getId();
+        }
+        throw new UserException("User not found");
+    }
+
+    public static Wish toEntity(WishDTO dto) {
+        Wish wish = new Wish();
+        wish.setMemberId(dto.memberId());
+        wish.setProductId(dto.productId());
+        return wish;
     }
 
     public void addWish(long productId, LoginUser loginUser) {
-        repository.addToWishlist(loginUser.getEmail(), loginUser.getType(), productId);
+        String email = loginUser.getEmail();
+        Long memberId = findByEmail(email);
+        Wish wish = new Wish();
+        wish.setMemberId(memberId);
+        wish.setProductId(productId);
+        wishRepository.save(wish);
     }
 
     public void removeWish(long productId, LoginUser loginUser) {
-        repository.removeFromWishlist(loginUser.getEmail(), loginUser.getType(), productId);
+        String email = loginUser.getEmail();
+        Long memberId = findByEmail(email);
+        Wish wish = new Wish();
+        wish.setMemberId(memberId);
+        wish.setProductId(productId);
+        wishRepository.deleteByMemberIdAndProductId(memberId, productId);
     }
 
     public List<Wish> getWishesByMemberId(LoginUser loginUser) {
-        return repository.getWishlistItems(loginUser.getEmail());
-    }
-
-    public LoginUser getLoginUserByToken(NativeWebRequest webRequest){
-        String token = webRequest.getHeader("Authorization").substring("Bearer ".length());
-        if(jwtUtil.checkClaim(token)){
-            String email = jwtUtil.getUserEmail(token);
-            String type = jwtUtil.getUserType(token);
-            LoginUser loginUser = new LoginUser(email ,type, token);
-            return loginUser;
-        }
-        return null;
+        return wishRepository.findAll();
     }
 }

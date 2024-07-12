@@ -10,28 +10,26 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     @Column(unique=true)
     private String email;
     private String password;
-    private String type; //1 : admin  2 :user
 
     public User(){}
 
-    @ConstructorProperties({"email", "password", "type"})
-    public User(String email, String password, String type) {
+    @ConstructorProperties({"email", "password"})
+    public User(String email, String password) {
         this.email = email;
         this.password = password;
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getEmail() {

@@ -28,6 +28,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
+    @ExceptionHandler(value = UserException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFound(ProductException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
     @Description("api exception")
     @ExceptionHandler(value = ApiException.class)
     public ResponseEntity<String> handleApiException(ApiException e) {
