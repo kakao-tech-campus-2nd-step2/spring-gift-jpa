@@ -16,7 +16,6 @@ public class WebConfig implements WebMvcConfigurer {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    @Autowired
     public WebConfig(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;

@@ -16,7 +16,6 @@ public class WishRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public WishRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }

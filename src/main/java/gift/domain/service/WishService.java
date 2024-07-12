@@ -26,7 +26,6 @@ public class WishService {
         productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
     }
 
-    @Autowired
     public WishService(WishRepository wishRepository, ProductRepository productRepository) {
         this.wishRepository = wishRepository;
         this.productRepository = productRepository;

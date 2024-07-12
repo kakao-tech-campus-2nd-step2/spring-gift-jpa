@@ -1,5 +1,6 @@
 package gift.domain.controller;
 
+import gift.domain.dto.UserLoginResponseDto;
 import gift.domain.dto.UserRegisterResponseDto;
 import gift.domain.dto.UserRequestDto;
 import gift.domain.service.UserService;
@@ -20,7 +21,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserRegisterResponseDto> loginUser(@RequestBody UserRequestDto requestDto) {
-        return SuccessResponse.ok(new UserRegisterResponseDto(HttpStatus.OK, userService.loginUser(requestDto).token()));
+    public ResponseEntity<UserLoginResponseDto> loginUser(@RequestBody UserRequestDto requestDto) {
+        return SuccessResponse.ok(new UserLoginResponseDto(HttpStatus.OK, userService.loginUser(requestDto).token()));
     }
 }

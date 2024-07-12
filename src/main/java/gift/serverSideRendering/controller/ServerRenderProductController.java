@@ -21,7 +21,6 @@ public class ServerRenderProductController {
 
     private final ProductService service;
 
-    @Autowired
     public ServerRenderProductController(ProductService service) {
         this.service = service;
     }
