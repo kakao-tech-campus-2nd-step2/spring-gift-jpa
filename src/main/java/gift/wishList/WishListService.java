@@ -3,6 +3,7 @@ package gift.wishList;
 import gift.product.Product;
 import gift.product.ProductRepository;
 import gift.user.User;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -47,5 +48,17 @@ public class WishListService {
         wishList.getUser().removeWishList(wishList);
         wishList.getProduct().removeWishList(wishList);
         wishListRepository.deleteById(id);
+    }
+
+    public Page<WishListDTO> getWishListsPages(int pageNum, int size) {
+        List<WishList> wishLists = wishListRepository.findAll();
+        List<WishListDTO> wishListDTOS = new ArrayList<>();
+        for (WishList wishList : wishLists) {
+            wishListDTOS.add(new WishListDTO(wishList));
+        }
+        PageRequest pageRequest = PageRequest.of(pageNum, size);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), wishListDTOS.size());
+        return new PageImpl<>(wishListDTOS.subList(start, end), pageRequest, wishListDTOS.size());
     }
 }
