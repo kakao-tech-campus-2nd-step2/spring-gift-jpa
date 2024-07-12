@@ -4,9 +4,11 @@ import gift.model.gift.Gift;
 import gift.model.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "wish")
+@DynamicUpdate
 public class Wish {
 
     @Id
@@ -53,5 +55,9 @@ public class Wish {
 
     public void increaseQuantity() {
         this.quantity++;
+    }
+
+    public void modifyQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

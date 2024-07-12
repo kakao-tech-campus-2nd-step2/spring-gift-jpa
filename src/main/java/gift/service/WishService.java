@@ -1,18 +1,14 @@
 package gift.service;
 
 import gift.dto.PageResponse;
+import gift.exception.WishItemNotFoundException;
 import gift.model.gift.Gift;
 import gift.model.user.User;
 import gift.model.wish.Wish;
-import gift.model.wish.WishResponse;
-import gift.repository.GiftRepository;
-import gift.repository.UserRepository;
-import gift.repository.WishRepository;
+import gift.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,8 +51,20 @@ public class WishService {
     public PageResponse<Wish> getGiftsForUser(Long userId, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("id").ascending());
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-        Page<Wish> wishes = wishRepository.findByUser(user,pageRequest);
+        Page<Wish> wishes = wishRepository.findByUser(user, pageRequest);
 
-        return new PageResponse<>(page,wishes.getContent(),size,wishes.getTotalElements(),wishes.getTotalPages());
+        return new PageResponse<>(page, wishes.getContent(), size, wishes.getTotalElements(), wishes.getTotalPages());
+    }
+
+    @Transactional
+    public void updateWishQuantity(Long userId, Long giftId, int quantity) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+        Gift gift = giftRepository.findById(giftId).orElseThrow(() -> new IllegalArgumentException("Invalid gift ID"));
+        List<Wish> existingWishes = wishRepository.findByUserAndGift(user, gift);
+        if (!existingWishes.isEmpty()) {
+            existingWishes.get(0).modifyQuantity(quantity);
+            return;
+        }
+        throw new WishItemNotFoundException("해당 위시리스트 아이템을 찾을 수 없습니다.");
     }
 }

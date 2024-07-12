@@ -34,10 +34,10 @@ public class WishListController {
 
     @GetMapping("/wish")
     public ResponseEntity<?> getGiftList(@RequestAttribute("user") User user,
-                                         @RequestParam(value = "page",required = false,defaultValue = "1") int page,
-                                         @RequestParam(value = "size",required = false,defaultValue = "5") int size) {
+                                         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                         @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
         if (user != null) {
-            PageResponse<GiftResponse> gifts = giftService.getAllGifts(page,size);
+            PageResponse<GiftResponse> gifts = giftService.getAllGifts(page, size);
             return ResponseEntity.ok(gifts);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
@@ -54,6 +54,17 @@ public class WishListController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
     }
 
+    @PutMapping("/wish/{giftId}")
+    public ResponseEntity<String> updateGiftQuantity(@RequestAttribute("user") User user,
+                                                     @PathVariable Long giftId,
+                                                     @RequestParam(name = "quantity") int quantity) {
+        if (user != null) {
+            wishService.updateWishQuantity(user.getId(), giftId, quantity);
+            return ResponseEntity.ok("카트에서 상품수량이 변경되었습니다.");
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+    }
+
     @DeleteMapping("/wish/{giftId}")
     public ResponseEntity<String> removeGiftFromCart(@RequestAttribute("user") User user,
                                                      @PathVariable Long giftId) {
@@ -66,15 +77,15 @@ public class WishListController {
 
     @GetMapping("/mywish")
     public ResponseEntity<PageResponse<WishResponse>> getUserGifts(@RequestAttribute("user") User user,
-                                                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                           @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+                                                                   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                                   @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
         if (user != null) {
-            PageResponse<Wish> userWishes = wishService.getGiftsForUser(user.getId(), page,size);
+            PageResponse<Wish> userWishes = wishService.getGiftsForUser(user.getId(), page, size);
             List<WishResponse> wishResponses =
                     userWishes.getContent()
                             .stream()
                             .map(wish -> new WishResponse(wish.getGift().getId(), wish.getGift().getName(), wish.getGift().getPrice(), wish.getQuantity())).collect(Collectors.toList());
-            PageResponse<WishResponse> pageResponse = new PageResponse<>(page,wishResponses,size,userWishes.getTotalElements(),userWishes.getTotalPages());
+            PageResponse<WishResponse> pageResponse = new PageResponse<>(page, wishResponses, size, userWishes.getTotalElements(), userWishes.getTotalPages());
             return ResponseEntity.ok(pageResponse);
         }
         PageResponse<WishResponse> emptyPageResponse = new PageResponse<>(page, Collections.emptyList(), size, 0, 0);
