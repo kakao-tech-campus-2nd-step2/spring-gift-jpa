@@ -67,3 +67,11 @@
     - [x] MemberRepositoryTest 작성
     - [x] ProductRepositoryTest 작성 
     - [ ] WishRepositoryTest 작성
+
+## 1주차 과제 피드백
+- [ ] spring Security 관련 내용 삭제 및 비활성화
+  - [ ] build 파일에서 관련 내용 비활성화
+  - [ ] 사용하지 않는 로직 삭제
+- [ ] MemberController header key 변경
+- [ ] 공통 Exception을 ControllerAdvice로 고치기
+- [ ] MemberController 
