@@ -1,67 +1,80 @@
 package gift.service;
 
-import gift.domain.Member;
-import gift.domain.MemberDAO;
+import gift.entity.Member;
+import gift.repository.MemberRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
-import java.util.Objects;
 
 @Service
 public class MemberService {
-    @Autowired
-    private final MemberDAO memberDAO;
+    private final MemberRepository memberRepository;
 
-    public MemberService(MemberDAO memberDAO){
-        this.memberDAO = memberDAO;
-        memberDAO.create();
+    public MemberService(MemberRepository memberRepository){
+        this.memberRepository = memberRepository;
     }
 
-    public String signUp(Member member) {
+    public String signUp(String str) {
         try {
-            String token = getToken(member);
-            memberDAO.insert(member, token);
+            var email = decodeToEmail(str);
+            var password = decodeToPassword(str);
+            String token = getToken(email, password);
+
+            var member = new Member(email, password, token);
+            memberRepository.save(member);
             return token;
         }
         catch (Exception e) {
-            throw new IllegalArgumentException("Invalid username or password");
+            throw new IllegalArgumentException("Invalid email or password : " + "(Email " + decodeToEmail(str) + "), (Password " +  decodeToPassword(str) + ")");
         }
     }
 
-    public String login(Member member) {
+    public String login(String str) {
         try {
-            return memberDAO.selectTokenbyMember(member);
-        }
+            var email = decodeToEmail(str);
+            var password = decodeToPassword(str);
+            var token = getToken(email, password);
+
+            if (memberRepository.existsByToken(token)) {
+                return token;
+            }
+            else throw new IllegalArgumentException("No such email or password"); }
         catch (Exception e) {
-            throw new IllegalArgumentException("Invalid username or password");
+            throw new IllegalArgumentException("Invalid email or password : " + "(Email " + decodeToEmail(str) + "), (Password " +  decodeToPassword(str) + ")");
         }
     }
 
     public boolean isValidToken(String token) {
         try {
-            var ftoken = memberDAO.selectTokenbyToken(token);
-            return Objects.equals(ftoken, token);
+            return memberRepository.existsByToken(token);
         } catch (Exception e) {
             return false;
         }
     }
 
-    private String getToken(Member member){
+    private String getToken(String email, String password){
         String secretKey = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
-
         String accessToken = Jwts.builder()
-                .setSubject(member.email())
-                .claim("email", member.email())
-                .claim("password", member.password())
+                .claim("email", email)
+                .claim("password", password)
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
                 .compact();
         return accessToken;
     }
 
-    private String stringToBase64(String str) {
-        return Base64.getEncoder().encodeToString(str.getBytes());
+    private String decodeToEmail(String str) {
+        String base64Credentials = str.substring("Basic ".length()).trim();
+        String credentials = new String(Base64.getDecoder().decode(base64Credentials));
+        String[] values = credentials.split(":", 2);
+        return values[0];
+    }
+
+    private String decodeToPassword(String str) {
+        String base64Credentials = str.substring("Basic ".length()).trim();
+        String credentials = new String(Base64.getDecoder().decode(base64Credentials));
+        String[] values = credentials.split(":", 2);
+        return values[1];
     }
 }

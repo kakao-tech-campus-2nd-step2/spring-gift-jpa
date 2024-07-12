@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.domain.WishlistItem;
+import gift.entity.Wishlist;
 import gift.service.WishlistService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,25 +17,25 @@ public class WishlistController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishlistItem>> getAllWishlist(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<Wishlist>> getAllWishlist(@RequestHeader("Authorization") String token) {
         return ResponseEntity.ok(wishlistService.getAllWishlist(token));
     }
 
     @PostMapping
-    public ResponseEntity<String> addWishlist(@RequestHeader("Authorization") String token, @RequestBody long id) {
-        wishlistService.addItem(token, id);
+    public ResponseEntity<String> addWishlist(@RequestHeader("Authorization") String token, @RequestBody int product_id) {
+        wishlistService.addItem(token, product_id);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteWishlist(@RequestHeader("Authorization") String token, @RequestBody long id) {
-        wishlistService.deleteItem(token, id);
+    public ResponseEntity<String> deleteWishlist(@RequestHeader("Authorization") String token, @RequestBody int product_id) {
+        wishlistService.deleteItem(token, product_id);
         return ResponseEntity.ok("정상적으로 삭제되었습니다.");
     }
 
     @PutMapping
-    public ResponseEntity<String> updateWishlist(@RequestHeader("Authorization") String token, @RequestBody long id, @RequestBody long num) {
-        wishlistService.changeNum(token, id, num);
+    public ResponseEntity<String> updateWishlist(@RequestHeader("Authorization") String token, @RequestBody int product_id, @RequestBody int num) {
+        wishlistService.changeNum(token, product_id, num);
         return ResponseEntity.ok("상품 수량이 변경되었습니다.");
     }
 }

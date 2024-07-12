@@ -1,6 +1,7 @@
 package gift.controller;
 
-import gift.domain.Product;
+import gift.entity.Product;
+import gift.domain.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -25,26 +26,24 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable long id) {
+    public ResponseEntity<Product> getProduct(@PathVariable int id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @PostMapping
-    public ResponseEntity<URI> addProduct(@Valid @RequestBody Product product) throws URISyntaxException {
-        productService.addProduct(product);
-        URI uri = new URI("/api/products/" + product.id());
+    public ResponseEntity<URI> addProduct(@Valid @RequestBody ProductDTO productDTO) throws URISyntaxException {
+        URI uri = new URI("/api/products/" + productService.addProduct(productDTO));
         return ResponseEntity.created(uri).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeProduct(@PathVariable long id) {
+    public ResponseEntity<?> removeProduct(@PathVariable int id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable long id, @Valid @RequestBody Product product) {
-        productService.updateProduct(id, product);
-        return ResponseEntity.ok(product);
+    public ResponseEntity<Product> updateProduct(@PathVariable int id, @Valid @RequestBody ProductDTO productDTO) {
+        return ResponseEntity.ok(productService.updateProduct(id, productDTO));
     }
 }

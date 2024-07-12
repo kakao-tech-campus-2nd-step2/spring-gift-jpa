@@ -1,7 +1,8 @@
 package gift.service;
-import gift.domain.Product;
-import gift.domain.ProductDAO;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import gift.entity.Product;
+import gift.domain.ProductDTO;
+import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,40 +10,41 @@ import java.util.NoSuchElementException;
 
 @Service
 public class ProductService {
-    @Autowired
-    private final ProductDAO productDAO;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductDAO productDAO) {
-        this.productDAO = productDAO;
-        productDAO.create();
-        productDAO.insert(new Product(1, "test", 1, "test"));
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+        Product product = new Product(1, "test", "imgURL");
+        productRepository.save(product);
     }
 
     public List<Product> getAllProducts() {
-        return productDAO.selectAll();
+        return productRepository.findAll();
     }
 
-    public Product getProductById(long id) {
+    public Product getProductById(int id) {
         try {
-            return productDAO.select(id);
+            return productRepository.findById(id);
         }
         catch (NoSuchElementException e) {
             throw new NoSuchElementException();
         }
     }
 
-    public void addProduct(Product product) {
+    public Product addProduct(ProductDTO productDTO) {
+        Product product = new Product(productDTO.price(), productDTO.name(), productDTO.imgURL());
         try {
-            productDAO.insert(product);
+            return productRepository.save(product);
         }
         catch (Exception e) {
             throw new IllegalArgumentException();
         }
     }
 
-    public void updateProduct(long id, Product product) {
+    public Product updateProduct(int id, ProductDTO productDTO) {
+        Product product = new Product(id, productDTO.price(), productDTO.name(), productDTO.imgURL());
         try {
-            productDAO.update(id, product);
+            return productRepository.save(product);
         }
         catch (NoSuchElementException e) {
             throw new NoSuchElementException("No product found with id " + id);
@@ -52,9 +54,9 @@ public class ProductService {
         }
     }
 
-    public void deleteProduct(long id) {
+    public void deleteProduct(int id) {
         try {
-            productDAO.delete(id);
+            productRepository.deleteById(id);
         }
         catch (Exception e) {
             throw new NoSuchElementException();
