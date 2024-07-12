@@ -1,9 +1,11 @@
 package gift.controller;
 
+import gift.dto.PageResponse;
 import gift.model.gift.GiftRequest;
 import gift.model.gift.GiftResponse;
 import gift.service.GiftService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -36,8 +38,10 @@ public class GiftController {
     }
 
     @GetMapping
-    public List<GiftResponse> getAllGift(@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 5) Pageable pageable) {
-        return giftService.getAllGifts(pageable);
+    public ResponseEntity<PageResponse<GiftResponse>> getAllGift(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                                 @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+        PageResponse<GiftResponse> response = giftService.getAllGifts(page, size);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
