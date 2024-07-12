@@ -1,11 +1,14 @@
+let currentPage = 0;
+const pageSize = 5;
+
 function getAuthToken() {
     // 토큰을 로컬 스토리지에서 가져옵니다.
     return localStorage.getItem('authToken');
 }
 
-function loadWishlist() {
+function loadWishlist(page) {
     const token = getAuthToken();
-    fetch('/api/wishes', {
+    fetch(`/api/wishes?page=${page}&size=${pageSize}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -16,7 +19,7 @@ function loadWishlist() {
         .then(wishes => {
             const wishlistTableBody = document.querySelector("#wishlistTableBody");
             wishlistTableBody.innerHTML = '';
-            wishes.forEach(wish => {
+            wishes.content.forEach(wish => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                 <td>${wish.id}</td>
@@ -29,7 +32,61 @@ function loadWishlist() {
             `;
                 wishlistTableBody.appendChild(row);
             });
+
+            renderPagination(wishes.page.totalPages, page);
         });
+}
+
+function renderPagination(totalPages, currentPage) {
+    const paginationNav = document.querySelector("#paginationNav");
+    paginationNav.innerHTML = '';
+
+    const ul = document.createElement('ul');
+    ul.classList.add('pagination');
+
+    const prevLi = document.createElement('li');
+    prevLi.classList.add('page-item');
+    const prevBtn = document.createElement('button');
+    prevBtn.classList.add('page-link');
+    prevBtn.textContent = '이전';
+    prevBtn.onclick = () => {
+        if (currentPage > 0) {
+            loadWishlist(currentPage - 1);
+        }
+    };
+    prevLi.appendChild(prevBtn);
+    ul.appendChild(prevLi);
+
+    for (let i = 0; i < totalPages; i++) {
+        const li = document.createElement('li');
+        li.classList.add('page-item');
+        const btn = document.createElement('button');
+        btn.classList.add('page-link');
+        btn.textContent = `${i + 1}`;
+        btn.onclick = () => {
+            loadWishlist(i);
+        };
+        if (i === currentPage) {
+            li.classList.add('active');
+        }
+        li.appendChild(btn);
+        ul.appendChild(li);
+    }
+
+    const nextLi = document.createElement('li');
+    nextLi.classList.add('page-item');
+    const nextBtn = document.createElement('button');
+    nextBtn.classList.add('page-link');
+    nextBtn.textContent = '다음';
+    nextBtn.onclick = () => {
+        if (currentPage < totalPages - 1) {
+            loadWishlist(currentPage + 1);
+        }
+    };
+    nextLi.appendChild(nextBtn);
+    ul.appendChild(nextLi);
+
+    paginationNav.appendChild(ul);
 }
 
 function createWish() {
@@ -46,7 +103,7 @@ function createWish() {
     }).then(response => {
         if (response.status === 201) {
             alert("위시리스트에 추가되었습니다.");
-            loadWishlist();
+            loadWishlist(currentPage);
         } else {
             alert("위시리스트에 추가되지 않았습니다.");
         }
@@ -65,7 +122,7 @@ function deleteWish(id) {
     }).then(response => {
         if (response.status == 204) {
             alert("위시리스트에서 삭제되었습니다.");
-            loadWishlist();
+            loadWishlist(currentPage);
         } else {
             alert("위시리스트에서 삭제되지 않았습니다.");
         }
@@ -73,5 +130,5 @@ function deleteWish(id) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    loadWishlist();
+    loadWishlist(currentPage);
 });
