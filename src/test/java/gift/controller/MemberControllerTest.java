@@ -7,9 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import javax.ws.rs.core.MediaType;
 
 import java.util.Optional;
 
@@ -39,9 +38,9 @@ public class MemberControllerTest {
 
         given(memberService.save(any(Member.class))).willReturn(member);
 
-        mockMvc.perform(post("/member/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"email\":\"testemail@example.com\",\"password\":\"testPassword\"}"))
+        mockMvc.perform(post("/members/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"testemail@example.com\",\"password\":\"testPassword\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("success"));
     }
@@ -55,9 +54,9 @@ public class MemberControllerTest {
         given(memberService.findByEmail(anyString())).willReturn(Optional.of(member));
         given(jwtUtil.generateToken(anyString())).willReturn("fakeToken");
 
-        mockMvc.perform(post("/member/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"email\":\"testemail@example.com\",\"password\":\"testPassword\"}"))
+        mockMvc.perform(post("/members/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"testemail@example.com\",\"password\":\"testPassword\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token").value("fakeToken"));
     }
@@ -70,8 +69,8 @@ public class MemberControllerTest {
         given(jwtUtil.extractEmail(anyString())).willReturn("testemail@example.com");
         given(memberService.findByEmail(anyString())).willReturn(Optional.of(member));
 
-        mockMvc.perform(post("/member/current")
-                .header("Authorization", "Bearer fakeToken"))
+        mockMvc.perform(post("/members/current")
+                        .header("Authorization", "Bearer fakeToken"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("testemail@example.com"));
     }
