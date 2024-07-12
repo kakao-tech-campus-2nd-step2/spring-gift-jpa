@@ -29,7 +29,6 @@ public class WishListService {
     }
 
     public void removeWishlistItem(WishListItem wishListItem, Wishlist wishlistOptional) {
-
         int newCount = wishListItem.getCount() - wishListItem.getQuantity();
 
         if (newCount > 0) {
@@ -38,6 +37,8 @@ public class WishListService {
             wishListJpaRepository.save(wishlistOptional);
             return;
         }
+
+        wishListJpaRepository.delete(wishlistOptional);
     }
 
 }
