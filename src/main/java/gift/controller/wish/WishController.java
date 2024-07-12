@@ -1,9 +1,11 @@
 package gift.controller.wish;
 
-import gift.controller.member.MemberDto;
+import gift.controller.auth.AuthController;
+import gift.controller.auth.LoginResponse;
 import gift.login.LoginMember;
 import gift.service.WishService;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,37 +18,47 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/wishes")
+@RequestMapping("api/wishes")
 public class WishController {
+
     private final WishService wishService;
 
     public WishController(WishService wishService) {
         this.wishService = wishService;
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<List<WishRequest>> getAllWishes(@LoginMember MemberDto member, @PathVariable String email) {
-        if (!member.email().equals(email)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(wishService.findAll(email));
+    @GetMapping
+    public ResponseEntity<List<WishResponse>> getAllWishes(@LoginMember LoginResponse loginMember) {
+        AuthController.validateAdmin(loginMember);
+        return ResponseEntity.status(HttpStatus.OK).body(wishService.findAll());
     }
 
-    @PostMapping
-    public ResponseEntity<WishRequest> addWish(@LoginMember MemberDto member, @RequestBody WishRequest wish) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(wishService.update(member.email(), wish));
+    @GetMapping("/{memberId}")
+    public ResponseEntity<List<WishResponse>> getWishes(@LoginMember LoginResponse loginMember,
+        @PathVariable UUID memberId) {
+        AuthController.validateUserOrAdmin(loginMember, memberId);
+        return ResponseEntity.status(HttpStatus.OK).body(wishService.findAllByMemberId(memberId));
     }
 
-    @PutMapping("/{email}/{productId}")
-    public ResponseEntity<WishRequest> putWish(@LoginMember MemberDto member, @PathVariable Long productId, @RequestBody WishRequest wish) {
-        return ResponseEntity.status(HttpStatus.OK).body(wishService.update(member.email(), wish));
+    @PostMapping("/{memberId}")
+    public ResponseEntity<WishResponse> createWish(@LoginMember LoginResponse loginMember,
+        @PathVariable UUID memberId, @RequestBody WishCreateRequest wish) {
+        AuthController.validateUserOrAdmin(loginMember, memberId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(wishService.save(memberId, wish));
     }
 
-    @DeleteMapping("/{email}/{productId}")
-    public ResponseEntity<Void> deleteProduct(@LoginMember MemberDto member, @PathVariable Long productId) {
-        System.out.println("called");
-        wishService.delete(member.email(), productId);
+    @PutMapping("/{memberId}/{productId}")
+    public ResponseEntity<WishResponse> updateWish(@LoginMember LoginResponse loginMember,
+        @PathVariable UUID memberId, @PathVariable UUID productId, @RequestBody WishUpdateRequest wish) {
+        AuthController.validateUserOrAdmin(loginMember, memberId);
+        return ResponseEntity.status(HttpStatus.OK).body(wishService.update(memberId, productId, wish));
+    }
+
+    @DeleteMapping("/{memberId}/{productId}")
+    public ResponseEntity<Void> deleteProduct(@LoginMember LoginResponse loginMember,
+        @PathVariable UUID memberId, @PathVariable UUID productId) {
+        AuthController.validateUserOrAdmin(loginMember, memberId);
+        wishService.delete(memberId, productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 }
