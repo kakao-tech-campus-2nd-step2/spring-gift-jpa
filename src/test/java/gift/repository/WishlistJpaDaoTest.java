@@ -50,7 +50,8 @@ class WishlistJpaDaoTest {
         wishlistJpaDao.save(wishlist);
 
         Assertions.assertDoesNotThrow(() -> {
-            wishlistJpaDao.findByWishlist(wishlist);
+            wishlistJpaDao.findByMember_EmailAndProduct_Id(wishlist.getMember().getEmail(),
+                wishlist.getProduct().getId());
         });
     }
 
@@ -69,7 +70,8 @@ class WishlistJpaDaoTest {
         Wishlist wishlist = generateWishlist();
         wishlistJpaDao.save(wishlist);
 
-        wishlistJpaDao.deleteByWishlist(wishlist);
+        wishlistJpaDao.deleteByMember_EmailAndProduct_Id(wishlist.getMember().getEmail(),
+            wishlist.getProduct().getId());
         assertThat(wishlistJpaDao.findAll().size()).isZero();
     }
 }

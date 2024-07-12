@@ -77,14 +77,14 @@ public class MemberService {
      * @param wish
      */
     public void addWishlist(WishlistRequest wish) {
-        Wishlist wishlist = convertWishlistRequestToWishlist(wish);
-
-        wishlist.getMember().getWishlist().add(wishlist);
-        wishlist.getProduct().getWishlist().add(wishlist);
-        wishlistJpaDao.findByWishlist(wishlist)
+        wishlistJpaDao.findByMember_EmailAndProduct_Id(wish.getEmail(), wish.getProductId())
             .ifPresent(v -> {
                 throw new IllegalArgumentException(ErrorMessage.WISHLIST_ALREADY_EXISTS_MSG);
             });
+
+        Wishlist wishlist = convertWishlistRequestToWishlist(wish);
+        wishlist.getMember().getWishlist().add(wishlist);
+        wishlist.getProduct().getWishlist().add(wishlist);
         wishlistJpaDao.save(wishlist);
     }
 
@@ -94,11 +94,10 @@ public class MemberService {
      * @param wish
      */
     public void deleteWishlist(WishlistRequest wish) {
-        Wishlist deleteWish = convertWishlistRequestToWishlist(wish);
-
-        wishlistJpaDao.findByWishlist(deleteWish)
+        wishlistJpaDao.findByMember_EmailAndProduct_Id(wish.getEmail(), wish.getProductId())
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.WISHLIST_NOT_EXISTS_MSG));
-        wishlistJpaDao.deleteByWishlist(deleteWish);
+
+        wishlistJpaDao.deleteByMember_EmailAndProduct_Id(wish.getEmail(), wish.getProductId());
     }
 
     /**
