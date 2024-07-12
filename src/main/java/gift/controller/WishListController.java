@@ -2,6 +2,8 @@ package gift.controller;
 
 import gift.domain.WishListRequest;
 import gift.domain.WishListResponse;
+import gift.repository.MemberRepository;
+import gift.repository.MenuRepository;
 import gift.service.JwtService;
 import gift.service.WishListService;
 import org.springframework.http.HttpHeaders;
@@ -15,19 +17,25 @@ import java.util.List;
 public class WishListController {
     private final WishListService wishListService;
     private final JwtService jwtService;
+    private final MenuRepository menuRepository;
+    private final MemberRepository memberRepository;
 
-    public WishListController(WishListService wishListService, JwtService jwtService){
+    public WishListController(WishListService wishListService, JwtService jwtService, MenuRepository menuRepository, MemberRepository memberRepository){
         this.wishListService = wishListService;
         this.jwtService = jwtService;
+        this.menuRepository = menuRepository;
+        this.memberRepository = memberRepository;
     }
 
     @PostMapping("/save")
-    public ResponseEntity<String> create(
+    public ResponseEntity<String> save(
             @RequestHeader("Authorization") String token,
             @RequestParam("menuId") Long menuId
     ) {
         String jwtId = jwtService.getMemberId();
-        WishListRequest wishListRequest = new WishListRequest(jwtId,menuId);
+        WishListRequest wishListRequest = new WishListRequest(
+                memberRepository.findById(jwtId).get(),
+                menuRepository.findById(menuId).get());
         wishListService.save(wishListRequest);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization",token.replace("Bearer ",""));

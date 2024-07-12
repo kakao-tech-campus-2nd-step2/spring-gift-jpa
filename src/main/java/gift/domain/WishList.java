@@ -8,41 +8,36 @@ public class WishList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String memberId;
-
-    @Column(nullable = false)
-    private Long menuId;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @OneToOne
     private Menu menu;
 
     public WishList() {}
 
-    public WishList(String memberId,Long menuId){
-        this(null, memberId,menuId);
+    public WishList(Member member,Menu menu){
+        this(null, member,menu);
     }
 
-    public WishList(Long id, String memberId, Long menuId){
+    public WishList(Long id, Member member, Menu menu){
         this.id = id;
-        this.memberId = memberId;
-        this.menuId = menuId;
+        this.member = member;
+        this.menu = menu;
     }
 
-    public Long getMenuId(){
-        return menuId;
-    }
 
     public Long getId() {
         return id;
     }
 
     public static WishList MapWishListRequestToWishList(WishListRequest wishListRequest){
-        return new WishList(wishListRequest.memberId(),wishListRequest.menuId());
+        return new WishList(wishListRequest.member(),wishListRequest.menu());
     }
 
     public static WishListResponse MapWishListToWishListResponse(WishList wishList){
-        return new WishListResponse(wishList.id, wishList.menuId);
+        return new WishListResponse(wishList.id, wishList.menu);
     }
 
 }
