@@ -2,7 +2,7 @@ package gift.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import gift.Util.JWTUtil;
-import gift.dto.wishlist.WishProductDTO;
+import gift.dto.product.ShowProductDTO;
 import gift.entity.Product;
 import gift.entity.User;
 import gift.entity.WishList;
@@ -38,7 +38,8 @@ public class WishListService {
             throw new NotFoundException("해당 물건이없습니다.");
         if(wishListRepository.findById(wishListId).isPresent())
            throw new BadRequestException("이미 추가된 물품입니다.");
-
+        if(userRepository.findById(tokenUserId).isEmpty())
+            throw new UnAuthException("인증이 잘못되었습니다");
         WishList wishList = new WishList(wishListId);
         Product product = productRepository.findById(productId).get();
         User user = userRepository.findById(tokenUserId).get();
@@ -49,20 +50,12 @@ public class WishListService {
         user.addWishlist(wishList);
     }
 
-    public Page<WishProductDTO> getWishList(String token, Pageable pageable) throws JsonProcessingException {
+    public Page<ShowProductDTO> getWishList(String token, Pageable pageable) throws JsonProcessingException {
         int tokenUserId = jwtUtil.getUserIdFromToken(token);
         if(!jwtUtil.validateToken(token))
             throw new UnAuthException("로그인 만료");
-        Page<Object[]> result = wishListRepository.findByUserId(tokenUserId,pageable);
-        return result.map(this::convertToWishListProduct);
-    }
+        return wishListRepository.findByUserId(tokenUserId,pageable);
 
-    private WishProductDTO convertToWishListProduct(Object[] array) {
-        return new WishProductDTO(
-                (String) array[0],
-                (Integer) array[1],
-                (String) array[2]
-        );
     }
 
     public void deleteWishList(String token, int productId) {

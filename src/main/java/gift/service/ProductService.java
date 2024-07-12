@@ -33,36 +33,16 @@ public class ProductService {
     @Autowired
     private OptionRepository optionRepository;
 
-    ObjectMapper objectMapper = new ObjectMapper();
-
     public Page<ProductWithOptionDTO> getAllProductsWithOption(Pageable pageable) {
-        Page<Object[]> result = optionRepository.findAllWithOption(pageable);
-        return result.map(this::convertToWithOptionDTO);
-    }
-    private ProductWithOptionDTO convertToWithOptionDTO(Object[] array) {
-        return new ProductWithOptionDTO(
-                (Integer) array[0],
-                (String) array[1],
-                (Integer) array[2],
-                (String) array[3],
-                (String) array[4]
-        );
+        return optionRepository.findAllWithOption(pageable);
+
     }
 
     public Page<ShowProductDTO> getAllProducts(Pageable pageable) {
-        Page<Product> result = productRepository.findAll(pageable);
-        return result.map(this::convertToShowProductDTO);
-
+        return productRepository.findAllProduct(pageable);
     }
 
-    private ShowProductDTO convertToShowProductDTO(Product product) {
-        return new ShowProductDTO(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl()
-        );
-    }
+
 
     public void saveProduct(SaveProductDTO product) {
         if(product.option() == null)
