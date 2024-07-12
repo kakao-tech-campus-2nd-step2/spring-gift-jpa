@@ -44,4 +44,12 @@ public class Member {
         this.email = email;
         this.password = password;
     }
+
+    public void updateEmail(String email) {
+        this.email = email;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }
