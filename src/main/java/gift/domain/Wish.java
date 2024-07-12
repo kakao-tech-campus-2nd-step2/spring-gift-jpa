@@ -15,6 +15,7 @@ public class Wish {
     private Long userId;
     @Column(nullable = false)
     private Long productId;
+    @Column(nullable = false)
     private int count;
 
     public Wish() {
