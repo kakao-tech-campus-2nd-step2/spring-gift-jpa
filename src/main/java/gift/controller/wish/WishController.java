@@ -5,11 +5,13 @@ import gift.controller.wish.dto.WishResponse;
 import gift.global.auth.Authenticate;
 import gift.global.auth.Authorization;
 import gift.global.auth.LoginInfo;
+import gift.global.dto.PageResponse;
 import gift.model.member.Role;
 import gift.service.WishService;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,8 +55,11 @@ public class WishController {
 
     @Authorization(role = Role.USER)
     @GetMapping("")
-    public ResponseEntity<List<WishResponse.Info>> getWishes(@Authenticate LoginInfo loginInfo) {
-        var response = wishService.getWishes(loginInfo.memberId());
+    public ResponseEntity<PageResponse<WishResponse.Info>> getWishes(
+        @Authenticate LoginInfo loginInfo,
+        @PageableDefault(size = 5) Pageable pageable
+    ) {
+        var response = wishService.getWishesPaging(loginInfo.memberId(), pageable);
         return ResponseEntity.ok().body(response);
     }
 
