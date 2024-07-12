@@ -21,24 +21,20 @@ class ProductRepositoryTest {
     private Product product1;
     private Product product2;
 
-    @BeforeEach
-    void setUp() {
-        product1 = new Product("아메리카노", 4500, "americano");
-        product2 = new Product("가방", 120000, "bag");
-        productRepository.save(product1);
-        productRepository.save(product2);
+    private Product createProduct(String name, int price, String url) {
+        return new Product(name, price, url);
     }
     @DisplayName("상품 정보 저장 테스트")
     @Test
     void save() {
         // given
-        Product product3 = new Product("노트북", 1500000, "laptop");
+        Product product1 = createProduct("americano", 4500, "americano");
         // when
-        Product savedProduct = productRepository.save(product3);
+        Product savedProduct = productRepository.save(product1);
         // then
         Assertions.assertAll(
             () -> assertThat(savedProduct.getId()).isNotNull(),
-            () -> assertThat(savedProduct.getName()).isEqualTo(product3.getName())
+            () -> assertThat(savedProduct.getName()).isEqualTo(product1.getName())
         );
     }
 
@@ -46,6 +42,8 @@ class ProductRepositoryTest {
     @Test
     void findById() {
         // given
+        Product product1 = createProduct("americano", 4500, "americano");
+        Product product2 = createProduct("bag", 120000, "bag");
         Long id = product1.getId();
         // when
         Product foundProduct = productRepository.findById(id).orElse(null);
@@ -57,6 +55,7 @@ class ProductRepositoryTest {
     @Test
     void deleteById() {
         // given
+        Product product1 = createProduct("americano", 4500, "americano");
         Long DeleteId = product1.getId();
 
         // when
