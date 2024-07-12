@@ -58,21 +58,26 @@ public class UserController {
     /*
      * 유저 정보 수정하기
      */
-    @PutMapping("/api/users/{userId}")
-    public ResponseEntity<Void> updateUsers(@PathVariable("userId") String userId, @RequestBody UserRequest user){
-        if(!userService.isDuplicate(user)) {
-            userService.update(user);
-            return new ResponseEntity<>(HttpStatus.OK);
+    @PutMapping("/api/users/{id}")
+    public ResponseEntity<Void> updateUsers(@PathVariable("id") Long id, @RequestBody UserRequest user){
+        if(!id.equals(userService.loadOneUser(user.getUserId()).getId())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        if(!userService.isDuplicate(user))
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        userService.update(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
     /*
      * 유저 정보 삭제하기
      */
-    @DeleteMapping("/api/users/{userId}")
-    public ResponseEntity<Void> deleteUsers(@PathVariable("userId") String userId){
-        if(userService.isDuplicate(userId)){
-            userService.delete(userId);
+    @DeleteMapping("/api/users/{id}")
+    public ResponseEntity<Void> deleteUsers(@PathVariable("id") Long id){
+        if(userService.isDuplicate(id)){
+            userService.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

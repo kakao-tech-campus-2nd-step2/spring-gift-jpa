@@ -4,6 +4,7 @@ import gift.DTO.User.UserRequest;
 import gift.DTO.User.UserResponse;
 import gift.domain.User;
 import gift.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,17 +34,7 @@ public class UserService {
         return list;
     }
     /*
-     * User의 정보를 저장하는 로직
-     */
-    public void createUser(UserRequest user){
-        userRepository.save(new User(
-                user.getUserId(),
-                user.getEmail(),
-                user.getPassword()
-        ));
-    }
-    /*
-     * User의 정보를 email을 기준으로 찾는 로직
+     * User의 정보를 userId를 기준으로 찾는 로직
      */
     public UserResponse loadOneUser(String userId){
         User user = userRepository.findByUserId(userId);
@@ -55,6 +46,41 @@ public class UserService {
         );
     }
     /*
+     * 위와 동일, 오버로딩
+     */
+    public UserResponse loadOneUser(Long id){
+        User user = userRepository.findById(id).orElseThrow(NullPointerException::new);
+        return new UserResponse(
+                user.getId(),
+                user.getUserId(),
+                user.getEmail(),
+                user.getPassword()
+        );
+    }
+    /*
+     * User의 정보를 저장하는 로직
+     */
+    @Transactional
+    public void createUser(UserRequest user){
+        userRepository.save(new User(
+                user.getUserId(),
+                user.getEmail(),
+                user.getPassword()
+        ));
+    }
+    @Transactional
+    public void delete(Long id){
+        userRepository.deleteById(id);
+    }
+    /*
+     * user 정보를 업데이트하는 로직
+     */
+    @Transactional
+    public void update(UserRequest user){
+        User byUserId = userRepository.findByUserId(user.getUserId());
+        byUserId.updateEntity(user.getEmail(), user.getPassword());
+    }
+    /*
      * userId의 중복 여부를 확인하는 로직
      */
     public boolean isDuplicate(UserRequest user){
@@ -63,8 +89,8 @@ public class UserService {
     /*
      * 위와 동일 ( overloading )
      */
-    public boolean isDuplicate(String userId){
-        return userRepository.existsByUserId(userId);
+    public boolean isDuplicate(Long id){
+        return userRepository.existsById(id);
     }
     /*
      * 로그인을 위한 확인을 해주는 로직
@@ -75,16 +101,4 @@ public class UserService {
     /*
      * user 정보를 삭제하는 로직
      */
-    public void delete(String userId){
-        userRepository.deleteByUserId(userId);
-    }
-    /*
-     * user 정보를 업데이트하는 로직
-     */
-    public void update(UserRequest user){
-        User byUserId = userRepository.findByUserId(user.getUserId());
-        byUserId.setEmail(user.getEmail());
-        byUserId.setPassword(user.getPassword());
-        userRepository.save(byUserId);
-    }
 }
