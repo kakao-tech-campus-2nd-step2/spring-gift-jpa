@@ -40,18 +40,13 @@ public class productController {
 
     @GetMapping("")
     public List<ProductDto> getAll() {
-
         return productService.getAll().stream().map(ProductDto::fromEntity).toList();
-
     }
 
     @GetMapping("/{id}")
     public ProductDto getOneById(@PathVariable("id") Long id) {
-
         Product product = productService.getOneById(id);
-
         return new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getUrl());
-
     }
 
     @PutMapping("/{id}")
@@ -64,4 +59,8 @@ public class productController {
         productService.delete(id);
     }
 
+    @GetMapping("/{name}")
+    public ProductDto getOneByName(@PathVariable("name") String name) {
+        return ProductDto.fromEntity(productService.findProductByName(name));
+    }
 }

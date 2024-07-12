@@ -16,13 +16,15 @@ public class EditProduct {
             this.url = url;
         }
 
-        public Request( String name, Long price, String url) {
+        public Request(String name, Long price, String url) {
             this.name = name;
             this.price = price;
             this.url = url;
         }
 
-        public Long getId() { return id; }
+        public Long getId() {
+            return id;
+        }
 
         public String getName() {
             return name;

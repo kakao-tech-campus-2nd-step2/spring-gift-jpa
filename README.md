@@ -1,5 +1,23 @@
 # spring-gift-jpa
 
+# 3주차 1단계 목표
+## 지금까지 작성한 JdbcTemplate 기반 코드를 JPA로 리팩터링
+실제 도메인 모델을 어떻게 구성하고 객체와 테이블을 어떻게 매핑해야 하는지 알아본다
+
+## 기능 목록 
+
+- [x] repository 에 JpaRepository extends
+- [x] jpa로 entitiy 와 db 테이블 매핑 
+- [x] 서비스 테이블 수정
+
+- []  @DataJpaTest 사용해서 학습테스트
+
+- [x] Users 테이블 
+- [x] Products 테이블 
+- [x] Wishes 테이블 
+- [x] Token 테이블 
+
+
 ### 2주차 3단계 요구사항 수정
 
 ## 3단계 위시리스트 구현

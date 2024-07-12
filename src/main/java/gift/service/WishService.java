@@ -1,53 +1,74 @@
 package gift.service;
 
+import gift.dto.TokenDto;
 import gift.dto.WishDto;
 import gift.entity.Wish;
-import gift.repository.ProductRepository;
-import gift.repository.WishRepository;
+import gift.repository.ProductRepositoryInterface;
+import gift.repository.WishRepositoryInterface;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
 import java.util.List;
 
 @Service
 public class WishService {
-    private WishRepository wishRepository;
-    private ProductRepository productRepository;
+    private final WishRepositoryInterface wishRepositoryInterface;
+    private final ProductRepositoryInterface productRepositoryInterface;
+    private final TokenService tokenService;
 
-    public WishService(WishRepository wishRepository, ProductRepository productRepository) {
-        this.wishRepository = wishRepository;
-        this.productRepository = productRepository;
+    public WishService(WishRepositoryInterface wishRepositoryInterface,
+                       ProductRepositoryInterface productRepositoryInterface,
+                       TokenService tokenService) {
+
+        this.wishRepositoryInterface = wishRepositoryInterface;
+        this.productRepositoryInterface = productRepositoryInterface;
+        this.tokenService = tokenService;
+
     }
 
-    public Wish save(WishDto wishDto) {
+    public WishDto save(WishDto wishDto) {
 
-        Long userId = translateIdFrom(wishDto.getToken());
+        Long userId = translateIdFrom(wishDto.getTokenValue());
         Long productId = wishDto.getProductId();
+        Wish newWish = new Wish(userId, productId);
 
-        return wishRepository.save(productId, userId);
+        return WishDto.fromEntity(wishRepositoryInterface.save(newWish));
     }
 
-    public List<WishDto> getAll(String token) {
+    public List<WishDto> getAll(TokenDto tokenDto) {
 
-        Long userId = translateIdFrom(token);
-        List<Wish> wishes = wishRepository.getAll(userId);
-
+        Long userId = translateIdFrom(tokenDto);
+        List<Wish> wishes = wishRepositoryInterface.findAllByUserId(userId);
 
         List<WishDto> wishDtos = wishes.stream().map(WishDto::fromEntity).toList();
         return wishDtos;
     }
 
-    public void delete(Long id, String token) throws IllegalAccessException {
-        Long userId = translateIdFrom(token);
-        wishRepository.delete(id, userId);
+    public void delete(Long id, TokenDto tokenDto) throws IllegalAccessException {
+
+        Long userId = translateIdFrom(tokenDto);
+        Wish candidateWish = wishRepositoryInterface.findById(id).get();
+        Long wishUserId = candidateWish.getUserId();
+
+        if (userId.equals(wishUserId)) {
+            wishRepositoryInterface.delete(candidateWish);
+        }
     }
 
-    private Long translateIdFrom(String token) {
+    private Long translateIdFrom(TokenDto tokenDto) {
 
-        byte[] decodedBytes = Base64.getDecoder().decode(token);
-        String decodedToken = new String(decodedBytes);
-        String[] userInfo = decodedToken.split(":");
-        String userId = userInfo[0];
+        String tokenValue = tokenDto.getTokenValue();
+        String decodedToken = tokenService.decodeTokenValue(tokenValue);
+        String[] userInfo = decodedToken.split(" ");
+        String userId = userInfo[1];
+
+        return Long.parseLong(userId);
+    }
+
+    private Long translateIdFrom(String tokenValue) {
+
+        String decodedToken = tokenService.decodeTokenValue(tokenValue);
+        String[] userInfo = decodedToken.split(" ");
+        String userId = userInfo[1];
 
         return Long.parseLong(userId);
     }

@@ -4,10 +4,10 @@ public class CreateProduct {
 
     public static class Request {
 
-        private Long id;
-        private String name;
-        private Long price;
-        private String imageUrl;
+        private final Long id;
+        private final String name;
+        private final Long price;
+        private final String imageUrl;
 
         public Request(Long id, String name, Long price, String imageUrl) {
             this.id = id;

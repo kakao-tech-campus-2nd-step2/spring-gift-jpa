@@ -1,14 +1,20 @@
 package gift.dto;
 
+import gift.entity.Token;
+
 public class TokenDto {
 
-    String token;
+    String tokenValue;
 
-    public TokenDto(String token) {
-        this.token = token;
+    public TokenDto(String tokenValue) {
+        this.tokenValue = tokenValue;
     }
 
-    public String getToken() {
-        return token;
+    public String getTokenValue() {
+        return tokenValue;
+    }
+
+    public static TokenDto fromEntity(Token token) {
+        return new TokenDto(token.getTokenValue());
     }
 }

@@ -3,9 +3,9 @@ package gift.dto;
 import gift.entity.User;
 
 public class UserDto {
-    private Long id;
-    private String email;
-    private String password;
+    private final Long id;
+    private final String email;
+    private final String password;
 
     public UserDto(Long id, String email, String password) {
         this.id = id;
@@ -30,9 +30,9 @@ public class UserDto {
     }
 
     public static class Request {
-        private Long id;
-        private String email;
-        private String password;
+        private final Long id;
+        private final String email;
+        private final String password;
 
         public Request(Long id, String email, String password) {
             this.id = id;
@@ -54,9 +54,9 @@ public class UserDto {
     }
 
     public static class Response {
-        private Long id;
-        private String email;
-        private String password;
+        private final Long id;
+        private final String email;
+        private final String password;
 
         public Response(Long id, String email, String password) {
             this.id = id;

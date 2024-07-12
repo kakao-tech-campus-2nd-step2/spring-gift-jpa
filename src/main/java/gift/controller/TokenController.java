@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/token")
 @RestController
 public class TokenController {
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
     public TokenController(TokenService tokenService) {
         this.tokenService = tokenService;
@@ -14,7 +14,7 @@ public class TokenController {
 
     @GetMapping("/{userId}")
     public String makeTokenFrom(@RequestParam("userId") Long userId) {
-        return tokenService.makeTokenFrom(userId);
+        return tokenService.makeTokenFrom(userId).getTokenValue();
     }
 
     @DeleteMapping("/{userId}")

@@ -2,7 +2,8 @@ package gift.service;
 
 import gift.dto.ProductDto;
 import gift.entity.Product;
-import gift.repository.ProductRepository;
+import gift.repository.ProductRepositoryInterface;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
@@ -10,34 +11,40 @@ import java.util.List;
 
 @ControllerAdvice
 @Service
+@Transactional
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final ProductRepositoryInterface productRepositoryInterface;
 
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductService(ProductRepositoryInterface productRepositoryInterface) {
+        this.productRepositoryInterface = productRepositoryInterface;
     }
 
     public Product createProduct(ProductDto productDto) {
         Product newProduct = new Product(productDto.getName(), productDto.getPrice(), productDto.getUrl());
-        return productRepository.save(newProduct);
+        return productRepositoryInterface.save(newProduct);
     }
 
     public List<Product> getAll() {
-        return productRepository.findAll();
+        return productRepositoryInterface.findAll();
     }
 
     public Product getOneById(Long id) {
-        return productRepository.findOneById(id);
+        return productRepositoryInterface.findById(id).get();
     }
 
     public void update(Long id, ProductDto productDto) {
-        Product newProduct = new Product(productDto.getName(), productDto.getPrice(), productDto.getUrl());
-        productRepository.update(id, newProduct);
+        Product actualProduct = productRepositoryInterface.findById(id).orElseThrow(() -> new RuntimeException("상품을 찾지 못했습니다."));
+
+        actualProduct.update(productDto);
     }
 
     public void delete(Long id) {
-        productRepository.delete(id);
+        Product product = productRepositoryInterface.findById(id).get();
+        productRepositoryInterface.delete(product);
     }
 
+    public Product findProductByName(String name) {
+        return productRepositoryInterface.findByName(name);
+    }
 }

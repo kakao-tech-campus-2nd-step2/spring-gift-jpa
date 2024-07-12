@@ -6,18 +6,18 @@ import java.util.Base64;
 
 public class WishDto {
     private Long id;
-    private Long productId;
-    private String token;
+    private final Long productId;
+    private final String tokenValue;
 
-    public WishDto(Long id, Long productId, String token) {
+    public WishDto(Long id, Long productId, String tokenValue) {
         this.id = id;
         this.productId = productId;
-        this.token = token;
+        this.tokenValue = tokenValue;
     }
 
-    public WishDto(Long productId, String token) {
+    public WishDto(Long productId, String tokenValue) {
         this.productId = productId;
-        this.token = token;
+        this.tokenValue = tokenValue;
     }
 
     public static WishDto fromEntity(Wish wish) {
@@ -39,19 +39,19 @@ public class WishDto {
         return productId;
     }
 
-    public String getToken() {
-        return token;
+    public String getTokenValue() {
+        return tokenValue;
     }
 
     public static class Request {
-        private Long id;
-        private Long productId;
-        private String token;
+        private final Long id;
+        private final Long productId;
+        private final String tokenValue;
 
-        public Request(Long id, Long productId, String token) {
+        public Request(Long id, Long productId, String tokenValue) {
             this.id = id;
             this.productId = productId;
-            this.token = token;
+            this.tokenValue = tokenValue;
         }
 
         public Long getId() {
@@ -62,8 +62,8 @@ public class WishDto {
             return productId;
         }
 
-        public String getToken() {
-            return token;
+        public String getTokenValue() {
+            return tokenValue;
         }
     }
 }
