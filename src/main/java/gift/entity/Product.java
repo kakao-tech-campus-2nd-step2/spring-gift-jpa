@@ -40,4 +40,7 @@ public class Product {
     }
 
     public int getId() { return id; }
+    public double getPrice() { return price;}
+    public String getName() { return name;}
+    public String getImageURL() { return imageURL;}
 }

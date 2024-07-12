@@ -4,11 +4,12 @@ import gift.entity.Product;
 import gift.domain.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
-import java.util.List;
 import java.net.URI;
 
 @RestController
@@ -21,8 +22,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<Page<Product>> getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Page<Product> productPage = productService.getAllProduct(page, size);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Page-Number", String.valueOf(productPage.getNumber()));
+        headers.add("X-Page-Size", String.valueOf(productPage.getSize()));
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(productPage);
     }
 
     @GetMapping("/{id}")
