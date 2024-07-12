@@ -6,9 +6,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "wishlist")
+@Table(name = "wishlist", uniqueConstraints = {
+    @UniqueConstraint(
+        name = "email_productID_UNIQUE",
+        columnNames = {"email", "product_id"}
+    )
+})
 public class Wishlist {
 
     @Id
