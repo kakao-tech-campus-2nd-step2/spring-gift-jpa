@@ -10,6 +10,7 @@ import gift.model.Member;
 import gift.model.MemberRole;
 import gift.model.Product;
 import gift.model.Wish;
+import java.util.Objects;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,12 +63,16 @@ class WishListServiceImplTest {
 
         //when
 
-        jpaWishRepository.save(new Wish(member,product));
-        jpaWishRepository.save(new Wish(member,product2));
-        jpaWishRepository.save(new Wish(member,product3));
+        member.addProduct(product);
+        member.addProduct(product2);
+        member.addProduct(product3);
 
+        jpaMemberRepository.save(member);
         //then
 
+        assertThat(jpaWishRepository.findAllByMemberId(member.getId())).isNotNull();
+        assertThat(jpaWishRepository.findAllByMemberId(member.getId()).stream().anyMatch(wish -> Objects.equals(
+            wish.getProduct().getName(), "tuna2"))).isTrue();
 
 
 
