@@ -29,6 +29,6 @@ public class WishListDto {
     }
 
     public static WishListDto fromEntity(WishList wishlist) {
-        return new WishListDto(wishlist.getMemberId(), wishlist.getMemberId());
+        return new WishListDto(wishlist.getMember().getId(), wishlist.getMember().getId());
     }
 }

@@ -1,13 +1,17 @@
 package gift.service;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import gift.dto.MemberDto;
 import gift.dto.request.LoginRequest;
 import gift.entity.Member;
+import gift.entity.WishList;
 import gift.exception.CustomException;
 import gift.repository.MemberRepository;
+import gift.repository.WishListRepository;
 import gift.util.JwtUtil;
 import jakarta.transaction.Transactional;
 
@@ -15,10 +19,12 @@ import jakarta.transaction.Transactional;
 public class MemberService {
 
     private MemberRepository memberRepository;
+    private WishListRepository wishListRepository;
     private JwtUtil jwtUtil;
 
-    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil){
+    public MemberService(MemberRepository memberRepository, WishListRepository wishListRepository, JwtUtil jwtUtil){
         this.memberRepository = memberRepository;
+        this.wishListRepository = wishListRepository;
         this.jwtUtil = jwtUtil;
     }
 
@@ -35,6 +41,13 @@ public class MemberService {
 
     @Transactional
     public void deleteMember(Long id){
+
+        memberRepository.findById(id)
+            .orElseThrow(() -> new CustomException("Member with id " + id + " not found", HttpStatus.NOT_FOUND));
+
+        List<WishList> wishList = wishListRepository.findByMemberId(id);
+        wishListRepository.deleteAll(wishList);
+        
         memberRepository.deleteById(id);
     }
 

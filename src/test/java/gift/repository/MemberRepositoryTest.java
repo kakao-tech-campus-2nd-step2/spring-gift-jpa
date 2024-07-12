@@ -28,9 +28,9 @@ public class MemberRepositoryTest {
 
     @BeforeEach
     void setUp(){
-        expected = new Member("testEmail", "testPassword", "testRole");
+        expected = new Member("testPassword", "testEmail", "testRole");
         actual = memberRepository.save(expected);
-        dupclicatedMember = new Member("testEmail", "testPassword", "testRole");
+        dupclicatedMember = new Member("testPassword", "testEmail", "testRole");
         notExistEmail = "not Exist Email";
     }
 

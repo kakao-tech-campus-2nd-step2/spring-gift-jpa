@@ -11,6 +11,7 @@ import gift.entity.WishList;
 public interface WishListRepository  extends JpaRepository<WishList, Long>{
 
     List<WishList> findByMemberId(Long memberId);
+    List<WishList> findByProductId(Long productId);
 
     Long findIdByMemberIdAndProductId(Long memberId, Long productId);
 }
