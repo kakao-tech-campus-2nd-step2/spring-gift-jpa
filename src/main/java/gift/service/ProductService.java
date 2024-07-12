@@ -1,11 +1,13 @@
 package gift.service;
 
 import gift.domain.model.dto.ProductAddRequestDto;
+import gift.domain.model.dto.ProductCursorResponseDto;
 import gift.domain.model.dto.ProductResponseDto;
 import gift.domain.model.dto.ProductUpdateRequestDto;
 import gift.domain.repository.ProductRepository;
 import gift.domain.model.entity.Product;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,10 +32,26 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getAllProduct() {
-        return productRepository.findAll().stream()
+    public ProductCursorResponseDto getAllProducts(Long cursor, int limit) {
+        List<Product> products;
+        if (cursor == null) {
+            products = productRepository.findByOrderByIdDesc(PageRequest.of(0, limit));
+        } else {
+            products = productRepository.findByIdLessThanOrderByIdDesc(cursor, PageRequest.of(0, limit));
+        }
+
+        List<ProductResponseDto> productDtos = products.stream()
             .map(this::convertToResponseDto)
             .collect(Collectors.toList());
+
+        Long nextCursor = null;
+        boolean hasNext = false;
+        if (!products.isEmpty()) {
+            nextCursor = products.getLast().getId();
+            hasNext = productRepository.existsByIdLessThan(nextCursor);
+        }
+
+        return new ProductCursorResponseDto(productDtos, nextCursor, hasNext);
     }
 
     @Transactional

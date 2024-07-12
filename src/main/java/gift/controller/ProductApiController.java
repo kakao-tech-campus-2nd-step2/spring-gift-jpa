@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.domain.model.dto.ProductAddRequestDto;
+import gift.domain.model.dto.ProductCursorResponseDto;
 import gift.domain.model.dto.ProductResponseDto;
 import gift.domain.model.dto.ProductUpdateRequestDto;
 import gift.service.ProductService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,8 +44,8 @@ public class ProductApiController {
     //    전체 상품 조회
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponseDto> getAllProducts() {
-        return productService.getAllProduct();
+    public ProductCursorResponseDto getAllProducts(@RequestParam(required = false) Long cursor) {
+        return productService.getAllProducts(cursor, 10);
     }
 
     //    상품 추가

@@ -16,7 +16,7 @@ public class ProductViewController {
 
     @GetMapping
     public String home(Model model) {
-        model.addAttribute("products", productService.getAllProduct());
+        model.addAttribute("products", productService.getAllProducts(null, 10));
         return "index";
     }
 }
