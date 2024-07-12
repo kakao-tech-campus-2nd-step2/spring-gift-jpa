@@ -7,6 +7,7 @@ import gift.global.dto.PageResponse;
 import gift.model.member.Role;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,10 +66,9 @@ public class ProductController {
 
     @GetMapping("/products")
     public ResponseEntity<PageResponse<ProductResponse.Info>> getProductsPaging(
-        @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-        @RequestParam(value = "size", required = false, defaultValue = "10") int size
+        Pageable pageable
     ) {
-        var response = productService.getProductsPaging(page, size);
+        var response = productService.getProductsPaging(pageable);
         return ResponseEntity.ok().body(response);
     }
 
