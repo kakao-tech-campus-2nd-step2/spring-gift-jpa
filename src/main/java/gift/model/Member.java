@@ -1,20 +1,29 @@
 package gift.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.Base64;
 
+@Entity
+@Table(name = "member")
 public class Member {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "이메일은 1글자 이상 입력하세요")
     @Email(message = "이메일 형식을 지켜야 합니다")
-    private final String email;
+    @Column(unique = true, nullable = false)
+    private String email;
 
     @NotBlank(message = "비밀번호는 1글자 이상 입력하세요")
-    private final String password;
+    @Column(nullable = false)
+    private String password;
+
+    protected Member() {}
 
     public Member(Long id, String email, String password) {
         this.id = id;
@@ -45,5 +54,4 @@ public class Member {
         }
         this.id = id;
     }
-
 }
