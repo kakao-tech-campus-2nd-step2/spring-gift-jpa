@@ -5,7 +5,6 @@ import gift.model.Product;
 import gift.model.dto.ProductRequestDto;
 import gift.model.dto.ProductResponseDto;
 import gift.repository.ProductRepository;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

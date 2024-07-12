@@ -2,7 +2,7 @@ package gift.model.dto;
 
 public class TokenResponseDto {
 
-    private String accessToken;
+    private final String accessToken;
 
     public TokenResponseDto(String accessToken) {
         this.accessToken = accessToken;

@@ -2,8 +2,8 @@ package gift.exception;
 
 public class MemberException extends RuntimeException {
 
-    private MemberErrorCode memberErrorCode;
-    private String detailMessage;
+    private final MemberErrorCode memberErrorCode;
+    private final String detailMessage;
 
     public MemberException(MemberErrorCode memberErrorCode) {
         super(memberErrorCode.getMessage());

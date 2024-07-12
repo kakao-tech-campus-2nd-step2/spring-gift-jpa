@@ -7,7 +7,6 @@ import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
 import java.util.List;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -53,8 +52,9 @@ class WishRepositoryTest {
         wishRepository.save(expected1);
         wishRepository.save(expected2);
 
-        List<Wish> actual = wishRepository.findAllByMemberId(expectedMember.getId(), PageRequest.of(0, 10, Sort.by(
-            Direction.ASC, "product"))).getContent();
+        List<Wish> actual = wishRepository.findAllByMemberId(expectedMember.getId(),
+            PageRequest.of(0, 10, Sort.by(
+                Direction.ASC, "product"))).getContent();
 
         assertThat(actual).containsExactly(expected1, expected2);
     }
