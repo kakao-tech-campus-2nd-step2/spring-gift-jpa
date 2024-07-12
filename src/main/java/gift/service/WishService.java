@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.exception.ResourceNotFoundException;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
