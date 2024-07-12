@@ -29,7 +29,6 @@ public class ProductController {
         this.productService = productService;
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> findProductById(@PathVariable Long id) {
         final ProductResponse response = productService.findProductWithWishCount(id);

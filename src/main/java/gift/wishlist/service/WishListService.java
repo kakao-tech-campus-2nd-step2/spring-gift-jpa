@@ -29,7 +29,7 @@ public class WishListService {
 
     @Transactional(readOnly = true)
     public List<WishListResponse> getWishList(Long userId) {
-        List<Wish> wishes = wishListRepository.findWishesByUserIdAndIsActiveTrue(userId);
+        List<Wish> wishes = wishListRepository.findWishesByAppUserIdAndIsActiveTrue(userId);
         if (wishes.isEmpty()) {
             throw new EntityNotFoundException("WishList");
         }
@@ -54,7 +54,7 @@ public class WishListService {
 
     @Transactional
     public void updateWishQuantity(Long userId, Long wishId, int quantity) {
-        Wish wish = wishListRepository.findByIdAndUserIdAndIsActiveTrue(wishId, userId)
+        Wish wish = wishListRepository.findByIdAndAppUserIdAndIsActiveTrue(wishId, userId)
                 .orElseThrow(() -> new EntityNotFoundException("Wish"));
         wish.setQuantity(quantity);
         wishListRepository.save(wish);
@@ -62,7 +62,7 @@ public class WishListService {
 
     @Transactional
     public void deleteWish(Long userId, Long wishId) {
-        Wish wish = wishListRepository.findByIdAndUserIdAndIsActiveTrue(wishId, userId)
+        Wish wish = wishListRepository.findByIdAndAppUserIdAndIsActiveTrue(wishId, userId)
                 .orElseThrow(() -> new EntityNotFoundException("Wish"));
         wish.setActive(false);
         wishListRepository.save(wish);

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WishListRepository extends JpaRepository<Wish, Long> {
-    List<Wish> findWishesByUserIdAndIsActiveTrue(@Param("userId") Long userId);
+    List<Wish> findWishesByAppUserIdAndIsActiveTrue(@Param("userId") Long userId);
 
-    Optional<Wish> findByIdAndUserIdAndIsActiveTrue(Long id, Long userId);
+    Optional<Wish> findByIdAndAppUserIdAndIsActiveTrue(Long id, Long userId);
 }

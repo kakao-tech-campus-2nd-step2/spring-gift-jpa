@@ -9,6 +9,7 @@ import gift.user.exception.ForbiddenException;
 import gift.user.model.dto.AppUser;
 import gift.user.model.dto.Role;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.Tuple;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,15 +31,17 @@ public class ProductService {
     }
 
     public ProductResponse findProductWithWishCount(Long id) {
-        Optional<Object[]> result = productRepository.findProductByIdWithWishCount(id);
-        return result.map(objects -> new ProductResponse((Product) objects[0], (Long) objects[1]))
+        Optional<Tuple> result = productRepository.findProductByIdWithWishCount(id);
+        return result.map(
+                        tuple -> new ProductResponse(tuple.get("product", Product.class), tuple.get("wishCount", Long.class)))
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
     }
 
     public List<ProductResponse> findAllProductWithWishCount() {
-        List<Object[]> results = productRepository.findAllActiveProductsWithWishCount();
+        List<Tuple> results = productRepository.findAllActiveProductsWithWishCount();
         return results.stream()
-                .map(objects -> new ProductResponse((Product) objects[0], (Long) objects[1]))
+                .map(tuple -> new ProductResponse(tuple.get("product", Product.class),
+                        tuple.get("wishCount", Long.class)))
                 .collect(Collectors.toList());
     }
 
