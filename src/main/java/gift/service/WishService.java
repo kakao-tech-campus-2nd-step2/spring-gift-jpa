@@ -38,7 +38,7 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishResponseDto> getMemberWishListByMemberId(Long memberId){
+    public List<WishResponseDto> getMemberWishesByMemberId(Long memberId){
         return wishRepository.findByMemberId(memberId)
                 .stream()
                 .map(WishResponseDto::from)
