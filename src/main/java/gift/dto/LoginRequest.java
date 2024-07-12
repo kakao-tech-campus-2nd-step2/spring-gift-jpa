@@ -1,16 +1,13 @@
 package gift.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record LoginRequest(
         @Email(message = "이메일 형식의 입력이어야 합니다.")
-        @NotNull
-        @NotEmpty
+        @NotBlank
         String email,
-        @NotNull
-        @NotEmpty
+        @NotBlank
         String password
 ) {
 }
