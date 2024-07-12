@@ -3,6 +3,9 @@ package gift.controller;
 import gift.annotation.LoginMember;
 import gift.dto.*;
 import gift.service.WishService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +28,9 @@ public class WishRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishResponseDto>> getMemberWishList(@LoginMember MemberRequestDto memberRequest){
-        return ResponseEntity.status(HttpStatus.OK).body(wishService.getMemberWishListByMemberId(memberRequest.getId()));
+    public ResponseEntity<List<WishResponseDto>> getMemberWishes(@LoginMember MemberRequestDto memberRequest, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(wishService.getPagedMemberWishesByMemberId(memberRequest.getId(),pageable));
     }
 
     @DeleteMapping("/{id}")
