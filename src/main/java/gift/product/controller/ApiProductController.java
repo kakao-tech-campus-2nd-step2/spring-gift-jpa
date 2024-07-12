@@ -2,7 +2,6 @@ package gift.product.controller;
 
 import gift.product.model.Product;
 import gift.product.service.ProductService;
-import gift.product.validation.ProductValidation;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +16,10 @@ import java.util.List;
 public class ApiProductController {
 
     private final ProductService productService;
-    private final ProductValidation productValidation;
 
     @Autowired
-    public ApiProductController(ProductService productService, ProductValidation productValidation) {
+    public ApiProductController(ProductService productService) {
         this.productService = productService;
-        this.productValidation = productValidation;
     }
 
     @GetMapping("/list")
