@@ -1,8 +1,12 @@
 package gift.user.domain;
 
+import gift.product.domain.WishList;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "users")
 public class User {
@@ -15,6 +19,9 @@ public class User {
     private String email;
 
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<WishList> wishLists = new ArrayList<>();
 
     public User() {
     }
