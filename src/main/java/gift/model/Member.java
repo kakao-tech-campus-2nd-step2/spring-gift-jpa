@@ -18,16 +18,12 @@ public class Member {
     private Long id;
 
     @Column(name = "name", nullable = false)
-    @NotBlank(message = "이름을 입력하세요.")
     private String name;
 
     @Column(name = "email", nullable = false, unique = true)
-    @NotBlank(message = "이메일을 입력하세요.")
-    @Email(message = "유효한 이메일을 입력하세요.")
     private String email;
 
     @Column(name = "password", nullable = false)
-    @NotBlank(message = "비밀번호를 입력하세요.")
     private String password;
 
     @Column(name = "role")
@@ -48,20 +44,35 @@ public class Member {
         return id;
     }
 
-    public @NotBlank(message = "이름을 입력하세요.") String getName() {
+    public String getName() {
         return name;
     }
 
-    public @NotBlank(message = "이메일을 입력하세요.") @Email(message = "유효한 이메일을 입력하세요.") String getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public @NotBlank(message = "비밀번호를 입력하세요.") String getPassword() {
+    public String getPassword() {
         return password;
     }
 
     public String getRole() {
         return role;
+    }
+
+    public void validate() {
+        if(name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("이름을 입력하세요.");
+        }
+        if(email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("이메일을 입력하세요.");
+        }
+        if(!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            throw new IllegalArgumentException("유효한 이메일을 입력하세요.");
+        }
+        if(password == null || password.trim().isEmpty()) {
+            throw new IllegalArgumentException("비밀 번호를 입력하세요.");
+        }
     }
 
 }
