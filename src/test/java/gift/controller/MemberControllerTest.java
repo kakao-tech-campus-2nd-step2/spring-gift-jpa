@@ -24,18 +24,19 @@ public class MemberControllerTest {
     private AuthService authService;
 
     @Test
-    @DisplayName("정상적으로 회원가입 후 잘못된 패스워드로 로그인 요청하기")
+    @DisplayName("정상적으로 가입 후 탈퇴 요청하기")
     void registerAndLoginFail() throws Exception {
+        //given
         var registerRequest = new RegisterRequest("테스트", "test@naver.com", "testPassword", "MEMBER");
-        var loginRequest = new LoginRequest("test@naver.com", "testPassword");
-
         authService.register(registerRequest);
+        var loginRequest = new LoginRequest("test@naver.com", "testPassword");
         var loginResponse = authService.login(loginRequest);
-
-        var deleted = mockMvc.perform(delete("/api/members")
+        var deleteRequest = delete("/api/members")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + loginResponse.token()));
-
+                .header("Authorization", "Bearer " + loginResponse.token());
+        //when
+        var deleted = mockMvc.perform(deleteRequest);
+        //then
         deleted.andExpect(status().isNoContent());
     }
 }

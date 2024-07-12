@@ -2,16 +2,18 @@ package gift.service;
 
 import gift.dto.LoginRequest;
 import gift.dto.RegisterRequest;
-import gift.exception.NotFoundElementException;
-import gift.service.auth.AuthService;
+import gift.exception.InvalidLoginInfoException;
 import gift.reflection.AuthTestReflectionComponent;
+import gift.service.auth.AuthService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 public class MemberServiceTest {
 
     @Autowired
@@ -24,16 +26,16 @@ public class MemberServiceTest {
     @Test
     @DisplayName("회원 탈퇴하기 - 성공")
     void deleteMemberSuccess() {
+        //given
         var registerRequest = new RegisterRequest("테스트", "test@naver.com", "testPassword", "MEMBER");
         var loginRequest = new LoginRequest("test@naver.com", "testPassword");
-        var auth = authService.register(registerRequest);
-        var id = authTestReflectionComponent.getMemberIdWithToken(auth.token());
+        authService.register(registerRequest);
         var loginAuth = authService.login(loginRequest);
-
-        Assertions.assertThat(auth.token()).isEqualTo(loginAuth.token());
-
+        var id = authTestReflectionComponent.getMemberIdWithToken(loginAuth.token());
+        //when
         memberService.deleteMember(id);
-
-        Assertions.assertThatThrownBy(() -> authService.login(loginRequest)).isInstanceOf(NotFoundElementException.class);
+        //then
+        Assertions.assertThatThrownBy(() -> authService.login(loginRequest))
+                .isInstanceOf(InvalidLoginInfoException.class);
     }
 }

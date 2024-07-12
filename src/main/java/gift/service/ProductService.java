@@ -1,44 +1,51 @@
 package gift.service;
 
+import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
 import gift.exception.InvalidProductNameWithKAKAOException;
+import gift.exception.NotFoundElementException;
 import gift.model.MemberRole;
 import gift.model.Product;
-import gift.dto.ProductRequest;
 import gift.repository.ProductOptionRepository;
 import gift.repository.ProductRepository;
+import gift.repository.WishProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductOptionRepository optionRepository;
+    private final WishProductRepository wishProductRepository;
+    private final ProductOptionRepository productOptionRepository;
 
-    public ProductService(ProductRepository productRepository, ProductOptionRepository optionRepository) {
+    public ProductService(ProductRepository productRepository, WishProductRepository wishProductRepository, ProductOptionRepository productOptionRepository) {
         this.productRepository = productRepository;
-        this.optionRepository = optionRepository;
+        this.wishProductRepository = wishProductRepository;
+        this.productOptionRepository = productOptionRepository;
     }
 
     public ProductResponse addProduct(ProductRequest productRequest, MemberRole memberRole) {
         productNameValidation(productRequest, memberRole);
-        var product = createProductWithProductRequest(productRequest);
-        var savedProduct = productRepository.save(product);
-        return getProductResponseFromProduct(savedProduct);
-    }
-
-    public void updateProduct(Long id, ProductRequest productRequest) {
-        var product = findProductWithId(id);
-        updateProductWithProductRequest(product, productRequest);
-    }
-
-    public ProductResponse getProduct(Long id) {
-        var product = findProductWithId(id);
+        var product = saveProductWithProductRequest(productRequest);
         return getProductResponseFromProduct(product);
     }
 
+    public void updateProduct(Long id, ProductRequest productRequest) {
+        var product = findProductById(id);
+        updateProductWithProductRequest(product, productRequest);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductResponse getProduct(Long id) {
+        var product = findProductById(id);
+        return getProductResponseFromProduct(product);
+    }
+
+    @Transactional(readOnly = true)
     public List<ProductResponse> getProducts() {
         return productRepository.findAll()
                 .stream()
@@ -46,22 +53,20 @@ public class ProductService {
                 .toList();
     }
 
-    public void deleteProduct(Long id) {
-        optionRepository.deleteByProductId(id);
-        productRepository.deleteById(id);
+    public void deleteProduct(Long productId) {
+        wishProductRepository.deleteWishProductsByProductId(productId);
+        productOptionRepository.deleteProductOptionsByProductId(productId);
+        productRepository.deleteById(productId);
     }
 
-    private Product findProductWithId(Long id) {
-        return productRepository.findById(id);
-    }
-
-    private Product createProductWithProductRequest(ProductRequest productRequest) {
-        return new Product(productRequest.name(), productRequest.price(), productRequest.imageUrl());
+    private Product saveProductWithProductRequest(ProductRequest productRequest) {
+        var product = new Product(productRequest.name(), productRequest.price(), productRequest.imageUrl());
+        return productRepository.save(product);
     }
 
     private void updateProductWithProductRequest(Product product, ProductRequest productRequest) {
         product.updateProductInfo(productRequest.name(), productRequest.price(), productRequest.imageUrl());
-        productRepository.update(product);
+        productRepository.save(product);
     }
 
     private void productNameValidation(ProductRequest productRequest, MemberRole memberRole) {
@@ -72,5 +77,10 @@ public class ProductService {
 
     private ProductResponse getProductResponseFromProduct(Product product) {
         return ProductResponse.of(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    }
+
+    private Product findProductById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundElementException(id + "를 가진 상품옵션이 존재하지 않습니다."));
     }
 }

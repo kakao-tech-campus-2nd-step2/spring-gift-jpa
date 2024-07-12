@@ -1,39 +1,49 @@
 package gift.service;
 
+import gift.dto.ProductBasicInformation;
 import gift.dto.WishProductAddRequest;
 import gift.dto.WishProductResponse;
 import gift.dto.WishProductUpdateRequest;
+import gift.exception.NotFoundElementException;
+import gift.model.Member;
+import gift.model.Product;
 import gift.model.WishProduct;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
 import gift.repository.WishProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class WishProductService {
 
     private final WishProductRepository wishProductRepository;
-    private final ProductService productService;
-    private final MemberService memberService;
+    private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
 
-    public WishProductService(WishProductRepository wishProductRepository, ProductService productService, MemberService memberService) {
+    public WishProductService(WishProductRepository wishProductRepository, ProductRepository productRepository, MemberRepository memberRepository) {
         this.wishProductRepository = wishProductRepository;
-        this.productService = productService;
-        this.memberService = memberService;
+        this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
     }
 
     public WishProductResponse addWishProduct(WishProductAddRequest wishProductAddRequest, Long memberId) {
-        memberService.existsById(memberId);
-        if (wishProductRepository.existsByProductAndMember(wishProductAddRequest.productId(), memberId)) {
-            return updateWishProductWithProductAndMember(wishProductAddRequest, memberId);
+        var product = productRepository.findById(wishProductAddRequest.productId())
+                .orElseThrow(() -> new NotFoundElementException(wishProductAddRequest.productId() + "를 가진 상품이 존재하지 않습니다."));
+        var member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundElementException(memberId + "를 가진 멤버가 존재하지 않습니다."));
+        if (wishProductRepository.existsByProductAndMember(product, member)) {
+            return updateWishProductWithProductAndMember(product, member, wishProductAddRequest.count());
         }
-        var wishProduct = createWishProductWithWishProductRequest(wishProductAddRequest, memberId);
-        var savedWishProduct = wishProductRepository.save(wishProduct);
-        return getWishProductResponseFromWishProduct(savedWishProduct);
+        var wishProduct = saveWishProductWithWishProductRequest(product, member, wishProductAddRequest.count());
+        return getWishProductResponseFromWishProduct(wishProduct);
     }
 
     public void updateWishProduct(Long id, WishProductUpdateRequest wishProductUpdateRequest) {
-        var wishProduct = wishProductRepository.findById(id);
+        var wishProduct = findWishProductById(id);
         if (wishProductUpdateRequest.count() == 0) {
             deleteWishProduct(id);
             return;
@@ -41,36 +51,45 @@ public class WishProductService {
         updateWishProductWithCount(wishProduct, wishProductUpdateRequest.count());
     }
 
-    private WishProductResponse updateWishProductWithProductAndMember(WishProductAddRequest wishProductAddRequest, Long memberId) {
-        var wishProduct = wishProductRepository.findByProductAndMember(wishProductAddRequest.productId(), memberId);
-        var count = wishProduct.getCount() + wishProductAddRequest.count();
-        var updatedWishProduct = updateWishProductWithCount(wishProduct, count);
-        return getWishProductResponseFromWishProduct(updatedWishProduct);
-    }
-
+    @Transactional(readOnly = true)
     public List<WishProductResponse> getWishProducts(Long memberId) {
-        return wishProductRepository.findAll(memberId)
+        return wishProductRepository.findAllByMemberId(memberId)
                 .stream()
                 .map(this::getWishProductResponseFromWishProduct)
                 .toList();
     }
 
-    public void deleteWishProduct(Long id) {
-        wishProductRepository.deleteById(id);
+    public void deleteWishProduct(Long wishProductId) {
+        wishProductRepository.deleteById(wishProductId);
     }
 
-    private WishProduct createWishProductWithWishProductRequest(WishProductAddRequest wishProductAddRequest, Long memberId) {
-        return new WishProduct(wishProductAddRequest.productId(), memberId, wishProductAddRequest.count());
+    private WishProduct saveWishProductWithWishProductRequest(Product product, Member member, Integer count) {
+        var wishProduct = new WishProduct(product, member, count);
+        return wishProductRepository.save(wishProduct);
+    }
+
+    private WishProductResponse updateWishProductWithProductAndMember(Product product, Member member, Integer count) {
+        var wishProduct = wishProductRepository.findByProductAndMember(product, member)
+                .orElseThrow(() -> new NotFoundElementException(product.getId() + "를 가진 상품과, " + member.getId() + "를 가진 멤버를 가진 위시 리스트가 존재하지 않습니다."));
+        var updatedCount = wishProduct.getCount() + count;
+        var updatedWishProduct = updateWishProductWithCount(wishProduct, updatedCount);
+        return getWishProductResponseFromWishProduct(updatedWishProduct);
     }
 
     private WishProduct updateWishProductWithCount(WishProduct wishProduct, Integer count) {
         wishProduct.updateCount(count);
-        wishProductRepository.update(wishProduct);
+        wishProductRepository.save(wishProduct);
         return wishProduct;
     }
 
     private WishProductResponse getWishProductResponseFromWishProduct(WishProduct wishProduct) {
-        var product = productService.getProduct(wishProduct.getProductId());
-        return WishProductResponse.of(wishProduct.getId(), product, wishProduct.getCount());
+        var product = wishProduct.getProduct();
+        var productBasicInformation = ProductBasicInformation.of(product.getId(), product.getName(), product.getPrice());
+        return WishProductResponse.of(wishProduct.getId(), productBasicInformation, wishProduct.getCount());
+    }
+
+    private WishProduct findWishProductById(Long id) {
+        return wishProductRepository.findById(id).orElseThrow(
+                () -> new NotFoundElementException(id + "를 가진 위시 리스트가 존재하지 않습니다."));
     }
 }

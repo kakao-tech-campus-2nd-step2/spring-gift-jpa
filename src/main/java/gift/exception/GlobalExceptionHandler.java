@@ -14,7 +14,6 @@ public class GlobalExceptionHandler {
 
     static final String NOT_FOUND_MESSAGE = "존재하지 않는 리소스에 대한 접근입니다.";
     static final String INVALID_PRODUCT_NAME_WITH_KAKAO_MESSAGE = "카카오가 포함된 문구는 담당 MD와 협의한 경우에만 사용할 수 있습니다.";
-    static final String FOREIGN_KEY_CONSTRAINT_VIOLATION_MESSAGE = "외래키 제약 조건에 위배되었습니다.";
     static final String DUPLICATED_EMAIL_MESSAGE = "이미 존재하는 이메일입니다.";
     static final String INVALID_LOGIN_INFO_MESSAGE = "로그인 정보가 유효하지 않습니다.";
     static final String UNAUTHORIZED_ACCESS_MESSAGE = "인가되지 않은 요청입니다.";
@@ -29,11 +28,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = InvalidProductNameWithKAKAOException.class)
     public ResponseEntity<String> invalidProductNameWithKAKAOExceptionHandling() {
         return new ResponseEntity<>(INVALID_PRODUCT_NAME_WITH_KAKAO_MESSAGE, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(value = ForeignKeyConstraintViolationException.class)
-    public ResponseEntity<String> foreignKeyConstraintHandling() {
-        return new ResponseEntity<>(FOREIGN_KEY_CONSTRAINT_VIOLATION_MESSAGE, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(value = DuplicatedEmailException.class)

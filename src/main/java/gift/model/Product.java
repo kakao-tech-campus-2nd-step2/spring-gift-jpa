@@ -1,20 +1,27 @@
 package gift.model;
 
-public class Product {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
-    private Long id;
+@Entity
+@Table(name = "product")
+public class Product extends BaseEntity {
+    @NotNull
+    @Column(name = "name")
     private String name;
+    @NotNull
+    @Column(name = "price")
     private Integer price;
+    @NotNull
+    @Column(name = "image_url")
     private String imageUrl;
 
-    public Product(String name, Integer price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    protected Product() {
     }
 
-    public Product(Long id, String name, Integer price, String imageUrl) {
-        this.id = id;
+    public Product(String name, Integer price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

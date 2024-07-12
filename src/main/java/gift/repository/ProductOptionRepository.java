@@ -1,19 +1,14 @@
 package gift.repository;
 
 import gift.model.ProductOption;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface ProductOptionRepository {
-    ProductOption save(ProductOption productOption);
+@Repository
+public interface ProductOptionRepository extends JpaRepository<ProductOption, Long> {
+    List<ProductOption> findAllByProductId(Long productId);
 
-    void update(ProductOption productOption);
-
-    ProductOption findById(Long id);
-
-    List<ProductOption> findAll(Long productId);
-
-    void deleteById(Long id);
-
-    void deleteByProductId(Long id);
+    void deleteProductOptionsByProductId(Long productId);
 }

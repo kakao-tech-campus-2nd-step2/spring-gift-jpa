@@ -1,24 +1,24 @@
 package gift.service;
 
-import gift.exception.UnauthorizedAccessException;
 import gift.repository.MemberRepository;
+import gift.repository.WishProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final WishProductRepository wishProductRepository;
 
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, WishProductRepository wishProductRepository) {
         this.memberRepository = memberRepository;
-    }
-
-    public void existsById(Long memberId) {
-        if (memberRepository.existsById(memberId)) return;
-        throw new UnauthorizedAccessException("인가되지 않은 요청입니다.");
+        this.wishProductRepository = wishProductRepository;
     }
 
     public void deleteMember(Long memberId) {
+        wishProductRepository.deleteWishProductsByMemberId(memberId);
         memberRepository.deleteById(memberId);
     }
 }

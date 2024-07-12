@@ -61,7 +61,7 @@
                 price: productPrice,
                 imageUrl: productImageUrl
             }),
-            statusCode:{
+            statusCode: {
                 201: function (data, textStatus, jqXHR) {
                     let locationHeader = jqXHR.getResponseHeader('Location');
                     if (locationHeader) {

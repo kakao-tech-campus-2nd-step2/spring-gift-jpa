@@ -1,22 +1,34 @@
 package gift.model;
 
-public class WishProduct {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
-    private Long id;
-    private Long productId;
-    private Long memberId;
+@Entity
+@Table(name = "wish_product")
+public class WishProduct extends BaseEntity {
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", referencedColumnName = "id")
+    private Member member;
+    @NotNull
+    @Column(name = "count")
     private Integer count;
 
-    public WishProduct(Long productId, Long memberId, Integer count) {
-        this.productId = productId;
-        this.memberId = memberId;
-        this.count = count;
+    public WishProduct() {
     }
 
-    public WishProduct(Long id, Long productId, Long memberId, Integer count) {
-        this.id = id;
-        this.productId = productId;
-        this.memberId = memberId;
+    public WishProduct(Product product, Member member, Integer count) {
+        this.product = product;
+        this.member = member;
         this.count = count;
     }
 
@@ -24,12 +36,12 @@ public class WishProduct {
         return id;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
     public Integer getCount() {
