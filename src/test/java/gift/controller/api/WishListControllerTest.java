@@ -60,13 +60,6 @@ class WishListControllerTest {
         return tokenResponse.token();
     }
 
-    private void addProduct30ToWish() {
-        Long memberId = tokenService.getMemberIdByToken(TOKEN);
-        for (int productId = 1; productId <= 30; productId++) {
-            wishListService.addProductToWishList(memberId, (long) productId, 10);
-        }
-    }
-
     private Long addProduct30() {
         Long startId = 0L;
         for (int i = 1; i <= 30; i++) {
@@ -241,42 +234,31 @@ class WishListControllerTest {
     @Test
     @DisplayName("위시리스트 페이지네이션 확인")
     void wishPagination() throws Exception {
+        //Given
+        addProduct30ToWish(START_PRODUCT_ID);
+
         //When
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(URL)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .param("page", "0")
+                        .param("size", "5")
+                        .param("sort", "productName,desc"))
                 //Then
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
-                        jsonPath("$.size").value(10),
+                        jsonPath("$.size").value(5),
                         jsonPath("$.sort.sorted").value(true),
                         jsonPath("number").value(0)
                 ).andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
     }
 
-    @Test
-    @Transactional
-    @DisplayName("위시리스트 페이지네이션 파라미터 확인")
-    void wishPagination2() throws Exception {
-        //When
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(URL)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("page", "1")
-                        .param("size", "5"))
-                //.param("sort", "productName,desc"))
-                //Then
-                .andExpectAll(
-                        status().isOk(),
-                        content().contentType(MediaType.APPLICATION_JSON)
-//                        jsonPath("$.size").value(5),
-//                        jsonPath("$.sort.sorted").value(true),
-//                        jsonPath("number").value(1)
-                ).andReturn();
-        System.out.println(mvcResult.getResponse().getContentAsString());
+    private void addProduct30ToWish(Long startProductId) {
+        Long memberId = tokenService.getMemberIdByToken(TOKEN);
+        for (Long productId = startProductId; productId <= 30; productId++) {
+            wishListService.addProductToWishList(memberId, productId, 10);
+        }
     }
-
 
 }

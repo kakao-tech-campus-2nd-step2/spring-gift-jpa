@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -31,22 +30,19 @@ class ProductControllerTest {
     @Test
     @DisplayName("Pagination 디폴트 동작 확인")
     void getProducts() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/products"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/products"))
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.APPLICATION_JSON),
                         jsonPath("$.size").value(10),
                         jsonPath("$.sort.sorted").value(true)
-                )
-                .andReturn();
-
-        System.out.println(mvcResult.getResponse().getContentAsString());
+                );
     }
 
     @Test
     @DisplayName("Pagination 파라미터 조작시 동작 확인")
     void getProducts2() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/products")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/products")
                         .param("page", "1")
                         .param("size", "5")
                         .param("sort", "id,desc"))
@@ -56,10 +52,7 @@ class ProductControllerTest {
                         jsonPath("$.size").value(5),
                         jsonPath("$.sort.sorted").value(true),
                         jsonPath("number").value(1)
-                )
-                .andReturn();
-
-        System.out.println(mvcResult.getResponse().getContentAsString());
+                );
     }
 
 }
