@@ -1,20 +1,63 @@
-create table product
+CREATE TABLE IF NOT EXISTS product
 (
-    id       bigint auto_increment,
-    name     varchar(255),
-    price    bigint,
-    imageUrl varchar(255),
-    primary key (id)
-);
-create table member
+    id
+    UUID
+    PRIMARY
+    KEY,
+    name
+    VARCHAR
 (
-    email varchar(30),
-    password varchar(30),
-    primary key (email)
-);
-create table wish
+    255
+) NOT NULL, price BIGINT NOT NULL, imageUrl VARCHAR
 (
-    email          varchar(30),
-    productId      bigint,
-    count          bigint
-);
+    255
+) );
+
+CREATE TABLE IF NOT EXISTS member
+(
+    id
+    UUID
+    PRIMARY
+    KEY,
+    email
+    VARCHAR
+(
+    255
+) NOT NULL UNIQUE, password VARCHAR
+(
+    255
+) NOT NULL, grade VARCHAR
+(
+    255
+) );
+
+CREATE TABLE IF NOT EXISTS wish
+(
+    id
+    UUID
+    PRIMARY
+    KEY,
+    member_id
+    UUID,
+    product_id
+    UUID,
+    count
+    BIGINT
+    NOT
+    NULL,
+    CONSTRAINT
+    fk_member
+    FOREIGN
+    KEY
+(
+    member_id
+) REFERENCES member
+(
+    id
+), CONSTRAINT fk_product FOREIGN KEY
+(
+    product_id
+) REFERENCES product
+(
+    id
+) );

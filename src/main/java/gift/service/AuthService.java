@@ -1,12 +1,11 @@
 package gift.service;
 
-import static gift.login.JwtUtil.generateToken;
-
-import gift.controller.member.MemberDto;
 import gift.controller.auth.Token;
-import gift.controller.member.MemberRequest;
+import gift.controller.auth.LoginRequest;
+import gift.domain.Member;
 import gift.exception.MemberNotExistsException;
 import gift.exception.PasswordNotMatchedException;
+import gift.login.JwtUtil;
 import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +17,12 @@ public class AuthService {
         this.memberRepository = memberRepository;
     }
 
-    public Token login(MemberRequest member) {
-        var m = memberRepository.findByEmail(member.email());
-        m.orElseThrow(MemberNotExistsException::new);
-        if (!member.password().equals(m.get().getPassword())) {
+    public Token login(LoginRequest member) {
+        Member m = memberRepository.findByEmail(member.email())
+            .orElseThrow(MemberNotExistsException::new);
+        if (!member.password().equals(m.getPassword())) {
             throw new PasswordNotMatchedException();
         }
-        Token token = new Token(generateToken(member.email(), member.password()));
-        return token;
+        return new Token(JwtUtil.generateToken(m.getId(), m.getEmail()));
     }
 }
