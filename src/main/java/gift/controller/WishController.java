@@ -32,7 +32,8 @@ public class WishController {
 //    Wish 추가
     @PostMapping
     public ResponseEntity<RequestStateDTO> addWish(@LoginMember MemberDto memberDto, @RequestBody RequestWishDto requestWishDto) {
-        wishService.addWish(memberDto.getId(), requestWishDto.getProductId());
+
+        wishService.addWish(memberDto, requestWishDto.getProductId());
         return ResponseEntity.ok().body(new RequestStateDTO(
             RequestStatus.success,
             null
