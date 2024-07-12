@@ -11,6 +11,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 public class ProductRepositoryTest {
@@ -43,7 +46,7 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void save() {
+    public void save() {
         Product expected = new Product("치킨", 20000, "chicken.com");
         Product actual = productRepository.save(expected);
         assertAll(
@@ -53,11 +56,27 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    void findByName() {
+    public void findByName() {
         String expectedName = "치킨";
         productRepository.save(new Product("치킨", 20000, "chicken.com"));
         boolean exists = productRepository.existsByName(expectedName);
         assertThat(exists).isTrue();
     }
+
+    @Test
+    public void findAllPagingTest(){
+        for(int i=0; i<50; i++){
+            Product product = new Product("name"+i,1000*i, i+".com");
+            productRepository.save(product);
+        }
+
+        Pageable pageable = PageRequest.of(0,10);
+        Page<Product> page = productRepository.findAll(pageable);
+
+        assertThat(page.getTotalElements()).isEqualTo(50);
+        assertThat(page.getTotalPages()).isEqualTo(5);
+        assertThat(page.getContent().size()).isEqualTo(10);
+    }
+
 
 }
