@@ -8,6 +8,8 @@ import gift.dto.WishResponse;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,10 +28,9 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
-    public List<WishResponse> getWishes(Long memberId) {
-        return wishRepository.findByMemberId(memberId).stream()
-                .map(wish -> new WishResponse(wish.getId(), wish.getProduct().getName(), wish.getMember().getId()))
-                .collect(Collectors.toList());
+    public Page<WishResponse> getWishes(Long memberId, PageRequest pageRequest) {
+        return wishRepository.findByMemberId(memberId, pageRequest)
+                .map(wish -> new WishResponse(wish.getId(), wish.getProduct().getName(), wish.getMember().getId()));
     }
 
     public WishResponse addWish(WishRequest wishRequest, Long memberId) {

@@ -4,6 +4,8 @@ import gift.domain.Member;
 import gift.dto.WishRequest;
 import gift.dto.WishResponse;
 import gift.service.WishService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +24,11 @@ public class WishController {
 
 
     @GetMapping
-    public ResponseEntity<List<WishResponse>> getWishes(@LoginMember Member member) {
-        List<WishResponse> wishes = wishService.getWishes(member.getId());
+    public ResponseEntity<Page<WishResponse>> getWishes(@LoginMember Member member,
+                                                        @RequestParam(defaultValue = "0") int page,
+                                                        @RequestParam(defaultValue = "10") int size) {
+        Page<WishResponse> wishes = wishService.getWishes(member.getId(), PageRequest.of(page, size));
+//        List<WishResponse> wishes = wishService.getWishes(member.getId());
         return ResponseEntity.ok(wishes);
     }
 
