@@ -105,7 +105,7 @@ public class WishlistRepositoryTest {
             () -> assertThat(actual.getProduct()).isNull()
         );
     }
-    
+
     @DirtiesContext
     @Test
     void deleteByWishlistId(){
