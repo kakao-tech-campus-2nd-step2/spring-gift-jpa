@@ -3,6 +3,7 @@ package gift.service;
 import gift.model.Product;
 import gift.dto.ProductDTO;
 import gift.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +24,17 @@ public class ProductService {
         return productRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public void saveProduct(ProductDTO productDTO) {
         productRepository.save(toEntity(productDTO, null));
     }
 
+    @Transactional
     public void updateProduct(ProductDTO productDTO, Long id) {
         productRepository.save(toEntity(productDTO, id));
     }
 
+    @Transactional
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }

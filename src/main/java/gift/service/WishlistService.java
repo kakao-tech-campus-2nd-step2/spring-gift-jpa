@@ -27,6 +27,7 @@ public class WishlistService {
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public void addWishlist(String email, Long productId) {
         Wishlist wishlist = new Wishlist(null, email, productId);
         wishlistRepository.save(wishlist);

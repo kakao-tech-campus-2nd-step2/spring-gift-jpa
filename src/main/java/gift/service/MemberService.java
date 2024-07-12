@@ -3,6 +3,7 @@ package gift.service;
 import gift.dto.MemberDTO;
 import gift.model.Member;
 import gift.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,7 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     public Member saveMember(MemberDTO memberDTO) {
         Member member = new Member(null, memberDTO.name(), memberDTO.email(), memberDTO.password(), "user");
         member.validate();
