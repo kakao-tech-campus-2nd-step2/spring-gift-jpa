@@ -2,7 +2,6 @@ package gift.product.util;
 
 import gift.product.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -11,7 +10,6 @@ import io.jsonwebtoken.security.SignatureException;
 import java.security.Key;
 
 import java.util.Date;
-import java.util.function.Function;
 
 import org.springframework.stereotype.Component;
 
@@ -40,8 +38,12 @@ public class JwtUtil {
     public boolean isValidToken(String token) {
         System.out.println("[JwtUtil] isValidToken()");
         try {
-            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
-            String subject = claimsJws.getBody().getSubject();
+            Jwts.parser()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
             return true;
         } catch (SignatureException e) {
             System.out.println("Invalid JWT signature: " + e.getMessage());
