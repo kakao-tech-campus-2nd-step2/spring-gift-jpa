@@ -25,8 +25,7 @@ public class MemberService {
 
     @Transactional
     public Token register(Member member) {
-        Optional<MemberEntity> existingMemberEntity = memberRepository.findByEmail(
-            member.getEmail());
+        Optional<MemberEntity> existingMemberEntity = memberRepository.findByEmail(member.getEmail());
         if (existingMemberEntity.isPresent()) {
             throw new AlreadyExistsException("Alreay Exists Member");
         }

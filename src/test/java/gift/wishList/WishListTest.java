@@ -38,12 +38,12 @@ public class WishListTest {
 
         url = "http://localhost:" + port;
 
-        Member member = new Member("admin2@example.com", "2222");
+        Member member = new Member(2L,"admin2@kakao.com", "2222");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Member> requestEntity = new HttpEntity<>(member, headers);
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url + "/members/register", member, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url + "/members/login", member, String.class);
 
         System.out.println(responseEntity);
 
@@ -56,7 +56,7 @@ public class WishListTest {
     @DisplayName("위시리스트 추가")
     @DirtiesContext
     void addWishList() {
-        Product product = new Product(4L,"Sample3", 3000L, "http://image3.jpg");
+        Product product = new Product(3L,"Sample3", 3000L, "http://image3.jpg");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
