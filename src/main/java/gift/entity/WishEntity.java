@@ -1,11 +1,12 @@
 package gift.entity;
 
-import gift.domain.Wish;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,33 +17,43 @@ public class WishEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private MemberEntity memberEntity;
 
-    @Column
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private ProductEntity productEntity;
 
     public WishEntity() {
     }
 
-    public WishEntity(Long memberId, Long productId) {
-        this.memberId = memberId;
-        this.productId = productId;
+    public WishEntity(MemberEntity memberEntity, ProductEntity productEntity) {
+        this.memberEntity = memberEntity;
+        this.productEntity = productEntity;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public MemberEntity getMemberEntity() {
+        return memberEntity;
     }
 
-    public Long getProductId() {
-        return productId;
+    public ProductEntity getProductEntity() {
+        return productEntity;
     }
 
-    public Wish toWish() {
-        return new Wish(this.id, this.memberId, this.productId);
+    public void updateMemberEntity(MemberEntity memberEntity){
+        // 기존의 memberEntity의 wishEntityList에 있던 wishEntity 삭제 필요
+
+        this.memberEntity = memberEntity;
+        memberEntity.getWishEntityList().add(this);
+    }
+
+    public void updateProductEntity(ProductEntity productEntity){
+        this.productEntity = productEntity;
+        productEntity.getWishEntityList().add(this);
     }
 }
