@@ -25,5 +25,5 @@
 - Page<> 반환
 ### ProductService
 - Page<> 처리를 위한 메소드로 변경
-### add_products.html
+### add_products.html, wishlist.html, products.html
 - pagenation 추가해서 페이지 이동할 수 있도록 수정
