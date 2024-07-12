@@ -22,8 +22,9 @@ public class ProductService{
     private WishListRepository wishListRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, WishListRepository wishListRepository) {
         this.productRepository = productRepository;
+        this.wishListRepository = wishListRepository;
     }
 
     @Transactional

@@ -22,8 +22,9 @@ public class MemberService {
     private WishListRepository wishListRepository;
     private JwtUtil jwtUtil;
 
-    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil){
+    public MemberService(MemberRepository memberRepository, WishListRepository wishListRepository, JwtUtil jwtUtil){
         this.memberRepository = memberRepository;
+        this.wishListRepository = wishListRepository;
         this.jwtUtil = jwtUtil;
     }
 
