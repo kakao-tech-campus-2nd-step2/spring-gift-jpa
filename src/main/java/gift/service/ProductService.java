@@ -2,13 +2,13 @@ package gift.service;
 
 import gift.dto.ProductRequest;
 import gift.model.Product;
-import gift.exception.product.ProductAlreadyExistsException;
 import gift.exception.product.ProductNotFoundException;
 import gift.repository.ProductRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,8 +30,8 @@ public class ProductService {
         return product;
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     public Product getProduct(Long id) {

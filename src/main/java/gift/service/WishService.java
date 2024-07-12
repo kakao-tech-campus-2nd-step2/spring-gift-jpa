@@ -8,6 +8,8 @@ import gift.model.Wish;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,8 +33,8 @@ public class WishService {
         return wish;
     }
 
-    public List<Product> getAllWishProductsByMember(Member member) {
-        return wishRepository.findAllByMemberId(member.getId());
+    public Page<Product> getAllWishProductsByMember(Member member, Pageable pageable) {
+        return wishRepository.findAllByMemberId(member.getId(), pageable);
     }
 
     @Transactional
