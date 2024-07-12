@@ -8,6 +8,6 @@ public record WishInfo(
         Integer amount
 ) {
     public static WishInfo from(Wish wish) {
-        return new WishInfo(wish.getId(), wish.getProductId(), wish.getAmount());
+        return new WishInfo(wish.getId(), wish.getProduct().getId(), wish.getAmount());
     }
 }

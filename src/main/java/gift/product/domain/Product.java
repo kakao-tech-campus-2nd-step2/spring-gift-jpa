@@ -1,11 +1,15 @@
 package gift.product.domain;
 
 import gift.product.exception.ProductNoConferredException;
+import gift.wish.domain.Wish;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.annotations.SoftDelete;
 
@@ -24,6 +28,10 @@ public class Product {
 
     @NotNull
     private String imgUrl;
+
+    @OneToMany
+    @JoinColumn(name = "product_id")
+    private List<Wish> wishes = new ArrayList<>();
 
     protected Product() {
     }
