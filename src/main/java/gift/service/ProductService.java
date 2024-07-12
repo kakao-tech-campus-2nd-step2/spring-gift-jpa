@@ -5,6 +5,7 @@ import gift.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -19,9 +20,18 @@ public class ProductService {
     }
 
     //전체 조회
-    public Page<Product> getAllProducts(int page){
-        Pageable pageable = PageRequest.of(page, 10);
+    public Page<Product> getAllProducts(int page, String sortBy, String sortOrder){
+        Sort sort = getSort(sortBy, sortOrder);
+        Pageable pageable = PageRequest.of(page, 10, sort);
         return productRepository.findAll(pageable);
+    }
+
+    private Sort getSort(String sortBy, String sortOrder){
+        Sort sort = Sort.by(sortBy);
+        if(sortOrder.equals("desc")){
+            return sort.descending();
+        }
+        return sort;
     }
 
     //하나 조회
@@ -48,5 +58,21 @@ public class ProductService {
                 newProduct.getPrice(),
                 newProduct.getImageUrl());
         productRepository.save(updatedProduct);
+    }
+
+    public int getPreviousPage(Page<Product> productPage) {
+        if (productPage.hasPrevious()) {
+            Pageable previousPageable = productPage.previousPageable();
+            return previousPageable.getPageNumber();
+        }
+        return -1;
+    }
+
+    public int getNextPage(Page<Product> productPage) {
+        if (productPage.hasNext()) {
+            Pageable nextPageable = productPage.nextPageable();
+            return nextPageable.getPageNumber();
+        }
+        return -1;
     }
 }

@@ -3,7 +3,6 @@ package gift.controller;
 import gift.service.ProductService;
 import gift.model.Product;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,19 +17,20 @@ public class ProductController {
     }
 
     @GetMapping
-    public String getAllProducts(@RequestParam(defaultValue = "0") int page, Model model) {
-        Page<Product> productPage = productService.getAllProducts(page);
+    public String getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "id") String sortBy,
+                                 @RequestParam(defaultValue = "asc") String sortOrder, Model model) {
+        Page<Product> productPage = productService.getAllProducts(page, sortBy, sortOrder);
         model.addAttribute("productList", productPage.getContent());
-        if (productPage.hasPrevious()) {
-            Pageable previousPageable = productPage.previousPageable();
-            int previousPageNumber = previousPageable.getPageNumber();
-            model.addAttribute("previousPage", previousPageNumber);
-        }
-        if (productPage.hasNext()) {
-            Pageable nextPageable = productPage.nextPageable();
-            int nextPageNumber = nextPageable.getPageNumber();
-            model.addAttribute("nextPage", nextPageNumber);
-        }
+
+        int previousPage = productService.getPreviousPage(productPage);
+        model.addAttribute("previousPage", previousPage);
+
+        int nextPage = productService.getNextPage(productPage);
+        model.addAttribute("nextPage", nextPage);
+
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortOrder", sortOrder);
+
         return "index";
     }
 
