@@ -22,3 +22,21 @@ spring data jpa 를 사용하도록 한다.
 
 - [X] : WishList와 member를 수정하여 정상 동작할 수 있도록 만들기
 - [X] : wishlist 테스트 코드 작성
+
+# step 3 페이지 구현하기
+
+상품 목록 조회를 먼저 구현해보자.
+
+1. Page 관련 Repository에 interface 추가해주기
+2. 서비스에 해당 리포지토리를 통해 Pageable 객체를 통해 Page<T> 로 처리해주기
+3. 컨트롤러 구현
+
+wish 구현
+
+1. wish interface 구현하기
+2. 서비스 구현
+3. 컨트롤러 구현
+
+추가
+
+관리자 페이지로 만들어보기
