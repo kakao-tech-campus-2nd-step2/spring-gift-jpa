@@ -43,7 +43,7 @@ public class ProductController {
     public ResponseEntity<SuccessBody<ProductResponseDTO>> getOneProduct(
         @PathVariable("id") Long productId) {
         ProductResponseDTO productResponseDTO = productService.getOneProduct(productId);
-        return ApiResponseGenerator.success(HttpStatus.OK, "id : " + productId + "상품을 조회했습니다.",
+        return ApiResponseGenerator.success(HttpStatus.OK, "id : " + productId + " 상품을 조회했습니다.",
             productResponseDTO);
     }
 
