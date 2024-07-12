@@ -58,4 +58,10 @@ public class MemberController {
             return ResponseEntity.status(403).body("Invalid token");
         }
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MemberResponse> getMemberById(@PathVariable Long id) {
+        MemberResponse memberResponse = memberService.findById(id);
+        return ResponseEntity.ok(memberResponse);
+    }
 }
