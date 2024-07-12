@@ -4,7 +4,7 @@ import gift.domain.member.Member;
 import jakarta.persistence.*;
 
 @Entity
-public class Wishlist {
+public class Wish {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -15,13 +15,13 @@ public class Wishlist {
     private Member member;
 
     @JoinColumn(name = "product_id", nullable = false)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
-    public Wishlist() {
+    public Wish() {
     }
 
-    public Wishlist(Member member, Product product) {
+    public Wish(Member member, Product product) {
         this.member = member;
         this.product = product;
     }
