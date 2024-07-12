@@ -4,8 +4,6 @@ import gift.domain.product.Product;
 import gift.domain.user.User;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +20,4 @@ public interface JpaCartItemRepository extends JpaRepository<CartItem, Long> {
 
     Optional<CartItem> findByUserIdAndProductId(Long userId, Long productId);
 
-    // paging
-    Page<CartItem> findAllByUserId(Long userId, PageRequest pageRequest);
 }

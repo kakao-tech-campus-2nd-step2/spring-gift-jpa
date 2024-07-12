@@ -63,7 +63,7 @@ public class ProductService {
      */
     public Page<Product> getProductsByPageAndSort(int page, int size, Sort sort) {
         PageRequest pageRequest = PageRequest.of(page, size, sort);
-        System.out.println("pageRequest = " + pageRequest);
+
         Page<Product> products = productRepository.findAll(pageRequest);
 
         return products;

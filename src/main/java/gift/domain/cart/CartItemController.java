@@ -8,6 +8,7 @@ import gift.global.response.ResponseMaker;
 import gift.global.response.ResultResponseDto;
 import gift.global.response.SimpleResultResponseDto;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,14 +60,14 @@ public class CartItemController {
      * 장바구니 조회 - 페이징(매개변수별)
      */
     @GetMapping(path = "/cart", params = "page")
-    public ResponseEntity<ResultResponseDto<List<Product>>> getProductsInCartByUserIdAndPageAndSort(
+    public ResponseEntity<ResultResponseDto<Page<Product>>> getProductsInCartByUserIdAndPageAndSort(
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "sort", defaultValue = "id_asc") String sort,
         @LoginInfo UserInfo userInfo) {
         int size = 10; // default
         Sort sortObj = getSortObject(sort);
 
-        List<Product> products = cartItemService.getProductsInCartByUserIdAndPageAndSort(
+        Page<Product> products = cartItemService.getProductsInCartByUserIdAndPageAndSort(
             userInfo.getId(),
             page,
             size,

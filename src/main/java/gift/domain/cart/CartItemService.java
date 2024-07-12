@@ -4,17 +4,16 @@ import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
 import gift.domain.user.JpaUserRepository;
 import gift.domain.user.User;
-
 import gift.global.exception.BusinessException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartItemService {
@@ -56,36 +55,9 @@ public class CartItemService {
     /**
      * 장바구니 상품 조회 - 페이징 X
      */
-    @Transactional(readOnly = true)
     public List<Product> getProductsInCartByUserId(Long userId) {
         List<CartItem> cartItems = cartItemRepository.findAllByUserId(userId);
 
-        return convertItemsToProducts(cartItems);
-    }
-
-
-    /**
-     * 장바구니 상품 조회 - 페이징
-     */
-    public List<Product> getProductsInCartByUserIdAndPageAndSort(Long userId, int page, int size, Sort sort) {
-        PageRequest pageRequest = PageRequest.of(page, size, sort);
-
-        Page<CartItem> cartItems = cartItemRepository.findAllByUserId(userId, pageRequest);
-
-        return convertItemsToProducts(cartItems.getContent());
-    }
-
-    /**
-     * 장바구니 상품 삭제
-     */
-    public void deleteCartItem(Long userId, Long productId) {
-        cartItemRepository.deleteByUserIdAndProductId(userId, productId);
-    }
-
-    /**
-     * 장바구니 상품들에서 실제 상품들 추출
-     */
-    private List<Product> convertItemsToProducts(List<CartItem> cartItems) {
         return cartItems.stream()
             .map(cartItem -> {
                 Product proxyProduct = cartItem.getProduct();
@@ -95,5 +67,32 @@ public class CartItemService {
             .collect(Collectors.toList());
     }
 
+
+    /**
+     * 장바구니 상품 조회 - 페이징(매개변수별)
+     */
+    public Page<Product> getProductsInCartByUserIdAndPageAndSort(Long userId, int page, int size, Sort sort) {
+        List<Long> productIds = cartItemRepository.findAllByUserId(userId).stream()
+            .map(cartItem -> cartItem.getProduct().getId())
+            .collect(Collectors.toList());
+
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        Page<Product> productsPage = productRepository.findAllByIdIn(productIds, pageRequest); // 영속성 컨텍스트에 이미 존재
+
+        List<Product> products = productsPage.getContent().stream()
+            .map(product -> {
+                return Product.createProductFromProxy(product);
+            })
+            .collect(Collectors.toList());
+        
+        // 새 Page 객체 생성
+        return PageableExecutionUtils.getPage(products, pageRequest, productsPage::getTotalElements);
+    }
+    /**
+     * 장바구니 상품 삭제
+     */
+    public void deleteCartItem(Long userId, Long productId) {
+        cartItemRepository.deleteByUserIdAndProductId(userId, productId);
+    }
 
 }
