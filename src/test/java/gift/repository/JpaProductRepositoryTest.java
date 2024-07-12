@@ -2,9 +2,11 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gift.domain.Product;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +54,10 @@ class JpaProductRepositoryTest {
             () -> assertThat(findProduct.getId()).isEqualTo(insertProductId),
             () -> assertThat(findProduct.getName()).isEqualTo("사과"),
             () -> assertThat(findProduct.getPrice()).isEqualTo(12000),
-            () -> assertThat(findProduct.getImageUrl()).isEqualTo("www.naver.com")
+            () -> assertThat(findProduct.getImageUrl()).isEqualTo("www.naver.com"),
+
+            () -> assertThrows(NoSuchElementException.class,
+                () -> jpaProductRepository.findById(100L).get())
         );
     }
 

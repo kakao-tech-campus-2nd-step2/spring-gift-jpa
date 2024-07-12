@@ -2,11 +2,13 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gift.domain.Product;
 import gift.domain.User;
 import gift.domain.Wish;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +86,10 @@ class JpaWishRepositoryTest {
         assertAll(
             () -> assertThat(findWish.getId()).isNotNull(),
             () -> assertThat(findWish.getId()).isEqualTo(insertWishId),
-            () -> assertThat(findWish.getCount()).isEqualTo(10)
+            () -> assertThat(findWish.getCount()).isEqualTo(10),
+
+            () -> assertThrows(NoSuchElementException.class,
+                () -> jpaWishRepository.findById(100L).get())
         );
     }
 

@@ -2,8 +2,10 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import gift.domain.User;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +53,10 @@ class JpaUserRepositoryTest {
             () -> assertThat(findUser.getId()).isEqualTo(insertUserId),
             () -> assertThat(findUser.getEmail()).isEqualTo("www.naver.com"),
             () -> assertThat(findUser.getPassword()).isEqualTo("1234"),
-            () -> assertThat(findUser.getRole()).isEqualTo("일반")
+            () -> assertThat(findUser.getRole()).isEqualTo("일반"),
+
+            () -> assertThrows(NoSuchElementException.class,
+                () -> jpaUserRepository.findById(100L).get())
         );
     }
 
