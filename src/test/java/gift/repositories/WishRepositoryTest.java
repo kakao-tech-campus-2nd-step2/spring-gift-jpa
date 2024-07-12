@@ -1,14 +1,15 @@
 package gift.repositories;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
+import gift.domain.Member;
+import gift.domain.Product;
 import gift.domain.Wish;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 class WishRepositoryTest {
@@ -16,68 +17,88 @@ class WishRepositoryTest {
     @Autowired
     private WishRepository wishRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
     @Test
     @DisplayName("특정 회원의 Wishlist 조회 테스트")
     void testFindWishListById() {
         // given
-        Long memberId = 1L;
+        Member member = new Member(null, "test@example.com", "password", "USER");
+        memberRepository.save(member);
+
+        Product product1 = new Product(null, "testProdut1", 300, "imageUrl");
+        productRepository.save(product1);
+
+        Product product2 = new Product(null, "testProdut2", 300, "imageUrl");
+        productRepository.save(product2);
+
         Wish wish1 = new Wish();
-        wish1.setMemberId(memberId);
-        wish1.setProductId(100L);
+        wish1.setMember(member);
+        wish1.setProduct(product1);
 
         Wish wish2 = new Wish();
-        wish2.setMemberId(memberId);
-        wish2.setProductId(200L);
+        wish2.setMember(member);
+        wish2.setProduct(product2);
 
         wishRepository.save(wish1);
         wishRepository.save(wish2);
 
         // when
-        List<Wish> wishList = wishRepository.findAllByMemberId(memberId);
+        List<Wish> wishList = wishRepository.findAllByMemberId(member.getId());
 
         // then
         assertThat(wishList).hasSize(2);
-        assertThat(wishList).extracting(Wish::getProductId).containsExactlyInAnyOrder(100L, 200L);
+        assertThat(wishList).extracting(Wish::getProduct).extracting(Product::getId)
+            .containsExactlyInAnyOrder(product1.getId(), product2.getId());
     }
 
     @Test
     @DisplayName("Wish 추가 테스트")
     void testAddWish() {
         // given
-        Long memberId = 2L;
-        Long productId = 300L;
+        Member member = new Member(null, "test2@example.com", "password", "USER");
+        memberRepository.save(member);
+
+        Product product = new Product(null, "testProdut3", 300, "imageUrl");
+        productRepository.save(product);
 
         Wish wish = new Wish();
-        wish.setMemberId(memberId);
-        wish.setProductId(productId);
+        wish.setMember(member);
+        wish.setProduct(product);
 
         // when
         wishRepository.save(wish);
 
         // then
-        List<Wish> wishList = wishRepository.findAllByMemberId(memberId);
+        List<Wish> wishList = wishRepository.findAllByMemberId(member.getId());
         assertThat(wishList).hasSize(1);
-        assertThat(wishList.get(0).getProductId()).isEqualTo(productId);
+        assertThat(wishList.get(0).getProduct().getId()).isEqualTo(product.getId());
     }
 
     @Test
     @DisplayName("Wish 삭제 테스트")
     void testDeleteWish() {
         // given
-        Long memberId = 3L;
-        Long productId = 400L;
+        Member member = new Member(null, "test3@example.com", "password", "USER");
+        memberRepository.save(member);
+
+        Product product = new Product(null, "testProdut4", 300, "imageUrl");
+        productRepository.save(product);
 
         Wish wish = new Wish();
-        wish.setMemberId(memberId);
-        wish.setProductId(productId);
+        wish.setMember(member);
+        wish.setProduct(product);
         wishRepository.save(wish);
 
         // when
-        wishRepository.deleteByMemberIdAndProductId(memberId, productId);
+        wishRepository.deleteByMemberIdAndProductId(member.getId(), product.getId());
 
         // then
-        List<Wish> wishList = wishRepository.findAllByMemberId(memberId);
+        List<Wish> wishList = wishRepository.findAllByMemberId(member.getId());
         assertThat(wishList).isEmpty();
     }
-
 }
