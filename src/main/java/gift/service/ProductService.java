@@ -40,10 +40,9 @@ public class ProductService {
     public PageResponse<ProductResponse> findAllProduct(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("id").descending());
         Page<Product> productList = productRepository.findAll(pageRequest);
-        int totalCount = (int) productList.getTotalElements();
         List<ProductResponse> productResponses = productList.getContent().stream().map(ProductResponse::from)
             .toList();
-        return new PageResponse<>(productResponses, page, size, totalCount);
+        return PageResponse.from(productResponses, productList);
     }
 
     @Transactional

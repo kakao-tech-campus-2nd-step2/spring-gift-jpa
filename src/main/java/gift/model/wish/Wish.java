@@ -61,4 +61,8 @@ public class Wish {
     public void updateWish(int count) {
         this.count = count;
     }
+
+    public boolean isOwner(Long userId) {
+        return this.user.getId().equals(userId);
+    }
 }

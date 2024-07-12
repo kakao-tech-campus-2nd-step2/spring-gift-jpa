@@ -58,7 +58,7 @@ public class ProductServiceTest {
         productService.register(productRequest1);
         productService.register(productRequest2);
         PageResponse<ProductResponse> products = productService.findAllProduct(1, 10);
-        assertThat(products.getTotalCount()).isEqualTo(2);
+        assertThat(products.size()).isEqualTo(2);
     }
 
     @Test
@@ -85,6 +85,6 @@ public class ProductServiceTest {
         productService.register(productRequest2);
         productService.deleteProduct(1L);
         PageResponse<ProductResponse> products = productService.findAllProduct(1, 10);
-        assertThat(products.getTotalCount()).isEqualTo(1);
+        assertThat(products.size()).isEqualTo(1);
     }
 }

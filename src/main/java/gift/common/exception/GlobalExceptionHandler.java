@@ -75,6 +75,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> wishNotFoundException(WishNotFoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
         problemDetail.setDetail(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problemDetail);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ProblemDetail> illegalArgumentException(IllegalArgumentException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setDetail(e.getMessage());
         return ResponseEntity.badRequest().body(problemDetail);
     }
 }
