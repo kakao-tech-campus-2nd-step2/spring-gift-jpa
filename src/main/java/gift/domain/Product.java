@@ -1,12 +1,30 @@
 package gift.domain;
 
+import gift.web.dto.request.product.UpdateProductRequest;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
 public class Product extends BaseEntity {
 
-    private final String name;
-    private final Integer price;
-    private final URL imageUrl;
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private Integer price;
+
+    private URL imageUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private List<WishProduct> wishProducts = new ArrayList<>();
+
+    protected Product() {
+    }
 
     public static class Builder extends BaseEntity.Builder<Builder> {
 
@@ -46,6 +64,13 @@ public class Product extends BaseEntity {
         name = builder.name;
         price = builder.price;
         imageUrl = builder.imageUrl;
+    }
+
+    public Product update(UpdateProductRequest request) {
+        this.name = request.getName();
+        this.price = request.getPrice();
+        this.imageUrl = request.getImageUrl();
+        return this;
     }
 
     public String getName() {
