@@ -1,12 +1,12 @@
-package gift.model;
+package gift.domain;
 
-public class WishList {
+public class WishListDTO {
     private Long userId;
     private Long productId;
 
-    public WishList(){}
+    public WishListDTO(){}
 
-    public WishList(Long userId, Long productId) {
+    public WishListDTO(Long userId, Long productId) {
         this.userId = userId;
         this.productId = productId;
 

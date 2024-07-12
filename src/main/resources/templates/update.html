@@ -46,7 +46,7 @@
 </head>
 <body>
 <h1>상품 수정</h1>
-<form th:action="@{/admin/products/update/{id}(id=${product.id})}" th:object="${product}" method="post">
+<form th:action="@{/admin/products/update/{id}(id=${productDTO.id})}" th:object="${productDTO}" method="post">
   Name: <input type="text" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'error' : ''"><br>
   <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></div>
 

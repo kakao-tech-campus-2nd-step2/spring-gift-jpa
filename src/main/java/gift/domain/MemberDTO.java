@@ -1,12 +1,12 @@
-package gift.model;
+package gift.domain;
 
-public class Member {
+public class MemberDTO {
     private Long id;
     private String email;
     private String password;
 
     // 기본 생성자 추가
-    public Member() {}
+    public MemberDTO() {}
 
     public void setEmail(String email) {
         this.email = email;

@@ -1,11 +1,11 @@
-package gift.model;
+package gift.domain;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
-public class Product {
+public class ProductDTO {
     // 필드 생성
     private Long id;
 
@@ -22,7 +22,14 @@ public class Product {
     @Pattern(regexp = "^https?://.*$", message = "올바른 이미지 URL 형식으로 입력해 주세요")
     private String imageUrl;
 
-    public Product(){}
+    public ProductDTO(){}
+
+    public ProductDTO(Long id, String name, int price, String imageUrl){
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
     
 
     // Getter 메서드들
