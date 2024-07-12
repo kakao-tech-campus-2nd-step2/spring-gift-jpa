@@ -3,7 +3,7 @@ package gift.Model;
 import jakarta.persistence.*;
 
 @Entity
-public class WishList {
+public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -14,16 +14,16 @@ public class WishList {
     @Column(nullable = false)
     int count;
 
-    protected WishList(){}
+    protected Wish(){}
 
-    public WishList(String email, Long id, Long productId, int count) {
+    public Wish(String email, Long id, Long productId, int count) {
         this.email = email;
         this.id = id;
         this.productId = productId;
         this.count = count;
     }
 
-    public WishList(String email, Long productId, int count) {
+    public Wish(String email, Long productId, int count) {
         this.email = email;
         this.productId = productId;
         this.count = count;
