@@ -38,11 +38,12 @@ public class WishlistService {
     }
 
     public void deleteItemFromWishlist(Long productId, String token) {
+
         Long memberId = Long.valueOf(tokenService.getMemberIdFromToken(token));
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
         boolean itemExists = wishlistRepository.findByMemberId(member.getId())
                 .stream()
-                .anyMatch(item -> item.getProduct().getId().equals(productId));
+                .anyMatch(item -> Long.valueOf(item.getProduct().getId()).equals(productId));
 
         if (!itemExists) {
             throw new MemberNotFoundException("해당 아이템이 존재하지 않습니다: " + productId);

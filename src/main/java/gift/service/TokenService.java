@@ -48,6 +48,6 @@ public class TokenService {
         JwtParser parser = (JwtParser) Jwts.parser().setSigningKey(secretKey);
         return parser.parseClaimsJws(token).getBody();
     }
-    
+
 }
 
