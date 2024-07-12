@@ -24,6 +24,7 @@ public class WishlistService {
 
     public List<Wishlist> getAllWishlist(String token) {
         var member_id = memberRepository.searchIdByToken(token);
+
         try {
             return wishlistRepository.findByMember_id(member_id);
         } catch(Exception e) {
@@ -33,6 +34,7 @@ public class WishlistService {
   
     public void deleteItem(String token, int product_id) {
         var member_id = memberRepository.searchIdByToken(token);
+
         if(isItem(member_id, product_id)) {
             wishlistRepository.deleteByMember_idAndMember_id(member_id, product_id);
         }
@@ -66,7 +68,7 @@ public class WishlistService {
 
         try {
             if (isItem(member_id, product_id)) {
-                var num = wishlistRepository.searchNumOfProductByMember_idAndProduct_id(member_id, product_id);
+                var num = wishlistRepository.searchCount_productByMember_idAndProduct_id(member_id, product_id);
                 var wishlist = new Wishlist(member, product, num+1);
                 wishlistRepository.save(wishlist);
             } else {
@@ -80,6 +82,6 @@ public class WishlistService {
     }
 
     public boolean isItem(int member_id, int product_id) {
-        return wishlistRepository.searchNumOfProductByMember_idAndProduct_id(member_id, product_id) > 0;
+        return wishlistRepository.searchCount_productByMember_idAndProduct_id(member_id, product_id) > 0;
     }
 }
