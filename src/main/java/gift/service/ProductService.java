@@ -74,13 +74,12 @@ public class ProductService {
     }
 
     private void checkAlreadyExists(Product product) {
-        List<ProductEntity> products = productRepository.findAll();
-        for (ProductEntity p : products) {
-            if (p.getName().equals(product.getName()) &&
+        boolean exists = productRepository.findAll().stream()
+            .anyMatch(p -> p.getName().equals(product.getName()) &&
                 p.getPrice().equals(product.getPrice()) &&
-                p.getImageUrl().equals(product.getImageUrl())) {
-                throw new AlreadyExistsException("해당 상품이 이미 존재 합니다!");
-            }
+                p.getImageUrl().equals(product.getImageUrl()));
+        if (exists) {
+            throw new AlreadyExistsException("해당 상품이 이미 존재 합니다!");
         }
     }
 
