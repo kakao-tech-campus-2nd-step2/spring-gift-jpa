@@ -27,7 +27,7 @@ public class ProductService {
         return new AddedProductIdResponse(addedProductId);
     }
 
-    public Product getProductById(Long productId) {
+    public Product getProduct(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);
     }
@@ -43,9 +43,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
 
-        product.changeName(name);
-        product.changePrice(price);
-        product.changeImageUrl(imageUrl);
+        product.change(name, price, imageUrl);
     }
 
     @Transactional

@@ -28,7 +28,7 @@ public class WishListService {
     @Transactional
     public void addProductToWishList(Long memberId, Long productId, int amount) {
         Member member = memberService.getMemberById(memberId);
-        Product product = productService.getProductById(productId);
+        Product product = productService.getProduct(productId);
 
         wishListRepository.findByMemberAndProduct(member, product)
                 .ifPresentOrElse(
@@ -45,7 +45,7 @@ public class WishListService {
     @Transactional
     public void deleteProductInWishList(Long memberId, Long productId) {
         Member member = memberService.getMemberById(memberId);
-        Product product = productService.getProductById(productId);
+        Product product = productService.getProduct(productId);
         Wish wish = wishListRepository.findByMemberAndProduct(member, product)
                 .orElseThrow(WishNotFoundException::new);
         wishListRepository.delete(wish);
@@ -54,7 +54,7 @@ public class WishListService {
     @Transactional
     public void updateWishProductAmount(Long memberId, Long productId, int amount) {
         Member member = memberService.getMemberById(memberId);
-        Product product = productService.getProductById(productId);
+        Product product = productService.getProduct(productId);
         Wish wish = wishListRepository.findByMemberAndProduct(member, product)
                 .orElseThrow(WishNotFoundException::new);
         wish.changeAmount(amount);
