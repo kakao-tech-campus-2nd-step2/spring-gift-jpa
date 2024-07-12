@@ -8,9 +8,9 @@ import gift.product.dao.ProductRepository;
 import gift.product.entity.Product;
 import gift.wishlist.dao.WishesRepository;
 import gift.wishlist.entity.Wish;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class WishesService {
@@ -43,13 +43,9 @@ public class WishesService {
         wishesRepository.delete(wish);
     }
 
-    public List<Product> getWishlistOfMember(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(ErrorCode.WISH_NOT_FOUND))
-                .getWishList()
-                .stream()
-                .map(Wish::getProduct)
-                .toList();
+    public Page<Product> getWishlistOfMember(Long memberId, Pageable pageable) {
+        return wishesRepository.findByMember_Id(memberId, pageable)
+                .map(Wish::getProduct);
     }
 
     private Wish createWish(Long memberId, Long productId) {
