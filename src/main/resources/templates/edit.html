@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product</title>
+</head>
+<body>
+<h1>Edit Product in Wish List</h1>
+
+<form th:action="@{/wishlist/edit/{id}(id=${wish.id})}" method="post">
+    <input type="text" name="product" th:value="${wish.product}" placeholder="Product Name"/>
+    <button type="submit">Update Product</button>
+</form>
+
+<a href="/wishlist">Back to Wish List</a>
+</body>
+</html>
