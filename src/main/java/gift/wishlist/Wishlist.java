@@ -35,6 +35,10 @@ public class Wishlist {
         this.product = product;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public Member getMember() {
         return member;
     }
