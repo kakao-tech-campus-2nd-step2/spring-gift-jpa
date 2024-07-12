@@ -33,8 +33,8 @@ public class ProductController {
 
     @Description("get product by id")
     @GetMapping("/products/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") long id) {
-        Product product = productService.getProduct(id);
+    public ResponseEntity<Product> getProductById(@PathVariable("id") Long productId) {
+        Product product = productService.getProduct(productId);
         return ResponseEntity.ok(product);
     }
 
@@ -48,15 +48,15 @@ public class ProductController {
 
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable long id) {
-        productService.deleteProduct(id);
+    public ResponseEntity<String> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
         return ResponseEntity.status(HttpStatus.
                 OK).body("Product deleted successfully");
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductDTO productDTO) {
-        productService.updateProduct(id, productDTO);
+    public ResponseEntity<String> updateProduct(@PathVariable Long productId, @RequestBody @Valid ProductDTO productDTO) {
+        productService.updateProduct(productId, productDTO);
         return ResponseEntity.status(HttpStatus.
                 OK).body("Product updated successfully");
     }

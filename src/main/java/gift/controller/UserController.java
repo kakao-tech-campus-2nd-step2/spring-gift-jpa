@@ -1,6 +1,5 @@
 package gift.controller;
 
-import gift.authorization.JwtUtil;
 import gift.dto.LoginUser;
 import gift.entity.User;
 import gift.service.LoginMember;
@@ -20,12 +19,20 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-    private final JwtUtil jwtUtil;
 
     @Autowired
-    public UserController(UserService userService, JwtUtil jwtUtil) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.jwtUtil = jwtUtil;
+    }
+
+    @GetMapping("/signup")
+    public String signupRendering() {
+        return "signup";
+    }
+
+    @GetMapping("/login")
+    public String loginRendering() {
+        return "login";
     }
 
     @Description("임시 확인용 html form. service x ")
@@ -35,19 +42,9 @@ public class UserController {
         return ResponseEntity.ok().body(users);
     }
 
-    @GetMapping("/signup")
-    public String signupRendering() {
-        return "signup";
-    }
-
     @PostMapping("/members")
     public ResponseEntity<Map<String, String>> register(@ModelAttribute("user") User user) {
         return userService.signUp(user);
-    }
-
-    @GetMapping("/login")
-    public String loginRendering() {
-        return "login";
     }
 
     @PostMapping("/members/login")

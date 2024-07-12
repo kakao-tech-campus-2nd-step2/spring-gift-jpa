@@ -10,10 +10,10 @@ import java.util.List;
 @Repository
 public class JdbcWishRepository implements WishRepository {
     private JdbcTemplate jdbcTemplate;
-    private JpaProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    public JdbcWishRepository(JdbcTemplate jdbcTemplate, JpaProductRepository productRepository) {
+    public JdbcWishRepository(JdbcTemplate jdbcTemplate, ProductRepository productRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.productRepository = productRepository;
     }
