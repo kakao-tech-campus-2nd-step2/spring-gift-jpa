@@ -27,14 +27,17 @@ public class WishListService {
 
     @Transactional
     public List<ResponseWishListDTO> editWishList(Member member, RequestWishListDTO requestWishListDTO) {
-        WishList wishList = wishListRepository.findByEmailAndProductId(member.getEmail(), requestWishListDTO.getProductId());
+        WishList wishList = wishListRepository.findByEmailAndProductId(member.getEmail(), requestWishListDTO.getProductId())
+                .orElseThrow(()-> new NoSuchElementException("매칭되는 물건이 없습니다"));
         wishList.setCount(requestWishListDTO.getCount());
         return getWishList(member);
     }
 
     @Transactional
     public List<ResponseWishListDTO> deleteWishList(Member member, RequestWishListDTO requestWishListDTO) {
-        wishListRepository.deleteWishListByEmailAndProductId(member.getEmail(), requestWishListDTO.getProductId());
+        WishList wishList = wishListRepository.findByEmailAndProductId(member.getEmail(), requestWishListDTO.getProductId())
+                .orElseThrow(() -> new NoSuchElementException("매칭되는 물건이 없습니다"));
+        wishListRepository.deleteById(wishList.getId());
         return getWishList(member);
     }
 }
