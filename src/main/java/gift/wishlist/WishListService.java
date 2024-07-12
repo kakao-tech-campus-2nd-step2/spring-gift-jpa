@@ -8,19 +8,22 @@ import gift.user.User;
 import gift.user.UserDTO;
 import gift.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class WishListService {
-    private static final Logger logger = LoggerFactory.getLogger(WishListService.class);
+
     private final WishListRepository wishListRepository;
     private final ProductService productService;
     private final UserService userService;
@@ -36,10 +39,24 @@ public class WishListService {
         this.jwtUtil = jwtUtil;
     }
 
-    public List<WishListDTO> getWishListsByUserId(long id) {
-        return wishListRepository.findAllByUserId(id).stream()
+    public Page<WishListDTO> getWishListsByUserId(long id, int page, int size, String sortDirection,
+        String sortBy) {
+        Direction direction = Direction.ASC;
+        if (!(sortBy.equalsIgnoreCase("id") || sortBy.equalsIgnoreCase("productId")
+            || sortBy.equalsIgnoreCase("num"))) {
+            sortBy = "id";
+        }
+        if (sortDirection.equalsIgnoreCase("desc") || sortDirection.equals("내림차순")) {
+            direction = Direction.DESC;
+        }
+        Pageable pageRequest = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        List<WishListDTO> wishLists = wishListRepository.findAllByUserId(id).stream()
             .map(WishListDTO::fromWishList)
             .toList();
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), wishLists.size());
+        List<WishListDTO> pageContent = wishLists.subList(start, end);
+        return new PageImpl<>(pageContent, pageRequest, wishLists.size());
     }
 
     public void extractEmailFromTokenAndValidate(HttpServletRequest request, String email) {
@@ -62,7 +79,6 @@ public class WishListService {
             wishList.getProductId())) {
             throw new IllegalArgumentException(email + "의 위시리스트에 존재하는 상품입니다.");
         }
-        logger.info("id: {}", wishList.getProductId());
         ProductDTO productDTO = productService.getProductById(wishList.getProductId());
         Product product = productDTO.toProduct();
         WishList wishList1 = new WishList(user, product, wishList.getNum());
@@ -75,7 +91,8 @@ public class WishListService {
         WishList wishList = wishListRepository.findByUserIdAndProductId(userId, productId);
         if (!wishListRepository.existsByUserIdAndProductId(userId, productId)) {
             throw new IllegalArgumentException(
-                userService.findById(userId).email() + "의 위시리스트에는 " + productService.getProductById(productId).getName()
+                userService.findById(userId).email() + "의 위시리스트에는 " + productService.getProductById(
+                    productId).getName()
                     + " 상품이 존재하지 않습니다.");
         }
         wishList.update(num);
@@ -85,7 +102,8 @@ public class WishListService {
     public void deleteWishList(long userId, long productId) throws NotFoundException {
         if (!wishListRepository.existsByUserIdAndProductId(userId, productId)) {
             throw new IllegalArgumentException(
-                userService.findById(userId).email() + "의 위시리스트에는 " + productService.getProductById(productId).getName()
+                userService.findById(userId).email() + "의 위시리스트에는 " + productService.getProductById(
+                    productId).getName()
                     + " 상품이 존재하지 않습니다.");
         }
         WishList wishList = wishListRepository.findByUserIdAndProductId(userId, productId);

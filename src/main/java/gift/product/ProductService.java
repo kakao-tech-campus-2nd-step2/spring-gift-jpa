@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -23,8 +24,8 @@ public class ProductService {
 
     public Page<ProductDTO> getAllProducts(int page, int size, String sortDirection, String sortBy) {
         Direction direction = Direction.ASC;
-        if(!(sortBy.equalsIgnoreCase("productId")||sortBy.equalsIgnoreCase("num"))){
-            sortBy = "productId";
+        if(!(sortBy.equalsIgnoreCase("id")||sortBy.equalsIgnoreCase("name"))){
+            sortBy = "id";
         }
         if(sortDirection.equalsIgnoreCase("desc")||sortDirection.equals("내림차순")){
             direction = Direction.DESC;

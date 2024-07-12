@@ -29,8 +29,8 @@ public class ProductApiController {
     @GetMapping
     public ResponseEntity<Page<ProductDTO>> getAllProducts(
         @RequestParam(value = "page", required = false, defaultValue = "0") int page,
-        @RequestParam(value = "size", required = false, defaultValue = "2") int size,
-        @RequestParam(value = "sortBy", required = false, defaultValue = "productId") String sortBy,
+        @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+        @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy,
         @RequestParam(value = "sortDirection", required = false, defaultValue = "asc") String sortDirection) {
         Page<ProductDTO> productPage = productService.getAllProducts(page, size, sortBy,
             sortDirection);
