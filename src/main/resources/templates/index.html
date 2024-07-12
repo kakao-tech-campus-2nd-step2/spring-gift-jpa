@@ -34,7 +34,7 @@
             <td><input type="checkbox" class="product-checkbox" th:value="${product.id}"></td>
             <td th:text="${product.name}"></td>
             <td th:text="${product.price}"></td>
-            <td th:text="${product.imageUrl}"></td>
+            <td><img th:src="${product.imageUrl}" alt="Product Image" class="img-thumbnail" style="max-width: 100px; max-height: 100px;"></td>
             <td>
                 <form th:action="@{/api/products/{id}/edit(id=${product.id})}" method="get" class="d-inline">
                     <button type="submit" class="btn btn-warning btn-sm">Edit</button>
