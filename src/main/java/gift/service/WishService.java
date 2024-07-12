@@ -30,11 +30,10 @@ public class WishService {
     }
 
     @Transactional
-    public void addProductToWishList(WishRequestDto wishRequestDto, LoginMemberDto loginMemberDto)
-        throws IllegalArgumentException {
+    public void addProductToWishList(WishRequestDto wishRequestDto, LoginMemberDto loginMemberDto) {
         Wish wish = wishRequestDto.toEntity();
         wish.setProduct(productRepository.findById(wishRequestDto.getProductId())
-            .orElseThrow(() -> new IllegalArgumentException("Wish Not Found")));
+            .orElseThrow(() -> new IllegalArgumentException("Wish 값이 잘못되었습니다.")));
         wish.setMember(loginMemberDto.toEntity());
         wishRepository.save(wish);
     }

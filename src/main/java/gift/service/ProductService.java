@@ -27,9 +27,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductResponseDto getProductById(Long id) throws IllegalArgumentException {
+    public ProductResponseDto getProductById(Long id) {
         return ProductResponseDto.from(productRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Product Not Found")));
+            .orElseThrow(() -> new IllegalArgumentException("Product 값이 잘못되었습니다.")));
     }
 
     @Transactional
@@ -39,9 +39,9 @@ public class ProductService {
 
     @Transactional
     public void updateProductById(Long id, ProductRequestDto productRequestDto)
-        throws ProductException, IllegalArgumentException {
+        throws ProductException {
         Product product = productRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Product Not Found"));
+            .orElseThrow(() -> new IllegalArgumentException("Product 값이 잘못되었습니다."));
         product.updateInfo(productRequestDto.toEntity());
     }
 

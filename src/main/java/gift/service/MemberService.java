@@ -16,10 +16,10 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public LoginMemberDto selectLoginMemberById(Long id) throws IllegalArgumentException {
+    public LoginMemberDto selectLoginMemberById(Long id) {
         return memberRepository.findById(id)
             .map(LoginMemberDto::from)
-            .orElseThrow(() -> new IllegalArgumentException("Member Not Found"));
+            .orElseThrow(() -> new IllegalArgumentException("member 값이 잘못되었습니다."));
     }
 
     @Transactional
