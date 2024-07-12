@@ -1,7 +1,4 @@
-package gift.validate;
-
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
+package gift.global.validate;
 
 import java.util.regex.Pattern;
 

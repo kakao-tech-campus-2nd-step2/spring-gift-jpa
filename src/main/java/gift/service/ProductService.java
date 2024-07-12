@@ -1,11 +1,12 @@
 package gift.service;
 
-import gift.controller.product.dto.ProductRequest.ProductRegisterRequest;
-import gift.controller.product.dto.ProductRequest.ProductUpdateRequest;
-import gift.controller.product.dto.ProductResponse.ProductInfoResponse;
+import gift.controller.product.dto.ProductRequest;
+import gift.controller.product.dto.ProductResponse;
 import gift.global.dto.PageResponse;
+import gift.model.product.Product;
 import gift.repository.ProductJpaRepository;
-import gift.validate.NotFoundException;
+import gift.global.validate.NotFoundException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,40 +20,38 @@ public class ProductService {
         this.productJpaRepository = productJpaRepository;
     }
 
-    @Transactional(readOnly = true)
-    public ProductInfoResponse getProduct(Long id) {
+    //@Transactional(readOnly = true)
+    public ProductResponse.Info getProduct(Long id) {
         var product = productJpaRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
-        return ProductInfoResponse.from(product);
+        return ProductResponse.Info.from(product);
     }
 
-    @Transactional
-    public void createProduct(ProductRegisterRequest request) {
+    //@Transactional
+    public void createProduct(ProductRequest.Register request) {
         productJpaRepository.save(request.toEntity());
     }
 
     @Transactional
-    public void updateProduct(Long id, ProductUpdateRequest request) {
+    public void updateProduct(Long id, ProductRequest.Update request) {
         var product = productJpaRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
         product.update(request.name(), request.price(), request.imageUrl());
         productJpaRepository.save(product);
     }
 
-    @Transactional
+    //@Transactional
     public void deleteProduct(Long id) {
         productJpaRepository.deleteById(id);
     }
 
-    @Transactional(readOnly = true)
-    public PageResponse<ProductInfoResponse> getProductsPaging(int page, int size) {
-        var productPage = productJpaRepository.findAllByOrderByIdDesc(
+    //@Transactional(readOnly = true)
+    public PageResponse<ProductResponse.Info> getProductsPaging(int page, int size) {
+        Page<Product> productPage = productJpaRepository.findAllByOrderByIdDesc(
             PageRequest.of(page, size));
         var content = productPage.getContent().stream()
-            .map(ProductInfoResponse::from)
+            .map(ProductResponse.Info::from)
             .toList();
-        return new PageResponse<>(content, productPage.getNumber(),
-            productPage.getSize(), productPage.getTotalPages(),
-            (int) productPage.getTotalElements());
+        return PageResponse.from(content, productPage);
     }
 }

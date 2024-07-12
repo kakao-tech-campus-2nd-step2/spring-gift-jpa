@@ -10,5 +10,14 @@ public record PageResponse<T>(
     Integer totalPage,
     Integer totalSize
 ) {
-    
+
+    public static <T, U> PageResponse<U> from(List<U> content, Page<T> page) {
+        return new PageResponse<>(
+            content,
+            page.getNumber(),
+            page.getSize(),
+            page.getTotalPages(),
+            (int) page.getTotalElements()
+        );
+    }
 }

@@ -1,4 +1,4 @@
-package gift.validate;
+package gift.global.validate;
 
 public class InvalidAuthRequestException extends RuntimeException {
 

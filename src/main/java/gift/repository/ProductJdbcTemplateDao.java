@@ -1,5 +1,8 @@
-package gift.model.product;
+package gift.repository;
 
+import gift.model.product.Product;
+import gift.model.product.ProductDao;
+import gift.model.product.ProductRowMapper;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;

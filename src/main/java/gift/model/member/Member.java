@@ -8,8 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import org.hibernate.validator.constraints.UniqueElements;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @Entity
 public class Member {
@@ -17,13 +15,17 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
     @Column(unique = true)
     private String email;
+
     @NotNull
     private String password;
+
     @NotNull
     private String name;
+
     @NotNull
     private Role role;
 

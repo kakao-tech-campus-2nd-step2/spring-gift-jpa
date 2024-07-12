@@ -1,11 +1,10 @@
 package gift.controller.wish;
 
-import gift.global.auth.Authorization;
+import gift.controller.wish.dto.WishRequest;
+import gift.controller.wish.dto.WishResponse;
 import gift.global.auth.Authenticate;
+import gift.global.auth.Authorization;
 import gift.global.auth.LoginInfo;
-import gift.controller.wish.dto.WishRequest.AddWishRequest;
-import gift.controller.wish.dto.WishRequest.UpdateWishRequest;
-import gift.controller.wish.dto.WishResponse.WishListResponse;
 import gift.model.member.Role;
 import gift.service.WishService;
 import jakarta.validation.Valid;
@@ -36,7 +35,7 @@ public class WishController {
     @PostMapping("")
     public ResponseEntity<String> addWish(
         @Authenticate LoginInfo loginInfo,
-        @Valid @RequestBody AddWishRequest request
+        @Valid @RequestBody WishRequest.Register request
     ) {
         wishService.addWish(loginInfo.memberId(), request);
         return ResponseEntity.ok().body("Wish insert successfully.");
@@ -54,7 +53,7 @@ public class WishController {
 
     @Authorization(role = Role.USER)
     @GetMapping("")
-    public ResponseEntity<List<WishListResponse>> getWishes(@Authenticate LoginInfo loginInfo) {
+    public ResponseEntity<List<WishResponse.Info>> getWishes(@Authenticate LoginInfo loginInfo) {
         var response = wishService.getWishes(loginInfo.memberId());
         return ResponseEntity.ok().body(response);
     }
@@ -63,7 +62,7 @@ public class WishController {
     @PatchMapping("")
     public ResponseEntity<String> updateWish(
         @Authenticate LoginInfo loginInfo,
-        @Valid @RequestBody UpdateWishRequest request
+        @Valid @RequestBody WishRequest.Update request
     ) {
         wishService.updateWish(loginInfo.memberId(), request);
         return ResponseEntity.ok().body("Wish updated successfully.");

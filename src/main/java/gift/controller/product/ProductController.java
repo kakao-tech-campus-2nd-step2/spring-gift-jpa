@@ -1,15 +1,12 @@
 package gift.controller.product;
 
-import gift.controller.product.dto.ProductResponse.ProductInfoResponse;
+import gift.controller.product.dto.ProductRequest;
+import gift.controller.product.dto.ProductResponse;
 import gift.global.auth.Authorization;
-import gift.controller.product.dto.ProductRequest.ProductRegisterRequest;
-import gift.controller.product.dto.ProductRequest.ProductUpdateRequest;
-
 import gift.global.dto.PageResponse;
 import gift.model.member.Role;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity<ProductInfoResponse> getProduct(
+    public ResponseEntity<ProductResponse.Info> getProduct(
         @PathVariable("id") Long id
     ) {
         var response = productService.getProduct(id);
@@ -40,7 +37,7 @@ public class ProductController {
     @Authorization(role = Role.ADMIN)
     @PostMapping("/products")
     public ResponseEntity<String> createProduct(
-        @RequestBody @Valid ProductRegisterRequest request
+        @RequestBody @Valid ProductRequest.Register request
     ) {
         productService.createProduct(request);
         return ResponseEntity.ok().body("Product created successfully.");
@@ -51,7 +48,7 @@ public class ProductController {
     @PutMapping("/products/{id}")
     public ResponseEntity<String> updateProduct(
         @PathVariable("id") Long id,
-        @RequestBody @Valid ProductUpdateRequest request
+        @RequestBody @Valid ProductRequest.Update request
     ) {
         productService.updateProduct(id, request);
         return ResponseEntity.ok().body("Product updated successfully.");
@@ -67,7 +64,7 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<PageResponse<ProductInfoResponse>> getProductsPaging(
+    public ResponseEntity<PageResponse<ProductResponse.Info>> getProductsPaging(
         @RequestParam(value = "page", required = false, defaultValue = "0") int page,
         @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
