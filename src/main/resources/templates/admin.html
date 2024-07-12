@@ -32,6 +32,10 @@
 </table>
 
 <br>
+
+<!-- 페이지네이션-->
+<div th:replace="~{pageNation :: #pagination}"></div>
+
 <!--상품 추가-->
 <button class="add-button" type="button" onclick="toggleAddProductForm()">상품 추가</button>
 
@@ -60,11 +64,16 @@
 </form>
 
 <script>
-    function fetchProducts() {
-        $.get("/api/products", function(data) {
-            var productList = $("#product-list");
+    const pageSize = 5; // pageNation 페이지 size 설정 content 개수 설정
+
+    function fetchProducts(page = 0) {
+        $.get(`/api/products?page=${page}&size=${pageSize}`, function(response) {
+            const products = response.content;
+            const totalPages = response.totalPages;
+
+            const productList = $("#product-list");
             productList.empty();
-            data.forEach(function(product) {
+            products.forEach(function(product) {
                 productList.append(`
                     <tr>
                         <td>${product.name}</td>
@@ -77,6 +86,8 @@
                     </tr>
                 `);
             });
+
+            updatePagination(totalPages, page);
         });
     }
 

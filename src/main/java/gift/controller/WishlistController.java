@@ -34,8 +34,7 @@ public class WishlistController {
         String token = getBearerToken(authorizationHeader);
         Long memberId = jwtUtil.getMemberIdFromToken(token);
 
-        Wish wish = new Wish(memberId, productId);
-        service.addWishProduct(wish);
+        service.addWishProduct(memberId, productId);
         return ResponseEntity.ok().build();
     }
 
