@@ -23,7 +23,7 @@ public class WebConfig {
     public FilterRegistrationBean<Filter> jwtFilter() {
         FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(jwtTokenFilter);
-        registrationBean.addUrlPatterns("/admin/*");
+        /*registrationBean.addUrlPatterns("/api/*");*/
         return registrationBean;
     }
 }

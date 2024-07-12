@@ -34,7 +34,7 @@
                     row.append($('<td>').text(product.name));
                     row.append($('<td>').text(product.price));
                     row.append($('<td>').append($('<img>').attr('src', product.imageUrl).css({'max-width': '100px', 'max-height': '100px'})));
-                    row.append($('<td>').html('<a href="/admin/products/edit/' + product.id + '">Edit</a> | <a href="/admin/products/delete/' + product.id + '">Delete</a>'));
+                    row.append($('<td>').html('<a href="/api/admin/products/edit/' + product.id + '">Edit</a> | <a href="/api/admin/products/delete/' + product.id + '">Delete</a>'));
 
                     // tbody에 행 추가
                     $('#product-table tbody').append(row);
@@ -47,6 +47,6 @@
     getProducts.init();
 </script>
 <br>
-<a href="/admin/products/add">Add Product</a>
+<a href="/api/admin/products/add">Add Product</a>
 </body>
 </html>
