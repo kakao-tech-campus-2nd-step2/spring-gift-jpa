@@ -25,6 +25,6 @@
 - [x] WishRepository Pageable 로 바꾸기
 - [x] WishService Page 로 수정
 - [x] WishController 수정
-- [ ] ProductRepository Pageable 로 바꾸기
-- [ ] ProductService Page 로 수정
-- [ ] ProductController 수정
+- [x] ProductRepository Pageable 로 바꾸기
+- [x] ProductService Page 로 수정
+- [x] ProductController 수정

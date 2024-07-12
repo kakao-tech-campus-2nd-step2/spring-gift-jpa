@@ -6,11 +6,18 @@ import gift.model.dto.ProductRequestDto;
 import gift.model.dto.ProductResponseDto;
 import gift.repository.ProductRepository;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
+
+    private static final int PAGE_SIZE = 10;
 
     private final ProductRepository productRepository;
 
@@ -19,11 +26,12 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getAllProducts() {
-        return productRepository.findAll()
-            .stream()
-            .map(ProductResponseDto::from)
-            .toList();
+    public List<ProductResponseDto> getAllProducts(int pageNo, String criteria) {
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Direction.DESC, criteria));
+        Page<ProductResponseDto> page = productRepository.findAll(pageable)
+            .map(ProductResponseDto::from);
+
+        return page.getContent();
     }
 
     @Transactional(readOnly = true)
