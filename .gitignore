@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+# Ignore Gradle wrapper jar file
+gradle/wrapper/gradle-wrapper.jar
+# Ignore Gradle project-specific cache directory
+.gradle/
+# Ignore IDE directories
+.idea/
+*.iml
+*.ipr
+*.iws
+# Ignore Eclipse project files
+.project
+.classpath
+.settings/
+.metadata/
+# Ignore temporary files
+*.tmp
+*.log
+*.bak
+*.swp
+
