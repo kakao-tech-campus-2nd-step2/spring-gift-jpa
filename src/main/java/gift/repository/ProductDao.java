@@ -4,7 +4,10 @@ import gift.domain.Product;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-//@Repository
+/*
+ * @deprecated Replaced by ProductRepository
+ */
+@Deprecated
 public class ProductDao {
     private final JdbcTemplate jdbcTemplate;
 

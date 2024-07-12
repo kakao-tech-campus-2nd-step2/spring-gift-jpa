@@ -5,7 +5,10 @@ import java.util.Optional;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
-@Repository
+/*
+ * @deprecated Replaced by JpaUserRepository
+ */
+@Deprecated
 public class UserRepository {
     private final JdbcClient jdbcClient;
 

@@ -8,7 +8,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-@Repository
+/*
+ * @deprecated Replaced by JpaWishRepository
+ */
+@Deprecated
 public class WishRepository {
     private final JdbcClient jdbcClient;
 

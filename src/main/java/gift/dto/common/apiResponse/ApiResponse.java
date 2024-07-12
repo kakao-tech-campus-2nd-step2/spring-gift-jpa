@@ -1,11 +1,13 @@
 package gift.dto.common.apiResponse;
 
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 
-public class ApiResponse<B> extends ResponseEntity<B> {
+public class ApiResponse<B> {
+    private B body;
+    private HttpStatusCode status;
 
     public ApiResponse(B body, HttpStatusCode status) {
-        super(body, status);
+        this.body = body;
+        this.status = status;
     }
 }

@@ -9,7 +9,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 
-@Repository
+/*
+ * @deprecated Replaced by JpaProductRepository
+ */
+@Deprecated
 public class ProductRepository {
     private final JdbcClient jdbcClient;
 
@@ -18,7 +21,7 @@ public class ProductRepository {
     }
 
     public Long insertProduct(Product product){
-        String sql = "insert into product (name, price, imageUrl) values (?, ?, ?)";
+        String sql = "insert into product (name, price, image_url) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcClient.sql(sql)
@@ -29,7 +32,7 @@ public class ProductRepository {
     }
 
     public Optional<Product> selectProduct(Long id){
-        String sql = "select id, name, price, imageUrl from product where id = ?";
+        String sql = "select id, name, price, image_url from product where id = ?";
         return jdbcClient.sql(sql)
             .param(id)
             .query(Product.class)
@@ -37,14 +40,14 @@ public class ProductRepository {
     }
 
     public List<Product> selectAllProduct(){
-        String sql = "select id, name, price, imageUrl from product";
+        String sql = "select id, name, price, image_url from product";
         return jdbcClient.sql(sql)
             .query(Product.class)
             .list();
     }
 
     public void updateProduct(Product product){
-        String sql = "update product set name = ?, price = ?, imageUrl = ? where id = ?";
+        String sql = "update product set name = ?, price = ?, image_url = ? where id = ?";
         jdbcClient.sql(sql)
             .params(product.getName(), product.getPrice(), product.getImageUrl(), product.getId())
             .update();
