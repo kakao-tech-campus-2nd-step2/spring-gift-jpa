@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.repository.ProductRepository;
 import gift.model.Product;
+import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,20 +21,18 @@ public class ProductService {
     }
 
     public Product getProductById(long id) {
-        return productRepository.findById(id);
+        return productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + id));
     }
 
     @Transactional
     public Product createProduct(Product product) {
-        productRepository.save(product);
-        return product;
+        return productRepository.save(product);
     }
 
     @Transactional
     public Product updateProduct(long id, Product product) {
         product.setId(id);
-        productRepository.update(product);
-        return product;
+        return productRepository.save(product);
     }
 
     @Transactional

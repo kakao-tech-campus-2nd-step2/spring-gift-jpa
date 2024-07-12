@@ -7,6 +7,7 @@ import gift.repository.MemberRepository;
 import gift.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Base64;
 import java.util.Optional;
@@ -23,6 +24,7 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
+    @Transactional
     public Member register(String email, String rawPassword) {
         Optional<Member> existingMember = memberRepository.findByEmail(email);
         if (existingMember.isPresent()) {

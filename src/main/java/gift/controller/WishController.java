@@ -29,14 +29,14 @@ public class WishController {
     }
 
     @PostMapping
-    public ResponseEntity<Wish> addWish(@LoginMember Member member, @RequestBody Wish wish) {
-        Wish savedWish = wishService.addWish(wish, member.getId());
+    public ResponseEntity<Wish> addWish(@LoginMember Member member, @RequestBody Long productId) {
+        Wish savedWish = wishService.addWish(member, productId);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedWish);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWish(@LoginMember Member member, @PathVariable Long id) {
-        wishService.deleteWish(member.getId(), id);
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<Void> deleteWish(@LoginMember Member member, @PathVariable Long productId) {
+        wishService.deleteWish(member.getId(), productId);
         return ResponseEntity.noContent().build();
     }
 }
