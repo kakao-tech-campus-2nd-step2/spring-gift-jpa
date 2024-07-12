@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
+
     private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
@@ -68,10 +69,17 @@ public class ProductService {
 
     // Mapper methods
     private static ProductResponse convertToDTO(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
+            product.getImageUrl());
     }
 
     private static Product convertToEntity(ProductRequest productDTO) {
-        return new Product(productDTO.id(), productDTO.name(), productDTO.price(), productDTO.imageUrl());
+        return new Product(productDTO.id(), productDTO.name(), productDTO.price(),
+            productDTO.imageUrl());
+    }
+
+    public Product convertToEntity(ProductResponse productResponse) {
+        return new Product(productResponse.id(), productResponse.name(),
+            productResponse.price(), productResponse.imageUrl());
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WishService {
+
     private final WishRepository wishRepository;
     private final ProductService productService;
 
@@ -30,9 +31,10 @@ public class WishService {
     }
 
     public WishResponse addWish(WishRequest wishRequest) {
-        productService.getProductById(wishRequest.productId());
+        productService.getProductById(wishRequest.product().getId());
 
-        if (wishRepository.existsByMemberIdAndProductId(wishRequest.memberId(), wishRequest.productId())) {
+        if (wishRepository.existsByMemberIdAndProductId(wishRequest.member().getId(),
+            wishRequest.product().getId())) {
             throw new DuplicateWishException(WISH_ALREADY_EXISTS);
         }
 
@@ -50,10 +52,10 @@ public class WishService {
 
     // Mapper methods
     private static Wish convertToEntity(WishRequest wishRequest) {
-        return new Wish(null, wishRequest.memberId(), wishRequest.productId());
+        return new Wish(null, wishRequest.member(), wishRequest.product());
     }
 
     private static WishResponse convertToDTO(Wish wish) {
-        return new WishResponse(wish.getId(), wish.getMemberId(), wish.getProductId());
+        return new WishResponse(wish.getId(), wish.getMember(), wish.getProduct());
     }
 }

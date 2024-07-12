@@ -2,6 +2,8 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import gift.model.Member;
+import gift.model.Product;
 import gift.model.Wish;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -20,13 +22,16 @@ public class WishRepositoryTest {
     @Test
     @DisplayName("위시리스트 항목 추가 및 ID로 조회")
     public void testSaveAndFindById() {
-        Wish wish = new Wish(null, 1L, 1L);
+        Member member = new Member(1L, "test@example.com", "password");
+        Product product = new Product(1L, "Product1", 100, "imageUrl1");
+
+        Wish wish = new Wish(null, member, product);
         Wish savedWish = wishRepository.save(wish);
         Optional<Wish> foundWish = wishRepository.findById(savedWish.getId());
 
         assertThat(foundWish).isPresent();
-        assertThat(foundWish.get().getMemberId()).isEqualTo(1L);
-        assertThat(foundWish.get().getProductId()).isEqualTo(1L);
+        assertThat(foundWish.get().getMember().getId()).isEqualTo(1L);
+        assertThat(foundWish.get().getProduct().getId()).isEqualTo(1L);
     }
 
     @Test
@@ -34,8 +39,12 @@ public class WishRepositoryTest {
     public void testFindAllByMemberId() {
         long initialCount = wishRepository.count();
 
-        Wish wish1 = new Wish(null, 1L, 1L);
-        Wish wish2 = new Wish(null, 1L, 2L);
+        Member member = new Member(1L, "test@example.com", "password");
+        Product product1 = new Product(1L, "Product1", 100, "imageUrl1");
+        Product product2 = new Product(2L, "Product2", 200, "imageUrl2");
+
+        Wish wish1 = new Wish(null, member, product1);
+        Wish wish2 = new Wish(null, member, product2);
 
         wishRepository.save(wish1);
         wishRepository.save(wish2);
@@ -46,7 +55,10 @@ public class WishRepositoryTest {
     @Test
     @DisplayName("위시리스트 항목 삭제")
     public void testDeleteById() {
-        Wish wish = new Wish(null, 1L, 1L);
+        Member member = new Member(1L, "test@example.com", "password");
+        Product product = new Product(1L, "Product1", 100, "imageUrl1");
+
+        Wish wish = new Wish(null, member, product);
         Wish savedWish = wishRepository.save(wish);
 
         wishRepository.deleteById(savedWish.getId());
@@ -58,7 +70,10 @@ public class WishRepositoryTest {
     @Test
     @DisplayName("회원 ID와 상품 ID로 위시리스트 항목 존재 여부 확인")
     public void testExistsByMemberIdAndProductId() {
-        Wish wish = new Wish(null, 1L, 1L);
+        Member member = new Member(1L, "test@example.com", "password");
+        Product product = new Product(1L, "Product1", 100, "imageUrl1");
+
+        Wish wish = new Wish(null, member, product);
         wishRepository.save(wish);
 
         boolean exists = wishRepository.existsByMemberIdAndProductId(1L, 1L);

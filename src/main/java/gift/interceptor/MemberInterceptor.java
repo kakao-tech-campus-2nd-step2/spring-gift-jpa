@@ -17,7 +17,8 @@ public class MemberInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
+    public boolean preHandle(@NonNull HttpServletRequest request,
+        @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         tokenValidator.validateToken(request);
         return true;
     }

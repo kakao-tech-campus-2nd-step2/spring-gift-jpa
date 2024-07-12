@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
     private final ProductService productService;
     private final MemberService memberService;
 
@@ -50,7 +51,8 @@ public class AdminController {
     }
 
     @PostMapping("/products")
-    public String addProduct(@Valid @ModelAttribute("product") ProductRequest productDTO, BindingResult result) {
+    public String addProduct(@Valid @ModelAttribute("product") ProductRequest productDTO,
+        BindingResult result) {
         if (result.hasErrors()) {
             return "product_form";
         }
@@ -66,7 +68,8 @@ public class AdminController {
     }
 
     @PutMapping("/products/{id}")
-    public String updateProduct(@PathVariable("id") Long id, @Valid @ModelAttribute ProductRequest productDTO, BindingResult result, Model model) {
+    public String updateProduct(@PathVariable("id") Long id,
+        @Valid @ModelAttribute ProductRequest productDTO, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("product", productDTO);
             model.addAttribute("org.springframework.validation.BindingResult.product", result);
@@ -97,7 +100,8 @@ public class AdminController {
     }
 
     @PostMapping("/members")
-    public String addMember(@Valid @ModelAttribute("member") MemberRequest memberDTO, BindingResult result) {
+    public String addMember(@Valid @ModelAttribute("member") MemberRequest memberDTO,
+        BindingResult result) {
         if (result.hasErrors()) {
             return "member_form";
         }
@@ -113,7 +117,8 @@ public class AdminController {
     }
 
     @PutMapping("/members/{id}")
-    public String updateMember(@PathVariable("id") Long id, @Valid @ModelAttribute MemberRequest memberDTO, BindingResult result, Model model) {
+    public String updateMember(@PathVariable("id") Long id,
+        @Valid @ModelAttribute MemberRequest memberDTO, BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("member", memberDTO);
             model.addAttribute("org.springframework.validation.BindingResult.member", result);

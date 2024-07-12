@@ -1,7 +1,12 @@
 package gift.dto.wish;
 
+import gift.model.Member;
+import gift.model.Product;
+
 public record WishResponse(
     Long id,
-    Long memberId,
-    Long productId
-) { }
+    Member member,
+    Product product
+) {
+
+}

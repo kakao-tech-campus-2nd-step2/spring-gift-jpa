@@ -22,7 +22,8 @@ public class MemberRequestTest {
     @DisplayName("유효한 회원 가입 요청")
     public void testRegisterMemberValid() {
         MemberRequest memberDTO = new MemberRequest(null, "valid@example.com", "validpassword");
-        ResponseEntity<MemberRequest> response = restTemplate.postForEntity("/api/members/register", memberDTO, MemberRequest.class);
+        ResponseEntity<MemberRequest> response = restTemplate.postForEntity("/api/members/register",
+            memberDTO, MemberRequest.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
@@ -31,7 +32,8 @@ public class MemberRequestTest {
     @DisplayName("유효하지 않은 이메일로 회원 가입 요청")
     public void testRegisterMemberInvalidEmail() {
         MemberRequest memberDTO = new MemberRequest(null, "invalid-email", "validpassword");
-        ResponseEntity<Map> response = restTemplate.postForEntity("/api/members/register", memberDTO, Map.class);
+        ResponseEntity<Map> response = restTemplate.postForEntity("/api/members/register",
+            memberDTO, Map.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody()).containsEntry("email", "유효한 이메일 주소를 입력해야 합니다.");
@@ -41,7 +43,8 @@ public class MemberRequestTest {
     @DisplayName("빈 이메일로 회원 가입 요청")
     public void testRegisterMemberBlankEmail() {
         MemberRequest memberDTO = new MemberRequest(null, "", "validpassword");
-        ResponseEntity<Map> response = restTemplate.postForEntity("/api/members/register", memberDTO, Map.class);
+        ResponseEntity<Map> response = restTemplate.postForEntity("/api/members/register",
+            memberDTO, Map.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody()).containsEntry("email", "이메일은 필수 입력 항목입니다.");
@@ -51,7 +54,8 @@ public class MemberRequestTest {
     @DisplayName("유효하지 않은 비밀번호로 회원 가입 요청")
     public void testRegisterMemberInvalidPassword() {
         MemberRequest memberDTO = new MemberRequest(null, "valid@example.com", "123");
-        ResponseEntity<Map> response = restTemplate.postForEntity("/api/members/register", memberDTO, Map.class);
+        ResponseEntity<Map> response = restTemplate.postForEntity("/api/members/register",
+            memberDTO, Map.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody()).containsEntry("password", "비밀번호는 최소 4자리 이상이어야 합니다.");
@@ -61,7 +65,8 @@ public class MemberRequestTest {
     @DisplayName("빈 비밀번호로 회원 가입 요청")
     public void testRegisterMemberBlankPassword() {
         MemberRequest memberDTO = new MemberRequest(null, "valid@example.com", "");
-        ResponseEntity<Map> response = restTemplate.postForEntity("/api/members/register", memberDTO, Map.class);
+        ResponseEntity<Map> response = restTemplate.postForEntity("/api/members/register",
+            memberDTO, Map.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody()).containsKey("password");
