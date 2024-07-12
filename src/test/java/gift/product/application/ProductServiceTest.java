@@ -13,9 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,18 +48,24 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void 모든_상품_조회_테스트() {
+    public void 모든_상품_페이징_조회_테스트() {
         // Given
-        Product product = new Product("Product1", 1000, "http://example.com/image1.jpg");
-        when(productRepository.findAll()).thenReturn(List.of(product));
+        Product product1 = new Product("Product1", 1000, "http://example.com/image1.jpg");
+        Product product2 = new Product("Product2", 2000, "http://example.com/image2.jpg");
+        Page<Product> page = new PageImpl<>(List.of(product1, product2), PageRequest.of(0, 2), 2);
+        when(productRepository.findAll(any(Pageable.class))).thenReturn(page);
+
+        Pageable pageable = PageRequest.of(0, 2);
 
         // When
-        List<ProductResponse> products = productService.findAll();
+        Page<ProductResponse> products = productService.findAll(pageable);
 
         // Then
-        assertThat(products).hasSize(1);
-        assertThat(products.get(0).name()).isEqualTo("Product1");
-        verify(productRepository, times(1)).findAll();
+        assertThat(products.getTotalElements()).isEqualTo(2);
+        assertThat(products.getContent()).hasSize(2);
+        assertThat(products.getContent().get(0).name()).isEqualTo("Product1");
+        assertThat(products.getContent().get(1).name()).isEqualTo("Product2");
+        verify(productRepository, times(1)).findAll(pageable);
     }
 
     @Test
