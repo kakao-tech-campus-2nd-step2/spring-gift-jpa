@@ -3,17 +3,16 @@ package gift.product.service;
 import gift.product.repository.MemberRepository;
 import gift.product.repository.ProductRepository;
 import gift.product.repository.WishListRepository;
-import gift.product.model.Product;
 import gift.product.model.Wish;
 import gift.product.util.JwtUtil;
 import gift.product.validation.WishListValidation;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -35,20 +34,15 @@ public class WishListService {
         this.productRepository = productRepository;
     }
 
-    public Collection<Product> getAllProducts(HttpServletRequest request) {
-        String token = jwtUtil.checkAuthorization(request.getHeader("Authorization"));
+    public Page<Wish> getAllProducts(String authorization, Pageable pageable) {
+        System.out.println("[WishListService] getAllProducts()");
+        String token = jwtUtil.checkAuthorization(authorization);
 
-        Collection<Wish> findList = wishListRepository.findAllByMember(memberRepository.findByEmail(jwtUtil.getEmailByToken(token)).get());
-
-        List<Product> responseList = new ArrayList<>();
-        for(Wish wish : findList)
-            productRepository.findById(wish.getProduct().getId()).ifPresent(responseList::add);
-
-        return responseList;
+        return  wishListRepository.findAllByMember(memberRepository.findByEmail(jwtUtil.getEmailByToken(token)).get(), pageable);
     }
 
     public ResponseEntity<String> registerWishProduct(HttpServletRequest request, Map<String, Long> requestBody) {
-
+        System.out.println("[WishListService] registerWishProduct()");
         String token = jwtUtil.checkAuthorization(request.getHeader("Authorization"));
         productRepository.existsById(requestBody.get("productId"));
 
@@ -63,6 +57,7 @@ public class WishListService {
     }
 
     public ResponseEntity<String> deleteWishProduct(HttpServletRequest request, Long id) {
+        System.out.println("[WishListService] deleteWishProduct()");
         String token = jwtUtil.checkAuthorization(request.getHeader("Authorization"));
         wishListValidation.deleteValidation(id, memberRepository.findByEmail(jwtUtil.getEmailByToken(token)).get());
         wishListRepository.deleteById(id);
