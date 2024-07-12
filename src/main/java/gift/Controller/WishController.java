@@ -1,7 +1,6 @@
 package gift.Controller;
 
 import gift.DTO.MemberDto;
-import gift.DTO.Member;
 import gift.DTO.WishListDto;
 import gift.LoginUser;
 import gift.Service.WishListService;
@@ -28,13 +27,14 @@ public class WishController {
   }
 
   @GetMapping
-  public ResponseEntity<List<WishListDto>> getWishList(@LoginUser MemberDto memberDto) {
+  public ResponseEntity<List<WishListDto>> getWishList(Optional<MemberDto> memberDto) {
     List<WishListDto> wishList = wishListService.getWishList();
     return ResponseEntity.ok(wishList);
   }
 
   @PostMapping
-  public ResponseEntity<WishListDto> addProductToWishList(@RequestBody WishListDto wishListDto) {
+  public ResponseEntity<WishListDto> addProductToWishList(@RequestBody WishListDto wishListDto, @LoginUser
+    Optional<MemberDto> memberDto) {
 
     WishListDto addedWishProduct = wishListService.addProductToWishList(wishListDto);
 

@@ -1,8 +1,7 @@
 package gift.Controller;
 
-import gift.DTO.ProductDto;
 import gift.DTO.Product;
-import gift.Exception.ProductNotFoundException;
+import gift.DTO.ProductDto;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;

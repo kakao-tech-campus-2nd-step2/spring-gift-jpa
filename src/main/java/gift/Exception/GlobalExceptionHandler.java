@@ -38,7 +38,8 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(ProductNotFoundException.class)
-  public ModelAndView handleProductNotFoundException(ProductNotFoundException ex, WebRequest request) {
+  public ModelAndView handleProductNotFoundException(ProductNotFoundException ex,
+    WebRequest request) {
     ModelAndView modelAndView = new ModelAndView("redirect:/admin/products");
     modelAndView.addObject("error", ex.getMessage());
     return modelAndView;

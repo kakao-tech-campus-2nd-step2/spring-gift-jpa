@@ -1,5 +1,6 @@
 package gift.DTO;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -14,7 +15,11 @@ public class ProductDto {
   })
   @NotBlank
   private String name;
+
+  @Min(value = 1)
   private int price;
+
+  @NotBlank
   private String imageUrl;
 
   public ProductDto() {

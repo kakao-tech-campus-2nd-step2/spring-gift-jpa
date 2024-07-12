@@ -18,13 +18,15 @@ public class Member {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
   @Column(nullable = false, unique = true)
   private String email;
+
   @Column(nullable = false)
   private String password;
 
-  @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
-  private List<WishList> wishLists = new ArrayList<>();
+  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+  private final List<WishList> wishLists = new ArrayList<>();
 
   public Member() {
 
@@ -48,8 +50,6 @@ public class Member {
   public String getPassword() {
     return this.password;
   }
-
-
 
   public boolean matchLoginInfo(MemberDto memberDtoByEmail) {
     return this.email.equals(memberDtoByEmail.getEmail()) && this.password.equals(
