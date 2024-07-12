@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.controller.wish.dto.WishRequest;
 import gift.controller.wish.dto.WishResponse;
+import gift.global.dto.PageResponse;
 import gift.model.member.Member;
 import gift.model.product.Product;
 import gift.model.wish.Wish;
@@ -9,8 +10,8 @@ import gift.repository.MemberJpaRepository;
 import gift.repository.ProductJpaRepository;
 import gift.repository.WishJpaRepository;
 import gift.global.validate.NotFoundException;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,11 +73,12 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishResponse.Info> getWishes(Long memberId) {
-        var response = wishJpaRepository.findByMemberId(memberId)
-            .stream()
+    public PageResponse<WishResponse.Info> getWishesPaging(Long memberId, Pageable pageable) {
+        Page<Wish> wishPage = wishJpaRepository.findAllByMemberId(memberId, pageable);
+        var content = wishPage.getContent().stream()
             .map(WishResponse.Info::from)
-            .collect(Collectors.toList());
-        return response;
+            .toList();
+
+        return PageResponse.from(content, wishPage);
     }
 }
