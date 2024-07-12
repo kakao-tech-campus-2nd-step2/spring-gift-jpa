@@ -6,6 +6,7 @@ import gift.product.presentation.dto.ResponsePagingProductDto;
 import gift.product.presentation.dto.ResponseProductDto;
 import gift.product.business.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -32,8 +33,14 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ResponsePagingProductDto> getProductsByPage(
-        @PageableDefault(size = 20, sort = "modifiedDate", direction = Sort.Direction.DESC) Pageable pageable)
-    {
+        @PageableDefault(size = 20, sort = "modifiedDate", direction = Sort.Direction.DESC) Pageable pageable,
+        @RequestParam(required = false) Integer size) {
+        if (size != null) {
+            if (size < 1 || size > 100) {
+                throw new IllegalArgumentException("size는 1~100 사이의 값이어야 합니다.");
+            }
+            pageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+        }
         var productPagingDto = productService.getProductsByPage(pageable);
         var responsePagingProductDto = ResponsePagingProductDto.from(productPagingDto);
         return ResponseEntity.ok(responsePagingProductDto);
