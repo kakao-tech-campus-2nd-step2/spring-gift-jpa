@@ -28,8 +28,9 @@ public class GiftController {
     }
 
     @GetMapping("/{id}")
-    public GiftResponse getGift(@PathVariable Long id) {
-        return giftService.getGift(id);
+    public ResponseEntity<GiftResponse> getGift(@PathVariable Long id) {
+        GiftResponse gift = giftService.getGift(id);
+        return ResponseEntity.ok(gift);
     }
 
     @GetMapping
@@ -39,12 +40,14 @@ public class GiftController {
     }
 
     @PutMapping("/{id}")
-    public void updateGift(@PathVariable Long id, @RequestBody GiftRequest giftReq) {
+    public ResponseEntity<String> updateGift(@PathVariable Long id, @RequestBody GiftRequest giftReq) {
         giftService.updateGift(giftReq, id);
+        return ResponseEntity.ok("상품 수정이 완료되었습니다.");
     }
 
     @DeleteMapping("/{id}")
-    public void deleteGift(@PathVariable Long id) {
+    public ResponseEntity<String> deleteGift(@PathVariable Long id) {
         giftService.deleteGift(id);
+        return ResponseEntity.ok("상품 삭제가 완료되었습니다.");
     }
 }
