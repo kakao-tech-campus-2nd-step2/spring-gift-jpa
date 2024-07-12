@@ -40,7 +40,7 @@ public class ProductService {
             product.getImageUrl());
     }
 
-    private static Product toEntity(ProductDTO productDTO, Long id) {
+    public static Product toEntity(ProductDTO productDTO, Long id) {
         return new Product(id, productDTO.name(), productDTO.price(), productDTO.imageUrl());
     }
 }
