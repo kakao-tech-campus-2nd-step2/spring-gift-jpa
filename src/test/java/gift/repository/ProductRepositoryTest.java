@@ -1,6 +1,8 @@
 package gift.repository;
 
 import gift.model.Product;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -18,11 +20,19 @@ class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
+    private Product product1;
+    private Product product2;
+
+    @BeforeEach
+    void setUp() {
+        productRepository.deleteAll();
+        product1 = productRepository.save(new Product("cookie", 2000L, "www.cookie.com"));
+        product2 = productRepository.save(new Product("pie", 5000L, "www.pie.com"));
+    }
+
     @Test
     void save() {
-        Product expected = new Product("cakes",
-                                       4500L,
-                                       "www.cakes.com");
+        Product expected = new Product("brownie", 3000L, "www.brownie.com");
 
         Product actual = productRepository.save(expected);
         assertAll(
@@ -35,16 +45,11 @@ class ProductRepositoryTest {
     @Test
     void finAll() {
         List<Product> products = productRepository.findAll();
-        assertThat(products).hasSize(3);
+        assertThat(products).hasSize(2);
     }
 
     @Test
     void findAllById() {
-        Product product1 = new Product("cookie", 2000L, "www.cookie.com");
-        Product product2 = new Product("pie", 5000L, "www.pie.com");
-        productRepository.save(product1);
-        productRepository.save(product2);
-
         List<Long> ids = Arrays.asList(product1.getId(), product2.getId());
         List<Product> products = productRepository.findAllById(ids);
 
@@ -53,8 +58,8 @@ class ProductRepositoryTest {
 
     @Test
     void deleteById() {
-        productRepository.deleteById(1L);
-        Optional<Product> deletedProduct = productRepository.findById(1L);
+        productRepository.deleteById(product1.getId());
+        Optional<Product> deletedProduct = productRepository.findById(product1.getId());
 
         assertThat(deletedProduct).isEmpty();
     }
