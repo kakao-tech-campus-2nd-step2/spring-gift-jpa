@@ -7,25 +7,27 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    @Column(name= "member_id", nullable = false)
-    Long memberId;
-    @Column(name= "product_id",nullable = false)
-    Long productId;
+    @ManyToOne
+    @JoinColumn (nullable = false)
+    private Member member;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Product product;
     @Column(nullable = false)
     int count;
 
     protected Wish(){}
 
-    public Wish(Long id, Long memberId, Long productId, int count) {
-        this.memberId = memberId;
+    public Wish(Long id,Member member, Product product, int count) {
+        this.member = member;
         this.id = id;
-        this.productId = productId;
+        this.product = product;
         this.count = count;
     }
 
-    public Wish(Long memberId, Long productId, int count) {
-        this.memberId = memberId;
-        this.productId = productId;
+    public Wish(Member member, Product product, int count) {
+        this.member = member;
+        this.product = product;
         this.count = count;
     }
 
@@ -33,12 +35,12 @@ public class Wish {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
     public int getCount() {
@@ -49,12 +51,12 @@ public class Wish {
         this.id = id;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public void setCount(int count) {
