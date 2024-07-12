@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 @DataJpaTest
 class WishRepositoryTest {
@@ -50,7 +53,8 @@ class WishRepositoryTest {
         wishRepository.save(expected1);
         wishRepository.save(expected2);
 
-        List<Wish> actual = wishRepository.findAllByMemberId(expectedMember.getId());
+        List<Wish> actual = wishRepository.findAllByMemberId(expectedMember.getId(), PageRequest.of(0, 10, Sort.by(
+            Direction.ASC, "product"))).getContent();
 
         assertThat(actual).containsExactly(expected1, expected2);
     }

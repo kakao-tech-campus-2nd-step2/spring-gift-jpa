@@ -27,7 +27,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductResponseDto> getAllProducts(int pageNo, String criteria) {
-        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Direction.DESC, criteria));
+        Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Direction.ASC, criteria));
 
         return productRepository.findAll(pageable)
             .map(ProductResponseDto::from);
