@@ -1,7 +1,11 @@
 package gift.service;
 
+import gift.domain.Member;
+import gift.domain.Product;
 import gift.domain.Wish;
 import gift.dto.WishDto;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -9,13 +13,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class WishService {
     private final WishRepository wishRepository;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
-    public WishService(WishRepository wishRepository) {
+    public WishService(WishRepository wishRepository, MemberRepository memberRepository, ProductRepository productRepository) {
         this.wishRepository = wishRepository;
+        this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
     }
 
     public void addWish(Long memberId, WishDto wishDto) {
-        Wish newWish = new Wish(memberId, wishDto.getProductId());
+        Member member = memberRepository.findById(memberId).orElseThrow();
+        Product product = productRepository.findById(wishDto.getProductId()).orElseThrow();
+        Wish newWish = new Wish(member, product);
         wishRepository.save(newWish);
     }
 
@@ -24,6 +34,7 @@ public class WishService {
     }
 
     public List<Wish> findByMemberId(Long id) {
-        return wishRepository.findByMemberId(id);
+        Member member = memberRepository.findById(id).orElseThrow();
+        return wishRepository.findByMember(member);
     }
 }
