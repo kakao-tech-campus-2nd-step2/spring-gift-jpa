@@ -39,9 +39,12 @@ public class ProductController {
         @RequestParam(defaultValue = "id") String sortBy,
         @RequestParam(defaultValue = "asc") String direction,
         Model model) {
-        Sort sort = direction.equalsIgnoreCase(Sort.Direction.DESC.name()) ?
-            Sort.by(sortBy).descending() :
-            Sort.by(sortBy).ascending();
+        Sort sort;
+        if (direction.equalsIgnoreCase(Sort.Direction.DESC.name())) {
+            sort = Sort.by(sortBy).descending();
+        } else {
+            sort = Sort.by(sortBy).ascending();
+        }
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<ProductDTO> productPage = productService.findAllProducts(pageable);
         model.addAttribute("products", productPage.getContent());

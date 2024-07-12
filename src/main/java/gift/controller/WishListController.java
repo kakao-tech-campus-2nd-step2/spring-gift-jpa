@@ -38,9 +38,12 @@ public class WishListController {
         if (email == null) {
             return "redirect:/users/login";
         }
-        Sort sort = direction.equalsIgnoreCase(Sort.Direction.DESC.name()) ?
-            Sort.by(sortBy).descending() :
-            Sort.by(sortBy).ascending();
+        Sort sort;
+        if (direction.equalsIgnoreCase(Sort.Direction.DESC.name())) {
+            sort = Sort.by(sortBy).descending();
+        } else {
+            sort = Sort.by(sortBy).ascending();
+        }
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<WishListDTO> wishListPage = wishListService.getWishListByUser(email, pageable);
         model.addAttribute("wishList", wishListPage.getContent());
