@@ -9,6 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -37,7 +41,7 @@ class WishRepositoryTest {
 
         entityManager.flush();
 
-        expectedQuantity = 2;
+        expectedQuantity = 10;
         expected = new Wish(expectedMember,expectedProduct,expectedQuantity);
     }
 
@@ -109,6 +113,27 @@ class WishRepositoryTest {
         List<Wish> findWishes = wishes.findAll();
         assertAll(
                 () -> assertThat(findWishes.size()).isEqualTo(0)
+        );
+    }
+
+    @Test
+    @DisplayName("위시 페이지 조회 테스트")
+    void testFindByMemberId() {
+        // given
+        wishes.save(new Wish(expectedMember,expectedProduct,1));
+        wishes.save(new Wish(expectedMember,expectedProduct,2));
+        wishes.save(new Wish(expectedMember,expectedProduct,3));
+
+        // when
+        Pageable pageable = PageRequest.of(0,2, Sort.by("id").descending());
+        Page<Wish> page = wishes.findByMemberId(expectedMember.getId(), pageable);
+
+        // then
+        assertAll(
+                () -> assertThat(page).isNotNull(),
+                () -> assertThat(page.getContent().size()).isEqualTo(2),
+                () -> assertThat(page.getTotalElements()).isEqualTo(3),
+                () -> assertThat(page.getTotalPages()).isEqualTo(2)
         );
     }
 }
