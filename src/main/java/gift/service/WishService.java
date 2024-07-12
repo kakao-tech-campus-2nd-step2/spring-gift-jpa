@@ -30,13 +30,13 @@ public class WishService {
 
     @Transactional
     public void update(Long id, WishPatchRequest request, Long memberId) {
-        checkProductByProductIdAndMemberId(request.productId(), memberId);
+        Wish wish = wishRepository.findByIdFetchJoin(id)
+                .orElseThrow(() -> new EntityNotFoundException("Wish with id " + id + " Does not exist"));
+        checkWishByProductIdAndMemberId(wish, request.productId(), memberId);
         if (request.productCount() == 0) {
             deleteByProductId(request.productId(), memberId);
             return;
         }
-        Wish wish = wishRepository.findByMemberIdAndProductId(memberId, request.productId())
-                .orElseThrow(() -> new EntityNotFoundException("Wish not found"));
         wish.updateWish(wish.getMember(), request.productCount(), wish.getProduct());
     }
 
@@ -48,8 +48,8 @@ public class WishService {
         wishRepository.save(new Wish(member, productCount, product));
     }
 
-    public Page<WishResponse> findAllByMemberId(Long memberId, Pageable pageable) {
-        return wishRepository.findAllByMemberIdOrderByCreatedAtAsc(memberId, pageable)
+    public Page<WishResponse> findAllWishPagingByMemberId(Long memberId, Pageable pageable) {
+        return wishRepository.findAllByMemberIdFetchJoin(memberId, pageable)
                 .map(WishResponse::from);
     }
 
@@ -57,8 +57,8 @@ public class WishService {
         wishRepository.deleteByProductIdAndMemberId(productId, memberId);
     }
 
-    private void checkProductByProductIdAndMemberId(Long productId, Long memberId) {
-        if (!wishRepository.existsByProductIdAndMemberId(productId, memberId)) {
+    private void checkWishByProductIdAndMemberId(Wish wish, Long productId, Long memberId) {
+        if ( !wish.containsProduct(productId)|| !wish.isOwner(memberId)) {
             throw new EntityNotFoundException("Product with id " + productId + " does not exist in " + memberId +"'s wish");
         }
     }

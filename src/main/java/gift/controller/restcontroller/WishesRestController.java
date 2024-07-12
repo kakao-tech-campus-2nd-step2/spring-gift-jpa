@@ -15,6 +15,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,9 +46,9 @@ public class WishesRestController {
     @SecurityRequirement(name = "Authorization")
     public ResponseEntity<PagingResponse<WishResponse>> getWishes(
             @Parameter(hidden = true) @NotNull @LoginMember Long memberId,
-            @PageableDefault(size = 10) Pageable pageable
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<WishResponse> responses = wishService.findAllByMemberId(memberId, pageable);
+        Page<WishResponse> responses = wishService.findAllWishPagingByMemberId(memberId, pageable);
         return ResponseEntity.ok().body(PagingResponse.from(responses));
     }
 

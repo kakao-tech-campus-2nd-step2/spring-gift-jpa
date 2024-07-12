@@ -41,6 +41,14 @@ public class Wish extends BasicEntity{
         this.product = product;
     }
 
+    public boolean isOwner(Long memberId) {
+        return member.getId().equals(memberId);
+    }
+
+    public boolean containsProduct(Long productId) {
+        return product.getId().equals(productId);
+    }
+
     public Member getMember() {
         return member;
     }

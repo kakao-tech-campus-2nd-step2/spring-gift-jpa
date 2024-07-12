@@ -19,7 +19,7 @@ public class ProductService {
     }
 
     public Page<ProductResponse> findAllProductPaging(Pageable pageable) {
-        return productRepository.findAllByOrderByCreatedAtAsc(pageable)
+        return productRepository.findAll(pageable)
                 .map(ProductResponse::from);
     }
 

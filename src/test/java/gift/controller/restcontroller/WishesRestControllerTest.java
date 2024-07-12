@@ -65,7 +65,7 @@ class WishesRestControllerTest {
         // given
         int dataCount = 5;
         doReturn(wishList(dataCount)).when(wishService)
-                .findAllByMemberId(1L, PageRequest.of(0, 10));
+                .findAllWishPagingByMemberId(1L, PageRequest.of(0, 10));
 
         // when
         ResultActions resultActions = mockMvc.perform(

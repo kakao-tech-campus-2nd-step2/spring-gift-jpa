@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class ProductRestController {
     @GetMapping("/products")
     @Operation(summary = "전체 상품 조회", description = "전체 상품을 조회합니다.")
     public ResponseEntity<PagingResponse<ProductResponse>> getProducts(
-            @PageableDefault(size = 10) Pageable pageable
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<ProductResponse> responses = productService.findAllProductPaging(pageable);
         return ResponseEntity.ok().body(PagingResponse.from(responses));

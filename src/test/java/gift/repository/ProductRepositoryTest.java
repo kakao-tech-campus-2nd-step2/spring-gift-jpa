@@ -5,27 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
-
-    @Test
-    void findAllByOrderByCreatedAtAsc() {
-        // given
-        save();
-        save();
-
-        // when
-        List<Product> products = productRepository.findAllByOrderByCreatedAtAsc();
-
-        // then
-        assertThat(products.get(2).getCreatedAt()).isBefore(products.get(3).getCreatedAt());
-    }
 
     @Test
     void updateById() {
