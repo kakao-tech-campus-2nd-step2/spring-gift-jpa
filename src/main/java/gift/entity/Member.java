@@ -1,27 +1,24 @@
 package gift.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-@Entity
-@Table(name = "members")
-public class Member {
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(unique = true, nullable = false)
     private String email;
-
-    @Column(nullable = false)
     private String password;
 
-    public Member() {    }
+    @OneToMany(mappedBy = "member")
+    @JsonManagedReference
+    private List<Wish> wishes = new ArrayList<>();
 
-    public Member(long id, String email, String password) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
+    public Member() {
     }
 
     public Member(String email, String password) {
@@ -29,27 +26,35 @@ public class Member {
         this.password = password;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String encodedPassword) {
-        this.password = encodedPassword;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<Wish> getWishes() {
+        return wishes;
+    }
+
+    public void setWishes(List<Wish> wishes) {
+        this.wishes = wishes;
     }
 }
