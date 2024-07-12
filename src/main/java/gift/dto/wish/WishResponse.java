@@ -8,4 +8,5 @@ public record WishResponse(
     Member member,
     Product product
 ) {
+
 }

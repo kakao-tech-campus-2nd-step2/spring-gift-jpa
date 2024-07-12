@@ -1,8 +1,14 @@
 package gift.controller;
 
+import gift.dto.member.MemberResponse;
+import gift.dto.product.ProductResponse;
 import gift.dto.wish.WishCreateRequest;
 import gift.dto.wish.WishRequest;
 import gift.dto.wish.WishResponse;
+import gift.model.Member;
+import gift.model.Product;
+import gift.service.MemberService;
+import gift.service.ProductService;
 import gift.service.WishService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -22,9 +28,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class WishController {
 
     private final WishService wishService;
+    private final MemberService memberService;
+    private final ProductService productService;
 
-    public WishController(WishService wishService) {
+    public WishController(WishService wishService, MemberService memberService,
+        ProductService productService) {
         this.wishService = wishService;
+        this.memberService = memberService;
+        this.productService = productService;
     }
 
     @GetMapping
@@ -38,8 +49,17 @@ public class WishController {
     public ResponseEntity<WishResponse> addWish(
         @Valid @RequestBody WishCreateRequest wishRequestDTO,
         @RequestAttribute("memberId") Long memberId) {
-        WishRequest wishWithMemberId = new WishRequest(memberId, wishRequestDTO.productId());
-        WishResponse createdWish = wishService.addWish(wishWithMemberId);
+
+        MemberResponse memberResponse = memberService.getMemberById(memberId);
+        Member member = new Member(memberResponse.id(), memberResponse.email(), null);
+
+        ProductResponse productResponse = productService.getProductById(wishRequestDTO.productId());
+        Product product = new Product(productResponse.id(), productResponse.name(),
+            productResponse.price(), productResponse.imageUrl());
+
+        WishRequest wishRequest = new WishRequest(member, product);
+        WishResponse createdWish = wishService.addWish(wishRequest);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(createdWish);
     }
 
