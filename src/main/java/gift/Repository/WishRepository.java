@@ -4,7 +4,10 @@ import gift.Entity.WishEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface WishRepository extends JpaRepository<WishEntity, Long> {
-    // 필요한 경우 커스텀 쿼리 메서드 추가 가능
+    List<WishEntity> findByProductId(Long id);
+    List<WishEntity> findByUserId(Long id);
 }

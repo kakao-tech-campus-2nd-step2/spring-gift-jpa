@@ -1,7 +1,9 @@
 package gift.Service;
 
 import gift.Entity.ProductEntity;
+import gift.Entity.WishEntity;
 import gift.Repository.ProductRepository;
+import gift.Repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private WishRepository wishRepository;
 
     public List<ProductEntity> findAllProducts() {
         return productRepository.findAll();
@@ -27,6 +32,10 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
+        // 관련된 WishEntity들도 삭제
+        List<WishEntity> wishes = wishRepository.findByProductId(id);
+        wishRepository.deleteAll(wishes);
+
         productRepository.deleteById(id);
     }
 }

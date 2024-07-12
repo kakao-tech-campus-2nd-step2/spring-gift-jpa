@@ -1,9 +1,7 @@
 package gift.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class UserEntity {
@@ -14,12 +12,15 @@ public class UserEntity {
     private String email;
     private String password;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WishEntity> wishes;
+
     public UserEntity(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public UserEntity(){}
+    public UserEntity() {}
 
     public Long getId() {
         return id;
@@ -43,5 +44,13 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<WishEntity> getWishes() {
+        return wishes;
+    }
+
+    public void setWishes(List<WishEntity> wishes) {
+        this.wishes = wishes;
     }
 }
