@@ -40,6 +40,14 @@
       </tr>
       </tbody>
     </table>
+    <div class="paging">
+      <ul class="pagination">
+        <th:block th:each="page : ${#numbers.sequence(pageInfo.startPageNum, pageInfo.endPageNum)}">
+          <li><a th:if="${page != pageInfo.currentPageNum}" th:href="@{/admin(page = ${page - 1})}" th:text="${page}"></a></li>
+          <li><a class="active" th:if="${page == pageInfo.currentPageNum}" th:text="${page}"></a></li>
+        </th:block>
+      </ul>
+    </div>
   </div>
 </div>
 <script>
