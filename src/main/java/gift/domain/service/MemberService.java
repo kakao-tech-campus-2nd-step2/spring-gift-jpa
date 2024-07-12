@@ -34,7 +34,7 @@ public class MemberService {
             throw new MemberAlreadyExistsException();
         });
 
-        return new MemberResponse(jwtUtil.generateToken(memberRepository.save(requestDto.toEntity("user"))));
+        return new MemberResponse(jwtUtil.generateToken(memberRepository.save(requestDto.toEntity("member"))));
     }
 
     @Transactional(readOnly = true)

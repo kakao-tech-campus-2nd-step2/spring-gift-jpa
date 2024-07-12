@@ -30,8 +30,8 @@ public class DataInitializer {
             new Product("바나나맛 우유 240ml", 1700, "https://img.danawa.com/prod_img/500000/107/815/img/3815107_1.jpg?_v=20231212093346")};
         Member[] members = {
             new Member("admin@example.com", HashUtil.hashCode("admin"), "admin"),
-            new Member("user@example.com", HashUtil.hashCode("user"), "user"),
-            new Member("user2@example.com", HashUtil.hashCode("user"), "user")};
+            new Member("user@example.com", HashUtil.hashCode("user"), "member"),
+            new Member("user2@example.com", HashUtil.hashCode("user"), "member")};
 
         for (int i = 0; i < products.length; i++) {
             products[i] = productRepository.save(products[i]);

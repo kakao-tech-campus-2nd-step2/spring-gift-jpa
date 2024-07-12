@@ -273,13 +273,14 @@ create table wish
 
 - [x] 위시리스트에 담길 아이템 도메인 객체 설계
   - 위시리스트 아이템 구성요소
+    - Id: Long
+      - PK
     - productId: Long
-      - FK(Products 테이블의 PK 참조)
-    - userEmail: String
-      - FK(Users 테이블의 PK 참조)
+      - FK(Product 테이블의 PK 참조)
+    - memberEmail: String
+      - FK(Member 테이블의 PK 참조)
     - quantity: Long
       - 상품의 수량
-    - PK: (productId, userEmail) 복합키
 - [x] 위시리스트를 저장하는 데이터베이스 연동
   - [x] 데이터베이스(H2 사용) 접근 Repository
   - [x] 스키마 SQL 및 예제 데이터 삽입 SQL 구비
