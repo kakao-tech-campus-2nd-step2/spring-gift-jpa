@@ -3,6 +3,7 @@ package gift.main.service;
 import gift.main.Exception.CustomException;
 import gift.main.Exception.ErrorCode;
 import gift.main.dto.UserVo;
+import gift.main.dto.WishProductResponce;
 import gift.main.entity.Product;
 import gift.main.entity.User;
 import gift.main.entity.WishProduct;
@@ -12,6 +13,7 @@ import gift.main.repository.WishProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WishProductService {
@@ -26,9 +28,12 @@ public class WishProductService {
         this.userRepository = userRepository;
     }
 
-    public List<WishProduct> getWishProducts(Long userId) {
-        List<WishProduct> wishProducts = wishProductRepository.findAllByUserId(userId)
-                .orElseGet(() -> List.of());
+    public List<WishProductResponce>  getWishProducts(Long userId) {
+        List<WishProductResponce> wishProducts = wishProductRepository.findAllByUserId(userId)
+                .orElseGet(() -> List.of())
+                .stream()
+                .map((wishProduct) -> new WishProductResponce(wishProduct))
+                .collect(Collectors.toList());
 
         return wishProducts;
 
