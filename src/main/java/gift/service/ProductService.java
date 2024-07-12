@@ -54,6 +54,8 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+        Product product = productRepository.findById(id)
+            .orElseThrow(NoSuchElementException::new);
+        productRepository.delete(product);
     }
 }
