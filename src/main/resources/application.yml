@@ -25,7 +25,6 @@ jpa:
       enabled: true
       path: /h2-console
 
-
 logging:
   level:
     org:

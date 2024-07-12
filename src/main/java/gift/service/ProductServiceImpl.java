@@ -81,6 +81,5 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll(pageable)
             .map(this::convertToDTO);
     }
-
 }
 

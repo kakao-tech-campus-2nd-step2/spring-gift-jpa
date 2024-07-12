@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+
 public interface WishlistService {
     List<WishlistDTO> getWishlistByUser(String username);
     void addToWishlist(String username, Long productId, int quantity); // 수량 추가
