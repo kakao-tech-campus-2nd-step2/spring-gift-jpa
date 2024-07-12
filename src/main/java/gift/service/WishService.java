@@ -3,6 +3,7 @@ package gift.service;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
+import gift.model.WishDTO;
 import gift.repository.WishRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 public class WishService {
@@ -26,15 +29,18 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public List<Wish> getWishlist(HttpServletRequest request, int page, String sortBy, String sortOrder) throws AuthenticationException {
+    public List<WishDTO> getWishlist(HttpServletRequest request, int page, String sortBy, String sortOrder) throws AuthenticationException {
         long memberId = memberService.getIdByToken(request);
 
         Sort sort = getSort(sortBy, sortOrder);
         Pageable pageable = PageRequest.of(page, 10, sort);
         Page<Wish> pageWishlist = wishRepository.findByMember_Id(memberId, pageable);
         List<Wish> wishlist= pageWishlist.getContent();
+        List<WishDTO> list = wishlist.stream()
+                .map(WishDTO::getWishDTO)
+                .toList();
 
-        return wishlist;
+        return list;
     }
 
     private Sort getSort(String sortBy, String sortOrder){
