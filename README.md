@@ -60,3 +60,6 @@ primary key (id)
 - @ManyToOne을 사용해 Wish Entity의 연관관계 매핑
 - 그에 따른 Service, Controller layer 리팩토링
 - 여러 유효성 검증 추가
+
+### Step3
+- Pageable객체 사용하여 Pagination 구현
