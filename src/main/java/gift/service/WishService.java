@@ -28,6 +28,7 @@ public class WishService {
         this.memberRepository = memberRepository;
     }
 
+    @Transactional
     public void update(Long id, WishPatchRequest request, Long memberId) {
         checkProductByProductIdAndMemberId(request.productId(), memberId);
         if (request.productCount() == 0) {

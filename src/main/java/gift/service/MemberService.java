@@ -10,6 +10,7 @@ import gift.repository.MemberRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -39,12 +40,12 @@ public class MemberService {
         return MemberResponse.from(member);
     }
 
+    @Transactional
     public void updateById(Long id, MemberRequest request) {
         Member member = memberRepository.findById(id)
                 .orElseThrow(()->
                         new EntityNotFoundException("Member with id " + id + " not found"));
         member.updateMember(request.email(), request.password(), request.role());
-        memberRepository.save(member);
     }
 
     public void deleteById(Long id) {
