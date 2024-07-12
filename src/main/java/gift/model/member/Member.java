@@ -8,40 +8,40 @@ import java.util.List;
 @Entity
 @Table(name = "members")
 public class Member {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        @Column(nullable = false, unique = true)
-        private String email;
+    @Column(nullable = false, unique = true)
+    private String email;
 
-        @Column(nullable = false)
-        private String password;
+    @Column(nullable = false)
+    private String password;
 
-        public Member() {
-        }
+    public Member() {
+    }
 
-        @OneToMany(mappedBy = "member")
-        private List<Wish> wishes;
+    @OneToMany(mappedBy = "member")
+    private List<Wish> wishes;
 
-        public Member(String email, String password) {
-                this.email = email;
-                this.password = password;
-        }
+    public Member(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 
-        public Long getId() {
-                return id;
-        }
+    public Long getId() {
+        return id;
+    }
 
-        public String getEmail() {
-                return email;
-        }
+    public String getEmail() {
+        return email;
+    }
 
-        public String getPassword() {
-                return password;
-        }
+    public String getPassword() {
+        return password;
+    }
 
-        public boolean isPasswordEqual(String inputPassword) {
-                return this.password.equals(inputPassword);
-        }
+    public boolean isPasswordEqual(String inputPassword) {
+        return this.password.equals(inputPassword);
+    }
 }
