@@ -61,7 +61,6 @@ public class WishService {
         return responses;
     }
 
-
     @Transactional(readOnly = true)
     public WishInfo getWish(final Long wishId, final Long userId) {
         Wish wish = wishRepository.findById(wishId)
