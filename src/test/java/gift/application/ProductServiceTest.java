@@ -15,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("상품 전체 조회 서비스 테스트")
-    void getAllProducts() {
+    void getPagedProducts() {
         List<Product> productList = new ArrayList<>();
         Product product1 = ProductMapper.toEntity(
                 new ProductRequest("product1", 1000, "https://testshop.com")
@@ -47,11 +49,13 @@ class ProductServiceTest {
         productList.add(product1);
         productList.add(product2);
 
-        given(productRepository.findAll()).willReturn(productList);
+        Page<Product> productPage = new PageImpl<>(productList);
 
-        List<ProductResponse> responseList = productService.getAllProducts();
+        given(productRepository.findAll(productPage.getPageable())).willReturn(productPage);
 
-        Assertions.assertThat(responseList.size()).isEqualTo(2);
+        Page<ProductResponse> responsePage = productService.getPagedProducts(productPage.getPageable());
+
+        Assertions.assertThat(responsePage.getTotalElements()).isEqualTo(2);
     }
 
     @Test

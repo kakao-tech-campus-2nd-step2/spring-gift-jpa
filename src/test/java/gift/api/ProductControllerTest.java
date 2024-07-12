@@ -19,6 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -53,17 +55,19 @@ class ProductControllerTest {
     @Test
     @DisplayName("상품 전체 조회 기능 테스트")
     void getAllProducts() throws Exception {
-        List<ProductResponse> response = new ArrayList<>();
+        List<ProductResponse> products = new ArrayList<>();
         ProductResponse productResponse1 = ProductMapper.toResponseDto(
                 new Product("product1", 1000, "https://testshop.com")
         );
         ProductResponse productResponse2 = ProductMapper.toResponseDto(
                 new Product("product2", 3000, "https://testshop.com")
         );
-        response.add(productResponse1);
-        response.add(productResponse2);
+        products.add(productResponse1);
+        products.add(productResponse2);
+
+        Page<ProductResponse> response = new PageImpl<>(products);
         String responseJson = objectMapper.writeValueAsString(response);
-        when(productService.getAllProducts()).thenReturn(response);
+        when(productService.getPagedProducts(any())).thenReturn(response);
 
         mockMvc.perform(get("/api/products")
                         .header(HttpHeaders.AUTHORIZATION, bearerToken))
@@ -71,7 +75,7 @@ class ProductControllerTest {
                 .andExpect(content().json(responseJson))
                 .andDo(print());
 
-        verify(productService).getAllProducts();
+        verify(productService).getPagedProducts(any());
     }
 
     @Test
