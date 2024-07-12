@@ -3,27 +3,41 @@ package gift.controller;
 import gift.domain.Product;
 import gift.dto.ProductDTO;
 import gift.repository.ProductRepository;
+import gift.service.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.stereotype.Controller;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.stereotype.Controller;
 
 @Controller
 @RequestMapping("/api/products")
 public class ProductController {
+
+    private final ProductService productService;
     private final ProductRepository productRepository;
 
-    public ProductController(ProductRepository productRepository) {
+    public ProductController(ProductService productService, ProductRepository productRepository) {
+        this.productService = productService;
         this.productRepository = productRepository;
     }
 
     @GetMapping
-    public String getProducts(Model model) {
-        List<Product> products = productRepository.findAll();
-        model.addAttribute("products", products);
+    public String getProducts(Model model,
+                              @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "10") int size,
+                              @RequestParam(defaultValue = "name,asc") String[] sort) {
+        Sort.Direction direction = Sort.Direction.fromString(sort[1]);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
+        Page<Product> productPage = productService.getProducts(pageable);
+
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
         return "products";
     }
 
