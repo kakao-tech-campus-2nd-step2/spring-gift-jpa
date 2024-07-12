@@ -3,7 +3,6 @@ package gift.service;
 import gift.domain.Member;
 import gift.domain.TokenAuth;
 import gift.exception.UnAuthorizationException;
-import gift.repository.token.TokenRepository;
 import gift.repository.token.TokenSpringDataJpaRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
@@ -24,16 +23,16 @@ public class TokenService {
         this.tokenRepository = tokenRepository;
     }
 
-    public String saveToken(Member member){
+    public String saveToken(Member member) {
         String accessToken = Jwts.builder()
                 .setSubject(member.getId().toString())
                 .claim("email", member.getEmail())
                 .signWith(getSecretKey())
                 .compact();
-        return tokenRepository.save(new TokenAuth(accessToken, member.getEmail())).getToken();
+        return tokenRepository.save(new TokenAuth(accessToken, member)).getToken();
     }
 
-    public TokenAuth findToken(String token){
+    public TokenAuth findToken(String token) {
         return tokenRepository.findByToken(token)
                 .orElseThrow(() -> new UnAuthorizationException("인증되지 않은 사용자입니다. 다시 로그인 해주세요."));
     }
@@ -42,7 +41,6 @@ public class TokenService {
         Claims claims = parseToken(token);
         return claims.getSubject();
     }
-
 
     public Claims parseToken(String token) {
         SecretKey key = getSecretKey();
@@ -53,5 +51,5 @@ public class TokenService {
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
-
 }
+
