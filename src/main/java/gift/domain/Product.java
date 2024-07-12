@@ -2,6 +2,9 @@ package gift.domain;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "product")
 public class Product {
@@ -17,6 +20,10 @@ public class Product {
 
     @Column(nullable = false)
     String imageUrl;
+
+    @OneToMany(mappedBy = "product")
+    private List<Wish> wishes = new ArrayList<>();
+
 
     public Product(String name, int price, String imageUrl) {
         this.name = name;

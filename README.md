@@ -83,9 +83,8 @@
 
 ## 구현할 기능 목록
 - [ ] 엔티티 구현
-  - [ ] Member에 wish 참조키 설정 (1 : N)
-  - [ ] Product에 wish 참조키 설정 (1 : N)
-  - [ ] Wish에 Member와 Product의 참조키 설정 (N : 1)
-  - [ ] Member가 삭제되면 wish도 삭제되도록 cascade
-  - [ ] Product가 삭제되면 wish도 삭제되도록 cascade
+  - [x] Member에 wish 참조키 설정 (1 : N)
+  - [x] Product에 wish 참조키 설정 (1 : N)
+  - [x] Wish에 Member와 Product의 참조키 설정 (N : 1)
+  - [ ] wish가 삭제되면 해당 wish가 자동 삭제되도록 리팩토링
 - [ ] 서비스 계층 수정 사항 수정

@@ -4,7 +4,6 @@ import gift.domain.Wish;
 import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,8 +19,8 @@ public class WishService{
 
     public void addToWishList(Long userId, Long productId) {
         Wish wish = new Wish();
-        wish.setUserId(userId);
-        wish.setProductId(productId);
+        wish.setMember(userId);
+        wish.setProduct(productId);
         wishRepository.save(wish);
     }
 
