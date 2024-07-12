@@ -26,11 +26,10 @@ public class Product {
     protected Product() {
     }
 
-    public Product(String name, int price, String imageUrl, List<Wish> wishList) {
+    public Product(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        this.wishList = wishList;
     }
 
     public void update(String name, int price, String imageUrl) {
