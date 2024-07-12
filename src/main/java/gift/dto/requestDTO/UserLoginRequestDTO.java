@@ -9,6 +9,6 @@ public record UserLoginRequestDTO(
     String password) {
 
     public static User toEntity(UserLoginRequestDTO userLoginRequestDTO) {
-        return new User(userLoginRequestDTO.email(), userLoginRequestDTO.password(), null);
+        return new User(userLoginRequestDTO.email(), userLoginRequestDTO.password(), null, null);
     }
 }
