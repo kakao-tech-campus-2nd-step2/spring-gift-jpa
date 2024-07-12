@@ -29,7 +29,6 @@ public class WishProduct extends BaseEntity {
     public WishProduct(Product product, Member member, Integer count) {
         this.product = product;
         this.member = member;
-        member.getWishes().add(this);
         this.count = count;
     }
 
@@ -51,9 +50,5 @@ public class WishProduct extends BaseEntity {
 
     public void updateCount(Integer count) {
         this.count = count;
-    }
-
-    public void removeWishProduct() {
-        member.getWishes().remove(this);
     }
 }

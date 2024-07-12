@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ProductOptionRepository extends JpaRepository<ProductOption, Long> {
     List<ProductOption> findAllByProductId(Long productId);
+
+    void deleteProductOptionsByProductId(Long productId);
 }

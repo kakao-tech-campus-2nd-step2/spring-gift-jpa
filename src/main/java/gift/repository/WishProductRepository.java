@@ -17,5 +17,7 @@ public interface WishProductRepository extends JpaRepository<WishProduct, Long> 
 
     List<WishProduct> findAllByMemberId(Long memberId);
 
+    void deleteWishProductsByMemberId(Long memberId);
+
     void deleteWishProductsByProductId(Long productId);
 }

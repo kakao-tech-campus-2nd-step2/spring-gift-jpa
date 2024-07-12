@@ -59,10 +59,8 @@ public class WishProductService {
                 .toList();
     }
 
-    public void deleteWishProduct(Long id) {
-        var wishProduct = findWishProductById(id);
-        wishProduct.removeWishProduct();
-        wishProductRepository.deleteById(id);
+    public void deleteWishProduct(Long wishProductId) {
+        wishProductRepository.deleteById(wishProductId);
     }
 
     private WishProduct saveWishProductWithWishProductRequest(Product product, Member member, Integer count) {

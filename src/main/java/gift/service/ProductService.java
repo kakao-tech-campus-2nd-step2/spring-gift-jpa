@@ -6,6 +6,7 @@ import gift.exception.InvalidProductNameWithKAKAOException;
 import gift.exception.NotFoundElementException;
 import gift.model.MemberRole;
 import gift.model.Product;
+import gift.repository.ProductOptionRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishProductRepository;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,12 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final WishProductRepository wishProductRepository;
+    private final ProductOptionRepository productOptionRepository;
 
-    public ProductService(ProductRepository productRepository, WishProductRepository wishProductRepository) {
+    public ProductService(ProductRepository productRepository, WishProductRepository wishProductRepository, ProductOptionRepository productOptionRepository) {
         this.productRepository = productRepository;
         this.wishProductRepository = wishProductRepository;
+        this.productOptionRepository = productOptionRepository;
     }
 
     public ProductResponse addProduct(ProductRequest productRequest, MemberRole memberRole) {
@@ -50,9 +53,10 @@ public class ProductService {
                 .toList();
     }
 
-    public void deleteProduct(Long id) {
-        wishProductRepository.deleteWishProductsByProductId(id);
-        productRepository.deleteById(id);
+    public void deleteProduct(Long productId) {
+        wishProductRepository.deleteWishProductsByProductId(productId);
+        productOptionRepository.deleteProductOptionsByProductId(productId);
+        productRepository.deleteById(productId);
     }
 
     private Product saveProductWithProductRequest(ProductRequest productRequest) {

@@ -3,9 +3,7 @@ package gift.service;
 import gift.dto.ProductOptionRequest;
 import gift.dto.ProductRequest;
 import gift.dto.ProductResponse;
-import gift.exception.NotFoundElementException;
 import gift.model.MemberRole;
-import gift.repository.ProductRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +21,6 @@ class ProductOptionServiceTest {
     private ProductService productService;
     @Autowired
     private ProductOptionService optionService;
-    @Autowired
-    private ProductRepository productRepository;
     private ProductResponse product;
 
     @BeforeEach
@@ -63,10 +59,6 @@ class ProductOptionServiceTest {
         optionService.addOption(size255gbOptionDto);
         //then
         Assertions.assertThat(optionService.getOptions(product.id()).size()).isEqualTo(2);
-        var options = productRepository.findById(product.id())
-                .orElseThrow(() -> new NotFoundElementException(product.id() + "를 가진 상품이 존재하지 않습니다."))
-                .getProductOptions();
-        Assertions.assertThat(options.size()).isEqualTo(2);
     }
 
     @Test

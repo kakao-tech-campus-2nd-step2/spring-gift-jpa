@@ -1,15 +1,10 @@
 package gift.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "member")
@@ -27,8 +22,6 @@ public class Member extends BaseEntity {
     @Enumerated
     @Column(name = "role")
     private MemberRole role;
-    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
-    private List<WishProduct> wishes = new ArrayList<>();
 
     public Member() {
     }
@@ -54,9 +47,5 @@ public class Member extends BaseEntity {
 
     public MemberRole getRole() {
         return role;
-    }
-
-    public List<WishProduct> getWishes() {
-        return wishes;
     }
 }

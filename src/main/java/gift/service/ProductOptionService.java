@@ -51,8 +51,6 @@ public class ProductOptionService {
     }
 
     public void deleteOption(Long id) {
-        var productOption = findProductOptionById(id);
-        productOption.removeOption();
         productOptionRepository.deleteById(id);
     }
 

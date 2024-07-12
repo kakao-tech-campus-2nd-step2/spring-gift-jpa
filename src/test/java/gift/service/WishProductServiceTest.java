@@ -7,7 +7,6 @@ import gift.dto.WishProductUpdateRequest;
 import gift.exception.NotFoundElementException;
 import gift.model.MemberRole;
 import gift.reflection.AuthTestReflectionComponent;
-import gift.repository.MemberRepository;
 import gift.service.auth.AuthService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -30,8 +29,6 @@ class WishProductServiceTest {
     private AuthService authService;
     @Autowired
     private MemberService memberService;
-    @Autowired
-    private MemberRepository memberRepository;
     @Autowired
     private AuthTestReflectionComponent authTestReflectionComponent;
     private Long managerId;
@@ -114,25 +111,6 @@ class WishProductServiceTest {
         var memberWishProducts = wishProductService.getWishProducts(memberId);
         //then
         Assertions.assertThat(memberWishProducts.size()).isEqualTo(0);
-
-        wishProductService.deleteWishProduct(managerWishProduct1.id());
-        wishProductService.deleteWishProduct(managerWishProduct2.id());
-    }
-
-    @Test
-    @DisplayName("추가된 위시리스트 상품을 이용자 객체에서 조회할 수 있다.")
-    void addWishProductAndFindFromMemberEntity() {
-        //given
-        var wishProduct1AddRequest = new WishProductAddRequest(product1Id, 5);
-        var wishProduct2AddRequest = new WishProductAddRequest(product2Id, 5);
-        var managerWishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
-        var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
-        //when
-        var wishProducts = memberRepository.findById(managerId)
-                .orElseThrow(() -> new NotFoundElementException(managerId + "를 가진 멤버가 존재하지 않습니다."))
-                .getWishes();
-        //then
-        Assertions.assertThat(wishProducts.size()).isEqualTo(2);
 
         wishProductService.deleteWishProduct(managerWishProduct1.id());
         wishProductService.deleteWishProduct(managerWishProduct2.id());

@@ -27,7 +27,6 @@ public class ProductOption extends BaseEntity {
 
     public ProductOption(Product product, String name, Integer additionalPrice) {
         this.product = product;
-        product.getProductOptions().add(this);
         this.name = name;
         this.additionalPrice = additionalPrice;
     }
@@ -51,9 +50,5 @@ public class ProductOption extends BaseEntity {
     public void updateOptionInfo(String name, Integer additionalPrice) {
         this.name = name;
         this.additionalPrice = additionalPrice;
-    }
-
-    public void removeOption() {
-        product.getProductOptions().remove(this);
     }
 }
