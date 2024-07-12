@@ -33,6 +33,7 @@
     .header-container {
         display: flex;
         align-items: center;
+        justify-content: space-between; /* Adjust for new button alignment */
     }
     .header-container h1 {
         margin-right: 20px;
@@ -44,11 +45,11 @@
     .pagination .page-btn {
         background-color: #f1f1f1;
         border: none;
-        padding: 10px; /* 네모 모양을 고려하여 충분한 크기로 설정 */
-        margin: 0 5px; /* 좌우 간격을 5px로 설정 */
+        padding: 10px;
+        margin: 0 5px;
         cursor: pointer;
         border-radius: 5px;
-        width: 50px; /* 고정된 너비 설정 */
+        width: 50px;
         text-align: center;
     }
     .pagination .current-page {
@@ -56,8 +57,32 @@
         color: white;
         border: 2px solid #4CAF50;
         border-radius: 5px;
-        width: 50px; /* 고정된 너비 설정 */
+        width: 50px;
         text-align: center;
+    }
+    .sort-buttons {
+        display: flex;
+        align-items: center;
+    }
+    .sort-buttons .btn {
+        margin-left: 10px;
+    }
+    .sort-buttons .sort-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 40px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-left: 10px;
+        text-align: center;
+    }
+    .sort-buttons .sort-btn span {
+        margin-left: 5px;
     }
   </style>
 </head>
@@ -69,23 +94,37 @@
   <h1>상품 목록</h1>
   <div class="pagination">
     <a th:if="${productPage.hasPrevious()}"
-       th:href="@{/web/products/list(page=${currentPage - 1}, size=${pageSize})}"
+       th:href="@{/web/products/list(page=${currentPage - 1}, size=${pageSize}, sort=${sort}, direction=${direction})}"
        class="page-btn">Prev</a>
 
     <span th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}">
-            <a th:href="@{/web/products/list(page=${i}, size=${pageSize})}"
+            <a th:href="@{/web/products/list(page=${i}, size=${pageSize}, sort=${sort}, direction=${direction})}"
                th:text="${i + 1}"
                th:classappend="${i == currentPage} ? 'current-page' : ''"
                class="page-btn"></a>
         </span>
 
     <a th:if="${productPage.hasNext()}"
-       th:href="@{/web/products/list(page=${currentPage + 1}, size=${pageSize})}"
+       th:href="@{/web/products/list(page=${currentPage + 1}, size=${pageSize}, sort=${sort}, direction=${direction})}"
        class="page-btn">Next</a>
   </div>
 </div>
 
-<a href="/web/products/add" class="btn">상품 추가</a>
+<div class="header-container">
+  <a href="/web/products/add" class="btn">상품 추가</a>
+  <div class="sort-buttons">
+    <a th:href="@{/web/products/list(sort='id', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize})}" class="sort-btn">
+      ID<span th:text="${sort == 'id' ? (direction == 'asc' ? '↑' : '↓') : ''}"></span>
+    </a>
+    <a th:href="@{/web/products/list(sort='name', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize})}" class="sort-btn">
+      Name<span th:text="${sort == 'name' ? (direction == 'desc' ? '↑' : '↓') : ''}"></span>
+    </a>
+    <a th:href="@{/web/products/list(sort='price', direction=${direction == 'asc' ? 'desc' : 'asc'}, page=${currentPage}, size=${pageSize})}" class="sort-btn">
+      Price<span th:text="${sort == 'price' ? (direction == 'desc' ? '↑' : '↓') : ''}"></span>
+    </a>
+  </div>
+</div>
+
 <table>
   <thead>
   <tr>
