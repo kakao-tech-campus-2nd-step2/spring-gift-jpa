@@ -33,7 +33,7 @@ public class ProductService {
 
     public void update(Long id, ProductRequest productRequest) {
         Product product = new Product(id, productRequest.name(), productRequest.price(), productRequest.imageUrl());
-        productRepository.save(product); // save() can be used for both insert and update
+        productRepository.save(product);
     }
 
     public void delete(Long id) {
