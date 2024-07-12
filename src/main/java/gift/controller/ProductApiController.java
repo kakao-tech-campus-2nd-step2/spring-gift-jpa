@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.domain.model.dto.ProductSearchRequestDto;
 import gift.domain.model.enums.ProductSortBy;
 import gift.domain.model.dto.ProductAddRequestDto;
 import gift.domain.model.dto.ProductResponseDto;
@@ -45,9 +46,8 @@ public class ProductApiController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Page<ProductResponseDto> getAllProducts(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "ID_DESC") ProductSortBy sortBy) {
-        return productService.getAllProducts(page, sortBy);
+        @Valid @RequestBody ProductSearchRequestDto requestDto) {
+        return productService.getAllProducts(requestDto.getPage(), requestDto.getSortBy());
     }
 
     //    상품 추가

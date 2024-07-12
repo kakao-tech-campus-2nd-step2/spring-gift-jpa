@@ -18,14 +18,8 @@ public class ProductViewController {
     }
 
     @GetMapping
-    public String home(Model model,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "ID_DESC") ProductSortBy sortBy) {
-        Page<?> productPage = productService.getAllProducts(page, sortBy);
-        model.addAttribute("products", productPage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", productPage.getTotalPages());
-        model.addAttribute("sortBy", sortBy);
+    public String home(Model model) {
+        productService.getAllProducts(1, ProductSortBy.ID_DESC);
         return "index";
     }
 }
