@@ -1,10 +1,14 @@
 package gift.domain.product;
 
+import gift.domain.wish.Wish;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name="products")
 public class Product {
@@ -20,6 +24,9 @@ public class Product {
 
     @Column(nullable = false)
     private String imageUrl;
+
+    @OneToMany
+    private List<Wish> wishList;
 
     public Product(Long id, String name, Long price, String imageUrl) {
         this.id = id;
