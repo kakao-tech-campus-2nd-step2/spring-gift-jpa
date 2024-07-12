@@ -13,4 +13,6 @@ public interface WishJpaRepository extends JpaRepository<Wish, Long> {
     Page<Wish> findByUser(User user, Pageable pageable);
 
     Optional<Wish> findByProductName(String productName);
+
+    boolean existsByProductName(String productName);
 }

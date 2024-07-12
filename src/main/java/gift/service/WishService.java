@@ -4,6 +4,7 @@ import gift.domain.User;
 import gift.domain.Wish;
 import gift.dto.Wishlist;
 import gift.dto.Wishlist.Request;
+import gift.exception.ProductErrorCode;
 import gift.exception.ProductException;
 import gift.exception.UserErrorCode;
 import gift.exception.UserException;
@@ -23,7 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class WishlistService {
+public class WishService {
 
     private final UserJpaRepository userRepository;
     private final WishJpaRepository wishlistRepository;
@@ -31,7 +32,7 @@ public class WishlistService {
     private final JwtTokenProvider tokenProvider;
 
     @Autowired
-    public WishlistService(UserJpaRepository userRepository, WishJpaRepository wishlistRepository,
+    public WishService(UserJpaRepository userRepository, WishJpaRepository wishlistRepository,
         ProductJpaRepository productRepository, JwtTokenProvider tokenProvider) {
         this.userRepository = userRepository;
         this.wishlistRepository = wishlistRepository;
@@ -61,14 +62,25 @@ public class WishlistService {
     public Wishlist.Response addItemToWishlist(String accessToken, Request request) {
         User user = userRepository.findByAccessToken(accessToken)
             .orElseThrow(() -> new BadToken(UserErrorCode.INVALID_TOKEN));
+        if(!productRepository.existsByName(request.getProductName())){
+            throw new ProductException(ProductErrorCode.PRODUCT_NAME_NOT_EXISTS);
+        }
 
-        Wish wish = wishlistRepository.findByProductName(request.getProductName())
-            .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NAME_NOT_EXISTS));
-        wish.setProductName(request.getProductName());
-        wish.setQuantity(request.getQuantity());
-        wish.setUser(user);
+        if(wishlistRepository.existsByProductName(request.getProductName())){
+            Wish wish = wishlistRepository.findByProductName(request.getProductName())
+                .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NAME_NOT_EXISTS));
+            wish.setProductName(request.getProductName());
+            wish.setQuantity(request.getQuantity());
+            wish.setUser(user);
 
-        user.addWish(wish);
+            user.addWish(wish);
+            userRepository.save(user);
+        }
+        else{
+            Wish wish = new Wish(request.getProductName(), request.getQuantity());
+            user.addWish(wish);
+            userRepository.save(user);
+        }
         return new Wishlist.Response(request.getProductName(), request.getQuantity());
     }
 

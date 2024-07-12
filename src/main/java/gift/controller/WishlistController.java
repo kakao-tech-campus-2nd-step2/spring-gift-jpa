@@ -2,10 +2,9 @@ package gift.controller;
 
 import gift.dto.Wishlist;
 import gift.dto.Wishlist.Response;
-import gift.service.WishlistService;
+import gift.service.WishService;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @AllArgsConstructor
 public class WishlistController {
 
-    private final WishlistService wishlistService;
+    private final WishService wishService;
 
     // 전체 장바구니 조회
     @GetMapping("/api/wishlist")
@@ -32,7 +31,7 @@ public class WishlistController {
                                                         @RequestParam(value="size",defaultValue = "10") int size){
 //        long userId = wishlistService.findUserId(accessToken);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
-        List<Response> responseList = wishlistService.getAllWishlistItems(accessToken, pageable);
+        List<Response> responseList = wishService.getAllWishlistItems(accessToken, pageable);
         return responseList;
     }
 
@@ -42,7 +41,7 @@ public class WishlistController {
     public Wishlist.Response addItem(@RequestHeader("Authorization") String accessToken, @RequestBody Wishlist.Request request){
 //        long userId = wishlistService.findUserId(accessToken);
 
-        Wishlist.Response item = wishlistService.addItemToWishlist(accessToken, request);
+        Wishlist.Response item = wishService.addItemToWishlist(accessToken, request);
         return item;
     }
     // 장바구니 상품 삭제
@@ -51,7 +50,7 @@ public class WishlistController {
     public Wishlist.Response deleteItem(@RequestHeader("Authorization") String accessToken, @RequestBody Wishlist.Request request){
 //        long userId = wishlistService.findUserId(accessToken);
 
-        Wishlist.Response item = wishlistService.deleteItemFromWishlist(accessToken, request);
+        Wishlist.Response item = wishService.deleteItemFromWishlist(accessToken, request);
         return item;
     }
 }
