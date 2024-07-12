@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.WishResponse;
 import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wish;
@@ -7,10 +8,8 @@ import gift.service.WishlistService;
 import gift.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
 
@@ -46,15 +45,15 @@ public class WishlistController {
         wish.setProductNumber(productNumber);
 
         Wish addedWish = wishlistService.addProduct(wish);
-        return ResponseEntity.ok(addedWish);
+        return ResponseEntity.ok(new WishResponse(addedWish.getId(), addedWish.getProduct().getId(), addedWish.getProduct().getName(), addedWish.getProductNumber()));
     }
 
     @GetMapping("/items")
-    public ResponseEntity<?> getItems(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<WishResponse>> getItems(@RequestHeader("Authorization") String token) {
         Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
         Long memberId = Long.parseLong(claims.getSubject());
 
-        List<Wish> wishes = wishlistService.getWishesByMemberId(memberId);
+        List<WishResponse> wishes = wishlistService.getWishesByMemberId(memberId);
         return ResponseEntity.ok(wishes);
     }
 
@@ -64,7 +63,7 @@ public class WishlistController {
             Product product = wishlistService.getProductById(productId);
             return ResponseEntity.ok(product);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+            return ResponseEntity.status(404).body("Product not found");
         }
     }
 
@@ -72,9 +71,9 @@ public class WishlistController {
     public ResponseEntity<?> updateProductNumber(@PathVariable Long id, @RequestBody int productNumber) {
         try {
             wishlistService.updateProductNumber(id, productNumber);
-            return ResponseEntity.ok("성공적으로 상품 수량을 수정하였습니다.");
+            return ResponseEntity.ok("Successfully updated product quantity.");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 상품이 존재하지 않습니다.");
+            return ResponseEntity.status(404).body("Product not found.");
         }
     }
 
@@ -82,9 +81,9 @@ public class WishlistController {
     public ResponseEntity<?> deleteItem(@PathVariable Long id) {
         try {
             wishlistService.deleteItem(id);
-            return ResponseEntity.ok("성공적으로 상품을 삭제하였습니다.");
+            return ResponseEntity.ok("Successfully deleted product.");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 상품이 존재하지 않습니다.");
+            return ResponseEntity.status(404).body("Product not found.");
         }
     }
 }
