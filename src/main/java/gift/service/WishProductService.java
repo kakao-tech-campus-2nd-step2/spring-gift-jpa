@@ -82,6 +82,8 @@ public class WishProductService {
 
     @Transactional
     public void deleteWishProduct(Long wishProductId) {
-        wishProductRepository.deleteById(wishProductId);
+        WishProduct wishProduct = wishProductRepository.findById(wishProductId)
+            .orElseThrow(NoSuchElementException::new);
+        wishProductRepository.delete(wishProduct);
     }
 }
