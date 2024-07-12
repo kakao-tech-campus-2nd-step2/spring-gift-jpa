@@ -5,10 +5,7 @@ import gift.model.Member;
 import gift.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.naming.AuthenticationException;
 import java.util.NoSuchElementException;
@@ -35,20 +32,20 @@ public class MemberService {
         }
     }
 
-    public String login(Member member){
+    public String login(Member member) throws IllegalAccessException {
         if(!memberRepository.existsByEmail(member.getEmail())){
-            throw new IllegalArgumentException("이메일을 확인해주세요.");
+            throw new IllegalAccessException("이메일을 확인해주세요.");
         }
         Member loginMember = memberRepository.findByEmail(member.getEmail());
         return getTokenWhenCorrectPW(loginMember, member);
     }
 
-    private String getTokenWhenCorrectPW(Member member, Member inputMember){
+    private String getTokenWhenCorrectPW(Member member, Member inputMember) throws IllegalAccessException {
         if(member.equals(inputMember)){
             return createJwtToken.createJwt(member.getId(), member.getEmail());
         }
         else {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new IllegalAccessException("비밀번호가 일치하지 않습니다.");
         }
     }
 
@@ -62,11 +59,5 @@ public class MemberService {
         Long memberId = getIdByToken(request);
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("해당 멤버가 없습니다."));
-    }
-
-    @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    @ExceptionHandler(IllegalArgumentException.class)
-    public String handleIllegalArgumentException(IllegalArgumentException e) {
-        return e.getMessage();
     }
 }
