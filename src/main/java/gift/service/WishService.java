@@ -5,6 +5,10 @@ import gift.model.Product;
 import gift.model.Wish;
 import gift.repository.WishRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
@@ -22,9 +26,23 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public List<Wish> getWishlistController(HttpServletRequest request) throws AuthenticationException {
+    public List<Wish> getWishlist(HttpServletRequest request, int page, String sortBy, String sortOrder) throws AuthenticationException {
         long memberId = memberService.getIdByToken(request);
-        return wishRepository.findByMember_Id(memberId);
+
+        Sort sort = getSort(sortBy, sortOrder);
+        Pageable pageable = PageRequest.of(page, 10, sort);
+        Page<Wish> pageWishlist = wishRepository.findByMember_Id(memberId, pageable);
+        List<Wish> wishlist= pageWishlist.getContent();
+
+        return wishlist;
+    }
+
+    private Sort getSort(String sortBy, String sortOrder){
+        Sort sort = Sort.by(sortBy);
+        if(sortOrder.equals("desc")){
+            return sort.descending();
+        }
+        return sort;
     }
 
     public void postWishlist(Long productId, HttpServletRequest request) throws AuthenticationException {
