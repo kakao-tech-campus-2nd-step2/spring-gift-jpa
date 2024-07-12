@@ -5,6 +5,7 @@ import gift.model.product.Product;
 import gift.model.product.ProductRequest;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,8 +28,8 @@ public class ProductController {
 
     // 모든 상품 조회
     @GetMapping
-    public String getAllProducts(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+    public String getAllProducts(Model model, Pageable pageable) {
+        model.addAttribute("products", productService.getAllProducts(pageable));
         return "products";
     }
 
