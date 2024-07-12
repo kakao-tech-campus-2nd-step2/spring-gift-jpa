@@ -39,7 +39,7 @@ class ProductRepositoryTest {
     void findById() {
         // given
         Product product1 = createProduct("americano", 4500, "americano");
-        Product product2 = createProduct("bag", 120000, "bag");
+        productRepository.save(product1);
         Long id = product1.getId();
         // when
         Product foundProduct = productRepository.findById(id).orElse(null);
@@ -52,6 +52,7 @@ class ProductRepositoryTest {
     void deleteById() {
         // given
         Product product1 = createProduct("americano", 4500, "americano");
+        productRepository.save(product1);
         Long DeleteId = product1.getId();
 
         // when
@@ -59,6 +60,6 @@ class ProductRepositoryTest {
         List<Product> remainingProducts = productRepository.findAll();
 
         // then
-        assertThat(remainingProducts.size()).isEqualTo(1);
+        assertThat(remainingProducts.size()).isEqualTo(0);
     }
 }
