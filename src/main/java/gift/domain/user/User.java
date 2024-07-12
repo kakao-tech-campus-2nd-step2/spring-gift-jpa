@@ -1,6 +1,7 @@
 package gift.domain.user;
 
 import gift.domain.cart.CartItem;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -4,6 +4,7 @@ import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
 import gift.domain.user.JpaUserRepository;
 import gift.domain.user.User;
+
 import gift.global.exception.BusinessException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,7 +54,6 @@ public class CartItemService {
      */
     public List<Product> getProductsInCartByUserId(Long userId) {
         List<CartItem> cartItems = cartItemRepository.findAllByUserId(userId);
-
         return cartItems.stream()
             .map(cartItem -> {
                 Product product = Product.createProductFromProxy(cartItem.getProduct());
