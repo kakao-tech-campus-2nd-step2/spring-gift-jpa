@@ -1,26 +1,21 @@
 package gift.wishlist.entity;
 
+import gift.wishlist.model.WishListId;
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "wish_products")
 public class WishList {
 
-    private long userId;
-    private long productId;
+    @EmbeddedId
+    private WishListId wishId;
+
+    @Column(nullable = false)
     private int quantity;
 
-    public WishList(long userId, long productId, int quantity) {
-        this.userId = userId;
-        this.productId = productId;
-        this.quantity = quantity;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public long getProductId() {
-        return productId;
-    }
-
-    public int getQuantity() {
-        return quantity;
+    public WishList() {
     }
 }

@@ -1,16 +1,28 @@
 package gift.user.entity;
 
-// User DB와 mapping될 엔터티
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userId;
+
+    @Column(nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String password;
 
-    public User(long userId, String email, String password) {
-        this.userId = userId;
-        this.email = email;
-        this.password = password;
+    protected User() {
+
     }
 
     public long getUserId() {

@@ -10,11 +10,11 @@ spring:
   sql:
     init:
       mode: always
-      schema-locations: classpath:static/sql/schema.sql
       data-locations: classpath:static/sql/data.sql
   jpa:
     properties:
       hibernate:
-        format_sql=true:
+        format_sql: true
     show-sql: true
     ddl-auto: create
+    defer-datasource-initialization: true
