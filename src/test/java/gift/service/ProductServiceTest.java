@@ -8,11 +8,17 @@ import gift.entity.ProductName;
 import gift.exception.BusinessException;
 import gift.repository.ProductRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.Rollback;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -101,31 +107,38 @@ public class ProductServiceTest {
         assertThrows(BusinessException.class, () -> productService.deleteProduct(2L));
     }
 
-    @Test
     @Rollback
-    public void 상품_목록_페이지네이션_성공() {
+    @TestFactory
+    public Collection<DynamicTest> 상품_목록_페이지네이션_성공() {
         for (int i = 1; i <= 25; i++) {
             Product product = new Product(new ProductName("상품 " + i), 1000 + i, "https://example.com/product" + i + ".jpg");
             productRepository.save(product);
         }
 
-        ProductPageResponseDto page1 = productService.getAllProducts(0, 10);
+        List<DynamicTest> dynamicTests = new ArrayList<>();
 
-        assertNotNull(page1);
-        assertEquals(10, page1.getProducts().size());
-        assertEquals(0, page1.getCurrentPage());
-        assertEquals(3, page1.getTotalPages());
+        dynamicTests.add(DynamicTest.dynamicTest("첫번째 페이지 조회", () -> {
+            ProductPageResponseDto page1 = productService.getAllProducts(0, 10);
+            assertNotNull(page1);
+            assertEquals(10, page1.getProducts().size());
+            assertEquals(0, page1.getCurrentPage());
+            assertEquals(3, page1.getTotalPages());
+        }));
 
-        ProductPageResponseDto page2 = productService.getAllProducts(1, 10);
+        dynamicTests.add(DynamicTest.dynamicTest("두번째 페이지 조회", () -> {
+            ProductPageResponseDto page2 = productService.getAllProducts(1, 10);
+            assertNotNull(page2);
+            assertEquals(10, page2.getProducts().size());
+            assertEquals(1, page2.getCurrentPage());
+        }));
 
-        assertNotNull(page2);
-        assertEquals(10, page2.getProducts().size());
-        assertEquals(1, page2.getCurrentPage());
+        dynamicTests.add(DynamicTest.dynamicTest("세번째 페이지 조회", () -> {
+            ProductPageResponseDto page3 = productService.getAllProducts(2, 10);
+            assertNotNull(page3);
+            assertEquals(5, page3.getProducts().size());
+            assertEquals(2, page3.getCurrentPage());
+        }));
 
-        ProductPageResponseDto page3 = productService.getAllProducts(2, 10);
-
-        assertNotNull(page3);
-        assertEquals(5, page3.getProducts().size());
-        assertEquals(2, page3.getCurrentPage());
+        return dynamicTests;
     }
 }
