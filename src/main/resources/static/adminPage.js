@@ -5,11 +5,10 @@ const closeButton = document.getElementsByClassName('close')[0];
 const mainCheckbox = document.querySelector('table th input[type="checkbox"]');
 const checkboxes = document.querySelectorAll('table td input[type="checkbox"]');
 
-export function addProductbtnOnClick(page) {
+export function addProductbtnOnClick() {
   modal.getElementsByTagName('h1')[0].innerText = 'Add a new product';
   modal.getElementsByTagName('button')[0].onclick = addProduct.bind(
       null,
-      page
   );
   modal.style.display = 'flex';
   document.getElementById('product-name-error-message').style.display =
@@ -18,12 +17,11 @@ export function addProductbtnOnClick(page) {
 
 window.addProductbtnOnClick = addProductbtnOnClick;
 
-export function editProductbtnOnClick(id, page) {
+export function editProductbtnOnClick(id) {
   modal.getElementsByTagName('h1')[0].innerText = 'Edit product';
   modal.getElementsByTagName('button')[0].onclick = editProduct.bind(
       null,
       id,
-      page
   );
   modal.style.display = 'flex';
   document.getElementById('product-name-error-message').style.display =
@@ -33,6 +31,7 @@ export function editProductbtnOnClick(id, page) {
 window.editProductbtnOnClick = editProductbtnOnClick;
 
 closeButton.onclick = function () {
+  modal.
   modal.style.display = 'none';
 };
 
@@ -63,7 +62,7 @@ export function checkboxOnClick() {
 
 window.checkboxOnClick = checkboxOnClick;
 
-export function deleteCheckedProductsOnClick(page) {
+export function deleteCheckedProductsOnClick() {
   const selectedCheckboxes = document.querySelectorAll(
       'table td input[type="checkbox"]:checked'
   );
@@ -72,7 +71,7 @@ export function deleteCheckedProductsOnClick(page) {
     const id = checkbox
     .closest('tr')
     .querySelector('td:nth-child(2)').innerText; // ID is in the second column
-    deleteProduct(id, page);
+    deleteProduct(id);
   });
   mainCheckbox.checked = false;
 }

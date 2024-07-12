@@ -126,11 +126,11 @@
       </div>
       <div class="content-index">
         <button th:onclick="'pagination(' + ${} + ')'">Previous</button>
-        <div th:each="pageList : ${pageList}">
+        <div th:each="pageList : ${pageLists}">
           <button
               th:text="${pageList}"
               th:classappend="${pageList == page} ? 'selected-page' : ''"
-              th:onclick="'pagination(' + ${pageList} + ')'"
+              th:onclick="'pagination(' + ${pageList} + ', ' + ${null} + ', '+ ${null} + ')'"
           />
         </div>
         <button>Next</button>

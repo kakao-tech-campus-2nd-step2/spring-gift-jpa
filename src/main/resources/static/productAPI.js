@@ -1,6 +1,6 @@
 let productAPIUrl = window.location.origin + '/api/products';
 
-export function addProduct(page) {
+export function addProduct() {
   const product = {
     name: document.getElementById('productName').value,
     price: document.getElementById('productPrice').value,
@@ -13,35 +13,22 @@ export function addProduct(page) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(product),
-  }).then((response) => {
-    if (response.status === 200) {
-      pagination(page);
-    }
-    if (response.status === 400) {
-      response.text().then((text) => {
-        const productNameErrorDiv = document.getElementById(
-            'product-name-error-message'
-        );
-        productNameErrorDiv.innerText = text;
-        productNameErrorDiv.style.display = 'block';
-      });
-    }
-  });
+  }).then(response => responseResult(response));
 }
 
-export function deleteProduct(id, page) {
+export function deleteProduct(id) {
   fetch(`${productAPIUrl}/${id}`, {
     method: 'DELETE',
   }).then((response) => {
     if (response.status === 200) {
-      pagination(page);
+      location.reload();
     }
   });
 }
 
 window.deleteProduct = deleteProduct;
 
-export function editProduct(id, page) {
+export function editProduct(id) {
   const product = {
     name: document.getElementById('productName').value,
     price: document.getElementById('productPrice').value,
@@ -54,25 +41,40 @@ export function editProduct(id, page) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(product),
-  }).then((response) => {
-    if (response.status === 200) {
-      pagination(page);
-    }
-    if (response.status === 400) {
-      response.text().then((text) => {
-        const productNameErrorDiv = document.getElementById(
-            'product-name-error-message'
-        );
-        productNameErrorDiv.innerText = text;
-        productNameErrorDiv.style.display = 'block';
-      });
-    }
-  });
+  }).then(response => responseResult(response));
 }
 
-export function pagination(page) {
-  const originalUrl = `${window.location.origin}/admin?page=${page}`;
-  window.location.href = originalUrl;
+function responseResult(response) {
+  if (response.status === 200) {
+    location.reload()
+  }
+
+  if (response.status === 400) {
+    response.text().then(
+        (text) => {
+          const productNameErrorDiv = document.getElementById(
+              'product-name-error-message'
+          )
+          productNameErrorDiv.innerText = text
+          productNameErrorDiv.style.display = 'block'
+        }
+    )
+  }
+}
+
+export function pagination(page, size, sort) {
+  const url = new URL(window.location)
+  const param = url.searchParams
+  if (page != null) {
+    param.set("page", page)
+  }
+  if (size != null) {
+    param.set("size", size)
+  }
+  if (sort != null) {
+    param.set("sort", sort)
+  }
+  window.location.href = url
 }
 
 window.pagination = pagination;
