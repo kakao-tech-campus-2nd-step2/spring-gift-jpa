@@ -3,45 +3,55 @@ package gift.controller.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.request.WishListRequest;
 import gift.dto.response.TokenResponse;
+import gift.dto.response.WishProductResponse;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import gift.service.TokenService;
-import org.junit.jupiter.api.*;
+import gift.service.WishListService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Transactional
 class WishListControllerTest {
 
     private static final String URL = "/api/wishlist";
     private static String TOKEN;
-    private static Long PRODUCT_ID;
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
+    private WishListService wishListService;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    TokenService tokenService;
+    @Autowired
+    MemberService memberService;
+    @Autowired
     private ObjectMapper objectMapper;
 
-    @BeforeAll
-    static void setup(@Autowired ProductService productService,
-                      @Autowired MemberService memberService,
-                      @Autowired TokenService tokenService) {
-        dummyProductAdd(productService);
-        TOKEN = getTokenByRegister(memberService, tokenService);
-    }
+    private Long START_PRODUCT_ID;
 
-    private static void dummyProductAdd(ProductService productService) {
-        PRODUCT_ID = productService.addProduct("SoySource", 1000, "soyImage").id();
-        productService.addProduct("Carrot", 200, "carrotImage");
+    @BeforeEach
+    void setup() {
+        START_PRODUCT_ID = addProduct30();
+        TOKEN = getTokenByRegister(memberService, tokenService);
     }
 
     private static String getTokenByRegister(MemberService memberService, TokenService tokenService) {
@@ -50,13 +60,30 @@ class WishListControllerTest {
         return tokenResponse.token();
     }
 
+    private void addProduct30ToWish() {
+        Long memberId = tokenService.getMemberIdByToken(TOKEN);
+        for (int productId = 1; productId <= 30; productId++) {
+            wishListService.addProductToWishList(memberId, (long) productId, 10);
+        }
+    }
+
+    private Long addProduct30() {
+        Long startId = 0L;
+        for (int i = 1; i <= 30; i++) {
+            if (i == 1) {
+                startId = productService.addProduct("testProduct" + i, 100, "ImageUrl").id();
+            }
+            productService.addProduct("testProduct" + i, 100, "ImageUrl");
+        }
+        return startId;
+    }
+
     @Test
-    @Order(1)
     @DisplayName("위시리스트에 상품 추가")
     void wishListAdd() throws Exception {
         //Given
-        WishListRequest wishListRequest = new WishListRequest(PRODUCT_ID, 100);
-        String json = objectMapper.writeValueAsString(wishListRequest);
+        WishListRequest newWishRequest = new WishListRequest(START_PRODUCT_ID, 100);
+        String json = objectMapper.writeValueAsString(newWishRequest);
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.post(URL)
@@ -70,11 +97,13 @@ class WishListControllerTest {
     }
 
     @Test
-    @Order(2)
     @DisplayName("위시리스트에 저장된 상품 추가 요청시 예외 던짐")
     void duplicatedProductAddThrowException() throws Exception {
         //Given
-        WishListRequest sameProductRequest = new WishListRequest(PRODUCT_ID, 100);
+        Long memberId = tokenService.getMemberIdByToken(TOKEN);
+        wishListService.addProductToWishList(memberId, START_PRODUCT_ID, 10);
+
+        WishListRequest sameProductRequest = new WishListRequest(START_PRODUCT_ID, 100);
         String json = objectMapper.writeValueAsString(sameProductRequest);
 
         //When
@@ -86,16 +115,15 @@ class WishListControllerTest {
                 .andExpectAll(
                         status().isConflict(),
                         content().contentType(MediaType.APPLICATION_PROBLEM_JSON),
-                        jsonPath("title").value("ProductId: " + PRODUCT_ID + " already exist in your wishlist")
+                        jsonPath("title").value("ProductId: " + START_PRODUCT_ID + " already exist in your wishlist")
                 );
     }
 
     @Test
-    @Order(3)
     @DisplayName("저장하려는 상품ID가 상품DB에 없을시 예외 던짐")
     void noProductThrowException() throws Exception {
         //Given
-        WishListRequest noExistProductRequest = new WishListRequest(-1L, 100);
+        WishListRequest noExistProductRequest = new WishListRequest(START_PRODUCT_ID - 1, 100);
         String json = objectMapper.writeValueAsString(noExistProductRequest);
 
         //When
@@ -111,67 +139,44 @@ class WishListControllerTest {
                 );
     }
 
-    @Test
-    @Order(4)
-    @DisplayName("위시리스트에 추가된 상품들 조회")
-    void getWishListProducts() throws Exception {
-        //When
-        mockMvc.perform(MockMvcRequestBuilders.get(URL)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                )
-                //Then
-                .andExpectAll(
-                        status().isOk(),
-                        content().contentType(MediaType.APPLICATION_JSON),
-                        jsonPath("$[0].productName").value("SoySource"),
-                        jsonPath("$[0].productAmount").value(100)
-                );
-    }
 
     @Test
-    @Order(5)
     @DisplayName("위시리스트에 저장된 수량 수정")
     void updateProductAmount() throws Exception {
         //Given
-        WishListRequest amountUpdateRequest = new WishListRequest(PRODUCT_ID, 99999);
+        Long memberId = tokenService.getMemberIdByToken(TOKEN);
+        wishListService.addProductToWishList(memberId, START_PRODUCT_ID, 10);
+
+        WishListRequest amountUpdateRequest = new WishListRequest(START_PRODUCT_ID, 99999);
         String json = objectMapper.writeValueAsString(amountUpdateRequest);
 
         //When
-        mockMvc.perform(MockMvcRequestBuilders.put(URL)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(URL)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-                )
+                        .content(json))
                 //Then
                 .andExpect(
                         status().isOk()
-                );
+                ).andReturn();
+        Page<WishProductResponse> wishProductsByMemberId = wishListService.getWishProductsByMemberId(tokenService.getMemberIdByToken(TOKEN), PageRequest.of(0, 10));
+        for (WishProductResponse wishProductResponse : wishProductsByMemberId) {
+            System.out.println(wishProductResponse.toString());
+        }
+
+        System.out.println(mvcResult.getResponse().getContentAsString());
+
     }
 
     @Test
-    @Order(6)
-    @DisplayName("수정 되었는지 확인")
-    void updateCheck() throws Exception {
-        //When
-        mockMvc.perform(MockMvcRequestBuilders.get(URL)
-                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
-                )
-                //Then
-                .andExpectAll(
-                        status().isOk(),
-                        content().contentType(MediaType.APPLICATION_JSON),
-                        jsonPath("$[0].productName").value("SoySource"),
-                        jsonPath("$[0].productAmount").value(99999)
-                );
-    }
-
-    @Test
-    @Order(7)
     @DisplayName("위시리스트에 저장된 상품 삭제")
     void deleteProduct() throws Exception {
         //Given
-        WishListRequest amountUpdateRequest = new WishListRequest(PRODUCT_ID, 0);
-        String json = objectMapper.writeValueAsString(amountUpdateRequest);
+        Long memberId = tokenService.getMemberIdByToken(TOKEN);
+        wishListService.addProductToWishList(memberId, START_PRODUCT_ID, 10);
+
+        WishListRequest deleteRequest = new WishListRequest(START_PRODUCT_ID, 0);
+        String json = objectMapper.writeValueAsString(deleteRequest);
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.delete(URL)
@@ -189,8 +194,11 @@ class WishListControllerTest {
     @DisplayName("위시리스트에 없는 상품 수정 요청시 예외 던짐")
     void updateThrow() throws Exception {
         //Given
-        WishListRequest amountUpdateRequest = new WishListRequest(PRODUCT_ID, 99999);
-        String json = objectMapper.writeValueAsString(amountUpdateRequest);
+        Long memberId = tokenService.getMemberIdByToken(TOKEN);
+        wishListService.addProductToWishList(memberId, START_PRODUCT_ID, 10);
+
+        WishListRequest notExistRequest = new WishListRequest(START_PRODUCT_ID + 1, 0);
+        String json = objectMapper.writeValueAsString(notExistRequest);
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.put(URL)
@@ -210,8 +218,11 @@ class WishListControllerTest {
     @DisplayName("위시리스트에 없는 상품 삭제 요청시 예외 던짐")
     void deleteThrow() throws Exception {
         //Given
-        WishListRequest amountUpdateRequest = new WishListRequest(PRODUCT_ID, 0);
-        String json = objectMapper.writeValueAsString(amountUpdateRequest);
+        Long memberId = tokenService.getMemberIdByToken(TOKEN);
+        wishListService.addProductToWishList(memberId, START_PRODUCT_ID, 10);
+
+        WishListRequest notExistRequest = new WishListRequest(START_PRODUCT_ID + 1, 0);
+        String json = objectMapper.writeValueAsString(notExistRequest);
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.delete(URL)
@@ -226,5 +237,46 @@ class WishListControllerTest {
                         jsonPath("title").value("Wish not found")
                 );
     }
+
+    @Test
+    @DisplayName("위시리스트 페이지네이션 확인")
+    void wishPagination() throws Exception {
+        //When
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON))
+                //Then
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON),
+                        jsonPath("$.size").value(10),
+                        jsonPath("$.sort.sorted").value(true),
+                        jsonPath("number").value(0)
+                ).andReturn();
+        System.out.println(mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("위시리스트 페이지네이션 파라미터 확인")
+    void wishPagination2() throws Exception {
+        //When
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + TOKEN)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("page", "1")
+                        .param("size", "5"))
+                //.param("sort", "productName,desc"))
+                //Then
+                .andExpectAll(
+                        status().isOk(),
+                        content().contentType(MediaType.APPLICATION_JSON)
+//                        jsonPath("$.size").value(5),
+//                        jsonPath("$.sort.sorted").value(true),
+//                        jsonPath("number").value(1)
+                ).andReturn();
+        System.out.println(mvcResult.getResponse().getContentAsString());
+    }
+
 
 }

@@ -1,7 +1,7 @@
 package gift.controller.api;
 
 import gift.service.ProductService;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,8 @@ class ProductControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeAll
-    static void setup(@Autowired ProductService productService) {
+    @BeforeEach
+    void setup(@Autowired ProductService productService) {
         for (int i = 0; i < 100; i++) {
             productService.addProduct("AmazingCoffee" + i, 59999, "a.jpg.com");
         }
@@ -31,7 +31,6 @@ class ProductControllerTest {
     @Test
     @DisplayName("Pagination 디폴트 동작 확인")
     void getProducts() throws Exception {
-        //@PageableDefault 디폴트는 size = 10, Direction.ASC
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/products"))
                 .andExpectAll(
                         status().isOk(),
