@@ -2,15 +2,16 @@ package gift.controller;
 
 import gift.model.Product;
 import gift.model.WishlistDTO;
-import gift.service.ProductService;
 import gift.service.WishlistService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/wishlist")
@@ -18,17 +19,18 @@ public class WishlistController {
 
 
     private final WishlistService wishlistService;
-    private final ProductService productService;
 
-    public WishlistController(WishlistService wishlistService, ProductService productService) {
+    public WishlistController(WishlistService wishlistService) {
         this.wishlistService = wishlistService;
-        this.productService = productService;
     }
 
     @GetMapping()
-    public Set<Product> getWishlists(HttpServletRequest request) {
+    public List<Product> getWishlists(HttpServletRequest request,
+                                      @RequestParam(required = false, defaultValue = "0", value = "page") int page,
+                                      @RequestParam(required = false, defaultValue = "5", value = "size") int size) {
         String email = (String) request.getAttribute("email");
-        return wishlistService.getWishlistProducts(email);
+        Pageable pageable = PageRequest.of(page, size);
+        return wishlistService.getWishlistProducts(email, pageable).getContent();
     }
 
     @PostMapping(consumes = "application/json")

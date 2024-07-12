@@ -7,10 +7,14 @@ import gift.model.WishlistDTO;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class WishlistService {
@@ -24,13 +28,18 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    public Set<Product> getWishlistProducts(String email) {
-        Optional<Wishlist> wishlist = wishlistRepository.findByEmail(email);
+    public Page<Product> getWishlistProducts(String email, Pageable pageable) {
+        Page<Product> wishlist = wishlistRepository.findWishlistProductByEmail(email, pageable);
         if (wishlist.isEmpty()) {
-            Wishlist save = wishlistRepository.save(new Wishlist());
-            wishlist = Optional.of(save);
+            Wishlist save = wishlistRepository.save(new Wishlist(email));
+
+            List<Product> products = save.getProducts().stream().collect(Collectors.toList());
+            int start = (int) pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), products.size());
+
+            return new PageImpl<>(products.subList(start, end), pageable, products.size());
         }
-        return wishlist.get().getProducts();
+        return wishlist;
     }
 
     public void addWishlistProduct(String email, WishlistDTO wishlistDTO) {
