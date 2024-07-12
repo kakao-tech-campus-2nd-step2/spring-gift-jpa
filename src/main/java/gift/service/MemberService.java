@@ -40,4 +40,8 @@ public class MemberService {
             throw new IllegalArgumentException("Invalid email or password");
         }
     }
+
+    public Member findById(Long id) {
+        return memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Member not found"));
+    }
 }
