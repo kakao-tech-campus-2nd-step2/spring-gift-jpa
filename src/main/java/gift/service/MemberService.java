@@ -39,8 +39,7 @@ public class MemberService {
     @Transactional
     public Token login(Member member) {
         Optional<MemberEntity> existingMemberEntity = memberRepository.findByEmail(member.getEmail());
-        if (existingMemberEntity.isPresent() &&
-            PasswordUtil.matches(member.getPassword(), existingMemberEntity.get().getPassword())) {
+        if (existingMemberEntity.isPresent() && PasswordUtil.matches(member.getPassword(), existingMemberEntity.get().getPassword())) {
             return new Token(jwtUtil.generateToken(entityToDto(existingMemberEntity)));
         }
         throw new ForbiddenException("Invalid email or password");

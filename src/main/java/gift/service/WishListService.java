@@ -47,9 +47,10 @@ public class WishListService {
     //해당 사용자의 위시리스트 조회(페이지 네이션)
     @Transactional(readOnly = true)
     public Page<WishList> getWishListItems(Long memberId, int page, int size) {
-        MemberEntity memberEntity = memberRepository.findById(memberId)
-            .orElseThrow(() -> new NotFoundException("멤버가 존재하지 않습니다."));
-
+        Optional<MemberEntity> memberEntity = memberRepository.findById(memberId);
+        if (memberEntity.isEmpty()) {
+            throw new NotFoundException("멤버가 존재하지 않습니다.");
+        }
         Pageable pageable = PageRequest.of(page, size);
         Page<WishListEntity> wishListEntities = wishListRepository.findByMemberEntity(memberEntity, pageable);
         return wishListEntities.map(this::entityToDto);
@@ -68,8 +69,7 @@ public class WishListService {
     }
 
     private WishList entityToDto(WishListEntity wishListEntity) {
-        return new WishList(wishListEntity.getMemberEntity().getId(),
-            wishListEntity.getProductEntity().getPrice());
+        return new WishList(wishListEntity.getMemberEntity().getId(), wishListEntity.getProductEntity().getPrice());
     }
 
     private WishListEntity dtoToEntity(WishList wishList) {

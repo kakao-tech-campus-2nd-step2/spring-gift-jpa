@@ -2,7 +2,6 @@ package gift.entity;
 
 import jakarta.persistence.*;
 
-
 @Entity
 @Table(name = "wish_lists")
 public class WishListEntity {

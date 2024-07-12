@@ -13,14 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/wishlist")
@@ -35,7 +28,7 @@ public class WishListController {
     }
 
     @GetMapping
-    public ResponseEntity<? > getWishListItems(
+    public ResponseEntity<?> getWishListItems(
         HttpServletRequest request,
         @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
         @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
@@ -46,7 +39,8 @@ public class WishListController {
 
         if (page != null && size != null) {
             //쿼리 파라미터로 page와 size가 들어온 경우 페이지 네이션 서비스
-            Page<WishList> wishLists = wishListService.getWishListItems(memberId.longValue(), page, size);
+            Page<WishList> wishLists = wishListService.getWishListItems(memberId.longValue(), page,
+                size);
             return ResponseEntity.ok(wishLists);
         } else {
             //기존 서비스
