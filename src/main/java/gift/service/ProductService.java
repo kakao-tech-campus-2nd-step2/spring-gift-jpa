@@ -25,7 +25,7 @@ public class ProductService {
      * @param productDTO 저장할 상품 객체
      */
     public ProductDTO createProduct(ProductDTO productDTO) {
-        var productEntity = productMapper.toProductEntity(productDTO);
+        var productEntity = productMapper.toProductEntity(productDTO, false);
         productRepository.save(productEntity);
         return productMapper.toProductDTO(productEntity);
     }

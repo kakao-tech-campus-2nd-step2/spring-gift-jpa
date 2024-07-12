@@ -16,12 +16,18 @@ public class ProductMapper {
         );
     }
 
-    public ProductEntity toProductEntity(ProductDTO productDTO) {
+    public ProductEntity toProductEntity(ProductDTO productDTO, boolean idRequired) {
         var productEntity = new ProductEntity();
-        productEntity.setId(productDTO.id());
+        if (idRequired) {
+            productEntity.setId(productDTO.id());
+        }
         productEntity.setName(productDTO.name());
         productEntity.setPrice(productDTO.price());
         productEntity.setImageUrl(productDTO.imageUrl());
         return productEntity;
+    }
+
+    public ProductEntity toProductEntity(ProductDTO productDTO) {
+        return toProductEntity(productDTO, true);
     }
 }

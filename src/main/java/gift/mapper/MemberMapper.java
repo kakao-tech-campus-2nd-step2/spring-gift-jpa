@@ -15,11 +15,17 @@ public class MemberMapper {
         );
     }
 
-    public MemberEntity toMemberEntity(MemberDTO memberDTO) {
+    public MemberEntity toMemberEntity(MemberDTO memberDTO, boolean idRequired) {
         var memberEntity = new MemberEntity();
-        memberEntity.setId(memberDTO.getId());
+        if (idRequired) {
+            memberEntity.setId(memberDTO.getId());
+        }
         memberEntity.setEmail(memberDTO.getEmail());
         memberEntity.setPassword(memberDTO.getPassword());
         return memberEntity;
+    }
+
+    public MemberEntity toMemberEntity(MemberDTO memberDTO) {
+        return toMemberEntity(memberDTO, true);
     }
 }
