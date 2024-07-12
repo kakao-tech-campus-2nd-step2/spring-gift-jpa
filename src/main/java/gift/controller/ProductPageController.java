@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.model.Product;
+import gift.dto.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -26,33 +26,33 @@ public class ProductPageController {
 
     @GetMapping("/new")
     public String createProductForm(Model model) {
-        Product product = new Product();
-        model.addAttribute("product", product);
+        ProductDTO productDTO = new ProductDTO();
+        model.addAttribute("product", productDTO);
         return "addProduct";
     }
 
     @PostMapping("/save")
-    public String createProduct(@Valid @ModelAttribute("product") Product product, BindingResult result, Model model) {
+    public String createProduct(@Valid @ModelAttribute("product") ProductDTO productDTO, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "addProduct";
         }
-        productService.createProduct(product);
+        productService.createProduct(productDTO);
         return "redirect:/products";
     }
 
     @GetMapping("/update/{id}")
     public String updateProductForm(@PathVariable long id, Model model) {
-        Product product = productService.getProductById(id);
-        model.addAttribute("product", product);
+        ProductDTO productDTO = productService.getProductById(id);
+        model.addAttribute("product", productDTO);
         return "editProduct";
     }
 
     @PostMapping("/update/{id}")
-    public String updateProduct(@PathVariable long id, @Valid @ModelAttribute("product") Product product, BindingResult result, Model model) {
+    public String updateProduct(@PathVariable long id, @Valid @ModelAttribute("product") ProductDTO productDTO, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "editProduct";
         }
-        productService.updateProduct(id, product);
+        productService.updateProduct(id, productDTO);
         return "redirect:/products";
     }
 

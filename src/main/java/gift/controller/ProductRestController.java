@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.model.Product;
+import gift.dto.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -19,26 +19,26 @@ public class ProductRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        List<ProductDTO> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable long id) {
-        Product product = productService.getProductById(id);
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable long id) {
+        ProductDTO product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product) {
-        Product savedProduct = productService.createProduct(product);
+    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+        ProductDTO savedProduct = productService.createProduct(productDTO);
         return ResponseEntity.ok(savedProduct);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable long id, @Valid @RequestBody Product product) {
-        Product updatedProduct = productService.updateProduct(id, product);
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable long id, @Valid @RequestBody ProductDTO productDTO) {
+        ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
         return ResponseEntity.ok(updatedProduct);
     }
 
