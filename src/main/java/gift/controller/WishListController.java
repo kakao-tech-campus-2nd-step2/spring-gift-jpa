@@ -37,8 +37,8 @@ public class WishListController {
     @GetMapping
     public ResponseEntity<? > getWishListItems(
         HttpServletRequest request,
-        @RequestParam(required = false) Integer page,
-        @RequestParam(required = false) Integer size) {
+        @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+        @RequestParam(name = "size", required = false, defaultValue = "10") Integer size) {
 
         String token = extractToken(request);
         Claims claims = jwtUtil.extractAllClaims(token);
