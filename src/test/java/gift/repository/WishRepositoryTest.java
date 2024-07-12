@@ -4,8 +4,11 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+import gift.entity.Member;
+import gift.entity.Product;
 import gift.entity.Wish;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,10 +19,28 @@ class WishRepositoryTest {
     @Autowired
     private WishRepository wishRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    private Member member;
+    private Product product;
+
+    @BeforeEach
+    public void setUp(){
+         product = new Product("product",1000,"imageurl.com");
+         productRepository.save(product);
+         member = new Member("email@email.com","password");
+         memberRepository.save(member);
+    }
+
     @Test
     void save(){
         //given
-        Wish expected = new Wish(1L,1L);
+        Wish expected = new Wish(member,product);
+        wishRepository.save(expected);
 
         //when
         Wish actual = wishRepository.save(expected);
@@ -27,27 +48,28 @@ class WishRepositoryTest {
         //then
         assertAll(
             ()->assertThat(actual.getId()).isNotNull(),
-            ()->assertThat(actual.getMemberId()).isEqualTo(expected.getMemberId()),
-            ()->assertThat(actual.getProductId()).isEqualTo(expected.getProductId())
+            ()->assertThat(actual.getMember()).isEqualTo(expected.getMember()),
+            ()->assertThat(actual.getProduct()).isEqualTo(expected.getProduct())
 
             );
 
     }
 
     @Test
-    void getWishByMemberId(){
+    void findByMemberId(){
         //given
-        Wish expected = new Wish(1L,2L);
+        Wish expected = new Wish(member,product);
         wishRepository.save(expected);
+        Member member = memberRepository.findByEmail("email@email.com");
 
         //when
-        List<Wish> actual = wishRepository.findByMemberId(1L);
+        List<Wish> actual = wishRepository.findByMemberId(member.getId());
 
         //then
         assertAll(
             ()->assertThat(actual.get(0).getId()).isNotNull(),
-            ()->assertThat(actual.get(0).getMemberId()).isEqualTo(1L),
-            ()->assertThat(actual.get(0).getProductId()).isEqualTo(2L)
+            ()->assertThat(actual.get(0).getMember()).isEqualTo(member),
+            ()->assertThat(actual.get(0).getProduct()).isEqualTo(product)
 
             );
 
@@ -57,15 +79,15 @@ class WishRepositoryTest {
     @Test
     void deleteWishByMemberIdAndProductId(){
         //given
-        Wish expected = new Wish(1L,2L);
+        Wish expected = new Wish(member,product);
         wishRepository.save(expected);
 
         //when
-        wishRepository.deleteByMemberIdAndProductId(1L,2L);
-        List<Wish> actual = wishRepository.findByMemberId(1L);
+        wishRepository.deleteById(expected.getId());
+        List<Wish> actual = wishRepository.findByMemberId(expected.getId());
 
         //then
-        assertThat(actual).isNull();
+        assertThat(actual.size()).isEqualTo(0);
     }
 
 }

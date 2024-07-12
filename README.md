@@ -1,7 +1,8 @@
 # spring-gift-jpa
 
-
 ## 기능 요구 사항
+
+### Step1
 
 지금까지 작성한 JdbcTemplate 기반 코드를 JPA로 리팩터링
 
@@ -38,8 +39,27 @@ primary key (id)
 )</code></pre>
 
 
+### Step2
+
+지금까지 작성한 JdbcTemplate 기반 코드를 JPA로 리팩터링하고 실제 도메인 모델을 어떻게 구성하고 객체와 테이블을 어떻게 매핑해야 하는지 알아본다.
+
+* 객체의 참조와 테이블의 외래 키를 매핑해서 객체에서는 참조를 사용하고 테이블에서는 외래 키를 사용할 수 있도록 한다.
+
+
+
 ## 구현한 기능
+
+### Step1
 
 - 기존 domain구조를 위 예시의 DDL 구조로 수정.
 - JPA를 활용한 entity클래스와 JpaRepository를 상속한 repository 생성
 - @DataJpaTest를 통한 테스트
+
+### Step2
+
+- @ManyToOne을 사용해 Wish Entity의 연관관계 매핑
+- 그에 따른 Service, Controller layer 리팩토링
+- 여러 유효성 검증 추가
+
+### Step3
+- Pageable객체 사용하여 Pagination 구현

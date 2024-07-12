@@ -1,8 +1,10 @@
 package gift.controller;
 
+import gift.dto.MemberDTO;
 import gift.entity.Member;
 import gift.response.AuthResponse;
 import gift.service.MemberService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,16 +23,18 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signUp(@RequestBody Member member) {
+    public ResponseEntity<String> signUp(@Valid @RequestBody MemberDTO memberDTO) {
+        Member member = memberDTO.toEntity();
         userService.generateUser(member);
 
         return new ResponseEntity<>("User 생성 완료", HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody Member member){
-        AuthResponse response =new AuthResponse(userService.authenticateUser(member));
-        return new ResponseEntity<>(response,HttpStatus.OK);
+    public ResponseEntity<AuthResponse> login(@RequestBody MemberDTO memberDTO) {
+        Member member = memberDTO.toEntity();
+        AuthResponse response = new AuthResponse(userService.authenticateUser(member));
+        return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
 

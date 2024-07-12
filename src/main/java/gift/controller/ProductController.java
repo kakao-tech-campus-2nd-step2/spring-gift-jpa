@@ -1,10 +1,13 @@
 package gift.controller;
 
 
+import gift.dto.ProductDTO;
 import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,18 +37,27 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-
     public Product getProductById(@PathVariable("id") long id) {
-        return productService.getProductById(id).get();
+        return productService.getProductById(id);
+    }
+
+
+    //Product Pagination
+    @GetMapping("/page/{page}")
+    public ResponseEntity<Page<Product>> getProductPage(@PathVariable("page") int page){
+        Page<Product> products = productService.getProductPage(page);
+        return new ResponseEntity<>(products,HttpStatus.OK);
     }
 
     //product 추가
     @PostMapping
-    public ResponseEntity<String> addProduct(@RequestBody @Valid Product product) {
+    public ResponseEntity<String> addProduct(@RequestBody @Valid ProductDTO productDTO) {
+        Product product = productDTO.toEntity();
         productService.saveProduct(product);
         return new ResponseEntity<>("OK", HttpStatus.CREATED);
 
     }
+
 
     //product 수정
     @PatchMapping("/{id}")

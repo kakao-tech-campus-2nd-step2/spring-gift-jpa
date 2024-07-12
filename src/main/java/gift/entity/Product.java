@@ -1,5 +1,6 @@
 package gift.entity;
 
+import gift.annotation.ProductName;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +14,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ProductName
     @Column(nullable = false, length = 15)
     private String name;
 
