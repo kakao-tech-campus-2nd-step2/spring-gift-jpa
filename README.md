@@ -7,7 +7,7 @@
   - [x] ProductRepositoryTest 작성
   - [x] MemberRepositoryTest 작성
 # step2
-- [ ] Entity에서 setter 호출하는 부분 최소화
+- [x] Entity에서 setter 호출하는 부분 최소화
 - [ ] 사용자 별 위시리스트 구현 (2주차 step3)
   - [ ] 위시리스트에 등록된 상품 목록을 조회
   - [ ] 위시리스트에 상품 추가

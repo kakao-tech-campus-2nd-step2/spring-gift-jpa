@@ -21,12 +21,7 @@ public class MemberRepositoryTest {
 
     @Test
     void save() {
-        Member expected = new Member();
-        expected.setId(1L);
-        expected.setUsername("admin");
-        expected.setEmail("admin@gmail.com");
-        expected.setPassword("1234");
-
+        Member expected = new Member(null, "admin", "admin@gmail.com","1234");
         Member actual = memberRepository.save(expected);
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
@@ -39,13 +34,8 @@ public class MemberRepositoryTest {
     @Test
     void deleteById() {
         Long id = 1L;
-        Member expected = new Member();
-        expected.setId(1L);
-        expected.setUsername("admin");
-        expected.setEmail("admin@gmail.com");
-        expected.setPassword("1234");
+        Member expected = new Member(id, "admin", "admin@gmail.com","1234");
         memberRepository.save(expected);
-
         memberRepository.deleteById(id);
 
         assertThat(memberRepository.findById(id)).isEmpty();
