@@ -40,8 +40,7 @@ public class AdminController {
 
     @GetMapping
     public String getAllProducts(@RequestParam(value = "page", defaultValue = "0") int page, Model model){
-        List<ProductDTO> dtoList = productService.getAll(token);
-        Page<ProductDTO> products = productService.transferListToPage(dtoList, page);
+        Page<ProductDTO> products = productService.getPage(token, page);
         model.addAttribute("products", products);
         return "products";
     }

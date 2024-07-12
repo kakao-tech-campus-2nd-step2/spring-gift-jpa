@@ -27,8 +27,7 @@ public class WishlistController {
 
     @GetMapping
     public String getAllWishlist(@RequestParam(value = "page", defaultValue = "0") int page, Model model){
-        List<String> dtoList = wishService.viewAll(token);
-        Page<String> wishlists = wishService.transferListToPage(dtoList, page);
+        Page<String> wishlists = wishService.getPage(token, page);
         model.addAttribute("wishlists", wishlists);
         return "wishlist";
     }
