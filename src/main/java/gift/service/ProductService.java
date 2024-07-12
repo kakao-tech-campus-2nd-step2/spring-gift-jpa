@@ -26,10 +26,11 @@ public class ProductService {
             .orElseThrow(() -> new ProductNotFoundException("해당 id를 가지고있는 Product 객체가 없습니다."));
     }
 
-    public void saveProduct(ProductRequest productRequest) {
+    public Product saveProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.getName(), productRequest.getPrice(),
             productRequest.getImg());
         productRepository.save(product);
+        return product;
     }
 
     public void updateProduct(Long id, ProductRequest productRequest) {

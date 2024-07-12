@@ -30,7 +30,7 @@ public class WishService {
         this.userRepository = userRepository;
     }
 
-    public void addWish(Long userId, WishRequest request) {
+    public Wish addWish(Long userId, WishRequest request) {
         Product product = productRepository.findById(request.getProductId())
             .orElseThrow(() -> new ProductNotFoundException("product가 없습니다."));
 
@@ -39,6 +39,7 @@ public class WishService {
 
         Wish wish = new Wish(user, product, request.getNumber());
         wishRepository.save(wish);
+        return wish;
     }
 
     public Page<Wish> getWishes(Long userId, Pageable pageable) {
