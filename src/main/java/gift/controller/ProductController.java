@@ -95,7 +95,7 @@ public class ProductController {
 
     @PatchMapping
     public ResponseEntity<Map<String, Object>> patchProducts(@RequestBody List<Map<String, Object>> updatesList) {
-        List<Product> updatedProducts = productService.patchProducts(updatesList);
+        List<Optional<Product>> updatedProducts = productService.patchProducts(updatesList);
         Map<String, Object> response = new HashMap<>();
         int originalCount = updatesList.size();
         int updateCount = updatedProducts.size();

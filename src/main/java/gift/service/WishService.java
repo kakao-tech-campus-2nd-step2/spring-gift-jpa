@@ -23,6 +23,6 @@ public class WishService {
     }
 
     public boolean removeWish(Long id, Long memberId) {
-        return wishRepository.deleteByIdAndMemberId(id, memberId);
+        return wishRepository.deleteByIdAndMemberId(id, memberId) > 0;
     }
 }
