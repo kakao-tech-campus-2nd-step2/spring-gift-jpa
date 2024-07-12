@@ -3,11 +3,10 @@ package gift.member.presentation;
 import gift.auth.TokenService;
 import gift.member.application.MemberResponse;
 import gift.member.application.MemberService;
-import gift.member.application.command.MemberUpdateCommand;
+import gift.member.application.command.MemberEmailUpdateCommand;
+import gift.member.application.command.MemberPasswordUpdateCommand;
 import gift.member.presentation.request.MemberJoinRequest;
 import gift.member.presentation.request.MemberLoginRequest;
-import gift.member.presentation.request.MemberUpdateRequest;
-import gift.wishlist.application.WishlistService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -108,21 +106,34 @@ public class MemberControllerTest {
     }
 
     @Test
-    void 회원_업데이트_테스트() throws Exception {
+    void 이메일_업데이트_테스트() throws Exception {
         // Given
         String newEmail = "test2@example.com";
-        String newPassword = "newPassword";
-        MemberUpdateCommand expectedCommand = new MemberUpdateCommand(memberId, newEmail, newPassword);
+        MemberEmailUpdateCommand expectedCommand = new MemberEmailUpdateCommand(memberId, newEmail);
 
         // When & Then
-        mockMvc.perform(put("/api/member/{id}", memberId)
+        mockMvc.perform(put("/api/member/{id}/email", memberId)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"" + newEmail + "\", \"password\":\"" + newPassword + "\"}"))
+                        .content("{\"email\":\"" + newEmail + "\"}"))
                 .andExpect(status().isOk());
 
-        Mockito.verify(memberService).update(eq(expectedCommand));
+        Mockito.verify(memberService).updateEmail(eq(expectedCommand));
     }
 
+    @Test
+    void 비밀번호_업데이트_테스트() throws Exception {
+        // Given
+        String newPassword = "newPassword";
+        MemberPasswordUpdateCommand expectedCommand = new MemberPasswordUpdateCommand(memberId, newPassword);
+
+        // When & Then
+        mockMvc.perform(put("/api/member/{id}/password", memberId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"password\":\"" + newPassword + "\"}"))
+                .andExpect(status().isOk());
+
+        Mockito.verify(memberService).updatePassword(eq(expectedCommand));
+    }
 
     @Test
     void 회원_삭제_테스트() throws Exception {

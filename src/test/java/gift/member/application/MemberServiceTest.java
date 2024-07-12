@@ -1,9 +1,10 @@
 package gift.member.application;
 
 import gift.exception.type.NotFoundException;
+import gift.member.application.command.MemberEmailUpdateCommand;
 import gift.member.application.command.MemberJoinCommand;
 import gift.member.application.command.MemberLoginCommand;
-import gift.member.application.command.MemberUpdateCommand;
+import gift.member.application.command.MemberPasswordUpdateCommand;
 import gift.member.domain.Member;
 import gift.member.domain.MemberRepository;
 import gift.wishlist.domain.WishlistRepository;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -71,27 +71,51 @@ public class MemberServiceTest {
     }
 
     @Test
-    void 회원_업데이트_테스트() {
+    void 이메일_업데이트_테스트() {
         // Given
-        MemberUpdateCommand command = new MemberUpdateCommand(1L, "new@example.com", "newPassword");
+        MemberEmailUpdateCommand command = new MemberEmailUpdateCommand(1L, "new@example.com");
         when(memberRepository.findById(command.id())).thenReturn(Optional.of(member));
 
         // When
-        assertDoesNotThrow(() -> memberService.update(command));
+        assertDoesNotThrow(() -> memberService.updateEmail(command));
 
         // Then
         Assertions.assertThat(member.getEmail()).isEqualTo("new@example.com");
-        Assertions.assertThat(member.getPassword()).isEqualTo("newPassword");
+        verify(memberRepository, times(1)).findById(command.id());
     }
 
     @Test
-    void 회원_업데이트_테스트_회원_없음() {
+    void 이메일_업데이트_테스트_회원_없음() {
         // Given
-        MemberUpdateCommand command = new MemberUpdateCommand(1L, "test@example.com", "newPassword");
+        MemberEmailUpdateCommand command = new MemberEmailUpdateCommand(1L, "new@example.com");
         when(memberRepository.findById(command.id())).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(NotFoundException.class, () -> memberService.update(command));
+        assertThrows(NotFoundException.class, () -> memberService.updateEmail(command));
+    }
+
+    @Test
+    void 비밀번호_업데이트_테스트() {
+        // Given
+        MemberPasswordUpdateCommand command = new MemberPasswordUpdateCommand(1L, "newPassword");
+        when(memberRepository.findById(command.id())).thenReturn(Optional.of(member));
+
+        // When
+        assertDoesNotThrow(() -> memberService.updatePassword(command));
+
+        // Then
+        Assertions.assertThat(member.getPassword()).isEqualTo("newPassword");
+        verify(memberRepository, times(1)).findById(command.id());
+    }
+
+    @Test
+    void 비밀번호_업데이트_테스트_회원_없음() {
+        // Given
+        MemberPasswordUpdateCommand command = new MemberPasswordUpdateCommand(1L, "newPassword");
+        when(memberRepository.findById(command.id())).thenReturn(Optional.empty());
+
+        // When & Then
+        assertThrows(NotFoundException.class, () -> memberService.updatePassword(command));
     }
 
     @Test
