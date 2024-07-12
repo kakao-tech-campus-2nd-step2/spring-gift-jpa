@@ -22,7 +22,7 @@ public class ProductName {
         return name;
     }
 
-    public boolean isCorrectName(String name){
+    private boolean isCorrectName(String name){
         if(name.length()>15){
             return false;
         }
@@ -36,7 +36,7 @@ public class ProductName {
         return true;
     }
 
-    public boolean isContainsKakao(String name){
+    private boolean isContainsKakao(String name){
         return name.contains("카카오");
     }
 

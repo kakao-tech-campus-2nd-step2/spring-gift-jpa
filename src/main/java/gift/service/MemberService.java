@@ -43,7 +43,7 @@ public class MemberService {
         return getTokenWhenCorrectPW(loginMember, member);
     }
 
-    public String getTokenWhenCorrectPW(Member member, Member inputMember){
+    private String getTokenWhenCorrectPW(Member member, Member inputMember){
         if(member.equals(inputMember)){
             return createJwtToken.createJwt(member.getId(), member.getEmail());
         }
