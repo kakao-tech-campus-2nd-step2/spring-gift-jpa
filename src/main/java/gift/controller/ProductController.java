@@ -1,9 +1,14 @@
 package gift.controller;
 
+import gift.dto.ProductResponseDto;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import gift.entity.Product;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,10 +32,29 @@ public class ProductController {
         this.productService = productService;
     }
 
+//    @GetMapping
+//    public ResponseEntity<List<ProductResponseDto>> getProducts() {
+//        return ResponseEntity.ok(productService.findAll());
+//    }
     @GetMapping
-    public ResponseEntity<List<Product>> getProducts() {
-        return ResponseEntity.ok(productService.findAll());
+    public ResponseEntity<List<ProductResponseDto>> getProducts(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = productService.findAll(pageable);
+        List<ProductResponseDto> productList = productPage.stream()
+            .map(product -> new ProductResponseDto(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl()
+            ))
+            .collect(Collectors.toList());
+        return new ResponseEntity<>(productList,HttpStatus.OK);
     }
+
+
 
     @PostMapping
     public ResponseEntity<String> addProducts(@Valid @RequestBody Product product, BindingResult bindingResult) {

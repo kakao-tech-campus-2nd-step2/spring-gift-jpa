@@ -10,6 +10,8 @@ import gift.repository.WishRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -49,8 +51,6 @@ public class WishService {
         return true;
     }
 
-
-
     public boolean deleteWishlist(Long memberId, Long productId){
         Optional<Wish> wish = wishRepository.findByMemberIdAndProductId(memberId, productId);
         if (wish.isPresent()){
@@ -60,4 +60,7 @@ public class WishService {
         return false;
     }
 
+    public Page<Wish> findAll(Pageable pageable) {
+        return wishRepository.findAll(pageable);
+    }
 }
