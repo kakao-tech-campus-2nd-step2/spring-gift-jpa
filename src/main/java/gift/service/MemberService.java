@@ -18,9 +18,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public LoginMemberDto selectLoginMemberById(Long id) throws IllegalArgumentException {
         return memberRepository.findById(id)
-            .map(member ->
-                LoginMemberDto.of(member.getId(), member.getName(), member.getEmail(),
-                    member.getRole()))
+            .map(LoginMemberDto::from)
             .orElseThrow(() -> new IllegalArgumentException("Member Not Found"));
     }
 

@@ -16,8 +16,9 @@ public class LoginMemberDto {
         this.role = role;
     }
 
-    public static LoginMemberDto of(Long id, String name, String email, String role) {
-        return new LoginMemberDto(id, name, email, role);
+    public static LoginMemberDto from(Member member) {
+        return new LoginMemberDto(member.getId(), member.getName(), member.getEmail(),
+            member.getRole());
     }
 
     public Long getId() {
