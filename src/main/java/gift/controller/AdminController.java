@@ -6,6 +6,7 @@ import gift.model.dto.ProductResponseDto;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,7 +32,7 @@ public class AdminController {
     public String getAllProducts(Model model,
         @RequestParam(required = false, defaultValue = "0", value = "pageNo") int pageNo,
         @RequestParam(required = false, defaultValue = "product", value = "criteria") String criteria) {
-        List<ProductResponseDto> productList = productService.getAllProducts(pageNo, criteria);
+        Page<ProductResponseDto> productList = productService.getAllProducts(pageNo, criteria);
         model.addAttribute("productList", productList);
         return "products";
     }

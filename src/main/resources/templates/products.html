@@ -20,7 +20,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="product: ${productList}">
+    <tr th:each="product: ${productList.content}">
       <td><span th:text="${product.id}"></span></td>
       <td><span th:text="${product.name}"></span></td>
       <td><span th:text="${product.price}"></span></td>
@@ -32,5 +32,19 @@
     </tr>
     </tbody>
   </table>
+
+<div>
+        <span th:if="${productList.hasPrevious()}">
+            <a th:href="@{/admin/products(pageNo=${productList.number - 1}, pageSize=${productList.size})}">Previous</a>
+        </span>
+  <span th:each="i : ${#numbers.sequence(0, productList.totalPages - 1)}">
+            <a th:href="@{/admin/products(pageNo=${i}, pageSize=${productList.size})}"
+               th:text="${i + 1}"
+               th:classappend="${i == productList.number} ? 'current' : ''">1</a>
+        </span>
+  <span th:if="${productList.hasNext()}">
+            <a th:href="@{/admin/products(pageNo=${productList.number + 1}, pageSize=${productList.size})}">Next</a>
+        </span>
+</div>
 </body>
 </html>

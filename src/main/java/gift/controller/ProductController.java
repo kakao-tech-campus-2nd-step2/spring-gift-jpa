@@ -29,7 +29,7 @@ public class ProductController {
     public List<ProductResponseDto> getAllProducts(
         @RequestParam(required = false, defaultValue = "0", value = "pageNo") int pageNo,
         @RequestParam(required = false, defaultValue = "product", value = "criteria") String criteria) {
-        return productService.getAllProducts(pageNo, criteria);
+        return productService.getAllProducts(pageNo, criteria).getContent();
     }
 
     @GetMapping("/{id}")
