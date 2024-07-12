@@ -4,7 +4,7 @@ import gift.domain.product.dto.ProductDto;
 import gift.domain.product.entity.Product;
 import gift.domain.product.service.ProductService;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,8 +35,13 @@ public class ProductRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> readAll() {
-        List<Product> productList = productService.readAll();
+    public ResponseEntity<Page<Product>> readAll(
+        @RequestParam(required = false, defaultValue = "0", value = "page") int page,
+        @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortingCriteria,
+        @RequestParam(required = false, defaultValue = "asc", value = "orderBy") String orderingCriteria,
+        @RequestParam(required = false, defaultValue = "10", value = "size") int size
+    ) {
+        Page<Product> productList = productService.readAll(page, sortingCriteria, orderingCriteria, size);
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
 

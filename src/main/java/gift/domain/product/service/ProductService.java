@@ -3,10 +3,12 @@ package gift.domain.product.service;
 import gift.domain.product.dao.ProductJpaRepository;
 import gift.domain.product.dto.ProductDto;
 import gift.domain.product.entity.Product;
-import gift.domain.wishlist.dao.WishlistJpaRepository;
 import gift.domain.wishlist.service.WishlistService;
 import gift.exception.InvalidProductInfoException;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,8 +28,9 @@ public class ProductService {
         return productJpaRepository.save(product);
     }
 
-    public List<Product> readAll() {
-        return productJpaRepository.findAll();
+    public Page<Product> readAll(int page, String sortingCriteria, String orderingCriteria, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(orderingCriteria), sortingCriteria));
+        return productJpaRepository.findAll(pageable);
     }
 
     public Product readById(long productId) {
