@@ -3,8 +3,11 @@ package gift.controller;
 import gift.dto.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
-import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,8 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -31,9 +33,20 @@ public class ProductController {
     }
 
     @GetMapping
-    public String allProducts(Model model) {
-        List<ProductDTO> productDTOs = productService.findAllProducts();
-        model.addAttribute("products", productDTOs);
+    public String allProducts(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "id") String sortBy,
+        @RequestParam(defaultValue = "asc") String direction,
+        Model model) {
+        Sort sort = direction.equalsIgnoreCase(Sort.Direction.DESC.name()) ?
+            Sort.by(sortBy).descending() :
+            Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<ProductDTO> productPage = productService.findAllProducts(pageable);
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
         return "Products";
     }
 

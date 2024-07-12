@@ -3,8 +3,11 @@ package gift.controller;
 import gift.dto.WishListDTO;
 import gift.service.WishListService;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/wishlist")
@@ -24,14 +28,26 @@ public class WishListController {
     }
 
     @GetMapping
-    public String viewWishList(HttpServletRequest request, Model model) {
+    public String viewWishList(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "id") String sortBy,
+        @RequestParam(defaultValue = "asc") String direction,
+        HttpServletRequest request, Model model) {
         String email = (String) request.getAttribute("email");
         if (email == null) {
             return "redirect:/users/login";
         }
-        List<WishListDTO> wishList = wishListService.getWishListByUser(email);
-
-        model.addAttribute("wishList", wishList);
+        Sort sort = direction.equalsIgnoreCase(Sort.Direction.DESC.name()) ?
+            Sort.by(sortBy).descending() :
+            Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<WishListDTO> wishListPage = wishListService.getWishListByUser(email, pageable);
+        model.addAttribute("wishList", wishListPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", wishListPage.getTotalPages());
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("direction", direction);
         return "wishlist";
     }
 
