@@ -1,8 +1,9 @@
 package gift.service;
 
 import gift.entity.WishListEntity;
-import gift.model.WishList;
+import gift.domain.WishListDTO;
 import gift.repository.WishListRepository;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +16,11 @@ public class WishListService {
     @Autowired
     private WishListRepository wishListRepository;
 
-    private WishList toWishListDTO(WishListEntity wishListEntity) {
-        return new WishList(wishListEntity.getProductId(), wishListEntity.getUserId());
+    private WishListDTO toWishListDTO(WishListEntity wishListEntity) {
+        return new WishListDTO(wishListEntity.getProductId(), wishListEntity.getUserId());
     }
 
-    public List<WishList> readWishList(Long userId) {
+    public List<WishListDTO> readWishList(Long userId) {
         List<WishListEntity> wishListEntities = wishListRepository.findByUserId(userId);
         return wishListEntities.stream()
             .map(this::toWishListDTO)
@@ -38,9 +39,8 @@ public class WishListService {
     }
 
     public void removeProductFromWishList(Long userId, Long productId) {
-        WishListEntity wishListEntity = wishListRepository.findByUserIdAndProductId(userId, productId);
-        if (wishListEntity != null) {
-            wishListRepository.delete(wishListEntity);
-        }
+        Optional<WishListEntity> wishListEntityOpt = wishListRepository.findByUserIdAndProductId(userId, productId);
+        wishListEntityOpt.ifPresent(wishListRepository::delete);
     }
+
 }
