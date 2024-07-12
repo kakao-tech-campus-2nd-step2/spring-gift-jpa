@@ -24,7 +24,6 @@ public class ProductService {
             NotFoundException::new);
         product.update(changeProduct.getName(),changeProduct.getPrice(),changeProduct.getImageUrl());
         productRepository.save(product);
-
         return HttpStatus.OK;
     }
 

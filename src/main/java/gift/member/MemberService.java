@@ -15,7 +15,6 @@ public class MemberService {
     public List<Member> findAllMember(){
         return memberRepository.findAll();
     }
-
     public Member findById(Long id) {
         return memberRepository.findById(id).orElseThrow();
     }
