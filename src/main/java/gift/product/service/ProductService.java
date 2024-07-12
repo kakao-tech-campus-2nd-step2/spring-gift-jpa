@@ -13,6 +13,8 @@ import jakarta.persistence.Tuple;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +45,14 @@ public class ProductService {
                 .map(tuple -> new ProductResponse(tuple.get("product", Product.class),
                         tuple.get("wishCount", Long.class)))
                 .collect(Collectors.toList());
+    }
+
+    public Page<ProductResponse> findAllProductWithWishCountPageable(Pageable pageable) {
+        Page<Tuple> results = productRepository.findAllActiveProductsWithWishCountPageable(pageable);
+        return results.map(tuple -> new ProductResponse(
+                tuple.get("product", Product.class),
+                tuple.get("wishCount", Long.class))
+        );
     }
 
     @Transactional

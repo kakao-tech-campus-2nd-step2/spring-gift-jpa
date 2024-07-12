@@ -4,6 +4,8 @@ import gift.product.model.dto.Product;
 import jakarta.persistence.Tuple;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,6 +20,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Tuple> findProductByIdWithWishCount(@Param("id") Long id);
 
     // 모든 상품의 상품 정보와 Wish 개수 조회
-    @Query("SELECT p AS product, COUNT(w) AS wishCount FROM Product p LEFT JOIN Wish w ON w.product = p WHERE p.isActive = true GROUP BY p")
+    @Query("SELECT p AS product, COUNT(w) AS wishCount FROM Product p LEFT JOIN Wish w ON w.product = p WHERE p.isActive = true GROUP BY p ")
     List<Tuple> findAllActiveProductsWithWishCount();
+
+    @Query("SELECT p AS product, COUNT(w) AS wishCount FROM Product p LEFT JOIN Wish w ON w.product = p WHERE p.isActive = true GROUP BY p")
+    Page<Tuple> findAllActiveProductsWithWishCountPageable(Pageable pageable);
 }

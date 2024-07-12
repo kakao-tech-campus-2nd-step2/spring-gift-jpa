@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@ControllerAdvice(basePackages = {"gift.user"})
+@ControllerAdvice
 public class JwtExceptionHandler {
 
     private ResponseEntity<String> createJwtErrorResponse(String errorMessage) {

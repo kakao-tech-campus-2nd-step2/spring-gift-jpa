@@ -9,6 +9,10 @@ import gift.user.model.dto.AppUser;
 import gift.user.resolver.LoginUser;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,6 +36,13 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> findProductById(@PathVariable Long id) {
         final ProductResponse response = productService.findProductWithWishCount(id);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<Page<ProductResponse>> findAllProductPage(
+            @PageableDefault(size = 10, sort = "wishCount", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ProductResponse> response = productService.findAllProductWithWishCountPageable(pageable);
         return ResponseEntity.ok().body(response);
     }
 
