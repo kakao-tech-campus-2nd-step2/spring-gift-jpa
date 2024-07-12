@@ -132,10 +132,8 @@
                     fnReset();
                     loadProducts();
                 },
-                error: function (xhr, status, error) {
-
-                    var errorResponse = JSON.parse(xhr.responseText);
-                    alert(errorResponse.errorMessage);
+                error: function (error) {
+                    alert(error);
                 }
             });
         });
@@ -147,26 +145,23 @@
             $.ajax({
                 type: 'GET',
                 url: '/spring-gift/admin/product/' + productId,
-                success: function (product) {
-                    var product = product;
+                success: function (searchProduct) {
                     var html = '';
-                    if (product) {
+                    if (searchProduct) {
                         html += '<tr>' +
-                            '<td>' + product.id + '</td>' +
-                            '<td>' + product.name + '</td>' +
-                            '<td>' + product.price + '</td>' +
-                            '<td>' + product.imageUrl + '</td>' +
-                            '<td>' + product.seller+ '</td>' +
+                            '<td>' + searchProduct.id + '</td>' +
+                            '<td>' + searchProduct.name + '</td>' +
+                            '<td>' + searchProduct.price + '</td>' +
+                            '<td>' + searchProduct.imageUrl + '</td>' +
+                            '<td>' + searchProduct.seller+ '</td>' +
                             '</tr>';
                     } else {
                         html += '<tr><td colspan="4">상품을 찾을 수 없습니다.</td></tr>';
                     }
                     $('#searchResult').html(html);
                 },
-
-                error: function (xhr, status, error) {
-                    var errorResponse = JSON.parse(xhr.responseText);
-                    alert(errorResponse.errorMessage);
+                error: function (error) {
+                    alert(error);
                 }
             });
         });
@@ -180,7 +175,7 @@
         function loadProducts() {
             $.ajax({
                 type: 'GET',
-                url: '/spring-gift/admin/products',
+                url: '/spring-gift/products',
                 success: function (response) {
                     var products = response;
                     var html = '';
@@ -194,7 +189,7 @@
                             '<td>' +
                             '<div style="display: flex; justify-content: center; gap: 10px;">' +
                             '<button class="btn btn-warning btn-sm edit-button" data-id="' + product.id + '" data-name="' + product.name + '" data-price="' + product.price + '" data-imageurl="' + product.imageUrl + '" style="width: 100px;">수정하기</button>' +
-                            '<button class="btn btn-danger btn-sm delete-button" data-id="' + product.id + '" style="width: 100px;">삭제하기</button>' +
+                            '<button class="btn btn-danger btn-sm delete-button" data-id="' + product.id + '" style="width: 100px;">삭제하기</button>'+
                             '</div>' +
                             '</td>' +
                             '</tr>';
@@ -202,7 +197,7 @@
                     $('#productList').html(html);
                 },
                 error: function (error) {
-                    alert('리스트 로드 중 오류가 발생했습니다.');
+                    alert(error);
                 }
             });
         }
@@ -233,7 +228,7 @@
 
             $.ajax({
                 type: 'PUT',
-                url: '/spring-gift/admin/product?id=' + productId,
+                url: '/spring-gift/admin/product/' + productId,
                 contentType: 'application/json',
                 data: JSON.stringify(productData),
                 success: function (response) {
@@ -261,7 +256,6 @@
                     alert('상품이 삭제되었습니다.');
                     loadProducts();
                 },
-
                 error: function (xhr, status, error) {
                     var errorResponse = JSON.parse(xhr.responseText);
                     alert(errorResponse.errorMessage);
