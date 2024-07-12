@@ -9,6 +9,10 @@ import gift.Model.Role;
 import gift.Repository.ProductRepository;
 import gift.Repository.MemberRepository;
 import gift.Token.JwtTokenProvider;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -85,6 +89,15 @@ public class ProductService {
         }
 
         return dtoList;
+    }
+
+    public Page<ProductDTO> transferListToPage(List<ProductDTO> dtoList, int page){
+        Pageable pageable = PageRequest.of(page, 10);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), dtoList.size());
+        List<ProductDTO> subList = dtoList.subList(start, end);
+
+        return new PageImpl<>(subList, pageable, dtoList.size());
     }
 
     public ProductDTO getById(String token, Long id){
