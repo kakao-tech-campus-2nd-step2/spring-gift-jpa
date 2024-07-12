@@ -1,11 +1,11 @@
 package gift.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,25 +15,35 @@ public class WishListEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(nullable = false, name = "product_id")
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private ProductEntity productEntity;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private MemberEntity userEntity;
 
     public WishListEntity(){}
 
-    public WishListEntity(Long productId, Long userId){
-        this.productId = productId;
-        this.userId = userId;
+    public WishListEntity(ProductEntity productEntity, MemberEntity userEntity){
+        this.productEntity = productEntity;
+        this.userEntity = userEntity;
     }
 
-    public Long getProductId() {
-        return productId;
+    public ProductEntity getProductEntity() {
+        return productEntity;
     }
 
-    public Long getUserId() {
-        return userId;
+    public MemberEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setProductEntity(ProductEntity productEntity) {
+        this.productEntity = productEntity;
+    }
+
+    public void setUserEntity(MemberEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
 
