@@ -40,13 +40,7 @@ public class WishService {
 
     public Wish addWish(WishRequest wishRequest) {
         WishEntity wishEntity = DtoToEntity(wishRequest);
-        MemberEntity memberEntity = memberRepository.findById(wishRequest.getMemberId())
-            .orElseThrow(() -> new EntityNotFoundException("[Wish 추가 실패] 해당하는 멤버가 존재하지 않습니다."));
-        ProductEntity productEntity = productRepository.findById(wishRequest.getProductId())
-            .orElseThrow(() -> new EntityNotFoundException("[Wish 추가 실패] 해당하는 상품이 존재하지 않습니다."));
 
-        wishEntity.updateMemberEntity(memberEntity);
-        wishEntity.updateProductEntity(productEntity);
         return entityToDomain(wishRepository.save(wishEntity));
     }
 
@@ -70,11 +64,11 @@ public class WishService {
     private WishEntity DtoToEntity(WishRequest wishRequest) {
         MemberEntity memberEntity = memberRepository
             .findById(wishRequest.getMemberId())
-            .orElseThrow(() -> new EntityNotFoundException("not found entity"));
+            .orElseThrow(() -> new EntityNotFoundException("해당하는 멤버가 존재하지 않습니다."));
 
         ProductEntity productEntity = productRepository
             .findById(wishRequest.getProductId())
-            .orElseThrow(() -> new EntityNotFoundException("not found entity"));
+            .orElseThrow(() -> new EntityNotFoundException("해당하는 상품이 존재하지 않습니다."));
 
         return new WishEntity(memberEntity, productEntity);
     }
