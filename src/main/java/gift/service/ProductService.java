@@ -22,11 +22,8 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Optional<Product> findById(Long id) {
-        if (productRepository.findById(id).isEmpty()) {
-            throw new BusinessException("해당 아이디에 대한 상품이 존재하지 않습니다.");
-        }
-        return productRepository.findById(id);
+    public Product findById(Long id) {
+        return productRepository.findById(id).orElseThrow(() -> new BusinessException("해당 아이디에 대한 상품이 존재하지 않습니다."));
     }
 
     public Product save(Product product) {

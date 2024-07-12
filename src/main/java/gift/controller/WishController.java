@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.annotation.LoginMember;
 import gift.dto.WishlistRequestDto;
+import gift.entity.Member;
 import gift.entity.Wish;
 import gift.service.WishService;
 import java.util.List;
@@ -35,8 +36,7 @@ public class WishController {
     @PostMapping
     public ResponseEntity<String> addWishlist(@LoginMember Long memberId,
         @RequestBody WishlistRequestDto wishlistRequestDto) {
-        wishService.addWishlist(new Wish(memberId, wishlistRequestDto.getProductId(),
-            wishlistRequestDto.getQuantity()));
+        wishService.addWishlist(memberId, wishlistRequestDto.getProductId(), wishlistRequestDto.getQuantity());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
