@@ -91,7 +91,7 @@ class JpaProductRepositoryTest {
         Long insertProductId = insertProduct(product);
         //when
         Product findProduct = jpaProductRepository.findById(insertProductId).get();
-        jpaProductRepository.delete(product);
+        jpaProductRepository.delete(findProduct);
         //then
         List<Product> productList = jpaProductRepository.findAll();
         assertAll(
