@@ -12,11 +12,14 @@ import gift.request.LoginRequest;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import gift.service.WishService;
+import gift.paging.ArticlePage;
 import gift.utils.ScriptUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -78,9 +81,14 @@ public class PagingViewController {
     }
 
     @GetMapping("/view/products")
-    public String getAllProducts(Model model) {
-        List<Product> productsList = productService.getAllProducts();
-        model.addAttribute("products", productsList);
+    public String getAllProducts(@RequestParam(defaultValue = "1") int page, Model model) {
+        PageRequest pageRequest = PageRequest.of(page-1, 10);
+        Page<Product> productsInPage = productService.getPagedAllProducts(pageRequest);
+        ArticlePage articlePage = new ArticlePage(productsInPage, page);
+
+        model.addAttribute("products", productsInPage.getContent());
+        model.addAttribute("pagingInfo", articlePage);
+
         return "pagingProducts";
     }
 

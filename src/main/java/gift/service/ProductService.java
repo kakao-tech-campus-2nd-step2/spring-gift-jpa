@@ -4,6 +4,8 @@ import gift.exception.NotFoundProductException;
 import gift.model.Product;
 import gift.repository.ProductRepository;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,10 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    public Page<Product> getPagedAllProducts(Pageable pageable) {
+        return productRepository.findPageBy(pageable);
     }
 
     public Product getProduct(Long id) {
