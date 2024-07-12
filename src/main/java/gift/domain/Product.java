@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -35,6 +36,8 @@ public class Product {
 
     @Column
     private String description;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wish> wishes;
 
     protected Product() {
     }
@@ -45,6 +48,7 @@ public class Product {
         this.price = builder.price;
         this.imageUrl = builder.imageUrl;
         this.description = builder.description;
+        this.wishes = builder.wishes;
     }
 
     public Long getId() {
@@ -73,6 +77,7 @@ public class Product {
         private BigDecimal price;
         private String imageUrl;
         private String description;
+        private List<Wish> wishes;
 
         public ProductBuilder id(Long id) {
             this.id = id;
@@ -96,6 +101,11 @@ public class Product {
 
         public ProductBuilder description(String description) {
             this.description = description;
+            return this;
+        }
+
+        public ProductBuilder wishes(List<Wish> wishes) {
+            this.wishes = wishes;
             return this;
         }
 

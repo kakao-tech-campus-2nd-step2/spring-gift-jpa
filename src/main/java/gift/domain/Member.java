@@ -1,8 +1,11 @@
 package gift.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import java.util.List;
 
 @Entity
 @Table(name = "member", uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
@@ -17,9 +20,14 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
     @Column(nullable = false)
     private String password;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wish> wishes;
 
     protected Member() {
     }
@@ -28,6 +36,7 @@ public class Member {
         this.id = builder.id;
         this.email = builder.email;
         this.password = builder.password;
+        this.wishes = builder.wishes;
     }
 
     public Long getId() {
@@ -46,6 +55,7 @@ public class Member {
         private Long id;
         private String email;
         private String password;
+        private List<Wish> wishes;
 
         public MemberBuilder id(Long id) {
             this.id = id;
@@ -59,6 +69,11 @@ public class Member {
 
         public MemberBuilder password(String password) {
             this.password = password;
+            return this;
+        }
+
+        public MemberBuilder wishes(List<Wish> wishes) {
+            this.wishes = wishes;
             return this;
         }
 
