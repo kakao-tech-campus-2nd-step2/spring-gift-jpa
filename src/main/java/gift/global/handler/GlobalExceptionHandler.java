@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> MethodArgumentNotValidException(
         MethodArgumentNotValidException e) {
         List<String> errors = new ArrayList<>();
-        e.getBindingResult().getAllErrors().forEach( error -> {
+        e.getBindingResult().getAllErrors().forEach(error -> {
             errors.add(error.getDefaultMessage());
         });
         String message = String.join("\n", errors);

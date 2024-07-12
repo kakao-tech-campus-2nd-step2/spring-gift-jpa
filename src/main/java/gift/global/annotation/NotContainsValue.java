@@ -9,8 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * (커스텀 어노테이션)
- * 필드/매개변수에 특정 문자열이 포함되어 있는지 검사
+ * (커스텀 어노테이션) 필드/매개변수에 특정 문자열이 포함되어 있는지 검사
  */
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)

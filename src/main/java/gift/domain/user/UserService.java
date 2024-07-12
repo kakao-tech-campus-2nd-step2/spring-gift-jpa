@@ -1,7 +1,6 @@
 package gift.domain.user;
 
 import gift.domain.user.dto.UserDTO;
-
 import gift.global.exception.BusinessException;
 import gift.global.jwt.JwtProvider;
 import org.springframework.http.HttpStatus;

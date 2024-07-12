@@ -11,10 +11,8 @@ import io.jsonwebtoken.PrematureJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
-import jakarta.validation.constraints.Email;
 import java.util.Date;
 import org.springframework.http.HttpStatus;
-
 import org.springframework.stereotype.Component;
 
 @Component
@@ -62,7 +60,7 @@ public class JwtProvider {
     }
 
     /**
-     *  현재 로그인한 사용자 정보 추출
+     * 현재 로그인한 사용자 정보 추출
      */
     public UserInfo getUserInfo(String token) {
         Claims claimsBody = getClaimsBody(token);
@@ -80,7 +78,8 @@ public class JwtProvider {
     public Long getId(String token) {
         Claims claimsBody = getClaimsBody(token);
 
-        Long userId = (claimsBody.get("id") instanceof Integer) ? Long.valueOf((Integer) claimsBody.get("id"))
+        Long userId =
+            (claimsBody.get("id") instanceof Integer) ? Long.valueOf((Integer) claimsBody.get("id"))
                 : (Long) claimsBody.get("id");
 
         return userId;

@@ -1,7 +1,7 @@
 package gift.global.controller;
 
-import gift.domain.product.ProductService;
 import gift.domain.product.Product;
+import gift.domain.product.ProductService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping( "/")
+@RequestMapping("/")
 public class HomeController {
 
     private final ProductService productService;

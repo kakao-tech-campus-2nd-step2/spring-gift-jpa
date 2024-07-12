@@ -4,7 +4,6 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,5 +19,6 @@ public interface JpaProductRepository extends JpaRepository<Product, Long> {
 
     // paging
     Page<Product> findAll(Pageable pageable);
+
     Page<Product> findAllByIdIn(List<Long> cartItemIds, Pageable pageable);
 }

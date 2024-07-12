@@ -12,25 +12,21 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CartItemService {
 
-    private final JdbcTemplate jdbcTemplate;
     private final JpaProductRepository productRepository;
     private final JpaCartItemRepository cartItemRepository;
     private final JpaUserRepository userRepository;
 
     public CartItemService(
-        JdbcTemplate jdbcTemplate,
         JpaProductRepository jpaProductRepository,
         JpaCartItemRepository jpaCartItemRepository,
         JpaUserRepository jpaUserRepository
     ) {
         this.userRepository = jpaUserRepository;
-        this.jdbcTemplate = jdbcTemplate;
         this.cartItemRepository = jpaCartItemRepository;
         this.productRepository = jpaProductRepository;
     }
@@ -60,8 +56,7 @@ public class CartItemService {
 
         return cartItems.stream()
             .map(cartItem -> {
-                Product proxyProduct = cartItem.getProduct();
-                Product product = Product.createProductFromProxy(proxyProduct);
+                Product product = Product.createProductFromProxy(cartItem.getProduct());
                 return product;
             })
             .collect(Collectors.toList());
@@ -71,23 +66,27 @@ public class CartItemService {
     /**
      * 장바구니 상품 조회 - 페이징(매개변수별)
      */
-    public Page<Product> getProductsInCartByUserIdAndPageAndSort(Long userId, int page, int size, Sort sort) {
+    public Page<Product> getProductsInCartByUserIdAndPageAndSort(Long userId, int page, int size,
+        Sort sort) {
         List<Long> productIds = cartItemRepository.findAllByUserId(userId).stream()
             .map(cartItem -> cartItem.getProduct().getId())
             .collect(Collectors.toList());
 
         PageRequest pageRequest = PageRequest.of(page, size, sort);
-        Page<Product> productsPage = productRepository.findAllByIdIn(productIds, pageRequest); // 영속성 컨텍스트에 이미 존재
+        Page<Product> productsPage = productRepository.findAllByIdIn(productIds,
+            pageRequest); // 영속성 컨텍스트에 이미 존재
 
         List<Product> products = productsPage.getContent().stream()
             .map(product -> {
                 return Product.createProductFromProxy(product);
             })
             .collect(Collectors.toList());
-        
+
         // 새 Page 객체 생성
-        return PageableExecutionUtils.getPage(products, pageRequest, productsPage::getTotalElements);
+        return PageableExecutionUtils.getPage(products, pageRequest,
+            productsPage::getTotalElements);
     }
+
     /**
      * 장바구니 상품 삭제
      */

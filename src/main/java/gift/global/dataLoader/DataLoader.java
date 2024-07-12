@@ -18,8 +18,10 @@ public class DataLoader {
     private final JpaProductRepository jpaProductRepository;
     private final JpaUserRepository jpaUserRepository;
     private final JpaCartItemRepository jpaCartItemRepository;
+
     @Autowired
-    public DataLoader(JpaProductRepository jpaProductRepository, JpaUserRepository jpaUserRepository, JpaCartItemRepository jpaCartItemRepository) {
+    public DataLoader(JpaProductRepository jpaProductRepository,
+        JpaUserRepository jpaUserRepository, JpaCartItemRepository jpaCartItemRepository) {
         this.jpaProductRepository = jpaProductRepository;
         this.jpaUserRepository = jpaUserRepository;
         this.jpaCartItemRepository = jpaCartItemRepository;
