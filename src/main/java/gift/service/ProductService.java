@@ -31,6 +31,10 @@ public class ProductService {
                 .orElse(null);
     }
 
+    public Product getProductEntityById(long id) {
+        return productRepository.findById(id).orElse(null);
+    }
+
     @Transactional
     public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = convertToEntity(productDTO);
@@ -51,7 +55,7 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    private ProductDTO convertToDTO(Product product) {
+    public ProductDTO convertToDTO(Product product) {
         ProductDTO productDTO = new ProductDTO();
         productDTO.setId(product.getId());
         productDTO.setName(product.getName());
@@ -60,7 +64,7 @@ public class ProductService {
         return productDTO;
     }
 
-    private Product convertToEntity(ProductDTO productDTO) {
+    public Product convertToEntity(ProductDTO productDTO) {
         Product product = new Product();
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
