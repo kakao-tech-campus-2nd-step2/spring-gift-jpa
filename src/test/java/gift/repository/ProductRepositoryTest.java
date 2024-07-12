@@ -209,7 +209,11 @@ class ProductRepositoryTest {
         // given
         entityManager.persist(expectedMember);
 
-        expectedProduct.addWish(expectedWish);
+        Wish expected = new Wish(expectedMember, expectedProduct, 1);
+        expectedProduct.addWish(expected);
+        expectedProduct.addWish(new Wish(expectedMember, expectedProduct, 2));
+        expectedProduct.addWish(new Wish(expectedMember, expectedProduct, 3));
+        expectedProduct.addWish(new Wish(expectedMember, expectedProduct, 4));
         Product savedProduct = products.save(expectedProduct);
         entityManager.flush();
         entityManager.clear();
@@ -223,8 +227,8 @@ class ProductRepositoryTest {
 
         // then
         assertAll(
-                () -> assertThat(wishes.size()).isEqualTo(1),
-                () -> assertThat(wishes.get(0)).isEqualTo(expectedWish)
+                () -> assertThat(wishes.size()).isEqualTo(4),
+                () -> assertThat(wishes.get(0)).isEqualTo(expected)
         );
     }
 
