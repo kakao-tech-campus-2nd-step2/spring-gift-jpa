@@ -1,7 +1,5 @@
 package gift.entity;
 
-import org.aspectj.lang.annotation.Pointcut;
-
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,6 +27,16 @@ public class Product {
    @NotBlank(message = "image url must not be blank")
    @Column(nullable = false, length = 255)
    private String imageUrl;
+
+    public Product() {
+    }
+
+    public Product(Long id, int price, String name, String imageUrl) {
+        this.id = id;
+        this.price = price;
+        this.name = name;
+        this.imageUrl = imageUrl;
+    }
 
     public int getPrice() {
         return price;
