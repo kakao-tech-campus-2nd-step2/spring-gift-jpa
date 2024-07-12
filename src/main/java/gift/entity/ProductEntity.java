@@ -30,7 +30,7 @@ public class ProductEntity {
     @Column
     private String imageUrl;
 
-    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL)
     private List<WishEntity> wishEntityList;
 
     public ProductEntity() {};
@@ -71,5 +71,9 @@ public class ProductEntity {
     public void addWishEntity(WishEntity wishEntity){
         this.wishEntityList.add(wishEntity);
         wishEntity.updateProductEntity(this);
+    }
+
+    public void removeWishEntity(WishEntity wishEntity){
+        this.wishEntityList.remove(wishEntity);
     }
 }
