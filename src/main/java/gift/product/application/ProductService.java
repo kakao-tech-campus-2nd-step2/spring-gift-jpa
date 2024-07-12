@@ -6,10 +6,10 @@ import gift.product.application.command.ProductUpdateCommand;
 import gift.product.domain.Product;
 import gift.product.domain.ProductRepository;
 import gift.wishlist.domain.WishlistRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,9 +22,9 @@ public class ProductService {
         this.wishlistRepository = wishlistRepository;
     }
 
-    public List<ProductResponse> findAll() {
-        return productRepository.findAll()
-                .stream().map(ProductResponse::from).toList();
+    public Page<ProductResponse> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(ProductResponse::from);
     }
 
     public ProductResponse findById(Long productId) {
