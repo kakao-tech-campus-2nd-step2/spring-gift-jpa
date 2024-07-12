@@ -4,14 +4,17 @@ import gift.domain.wish.Wish;
 
 public class WishResponseDto {
     private final Long wishId;
-    private final Long userId;
+    private final Long memberId;
     private final Long productId;
+    private final String productName;
+
     private final Integer quantity;
 
     public WishResponseDto(Wish wish) {
         this.wishId = wish.getId();
-        this.userId = wish.getMemberId();
-        this.productId = wish.getProductId();
+        this.memberId = wish.getMember().getId();
+        this.productId = wish.getProduct().getId();
+        this.productName = wish.getProduct().getName();
         this.quantity = wish.getQuantity();
     }
 
@@ -19,12 +22,16 @@ public class WishResponseDto {
         return wishId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getMemberId() {
+        return memberId;
     }
 
     public Long getProductId() {
         return productId;
+    }
+
+    public String getProductName() {
+        return productName;
     }
 
     public Integer getQuantity() {
