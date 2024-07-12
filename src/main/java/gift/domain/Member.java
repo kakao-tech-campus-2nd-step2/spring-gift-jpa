@@ -1,7 +1,7 @@
 package gift.domain;
 
 import jakarta.persistence.*;
-
+import java.util.List;
 
 @Entity
 @Table(name = "member")
@@ -16,9 +16,15 @@ public class Member {
 
     @Column(nullable = false)
     private String password;
-    public Member(){
 
-    }
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WishlistItem> wishlistItems;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TokenAuth> tokenAuths;
+
+    public Member() { }
+
     public Member(Long id, String email, String password) {
         this.id = id;
         this.email = email;
@@ -54,5 +60,19 @@ public class Member {
         this.password = password;
     }
 
+    public List<WishlistItem> getWishlistItems() {
+        return wishlistItems;
+    }
 
+    public void setWishlistItems(List<WishlistItem> wishlistItems) {
+        this.wishlistItems = wishlistItems;
+    }
+
+    public List<TokenAuth> getTokenAuths() {
+        return tokenAuths;
+    }
+
+    public void setTokenAuths(List<TokenAuth> tokenAuths) {
+        this.tokenAuths = tokenAuths;
+    }
 }
