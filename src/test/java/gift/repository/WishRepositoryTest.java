@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +52,8 @@ class WishRepositoryTest {
     @DisplayName("멤버의 전체 위시 찾기")
     void findAllByMemberIdWithProduct() {
         //When
-        List<Wish> wishes = wishRepository.findAllByMember(testMember);
+        PageRequest pageable = PageRequest.of(0, 10);
+        List<Wish> wishes = wishRepository.findAllByMember(testMember, pageable).getContent();
 
         //Then
         assertThat(wishes).isNotEmpty()
