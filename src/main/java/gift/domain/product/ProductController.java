@@ -6,6 +6,8 @@ import gift.global.response.SimpleResultResponseDto;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -50,6 +53,34 @@ public class ProductController {
     }
 
     /**
+     * 전체 상품 조회 - 페이징(id_asc)
+     */
+    @GetMapping(params = "page")
+    public ResponseEntity<ResultResponseDto<Page<Product>>> getProductsPage(
+        @RequestParam(value = "page", defaultValue = "10") int page
+    ) {
+        int size = 10; // default
+        Page<Product> products = productService.getProductsPage(page, size);
+        // 성공 시
+        return ResponseMaker.createResponse(HttpStatus.OK, "전체 목록 상품을 조회했습니다.", products);
+    }
+
+    /**
+     * 전체 상품 조회 - 페이징(매개변수별)
+     */
+    @GetMapping(params = {"page", "sort"})
+    public ResponseEntity<ResultResponseDto<Page<Product>>> getProductsPage(
+        @RequestParam(value = "page", defaultValue = "10") int page,
+        @RequestParam(value = "sort", defaultValue = "id_asc") String sort
+    ) {
+        int size = 10; // default
+        Sort sortObj = getSortObject(sort);
+        Page<Product> products = productService.getProductsPageSort(page, size, sortObj);
+        // 성공 시
+        return ResponseMaker.createResponse(HttpStatus.OK, "전체 목록 상품을 조회했습니다.", products);
+    }
+
+    /**
      * 상품 수정
      */
     @PutMapping("/{id}")
@@ -79,4 +110,18 @@ public class ProductController {
         return ResponseMaker.createSimpleResponse(HttpStatus.OK, "상품이 삭제되었습니다.");
     }
 
+    private Sort getSortObject(String sort) {
+        switch (sort) {
+            case "price_asc":
+                return Sort.by(Sort.Direction.ASC, "price");
+            case "price_desc":
+                return Sort.by(Sort.Direction.DESC, "price");
+            case "name_asc":
+                return Sort.by(Sort.Direction.ASC, "name");
+            case "name_desc":
+                return Sort.by(Sort.Direction.DESC, "name");
+            default:
+                return Sort.by(Sort.Direction.ASC, "id");
+        }
+    }
 }

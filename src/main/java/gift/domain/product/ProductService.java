@@ -8,6 +8,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -49,6 +53,28 @@ public class ProductService {
     public List<Product> getProducts() {
         List<Product> products = productRepository.findAll();
         System.out.println("products = " + products);
+
+        return products;
+    }
+
+    /**
+     * 전체 싱픔 목록 조회 - 기본 페이징(id_asc)
+     */
+    public Page<Product> getProductsPage(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Order.asc("id")));
+
+        Page<Product> products = productRepository.findAll(pageRequest);
+
+        return products;
+    }
+
+    /**
+     * 전체 싱픔 목록 조회 - 페이징(매개변수별)
+     */
+    public Page<Product> getProductsPageSort(int page, int size, Sort sort) {
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+
+        Page<Product> products = productRepository.findAll(pageRequest);
 
         return products;
     }
@@ -101,7 +127,7 @@ public class ProductService {
             throw new BusinessException(HttpStatus.BAD_REQUEST, message);
         }
     }
-
+    
 }
 
 

@@ -34,6 +34,15 @@ public class DataLoader {
         jpaProductRepository.save(americano);
         jpaProductRepository.save(cafuchino);
         jpaProductRepository.save(malcha);
+        // dummy Product data
+        for (int i = 0; i < 100; i++) {
+            Product dummyProduct = new Product(
+                "더미 제품 " + (i + 1),
+                1000 + (i * 10),
+                "https://example.com/dummy" + (i + 1) + ".jpg"
+            );
+            jpaProductRepository.save(dummyProduct);
+        }
 
         // User
         User minji = new User("minji@example.com", "password1");
