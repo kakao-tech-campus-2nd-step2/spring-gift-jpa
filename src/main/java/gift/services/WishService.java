@@ -4,7 +4,9 @@ package gift.services;
 import gift.domain.Wish;
 import gift.dto.WishDto;
 import gift.repositories.WishRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,25 +18,30 @@ public class WishService {
     }
 
 //    Wishlist 조회
-    public List<WishDto> getWishListById (Long memberId){
-        List<Wish> wishList = wishRepository.findWishListById(memberId);
-        List<WishDto> wishDtoList = wishList.stream().map(wish -> new WishDto(
-            wish.getMemberId(),
-            wish.getProductId(),
-            wish.getProductName()
-        )).toList();
-
-        return wishDtoList;
+    @Transactional
+    public List<WishDto> getWishListById(Long memberId) {
+        List<Wish> wishList = wishRepository.findAllByMemberId(memberId);
+        return wishList.stream()
+            .map(wish -> new WishDto(
+                wish.getMemberId(),
+                wish.getProductId()
+            ))
+            .collect(Collectors.toList());
     }
 
 //    Wish 추가
+    @Transactional
     public void addWish(Long memberId, Long productId){
-        wishRepository.insertWish(memberId, productId);
+        Wish wish = new Wish();
+        wish.setMemberId(memberId);
+        wish.setProductId(productId);
+        wishRepository.save(wish);
     }
 
 //    Wish 삭제
-    public void deleteWish(Long memberId, Long productId){
-        wishRepository.deleteWish(memberId, productId);
+    @Transactional
+    public void deleteWish(Long memberId, Long productId) {
+        wishRepository.deleteByMemberIdAndProductId(memberId, productId);
     }
 
 }

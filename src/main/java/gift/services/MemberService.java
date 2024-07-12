@@ -30,29 +30,37 @@ public class MemberService {
             memberDto.getPassword(),
             memberDto.getRole()
         );
-        Member existingMember = memberRepository.find(member);
+        // 이메일로 기존 회원 조회
+        Member existingMember = memberRepository.findByEmail(member.getEmail());
 
+        // 이미 존재하는 이메일일 경우 예외 발생
         if (existingMember != null) {
             throw new EmailAlreadyExistsException();
         }
 
-        if(member.getMemberId() == null) {
-            member.setMemberId(currentMemberId++);
-        }
+        // 새로운 회원 생성 및 저장
+        Member newmember = new Member(
+            null,
+            memberDto.getEmail(),
+            memberDto.getPassword(),
+            memberDto.getRole()
+        );
 
-        memberRepository.register(member);
+        memberRepository.save(newmember);
     }
 
     public String login(MemberDto memberDto) {
 
-        Member member = new Member(memberDto.getMemberId(), memberDto.getEmail(), memberDto.getPassword(), memberDto.getRole());
-        Member existingMember = memberRepository.find(member);
+        // 이메일로 회원 조회
+        Member existingMember = memberRepository.findByEmail(memberDto.getEmail());
 
-        if (existingMember == null) {
-            throw new NoSuchElementException("Email is not exist. ");
+        // 회원이 존재하지 않거나 비밀번호가 일치하지 않을 경우 예외 발생
+        if (existingMember == null || !existingMember.getPassword().equals(memberDto.getPassword())) {
+            throw new NoSuchElementException("이메일이 존재하지 않거나 비밀번호가 일치하지 않습니다.");
         }
 
-        String token = jwtUtil.createJwt(member.getEmail());
+        // JWT 토큰 생성 및 반환
+        String token = jwtUtil.createJwt(existingMember.getEmail());
         return token;
 
     }
@@ -60,7 +68,7 @@ public class MemberService {
     public MemberDto getLoginUser(String token){
         String email = jwtUtil.getLoginEmail(token);
         Member existingMember = memberRepository.findByEmail(email);
-        MemberDto memberDto = new MemberDto(existingMember.getMemberId(),
+        MemberDto memberDto = new MemberDto(existingMember.getId(),
             existingMember.getEmail(),
             existingMember.getPassword(),
             existingMember.getRole());

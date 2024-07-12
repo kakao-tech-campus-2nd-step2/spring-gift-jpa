@@ -3,12 +3,10 @@ package gift.dto;
 public class WishDto {
     private Long memberId;
     private Long productId;
-    private String productName;
 
-    public WishDto(Long memberId, Long productId , String productName) {
+    public WishDto(Long memberId, Long productId) {
         this.memberId = memberId;
         this.productId = productId;
-        this.productName = productName;
     }
 
     public WishDto(Long productId) {
@@ -22,9 +20,5 @@ public class WishDto {
 
     public Long getProductId() {
         return productId;
-    }
-
-    public String getProductName() {
-        return productName;
     }
 }
