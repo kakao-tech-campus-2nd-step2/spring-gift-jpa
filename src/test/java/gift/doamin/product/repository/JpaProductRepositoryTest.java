@@ -3,20 +3,36 @@ package gift.doamin.product.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.doamin.product.entity.Product;
+import gift.doamin.user.entity.User;
+import gift.doamin.user.entity.UserRole;
+import gift.doamin.user.repository.JpaUserRepository;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 @DataJpaTest
 class JpaProductRepositoryTest {
+
     @Autowired
     private JpaProductRepository jpaProductRepository;
 
+    @Autowired
+    private JpaUserRepository jpaUserRepository;
+
+    @BeforeEach
+    void setUp() {
+        jpaUserRepository.save(new User("test1@test.com", "test", "test1", UserRole.SELLER));
+        jpaUserRepository.save(new User("test2@test.com", "test", "test2", UserRole.SELLER));
+    }
+
     @Test
     void save() {
-        Product product = new Product(1L, "test", 10000, "test.png");
+        User user = jpaUserRepository.findByEmail("test1@test.com").get();
+        Product product = new Product(user, "test", 10000, "test.png");
 
         Product savedProduct = jpaProductRepository.save(product);
 
@@ -25,11 +41,13 @@ class JpaProductRepositoryTest {
 
     @Test
     void findAll() {
-        Product product1 = new Product(1L, "test1", 1, "test1.png");
+        User user1 = jpaUserRepository.findByEmail("test1@test.com").get();
+        Product product1 = new Product(user1, "test1", 1, "test1.png");
         jpaProductRepository.save(product1);
-        Product product2 = new Product(2L, "test2", 2, "test2.png");
+        User user2 = jpaUserRepository.findByEmail("test2@test.com").get();
+        Product product2 = new Product(user2, "test2", 2, "test2.png");
         jpaProductRepository.save(product2);
-        
+
         List<Product> allProducts = jpaProductRepository.findAll();
 
         assertThat(allProducts.size()).isEqualTo(2);
@@ -37,7 +55,9 @@ class JpaProductRepositoryTest {
 
     @Test
     void findById() {
-        Product product = new Product(1L, "test", 10000, "test.png");
+        User user = jpaUserRepository.findByEmail("test1@test.com").get();
+        System.out.println(user);
+        Product product = new Product(user, "test", 10000, "test.png");
         Product savedProduct = jpaProductRepository.save(product);
 
         Optional<Product> foundProduct = jpaProductRepository.findById(savedProduct.getId());
@@ -47,7 +67,8 @@ class JpaProductRepositoryTest {
 
     @Test
     void deleteById() {
-        Product product = new Product(1L, "test", 10000, "test.png");
+        User user = jpaUserRepository.findByEmail("test1@test.com").get();
+        Product product = new Product(user, "test", 10000, "test.png");
         Product savedProduct = jpaProductRepository.save(product);
 
         jpaProductRepository.deleteById(savedProduct.getId());
