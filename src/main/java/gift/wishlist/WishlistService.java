@@ -2,6 +2,8 @@ package gift.wishlist;
 
 import gift.exception.InvalidProduct;
 import gift.member.Member;
+import gift.member.MemberRepository;
+import gift.product.Product;
 import gift.product.ProductRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
@@ -16,24 +18,47 @@ import org.springframework.stereotype.Service;
 public class WishlistService {
 
     private final WishlistRepository wishlistRepository;
+    private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
 
-    public WishlistService(WishlistRepository wishlistRepository) {
+    public WishlistService(
+        WishlistRepository wishlistRepository,
+        ProductRepository productRepository,
+        MemberRepository memberRepository) {
         this.wishlistRepository = wishlistRepository;
+        this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
     }
 
-    public List<Long> checkWishlist() {
+    // 모든 상품 조회
+//    public List<Long> checkWishlist() {
+//        List<Wishlist> wishlists = wishlistRepository.findAll();
+//        List<Long> productIds = new ArrayList<>();
+//
+//        for (Wishlist wishlist : wishlists) {
+//            productIds.add(wishlist.getProductId());
+//        }
+//
+//        return productIds;
+//    }
+    public List<Product> checkWishlist() {
         List<Wishlist> wishlists = wishlistRepository.findAll();
-        List<Long> productIds = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
 
         for (Wishlist wishlist : wishlists) {
-            productIds.add(wishlist.getProductId());
+            products.add(wishlist.getProduct());
         }
 
-        return productIds;
+        return products;
     }
 
+
+    // 상품 추가
+    @Transactional
     public void addWishlist(WishRequestDto request, Member member) {
-        wishlistRepository.saveAndFlush(new Wishlist(member.getId(), request.productId()));
+        Optional<Product> product = productRepository.findById(request.productId());
+
+        wishlistRepository.saveAndFlush(new Wishlist(member, product.get()));
     }
 
     @Transactional
