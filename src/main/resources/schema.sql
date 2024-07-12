@@ -1,3 +1,4 @@
+/*
 DROP TABLE IF EXISTS wishlist;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS users;
@@ -22,3 +23,4 @@ CREATE TABLE wishlist (
                           FOREIGN KEY (user_id) REFERENCES users(email) ON DELETE CASCADE,
                           FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
+ */
