@@ -12,11 +12,13 @@ import gift.Repository.WishlistRepository;
 
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
 public class WishlistRepositoryTest {
@@ -27,6 +29,7 @@ public class WishlistRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
+    @DirtiesContext
     @Test
     void findAllByEmail(){
         Member member = memberRepository.save(new Member(1L, "1234@google.com","1234"));
@@ -36,7 +39,9 @@ public class WishlistRepositoryTest {
         wishlistRepository.addProductInWishlist(member.getId(),expected1.getId());
         wishlistRepository.addProductInWishlist(member.getId(),expected2.getId());
         List<Product> products = wishlistRepository.findAllProductInWishlistByEmail(member.getEmail());
-
+        for(Product a : products){
+            System.out.println(a.getId()+" "+a.getName()+" "+a.getPrice()+" "+a.getImageUrl());
+        }
         Product actual1 = products.get(0);
         Product actual2 = products.get(1);
 
@@ -53,6 +58,7 @@ public class WishlistRepositoryTest {
         );
     }
 
+    @DirtiesContext
     @Test
     void addProductInWishlist(){
         Member expectedMember = memberRepository.save(new Member(1L, "1234@google.com","1234"));
@@ -72,6 +78,7 @@ public class WishlistRepositoryTest {
         );
     }
 
+    @DirtiesContext
     @Test
     void getWishlistId(){
         Member expectedMember = memberRepository.save(new Member(1L, "1234@google.com","1234"));
@@ -83,6 +90,7 @@ public class WishlistRepositoryTest {
         assertThat(actualId).isEqualTo(1L);// 1개 만 저장했으므로 1L
     }
 
+    @DirtiesContext
     @Test
     void changeProductMemberNull(){
         Member expectedMember = memberRepository.save(new Member(1L, "1234@google.com","1234"));
@@ -97,7 +105,8 @@ public class WishlistRepositoryTest {
             () -> assertThat(actual.getProduct()).isNull()
         );
     }
-
+    
+    @DirtiesContext
     @Test
     void deleteByWishlistId(){
         Member expectedMember = memberRepository.save(new Member(1L, "1234@google.com","1234"));
@@ -111,6 +120,4 @@ public class WishlistRepositoryTest {
         Wishlist actual = wishlistRepository.findWishlistById(actualId);
         assertThat(actual).isNull();
     }
-
-
 }
