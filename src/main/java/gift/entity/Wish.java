@@ -1,9 +1,6 @@
 package gift.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-
 
 @Entity
 public class Wish {
@@ -13,17 +10,22 @@ public class Wish {
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
-    @JsonBackReference
     private Member member;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    @JsonIgnoreProperties("wishes")
     private Product product;
 
     private int productNumber;
 
-    // Getters and setters
+    public Wish() {}
+
+    public Wish(Member member, Product product, int productNumber) {
+        this.member = member;
+        this.product = product;
+        this.productNumber = productNumber;
+    }
+
     public Long getId() {
         return id;
     }
