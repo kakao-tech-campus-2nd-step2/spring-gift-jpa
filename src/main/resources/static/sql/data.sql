@@ -220,6 +220,22 @@ values (1, 2, 5);
 insert into wish (member_id, product_id, count)
 values (1, 4, 13);
 insert into wish (member_id, product_id, count)
+values (1, 3, 5);
+insert into wish (member_id, product_id, count)
+values (1, 14, 13);
+insert into wish (member_id, product_id, count)
+values (1, 22, 5);
+insert into wish (member_id, product_id, count)
+values (1, 34, 13);
+insert into wish (member_id, product_id, count)
+values (1, 42, 5);
+insert into wish (member_id, product_id, count)
+values (1, 54, 13);
+insert into wish (member_id, product_id, count)
+values (1, 32, 5);
+insert into wish (member_id, product_id, count)
+values (1, 74, 13);
+insert into wish (member_id, product_id, count)
 values (2, 12, 13);
 insert into wish (member_id, product_id, count)
 values (3, 32, 13);
