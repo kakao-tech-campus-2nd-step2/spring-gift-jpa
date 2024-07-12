@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -18,21 +21,16 @@ public class Product {
     private int price;
     @Column(nullable = false)
     private String imageUrl;
-
+    @OneToMany(mappedBy = "product")
+    private List<Wish> wishList = new ArrayList<>();
     protected Product() {
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
-        this.id = id;
+    public Product(String name, int price, String imageUrl, List<Wish> wishList) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-    }
-
-    public Product(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.wishList = wishList;
     }
 
     public void update(String name, int price, String imageUrl) {
@@ -55,5 +53,9 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public List<Wish> getWishList() {
+        return wishList;
     }
 }
