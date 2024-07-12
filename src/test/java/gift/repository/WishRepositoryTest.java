@@ -3,7 +3,8 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import gift.dto.WishRequest;
+import gift.entity.MemberEntity;
+import gift.entity.ProductEntity;
 import gift.entity.WishEntity;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -16,17 +17,33 @@ class WishRepositoryTest {
 
     @Autowired
     private WishRepository wishRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
     @Test
     @DisplayName("memberId로 wish 리스트 가져오는 findAllByMember 테스트")
-    void findAllByMemberId() {
+    void findAllByMemberEntity() {
         // given
-        WishRequest request1 = new WishRequest(1L, 1L);
-        WishRequest request2 = new WishRequest(1L, 2L);
-        WishEntity expected1 = wishRepository.save(request1.toWishEntity());
-        WishEntity expected2 = wishRepository.save(request2.toWishEntity());
+        MemberEntity member = new MemberEntity("test", "password");
+        MemberEntity savedMember = memberRepository.save(member);
+
+        ProductEntity product1 = new ProductEntity("product1", 1000, "product1.jpg");
+        ProductEntity product2 = new ProductEntity("product2", 2000, "product2.jpg");
+
+        ProductEntity savedProduct1 = productRepository.save(product1);
+        ProductEntity savedProduct2 = productRepository.save(product2);
+
+        WishEntity wish1 = new WishEntity(savedMember, savedProduct1);
+        WishEntity wish2 = new WishEntity(savedMember, savedProduct2);
+
+        WishEntity expected1 = wishRepository.save(wish1);
+        WishEntity expected2 = wishRepository.save(wish2);
 
         // when
-        List<WishEntity> actualList = wishRepository.findAllByMemberId(request1.getMemberId());
+        List<WishEntity> actualList = wishRepository.findAllByMemberEntity(savedMember);
 
         // then
         assertThat(actualList).isNotNull();
@@ -38,8 +55,14 @@ class WishRepositoryTest {
     @DisplayName("findById 테스트")
     void findById(){
         // given
-        WishRequest request = new WishRequest(1L, 1L);
-        WishEntity expected = wishRepository.save(request.toWishEntity());
+        MemberEntity member = new MemberEntity("test", "password");
+        MemberEntity savedMember = memberRepository.save(member);
+
+        ProductEntity product = new ProductEntity("product", 1000, "product1.jpg");
+        ProductEntity savedProduct = productRepository.save(product);
+
+        WishEntity request = new WishEntity(savedMember, savedProduct);
+        WishEntity expected = wishRepository.save(request);
 
         // when
         WishEntity actual = wishRepository.findById(expected.getId()).orElseThrow();
@@ -52,8 +75,13 @@ class WishRepositoryTest {
     @DisplayName("save 테스트")
     void save(){
         // given
-        WishRequest request = new WishRequest(1L, 1L);
-        WishEntity expected = request.toWishEntity();
+        MemberEntity member = new MemberEntity("test", "password");
+        MemberEntity savedMember = memberRepository.save(member);
+
+        ProductEntity product = new ProductEntity("product", 1000, "product1.jpg");
+        ProductEntity savedProduct = productRepository.save(product);
+
+        WishEntity expected = new WishEntity(savedMember, savedProduct);
 
         // when
         WishEntity actual = wishRepository.save(expected);
@@ -61,8 +89,8 @@ class WishRepositoryTest {
         // then
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
-            () -> assertThat(actual.getMemberId()).isEqualTo(expected.getMemberId()),
-            () -> assertThat(actual.getProductId()).isEqualTo(expected.getProductId())
+            () -> assertThat(actual.getMemberEntity()).isEqualTo(expected.getMemberEntity()),
+            () -> assertThat(actual.getProductEntity()).isEqualTo(expected.getProductEntity())
         );
     }
 
@@ -70,8 +98,14 @@ class WishRepositoryTest {
     @DisplayName("delete 테스트")
     void delete(){
         // given
-        WishRequest request = new WishRequest(1L, 1L);
-        WishEntity savedWish = wishRepository.save(request.toWishEntity());
+        MemberEntity member = new MemberEntity("test", "password");
+        MemberEntity savedMember = memberRepository.save(member);
+
+        ProductEntity product = new ProductEntity("product", 1000, "product1.jpg");
+        ProductEntity savedProduct = productRepository.save(product);
+
+        WishEntity request = new WishEntity(savedMember, savedProduct);
+        WishEntity savedWish = wishRepository.save(request);
 
         // when
         wishRepository.delete(savedWish);
