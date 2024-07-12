@@ -2,7 +2,6 @@ package gift.product.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.TestUtils;
 import gift.auth.dto.LoginReqDto;
 import gift.auth.token.AuthToken;
 import gift.common.exception.ErrorResponse;
@@ -11,6 +10,8 @@ import gift.product.dto.ProductReqDto;
 import gift.product.dto.ProductResDto;
 import gift.product.exception.ProductErrorCode;
 import gift.product.message.ProductInfo;
+import gift.utils.RestPage;
+import gift.utils.TestUtils;
 import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,6 +27,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -68,18 +70,28 @@ class ProductControllerTest {
     @DisplayName("전체 상품 조회")
     void 전체_상품_조회() {
         //given
-        var request = TestUtils.createRequestEntity(baseUrl + "/api/products", null, HttpMethod.GET, accessToken);
+        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/api/products")
+                .queryParam("page", 0)
+                .queryParam("size", 3)
+                .queryParam("sort", "id,desc")  // id 역순 정렬
+                .build()
+                .toString();
+
+        RequestEntity<Object> request = TestUtils.createRequestEntity(url, null, HttpMethod.GET, accessToken);
 
         //when
-        var responseType = new ParameterizedTypeReference<List<ProductResDto>>() {};
-        var actual = restTemplate.exchange(request, responseType);  // List<ProductResDto> 타입으로 받음
+        var responseType = new ParameterizedTypeReference<RestPage<ProductResDto>>() {};
+        var actual = restTemplate.exchange(request, responseType);  // Page<ProductResDto> 타입으로 받음
+        var products = actual.getBody().getContent();
 
         //then
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actual.getBody()).isNotNull();
-        assertThat(actual.getBody().size()).isEqualTo(3);
+        assertThat(products).isNotNull();
+        assertThat(products.size()).isEqualTo(3);
+        assertThat(products).map(ProductResDto::name).containsExactly("상품3", "상품2", "상품1");
+        assertThat(products).map(ProductResDto::price).containsExactly(3000, 2000, 1000);
 
-        actual.getBody().forEach(product -> assertThat(product).isInstanceOf(ProductResDto.class));
+        products.forEach(product -> assertThat(product).isInstanceOf(ProductResDto.class));
     }
 
     @Test
@@ -185,8 +197,8 @@ class ProductControllerTest {
     void 상품_수정() {
         //given: 상품 조회 후 마지막 상품을 수정
         var lastProductRequest = TestUtils.createRequestEntity(baseUrl + "/api/products", null, HttpMethod.GET, accessToken);
-        var lastProductResponse = restTemplate.exchange(lastProductRequest, new ParameterizedTypeReference<List<ProductResDto>>() {});
-        var lastProduct = lastProductResponse.getBody().getLast();
+        var lastProductResponse = restTemplate.exchange(lastProductRequest, new ParameterizedTypeReference<RestPage<ProductResDto>>() {});
+        var lastProduct = lastProductResponse.getBody().getContent().getLast();
         Long productId = lastProduct.id();
 
         var reqBody = new ProductReqDto("이름 수정", 20000, "https://www.google.com/modify.png");

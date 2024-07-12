@@ -1,14 +1,18 @@
 package gift.product.service;
 
-import gift.product.entity.Product;
 import gift.product.dto.ProductReqDto;
 import gift.product.dto.ProductResDto;
+import gift.product.entity.Product;
 import gift.product.exception.ProductCreateException;
 import gift.product.exception.ProductDeleteException;
 import gift.product.exception.ProductNotFoundException;
 import gift.product.exception.ProductUpdateException;
 import gift.product.repository.ProductRepository;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +26,14 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResDto> getProducts() {
-        return productRepository.findAll().stream()
+    public Page<ProductResDto> getProducts(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
+
+        List<ProductResDto> productResDtos = products.stream()
                 .map(ProductResDto::new)
-                .toList();
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(productResDtos, pageable, products.getTotalElements());
     }
 
     @Transactional(readOnly = true)
