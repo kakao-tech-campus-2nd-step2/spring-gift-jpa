@@ -50,6 +50,22 @@
             </tr>
           </tbody>
         </table>
+        <!--페이지 네이션-->
+        <div th:if="${totalPages > 1}">
+          <nav>
+            <ul class="pagination">
+              <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
+                <a class="page-link" th:href="@{/products?page=${currentPage - 1}&size=${pageSize}}">이전</a>
+              </li>
+              <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}" th:class="${pageNumber == currentPage} ? 'page-item active' : 'page-item'">
+                <a class="page-link" th:href="@{/products?page=${pageNumber}&size=${pageSize}}" th:text="${pageNumber + 1}"></a>
+              </li>
+              <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">
+                <a class="page-link" th:href="@{/products?page=${currentPage + 1}&size=${pageSize}}">다음</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </div> <!-- /container -->
   </body>

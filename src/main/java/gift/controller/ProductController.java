@@ -1,12 +1,17 @@
 package gift.controller;
 
 import gift.domain.Product;
+import gift.domain.WishList;
 import gift.error.NotFoundException;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 
@@ -32,9 +38,20 @@ public class ProductController {
     //상품 전체 조회 페이지
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public String showProductList(Model model) {
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
+    public String showProductList(
+        @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+        @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
+        Model model) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productsPage = productService.getAllProducts(pageable);
+
+        model.addAttribute("products", productsPage.getContent());
+        model.addAttribute("currentPage", productsPage.getNumber());
+        model.addAttribute("totalPages", productsPage.getTotalPages());
+        model.addAttribute("totalItems", productsPage.getTotalElements());
+        model.addAttribute("pageSize", productsPage.getSize());
+
         return "products_list";
     }
 

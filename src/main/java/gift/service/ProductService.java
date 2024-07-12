@@ -7,6 +7,8 @@ import gift.error.NotFoundException;
 import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +23,9 @@ public class ProductService {
 
     //전체 상품 조회 기능
     @Transactional(readOnly = true)
-    public List<Product> getAllProducts() {
-        List<ProductEntity> productEntities = productRepository.findAll();
-        return productEntities.stream()
-            .map(this::entityToDto)
-            .collect(Collectors.toList());
+    public Page<Product> getAllProducts(Pageable pageable) {
+        Page<ProductEntity> productEntities = productRepository.findAll(pageable);
+        return productEntities.map(this::entityToDto);
     }
 
     //단일 상품 조회 기능
