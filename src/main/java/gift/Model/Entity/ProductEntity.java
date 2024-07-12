@@ -23,11 +23,6 @@ public class ProductEntity {
         @Column(name = "image_url")
         private String imageUrl;
 
-        @OnDelete(action= OnDeleteAction.CASCADE)
-        @OneToMany(mappedBy = "product")
-        @JsonManagedReference
-        private List<WishEntity> wishEntities;
-
         public ProductEntity(){}
 
         public ProductEntity(String name, int price, String imageUrl){
@@ -66,14 +61,6 @@ public class ProductEntity {
 
         public void setImageUrl(String imageUrl) {
                 this.imageUrl = imageUrl;
-        }
-
-        public List<WishEntity> getWishes() {
-                return wishEntities;
-        }
-
-        public void setWishes(List<WishEntity> wishEntities) {
-                this.wishEntities = wishEntities;
         }
 }
 

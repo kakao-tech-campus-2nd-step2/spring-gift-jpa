@@ -25,11 +25,6 @@ public class MemberEntity {
         @Column(name="role")
         private Role role;
 
-        @OnDelete(action= OnDeleteAction.CASCADE)
-        @OneToMany(mappedBy = "member")
-        @JsonManagedReference
-        private List<WishEntity> wishEntities;
-
         public MemberEntity(){}
 
         public MemberEntity(String email, String password, Role role){
@@ -68,13 +63,5 @@ public class MemberEntity {
 
         public void setRole(Role role) {
                 this.role = role;
-        }
-
-        public List<WishEntity> getWishes() {
-                return wishEntities;
-        }
-
-        public void setWishes(List<WishEntity> wishEntities) {
-                this.wishEntities = wishEntities;
         }
 }
