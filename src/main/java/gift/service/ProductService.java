@@ -1,10 +1,11 @@
 package gift.service;
 
 import gift.dto.ProductRequest;
-import gift.repository.ProductRepository;
 import gift.entity.Product;
 import gift.exception.ProductNotFoundException;
-import java.util.List;
+import gift.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,8 +17,8 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     public Product getProductById(Long id) {

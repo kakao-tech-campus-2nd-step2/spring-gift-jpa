@@ -4,7 +4,10 @@ import gift.dto.ProductRequest;
 import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +28,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getProduct() {
-        return productService.getAllProducts();
+    public Page<Product> getProduct(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return productService.getAllProducts(pageable);
     }
 
     @GetMapping("/{id}")

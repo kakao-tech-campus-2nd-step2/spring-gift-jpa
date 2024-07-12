@@ -5,7 +5,10 @@ import gift.dto.WishRequest;
 import gift.entity.User;
 import gift.entity.Wish;
 import gift.service.WishService;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +37,8 @@ public class WishController {
     }
 
     @GetMapping
-    public List<Wish> getWishes(@LoginUser User user) {
-        return wishService.getWishes(user.getId());
+    public Page<Wish> getWishes(@LoginUser User user, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return wishService.getWishes(user.getId(), pageable);
     }
 
     @GetMapping("/{wishId}")

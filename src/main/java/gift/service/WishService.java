@@ -10,8 +10,9 @@ import gift.exception.WishNotFoundException;
 import gift.repository.ProductRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishRepository;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,8 +41,8 @@ public class WishService {
         wishRepository.save(wish);
     }
 
-    public List<Wish> getWishes(Long userId) {
-        return wishRepository.findByUserId(userId);
+    public Page<Wish> getWishes(Long userId, Pageable pageable) {
+        return wishRepository.findByUserId(userId, pageable);
     }
 
     public Wish getOneWish(Long userId, Long wishId) {
