@@ -26,12 +26,12 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerMember(@RequestBody Member member) throws AlreadyExistMember {
+    public ResponseEntity<TokenResponseDto> registerMember(@RequestBody Member member) throws AlreadyExistMember {
         return memberService.register(member);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Member member) throws NotFoundMember {
+    public ResponseEntity<TokenResponseDto> login(@RequestBody Member member) throws NotFoundMember {
         return memberService.login(member);
     }
 
