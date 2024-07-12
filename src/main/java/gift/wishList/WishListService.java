@@ -50,13 +50,9 @@ public class WishListService {
         wishListRepository.deleteById(id);
     }
 
-    public Page<WishListDTO> getWishListsPages(int pageNum, int size) {
-        List<WishList> wishLists = wishListRepository.findAll();
-        List<WishListDTO> wishListDTOS = new ArrayList<>();
-        for (WishList wishList : wishLists) {
-            wishListDTOS.add(new WishListDTO(wishList));
-        }
-        PageRequest pageRequest = PageRequest.of(pageNum, size);
+    public Page<WishListDTO> getWishListsPages(int pageNum, int size, User user) {
+        List<WishListDTO> wishListDTOS = findByUser(user);
+        PageRequest pageRequest = PageRequest.of(pageNum, size, Sort.by("id"));
         int start = (int) pageRequest.getOffset();
         int end = Math.min((start + pageRequest.getPageSize()), wishListDTOS.size());
         return new PageImpl<>(wishListDTOS.subList(start, end), pageRequest, wishListDTOS.size());

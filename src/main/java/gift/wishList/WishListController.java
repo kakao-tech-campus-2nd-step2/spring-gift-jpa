@@ -56,10 +56,11 @@ public class WishListController {
 
     @GetMapping("/pages")
     @Transactional
-    public ResponseEntity<Page<WishListDTO>> getWishListsPage(@RequestParam(required = false, defaultValue = "0", value = "page") int page,
+    public ResponseEntity<Page<WishListDTO>> getWishListsPage(@LoginUser User user,
+                                                              @RequestParam(required = false, defaultValue = "0", value = "page") int page,
                                                               @RequestParam(required = false, defaultValue = "10", value = "size") int size) {
 
-        return ResponseEntity.ok(wishListService.getWishListsPages(page, size));
+        return ResponseEntity.ok(wishListService.getWishListsPages(page, size, user));
     }
 
 }
