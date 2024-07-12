@@ -41,7 +41,7 @@ public class WishService {
 
     @Transactional
     public void updateWish(WishParam wishRequest, final Long wishId) {
-        Wish wish = wishRepository.findById(wishId)
+        Wish wish = wishRepository.findWishByIdWithUserAndProduct(wishId)
                 .orElseThrow(() -> WishNotFoundException.of(wishId));
 
         User user = userRepository.getReferenceById(wishRequest.userId());
@@ -52,7 +52,7 @@ public class WishService {
 
     @Transactional(readOnly = true)
     public List<WishInfo> getWishList(final Long userId) {
-        List<Wish> wishes = wishRepository.findWishesByUserId(userId);
+        List<Wish> wishes = wishRepository.findWishesByUserIdWithUserAndProduct(userId);
 
         var responses = wishes.stream()
                 .map(WishInfo::from)
