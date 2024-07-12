@@ -1,7 +1,8 @@
 package gift.service;
 
+import gift.dto.ProductDTO;
 import gift.entity.Product;
-import gift.repository.JpaProductRepository;
+import gift.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,18 +12,14 @@ import java.util.Optional;
 @Service
 public class AdminService {
 
-    private final JpaProductRepository repository;
+    private final ProductRepository repository;
 
     @Autowired
-    public AdminService(JpaProductRepository repository) {
+    public AdminService(ProductRepository repository) {
         this.repository = repository;
     }
 
-    public void saveProduct(Product product) {
-        repository.save(product);
-    }
-
-    public Optional<Product> getProduct(long productId) {
+    public Optional<Product> getProduct(Long productId) {
         return repository.findById(productId);
     }
 
@@ -30,11 +27,14 @@ public class AdminService {
         return repository.findAll();
     }
 
-    public void deleteProduct(long productId) {
+    public void saveProduct(ProductDTO productDTO) {
+    }
+
+    public void deleteProduct(Long productId) {
         repository.deleteById(productId);
     }
 
-    public void updateProduct(long id, Product product) {
-        repository.updateById(id, product);
+    public void updateProduct(Long id, Product product) {
+
     }
 }

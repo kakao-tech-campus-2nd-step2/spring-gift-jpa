@@ -11,3 +11,4 @@ public interface UserRepository {
     List<User> findAll();
     Optional<User> isExistUser(User user);
 }
+
