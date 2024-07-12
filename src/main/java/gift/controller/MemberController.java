@@ -45,7 +45,8 @@ public class MemberController {
             return "register_member_form";
         }
 
-        Member member = new Member(null, memberDTO.name(), memberDTO.email(), memberDTO.password(), "user");
+        Member member = new Member(null, memberDTO.name(), memberDTO.email(), memberDTO.password(),
+            "user");
         memberService.saveMember(memberDTO);
 
         return "register_success";

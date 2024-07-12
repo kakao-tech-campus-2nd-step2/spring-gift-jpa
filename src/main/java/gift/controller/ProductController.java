@@ -27,7 +27,7 @@ public class ProductController {
     @PostMapping
     public Product addProduct(@RequestBody ProductDTO newProductDTO) {
         productService.saveProduct(newProductDTO);
-        return productService.toEntity(newProductDTO,null);
+        return productService.toEntity(newProductDTO, null);
     }
 
     @GetMapping("/{id}")
@@ -46,7 +46,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable("id") long id, @RequestBody ProductDTO updatedProductDTO) {
+    public Product updateProduct(@PathVariable("id") long id,
+        @RequestBody ProductDTO updatedProductDTO) {
         productService.updateProduct(updatedProductDTO, id);
         return productService.findProductsById(id);
     }

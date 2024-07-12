@@ -70,7 +70,8 @@ class WishlistRepositoryTest {
     void testDeleteByMemberEmailAndProductId() {
         Wishlist wishlist = new Wishlist(1L, savedMember.getEmail(), savedProduct.getId());
         wishlistRepository.save(wishlist);
-        wishlistRepository.deleteByMemberEmailAndProductId(savedMember.getEmail(), savedProduct.getId());
+        wishlistRepository.deleteByMemberEmailAndProductId(savedMember.getEmail(),
+            savedProduct.getId());
         List<Wishlist> result = wishlistRepository.findByMemberEmail(savedMember.getEmail());
         assertThat(result.size()).isEqualTo(0);
     }

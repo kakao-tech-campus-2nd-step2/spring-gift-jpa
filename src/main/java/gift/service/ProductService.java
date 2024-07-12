@@ -45,7 +45,8 @@ public class ProductService {
     }
 
     public static Product toEntity(ProductDTO productDTO, Long id) {
-        Product product = new Product(id, productDTO.name(), productDTO.price(), productDTO.imageUrl());
+        Product product = new Product(id, productDTO.name(), productDTO.price(),
+            productDTO.imageUrl());
         product.validate();
         return product;
     }

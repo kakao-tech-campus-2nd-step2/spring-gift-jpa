@@ -17,7 +17,8 @@ public class MemberService {
 
     @Transactional
     public Member saveMember(MemberDTO memberDTO) {
-        Member member = new Member(null, memberDTO.name(), memberDTO.email(), memberDTO.password(), "user");
+        Member member = new Member(null, memberDTO.name(), memberDTO.email(), memberDTO.password(),
+            "user");
         member.validate();
         return memberRepository.save(member);
     }

@@ -111,7 +111,7 @@ class ProductRepositoryTest {
     @Test
     void testSaveWithKaKaoName() {
         try {
-            invalidProduct = new Product(1L, "카카오상품","100","https://kakao");
+            invalidProduct = new Product(1L, "카카오상품", "100", "https://kakao");
             invalidProduct.validate();
             productRepository.save(invalidProduct);
         } catch (IllegalArgumentException e) {

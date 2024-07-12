@@ -29,7 +29,8 @@ public class WishlistController {
 
     @PostMapping
     @ResponseBody
-    public String addWishlist(@RequestBody WishlistRequest wishlistRequest, @LoginMember Member member) {
+    public String addWishlist(@RequestBody WishlistRequest wishlistRequest,
+        @LoginMember Member member) {
         if (member == null) {
             return "redirect:/members/login";
         }
