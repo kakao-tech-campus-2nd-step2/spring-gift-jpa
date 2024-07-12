@@ -51,10 +51,6 @@ public class AuthenticateMemberArgumentResolver implements HandlerMethodArgument
             throw new IllegalArgumentException("Member not found for token: " + token);
         }
 
-        return new UserRequest(
-                userRes.getUserId(),
-                userRes.getEmail(),
-                userRes.getPassword()
-        );
+        return userRes;
     }
 }
