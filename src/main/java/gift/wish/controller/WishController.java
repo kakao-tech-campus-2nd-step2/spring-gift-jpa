@@ -23,8 +23,8 @@ public class WishController {
 
     // 1. 사용자 위시리스트에 상품 추가
     @PostMapping
-    public void addWish(@LoginMember Member member, @RequestBody WishRequest wishRequest) {
-        wishlistService.addProductToWishlist(member, wishRequest.getProductId());
+    public void createWish(@LoginMember Member member, @RequestBody WishRequest wishRequest) {
+        wishlistService.createWish(member, wishRequest.getProductId());
     }
 
     // 2. 사용자 위시리스트 상품 전체 조회

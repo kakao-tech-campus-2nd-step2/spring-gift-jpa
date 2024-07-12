@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "product")
@@ -35,6 +34,15 @@ public class Product {
         return price == comparingProduct.price &&
                 name.equals(comparingProduct.name) &&
                 imageUrl.equals(comparingProduct.imageUrl);
+    }
+    public void addWish(Wish wish) {
+        this.wishes.add(wish);
+        wish.setProduct(this);
+    }
+
+    public void removeWish(Wish wish) {
+        wishes.remove(wish);
+        wish.setProduct(null);
     }
 
     // Constructors, Getters, and Setters
@@ -87,13 +95,5 @@ public class Product {
         this.wishes = wishes;
     }
 
-    public void addWish(Wish wish) {
-        wishes.add(wish);
-        wish.setProduct(this);
-    }
 
-    public void removeWish(Wish wish) {
-        wishes.remove(wish);
-        wish.setProduct(null);
-    }
 }

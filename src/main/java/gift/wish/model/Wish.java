@@ -13,6 +13,7 @@ public class Wish {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    // 지연 로딩의 이유? 연관된 엔티티를 실제로 사용하기 전까지, 즉 영속성 컨텍스트가 활성화되기 전까지는 로딩을 지연시킨다. 이를 통해 성능 최적화와 메모리 사용량을 줄일 수 있따.
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 

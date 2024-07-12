@@ -50,23 +50,22 @@ public class WishCRUDTest {
         testProduct = new Product("Ice Americano", 2000, "http://example.com/example.jpg");
         productRepository.save(testProduct);
 
-        testWish = new Wish(testMember, testProduct);
-        wishRepository.save(testWish);
+        wishService.createWish(testMember, testProduct.getId());
     }
 
     @Test
-    public void testAddProductToWishlist() {
+    public void testCreateWish() {
         // Given
         Product newProduct = new Product("CaffeLatte", 2500, "http://example.com/image2.jpg");
         productRepository.save(newProduct);
 
         // When
-        wishService.addProductToWishlist(testMember, newProduct.getId());
+        wishService.createWish(testMember, newProduct.getId());
 
         // Then
-        List<Wish> wishes = wishRepository.findAllByMember(testMember);
+        List<WishDTO> wishes = wishService.getWishlistByMemberId(testMember);
         assertThat(wishes).hasSize(2);
-        assertThat(wishes).extracting(wish -> wish.getProduct().getName()).contains("CaffeLatte");
+        assertThat(wishes.get(1).getProductName()).isEqualTo("CaffeLatte");
     }
 
     @Test
@@ -82,13 +81,14 @@ public class WishCRUDTest {
     @Test
     public void testDeleteWish() {
         // Given
-        Long wishId = testWish.getId();
-
+        Wish wish = wishRepository.findAll().get(0);
+        Long wishId = wish.getId();
+        System.out.println("wishId = " + wishId);
         // When
         wishService.deleteWish(wishId);
 
         // Then
-        List<Wish> wishes = wishRepository.findAllByMember(testMember);
-        assertThat(wishes).isEmpty();
+        List<Wish> wishlist = wishRepository.findAll();
+        assertThat(wishlist).isEmpty();
     }
 }

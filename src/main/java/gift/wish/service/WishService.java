@@ -8,7 +8,7 @@ import gift.wish.model.WishDTO;
 import java.util.List;
 
 public interface WishService {
-    void addProductToWishlist(Member member, Long productId);
+    void createWish(Member member, Long productId);
     List<WishDTO> getWishlistByMemberId(Member member);
     void deleteWish(Long wishId);
 }
