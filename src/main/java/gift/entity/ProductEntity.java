@@ -5,7 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name="products")
@@ -22,6 +24,9 @@ public class ProductEntity {
 
     @Column(nullable = false, columnDefinition = "varchar(255)")
     private String imageUrl;
+
+    @OneToMany(mappedBy = "productEntity")
+    private List<WishListEntity> wishListEntities;
 
     public ProductEntity() {}
 
@@ -45,6 +50,14 @@ public class ProductEntity {
 
     public String getImageUrl(){
         return imageUrl;
+    }
+
+    public List<WishListEntity> getWishListEntities() {
+        return wishListEntities;
+    }
+
+    public void setWishListEntities(List<WishListEntity> wishListEntities) {
+        this.wishListEntities = wishListEntities;
     }
 
     // 필드 업데이트를 위한 메서드

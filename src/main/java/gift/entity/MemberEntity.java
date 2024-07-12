@@ -1,13 +1,13 @@
 package gift.entity;
 
-import gift.model.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.math.BigInteger;
+import java.util.List;
 
 @Entity
 @Table(name="members")
@@ -21,6 +21,9 @@ public class MemberEntity {
 
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "userEntity")
+    private List<WishListEntity> wishListEntities;
 
     public MemberEntity() {}
 
@@ -39,5 +42,9 @@ public class MemberEntity {
 
     public String getPassword() {
         return password;
+    }
+
+    public List<WishListEntity> getWishListEntities() {
+        return wishListEntities;
     }
 }
