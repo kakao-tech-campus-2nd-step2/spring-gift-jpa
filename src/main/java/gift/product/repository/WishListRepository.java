@@ -1,6 +1,5 @@
 package gift.product.repository;
 
-import gift.product.model.Member;
 import gift.product.model.Wish;
 
 import org.springframework.data.domain.Page;
@@ -10,5 +9,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface WishListRepository extends JpaRepository<Wish, Long> {
-    Page<Wish> findAllByMember(Member member, Pageable pageable);
+    Page<Wish> findAllByMemberId(Long memberId, Pageable pageable);
 }

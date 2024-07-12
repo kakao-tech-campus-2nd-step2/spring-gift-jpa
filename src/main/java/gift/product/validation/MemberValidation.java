@@ -25,15 +25,15 @@ public class MemberValidation {
     }
 
     public void signUpValidation(Member member) {
-        if(memberRepository.findByEmail(member.getEmail()).isPresent())
+        if(memberRepository.findByEmail(member.getEmail()) != null)
             throw new DuplicateException("이미 가입된 이메일입니다.");
     }
 
     public Member loginValidation(String email) {
-        Optional<Member> member = memberRepository.findByEmail(email);
-        if(member.isEmpty())
-            throw new LoginFailedException("잘못된 이메일 입니다.");
-        return member.get();
+        Member member = memberRepository.findByEmail(email);
+        if(member == null)
+            throw new LoginFailedException("이메일을 잘못 입력하였습니다.");
+        return member;
     }
 
     public boolean isNull(String str) {

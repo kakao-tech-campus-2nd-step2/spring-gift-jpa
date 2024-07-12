@@ -37,8 +37,9 @@ public class WishListService {
     public Page<Wish> getAllProducts(String authorization, Pageable pageable) {
         System.out.println("[WishListService] getAllProducts()");
         String token = jwtUtil.checkAuthorization(authorization);
-
-        return  wishListRepository.findAllByMember(memberRepository.findByEmail(jwtUtil.getEmailByToken(token)).get(), pageable);
+        String email = jwtUtil.getEmailByToken(token);
+        Long memberId = memberRepository.findByEmail(email).getId();
+        return  wishListRepository.findAllByMemberId(memberId, pageable);
     }
 
     public ResponseEntity<String> registerWishProduct(HttpServletRequest request, Map<String, Long> requestBody) {
@@ -48,7 +49,7 @@ public class WishListService {
 
         wishListRepository.save(
                 new Wish(
-                        memberRepository.findByEmail(jwtUtil.getEmailByToken(token)).get(),
+                        memberRepository.findByEmail(jwtUtil.getEmailByToken(token)),
                         productRepository.findById(requestBody.get("productId")).get()
                 )
         );
@@ -59,7 +60,7 @@ public class WishListService {
     public ResponseEntity<String> deleteWishProduct(HttpServletRequest request, Long id) {
         System.out.println("[WishListService] deleteWishProduct()");
         String token = jwtUtil.checkAuthorization(request.getHeader("Authorization"));
-        wishListValidation.deleteValidation(id, memberRepository.findByEmail(jwtUtil.getEmailByToken(token)).get());
+        wishListValidation.deleteValidation(id, memberRepository.findByEmail(jwtUtil.getEmailByToken(token)));
         wishListRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("delete WishProduct successfully");
     }
