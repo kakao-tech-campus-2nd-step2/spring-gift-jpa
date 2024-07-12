@@ -26,11 +26,6 @@ public class WishRequestDto {
         return count;
     }
 
-    public Wish toEntity() {
-        return new Wish(
-            count
-        );
-    }
 
     public boolean isCountZero() {
         return count == 0;

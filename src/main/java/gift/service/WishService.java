@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.model.Product;
 import gift.model.Wish;
 import gift.model.dto.LoginMemberDto;
 import gift.model.dto.WishRequestDto;
@@ -31,11 +32,9 @@ public class WishService {
 
     @Transactional
     public void addProductToWishList(WishRequestDto wishRequestDto, LoginMemberDto loginMemberDto) {
-        Wish wish = wishRequestDto.toEntity();
-        wish.setProduct(productRepository.findById(wishRequestDto.getProductId())
-            .orElseThrow(() -> new IllegalArgumentException("Wish 값이 잘못되었습니다.")));
-        wish.setMember(loginMemberDto.toEntity());
-        wishRepository.save(wish);
+        Product product = productRepository.findById(wishRequestDto.getProductId())
+            .orElseThrow(() -> new IllegalArgumentException("Wish 값이 잘못되었습니다."));
+        wishRepository.save(new Wish(loginMemberDto.toEntity(), product, wishRequestDto.getCount()));
     }
 
     @Transactional
