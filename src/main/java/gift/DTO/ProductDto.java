@@ -16,7 +16,11 @@ public class ProductDto {
   })
   @NotBlank
   private String name;
+
+  @NotBlank
   private int price;
+
+  @NotBlank
   private String imageUrl;
 
   public ProductDto() {
