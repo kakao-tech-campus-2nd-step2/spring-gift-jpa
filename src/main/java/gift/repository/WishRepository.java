@@ -1,5 +1,7 @@
 package gift.repository;
 
+import gift.model.product.Product;
+import gift.model.user.User;
 import gift.model.wish.Wish;
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +11,7 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
 
     boolean existsByProductIdAndUserId(Long productId, Long userId);
 
-    List<Wish> findAllByUserId(Long userId);
+    List<Wish> findByUserId(Long userId);
 
     void deleteByProductIdAndUserId(Long productId, Long userId);
 

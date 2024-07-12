@@ -1,4 +1,4 @@
-package gift;
+package gift.repository;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,8 +13,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
+@Sql("/truncate.sql")
 public class ProductRepositoryTest {
 
     @Autowired
@@ -48,7 +50,7 @@ public class ProductRepositoryTest {
         productRepository.save(new Product(null, "상품1", 1000, "image1.jpg"));
         productRepository.save(new Product(null, "상품2", 2000, "image2.jpg"));
         List<Product> products = productRepository.findAll();
-        assertThat(products).hasSize(8);
+        assertThat(products).hasSize(2);
     }
 
     @Test
@@ -70,6 +72,6 @@ public class ProductRepositoryTest {
         productRepository.save(new Product(null, "상품2", 2000, "image2.jpg"));
         productRepository.deleteById(1L);
         List<Product> products = productRepository.findAll();
-        assertThat(products).hasSize(7);
+        assertThat(products).hasSize(1);
     }
 }

@@ -13,8 +13,10 @@ import gift.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -25,6 +27,7 @@ public class UserService {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Transactional
     public UserResponse register(UserRequest userRequest) {
         if (userRepository.existsByEmail(userRequest.email())) {
             throw new ExistUserException();
