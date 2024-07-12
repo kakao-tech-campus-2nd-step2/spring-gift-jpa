@@ -43,7 +43,7 @@ public class ProductService {
             .collect(Collectors.toList());
     }
 
-    // Read(단일 상품) - getProduct()
+    // Read(단일 상품) - getProductEntity()
     public Product getProduct(Long id) {
         ProductEntity response = productRepository.findById(id).orElse(null);
         return response != null ? toProductDTO(response) : null;
