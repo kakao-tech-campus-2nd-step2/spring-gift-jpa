@@ -1,17 +1,16 @@
 package gift.Controller;
 
 import gift.Service.WishService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/wishlist")
-public class WishController {
+public class WishRestController {
     private final WishService wishService;
 
-    public  WishController(WishService wishService){
+    public WishRestController(WishService wishService){
         this.wishService = wishService;
     }
 

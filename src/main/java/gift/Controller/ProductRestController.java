@@ -1,7 +1,6 @@
 package gift.Controller;
 
 import gift.Model.DTO.ProductDTO;
-import gift.Model.Entity.ProductEntity;
 import gift.Service.ProductService;
 import gift.Valid.NameValidator;
 import org.springframework.validation.BindingResult;
@@ -9,15 +8,14 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-public class ProductController {
+public class ProductRestController {
     private final ProductService productService;
     private NameValidator nameValidator;
 
-    public ProductController(ProductService productService){
+    public ProductRestController(ProductService productService){
         this.productService = productService;
     }
 
