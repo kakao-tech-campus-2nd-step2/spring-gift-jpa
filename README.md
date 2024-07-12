@@ -73,5 +73,5 @@
   - [x] build 파일에서 관련 내용 비활성화
   - [x] 사용하지 않는 로직 삭제
 - [x] MemberController header key 변경
-- [ ] 공통 Exception을 ControllerAdvice로 고치기
+- [x] 공통 Exception을 ControllerAdvice로 고치기
 - [ ] MemberController 

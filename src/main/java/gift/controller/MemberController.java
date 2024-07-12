@@ -26,12 +26,8 @@ public class MemberController {
 
     @PostMapping("/register")
     public ResponseEntity<MemberResponse> registerMember(@RequestBody MemberRequest requestDto) {
-        try {
-            MemberResponse responseDto = memberService.registerMember(requestDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+        MemberResponse responseDto = memberService.registerMember(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @PostMapping("/login")
