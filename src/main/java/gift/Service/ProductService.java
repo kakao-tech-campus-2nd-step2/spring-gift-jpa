@@ -91,7 +91,8 @@ public class ProductService {
         return dtoList;
     }
 
-    public Page<ProductDTO> transferListToPage(List<ProductDTO> dtoList, int page){
+    public Page<ProductDTO> getPage(String token, int page){
+        List<ProductDTO> dtoList = getAll(token);
         Pageable pageable = PageRequest.of(page, 10);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), dtoList.size());
