@@ -1,10 +1,13 @@
 package gift.service;
 
+import gift.domain.Member;
+import gift.domain.Product;
 import gift.domain.Wish;
 import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WishService{
@@ -13,18 +16,21 @@ public class WishService{
         this.wishRepository = wishRepository;
     }
 
-    public List<Wish> getWishList(Long memberId) {
-        return wishRepository.findByUserId(memberId);
+    public List<Wish> getWishesByMember(Member member) {
+        return member.getWishes().stream()
+                .filter(w -> !w.isDeleted())
+                .collect(Collectors.toList());
     }
 
-    public void addToWishList(Long userId, Long productId) {
+    public void addWish(Member member, Product product) {
         Wish wish = new Wish();
-        wish.setMember(userId);
-        wish.setProduct(productId);
+        wish.setMember(member);
+        wish.setProduct(product);
         wishRepository.save(wish);
     }
 
-    public void removeFromWishList(Long userId, Long productId) {
-        wishRepository.deleteByUserIdAndProductId(userId, productId);
+    public void deleteWish(Wish wish) {
+        wish.setDeleted(true);
     }
+
 }

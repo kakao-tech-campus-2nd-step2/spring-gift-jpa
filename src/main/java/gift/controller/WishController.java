@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.domain.Member;
+import gift.domain.Product;
 import gift.domain.Wish;
 import gift.security.LoginMember;
 import org.springframework.http.HttpStatus;
@@ -21,19 +22,19 @@ public class WishController {
 
     @GetMapping
     public ResponseEntity<List<Wish>> getWishList(@LoginMember Member member) {
-        List<Wish> wishList = wishService.getWishList(member.getId());
+        List<Wish> wishList = wishService.getWishesByMember(member);
         return ResponseEntity.ok(wishList);
     }
 
     @PostMapping
-    public ResponseEntity<Void> addToWishList(@LoginMember Member member, @RequestParam Long productId) {
-        wishService.addToWishList(member.getId(), productId);
+    public ResponseEntity<Void> addToWishList(@LoginMember Member member, @RequestParam Product product) {
+        wishService.addWish(member, product);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> removeFromWishList(@LoginMember Member member, @RequestParam Long productId) {
-        wishService.removeFromWishList(member.getId(), productId);
+    public ResponseEntity<Void> removeFromWishList(@LoginMember Member member, @RequestParam Wish wish) {
+        wishService.deleteWish(wish);
         return ResponseEntity.noContent().build();
     }
 }

@@ -3,6 +3,7 @@ package gift.domain;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -32,17 +33,11 @@ public class Member {
         return password;
     }
 
-    public void setUser_id(long userId) {
-        this.user_id = userId;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Long getId() {
         return user_id;
+    }
+
+    public List<Wish> getWishes() {
+        return this.wishes;
     }
 }

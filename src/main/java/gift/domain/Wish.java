@@ -18,7 +18,7 @@ public class Wish {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private boolean deleted;
+    private boolean isDeleted = false;
 
     public Member getMember() {
         return member;
@@ -40,4 +40,11 @@ public class Wish {
         this.product = product;
     }
 
+    public boolean isDeleted() {
+        return this.isDeleted;
+    }
+
+    public void setDeleted(boolean b) {
+        this.isDeleted = b;
+    }
 }
