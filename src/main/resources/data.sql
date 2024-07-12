@@ -5,3 +5,4 @@ INSERT INTO product (name, price, image_url) VALUES
 INSERT INTO member (email, password) VALUES
     ('test1@example.com', 'password1'),
     ('test2@example.com', 'password2');
+
