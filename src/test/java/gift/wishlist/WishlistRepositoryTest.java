@@ -124,32 +124,4 @@ class WishlistRepositoryTest {
         //then
         assertThat(actual).isEmpty();
     }
-
-    @Test
-    @DisplayName("[Unit] existWishlist test")
-    void existWishlistTest() {
-        //given
-        wishlistRepository.save(
-            new Wishlist(
-                productRepository.findById(1L).get(),
-                memberRepository.findById("aaa@email.com").get()
-            )
-        );
-
-        //when
-        Boolean trueCase = wishlistRepository.existsByMemberEmailAndProductId(
-            "aaa@email.com", 1L
-        );
-
-        Boolean falseCase = wishlistRepository.existsByMemberEmailAndProductId(
-            "aaa@email.com",
-            2L
-        );
-
-        //then
-        assertAll(
-            () -> assertThat(trueCase).isTrue(),
-            () -> assertThat(falseCase).isFalse()
-        );
-    }
 }

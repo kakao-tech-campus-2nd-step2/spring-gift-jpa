@@ -41,12 +41,12 @@ public class WishlistService {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND));
 
-        if (wishlistRepository.existsByMemberEmailAndProductId(
-            memberTokenDTO.getEmail(),
-            productId)
-        ) {
-            throw new IllegalArgumentException(WISHLIST_ALREADY_EXISTS);
-        }
+        wishlistRepository.findByMemberEmailAndProductId(memberTokenDTO.getEmail(), productId)
+            .ifPresent(
+                e -> {
+                    throw new IllegalArgumentException(WISHLIST_ALREADY_EXISTS);
+                }
+            );
 
         wishlistRepository.save(
             new Wishlist(

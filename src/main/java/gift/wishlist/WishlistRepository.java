@@ -10,7 +10,5 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
     List<Wishlist> findAllByMemberEmail(String email);
 
-    boolean existsByMemberEmailAndProductId(String email, Long productId);
-
     Optional<Wishlist> findByMemberEmailAndProductId(String email, Long productId);
 }
