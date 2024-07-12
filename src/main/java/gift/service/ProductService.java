@@ -5,8 +5,9 @@ import gift.dto.ProductDto;
 import gift.entity.Product;
 import gift.repository.ProductJpaDao;
 import jakarta.transaction.Transactional;
-import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -59,8 +60,8 @@ public class ProductService {
      *
      * @return 상품 List
      */
-    public List<ProductDto> getAllProducts() {
-        return productJpaDao.findAll().stream().map(ProductDto::new).toList();
+    public Page<ProductDto> getAllProducts(Pageable pageable) {
+        return productJpaDao.findAll(pageable).map(ProductDto::new);
     }
 
     /**

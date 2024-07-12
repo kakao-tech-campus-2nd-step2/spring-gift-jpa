@@ -40,7 +40,7 @@
     </div>
     <hr>
     <button class="btn btn-success"
-            th:onclick="|location.href='@{/api/products}'|"
+            th:onclick="|location.href='@{/api/products(page=0, size=5)}'|"
             type="button">
         상품 목록
     </button>

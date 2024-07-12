@@ -1,3 +1,5 @@
+const productListPage = '/api/products?size=5';
+
 function addOne() {
      event.preventDefault();
 
@@ -16,7 +18,7 @@ function addOne() {
 
         success: function (response) {
             alert(response);
-            location.href = '/api/products';
+            location.href = productListPage
         },
         error: function (request, status, error) {
             alert(request.responseText);            
@@ -30,7 +32,7 @@ function deleteOne(id) {
        url: `/api/products/product/${id}`,
        success: function(response) {
             alert(response); 
-            location.href = '/api/products';
+            location.href = productListPage;
         },
         error: function (request, status, error) {
             alert(request.responseText);            
@@ -56,7 +58,7 @@ function editOne() {
         processData: false,
         success: function (response) {
             alert(response);
-            location.href = '/api/products';
+            location.href = productListPage;
         },
         error: function (request, status, error) {
             alert(request.responseText);            
@@ -75,7 +77,7 @@ function addWishlist(productId) {
         },
         success: function (response) {
             alert(response);
-            location.href = '/api/products';
+            location.href = productListPage;
         },
         error: function (request, status, error) {
             alert(request.responseText);            
