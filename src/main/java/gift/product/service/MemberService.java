@@ -41,8 +41,7 @@ public class MemberService {
         if(!passwordEncoder.matches(member.getPassword(), findMember.getPassword()))
             throw new LoginFailedException("비밀번호가 틀립니다.");
 
-        memberValidation.login(member.getEmail());
-        return new ResponseEntity<>(responseToken(memberValidation.getToken(member.getEmail())), HttpStatus.OK);
+        return new ResponseEntity<>(responseToken(jwtUtil.generateToken(member.getEmail())), HttpStatus.OK);
     }
 
     public Map<String, String> responseToken(String token) {
