@@ -1,10 +1,7 @@
 package gift.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -15,13 +12,9 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Email(message = "유효한 이메일을 입력해주세요.")
-    @NotBlank(message = "이메일은 필수 입력 항목입니다.")
     @Column(nullable = false, unique = true)
     private String email;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
     @Column(nullable = false)
     private String password;
 
@@ -49,6 +42,10 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public List<Wish> getWishes() {
+        return wishes;
     }
 
     public static class MemberBuilder {
