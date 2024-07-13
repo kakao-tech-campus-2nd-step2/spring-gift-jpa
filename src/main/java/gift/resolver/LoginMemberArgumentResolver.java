@@ -11,6 +11,9 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
+    private static final String BEARER_PREFIX = "Bearer ";
+    private static final int BEARER_PREFIX_LENGTH = BEARER_PREFIX.length();
+
     private final MemberService memberService;
 
     public LoginMemberArgumentResolver(MemberService memberService) {
@@ -24,9 +27,9 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String token = webRequest.getHeader("Authorization");
-        if (token != null && token.startsWith("Bearer ")) {
-            String memberToken = token.substring(7);
+        String bearerToken = webRequest.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith(BEARER_PREFIX)) {
+            String memberToken = bearerToken.substring(BEARER_PREFIX_LENGTH);
             Member member = memberService.getMemberByToken(memberToken);
             return member;
         }
