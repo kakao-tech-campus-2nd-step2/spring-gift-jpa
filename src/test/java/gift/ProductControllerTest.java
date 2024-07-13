@@ -46,7 +46,7 @@ public class ProductControllerTest {
   @Test
   public void testGetAllProducts() {
     Pageable pageable= PageRequest.of(0,5);
-
+    
     // 제품 추가
     ProductDto productDto1 = new ProductDto(1L, "Coffee", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");

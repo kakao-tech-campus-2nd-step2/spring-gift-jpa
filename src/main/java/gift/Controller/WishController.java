@@ -30,6 +30,7 @@ public class WishController {
   @GetMapping
   public ResponseEntity<Page<WishListDto>> getWishList(Pageable pageable) {
     Page<WishListDto> wishList = wishListService.getWishList(pageable);
+    
     return ResponseEntity.ok(wishList);
   }
 

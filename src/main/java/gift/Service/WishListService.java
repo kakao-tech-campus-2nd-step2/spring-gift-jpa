@@ -41,6 +41,7 @@ public class WishListService {
 
     Page<WishList> wishLists = wishListRepository.findAll(pageable);
     Page<WishListDto> wishListDtos = wishLists.map(ConverterToDto::convertToWishListDto);
+
     return wishListDtos;
   }
 
