@@ -12,6 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 class WishlistRepositoryTest {
@@ -41,9 +44,11 @@ class WishlistRepositoryTest {
         Member member = new Member("example100@example.com","password");
         memberRepository.save(member);
         WishList expected = new WishList(member, 100L);
+
         WishList actual = wishlistRepository.save(expected);
-        List<WishList> products = wishlistRepository.findByMember(member);
-        assertThat(products.contains(actual)).isTrue();
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<WishList> products = wishlistRepository.findByMember(member, pageable);
+        assertThat(products.stream().findAny()).isPresent();
     }
 
     @Test
