@@ -1,6 +1,7 @@
 package gift.member.presentation.dto;
 
 import gift.member.business.dto.WishListDto;
+import java.util.List;
 
 public record ResponseWishListDto(
     Long id,
@@ -20,5 +21,11 @@ public record ResponseWishListDto(
             wishListDto.imageUrl(),
             wishListDto.count()
         );
+    }
+
+    public static List<ResponseWishListDto> of(List<WishListDto> wishListDtos) {
+        return wishListDtos.stream()
+            .map(ResponseWishListDto::from)
+            .toList();
     }
 }

@@ -58,6 +58,11 @@ public class GlobalExceptionHandler {
         return createErrorResponseEntity(e.getErrorCode(), Map.of("description", e.getDetails()));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException e) {
+        return createErrorResponseEntity(ErrorCode.INVALID_REQUEST, Map.of("description", e.getMessage()));
+    }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGenericException(Exception e) {

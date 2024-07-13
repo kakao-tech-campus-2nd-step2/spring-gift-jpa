@@ -4,6 +4,8 @@ import gift.product.persistence.entity.Product;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductRepository {
 
@@ -22,4 +24,6 @@ public interface ProductRepository {
     void deleteAll();
 
     Product getReferencedProduct(Long productId);
+
+    Page<Product> getProductsByPage(Pageable pageRequest);
 }

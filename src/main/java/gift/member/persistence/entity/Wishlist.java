@@ -1,5 +1,6 @@
 package gift.member.persistence.entity;
 
+import gift.global.domain.BaseTimeEntity;
 import gift.product.persistence.entity.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,11 +8,16 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
-public class Wishlist {
+@Table(name = "wishlist",
+    indexes = {@Index(name = "idx_modified_date", columnList = "modified_date")}
+)
+public class Wishlist extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wishlist_id")

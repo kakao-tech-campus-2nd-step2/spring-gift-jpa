@@ -1,5 +1,6 @@
 package gift.member.presentation.dto;
 
+import gift.member.business.dto.WishlistUpdateDto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 

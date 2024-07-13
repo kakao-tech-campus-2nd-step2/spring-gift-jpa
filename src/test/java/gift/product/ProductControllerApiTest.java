@@ -317,4 +317,18 @@ public class ProductControllerApiTest {
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
+
+    @Test
+    void testGetProductByPage_SizeFail(){
+        // given
+        String getUrl = "http://localhost:"+port+"/api/products?page=0&size=101";
+
+        // when
+        var entity = new HttpEntity<>(headers);
+        var getResponseEntity = restTemplate.exchange(getUrl, HttpMethod.GET, entity, String.class);
+
+        // then
+        assertThat(getResponseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(getResponseEntity.getBody().contains("size는 1~100 사이의 값이어야 합니다.")).isTrue();
+    }
 }

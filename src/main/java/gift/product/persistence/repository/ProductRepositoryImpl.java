@@ -6,6 +6,8 @@ import gift.product.persistence.entity.Product;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -70,5 +72,10 @@ public class ProductRepositoryImpl implements ProductRepository{
     @Override
     public Product getReferencedProduct(Long productId) {
         return productJpaRepository.getReferenceById(productId);
+    }
+
+    @Override
+    public Page<Product> getProductsByPage(Pageable pageRequest) {
+        return productJpaRepository.findAll(pageRequest);
     }
 }

@@ -3,7 +3,8 @@ package gift.member.persistence.repository;
 import gift.global.exception.ErrorCode;
 import gift.global.exception.NotFoundException;
 import gift.member.persistence.entity.Wishlist;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -12,11 +13,6 @@ public class WishlistRepositoryImpl implements WishlistRepository{
 
     public WishlistRepositoryImpl(WishlistJpaRepository wishlistJpaRepository) {
         this.wishlistJpaRepository = wishlistJpaRepository;
-    }
-
-    @Override
-    public List<Wishlist> getWishListByMemberId(Long memberId) {
-        return wishlistJpaRepository.findByMemberId(memberId);
     }
 
     @Override
@@ -46,5 +42,10 @@ public class WishlistRepositoryImpl implements WishlistRepository{
     @Override
     public void deleteAll() {
         wishlistJpaRepository.deleteAll();
+    }
+
+    @Override
+    public Page<Wishlist> getWishListByPage(Long memberId, Pageable pageRequest) {
+        return wishlistJpaRepository.findByMemberId(memberId, pageRequest);
     }
 }
