@@ -1,4 +1,39 @@
 # spring-gift-jpa
+## 3단계(페이지네이션) 요구사항
+
+### 과제 진행 요구 사항
+
+상품과 위시 리스트 보기에 페이지네이션을 구현한다.
+
+- 대부분의 게시판은 모든 게시글을 한 번에 표시하지 않고 여러 페이지로 나누어 표시한다. 정렬 방법을 설정하여 보고 싶은 정보의 우선 순위를 정할 수도 있다.
+- 페이지네이션은 원하는 정렬 방법, 페이지 크기 및 페이지에 따라 정보를 전달하는 방법이다.
+
+
+
+### 힌트
+
+이를 직접 구현할 수도 있지만, 스프링 데이터는 `Pageable`이라는 객체를 제공하여 쉽게 구현할 수 있다. 또한 `List`, `Slice`, `Page` 등 다양한 반환 타입을 제공한다.
+
+
+
+#### 참고자료
+
+- [Paging, Iterating Large Results, Sorting & Limiting](https://docs.spring.io/spring-data/jpa/reference/repositories/query-methods-details.html#repositories.special-parameters)
+- [Pagination and Sorting using Spring Data JPA](https://www.baeldung.com/spring-data-jpa-pagination-sorting)
+- [Converting List to Page Using Spring Data JPA](https://www.baeldung.com/spring-data-jpa-convert-list-page)
+
+
+
+### 3단계 To-do
+
+- [x] Product Pagination
+- [ ] ~~User Pagination~~
+  * user 전체에 대한 get 요청이 없으므로 해당 없음
+  * 추후 회원 관리 등의 기능이 필요할 시 개발 예정
+- [x] Wish Pagination
+
+
+
 ## 2단계(연관 관계 매핑) 요구 사항
 
 ### 기능 요구 사항
