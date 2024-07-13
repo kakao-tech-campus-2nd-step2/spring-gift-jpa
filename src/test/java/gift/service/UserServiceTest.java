@@ -11,6 +11,7 @@ import gift.dto.user.UserLoginRequest;
 import gift.dto.user.UserRegisterRequest;
 import gift.dto.user.UserResponse;
 import gift.entity.User;
+import gift.exception.InvalidTokenException;
 import gift.exception.user.UserAlreadyExistException;
 import gift.exception.user.UserNotFoundException;
 import gift.repository.UserRepository;
@@ -140,5 +141,67 @@ class UserServiceTest implements AutoCloseable {
             .isInstanceOf(UserNotFoundException.class);
         verify(userRepository, times(1)).findByEmailAndPassword(request.email(),
             request.password());
+    }
+
+    @Test
+    @DisplayName("get user by id test")
+    void getUserByIdTest() {
+        // given
+        User user = User.builder()
+            .id(1L)
+            .email("user1@example.com")
+            .password("password1")
+            .build();
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        // when
+        User actual = userService.getUserById(1L);
+
+        // then
+        assertThat(actual).isNotNull();
+        assertThat(actual.getId()).isEqualTo(1L);
+        verify(userRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    @DisplayName("get user by id not found test")
+    void getUserByIdNotFoundTest() {
+        // given
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> userService.getUserById(1L))
+            .isInstanceOf(UserNotFoundException.class);
+        verify(userRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    @DisplayName("get user id by token test")
+    void getUserIdByTokenTest() {
+        // given
+        String token = "token";
+        when(jwtUtil.extractUserId(token)).thenReturn(1L);
+        when(userRepository.existsById(1L)).thenReturn(true);
+
+        // when
+        Long userId = userService.getUserIdByToken(token);
+
+        // then
+        assertThat(userId).isEqualTo(1L);
+        verify(jwtUtil, times(1)).extractUserId(token);
+        verify(userRepository, times(1)).existsById(1L);
+    }
+
+    @Test
+    @DisplayName("invalid token test")
+    void invalidTokenTest() {
+        // given
+        String token = "invalid_token";
+        when(jwtUtil.extractUserId(token)).thenReturn(null);
+
+        // when & then
+        assertThatThrownBy(() -> userService.getUserIdByToken(token))
+            .isInstanceOf(InvalidTokenException.class);
+        verify(jwtUtil, times(1)).extractUserId(token);
     }
 }
