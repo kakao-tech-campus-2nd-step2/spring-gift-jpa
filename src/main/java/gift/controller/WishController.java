@@ -2,8 +2,6 @@ package gift.controller;
 
 import gift.dto.wish.WishCreateRequest;
 import gift.dto.wish.WishResponse;
-import gift.service.MemberService;
-import gift.service.ProductService;
 import gift.service.WishService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -23,14 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class WishController {
 
     private final WishService wishService;
-    private final MemberService memberService;
-    private final ProductService productService;
 
-    public WishController(WishService wishService, MemberService memberService,
-        ProductService productService) {
+    public WishController(WishService wishService) {
         this.wishService = wishService;
-        this.memberService = memberService;
-        this.productService = productService;
     }
 
     @GetMapping

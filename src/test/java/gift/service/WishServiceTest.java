@@ -67,8 +67,8 @@ public class WishServiceTest {
         WishCreateRequest wishCreateRequest = new WishCreateRequest(1L);
         WishResponse response = wishService.addWish(wishCreateRequest, 1L);
 
-        assertEquals(member, response.member());
-        assertEquals(product, response.product());
+        assertEquals(1L, response.memberId());
+        assertEquals(1L, response.productId());
         assertNotNull(response.id());
     }
 
@@ -144,7 +144,7 @@ public class WishServiceTest {
 
         List<WishResponse> wishlist = wishService.getWishlistByMemberId(1L);
         assertEquals(1, wishlist.size());
-        assertEquals(member, wishlist.getFirst().member());
-        assertEquals(product, wishlist.getFirst().product());
+        assertEquals(1L, wishlist.getFirst().memberId());
+        assertEquals(1L, wishlist.getFirst().productId());
     }
 }

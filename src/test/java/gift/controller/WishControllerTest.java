@@ -7,8 +7,6 @@ import static org.mockito.Mockito.when;
 
 import gift.dto.wish.WishCreateRequest;
 import gift.dto.wish.WishResponse;
-import gift.model.Member;
-import gift.model.Product;
 import gift.service.WishService;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,21 +26,15 @@ public class WishControllerTest {
     @InjectMocks
     private WishController wishController;
 
-    private Member member;
-    private Product product;
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-
-        member = new Member(1L, "test@example.com", "password");
-        product = new Product(1L, "Product1", 100, "imageUrl1");
     }
 
     @Test
     @DisplayName("위시리스트 조회")
     public void testGetWishlist() {
-        WishResponse wishResponse = new WishResponse(1L, member, product);
+        WishResponse wishResponse = new WishResponse(1L, 1L, 1L);
         when(wishService.getWishlistByMemberId(1L)).thenReturn(List.of(wishResponse));
 
         ResponseEntity<List<WishResponse>> response = wishController.getWishlist(1L);
@@ -55,7 +47,7 @@ public class WishControllerTest {
     @DisplayName("위시리스트 항목 추가")
     public void testAddWish() {
         WishCreateRequest wishCreateRequest = new WishCreateRequest(1L);
-        WishResponse wishResponse = new WishResponse(1L, member, product);
+        WishResponse wishResponse = new WishResponse(1L, 1L, 1L);
 
         when(wishService.addWish(any(WishCreateRequest.class), any(Long.class))).thenReturn(
             wishResponse);

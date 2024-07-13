@@ -6,7 +6,6 @@ import static gift.util.Constants.WISH_NOT_FOUND;
 import gift.dto.member.MemberResponse;
 import gift.dto.product.ProductResponse;
 import gift.dto.wish.WishCreateRequest;
-import gift.dto.wish.WishRequest;
 import gift.dto.wish.WishResponse;
 import gift.exception.wish.DuplicateWishException;
 import gift.exception.wish.WishNotFoundException;
@@ -50,8 +49,7 @@ public class WishService {
             throw new DuplicateWishException(WISH_ALREADY_EXISTS);
         }
 
-        WishRequest wishRequest = new WishRequest(member, product);
-        Wish wish = convertToEntity(wishRequest);
+        Wish wish = new Wish(null, member, product);
         Wish savedWish = wishRepository.save(wish);
         return convertToDTO(savedWish);
     }
@@ -64,11 +62,7 @@ public class WishService {
     }
 
     // Mapper methods
-    private static Wish convertToEntity(WishRequest wishRequest) {
-        return new Wish(null, wishRequest.member(), wishRequest.product());
-    }
-
     private static WishResponse convertToDTO(Wish wish) {
-        return new WishResponse(wish.getId(), wish.getMember(), wish.getProduct());
+        return new WishResponse(wish.getId(), wish.getMember().getId(), wish.getProduct().getId());
     }
 }
