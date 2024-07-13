@@ -10,6 +10,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 class WishRepositoryTest {
@@ -22,6 +25,8 @@ class WishRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
+
+    private Pageable pageable = PageRequest.of(0, 10);
 
     @Test
     @DisplayName("특정 회원의 Wishlist 조회 테스트")
@@ -48,7 +53,7 @@ class WishRepositoryTest {
         wishRepository.save(wish2);
 
         // when
-        List<Wish> wishList = wishRepository.findAllByMemberId(member.getId());
+        Page<Wish> wishList = wishRepository.findAllByMemberId(member.getId(), pageable);
 
         // then
         assertThat(wishList).hasSize(2);
@@ -74,7 +79,7 @@ class WishRepositoryTest {
         wishRepository.save(wish);
 
         // then
-        List<Wish> wishList = wishRepository.findAllByMemberId(member.getId());
+        List<Wish> wishList = wishRepository.findAllByMemberId(member.getId(), Pageable.unpaged()).getContent();
         assertThat(wishList).hasSize(1);
         assertThat(wishList.get(0).getProduct().getId()).isEqualTo(product.getId());
     }
@@ -98,7 +103,7 @@ class WishRepositoryTest {
         wishRepository.deleteByMemberIdAndProductId(member.getId(), product.getId());
 
         // then
-        List<Wish> wishList = wishRepository.findAllByMemberId(member.getId());
+        List<Wish> wishList = wishRepository.findAllByMemberId(member.getId(), Pageable.unpaged()).getContent();
         assertThat(wishList).isEmpty();
     }
 }
