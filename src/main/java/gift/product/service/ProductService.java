@@ -24,8 +24,9 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Page<Product> getProductsByPage(int page) {
-        return productRepository.findAll(PageRequest.of(page, PAGE_SIZE));
+    public List<Product> getProductsByPage(int page) {
+        Page<Product> products = productRepository.findAll(PageRequest.of(page, PAGE_SIZE));
+        return products.getContent();
     }
 
     public Product getProductById(Long id) {

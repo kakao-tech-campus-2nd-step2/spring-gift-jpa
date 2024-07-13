@@ -31,8 +31,8 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResultResponseDto<Page<Product>>> getProductsByPage(@RequestParam(name = "page") int page) {
-        Page<Product> products = productService.getProductsByPage(page);
+    public ResponseEntity<ResultResponseDto<List<Product>>> getProductsByPage(@RequestParam(name = "page") int page) {
+        List<Product> products = productService.getProductsByPage(page);
         return ResponseHelper.createResponse(ResultCode.GET_ALL_PRODUCTS_SUCCESS, products);
     }
 
