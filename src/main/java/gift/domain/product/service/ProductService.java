@@ -38,7 +38,7 @@ public class ProductService {
     }
 
     public ProductResponse addProduct(ProductRequest productRequest) {
-        Product product = productRepository.save(productRequest.toProductEntity());
+        Product product = productRepository.save(dtoToEntity(productRequest));
         return entityToDto(product);
     }
 
