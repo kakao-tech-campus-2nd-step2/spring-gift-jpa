@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -41,7 +43,7 @@ class ProductControllerTest {
     @Test
     void productList() throws Exception {
         //given
-        given(productService.getProducts()).willReturn(List.of());
+        given(productService.getProducts(any(Pageable.class))).willReturn(new PageImpl<>(List.of()));
 
         //when
         ResultActions result = mvc.perform(get("/api/products"));
@@ -50,7 +52,7 @@ class ProductControllerTest {
         result
                 .andExpect(status().isOk());
 
-        then(productService).should().getProducts();
+        then(productService).should().getProducts(any(Pageable.class));
     }
 
     @DisplayName("[GET] 하나의 상품 정보를 조회한다.")

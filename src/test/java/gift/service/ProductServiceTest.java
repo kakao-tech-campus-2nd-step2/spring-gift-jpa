@@ -10,6 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,13 +34,14 @@ class ProductServiceTest {
     @Test
     void getProducts() throws Exception {
         //given
-        given(productRepository.findAll()).willReturn(List.of());
+        PageRequest pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"));
+        given(productRepository.findAll(pageable)).willReturn(new PageImpl<>(List.of()));
 
         //when
-        productService.getProducts();
+        productService.getProducts(pageable);
 
         //then
-        then(productRepository).should().findAll();
+        then(productRepository).should().findAll(pageable);
     }
 
     @DisplayName("상품 ID를 받아 해당하는 상품 정보를 조회한다.")

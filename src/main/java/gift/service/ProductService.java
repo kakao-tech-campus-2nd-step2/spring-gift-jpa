@@ -5,10 +5,13 @@ import gift.exception.ProductNotFoundException;
 import gift.repository.ProductRepository;
 import gift.request.ProductRequest;
 import gift.response.ProductResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -19,10 +22,12 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> getProducts() {
-        return productRepository.findAll().stream()
+    public Page<ProductResponse> getProducts(Pageable pageable) {
+        List<ProductResponse> response = productRepository.findAll(pageable).stream()
                 .map(Product::toDto)
-                .collect(Collectors.toList());
+                .toList();
+
+        return new PageImpl<>(response, pageable, response.size());
     }
 
     public ProductResponse getProduct(Long productId) {
@@ -35,6 +40,7 @@ public class ProductService {
         productRepository.save(request.toEntity());
     }
 
+    @Transactional
     public void editProduct(Long productId, ProductRequest request) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(ProductNotFoundException::new);

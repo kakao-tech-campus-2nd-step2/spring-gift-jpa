@@ -1,6 +1,6 @@
 package gift.domain.member;
 
-import gift.domain.Wishlist;
+import gift.domain.Wish;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ public class Member {
 
     private MemberRole role;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Wishlist> wishes = new ArrayList<>();
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<Wish> wishes = new ArrayList<>();
 
     public Member() {
     }
@@ -42,7 +42,7 @@ public class Member {
         return role;
     }
 
-    public List<Wishlist> getWishes() {
+    public List<Wish> getWishes() {
         return wishes;
     }
 
