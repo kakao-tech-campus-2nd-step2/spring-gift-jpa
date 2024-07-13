@@ -2,9 +2,9 @@ package gift.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.product.dto.ProductRequest;
-import gift.product.entity.ProductEntity;
-import gift.product.repository.ProductRepository;
+import gift.domain.product.dto.ProductRequest;
+import gift.domain.product.entity.Product;
+import gift.domain.product.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.net.URI;
@@ -46,7 +46,7 @@ class ProductControllerTest {
     @Test
     @Transactional
     void read() {
-        ProductEntity product = productRepository.save(new ProductEntity("test", 1000,"test.jpg"));
+        Product product = productRepository.save(new Product("test", 1000,"test.jpg"));
         System.out.println("테스트" + product.getName() +"id 값"+ product.getId());
 
         var url = "http://localhost:" + port + "/api/products/1";
@@ -71,7 +71,7 @@ class ProductControllerTest {
     @Test
     @Transactional
     void update() {
-        ProductEntity product = productRepository.save(new ProductEntity("test", 1000,"test.jpg"));
+        Product product = productRepository.save(new Product("test", 1000,"test.jpg"));
         var id = 1L;
         var request = new ProductRequest("product", 1000, "image.jpg");
         var url = "http://localhost:" + port + "/api/products/" + id;
@@ -84,7 +84,7 @@ class ProductControllerTest {
     @Test
     @Transactional
     void delete() {
-        ProductEntity product = productRepository.save(new ProductEntity("test", 1000,"test.jpg"));
+        Product product = productRepository.save(new Product("test", 1000,"test.jpg"));
         var id = 1L;
         var url = "http://localhost:" + port + "/api/products/" + id;
 

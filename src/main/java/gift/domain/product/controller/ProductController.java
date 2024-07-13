@@ -1,8 +1,8 @@
-package gift.product.controller;
+package gift.domain.product.controller;
 
-import gift.product.dto.ProductRequest;
-import gift.product.service.ProductService;
-import gift.product.domain.Product;
+import gift.domain.product.dto.ProductRequest;
+import gift.domain.product.dto.ProductResponse;
+import gift.domain.product.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Product>> readAll(
+    public ResponseEntity<List<ProductResponse>> readAll(
         @RequestParam(defaultValue = "0") int pageNo,
         @RequestParam(defaultValue = "10") int pageSize
     ) {
@@ -37,26 +37,26 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> read(@PathVariable("id") Long id) {
+    public ResponseEntity<ProductResponse> read(@PathVariable("id") Long id) {
         return new ResponseEntity<>(productService.getProduct(id), HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<Product> create(@RequestBody @Valid ProductRequest productRequest) {
-        Product product = productService.addProduct(productRequest);
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
+    public ResponseEntity<ProductResponse> create(@RequestBody @Valid ProductRequest productRequest) {
+        ProductResponse productResponse = productService.addProduct(productRequest);
+        return new ResponseEntity<>(productResponse, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable("id") Long id,
+    public ResponseEntity<ProductResponse> update(@PathVariable("id") Long id,
         @RequestBody @Valid ProductRequest productRequest) {
-        Product product = productService.updateProduct(id, productRequest);
+        ProductResponse productResponse = productService.updateProduct(id, productRequest);
 
-        return new ResponseEntity<>(product, HttpStatus.OK);
+        return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Product> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<ProductResponse> delete(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
