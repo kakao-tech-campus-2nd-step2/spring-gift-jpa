@@ -31,9 +31,7 @@ public class ProductController {
                               @RequestParam(defaultValue = "0") int page,
                               @RequestParam(defaultValue = "10") int size,
                               @RequestParam(defaultValue = "name,asc") String[] sort) {
-        Sort.Direction direction = Sort.Direction.fromString(sort[1]);
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
-        Page<Product> productPage = productService.getProducts(pageable);
+        Page<Product> productPage = productService.getProducts(page, size, sort);
 
         model.addAttribute("productPage", productPage);
         model.addAttribute("currentPage", page);
