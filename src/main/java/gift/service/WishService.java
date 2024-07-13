@@ -58,26 +58,23 @@ public class WishService {
     @Transactional
     public void updateWishes(List<UpdateWishRequest> requests) {
         for (UpdateWishRequest request : requests) {
-            Wish wish = getWish(request.id());
-            wish.changeQuantity(request.quantity());
-            updateWish(wish);
+            updateWish(request);
         }
-    }
-
-    @Transactional
-    protected void updateWish(Wish wish) {
-        if (wish.isQuantityZero()) {
-            deleteWish(wish);
-            return;
-        }
-
-        wishRepository.save(wish);
     }
 
     @Transactional
     public void deleteWishes(List<UpdateWishRequest> requests) {
         for (UpdateWishRequest request : requests) {
             deleteWish(getWish(request.id()));
+        }
+    }
+
+    @Transactional
+    protected void updateWish(UpdateWishRequest request) {
+        Wish wish = getWish(request.id());
+        wish.changeQuantity(request.quantity());
+        if(wish.isQuantityZero()) {
+            deleteWish(wish);
         }
     }
 
