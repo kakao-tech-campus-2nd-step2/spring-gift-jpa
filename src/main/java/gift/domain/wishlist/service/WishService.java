@@ -31,8 +31,6 @@ public class WishService {
     }
 
     public List<WishResponse> getWishesByMember(Member member, int pageNo, int pageSize) {
-//        Member savedmember = memberRepository.findById(member.getId())
-//            .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다."));
 
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         return wishRepository
