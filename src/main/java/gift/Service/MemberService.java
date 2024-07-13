@@ -6,7 +6,6 @@ import gift.DTO.MemberDto;
 import gift.Exception.ForbiddenException;
 import gift.Exception.UnauthorizedException;
 import gift.Repository.MemberRepository;
-import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
