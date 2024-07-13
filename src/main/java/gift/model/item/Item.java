@@ -1,10 +1,15 @@
 package gift.model.item;
 
+import gift.model.wishList.WishItem;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,6 +23,9 @@ public class Item {
     @Column(nullable = false)
     private Long price;
     private String imgUrl;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<WishItem> wishes = new ArrayList<>();
 
     public Item() {
     }
@@ -45,6 +53,10 @@ public class Item {
         return imgUrl;
     }
 
+    public List<WishItem> getWishes() {
+        return wishes;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -61,5 +73,9 @@ public class Item {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, price, imgUrl);
+    }
+
+    public ItemDTO toItemDTO() {
+        return new ItemDTO(id, name, price, imgUrl);
     }
 }

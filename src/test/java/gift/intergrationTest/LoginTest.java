@@ -110,7 +110,7 @@ public class LoginTest {
         var url = "http://localhost:" + port + "/login";
         User unregistered = new User(0L, testEmail, "wrongPw");
         Map<String, String> error = new HashMap<>();
-        error.put("passWord", ErrorCode.PASSWORD_MISMATCH.getMessage());
+        error.put("password", ErrorCode.PASSWORD_MISMATCH.getMessage());
         ErrorResponseDTO expected = new ErrorResponseDTO(ErrorCode.PASSWORD_MISMATCH, error);
         initForLogin();
 

@@ -1,23 +1,25 @@
 package gift.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import gift.model.item.ItemDTO;
 import gift.model.item.ItemForm;
 import gift.service.ItemService;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequestMapping("/product")
 public class ItemController {
 
@@ -28,53 +30,36 @@ public class ItemController {
     }
 
     @GetMapping("/list")
-    public String getItemList(Model model) {
-        model.addAttribute("list", itemService.getList());
-        return "list";
+    public ResponseEntity<List<ItemDTO>> getItemList(Model model) {
+        List<ItemDTO> list = itemService.getList();
+        return ResponseEntity.ok(list);
     }
 
-    @GetMapping("/create")
-    public String getCreateForm(Model model, ItemForm form) {
-        model.addAttribute("item", form);
-        return "create";
-    }
-
-    @PostMapping("/create")
-    public String createItem(@Valid @ModelAttribute("item") ItemForm form, BindingResult result,
-        HttpServletResponse response) {
+    @PostMapping("/")
+    public ResponseEntity<Long> createItem(@Valid @RequestBody ItemForm form, BindingResult result,
+        HttpServletResponse response) throws MethodArgumentNotValidException {
         if (result.hasErrors()) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            return "create";
+            throw new MethodArgumentNotValidException(null, result);
         }
-        itemService.insertItem(form);
-        return "redirect:/product/list";
+        Long itemId = itemService.insertItem(form);
+        return ResponseEntity.ok(itemId);
     }
 
-    @GetMapping("/update/{id}")
-    public String getUpdateForm(@PathVariable Long id, Model model) {
-        ItemDTO itemDTO = itemService.findItem(id);
-        ItemForm form = new ItemForm(itemDTO.getName(), itemDTO.getPrice(), itemDTO.getImgUrl());
-        model.addAttribute("item", form);
-        model.addAttribute("id", id);
-        return "update";
-    }
 
-    @PutMapping("/update/{id}")
-    public String updateItem(@PathVariable Long id, @Valid @ModelAttribute("item") ItemForm form,
-        BindingResult result,
-        HttpServletResponse response) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Long> updateItem(@PathVariable Long id, @Valid @RequestBody ItemForm form,
+        BindingResult result) throws MethodArgumentNotValidException {
         if (result.hasErrors()) {
-            response.setStatus(HttpStatus.BAD_REQUEST.value());
-            return "update";
+            throw new MethodArgumentNotValidException(null, result);
         }
         ItemDTO itemDTO = new ItemDTO(id, form.getName(), form.getPrice(), form.getImgUrl());
-        itemService.updateItem(itemDTO);
-        return "redirect:/product/list";
+        Long itemId = itemService.updateItem(itemDTO);
+        return ResponseEntity.ok(itemId);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public String deleteItem(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Long> deleteItem(@PathVariable Long id) {
         itemService.deleteItem(id);
-        return "redirect:/product/list";
+        return ResponseEntity.ok(id);
     }
 }

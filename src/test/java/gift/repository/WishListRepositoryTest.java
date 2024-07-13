@@ -2,6 +2,8 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import gift.model.item.Item;
+import gift.model.user.User;
 import gift.model.wishList.WishItem;
 import java.util.List;
 import org.assertj.core.groups.Tuple;
@@ -17,9 +19,9 @@ public class WishListRepositoryTest {
     @Autowired
     private WishListRepository wishListRepository;
 
-    private final Long testUserId = 1234L;
-    private final Long testItemId = 10L;
-    private final WishItem testWishItem = new WishItem(1L, testUserId, testItemId);
+    private final Long testUserId = 1L;
+    private final Long testItemId = 1L;
+    private final WishItem testWishItem = new WishItem(1L, new User(testUserId,"test","test"), new Item(testItemId,"test",0L,"test"));
 
     @BeforeEach
     void setUp(){
