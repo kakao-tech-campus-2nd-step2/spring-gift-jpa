@@ -27,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping("/productpage/{pageNum}")
-    public ResponseEntity<?> getProducts(@PathVariable(name = "pageNum")Optional<Integer> pageNum) {
+    public ResponseEntity<?> getProductPage(@PathVariable(name = "pageNum")Optional<Integer> pageNum) {
         Page<ProductResponce> productPage = productService.getProductPage(pageNum.orElse(0));
         return ResponseEntity.ok(productPage);
     }
