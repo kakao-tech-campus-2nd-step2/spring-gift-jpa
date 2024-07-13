@@ -1,5 +1,7 @@
 package gift.service;
 
+import gift.exception.KakaoValidationException;
+import gift.exception.StringValidationException;
 import gift.model.Product;
 import gift.model.ProductDto;
 import gift.repository.ProductRepository;
@@ -33,12 +35,16 @@ public class ProductService {
   }
 
   public boolean updateProduct(Long id, ProductDto productDetails) {
+    productDetails.validate();
     return productRepository.findById(id).map(product -> {
       product.update(productDetails.getName(), productDetails.getPrice(), productDetails.getImageUrl());
       productRepository.save(product);
       return true;
     }).orElse(false);
   }
+
+
+
 
   public void deleteById(Long id) {
     productRepository.deleteById(id);

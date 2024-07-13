@@ -28,6 +28,7 @@ public class ProductDto {
     this.name = name;
     this.price = price;
     this.imageUrl = imageUrl;
+    validate();
   }
 
   public Long getId() {
