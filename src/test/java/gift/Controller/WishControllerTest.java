@@ -28,8 +28,8 @@ class WishControllerTest {
   public WishControllerTest(WishController wishController, ProductController productController,
     MemberController memberController) {
     this.wishController = wishController;
-    this.productController=productController;
-    this.memberController=memberController;
+    this.productController = productController;
+    this.memberController = memberController;
   }
 
   @Test
@@ -51,38 +51,66 @@ class WishControllerTest {
     ResponseEntity<Page<WishListDto>> wishListDtoEntity = wishController.getWishList(pageable);
     Page<WishListDto> wishListDtos = wishListDtoEntity.getBody();
 
-    assertThat(memberDto1.getId()).isEqualTo(
-      wishListDtos.getContent().get(0).getMemberDto().getId());
-    assertThat(memberDto1.getEmail()).isEqualTo(
-      wishListDtos.getContent().get(0).getMemberDto().getEmail());
-    assertThat(memberDto1.getPassword()).isEqualTo(
-      wishListDtos.getContent().get(0).getMemberDto().getPassword());
+    assertThat(wishListDtos.getContent().get(0).getMemberDto().getId()).isEqualTo(
+      memberDto1.getId());
+    assertThat(wishListDtos.getContent().get(0).getMemberDto().getEmail()).isEqualTo(
+      memberDto1.getEmail());
+    assertThat(wishListDtos.getContent().get(0).getMemberDto().getPassword()).isEqualTo(
+      memberDto1.getPassword());
 
-    assertThat(productDto1.getId()).isEqualTo(
-      wishListDtos.getContent().get(0).getProductDto().getId());
-    assertThat(productDto1.getName()).isEqualTo(
-      wishListDtos.getContent().get(0).getProductDto().getName());
-    assertThat(productDto1.getPrice()).isEqualTo(
-      wishListDtos.getContent().get(0).getProductDto().getPrice());
-    assertThat(productDto1.getImageUrl()).isEqualTo(
-      wishListDtos.getContent().get(0).getProductDto().getImageUrl());
+    assertThat(wishListDtos.getContent().get(0).getProductDto().getId()).isEqualTo(
+      productDto1.getId());
+    assertThat(wishListDtos.getContent().get(0).getProductDto().getName()).isEqualTo(
+      productDto1.getName());
+    assertThat(wishListDtos.getContent().get(0).getProductDto().getPrice()).isEqualTo(
+      productDto1.getPrice());
+    assertThat(wishListDtos.getContent().get(0).getProductDto().getImageUrl()).isEqualTo(
+      productDto1.getImageUrl());
 
-    assertThat(productDto2.getId()).isEqualTo(
-      wishListDtos.getContent().get(1).getProductDto().getId());
-    assertThat(productDto2.getName()).isEqualTo(
-      wishListDtos.getContent().get(1).getProductDto().getName());
-    assertThat(productDto2.getPrice()).isEqualTo(
-      wishListDtos.getContent().get(1).getProductDto().getPrice());
-    assertThat(productDto2.getImageUrl()).isEqualTo(
-      wishListDtos.getContent().get(1).getProductDto().getImageUrl());
+    assertThat(wishListDtos.getContent().get(1).getProductDto().getId()).isEqualTo(
+      productDto2.getId());
+    assertThat(wishListDtos.getContent().get(1).getProductDto().getName()).isEqualTo(
+      productDto2.getName());
+    assertThat(wishListDtos.getContent().get(1).getProductDto().getPrice()).isEqualTo(
+      productDto2.getPrice());
+    assertThat(wishListDtos.getContent().get(1).getProductDto().getImageUrl()).isEqualTo(
+      productDto2.getImageUrl());
 
   }
 
-//  @Test
-//  void addProductToWishList() {
-//  }
-//
-//  @Test
-//  void deleteProductToWishList() {
-//  }
+  @Test
+  void addProductToWishList() {
+    MemberDto memberDto1 = new MemberDto(1L, "a@naver.com", "abcde");
+    memberController.userSignUp(memberDto1);
+
+    ProductDto productDto1 = new ProductDto(1L, "product1", 100, "abcd.img");
+    productController.addProduct(productDto1);
+
+    WishListDto wishListDto1 = new WishListDto(1L, memberDto1, productDto1);
+
+    WishListDto addedWishListDto = wishController.addProductToWishList(wishListDto1, null)
+      .getBody();
+
+    assertThat(addedWishListDto.getMemberDto().getId()).isEqualTo(memberDto1.getId());
+    assertThat(addedWishListDto.getMemberDto().getEmail()).isEqualTo(memberDto1.getEmail());
+    assertThat(addedWishListDto.getMemberDto().getPassword()).isEqualTo(memberDto1.getPassword());
+
+    assertThat(addedWishListDto.getProductDto().getId()).isEqualTo(productDto1.getId());
+    assertThat(addedWishListDto.getProductDto().getName()).isEqualTo(productDto1.getName());
+    assertThat(addedWishListDto.getProductDto().getPrice()).isEqualTo(productDto1.getPrice());
+    assertThat(addedWishListDto.getProductDto().getImageUrl()).isEqualTo(productDto1.getImageUrl());
+
+  }
+
+  @Test
+  void deleteProductToWishList() {
+    MemberDto memberDto1 = new MemberDto(1L, "a@naver.com", "abcde");
+    memberController.userSignUp(memberDto1);
+
+    ProductDto productDto1 = new ProductDto(1L, "product1", 100, "abcd.img");
+    productController.addProduct(productDto1);
+
+    WishListDto wishListDto1 = new WishListDto(1L, memberDto1, productDto1);
+
+  }
 }
