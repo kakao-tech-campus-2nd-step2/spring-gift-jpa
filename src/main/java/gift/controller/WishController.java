@@ -3,7 +3,6 @@ package gift.controller;
 import gift.domain.Wish;
 import gift.dto.WishDTO;
 import gift.service.WishService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +27,6 @@ public class WishController {
 
     private final WishService wishService;
 
-    @Autowired
     public WishController(WishService wishService) {
         this.wishService = wishService;
     }
