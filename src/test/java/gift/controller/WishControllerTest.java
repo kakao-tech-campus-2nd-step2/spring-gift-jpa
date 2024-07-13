@@ -6,6 +6,7 @@ import gift.entity.Wish;
 import gift.repository.MemberRepository;
 import gift.service.WishService;
 import gift.util.JwtUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -38,6 +39,7 @@ public class WishControllerTest {
     private JwtUtil jwtUtil;
 
     @Test
+    @DisplayName("위시리스트 전체 조회")
     public void getWishes() throws Exception {
         Member member = new Member();
         member.setId(1L);
@@ -66,6 +68,7 @@ public class WishControllerTest {
     }
 
     @Test
+    @DisplayName("위시리스트 추가")
     public void addWish() throws Exception {
         Member member = new Member();
         member.setId(1L);
@@ -96,6 +99,7 @@ public class WishControllerTest {
     }
 
     @Test
+    @DisplayName("위시리스트 삭제")
     public void deleteWish() throws Exception {
         Member member = new Member();
         member.setId(1L);
