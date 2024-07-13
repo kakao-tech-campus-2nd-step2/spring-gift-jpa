@@ -5,11 +5,11 @@ import gift.dto.CreateProductDto;
 import gift.dto.UpdateProductDto;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/products")
@@ -30,8 +30,8 @@ public class ProductController {
 
     // 전체 상품 조회
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> allProducts = productService.getAllProducts();
+    public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
+        Page<Product> allProducts = productService.getAllProducts(pageable);
         if (allProducts.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
