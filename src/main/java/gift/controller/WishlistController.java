@@ -5,7 +5,6 @@ import gift.model.WishlistDTO;
 import gift.service.WishlistService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +25,8 @@ public class WishlistController {
 
     @GetMapping()
     public List<Product> getWishlists(HttpServletRequest request,
-                                      @RequestParam(required = false, defaultValue = "0", value = "page") int page,
-                                      @RequestParam(required = false, defaultValue = "5", value = "size") int size) {
+                                      Pageable pageable) {
         String email = (String) request.getAttribute("email");
-        Pageable pageable = PageRequest.of(page, size);
         return wishlistService.getWishlistProducts(email, pageable).getContent();
     }
 
