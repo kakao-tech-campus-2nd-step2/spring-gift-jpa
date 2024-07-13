@@ -23,7 +23,7 @@ public class ProductIdValidatorTest {
 
     @Autowired
     private ProductService productService;
-    
+
     @Test
     public void save_existingProductId() {
         //given
