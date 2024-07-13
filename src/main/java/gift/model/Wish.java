@@ -32,11 +32,6 @@ public class Wish {
     public Wish() {
     }
 
-    public Wish(Member member, String productName) {
-        this.member = member;
-        this.productName = productName;
-    }
-
     public Wish(Product product, Member member) {
         this.productName = product.getName();
         this.product = product;
