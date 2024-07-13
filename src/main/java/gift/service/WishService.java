@@ -25,20 +25,20 @@ public class WishService {
 
     }
 
-    public WishDto save(Long productId, String tokenValue) {
+    public WishDto.Response save(Long productId, String tokenValue) {
 
         Long userId = translateIdFrom(tokenValue);
         Wish newWish = new Wish(userId, productId);
 
-        return WishDto.fromEntity(wishRepositoryInterface.save(newWish));
+        return WishDto.Response.fromEntity(wishRepositoryInterface.save(newWish));
     }
 
-    public List<WishDto> getAll(TokenDto tokenDto) {
+    public List<WishDto.Response> getAll(TokenDto tokenDto) {
 
         Long userId = translateIdFrom(tokenDto);
         List<Wish> wishes = wishRepositoryInterface.findAllByUserId(userId);
 
-        List<WishDto> wishDtos = wishes.stream().map(WishDto::fromEntity).toList();
+        List<WishDto.Response> wishDtos = wishes.stream().map(WishDto.Response::fromEntity).toList();
         return wishDtos;
     }
 

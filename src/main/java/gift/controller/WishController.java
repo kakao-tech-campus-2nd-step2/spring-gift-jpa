@@ -23,7 +23,7 @@ public class WishController {
     }
 
     @GetMapping()
-    public List<WishDto> getAll(@RequestParam TokenDto token) {
+    public List<WishDto.Response> getAll(@RequestParam TokenDto token) {
         return wishService.getAll(token);
     }
 

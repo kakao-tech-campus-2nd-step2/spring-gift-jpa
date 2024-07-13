@@ -28,8 +28,8 @@ public class UserService {
     }
 
 
-    public List<UserDto> getAll() {
-        return userRepositoryInterface.findAll().stream().map(UserDto::fromEntity).toList();
+    public List<UserDto.Response> getAll() {
+        return userRepositoryInterface.findAll().stream().map(UserDto.Response::fromEntity).toList();
     }
 
     public TokenDto generateTokenDtoFrom(String userEmail) {
@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public boolean login(String email, String password) throws AuthenticationException {
-        UserDto dbUserDto = UserDto.fromEntity(userRepositoryInterface.findByEmail(email));
+        UserDto.Response dbUserDto = UserDto.Response.fromEntity(userRepositoryInterface.findByEmail(email));
 
         if (validatePassword(password, dbUserDto.getPassword())) {
             return true;
