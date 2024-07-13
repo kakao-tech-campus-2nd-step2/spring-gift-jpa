@@ -5,8 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "user_table")
@@ -20,8 +22,10 @@ public class User {
     @Column(nullable = false)
     private String password;
     private String role;
+    @OneToMany(mappedBy = "user")
+    private List<Wish> wishList = new ArrayList<>();
 
-    public User() {
+    protected User() {
     }
 
     public User(String email, String password, String role) {
@@ -33,6 +37,7 @@ public class User {
     public Long getId() {
         return id;
     }
+
     public String getEmail() {
         return email;
     }
@@ -40,11 +45,16 @@ public class User {
     public String getPassword() {
         return password;
     }
+
     public String getRole() {
         return role;
     }
 
-    public void updateRole(Role role){
+    public List<Wish> getWishList() {
+        return wishList;
+    }
+
+    public void updateRole(Role role) {
         this.role = role.name();
     }
 }

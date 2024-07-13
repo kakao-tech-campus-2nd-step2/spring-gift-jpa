@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 public @interface ValidProductName {
     String message() default "Invalid Product";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 }

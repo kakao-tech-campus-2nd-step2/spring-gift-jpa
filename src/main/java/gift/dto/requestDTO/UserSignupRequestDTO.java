@@ -12,6 +12,7 @@ public record UserSignupRequestDTO(
     String role) {
 
     public static User toEntity(UserSignupRequestDTO userSignupRequestDTO) {
-        return new User(userSignupRequestDTO.email(), userSignupRequestDTO.password(), userSignupRequestDTO.role());
+        return new User(userSignupRequestDTO.email(), userSignupRequestDTO.password(),
+            userSignupRequestDTO.role());
     }
 }

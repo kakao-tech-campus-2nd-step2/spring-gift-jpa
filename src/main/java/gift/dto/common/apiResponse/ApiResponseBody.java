@@ -1,7 +1,7 @@
 package gift.dto.common.apiResponse;
 
 public class ApiResponseBody {
-    public static class SuccessBody<D>{
+    public static class SuccessBody<D> {
         private String status;
         private String message;
         private D data;
@@ -24,7 +24,8 @@ public class ApiResponseBody {
             return data;
         }
     }
-    public static class FailureBody{
+
+    public static class FailureBody {
         private String status;
         private String message;
         private String code;

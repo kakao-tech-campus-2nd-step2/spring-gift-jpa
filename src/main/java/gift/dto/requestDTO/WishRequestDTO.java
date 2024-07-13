@@ -1,3 +1,13 @@
 package gift.dto.requestDTO;
 
-public record WishRequestDTO (Long userId, Long productId, int count) { }
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
+public record WishRequestDTO(
+    @NotNull
+    Long userId,
+    @NotNull
+    Long productId,
+    @Min(1)
+    int count) {
+}
