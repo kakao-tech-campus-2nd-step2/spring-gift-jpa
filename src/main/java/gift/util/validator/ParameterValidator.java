@@ -63,7 +63,7 @@ public class ParameterValidator {
         return returnMap;
     }
 
-    private Member validateMember(MemberDTO memberDTO) {
+    public Member validateMember(MemberDTO memberDTO) {
         Optional<Member> optionalMember = memberRepository.findByEmail(memberDTO.getEmail());
         if (optionalMember.isEmpty()) {
             throw new UserNotFoundException("유저를 찾을 수 없습니다.");
