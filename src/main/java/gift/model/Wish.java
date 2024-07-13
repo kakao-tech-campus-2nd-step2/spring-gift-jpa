@@ -1,9 +1,29 @@
 package gift.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "wish")
 public class Wish {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long memberId;
-    private String productName;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    public Wish() {}
+
+    public Wish(Member member, Product product) {
+        this.member = member;
+        this.product = product;
+    }
 
     public Long getId() {
         return id;
@@ -13,19 +33,17 @@ public class Wish {
         this.id = id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() { return member; }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public Product getProduct() {
+        return product;
     }
 
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

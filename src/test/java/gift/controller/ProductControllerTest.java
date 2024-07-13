@@ -37,8 +37,8 @@ class ProductControllerTest {
     @Test
     @DisplayName("모든 제품 조회")
     void testGetAllProducts() {
-        Product product1 = new Product(1L, "Product1", 100, "http://example.com/image1");
-        Product product2 = new Product(2L, "Product2", 200, "http://example.com/image2");
+        Product product1 = new Product("Product1", 100, "http://example.com/image1");
+        Product product2 = new Product("Product2", 200, "http://example.com/image2");
         when(productService.getAllProducts()).thenReturn(Arrays.asList(product1, product2));
 
         ResponseEntity<Map<String, Object>> response = productController.getAllProducts();
@@ -53,7 +53,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("ID로 특정 제품 조회")
     void testGetProductById() {
-        Product product = new Product(1L, "Product1", 100, "http://example.com/image1");
+        Product product = new Product("Product1", 100, "http://example.com/image1");
         when(productService.getProductById(anyLong())).thenReturn(product);
 
         ResponseEntity<Map<String, Object>> response = productController.getProductById(1L);
@@ -81,7 +81,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("새로운 상품 생성")
     void testCreateProduct() {
-        Product product = new Product(null, "Product1", 100, "http://example.com/image1");
+        Product product = new Product("Product1", 100, "http://example.com/image1");
         when(productService.createProduct(any(Product.class))).thenReturn(true);
 
         ResponseEntity<Map<String, Object>> response = productController.createProduct(product);
@@ -94,7 +94,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("기존 상품을 수정")
     void testUpdateProduct() {
-        Product updatedProduct = new Product(1L, "UpdatedProduct1", 150, "http://example.com/updated_image1");
+        Product updatedProduct = new Product("UpdatedProduct1", 150, "http://example.com/updated_image1");
         when(productService.updateProduct(anyLong(), any(Product.class))).thenReturn(true);
         when(productService.getProductById(anyLong())).thenReturn(updatedProduct);
 
@@ -108,7 +108,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("기존 상품을 부분 수정")
     void testPatchProduct() {
-        Product updatedProduct = new Product(1L, "UpdatedProduct1", 150, "http://example.com/updated_image1");
+        Product updatedProduct = new Product("UpdatedProduct1", 150, "http://example.com/updated_image1");
         when(productService.patchProduct(anyLong(), any(Map.class))).thenReturn(true);
         when(productService.getProductById(anyLong())).thenReturn(updatedProduct);
 
@@ -126,8 +126,8 @@ class ProductControllerTest {
     @Test
     @DisplayName("여러 기존 상품을 부분 수정")
     void testPatchProducts() {
-        Product product1 = new Product(1L, "UpdatedProduct1", 150, "http://example.com/updated_image1");
-        Product product2 = new Product(2L, "UpdatedProduct2", 250, "http://example.com/updated_image2");
+        Product product1 = new Product("UpdatedProduct1", 150, "http://example.com/updated_image1");
+        Product product2 = new Product("UpdatedProduct2", 250, "http://example.com/updated_image2");
         when(productService.patchProducts(anyList())).thenReturn(Arrays.asList(product1, product2));
 
         Map<String, Object> updates1 = new HashMap<>();

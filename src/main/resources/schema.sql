@@ -1,19 +1,26 @@
-CREATE TABLE IF NOT EXISTS product (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    price INTEGER NOT NULL,
-    imageUrl VARCHAR(255)
+create table if not exists member (
+    id          BIGINT          not null AUTO_INCREMENT,
+    email       VARCHAR(255)    not null,
+    password    VARCHAR(255)    not null,
+    PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS members (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+create table if not exists product (
+    id          BIGINT          not null AUTO_INCREMENT,
+    name        VARCHAR(15)     not null,
+    price       INTEGER         not null,
+    image_url   VARCHAR(255)    not null,
+    PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS wishes (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    member_id BIGINT NOT NULL,
-    product_name VARCHAR(255) NOT NULL,
-    FOREIGN KEY (member_id) REFERENCES members(id)
+create table if not exists wish (
+    id          BIGINT          not null AUTO_INCREMENT,
+    member_id   BIGINT          not null,
+    product_id  BIGINT          not null,
+    PRIMARY KEY (id),
+    FOREIGN KEY (member_id)     REFERENCES member(id),
+    FOREIGN KEY (product_id)    REFERENCES product(id)
 );
+
+alter table member
+    add constraint uk_member unique (email)
