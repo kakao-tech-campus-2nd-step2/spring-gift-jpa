@@ -4,10 +4,10 @@ import gift.service.MemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -22,12 +22,11 @@ import java.nio.charset.StandardCharsets;
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final MemberService memberService;
-    private final SecretKey secretKey;
+    private final String secretKey;
 
-    public LoginMemberArgumentResolver(MemberService memberService, @Value("${jwt.secret.key}") String encryptedSecretKey, StringEncryptor stringEncryptor) {
+    public LoginMemberArgumentResolver(MemberService memberService, @Value("${jwt.secret}") String secretKey) {
         this.memberService = memberService;
-        String decryptedSecretKey = stringEncryptor.decrypt(encryptedSecretKey);
-        this.secretKey = Keys.hmacShaKeyFor(decryptedSecretKey.getBytes(StandardCharsets.UTF_8));
+        this.secretKey = secretKey;
     }
 
     @Override
@@ -42,7 +41,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             Claims claims = Jwts.parser()
-                .verifyWith(secretKey)
+                .verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
