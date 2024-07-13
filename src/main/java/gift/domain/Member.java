@@ -30,7 +30,7 @@ public class Member {
     private String grade;
 
     @OneToMany(mappedBy = "member",  cascade = CascadeType.REMOVE)
-    private List<Wish> wishes = new LinkedList<>();
+    private final List<Wish> wishes = new LinkedList<>();
 
     public Member() {
     }

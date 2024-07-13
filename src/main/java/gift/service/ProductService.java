@@ -9,6 +9,7 @@ import gift.exception.ProductNotExistsException;
 import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,7 +35,8 @@ public class ProductService {
             product.imageUrl()).ifPresent(p -> {
             throw new ProductAlreadyExistsException();
         });
-        return GlobalMapper.toProductResponse(productRepository.save(GlobalMapper.toProduct(product)));
+        return GlobalMapper.toProductResponse(
+            productRepository.save(GlobalMapper.toProduct(product)));
     }
 
     public ProductResponse update(UUID id, ProductRequest product) {

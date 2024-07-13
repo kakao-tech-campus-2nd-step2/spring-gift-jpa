@@ -4,6 +4,7 @@ import gift.controller.auth.AuthController;
 import gift.controller.auth.LoginRequest;
 import gift.controller.auth.LoginResponse;
 import gift.controller.auth.Token;
+import gift.exception.UnauthorizedException;
 import gift.login.LoginMember;
 import gift.service.AuthService;
 import gift.service.MemberService;

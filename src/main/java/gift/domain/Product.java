@@ -14,20 +14,16 @@ import java.util.UUID;
 @Entity
 public class Product {
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private final List<Wish> wishes = new LinkedList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     @Column(nullable = false)
     private String name;
-
     @Column(nullable = false)
     private Long price;
-
     private String imageUrl;
-
-    @OneToMany(mappedBy = "product",  cascade = CascadeType.REMOVE)
-    private List<Wish> wishes = new LinkedList<>();
 
     public Product() {
     }
@@ -46,20 +42,20 @@ public class Product {
         return name;
     }
 
-    public Long getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
+    public Long getPrice() {
+        return price;
+    }
+
     public void setPrice(Long price) {
         this.price = price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {

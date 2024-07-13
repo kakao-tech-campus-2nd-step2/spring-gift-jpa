@@ -2,7 +2,6 @@ package gift.controller.product;
 
 import gift.controller.auth.AuthController;
 import gift.controller.auth.LoginResponse;
-import gift.controller.member.MemberResponse;
 import gift.login.LoginMember;
 import gift.service.ProductService;
 import java.util.List;
@@ -24,7 +23,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService, AuthController authController) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
@@ -41,7 +40,6 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(@LoginMember LoginResponse loginMember,
         @RequestBody ProductRequest product) {
-        AuthController.validateAdmin(loginMember);
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(product));
     }
 

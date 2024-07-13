@@ -33,10 +33,10 @@ public class MemberService {
         return GlobalMapper.toMemberResponse(member);
     }
 
-    public LoginResponse findByEmail(String email) {
+    public MemberResponse findByEmail(String email) {
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(MemberNotExistsException::new);
-        return GlobalMapper.toLoginResponse(member);
+        return GlobalMapper.toMemberResponse(member);
     }
 
     public MemberResponse save(LoginRequest member) {
