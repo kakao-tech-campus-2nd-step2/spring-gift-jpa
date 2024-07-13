@@ -4,10 +4,12 @@ import gift.annotation.LoginMember;
 import gift.domain.Member;
 import gift.domain.Wish;
 import gift.dto.WishDto;
-import gift.repository.WishRepository;
 import gift.service.WishService;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,18 +28,14 @@ public class WishController {
         this.wishService = wishService;
     }
 
-
     @GetMapping
-    public ResponseEntity<List<Wish>> getWishlist(@LoginMember Member member) {
-        List<Wish> wishItems = wishService.findByMemberId(member.getId());
-//        List<Product> products = new ArrayList<>();
-//        for (Wish wishItem : wishItems) {
-//            Product product = productDao.findById(wishItem.getProductId());
-//            if (product != null) {
-//                products.add(product);
-//            }
-//        }
-        return new ResponseEntity<>(wishItems, HttpStatus.OK);
+    public ResponseEntity<Page<Wish>> getWishlist(@LoginMember Member member,
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "size", defaultValue = "10") int size,
+        @RequestParam(name = "sortBy", defaultValue = "id") String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<Wish> wishItems = wishService.findPagedWishesByMemberId(member.getId(), pageable);
+        return ResponseEntity.ok(wishItems);
     }
 
     @PostMapping("/add")

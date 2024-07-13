@@ -8,6 +8,8 @@ import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,5 +38,10 @@ public class WishService {
     public List<Wish> findByMemberId(Long id) {
         Member member = memberRepository.findById(id).orElseThrow();
         return wishRepository.findByMember(member);
+    }
+
+    public Page<Wish> findPagedWishesByMemberId(Long id, Pageable pageable) {
+        Member member = memberRepository.findById(id).orElseThrow();
+        return wishRepository.findByMember(member, pageable);
     }
 }
