@@ -30,6 +30,9 @@ public class Wish {
     public Wish() {
     }
 
+    public Wish() {
+    }
+
     public Wish(Long id, Long productId, Long userId) {
         this.id = id;
         this.productId = productId;

@@ -1,10 +1,12 @@
 package gift.entity;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import org.springframework.lang.NonNull;
 
 @Entity
