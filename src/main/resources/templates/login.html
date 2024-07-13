@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <script type="text/javascript" src="/js/authSetup.js" defer></script>
+</head>
+<body>
+<h1>Login</h1>
+<form id="loginForm" th:action="@{/members/login}" method="post">
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email"><br>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password"><br>
+    <button id="loginBtn" type="submit">Login</button>
+</form>
+<a href="/members/register">Register</a>
+
+<script type="text/javascript">
+
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 폼 제출 막기
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        fetch('http://localhost:8000/members/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                'email': email,
+                'password': password
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.token) {
+                    console.log('Token saved to local storage:', data.token);
+                    authSetup.storeToken(data.token);
+                    location.href = "/view/home";
+
+                } else {
+                    console.error('Error:', data.error);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</html>
+

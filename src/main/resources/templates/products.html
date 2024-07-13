@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/authSetup.js"></script> <!-- th:src에서 src로 수정 -->
+</head>
+<body>
+<h1>Product List</h1>
+<table border="1" id="product-table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Image</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody> <!-- tbody 추가 -->
+    </tbody>
+</table>
+<script>
+    const getProducts = {
+            init: function () {
+                authSetup.setAuthorizationHeader();
+                $.ajax({
+                    type: "GET",
+                    url: '/api/admin/products',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=UTF-8',
+                }).done(function (response) {
+                    $.each(response, function (index, product) {
+                        let row = $('<tr>');
+                        row.append($('<td>').text(product.id));
+                        row.append($('<td>').text(product.name));
+                        row.append($('<td>').text(product.price));
+                        row.append($('<td>').append($('<img>').attr('src', product.imageUrl).css({'max-width': '100px', 'max-height': '100px'})));
+                        row.append($('<td>').html('<a href="/api/admin/products/edit/' + product.id + '">Edit</a> | <a href="/api/admin/products/delete/' + product.id + '">Delete</a>'));
+
+                        // tbody에 행 추가
+                        $('#product-table tbody').append(row);
+                    });
+                }).fail(function () {
+                    alert('이동 불가');
+                });
+            }
+        };
+        getProducts.init();
+</script>
+<br>
+<a href="/api/admin/products/add">Add Product</a>
+</body>
+</html>

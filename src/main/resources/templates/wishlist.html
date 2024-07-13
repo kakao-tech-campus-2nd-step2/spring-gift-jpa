@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .wishlist-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        .wishlist-item img {
+            max-width: 100px;
+            margin-right: 20px;
+        }
+        .wishlist-item .info {
+            flex: 1;
+        }
+        .wishlist-item .actions {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>Your Wishlist</h1>
+<div id="wishlist"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('You need to log in first.');
+            return;
+        }
+
+        fetch('/api/wishlist', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const wishlistContainer = document.getElementById('wishlist');
+            wishlistContainer.innerHTML = '';
+
+            if (data.length === 0) {
+                wishlistContainer.innerHTML = '<p>Your wishlist is empty.</p>';
+            } else {
+                data.forEach(product => {
+                    const item = document.createElement('div');
+                    item.className = 'wishlist-item';
+
+                    item.innerHTML = `
+                        <img src="${product.imageUrl}" alt="${product.name}">
+                        <div class="info">
+                            <h2>${product.name}</h2>
+                            <p>Price: $${product.price}</p>
+                        </div>
+                        <div class="actions">
+                            <button onclick="removeFromWishlist(${product.id})">Remove</button>
+                        </div>
+                    `;
+
+                    wishlistContainer.appendChild(item);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching wishlist:', error);
+        });
+    });
+
+    function removeFromWishlist(productId) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('You need to log in first.');
+            return;
+        }
+
+        fetch(`/api/wishlist/${productId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+        .then(() => {
+            // 성공적으로 삭제되었을 때 UI에서 항목을 제거
+            const item = document.querySelector(`.wishlist-item button[onclick="removeFromWishlist(${productId})"]`).parentElement.parentElement;
+            item.remove();
+        })
+        .catch(error => {
+            console.error('Error removing wishlist item:', error);
+        });
+    }
+</script>
+</body>
+</html>
