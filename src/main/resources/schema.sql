@@ -11,3 +11,11 @@ CREATE TABLE users (
                        email VARCHAR(255) NOT NULL,
                        password VARCHAR(255) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS wishes (
+                                      id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                      product_id BIGINT NOT NULL,
+                                      user_id BIGINT NOT NULL,
+                                      amount INT NOT NULL,
+                                      is_deleted BOOLEAN NOT NULL
+);

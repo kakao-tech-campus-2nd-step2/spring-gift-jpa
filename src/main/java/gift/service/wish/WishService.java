@@ -1,30 +1,64 @@
 package gift.service.wish;
 
-import gift.domain.user.User;
+import gift.domain.wish.Wish;
+import gift.repository.product.ProductRepository;
+import gift.repository.wish.WishRepository;
+import gift.exception.product.ProductNotFoundException;
+import gift.exception.wish.WishCanNotModifyException;
+import gift.exception.wish.WishNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
+@Transactional
 public class WishService {
 
-    // 실제 데이터베이스를 사용하지 않고, 임시로 HashMap을 사용하여 위시리스트를 저장합니다.
-    private final Map<User, List<String>> userWishlistMap = new HashMap<>();
+    private final WishRepository wishRepository;
+    private final ProductRepository productRepository;
 
-    public List<String> getWishlistByUser(User user) {
-        return userWishlistMap.getOrDefault(user, new ArrayList<>());
+    @Autowired
+    public WishService(WishRepository wishRepository, ProductRepository productRepository) {
+        this.wishRepository = wishRepository;
+        this.productRepository = productRepository;
     }
 
-    public void addToWishlist(User user, String product) {
-        List<String> wishlist = userWishlistMap.computeIfAbsent(user, k -> new ArrayList<>());
-        wishlist.add(product);
+    public void saveWish(Long productId, Long userId, int amount) {
+        productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
+
+        Wish wish = new Wish(productId, userId, amount);
+        wishRepository.save(wish);
     }
 
-    public void removeFromWishlist(User user, String product) {
-        List<String> wishlist = userWishlistMap.getOrDefault(user, new ArrayList<>());
-        wishlist.remove(product);
+    public void modifyWish(Long wishId, Long productId, Long userId, int amount) {
+        Wish wish = wishRepository.findByIdAndUserId(wishId, userId)
+                .orElseThrow(() -> new WishNotFoundException(wishId));
+
+        if (!wish.getProductId().equals(productId)) {
+            throw new WishCanNotModifyException();
+        }
+
+        wishRepository.save(new Wish(wishId, productId, userId, amount));
+    }
+
+    public List<Wish> getWishList(Long userId) {
+        List<Wish> wishes = wishRepository.findByUserId(userId);
+        return wishes;
+    }
+
+    public Wish getWishDetail(Long wishId, Long userId) {
+        return wishRepository.findByIdAndUserId(wishId, userId)
+                .orElseThrow(() -> new WishNotFoundException(wishId));
+    }
+
+    public void deleteWish(Long wishId, Long userId) {
+        Wish wish = wishRepository.findByIdAndUserId(wishId, userId)
+                .orElseThrow(() -> new WishNotFoundException(wishId));
+
+        wish.delete();
+        wishRepository.save(wish);
     }
 }

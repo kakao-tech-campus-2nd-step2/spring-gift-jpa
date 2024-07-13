@@ -1,8 +1,11 @@
 package gift.exception;
 
+import gift.exception.product.ProductNotFoundException;
 import gift.exception.user.InvalidCredentialsException;
 import gift.exception.user.UserAlreadyExistsException;
 import gift.exception.user.UserNotFoundException;
+import gift.exception.wish.WishCanNotModifyException;
+import gift.exception.wish.WishNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,6 +41,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<String> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<String> handleProductNotFoundException(ProductNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(WishNotFoundException.class)
+    public ResponseEntity<String> handleWishNotFoundException(WishNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(WishCanNotModifyException.class)
+    public ResponseEntity<String> handleWishCanNotModifyException(WishCanNotModifyException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 

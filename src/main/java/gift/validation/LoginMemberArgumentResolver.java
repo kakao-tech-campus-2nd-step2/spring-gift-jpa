@@ -1,9 +1,7 @@
 package gift.validation;
 
 import gift.domain.user.User;
-import gift.service.user.UserService;
-import gift.util.JwtTokenUtil;
-import io.jsonwebtoken.Claims;
+import gift.repository.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -14,39 +12,36 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import static gift.util.JwtTokenUtil.extractTokenFromHeader;
+import java.util.Optional;
 
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
-
-    private final UserService userService;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final UserRepository userRepository;
 
     @Autowired
-    public LoginMemberArgumentResolver(UserService userService, JwtTokenUtil jwtTokenUtil) {
-        this.userService = userService;
-        this.jwtTokenUtil = jwtTokenUtil;
+    public LoginMemberArgumentResolver(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(LoginMember.class) && parameter.getParameterType().equals(User.class);
+        return parameter.hasParameterAnnotation(LoginMember.class);
     }
 
+    //토큰 검증 2
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        HttpServletRequest servletRequest = (HttpServletRequest) webRequest.getNativeRequest();
+        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+        String email = (String) request.getAttribute("email");
 
-        String token = JwtTokenUtil.extractTokenFromHeader(servletRequest);
-
-        if (token != null && !token.isEmpty() && jwtTokenUtil.validateToken(token)) {
-            String email = jwtTokenUtil.getClaimsFromToken(token).getSubject();
-            User user = userService.findByEmail(email).orElse(null);
-            System.out.println("hi");
-            return user;
+        if (email == null) {
+            throw new IllegalArgumentException("JWT 토큰에서 이메일을 추출할 수 없습니다.");
         }
 
-        return null;
-    }
+        Optional<User> userOptional = userRepository.findByEmail(email);
 
+        User user = userOptional.orElseThrow(() -> new IllegalArgumentException("인증된 사용자를 찾을 수 없습니다."));
+
+        return user;
+    }
 }
