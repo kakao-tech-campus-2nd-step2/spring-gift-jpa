@@ -4,11 +4,12 @@ import gift.config.auth.LoginUser;
 import gift.domain.model.entity.User;
 import gift.domain.model.dto.WishResponseDto;
 import gift.domain.model.dto.WishUpdateRequestDto;
+import gift.domain.model.dto.WishSearchRequestDto;
 import gift.service.WishService;
 import jakarta.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,8 +34,10 @@ public class WishController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<WishResponseDto> getWishes(@LoginUser User user) {
-        return wishService.getProductsByUserEmail(user.getEmail());
+    public Page<WishResponseDto> getWishes(@LoginUser User user,
+        @Valid @RequestBody WishSearchRequestDto requestDto) {
+        return wishService.getProductsByUserEmail(user.getEmail(), requestDto.getPage(),
+            requestDto.getSortBy());
     }
 
     @PostMapping("/{productId}")

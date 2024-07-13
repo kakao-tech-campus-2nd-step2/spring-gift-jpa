@@ -5,13 +5,16 @@ import gift.domain.model.dto.WishUpdateRequestDto;
 import gift.domain.model.entity.Product;
 import gift.domain.model.entity.User;
 import gift.domain.model.entity.Wish;
+import gift.domain.model.enums.WishSortBy;
 import gift.domain.repository.WishRepository;
 import gift.exception.DuplicateWishItemException;
 import gift.exception.NoSuchWishException;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.stream.Collectors;
 
 @Service
 public class WishService {
@@ -19,6 +22,7 @@ public class WishService {
     private final WishRepository wishRepository;
     private final ProductService productService;
     private final UserService userService;
+    private static final int PAGE_SIZE = 10;
 
     public WishService(WishRepository wishRepository, ProductService productService,
         UserService userService) {
@@ -28,10 +32,29 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishResponseDto> getProductsByUserEmail(String email) {
-        return wishRepository.findByUserEmail(email).stream()
-            .map(this::convertToWishResponseDto)
-            .collect(Collectors.toList());
+    public Page<WishResponseDto> getProductsByUserEmail(String email, int page, WishSortBy sortBy) {
+        Sort sort = createSort(sortBy);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort); // 페이지 크기를 10으로 고정
+        Page<Wish> wishPage = wishRepository.findByUserEmail(email, pageable);
+        return wishPage.map(this::convertToWishResponseDto);
+    }
+
+    private Sort createSort(WishSortBy sortBy) {
+        switch (sortBy) {
+            case PRODUCT_NAME_ASC:
+                return Sort.by(Sort.Direction.ASC, "product.name");
+            case PRODUCT_NAME_DESC:
+                return Sort.by(Sort.Direction.DESC, "product.name");
+            case COUNT_ASC:
+                return Sort.by(Sort.Direction.ASC, "count");
+            case COUNT_DESC:
+                return Sort.by(Sort.Direction.DESC, "count");
+            case ID_DESC:
+                return Sort.by(Sort.Direction.DESC, "id");
+            case ID_ASC:
+            default:
+                return Sort.by(Sort.Direction.ASC, "id");
+        }
     }
 
     @Transactional
