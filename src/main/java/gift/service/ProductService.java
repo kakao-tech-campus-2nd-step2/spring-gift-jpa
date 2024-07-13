@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.product.ProductWithOptionDTO;
 import gift.dto.product.SaveProductDTO;
 import gift.dto.product.ShowProductDTO;
+
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.exception.exception.BadRequestException;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.stream;
+
 
 @Service
 @Validated
@@ -68,6 +70,7 @@ public class ProductService {
 
     private boolean isValidProduct(@Valid Product product){
         if(product.getName().contentEquals("카카오"))
+
             throw new UnAuthException("MD와 상담해주세요.");
         Optional<Product> productOptional = productRepository.findById(product.getId());
         return productOptional.map(value -> value.equals(product)).orElse(true);
@@ -95,6 +98,7 @@ public class ProductService {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonProduct="";
+
         try {
             jsonProduct = objectMapper.writeValueAsString(product);
         } catch (JsonProcessingException e) {
@@ -105,6 +109,7 @@ public class ProductService {
 
     public void modifyProduct(Product product) {
         if(productRepository.findById(product.getId()).isEmpty())
+
             throw new NotFoundException("물건이 없습니다.");
         productRepository.deleteById(product.getId());
         productRepository.save(product);

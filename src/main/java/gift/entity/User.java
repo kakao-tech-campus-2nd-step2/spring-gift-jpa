@@ -13,6 +13,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(unique=true, nullable=false)
+
     private String email;
     @Column(nullable = false)
     private String password;
@@ -27,6 +28,7 @@ public class User {
     public void addWishlist(WishList wishlist){
         this.wishlist.add(wishlist);
     }
+
 
     public int getId() {
         return id;

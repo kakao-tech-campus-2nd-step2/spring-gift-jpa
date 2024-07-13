@@ -1,5 +1,6 @@
 package gift.controller;
 
+
 import gift.dto.product.SaveProductDTO;
 import gift.dto.product.ShowProductDTO;
 import gift.entity.Product;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +26,11 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @GetMapping("/api/products")
+
     public Page<ShowProductDTO> getProducts(@RequestParam(value = "page", defaultValue = "0") int pageNum) {
         Pageable pageable = PageRequest.of(pageNum, 2, Sort.by(Sort.Direction.ASC, "id"));
         return productService.getAllProducts(pageable);
+
     }
 
     @PostMapping("/api/products")

@@ -1,21 +1,25 @@
 package gift.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import gift.Util.JWTUtil;
 import gift.dto.product.ShowProductDTO;
 import gift.entity.Product;
 import gift.entity.User;
+
 import gift.entity.WishList;
 import gift.exception.exception.BadRequestException;
 import gift.exception.exception.NotFoundException;
 import gift.exception.exception.UnAuthException;
 import gift.repository.ProductRepository;
+
 import gift.repository.UserRepository;
 import gift.repository.WishListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class WishListService {
@@ -25,6 +29,7 @@ public class WishListService {
     ProductRepository productRepository;
     @Autowired
     JWTUtil jwtUtil;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -64,4 +69,5 @@ public class WishListService {
         WishList.WishListId wishListId = new WishList.WishListId(tokenUserId,productId);
         wishListRepository.deleteById(wishListId);
     }
+
 }

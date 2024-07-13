@@ -63,6 +63,7 @@ public class WishList {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
     // getters and setters
 
     public WishList(WishListId id) {
@@ -71,6 +72,7 @@ public class WishList {
 
     public WishList() {
     }
+
 
     public void setId(WishListId id) {
         this.id = id;
@@ -91,6 +93,7 @@ public class WishList {
     public User getUser() {
         return user;
     }
+
 
     public WishListId getId() {
         return id;

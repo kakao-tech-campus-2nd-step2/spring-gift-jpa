@@ -44,6 +44,7 @@ public class Option {
         this.product = product;
     }
 
+
     public OptionId getId() {
         return id;
     }

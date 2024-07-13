@@ -3,9 +3,11 @@ package gift.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import gift.dto.user.LoginDTO;
 import gift.dto.user.SignUpDTO;
 import gift.dto.user.Token;
+
 import gift.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/signup")
     public String SignUp(@RequestBody SignUpDTO signUpDTO) {
+
         userService.signUp(signUpDTO);
         return "redirect:/signin";
     }
@@ -47,6 +50,7 @@ public class UserController {
     @ResponseBody
     public String signIn(@RequestBody LoginDTO loginDTO) throws JsonProcessingException {
         Token token = userService.signIn(loginDTO);
+
         return objectMapper.writeValueAsString(token);
     }
 
