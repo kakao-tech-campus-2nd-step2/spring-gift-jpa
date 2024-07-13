@@ -2,14 +2,15 @@ package gift.product.service;
 
 import gift.product.dto.ProductRequestDto;
 import gift.product.dto.ProductResponseDto;
+import gift.product.entity.Product;
 import gift.product.repository.ProductRepository;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// 아직은 로직이 단순해서 service가 필요 없는 규모라고 생각하지만, 확장을 위해 service로 분리
 @Service
 @Transactional(readOnly = true)
 public class ProductService {
@@ -21,29 +22,45 @@ public class ProductService {
     }
 
     @Transactional
-    // dao를 호출해서 productDTO를 DB에 넣는 함수
+    // repository를 호출해서 productDTO를 DB에 넣는 함수
     public void insertProduct(ProductRequestDto productRequestDto) {
+        Product product = new Product(productRequestDto.name(), productRequestDto.price(), productRequestDto.imageUrl());
+        productRepository.save(product);
     }
 
-    // dao를 호출해서 DB에 담긴 로우를 반환하는 함수
+    // repository를 호출해서 DB에 담긴 로우를 반환하는 함수
     public ProductResponseDto selectProduct(long productId) {
-        return new ProductResponseDto(0,null,0,null);
+        Product product = productRepository.findById(productId).get();
+        return new ProductResponseDto(product.getProductId(), product.getName(), product.getPrice(),
+            product.getImage());
     }
 
     // 전체 제품 정보를 반환하는 함수
     public List<ProductResponseDto> selectProducts() {
-        return new ArrayList<>();
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(product -> new ProductResponseDto(product.getProductId(),
+            product.getName(), product.getPrice(), product.getImage())).collect(Collectors.toList());
     }
 
-    // dao를 호출해서 특정 로우를 파라메터로 전달된 DTO로 교체하는 함수
+    // repository를 호출해서 특정 로우를 파라메터로 전달된 DTO로 교체하는 함수
+    @Transactional
     public void updateProduct(long productId, ProductRequestDto productRequestDto) {
-//        productRepository.updateProduct(
-//            new Product(productId, productRequestDto.name(), productRequestDto.price(),
-//                productRequestDto.imageUrl()));
+        Product product = productRepository.findById(productId).get();
+        product.updateProduct(productRequestDto.name(), productRequestDto.price(),
+            productRequestDto.imageUrl());
     }
 
-    // dao를 호출해서 특정 로우를 제거하는 함수
-    public void deleteProduct(long id) {
-
+    // repository를 호출해서 특정 로우를 제거하는 함수
+    @Transactional
+    public void deleteProduct(long productId) {
+        verifyExistence(productId);
+        productRepository.deleteById(productId);
+    }
+    
+    // get()을 사용하지 않는 delete 작업에서 사용할 검증
+    private void verifyExistence(long productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new NoSuchElementException("이미 삭제된 제품입니다.");
+        }
     }
 }

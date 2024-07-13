@@ -1,45 +1,112 @@
 package gift.wishlist.service;
 
+import gift.permission.repository.PermissionRepository;
+import gift.product.entity.Product;
+import gift.product.repository.ProductRepository;
+import gift.user.entity.User;
 import gift.wishlist.dto.WishListRequestDto;
 import gift.wishlist.dto.WishListResponseDto;
+import gift.wishlist.entity.WishList;
+import gift.wishlist.model.WishListId;
 import gift.wishlist.repository.WishListRepository;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class WishListService {
 
     private final WishListRepository wishListRepository;
+    private final ProductRepository productRepository;
+    private final PermissionRepository permissionRepository;
 
-    public WishListService(WishListRepository wishListRepository) {
+    public WishListService(WishListRepository wishListRepository,
+        ProductRepository productRepository, PermissionRepository permissionRepository) {
         this.wishListRepository = wishListRepository;
+        this.productRepository = productRepository;
+        this.permissionRepository = permissionRepository;
     }
 
-    // 추가
+    // 위시리스트 추가하는 핸들러
     public void insertWishProduct(WishListRequestDto wishListRequestDto) {
-        // insertWishProduct의 반환값이 이미 key를 가진 로우가 있어서 삽입에 실패했는지를 나타냅니다.
-        // 메서드 이름만 보면 void처럼 보여서 key를 가진 로우가 존재하는지에 대한 검증을 service에서 했어야 할지도 고민을 했었습니다.
+        WishListId wishListId = getWishListId(wishListRequestDto);
 
-        // 만약 이미 있는 요소에 insert 요청을 넣었다면
-        // 위시 리스트의 제품 개수 하나 늘리기
+        // 이미 위시리스트에 존재하는 제품을 또 추가하는 경우 하나 늘려주기
+        if (wishListRepository.existsById(wishListId)) {
+            increaseWishProduct(wishListRequestDto);
+            return;
+        }
+
+        // 그렇지 않다면 1개 제품 추가
+        WishList wishList = new WishList(wishListId, 1);
+        wishListRepository.save(wishList);
     }
 
-    // 읽기
+    // 위시리스트를 읽어오는 핸들러
+    @Transactional(readOnly = true)
     public List<WishListResponseDto> readWishProducts(long userId) {
-        return new ArrayList<>();
+        // 특정 userId를 갖는 위시리스트 불러오기
+        List<WishList> wishProducts = wishListRepository.findByWishListIdUserUserId(userId);
+
+        return wishProducts.stream().map(wishList -> {
+           long wishUserId = wishList.getWishListId().getUser().getUserId();
+           long wishProductId = wishList.getWishListId().getProduct().getProductId();
+           String name = wishList.getWishListId().getProduct().getName();
+           int price = wishList.getWishListId().getProduct().getPrice();
+           String imageUrl = wishList.getWishListId().getProduct().getImage();
+           int quantity = wishList.getQuantity();
+
+           return new WishListResponseDto(wishUserId, wishProductId, name, price, imageUrl, quantity);
+        }).collect(Collectors.toList());
     }
 
-    // 개수 증가
+    // 개수 증가하는 핸들러
     public void increaseWishProduct(WishListRequestDto wishListRequestDto) {
+        WishListId wishListId = getWishListId(wishListRequestDto);
+
+        WishList actualWishList = wishListRepository.findById(wishListId).get();
+        int afterQuantity = actualWishList.getQuantity() + 1;
+
+        actualWishList.updateQuantity(afterQuantity);
     }
 
-    // 개수 감소
+    // 개수 감소하는 핸들러
     public void decreaseWishProduct(WishListRequestDto wishListRequestDto) {
+        WishListId wishListId = getWishListId(wishListRequestDto);
+
+        WishList actualWishList = wishListRepository.findById(wishListId).get();
+        int afterQuantity = actualWishList.getQuantity() - 1;
+
         // 만약 수정하려고 하는 양이 0 이하라면, 제품을 삭제합니다.
+        if (afterQuantity < 1) {
+            deleteWishProduct(wishListRequestDto);
+            return;
+        }
+
+        actualWishList.updateQuantity(afterQuantity);
     }
 
-    // 삭제
+    // 위시리스트에서 제품을 삭제하는 핸들러
     public void deleteWishProduct(WishListRequestDto wishListRequestDto) {
+        WishListId wishListId = getWishListId(wishListRequestDto);
+
+        verifyWishProductExistence(wishListId);
+        wishListRepository.deleteById(wishListId);
+    }
+
+    // get()을 사용하지 않는 delete 작업에서 사용할 검증
+    private void verifyWishProductExistence(WishListId wishListId) {
+        if (!wishListRepository.existsById(wishListId)) {
+            throw new IllegalArgumentException("이미 삭제된 제품입니다.");
+        }
+    }
+
+    // WishListId를 불러오기 위해 user를 찾고, product를 찾고, new WishListId를 하는 과정을 메서드로 담아서 중복을 줄였습니다.
+    private WishListId getWishListId(WishListRequestDto wishListRequestDto) {
+        User actualUser = permissionRepository.findById(wishListRequestDto.userId()).get();
+        Product actualProduct = productRepository.findById(wishListRequestDto.productId()).get();
+        return new WishListId(actualUser, actualProduct);
     }
 }
