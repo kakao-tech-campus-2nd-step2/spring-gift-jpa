@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,7 +25,7 @@ public class Product {
     private String imageUrl;
 
     @OneToMany(mappedBy = "product")
-    private List<Wish> wishes;
+    private List<Wish> wishes = new ArrayList<>();
 
     public Product(String name, Integer price, String imageUrl) {
         this.name = name;
@@ -51,15 +52,9 @@ public class Product {
         return imageUrl;
     }
 
-    public void changeName(String name) {
+    public void change(String name, int price, String imageUrl) {
         this.name = name;
-    }
-
-    public void changePrice(Integer price) {
         this.price = price;
-    }
-
-    public void changeImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 

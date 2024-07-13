@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,8 +29,7 @@ class WishRepositoryTest {
 
     private Member testMember;
     private Product testProduct1;
-    private Wish testWish1;
-    private Wish testWish2;
+    private Product testProduct2;
 
     @BeforeEach
     void setUp() {
@@ -37,21 +37,23 @@ class WishRepositoryTest {
         memberRepository.save(testMember);
 
         testProduct1 = new Product("almond", 500, "almond.jpg");
-        Product testProduct2 = new Product("ice", 9000, "ice.jpg");
+        testProduct2 = new Product("ice", 9000, "ice.jpg");
         productRepository.save(testProduct1);
         productRepository.save(testProduct2);
-
-        testWish1 = new Wish(testMember, 100, testProduct1);
-        testWish2 = new Wish(testMember, 2000, testProduct2);
-        wishRepository.save(testWish1);
-        wishRepository.save(testWish2);
     }
 
     @Test
     @DisplayName("멤버의 전체 위시 찾기")
     void findAllByMemberIdWithProduct() {
+        //Given
+        Wish testWish1 = new Wish(testMember, 100, testProduct1);
+        Wish testWish2 = new Wish(testMember, 2000, testProduct2);
+        wishRepository.save(testWish1);
+        wishRepository.save(testWish2);
+
         //When
-        List<Wish> wishes = wishRepository.findAllByMember(testMember);
+        PageRequest pageable = PageRequest.of(0, 10);
+        List<Wish> wishes = wishRepository.findAllByMember(testMember, pageable).getContent();
 
         //Then
         assertThat(wishes).isNotEmpty()
@@ -64,6 +66,10 @@ class WishRepositoryTest {
     @Test
     @DisplayName("멤버, 상품으로 위시 찾기")
     void findByMemberIdAndProductId() {
+        //Given
+        Wish testWish1 = new Wish(testMember, 100, testProduct1);
+        wishRepository.save(testWish1);
+
         //When
         Optional<Wish> wish = wishRepository.findByMemberAndProduct(testMember, testProduct1);
 

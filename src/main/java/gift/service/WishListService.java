@@ -7,10 +7,10 @@ import gift.entity.Wish;
 import gift.exception.WishAlreadyExistsException;
 import gift.exception.WishNotFoundException;
 import gift.repository.WishRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class WishListService {
@@ -28,7 +28,7 @@ public class WishListService {
     @Transactional
     public void addProductToWishList(Long memberId, Long productId, int amount) {
         Member member = memberService.getMemberById(memberId);
-        Product product = productService.getProductById(productId);
+        Product product = productService.getProduct(productId);
 
         wishListRepository.findByMemberAndProduct(member, product)
                 .ifPresentOrElse(
@@ -45,7 +45,7 @@ public class WishListService {
     @Transactional
     public void deleteProductInWishList(Long memberId, Long productId) {
         Member member = memberService.getMemberById(memberId);
-        Product product = productService.getProductById(productId);
+        Product product = productService.getProduct(productId);
         Wish wish = wishListRepository.findByMemberAndProduct(member, product)
                 .orElseThrow(WishNotFoundException::new);
         wishListRepository.delete(wish);
@@ -54,18 +54,16 @@ public class WishListService {
     @Transactional
     public void updateWishProductAmount(Long memberId, Long productId, int amount) {
         Member member = memberService.getMemberById(memberId);
-        Product product = productService.getProductById(productId);
+        Product product = productService.getProduct(productId);
         Wish wish = wishListRepository.findByMemberAndProduct(member, product)
                 .orElseThrow(WishNotFoundException::new);
         wish.changeAmount(amount);
     }
 
-    public List<WishProductResponse> getWishProductsByMemberId(Long memberId) {
+    public Page<WishProductResponse> getWishProductsByMemberId(Long memberId, Pageable pageable) {
         Member member = memberService.getMemberById(memberId);
-        return wishListRepository.findAllByMember(member)
-                .stream()
-                .map(WishProductResponse::fromWish)
-                .toList();
+        return wishListRepository.findAllByMember(member, pageable)
+                .map(WishProductResponse::fromWish);
     }
 
 }
