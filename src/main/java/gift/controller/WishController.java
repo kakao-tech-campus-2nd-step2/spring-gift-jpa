@@ -47,13 +47,13 @@ public class WishController {
 
     @PostMapping
     public ResponseEntity<WishResponse> addWish(
-        @Valid @RequestBody WishCreateRequest wishRequestDTO,
+        @Valid @RequestBody WishCreateRequest wishCreateRequest,
         @RequestAttribute("memberId") Long memberId) {
 
         MemberResponse memberResponse = memberService.getMemberById(memberId);
         Member member = memberService.convertToEntity(memberResponse);
 
-        ProductResponse productResponse = productService.getProductById(wishRequestDTO.productId());
+        ProductResponse productResponse = productService.getProductById(wishCreateRequest.productId());
         Product product = productService.convertToEntity(productResponse);
 
         WishRequest wishRequest = new WishRequest(member, product);

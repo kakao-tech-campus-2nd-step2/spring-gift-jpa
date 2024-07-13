@@ -40,15 +40,15 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductResponse> addProduct(
-        @Valid @RequestBody ProductRequest productDTO) {
-        ProductResponse createdProduct = productService.addProduct(productDTO);
+        @Valid @RequestBody ProductRequest productRequest) {
+        ProductResponse createdProduct = productService.addProduct(productRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id,
-        @Valid @RequestBody ProductRequest productDTO) {
-        ProductResponse updatedProduct = productService.updateProduct(id, productDTO);
+        @Valid @RequestBody ProductRequest productRequest) {
+        ProductResponse updatedProduct = productService.updateProduct(id, productRequest);
         return ResponseEntity.ok(updatedProduct);
     }
 

@@ -23,15 +23,15 @@ public class MemberController {
 
     // 회원가입 (회원 추가)
     @PostMapping("/register")
-    public ResponseEntity<MemberResponse> register(@Valid @RequestBody MemberRequest memberDTO) {
-        MemberResponse registeredMember = memberService.registerMember(memberDTO);
+    public ResponseEntity<MemberResponse> register(@Valid @RequestBody MemberRequest memberRequest) {
+        MemberResponse registeredMember = memberService.registerMember(memberRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredMember);
     }
 
     // 로그인 (회원 검증)
     @PostMapping("/login")
-    public ResponseEntity<MemberResponse> login(@RequestBody MemberRequest memberDTO) {
-        MemberResponse loggedInMember = memberService.loginMember(memberDTO);
+    public ResponseEntity<MemberResponse> login(@RequestBody MemberRequest memberRequest) {
+        MemberResponse loggedInMember = memberService.loginMember(memberRequest);
         return ResponseEntity.ok(loggedInMember);
     }
 }
