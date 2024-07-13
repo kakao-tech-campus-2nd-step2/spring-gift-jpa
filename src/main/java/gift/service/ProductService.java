@@ -43,7 +43,9 @@ public class ProductService {
             if (e instanceof DataIntegrityViolationException) {
                 throw new BadRequestException("잘못된 제품 값을 입력했습니다. 입력 칸 옆의 설명을 다시 확인해주세요");
             }
-            throw new InternalServerException(e.getMessage());
+            if (!(e instanceof BadRequestException)) {
+                throw new InternalServerException(e.getMessage());
+            }
         }
     }
 

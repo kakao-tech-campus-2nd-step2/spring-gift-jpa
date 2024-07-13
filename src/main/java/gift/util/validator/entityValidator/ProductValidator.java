@@ -14,10 +14,6 @@ public class ProductValidator {
             "^((?!카카오).)*$"
     );
 
-    private static final Pattern URL_PATTERN = Pattern.compile(
-            "^((http(s)?)://)?(www.)?([a-zA-Z0-9]+)\\.[a-z]+([a-zA-z0-9.?#]+)?"
-    );
-
     public static void validateProduct(ProductDTO productDTO) {
         validateName(productDTO.name());
         validatePrice(productDTO.price());
@@ -51,9 +47,6 @@ public class ProductValidator {
     private static void validateImageUrl(String imageUrl) {
         if (imageUrl == null || imageUrl.isBlank()) {
             throw new BlankContentException("이미지 URL을 입력해주세요.");
-        }
-        if(!URL_PATTERN.matcher(imageUrl).matches()) {
-            throw new BadRequestException("URL 형식이 아닙니다.");
         }
     }
 }
