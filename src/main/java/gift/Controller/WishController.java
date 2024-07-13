@@ -1,10 +1,13 @@
 package gift.Controller;
 
+import gift.DTO.WishDTO;
 import gift.Entity.WishEntity;
 import gift.Service.WishService;
 import gift.Service.UserService;
 import gift.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +27,8 @@ public class WishController {
     private ProductService productService;
 
     @GetMapping
-    public List<WishEntity> getAllWishes() {
-        return wishService.findAllWishes();
+    public Page<WishDTO> getAllWishes(Pageable pageable) {
+        return wishService.getWishes(pageable);
     }
 
     @GetMapping("/{id}")
