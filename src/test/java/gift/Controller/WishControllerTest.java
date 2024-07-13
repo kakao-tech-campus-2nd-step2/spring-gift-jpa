@@ -111,6 +111,11 @@ class WishControllerTest {
     productController.addProduct(productDto1);
 
     WishListDto wishListDto1 = new WishListDto(1L, memberDto1, productDto1);
+    wishController.addProductToWishList(wishListDto1,null);
 
+    ResponseEntity responseEntity=wishController.deleteProductToWishList(1L);
+    ResponseEntity<Void> expectedResponse = ResponseEntity.noContent().build();
+
+    assertThat(responseEntity.getStatusCode()).isEqualTo(expectedResponse.getStatusCode());
   }
 }
