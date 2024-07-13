@@ -8,6 +8,7 @@ import gift.DTO.WishListDto;
 import gift.Repository.MemberRepository;
 import gift.Repository.ProductRepository;
 import gift.Repository.WishListRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,8 @@ public class WishListService {
   }
 
   public void deleteProductToWishList(Long id) {
+    WishList wishList = wishListRepository.findById(id)
+      .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
     wishListRepository.deleteById(id);
   }
 }
