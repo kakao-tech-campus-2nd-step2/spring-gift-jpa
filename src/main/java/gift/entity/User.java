@@ -14,38 +14,6 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
 
-    public static class Builder {
-
-        private Long id;
-        private String email;
-        private String password;
-        private Set<Wish> wishes;
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder email(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public Builder password(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public Builder wishes(Set<Wish> wishes) {
-            this.wishes = wishes;
-            return this;
-        }
-
-        public User build() {
-            return new User(this);
-        }
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -89,5 +57,36 @@ public class User {
         return wishes;
     }
 
+    public static class Builder {
+
+        private Long id;
+        private String email;
+        private String password;
+        private Set<Wish> wishes;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder wishes(Set<Wish> wishes) {
+            this.wishes = wishes;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
+    }
 
 }

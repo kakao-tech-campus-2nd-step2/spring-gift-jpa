@@ -15,39 +15,6 @@ import jakarta.validation.constraints.Positive;
 @Table(name = "wishes")
 public class Wish {
 
-    public static class Builder {
-
-        private Long id;
-        private Integer quantity;
-        private User user;
-        private Product product;
-
-        public Builder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder quantity(Integer quantity) {
-            this.quantity = quantity;
-            return this;
-        }
-
-        public Builder user(User user) {
-            this.user = user;
-            return this;
-        }
-
-        public Builder product(Product product) {
-            this.product = product;
-            return this;
-        }
-
-        public Wish build() {
-            return new Wish(this);
-        }
-
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -102,6 +69,39 @@ public class Wish {
 
     public boolean isQuantityZero() {
         return quantity <= 0;
+    }
+
+    public static class Builder {
+
+        private Long id;
+        private Integer quantity;
+        private User user;
+        private Product product;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder quantity(Integer quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
+        public Builder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Builder product(Product product) {
+            this.product = product;
+            return this;
+        }
+
+        public Wish build() {
+            return new Wish(this);
+        }
+
     }
 
 
