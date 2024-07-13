@@ -12,13 +12,10 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    private final ProductValidation productValidation;
 
-    public ProductService(ProductRepository productRepository, ProductValidation productValidation) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.productValidation = productValidation;
     }
-    private final AtomicLong id = new AtomicLong(1);
 
     public Product createProduct(CreateProductDto productDto) {
         Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());

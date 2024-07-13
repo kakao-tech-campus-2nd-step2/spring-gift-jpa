@@ -5,6 +5,7 @@ import gift.dto.LoginRequest;
 import gift.dto.LoginResponse;
 import gift.dto.MemberRequest;
 import gift.dto.MemberResponse;
+import gift.exception.ErrorMessage;
 import gift.repository.MemberRepository;
 import gift.security.JwtTokenProvider;
 import gift.security.SecurityService;
@@ -24,7 +25,7 @@ public class MemberService {
 
     public MemberResponse registerMember(MemberRequest requestDto) {
         if (memberRepository.existsByEmail(requestDto.getEmail())) {
-            throw new IllegalArgumentException("이메일이 이미 존재합니다.");
+            throw new IllegalArgumentException(ErrorMessage.MEMBER_EMAIL_ALREADY_EXISTS);
         }
 
         Member member = new Member(requestDto.getEmail(), requestDto.getPassword());
@@ -36,18 +37,13 @@ public class MemberService {
 
     public LoginResponse login(LoginRequest loginRequest) {
         Member member = memberRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new RuntimeException("일치하는 이메일이 없습니다."));
+                .orElseThrow(() -> new RuntimeException(ErrorMessage.EMAIL_NOT_FOUND));
         if (member != null && member.getPassword().equals(loginRequest.getPassword())) {
             String token = jwtTokenProvider.generateToken(member);
             return new LoginResponse(token);
         } else {
-            return new LoginResponse("일치하는 이메일이 없거나 비밀번호가 틀렸습니다.");
+            throw new IllegalArgumentException(ErrorMessage.INVALID_LOGIN_CREDENTIALS);
         }
-    }
-
-    public Member findByEmail(String email) {
-        return memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("해당 " + email + " 가진 회원이 없습니다."));
     }
 
     public Member getMemberByToken(String memberToken) {

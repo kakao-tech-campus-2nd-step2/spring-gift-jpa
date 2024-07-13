@@ -90,7 +90,7 @@
 - [x] 서비스 계층 수정 사항 수정
 
 ## 수정 사항
-- [ ] GlobalExceptionHandler - Exception에 코드 등을 넣어서 에러메시지 대신 사용
+- [x] GlobalExceptionHandler - Exception에 코드 등을 넣어서 에러메시지 대신 사용
 - [ ] Repository - JPA에서 자동으로 만들어줘서 구현안해도되는 코드 삭제
 - [ ] LoginMemberArgumentResolver - 토큰 파싱 시, 문자 길이로 값 사용해보기
 - [ ] JwtTokenProvider - 변수명으로 86400000 수정
