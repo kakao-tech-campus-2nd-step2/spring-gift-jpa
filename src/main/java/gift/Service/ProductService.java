@@ -60,6 +60,9 @@ public class ProductService {
     }
 
     private List<WishDTO> convertWishesToDTOs(List<WishEntity> wishEntities) {
+        if (wishEntities == null) {
+            return List.of();
+        }
         return wishEntities.stream()
                 .map(wishEntity -> new WishDTO(wishEntity.getId(), wishEntity.getProductName()))
                 .collect(Collectors.toList());
