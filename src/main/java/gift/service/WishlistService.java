@@ -25,11 +25,11 @@ public class WishlistService {
 	private ProductRepository productRepository;
 	
 	@Autowired
-	private AuthService authServicee;
+	private AuthService authService;
 	
 	public List<Wishlist> getWishlist(String token, BindingResult bindingResult) {
-        String email = authServicee.parseToken(token);
-        User user = authServicee.searchUser(email, bindingResult);
+        String email = authService.parseToken(token);
+        User user = authService.searchUser(email, bindingResult);
         return wishlistRepository.findByUserId(user.getId());
     }
 	
@@ -38,8 +38,8 @@ public class WishlistService {
 			throw new InvalidProductException(bindingResult.getFieldError().getDefaultMessage());
 		}
 		
-		String email = authServicee.parseToken(token);
-        User user = authServicee.searchUser(email, bindingResult);
+		String email = authService.parseToken(token);
+        User user = authService.searchUser(email, bindingResult);
         
         Product product = productRepository.findById(wishlist.getProduct().getId())
         		.orElseThrow(() -> new InvalidProductException("The product does not exits."));
@@ -53,8 +53,8 @@ public class WishlistService {
 		if(bindingResult.hasErrors()) {
 			throw new InvalidProductException(bindingResult.getFieldError().getDefaultMessage());
 		}
-		String email = authServicee.parseToken(token);
-        User user = authServicee.searchUser(email, bindingResult);
+		String email = authService.parseToken(token);
+        User user = authService.searchUser(email, bindingResult);
 		
         Wishlist deleteWishlist = wishlistRepository.findById(wishlist.getId())
         		.orElseThrow(() -> new InvalidProductException("Product colud not be removed from wishlist."));
@@ -68,8 +68,8 @@ public class WishlistService {
 		if(bindingResult.hasErrors()) {
 			throw new InvalidProductException(bindingResult.getFieldError().getDefaultMessage());
 		}
-		String email = authServicee.parseToken(token);
-        User user = authServicee.searchUser(email, bindingResult);
+		String email = authService.parseToken(token);
+        User user = authService.searchUser(email, bindingResult);
 		
         Wishlist updateWishlist = wishlistRepository.findById(wishlist.getId())
         		.orElseThrow(() -> new InvalidProductException("Product could not be update in wishlist."));
