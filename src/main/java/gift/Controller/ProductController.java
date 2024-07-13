@@ -7,6 +7,8 @@ import gift.Service.ProductService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +27,10 @@ public class ProductController {
     }
 
     @GetMapping("/api/products")
-    public String getProducts(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+    public String getProducts(Model model, Pageable pageable) {
+        Page<Product> productPage = productService.findAll(pageable);
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("page", productPage);
         return "index";
     }
 
