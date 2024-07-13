@@ -9,6 +9,9 @@ import gift.service.TokenService;
 import gift.service.WishService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,14 +34,14 @@ public class WishController {
 
     @ResponseBody
     @GetMapping
-    public ResponseEntity<List<WishResponseDto>> getWishProducts(HttpServletRequest request){
+    public ResponseEntity<List<WishResponseDto>> getWishProducts(HttpServletRequest request,
+                                                                 @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
         AuthToken token = getAuthVO(request);
 
-        List<WishResponseDto> findProducts = wishService.findAllWish(token.getEmail());
+        List<WishResponseDto> findProducts = wishService.findWishesPaging(token.getEmail(), pageable);
 
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(findProducts);
     }
-
     @PostMapping
     public String addWishProduct(HttpServletRequest request,
                                  @RequestBody @Valid WishCreateRequest wishCreateRequest){

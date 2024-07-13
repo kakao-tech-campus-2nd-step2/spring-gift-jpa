@@ -4,6 +4,9 @@ import gift.dto.request.ProductRequestDto;
 import gift.dto.response.ProductResponseDto;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +24,9 @@ public class ProductController {
     }
 
     @GetMapping()
-    public String getAll(Model model){
-        List<ProductResponseDto> productDtos = productService.findAllProducts();
+    public String getAll(Model model,
+                         @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
+        List<ProductResponseDto> productDtos = productService.findProducts(pageable);
         model.addAttribute("productDtos", productDtos);
         return "manager";
     }

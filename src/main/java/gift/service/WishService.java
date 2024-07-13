@@ -9,6 +9,7 @@ import gift.exception.ForbiddenException;
 import gift.repository.member.MemberRepository;
 import gift.repository.product.ProductRepository;
 import gift.repository.wish.WishRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,11 @@ public class WishService {
                 .collect(Collectors.toList());
     }
 
+    public List<WishResponseDto> findWishesPaging(String email, Pageable pageable){
+        return wishRepository.findWishesByMemberEmail(email, pageable).stream()
+                .map(WishResponseDto::from)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public WishResponseDto addWish(Long productId, String email, int count){

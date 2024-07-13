@@ -1,9 +1,10 @@
 package gift.domain;
 
+import gift.utils.TimeStamp;
 import jakarta.persistence.*;
 
 @Entity
-public class Wish {
+public class Wish extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

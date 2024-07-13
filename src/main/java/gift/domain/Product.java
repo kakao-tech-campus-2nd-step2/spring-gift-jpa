@@ -1,13 +1,14 @@
 package gift.domain;
 
 import gift.dto.request.ProductRequestDto;
+import gift.utils.TimeStamp;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Product {
+public class Product extends TimeStamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +21,7 @@ public class Product {
     private int price;
     private String imageUrl;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "product")
     private List<Wish> wishList = new ArrayList<>();
 
     public Product() {
