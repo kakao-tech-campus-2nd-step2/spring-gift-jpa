@@ -10,21 +10,22 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "product")
 public class Product {
+  
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private Long id;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-   @Column(name = "name", nullable = false)
-   private String name;
+    @Column(name = "price", nullable = false)
+    private int price;
 
-   @Column(name = "price", nullable = false)
-   private int price;
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
 
-   @Column(name = "image_url", nullable = false)
-   private String imageUrl;
-
-   protected Product() {}
+    protected Product() {
+    }
 
     public Product(String name, int price, String imageUrl) {
         this.name = name;
@@ -32,7 +33,7 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public void update(String name, int price, String imageUrl){
+    public void update(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

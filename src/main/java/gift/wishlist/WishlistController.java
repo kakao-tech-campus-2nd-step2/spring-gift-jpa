@@ -5,6 +5,7 @@ import gift.exception.UnAuthorizationException;
 import gift.login.LoginMember;
 import gift.logout.TokenValidator;
 import gift.member.Member;
+import gift.product.Product;
 import gift.product.ProductService;
 import java.util.List;
 import org.springframework.http.HttpEntity;
@@ -37,14 +38,20 @@ public class WishlistController {
         throws UnAuthorizationException {
         String token = authHeader.replace("Bearer ", "");
         tokenValidator.validateToken(token);
+        wishlistService.addWishlist(request, member);
+    }
+
+    @GetMapping
+    public List<Product> getWishlist() {
+        return wishlistService.checkWishlist();
     }
 
     @DeleteMapping("/{id}")
-    public HttpEntity<String> deleteWish(@PathVariable(name="id") Long wishId, @RequestHeader("Authorization") String authHeader)
+    public HttpEntity<String> deleteWish(@PathVariable(name="id") Long wishId, @LoginMember Member member, @RequestHeader("Authorization") String authHeader)
         throws UnAuthorizationException {
         String token = authHeader.replace("Bearer ", "");
         tokenValidator.validateToken(token);
-        return wishlistService.deleteWishlist(wishId);
+        return wishlistService.deleteWishlist(wishId, member.getId());
     }
 
 }

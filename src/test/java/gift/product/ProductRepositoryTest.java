@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -17,6 +18,7 @@ class ProductRepositoryTest {
     private ProductRepository productRepository;
 
     @Test
+    @DisplayName("상품 저장 테스트")
     void save() {
         Product expected = new Product("사과",2000,"www");
         Product actual = productRepository.save(expected);
@@ -24,6 +26,7 @@ class ProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("단일 상품 조회 테스트")
     void findById() {
         String expectedName = "사과";
         int expectedPrice = 2000;
@@ -43,6 +46,7 @@ class ProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("모든 상품 조회 테스트")
     void findAll() {
         Product product1 = new Product("사과", 2000, "www");
         Product product2 = new Product("앵우", 100000, "www.com");
@@ -56,10 +60,10 @@ class ProductRepositoryTest {
         assertAll(
             () -> assertThat(productList.size()).isEqualTo(3)
         );
-
     }
 
     @Test
+    @DisplayName("상품 수정 테스트")
     void update() {
         Product product = new Product("사과", 2000, "www");
 
@@ -73,6 +77,7 @@ class ProductRepositoryTest {
     }
 
     @Test
+    @DisplayName("상품 삭제 테스트")
     void delete() {
         Product product = new Product("사과", 2000, "www");
         productRepository.save(product);

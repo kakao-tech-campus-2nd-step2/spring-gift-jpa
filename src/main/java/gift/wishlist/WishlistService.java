@@ -2,6 +2,8 @@ package gift.wishlist;
 
 import gift.exception.InvalidProduct;
 import gift.member.Member;
+import gift.member.MemberRepository;
+import gift.product.Product;
 import gift.product.ProductRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
@@ -16,32 +18,54 @@ import org.springframework.stereotype.Service;
 public class WishlistService {
 
     private final WishlistRepository wishlistRepository;
+    private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
 
-    public WishlistService(WishlistRepository wishlistRepository) {
+    public WishlistService(
+        WishlistRepository wishlistRepository,
+        ProductRepository productRepository,
+        MemberRepository memberRepository) {
         this.wishlistRepository = wishlistRepository;
+        this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
     }
 
-    public List<Long> checkWishlist() {
+    public List<Product> checkWishlist() {
         List<Wishlist> wishlists = wishlistRepository.findAll();
-        List<Long> productIds = new ArrayList<>();
+        List<Product> products = new ArrayList<>();
 
         for (Wishlist wishlist : wishlists) {
-            productIds.add(wishlist.getProductId());
+            products.add(wishlist.getProduct());
         }
 
-        return productIds;
-    }
-
-    public void addWishlist(WishRequestDto request, Member member) {
-        wishlistRepository.saveAndFlush(new Wishlist(member.getId(), request.productId()));
+        return products;
     }
 
     @Transactional
-    public HttpEntity<String> deleteWishlist(Long productId) {
-        if (wishlistRepository.findByProductId(productId).isEmpty()) {
+    public void addWishlist(WishRequestDto request, Member member) {
+        Optional<Product> product = productRepository.findById(request.productId());
+
+        wishlistRepository.saveAndFlush(new Wishlist(member, product.get()));
+    }
+
+    @Transactional
+    public HttpEntity<String> deleteWishlist(Long productId, Long memberId) {
+        List<Wishlist> wishlist1 = wishlistRepository.findByProductId(productId);
+        List<Wishlist> wishlist2 = wishlistRepository.findByMemberId(memberId);
+
+        Wishlist wishlistItem = null;
+        for (Wishlist item : wishlist1) {
+            if (wishlist2.contains(item)) {
+                wishlistItem = item;
+                break;
+            }
+        }
+
+        if (wishlistItem != null) {
+            wishlistRepository.delete(wishlistItem);
+            return ResponseEntity.ok("장바구니에서 제거되었습니다");
+        } else {
             throw new InvalidProduct("잘못된 접근입니다");
         }
-        wishlistRepository.deleteByProductId(productId);
-        return ResponseEntity.ok("장바구니에서 제거되었습니다");
     }
 }
