@@ -78,7 +78,7 @@
       }
 
       function loadWishListPage(token, userId) {
-        const targetUrl = `/users/${userId}/main`;
+        const targetUrl = `/users/${userId}/main?page-no=0&&sorting-state=0`;
         const headers = { Authorization: `Bearer ${token}` };
 
         requestView(targetUrl, headers);

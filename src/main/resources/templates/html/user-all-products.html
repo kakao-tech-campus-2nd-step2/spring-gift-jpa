@@ -15,7 +15,9 @@
       </form>
     </div>
   </header>
-  <body th:attr="data-userId=${userId}, data-token=${token}">
+  <body
+    th:attr="data-userId=${userId}, data-token=${token}, page-no=${pageNo}, sorting-state=${sortingState}"
+  >
     <table id="products" class="x-middle">
       <caption class="title">
         Product List
@@ -90,7 +92,7 @@
       function loadMainPage() {
         const userId = document.body.getAttribute('data-userId');
         const token = document.body.getAttribute('data-token');
-        const targetUrl = `/users/${userId}/main`;
+        const targetUrl = `/users/${userId}/main?page-no=0&&sorting-state=0`;
         const headers = { Authorization: token };
         requestView(targetUrl, headers);
       }
