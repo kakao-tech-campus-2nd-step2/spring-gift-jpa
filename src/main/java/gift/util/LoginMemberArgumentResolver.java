@@ -21,8 +21,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
-
-    @Autowired
+    
     public LoginMemberArgumentResolver(MemberService memberService, JwtUtil jwtUtil) {
         this.memberService = memberService;
         this.jwtUtil = jwtUtil;
