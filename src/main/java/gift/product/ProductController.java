@@ -2,9 +2,12 @@ package gift.product;
 
 import gift.exception.InvalidProduct;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,8 +30,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductResponseDto> getAllProducts() {
-        return productService.getAllPrdouct();
+    public Page<ProductResponseDto> getAllProducts(Pageable pageable) {
+        return productService.getAllProducts(pageable);
     }
 
     @GetMapping("/{id}")
@@ -36,7 +39,6 @@ public class ProductController {
         return productService.getProductById(id)
             .orElseThrow(() -> new InvalidProduct("유효하지 않은 상품입니다"));
     }
-
 
     @PostMapping
     public ProductResponseDto addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {
