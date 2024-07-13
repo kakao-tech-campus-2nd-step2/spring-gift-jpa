@@ -41,12 +41,4 @@ public class JwtService {
             .parseClaimsJws(token)
             .getBody();
     }
-
-    public String extractEmail(String token) {
-        return extractAllClaims(token).get("email", String.class);
-    }
-
-    public Long extractUserId(String token) {
-        return extractAllClaims(token).get("userId", Long.class);
-    }
 }
