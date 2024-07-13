@@ -10,9 +10,12 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -73,4 +76,17 @@ public class JwtTokenProvider {
         return null;
     }
 
+    public String extractJwtTokenFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            return null;
+        }
+
+        Optional<Cookie> cookie = Arrays.stream(cookies)
+            .filter(c -> c.getName().equals("jwtToken"))
+            .findFirst();
+
+        return cookie.map(Cookie::getValue)
+            .orElse(null);
+    }
 }

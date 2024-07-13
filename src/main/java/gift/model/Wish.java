@@ -1,8 +1,8 @@
 package gift.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,7 +13,7 @@ import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(
-    name = "wish_products",
+    name = "wish",
     uniqueConstraints = {
         @UniqueConstraint(
             name = "constraintName",
@@ -21,24 +21,24 @@ import jakarta.persistence.UniqueConstraint;
         )
     }
 )
-public class WishProduct {
+public class Wish {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "fk_wish_member_id_ref_member_id"))
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "fk_wish_product_id_ref_product_id"))
     private Product product;
 
-    protected WishProduct() {
+    protected Wish() {
     }
 
-    public WishProduct(Member member, Product product) {
+    public Wish(Member member, Product product) {
         this.member = member;
         this.product = product;
     }

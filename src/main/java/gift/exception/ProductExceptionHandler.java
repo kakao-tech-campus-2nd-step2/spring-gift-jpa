@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ProductExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(ProductException.class)
-    public ErrorResult notFoundProductExHandle(ProductException e) {
-        return new ErrorResult("상품 에러", e.getMessage());
+    @ExceptionHandler(NotFoundProductException.class)
+    public ErrorResult notFoundProductExHandle(NotFoundProductException e) {
+        return new ErrorResult("wish 에러", e.getMessage());
     }
 }
