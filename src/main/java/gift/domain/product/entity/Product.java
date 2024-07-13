@@ -74,11 +74,6 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public void addWish(Wish wish) {
-        this.wishList.add(wish);
-        wish.updateProduct(this);
-    }
-
     public void removeWish(Wish wish) {
         this.wishList.remove(wish);
     }
