@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 public class MemberDto {
 
   private Long id;
-  @NotBlank(message = "Email을 필수입니다.")
+  @NotBlank(message = "Email은 필수입니다.")
   @Email(message = "Email형식으로 제출해주십오.")
   private String email;
   @NotBlank(message = "비밀번호는 필수입니다.")
