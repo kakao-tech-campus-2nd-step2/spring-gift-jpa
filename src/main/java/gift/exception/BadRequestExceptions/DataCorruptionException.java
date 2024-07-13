@@ -2,7 +2,7 @@ package gift.exception.BadRequestExceptions;
 
 public class DataCorruptionException extends BadRequestException {
 
-    public DataCorruptionException() {
+    private DataCorruptionException() {
         super();
     }
 

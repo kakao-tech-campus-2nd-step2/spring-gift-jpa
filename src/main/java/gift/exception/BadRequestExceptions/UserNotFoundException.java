@@ -2,7 +2,7 @@ package gift.exception.BadRequestExceptions;
 
 public class UserNotFoundException extends BadRequestException {
 
-    public UserNotFoundException() {
+    private UserNotFoundException() {
         super();
     }
 

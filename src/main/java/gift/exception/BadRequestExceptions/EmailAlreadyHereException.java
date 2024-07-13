@@ -2,7 +2,7 @@ package gift.exception.BadRequestExceptions;
 
 public class EmailAlreadyHereException extends BadRequestException {
 
-    public EmailAlreadyHereException() {
+    private EmailAlreadyHereException() {
         super();
     }
 

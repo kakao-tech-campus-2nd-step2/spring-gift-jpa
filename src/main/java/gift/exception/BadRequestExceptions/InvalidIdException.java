@@ -2,7 +2,7 @@ package gift.exception.BadRequestExceptions;
 
 public class InvalidIdException extends BadRequestException {
 
-    public InvalidIdException() {
+    private InvalidIdException() {
         super();
     }
 

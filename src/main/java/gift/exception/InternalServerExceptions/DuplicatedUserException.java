@@ -2,7 +2,7 @@ package gift.exception.InternalServerExceptions;
 
 public class DuplicatedUserException extends InternalServerException {
 
-    public DuplicatedUserException() {
+    private DuplicatedUserException() {
         super();
     }
 

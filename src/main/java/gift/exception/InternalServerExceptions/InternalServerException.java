@@ -2,7 +2,7 @@ package gift.exception.InternalServerExceptions;
 
 public class InternalServerException extends RuntimeException {
 
-    public InternalServerException() {
+    InternalServerException() {
         super();
     }
 
