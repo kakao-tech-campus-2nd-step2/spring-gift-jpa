@@ -1,4 +1,4 @@
-package gift.member.dto;
+package gift.domain.member.dto;
 
 public class MemberRequest {
 
