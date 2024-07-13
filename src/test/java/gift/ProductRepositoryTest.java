@@ -10,6 +10,8 @@ import gift.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 public class ProductRepositoryTest {
@@ -45,8 +47,32 @@ public class ProductRepositoryTest {
     @Test
     void findAll() {
         var product1 = createProduct(1L, "Product A", 4500, "image-productA.url");
-        var product2 = createProduct(2L, "Product A", 4500, "image-productA.url");
+        var product2 = createProduct(2L, "Product B", 4500, "image-productB.url");
+        products.save(product1);
+        products.save(product2);
+        assertThat(products.findAll().size()).isEqualTo(2);
+    }
 
+    @Test
+    void findPage() {
+        var product1 = createProduct(1L, "Product A", 4500, "image-productA.url");
+        var product2 = createProduct(2L, "Product B", 4500, "image-productB.url");
+        var product3 = createProduct(3L, "Product C", 4500, "image-productC.url");
+        products.save(product1);
+        products.save(product2);
+        products.save(product3);
+
+        Pageable pageable1 = PageRequest.of(0, 2);
+        Pageable pageable2 = PageRequest.of(1, 2);
+
+        assertThat(products.findAll(pageable1).stream()
+            .toList()
+            .size())
+            .isEqualTo(2);
+        assertThat(products.findAll(pageable2).stream()
+            .toList()
+            .size())
+            .isEqualTo(1);
     }
 
     @Test

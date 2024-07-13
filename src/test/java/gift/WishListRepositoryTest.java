@@ -8,6 +8,7 @@ import gift.exception.RepositoryException;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.WishList;
+import gift.model.WishListDTO;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishListRepository;
@@ -16,6 +17,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 public class WishListRepositoryTest {
@@ -68,11 +71,21 @@ public class WishListRepositoryTest {
         var wishList3 = createWishList(memberB, productB, 1);
         wishlists.save(wishList3);
 
+        Pageable pageable = PageRequest.of(0, 2);
+
         assertAll(
             () -> assertThat(
-                wishlists.findWishListByMemberId(memberA.getId()).size()).isEqualTo(1),
+                wishlists.findWishListByMemberId(memberA.getId(), pageable)
+                    .stream()
+                    .toList()
+                    .size())
+                .isEqualTo(1),
             () -> assertThat(
-                wishlists.findWishListByMemberId(memberB.getId()).size()).isEqualTo(2)
+                wishlists.findWishListByMemberId(memberB.getId(), pageable)
+                    .stream()
+                    .toList()
+                    .size())
+                .isEqualTo(2)
         );
     }
 
@@ -90,5 +103,10 @@ public class WishListRepositoryTest {
         update.setQuantity(3);
 
         assertThat(update.getQuantity()).isEqualTo(3);
+    }
+
+    private WishListDTO converToDTO(WishList wishList) {
+        return new WishListDTO(wishList.getMember().getId(), wishList.getProduct().getId(),
+            wishList.getQuantity());
     }
 }
