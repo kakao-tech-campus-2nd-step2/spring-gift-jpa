@@ -4,6 +4,8 @@ import gift.exceptions.CustomException;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -21,8 +23,8 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public String getAllProducts(Model model) {
-        ProductsResponseDTO products = productService.getAllProducts();
+    public String getAllProducts(Model model, @PageableDefault(size = 3, sort = "id") Pageable pageable) {
+        ProductsPageResponseDTO products = productService.getAllProducts(pageable);
         model.addAttribute("products", products);
         return "manage";
     }
