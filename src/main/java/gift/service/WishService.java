@@ -15,6 +15,8 @@ import gift.model.Wish;
 import gift.repository.WishRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,10 +33,9 @@ public class WishService {
         this.memberService = memberService;
     }
 
-    public List<WishResponse> getWishlistByMemberId(Long memberId) {
-        return wishRepository.findAllByMemberId(memberId).stream()
-            .map(WishService::convertToDTO)
-            .collect(Collectors.toList());
+    // 모든 위시 조회 (페이지네이션)
+    public Page<WishResponse> getWishlistByMemberId(Long memberId, Pageable pageable) {
+        return wishRepository.findAllByMemberId(memberId, pageable).map(WishService::convertToDTO);
     }
 
     public WishResponse addWish(WishCreateRequest wishCreateRequest, Long memberId) {

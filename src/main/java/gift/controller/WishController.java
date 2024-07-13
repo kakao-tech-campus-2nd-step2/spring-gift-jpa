@@ -5,6 +5,8 @@ import gift.dto.wish.WishResponse;
 import gift.service.WishService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,9 +29,9 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishResponse>> getWishlist(
-        @RequestAttribute("memberId") Long memberId) {
-        List<WishResponse> wishlist = wishService.getWishlistByMemberId(memberId);
+    public ResponseEntity<Page<WishResponse>> getWishlist(
+        @RequestAttribute("memberId") Long memberId, Pageable pageable) {
+        Page<WishResponse> wishlist = wishService.getWishlistByMemberId(memberId, pageable);
         return ResponseEntity.ok(wishlist);
     }
 
