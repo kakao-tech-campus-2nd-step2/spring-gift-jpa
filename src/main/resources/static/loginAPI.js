@@ -21,6 +21,7 @@ document.getElementById('loginForm').addEventListener('submit',
         if (response.status === 200) {
           response.json().then(data => {
             localStorage.setItem("Authorization", data.accessToken)
+            window.location.href = "/wishlist"
           })
         }
       })

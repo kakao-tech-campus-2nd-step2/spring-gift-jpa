@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>spring gift product wishlist page</title>
+  <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css"
+  />
+</head>
+<body>
+<table>
+  <tr th:each="product : ${products}">
+    <td th:text="${product.getId()}" id="id"></td>
+    <td th:text="${product.getName()}"></td>
+    <td th:text="${product.getPrice()}"></td>
+    <td th:text="${product.getImageUrl()}"></td>
+  </tr>
+</table>
+</body>
+</html>
