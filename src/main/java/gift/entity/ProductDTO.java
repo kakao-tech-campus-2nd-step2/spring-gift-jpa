@@ -22,27 +22,27 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public @NotNull String getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(@NotNull String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public @NotNull Integer getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(@NotNull Integer price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
-    public @NotNull String getImageurl() {
+    public String getImageurl() {
         return imageurl;
     }
 
-    public void setImageurl(@NotNull String imageurl) {
+    public void setImageurl(String imageurl) {
         this.imageurl = imageurl;
     }
 }

@@ -21,19 +21,19 @@ public class UserDTO {
         this.password = password;
     }
 
-    public @Length(min = 1, max = 50) @NotNull String getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(@Length(min = 1, max = 50) @NotNull String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public @Length(min = 1, max = 50) @NotNull String getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(@Length(min = 1, max = 50) @NotNull String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 }
