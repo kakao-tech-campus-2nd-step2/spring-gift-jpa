@@ -17,10 +17,6 @@ public class MemberRepositoryTest {
     @Autowired
     private MemberRepository members;
 
-    private Member createMember(String email, String password) {
-        return new Member(email, password);
-    }
-
     @Test
     void save() {
         var expected = createMember("test", "password");
@@ -40,5 +36,9 @@ public class MemberRepositoryTest {
             () -> assertThat(actual.getEmail()).isEqualTo(expected.getEmail()),
             () -> assertThat(actual.getPassword()).isEqualTo(expected.getPassword())
         );
+    }
+
+    private Member createMember(String email, String password) {
+        return new Member(email, password);
     }
 }

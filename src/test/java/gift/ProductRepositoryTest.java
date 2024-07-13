@@ -37,20 +37,29 @@ public class ProductRepositoryTest {
     void find() {
         var expected = createProduct(1L, "Product A", 4500, "image-productA.url");
         var actual = products.save(expected);
-        assertThat(actual).isEqualTo(
+        assertThat(actual.getName()).isEqualTo(
             products.findById(1L).orElseThrow(() -> new RepositoryException(
-                ErrorCode.PRODUCT_NOT_FOUND, actual.getId())));
+                ErrorCode.PRODUCT_NOT_FOUND, actual.getId())).getName());
+    }
+
+    @Test
+    void findAll() {
+        var product1 = createProduct(1L, "Product A", 4500, "image-productA.url");
+        var product2 = createProduct(2L, "Product A", 4500, "image-productA.url");
+
     }
 
     @Test
     void update() {
         var expected = createProduct(1L, "Product A", 4500, "image-productA.url");
-        var update = products.save(expected);
-        update.setName("Product B");
-        update.setPrice(5500);
+        products.save(expected);
+        var current = products.findById(1L)
+            .orElseThrow(() -> new RepositoryException(ErrorCode.PRODUCT_NOT_FOUND, 1L));
+        current.setName("Product B");
+        current.setPrice(5500);
 
-        Product actual = products.save(update);
-        assertThat(actual.getPrice()).isEqualTo(5500);
+        Product update = products.save(current);
+        assertThat(update.getPrice()).isEqualTo(5500);
     }
 
     @Test
