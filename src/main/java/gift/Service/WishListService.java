@@ -9,6 +9,8 @@ import gift.Repository.MemberRepository;
 import gift.Repository.ProductRepository;
 import gift.Repository.WishListRepository;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,9 +37,10 @@ public class WishListService {
     return wishListDto;
   }
 
-  public List<WishListDto> getWishList() {
-    List<WishListDto> wishListDtos = wishListRepository.findAll().stream()
-      .map(ConverterToDto::convertToWishListDto).toList();
+  public Page<WishListDto> getWishList(Pageable pageable) {
+
+    Page<WishList> wishLists = wishListRepository.findAll(pageable);
+    Page<WishListDto> wishListDtos = wishLists.map(ConverterToDto::convertToWishListDto);
     return wishListDtos;
   }
 
