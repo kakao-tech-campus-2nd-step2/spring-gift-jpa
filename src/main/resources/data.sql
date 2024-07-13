@@ -12,7 +12,3 @@ INSERT INTO users (email, password, role) VALUES ('user@user', 'user', 'user');
 INSERT INTO wish (user_id, product_id) VALUES (2, 1);
 INSERT INTO wish (user_id, product_id) VALUES (2, 2);
 INSERT INTO wish (user_id, product_id) VALUES (2, 3);
-INSERT INTO wish (user_id, product_id) VALUES (2, 4);
-INSERT INTO wish (user_id, product_id) VALUES (2, 5);
-INSERT INTO wish (user_id, product_id) VALUES (2, 6);
-INSERT INTO wish (user_id, product_id) VALUES (2, 7);
