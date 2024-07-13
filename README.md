@@ -91,12 +91,12 @@ Response 객체를 Service 에서 완전히 다 만들어서 주어야한다는 
 
 ### 구현 기능
 이전 step2 에서 수정할 것들
-- [ ] Service test 작성하기
-- [ ] Cascade 수정하기
+- [x] Service test 작성하기
+- [x] Cascade 수정하기
 
 step2 에서 구현할 것들
-- [ ] 페이지네이션 API 구현하기
-- [ ] 페이지네이션 UI 구현하기
+- [x] 페이지네이션 API 구현하기
+- [x] 페이지네이션 UI 구현하기
 
 
 
