@@ -21,25 +21,25 @@ public class UserService {
 
     public User getUserByToken(String token) {
         String email = tokenService.extractEmail(token);
-        return userRepository.findByEmail(email);
-    }
-
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserAuthException("유효하지 않은 토큰입니다."));
     }
 
     public void registerUser(String email, String password) {
-        if (userRepository.findByEmail(email) != null) {
-            throw new EmailAlreadyExistsException("이미 존재하는 email입니다.");
-        }
-        User newUser = new User(email, password);
-        userRepository.save(newUser);
+        userRepository.findByEmail(email)
+            .ifPresentOrElse(user -> {
+                throw new EmailAlreadyExistsException("이미 존재하는 email입니다.");
+            }, () -> {
+                User newUser = new User(email, password);
+                userRepository.save(newUser);
+            });
     }
 
     public String authenticateUser(String email, String password) {
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UserAuthException("잘못된 로그인입니다."));
 
-        if (user == null || !user.samePassword(password)) {
+        if (!user.samePassword(password)) {
             throw new UserAuthException("잘못된 로그인입니다.");
         }
         return tokenService.generateToken(user.getEmail());

@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -15,29 +17,22 @@ public class Wish {
     @Id
     private Long id;
     @NotNull
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     @NotNull
-    private Long productId;
-    @NotNull
-    private String productName;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
     @NotNull
     private int number;
 
     public Wish() {
     }
 
-    public Wish(Long userId, Long productId, String productName, int number) {
-        this.userId = userId;
-        this.productId = productId;
-        this.productName = productName;
-        this.number = number;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
+    public Wish(User user, Product product, int number) {
+        this.user = user;
+        this.product = product;
         this.number = number;
     }
 
@@ -49,27 +44,27 @@ public class Wish {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
-    public String getProductName() {
-        return productName;
+    public int getNumber() {
+        return number;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setNumber(int number) {
+        this.number = number;
     }
 }

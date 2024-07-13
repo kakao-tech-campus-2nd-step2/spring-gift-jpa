@@ -96,4 +96,14 @@ public class GlobalExceptionHandler {
         problemDetail.setTitle("Wrong Authorized Access");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(problemDetail);
     }
+
+    @ExceptionHandler(WishNotFoundException.class)
+    public ResponseEntity<ProblemDetail> handleWishNotFoundException(
+        WishNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND,
+            ex.getMessage());
+        problemDetail.setType(URI.create("/errors/wish-not-found"));
+        problemDetail.setTitle("Wish Not Found");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problemDetail);
+    }
 }

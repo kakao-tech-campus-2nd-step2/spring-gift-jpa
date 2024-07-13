@@ -2,64 +2,83 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import gift.entity.Product;
+import gift.entity.User;
 import gift.entity.Wish;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
 class WishRepositoryTest {
 
     @Autowired
-    WishRepository wishRepository;
+    private WishRepository wishRepository;
+
     @Autowired
-    EntityManager entityManager;
+    private UserRepository userRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private EntityManager entityManager;
+
+    private User user;
+    private Product product1;
+    private Product product2;
+
+    @BeforeEach
+    void setUp() {
+        user = new User("user@test.com", "password");
+        userRepository.save(user);
+
+        product1 = new Product("Product 1", 10000, "image1.jpg");
+        product2 = new Product("Product 2", 2000, "image2.jpg");
+        productRepository.save(product1);
+        productRepository.save(product2);
+    }
 
     @Test
     @DisplayName("유저 아이디 기반 위시리스트 반환 테스트")
     void findByUserId() {
-        Long userId = 1L;
-        Wish wish1 = new Wish(userId, 1L, "Product 1", 10);
-        Wish wish2 = new Wish(userId, 2L, "Product 2", 15);
+        Wish wish1 = new Wish(user, product1, 10);
+        Wish wish2 = new Wish(user, product2, 15);
         wishRepository.save(wish1);
         wishRepository.save(wish2);
-        List<Wish> wishes = wishRepository.findByUserId(userId);
+        List<Wish> wishes = wishRepository.findByUserId(user.getId());
 
         assertThat(wishes).hasSize(2);
-        assertThat(wishes.getFirst().getProductName()).isEqualTo(wish1.getProductName());
+        assertThat(wishes.getFirst().getProduct().getName()).isEqualTo(
+            wish1.getProduct().getName());
     }
 
     @Test
     @DisplayName("유저 아이디와 위시 아이디 기반 위시 객체 반환 테스트")
     void findByUserIdAndId() {
-        Long userId = 1L;
-        Wish wish = new Wish(userId, 1L, "Product", 10);
+        Wish wish = new Wish(user, product1, 10);
         Wish actual = wishRepository.save(wish);
-        Wish expected = wishRepository.findByUserIdAndId(userId, actual.getId());
+        Wish expected = wishRepository.findByUserIdAndId(user.getId(), actual.getId()).orElse(null);
 
         assertThat(actual.getId()).isEqualTo(expected.getId());
-        assertThat(actual.getProductId()).isEqualTo(expected.getProductId());
+        assertThat(actual.getProduct().getId()).isEqualTo(expected.getProduct().getId());
     }
 
     @Test
-    @DisplayName("위시 리스트 특정 객체 수량 변경 테스트")
+    @DisplayName("updateWishNumber JPQL 테스트")
     void updateWishNumber() {
-        Long userId = 1L;
-        Wish wish = new Wish(userId, 1L, "Product to update", 10);
+        Wish wish = new Wish(user, product1, 10);
         Wish savedWish = wishRepository.save(wish);
-        wishRepository.updateWishNumber(userId, savedWish.getId(), 30);
+        wishRepository.updateWishNumber(user.getId(), savedWish.getId(), 30);
         entityManager.flush();
         entityManager.clear();
 
-        Wish updatedWish = wishRepository.findByUserIdAndId(userId, savedWish.getId());
+        Wish updatedWish = wishRepository.findByUserIdAndId(user.getId(), savedWish.getId()).orElse(null);
 
-        assertThat(updatedWish).isNotNull();
         assertThat(updatedWish.getNumber()).isEqualTo(30);
     }
 }

@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.ProductRequest;
 import gift.repository.ProductRepository;
 import gift.entity.Product;
 import gift.exception.ProductNotFoundException;
@@ -20,14 +21,19 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        try {
-            return productRepository.findById(id).orElse(null);
-        } catch (Exception e) {
-            throw new ProductNotFoundException("해당 id를 가지고있는 Product 객체가 없습니다.");
-        }
+        return productRepository.findById(id)
+            .orElseThrow(() -> new ProductNotFoundException("해당 id를 가지고있는 Product 객체가 없습니다."));
     }
 
-    public void saveProduct(Product product) {
+    public void saveProduct(ProductRequest productRequest) {
+        Product product = new Product(productRequest.getName(), productRequest.getPrice(),
+            productRequest.getImg());
+        productRepository.save(product);
+    }
+
+    public void updateProduct(Long id, ProductRequest productRequest) {
+        Product product = new Product(id, productRequest.getName(), productRequest.getPrice(),
+            productRequest.getImg());
         productRepository.save(product);
     }
 

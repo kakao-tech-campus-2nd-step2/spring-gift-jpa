@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.ProductRequest;
 import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
@@ -34,17 +35,18 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product addProduct(@Valid @RequestBody Product product) {
-        productService.saveProduct(product);
-        return product;
+    public Product addProduct(@Valid @RequestBody ProductRequest productRequest) {
+        productService.saveProduct(productRequest);
+        return new Product(productRequest.getName(), productRequest.getPrice(),
+            productRequest.getImg());
     }
 
     @PutMapping("/{id}")
-    public Product changeProduct(@PathVariable("id") Long id, @Valid @RequestBody Product product) {
-        productService.getProductById(id);
-        product.setId(id);
-        productService.saveProduct(product);
-        return product;
+    public Product changeProduct(@PathVariable("id") Long id,
+        @Valid @RequestBody ProductRequest productRequest) {
+        productService.updateProduct(id, productRequest);
+        return new Product(id, productRequest.getName(), productRequest.getPrice(),
+            productRequest.getImg());
     }
 
     @DeleteMapping("/{id}")
