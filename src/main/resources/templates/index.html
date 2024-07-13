@@ -19,7 +19,7 @@
         <table class="product-list">
             <tr>
                 <th>Image</th>
-                <th>ID</th> 
+                <th>ID</th>
                 <th>Name</th>
                 <th>Price</th>
                 <th>Actions</th>
@@ -27,7 +27,7 @@
             <tr th:each="product: ${pages.content}">
                 <td>
                     <a th:href="@{'/admin/products/' + ${product.id}}">
-                        <img th:src="@{${product.imageUrl}}" alt="no image" class="product-img"/>
+                        <img class="product-img" th:src="@{${product.imageUrl}}" alt="no image" />
                     </a>
                 </td>
                 <td th:text="${product.id}"></td>
@@ -41,6 +41,24 @@
                 </td>
             </tr>
         </table>
+    </div>
+    <div th:if="${!pages.empty}">
+        <ul class="footer">
+            <li class="page" th:classappend="${pages.first} ? 'disabled'">
+                <a th:href="@{|?page=${pages.number-1}|}">
+                    <span>이전</span>
+                </a>
+            </li>
+            <li class="page" th:each="page: ${#numbers.sequence(0, pages.totalPages-1)}"
+                th:classappend="${page == pages.number} ? 'active'">
+                <a th:text="${page}" th:href="@{|?page=${page}|}"></a>
+            </li>
+            <li class="page" th:classappend="${pages.last} ? 'disabled'">
+                <a th:href="@{|?page=${pages.number+1}|}">
+                    <span>다음</span>
+                </a>
+            </li>
+        </ul>
     </div>
 </body>
 </html>

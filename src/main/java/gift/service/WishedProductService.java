@@ -27,7 +27,7 @@ public class WishedProductService {
     }
 
     public Page<WishedProductDTO> getWishedProducts(MemberDTO memberDTO, int page) {
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 5);
         return wishedProductRepository.findByMember(memberDTO.toEntity(), pageable)
             .map(wishedProduct -> wishedProduct.toDTO());
     }
