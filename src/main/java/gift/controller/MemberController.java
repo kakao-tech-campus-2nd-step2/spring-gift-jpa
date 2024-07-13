@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.exception.ForbiddenException;
 import gift.model.Member;
 import gift.service.MemberService;
 import java.util.HashMap;
@@ -38,17 +39,15 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Member member) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Member member){
         return memberService.login(member.getEmail(), member.getPassword())
             .map(token -> { // 토큰이 리턴 -> 정상 로그인 됨
                 Map<String, Object> response = new HashMap<>();
                 response.put("token", token);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             })
-            .orElseGet(() -> { // 토큰 리턴이 안됨 -> 로그인 안됨
-                Map<String, Object> response = new HashMap<>();
-                response.put("message", "Invalid email or password");
-                return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-            });
+            .orElseThrow(() -> // 토큰 리턴이 안됨 -> 로그인 안됨
+                new ForbiddenException("없는 계정입니다")
+            );
     }
 }
