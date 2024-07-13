@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
@@ -16,8 +16,6 @@
     <div class="container">
         <h2>판매 리스트 확인</h2>
         <p>판매 상품을 확인하고 마음에 드는 상품을 위시리스트에 담을 수 있습니다.</p>
-
-        <a type="button" class="btn btn-info " href="/spring-gift/wishlist">장바구니 가기</a>
     </div>
     <div class="container">
         <table class="table table-striped">
@@ -34,32 +32,28 @@
             <tbody id="productList"></tbody>
         </table>
     </div>
-
-    <div class="container">
-        <ul class="pagination justify-content-center" id="pagination"></ul>
-    </div>
 </div>
 
+<div class="container">
+    <a type="button" class="btn btn-info btn-block" href="/spring-gift/wishlist">장바구니 가기</a>
+</div>
 <script>
     $(document).ready(function () {
-        let currentPage = 0;
-
+        loadProducts();
         // 상품 리스트 로드하기
-        function loadProducts(pageNum) {
+        function loadProducts() {
             $.ajax({
                 type: 'GET',
-                url: '/spring-gift/productpage/' + pageNum,
+                url: '/spring-gift/products',
                 success: function (response) {
-                    var products = response.content;
-                    var totalPages = response.totalPages;
+                    var products = response;
                     var html = '';
-
                     products.forEach(function (product) {
                         html += '<tr>' +
                             '<td>' + product.id + '</td>' +
                             '<td>' + product.name + '</td>' +
                             '<td>' + product.price + '</td>' +
-                            '<td>' + product.imag + '</td>' +
+                            '<td>' + product.imageUrl + '</td>' +
                             '<td>' + product.seller + '</td>' +
                             '<td>' +
                             '<div style="display: flex; justify-content: center; gap: 10px;">' +
@@ -69,7 +63,6 @@
                             '</tr>';
                     });
                     $('#productList').html(html);
-                    setupPagination(totalPages, pageNum);
                 },
                 error: function (error) {
                     alert('리스트 로드 중 오류가 발생했습니다.');
@@ -77,50 +70,20 @@
             });
         }
 
-        // 페이지네이션 설정
-        function setupPagination(totalPages, currentPage) {
 
-            let paginationHtml = '';
 
-            // 처음 버튼
-            paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="0">처음</a></li>';
-
-            // 중간 페이지 버튼들
-            const startPage = Math.max(0, currentPage - 2);
-            const endPage = Math.min(totalPages - 1, currentPage + 2);
-
-            for (let i = startPage; i <= endPage; i++) {
-                if (i === currentPage) {
-                    paginationHtml += '<li class="page-item active"><a class="page-link" href="javascript:void(0);" data-page="' + i + '">' + i + '</a></li>';
-                } else {
-                    paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="' + i + '">' + i + '</a></li>';
-                }
-            }
-
-            // 마지막 버튼
-            paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="' + (totalPages - 1) + '">마지막</a></li>';
-
-            $('#pagination').html(paginationHtml);
-        }
-
-        // 페이지 링크 클릭 이벤트 처리
-        $(document).on('click', '.page-link', function () {
-            const pageNum = $(this).data('page');
-            if (pageNum !== undefined && pageNum !== currentPage) {
-                currentPage = pageNum;
-                loadProducts(currentPage);
-            }
-        });
-
+        // 등록버튼 클릭시, 위시리스트 담기
         $(document).on('click', '.add-button', function () {
             var productId = $(this).data('id');
             $.ajax({
                 type: 'POST',
                 url: '/spring-gift/wishlist/' + productId,
+                ///spring-gift/wishlist
                 success: function (response) {
                     alert('상품이 위시리스트에 담겼습니다.');
-                    loadProducts(currentPage);
+                    loadProducts();
                 },
+
                 error: function (xhr, status, error) {
                     var errorResponse = JSON.parse(xhr.responseText);
                     alert(errorResponse.errorMessage);
@@ -129,7 +92,7 @@
         });
 
         // 초기 로드
-        loadProducts(currentPage);
+        loadProducts();
     });
 </script>
 </body>
