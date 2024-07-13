@@ -1,10 +1,12 @@
 package gift.global.exception;
 
-public class UnauthorizedMemberException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class UnauthorizedMemberException extends GlobalException {
 
     private static final String MESSAGE = "Unauthorized member.";
 
     public UnauthorizedMemberException() {
-        super(MESSAGE);
+        super(MESSAGE, HttpStatus.UNAUTHORIZED);
     }
 }

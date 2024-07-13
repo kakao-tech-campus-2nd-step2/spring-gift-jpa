@@ -1,10 +1,12 @@
 package gift.global.exception;
 
-public class ForbiddenMemberException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class ForbiddenMemberException extends GlobalException {
 
     private static final String MESSAGE = "Forbidden member.";
 
     public ForbiddenMemberException() {
-        super(MESSAGE);
+        super(MESSAGE, HttpStatus.FORBIDDEN);
     }
 }

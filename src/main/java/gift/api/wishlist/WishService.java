@@ -1,6 +1,10 @@
 package gift.api.wishlist;
 
-import jakarta.persistence.EntityManager;
+import gift.api.member.Member;
+import gift.api.member.MemberRepository;
+import gift.api.product.Product;
+import gift.api.product.ProductRepository;
+import gift.global.exception.NoSuchIdException;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -8,33 +12,39 @@ import org.springframework.stereotype.Service;
 @Service
 public class WishService {
 
-    private final EntityManager entityManager;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
     private final WishRepository wishRepository;
 
-    public WishService(EntityManager entityManager, WishRepository wishRepository) {
-        this.entityManager = entityManager;
+    public WishService(MemberRepository memberRepository, ProductRepository productRepository,
+                                                        WishRepository wishRepository) {
+        this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
         this.wishRepository = wishRepository;
     }
 
     public List<Wish> getItems(Long memberId) {
-        return wishRepository.findByMemberId(memberId);
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new NoSuchIdException("member"));
+        return wishRepository.findByMemberId(member);
     }
 
     public void add(Long memberId, WishRequest wishRequest) {
-        wishRepository.save(new Wish(memberId, wishRequest.productId(), wishRequest.quantity()));
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new NoSuchIdException("member"));
+        Product product = productRepository.findById(wishRequest.productId())
+            .orElseThrow(() -> new NoSuchIdException("product"));
+        wishRepository.save(new Wish(member, product, wishRequest.quantity()));
     }
 
     @Transactional
     public void update(Long memberId, WishRequest wishRequest) {
-        if (wishRequest.quantity() == 0) {
-            wishRepository.deleteByMemberIdAndProductId(memberId, wishRequest.productId());
-            return;
-        }
-        Wish wish = entityManager.find(Wish.class, new WishId(memberId, wishRequest.productId()));
-        wish.setQuantity(wishRequest.quantity());
+        Wish wish = wishRepository.findById(new WishId(memberId, wishRequest.productId()))
+            .orElseThrow(() -> new NoSuchIdException("wish"));
+        wish.updateQuantity(wishRequest.quantity());
     }
 
     public void delete(Long memberId, WishRequest wishRequest) {
-        wishRepository.deleteByMemberIdAndProductId(memberId, wishRequest.productId());
+        wishRepository.deleteById(new WishId(memberId, wishRequest.productId()));
     }
 }

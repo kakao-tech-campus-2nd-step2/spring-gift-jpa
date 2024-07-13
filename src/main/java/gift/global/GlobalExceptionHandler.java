@@ -1,9 +1,6 @@
 package gift.global;
 
-import gift.api.member.EmailAlreadyExistsException;
-import gift.global.exception.ForbiddenMemberException;
-import gift.global.exception.UnauthorizedMemberException;
-import org.springframework.http.HttpStatus;
+import gift.global.exception.GlobalException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,29 +10,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException e) {
-        return ResponseEntity.badRequest().body(e.getBindingResult()
-                                                .getFieldError()
-                                                .getDefaultMessage());
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.of(e.getBindingResult()
+                                                                .getFieldError()
+                                                                .getDefaultMessage()));
     }
 
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<String> handleEmailRedundancyException(EmailAlreadyExistsException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler(UnauthorizedMemberException.class)
-    public ResponseEntity<String> handleUnauthorizationException(UnauthorizedMemberException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(ForbiddenMemberException.class)
-    public ResponseEntity<String> handleForbiddenMemberException(ForbiddenMemberException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+    @ExceptionHandler(GlobalException.class)
+    public ResponseEntity<ErrorResponse> handleGlobalException(GlobalException e) {
+        return new ResponseEntity<>(ErrorResponse.of(e.getMessage()), e.getHttpStatus());
     }
 
     @ExceptionHandler(UnsupportedOperationException.class)
-    public ResponseEntity<String> handleUnsupportedOperationException(UnsupportedOperationException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<ErrorResponse> handleUnsupportedOperationException(UnsupportedOperationException e) {
+        return ResponseEntity.badRequest().body(ErrorResponse.of(e.getMessage()));
     }
 }
