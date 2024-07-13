@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -26,53 +27,38 @@ public class WishlistRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
+    
+    private User user;
+    private Product product;
 
+    @BeforeEach
+    void setUp() {
+    	 user = new User("tset@test.com", "pw");
+    	 userRepository.save(user);
+    	 product = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
+    	 productRepository.save(product);
+    }
+    
     @Test
     void save() {
-        User user = new User();
-        user.setEmail("test@test.com");
-        user.setPassword("pw");
-        userRepository.save(user);
+    	Wishlist expected = new Wishlist(user, product);
+    	expected.setQuantity(2);
+    	Wishlist actual = wishlistRepository.save(expected);
 
-        Product product = new Product();
-        product.setName("아이스 아메리카노 T");
-        product.setPrice(4500);
-        product.setImageUrl("https://example.com/image.jpg");
-        productRepository.save(product);
-
-        Wishlist expected = new Wishlist();
-        expected.setUser(user);
-        expected.setProduct(product);
-        expected.setQuantity(2);
-        Wishlist actual = wishlistRepository.save(expected);
-
-        assertThat(actual.getId()).isNotNull();
-        assertThat(actual.getUser()).isEqualTo(expected.getUser());
-        assertThat(actual.getProduct()).isEqualTo(expected.getProduct());
-        assertThat(actual.getQuantity()).isEqualTo(expected.getQuantity());
+    	assertThat(actual.getId()).isNotNull();
+    	assertThat(actual.getUser()).isEqualTo(expected.getUser());
+    	assertThat(actual.getProduct()).isEqualTo(expected.getProduct());
+    	assertThat(actual.getQuantity()).isEqualTo(expected.getQuantity());
     }
 
     @Test
     void findByUserId() {
-        User user = new User();
-        user.setEmail("test@test.com");
-        user.setPassword("pw");
-        userRepository.save(user);
+    	Wishlist wishlist = new Wishlist(user, product);
+    	wishlist.setQuantity(2);
+    	wishlistRepository.save(wishlist);
 
-        Product product = new Product();
-        product.setName("아이스 아메리카노 T");
-        product.setPrice(4500);
-        product.setImageUrl("https://example.com/image.jpg");
-        productRepository.save(product);
-
-        Wishlist wishlist = new Wishlist();
-        wishlist.setUser(user);
-        wishlist.setProduct(product);
-        wishlist.setQuantity(2);
-        wishlistRepository.save(wishlist);
-
-        List<Wishlist> wishlistItems = wishlistRepository.findByUserId(user.getId());
-        assertThat(wishlistItems).hasSize(1);
-        assertThat(wishlistItems.get(0).getProduct().getName()).isEqualTo(product.getName());
+    	List<Wishlist> WishlistItems = wishlistRepository.findByUserId(user.getId());
+    	assertThat(WishlistItems).hasSize(1);
+    	assertThat(WishlistItems.get(0).getProduct().getName()).isEqualTo(product.getName());
     }
 }
