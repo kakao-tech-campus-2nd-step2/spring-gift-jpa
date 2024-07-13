@@ -2,21 +2,21 @@ package gift.dto;
 
 public class WishlistResponseDto {
 
-    private Long userId;
+    private Long memberId;
     private Long productId;
 
 
-    public WishlistResponseDto(Long userId, Long productId) {
-        this.userId = userId;
+    public WishlistResponseDto(Long memberId, Long productId) {
+        this.memberId = memberId;
         this.productId = productId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 
     public Long getProductId() {

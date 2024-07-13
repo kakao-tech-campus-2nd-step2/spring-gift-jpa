@@ -11,6 +11,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -34,11 +38,11 @@ public class WishRepositoryTest {
         Product product = new Product("치킨", 20000, "chicken.com");
         productRepository.save(product);
 
-        Wish wish = new Wish(member.getId(), product.getId());
+        Wish wish = new Wish(member, product);
         wishRepository.save(wish);
 
         List<Wish> wishList = wishRepository.findByMemberId(member.getId());
-        assertThat(wishList.get(0).getProductId()).isEqualTo(product.getId());
+        assertThat(wishList.get(0).getProduct().getId()).isEqualTo(product.getId());
     }
 
     @Test
@@ -50,7 +54,7 @@ public class WishRepositoryTest {
         Product product = new Product("치킨", 20000, "chicken.com");
         productRepository.save(product);
 
-        Wish wish = new Wish(member.getId(), product.getId());
+        Wish wish = new Wish(member, product);
         wishRepository.save(wish);
 
         wishRepository.delete(wish);
@@ -61,25 +65,25 @@ public class WishRepositoryTest {
 
 
     @Test
-    void save() {
+    public void save() {
         Member member = new Member("admin@gmail.com", "password");
         memberRepository.save(member);
 
         Product product = new Product("치킨", 20000, "chicken.com");
         productRepository.save(product);
 
-        Wish expected = new Wish(member.getId(), product.getId());
+        Wish expected = new Wish(member, product);
         Wish actual = wishRepository.save(expected);
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
-            () -> assertThat(actual.getMemberId()).isEqualTo(expected.getMemberId()),
-            () -> assertThat(actual.getProductId()).isEqualTo(expected.getProductId())
+            () -> assertThat(actual.getMember().getId()).isEqualTo(expected.getMember().getId()),
+            () -> assertThat(actual.getProduct().getId()).isEqualTo(expected.getProduct().getId())
         );
     }
 
 
     @Test
-    void findByMemberId() {
+    public void findByMemberId() {
         Member member = new Member("admin@gmail.com", "password");
         memberRepository.save(member);
 
@@ -89,10 +93,36 @@ public class WishRepositoryTest {
         Product product2 = new Product("피자", 30000, "pizza.com");
         productRepository.save(product2);
 
-        wishRepository.save(new Wish(member.getId(), product.getId()));
-        wishRepository.save(new Wish(member.getId(), product2.getId()));
+        wishRepository.save(new Wish(member, product));
+        wishRepository.save(new Wish(member, product2));
 
         List<Wish> wishlists = wishRepository.findByMemberId(member.getId());
         assertThat(wishlists).hasSize(2);
     }
+
+    @Test
+    public void findByMemberIdPagingTest(){
+        Member member = new Member("admin@gmail.com", "password");
+        memberRepository.save(member);
+        Long memberId = member.getId();
+
+        for(int i=0; i<50; i++){
+            Product product = new Product("name"+i,1000*i, i+".com");
+            productRepository.save(product);
+
+            Wish wish = new Wish(member, product);
+            wishRepository.save(wish);
+        }
+
+        Pageable pageable = PageRequest.of(0,10);
+        Page<Wish> page = wishRepository.findByMemberId(memberId, pageable);
+
+        assertThat(page.getTotalElements()).isEqualTo(50);
+        assertThat(page.getTotalPages()).isEqualTo(5);
+        assertThat(page.getContent().size()).isEqualTo(10);
+
+    }
+
+
+
 }
