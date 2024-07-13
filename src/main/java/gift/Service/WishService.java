@@ -40,9 +40,11 @@ public class WishService {
     }
 
     private WishDTO convertToDTO(WishEntity wishEntity) {
-        WishDTO wishDTO = new WishDTO();
-        wishDTO.setId(wishEntity.getId());
-        wishDTO.setComment(wishEntity.getProductName()); // Assuming the comment is stored in productName
-        return wishDTO;
+        return new WishDTO(
+                wishEntity.getId(),
+                wishEntity.getUser().getId(),
+                wishEntity.getProduct().getId(),
+                wishEntity.getProductName()
+        );
     }
 }

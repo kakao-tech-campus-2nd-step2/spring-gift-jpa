@@ -1,6 +1,5 @@
 package gift.DTO;
 
-import gift.Entity.ProductEntity;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.List;
@@ -20,12 +19,6 @@ public class ProductDTO {
 
     public ProductDTO() {}
 
-    public ProductDTO(ProductEntity entity) {
-        this.id = entity.getId();
-        this.name = entity.getName();
-        this.price = entity.getPrice();
-        this.imageUrl = entity.getImageUrl();
-    }
 
     public ProductDTO(Long id, String name, int price, String imageUrl, List<WishDTO> wishes) {
         this.id = id;

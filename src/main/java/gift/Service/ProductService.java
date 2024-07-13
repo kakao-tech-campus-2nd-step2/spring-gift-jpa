@@ -64,7 +64,12 @@ public class ProductService {
             return List.of();
         }
         return wishEntities.stream()
-                .map(wishEntity -> new WishDTO(wishEntity.getId(), wishEntity.getProductName()))
+                .map(wishEntity -> new WishDTO(
+                        wishEntity.getId(),
+                        wishEntity.getUser().getId(),
+                        wishEntity.getProduct().getId(),
+                        wishEntity.getProductName()))
                 .collect(Collectors.toList());
     }
+
 }
