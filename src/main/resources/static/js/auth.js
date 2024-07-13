@@ -1,3 +1,7 @@
+function setAuthToken(token) {
+    return localStorage.setItem('authToken', token);
+}
+
 function register() {
     const email = document.querySelector('#username').value;
     const password = document.querySelector('#password').value;
@@ -29,7 +33,7 @@ function login() {
     }).then(response => response.json())
         .then(data => {
             if (data.token) {
-                localStorage.setItem('authToken', data.token);
+                setAuthToken(data.token)
                 alert("로그인에 성공했습니다.");
                 window.location.href = '/';
             } else {
