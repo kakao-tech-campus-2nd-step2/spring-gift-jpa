@@ -5,7 +5,6 @@ import gift.auth.DTO.TokenDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Base64;
@@ -16,7 +15,7 @@ import java.util.Date;
  */
 public class JwtToken {
 
-    private String secretKey = Base64.getEncoder()
+    private final String secretKey = Base64.getEncoder()
         .encodeToString("kaTeCamABCDEFGHIJKLmnoPQRSTUVWXYZ".getBytes());
     private final long tokenExpTime = 3600L; // 1시간
 

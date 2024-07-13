@@ -8,10 +8,11 @@ import org.springframework.stereotype.Repository;
  * 상품 데이터에 대한 데이터베이스 처리를 담당하는 인터페이스
  */
 @Repository
-public interface WishListRepository extends JpaRepository<WishListEntity, Long>{
-    List<WishListEntity> findAllByUserId(Long userId);
+public interface WishListRepository extends JpaRepository<WishListEntity, Long> {
 
-    int deleteWishListsByUserId(Long userId);
+    List<WishListEntity> findAllByMemberEntityId(Long userId);
 
-    int deleteWishListByUserIdAndProductId(Long userId, Long productId);
+    int deleteWishListsByMemberEntityId(Long userId);
+
+    int deleteWishListByMemberEntityIdAndProductEntityId(Long userId, Long productId);
 }

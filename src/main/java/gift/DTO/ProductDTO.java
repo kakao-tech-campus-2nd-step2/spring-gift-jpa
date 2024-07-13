@@ -8,8 +8,7 @@ import jakarta.validation.constraints.Size;
  * 제품의 세부 사항을 나타내는 클래스. ID, 이름, 가격, 이미지 URL을 포함한다.
  */
 public record ProductDTO(
-    @NotNull(message = "ID는 null이 될 수 없습니다.")
-    long id,
+    Long id,
 
     @NotNull(message = "이름은 null이 될 수 없습니다.")
     @Size(min = 1, max = 15, message = "이름은 1자에서 15자 사이여야 합니다.")
@@ -25,4 +24,7 @@ public record ProductDTO(
     String imageUrl
 ) {
 
+    public ProductDTO(String name, long price, String imageUrl) {
+        this(null, name, price, imageUrl);
+    }
 }

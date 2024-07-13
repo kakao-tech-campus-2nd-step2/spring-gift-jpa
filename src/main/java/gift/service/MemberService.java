@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.auth.DTO.MemberDTO;
+import gift.mapper.MemberMapper;
 import gift.model.member.MemberEntity;
 import gift.model.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private MemberMapper memberMapper;
+
     /**
      * 사용자 존재 여부 확인 메서드
      *
@@ -19,7 +23,8 @@ public class MemberService {
      * @return 사용자 존재 여부
      */
     public boolean isExist(MemberDTO memberDTO) {
-        return memberRepository.existsByEmailAndPasswordAndDeleteFalse(memberDTO.getEmail(), memberDTO.getPassword());
+        return memberRepository.existsByEmailAndPasswordAndDeleteFalse(memberDTO.getEmail(),
+            memberDTO.getPassword());
     }
 
     /**
@@ -29,9 +34,7 @@ public class MemberService {
      * @return 사용자 존재 여부
      */
     public boolean signUp(MemberDTO memberDTO) {
-        MemberEntity member = new MemberEntity();
-        member.setEmail(memberDTO.getEmail());
-        member.setPassword(memberDTO.getPassword());
+        var member = memberMapper.toMemberEntity(memberDTO, false);
         memberRepository.save(member);
         return true;
     }
@@ -43,7 +46,8 @@ public class MemberService {
      * @return 사용자 ID
      */
     public long getUserId(MemberDTO memberDTO) {
-        MemberEntity member = memberRepository.findByEmailAndPasswordAndDeleteFalse(memberDTO.getEmail(), memberDTO.getPassword());
+        MemberEntity member = memberRepository.findByEmailAndPasswordAndDeleteFalse(
+            memberDTO.getEmail(), memberDTO.getPassword());
         return member != null ? member.getId() : -1;
     }
 }
