@@ -21,12 +21,12 @@ public class ProductService {
 
     public Page<Product> findAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        System.out.println("Pageable: Page " + page + ", Size " + size);
         return productRepository.findAll(pageable);
     }
 
     public Product findById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new BusinessException("해당 아이디에 대한 상품이 존재하지 않습니다."));
+        return productRepository.findById(id)
+            .orElseThrow(() -> new BusinessException("해당 아이디에 대한 상품이 존재하지 않습니다."));
     }
 
     public Product save(Product product) {

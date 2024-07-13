@@ -9,7 +9,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WishRepository extends JpaRepository<Wish, Long>, PagingAndSortingRepository<Wish, Long> {
+public interface WishRepository extends JpaRepository<Wish, Long>,
+    PagingAndSortingRepository<Wish, Long> {
 
     Page<Wish> findByMemberId(Long memberId, Pageable pageable);
 

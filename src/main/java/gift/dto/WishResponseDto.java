@@ -1,6 +1,7 @@
 package gift.dto;
 
 public class WishResponseDto {
+
     private Long id;
     private Long productId;
     private String productName;

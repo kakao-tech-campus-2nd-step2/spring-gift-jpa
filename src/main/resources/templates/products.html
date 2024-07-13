@@ -117,7 +117,6 @@
         return response.json();
       })
       .then(data => {
-        console.log('Fetched data:', data); // 받아온 데이터 확인
         tableBody.innerHTML = ""; // 기존 테이블 내용 초기화
         if (data.content) {
           data.content.forEach(product => {
@@ -148,7 +147,6 @@
                             `;
           });
         }
-        console.log('Total Pages:', data.totalPages); // 총 페이지 수를 로그로 확인
         updatePagination(data.totalPages, page); // 페이지네이션 업데이트
       })
       .catch(error => console.error('Error:', error));
