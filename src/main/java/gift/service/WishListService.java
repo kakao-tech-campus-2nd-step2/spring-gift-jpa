@@ -6,7 +6,6 @@ import gift.dto.product.ShowProductDTO;
 import gift.entity.Product;
 import gift.entity.User;
 import gift.entity.WishList;
-import gift.entity.compositeKey.WishListId;
 import gift.exception.exception.BadRequestException;
 import gift.exception.exception.NotFoundException;
 import gift.exception.exception.UnAuthException;
@@ -33,7 +32,7 @@ public class WishListService {
         int tokenUserId = jwtUtil.getUserIdFromToken(token);
         if(!jwtUtil.validateToken(token))
             throw new UnAuthException("로그인 만료");
-        WishListId wishListId = new WishListId(tokenUserId,productId);
+        WishList.WishListId wishListId = new WishList.WishListId(tokenUserId,productId);
         if(productRepository.findById(productId).isEmpty())
             throw new NotFoundException("해당 물건이없습니다.");
         if(wishListRepository.findById(wishListId).isPresent())
@@ -62,7 +61,7 @@ public class WishListService {
         if(!jwtUtil.validateToken(token))
             throw new UnAuthException("로그인 만료");
         int tokenUserId = jwtUtil.getUserIdFromToken(token);
-        WishListId wishListId = new WishListId(tokenUserId,productId);
+        WishList.WishListId wishListId = new WishList.WishListId(tokenUserId,productId);
         wishListRepository.deleteById(wishListId);
     }
 }

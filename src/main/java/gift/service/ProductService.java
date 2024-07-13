@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.product.ProductWithOptionDTO;
 import gift.dto.product.SaveProductDTO;
 import gift.dto.product.ShowProductDTO;
-import gift.entity.compositeKey.OptionId;
 import gift.entity.Option;
 import gift.entity.Product;
 import gift.exception.exception.BadRequestException;
@@ -56,7 +55,7 @@ public class ProductService {
 
         List<String> optionList = stream(product.option().split(",")).toList();
         for(String str : optionList){
-            OptionId optionId = new OptionId(saveProduct.getId(), str);
+            Option.OptionId optionId = new Option.OptionId(saveProduct.getId(), str);
             Option option = new Option(optionId);
             if(isValidOption(optionId)) {
                 option.setProduct(saveProduct);
@@ -74,7 +73,7 @@ public class ProductService {
         return productOptional.map(value -> value.equals(product)).orElse(true);
     }
 
-    private boolean isValidOption(@Valid OptionId optionID){
+    private boolean isValidOption(@Valid Option.OptionId optionID){
         if(optionRepository.findById(optionID).isPresent())
             throw new BadRequestException("이미 존재하는 옵션입니다.");
         return true;
