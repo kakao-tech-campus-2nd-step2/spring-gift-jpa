@@ -47,9 +47,10 @@ public class WishlistController {
         return "wishlist";
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteItem(@PathVariable("id") Long productId) {
+    @PostMapping("/delete/{id}")
+    public String deleteItem(@PathVariable("id") Long productId, RedirectAttributes redirectAttributes) {
         wishlistService.deleteById(productId);
-        return ResponseEntity.ok().body("delete complete!");
+        redirectAttributes.addFlashAttribute("message", "Product successfully deleted!");
+        return "redirect:/wishlist/items";
     }
 }
