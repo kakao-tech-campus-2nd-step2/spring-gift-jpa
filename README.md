@@ -18,3 +18,8 @@ JPA로 리팩토링하고 @DataJpaTest를 사용해 학습테스트를 해본다
 2. WishResponse.java 추가
 3. setters 대신 Builder pattern 적용
 
+### step3
+
+1. FetchType.LAZY 추가
+2. 상품목록과 위시리스트에 대한 페이지네이션
+3. Paging 테스트코드
