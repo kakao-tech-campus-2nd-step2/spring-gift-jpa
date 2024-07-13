@@ -69,7 +69,7 @@ public class WishControllerTest {
     @Test
     @DisplayName("위시리스트 항목 삭제")
     public void testDeleteWish() {
-        ResponseEntity<Void> response = wishController.deleteWish(1L);
+        ResponseEntity<Void> response = wishController.deleteWish(1L, 1L);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 }

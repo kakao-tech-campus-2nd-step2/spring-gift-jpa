@@ -6,6 +6,7 @@ import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ public class WishRepositoryTest {
 
     @Autowired
     private WishRepository wishRepository;
+
+    @BeforeEach
+    public void setUp() {
+        wishRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("위시리스트 항목 추가 및 ID로 조회")
@@ -40,8 +46,6 @@ public class WishRepositoryTest {
     @Test
     @DisplayName("모든 위시리스트 항목 조회 (페이지네이션 적용)")
     public void testFindAllByMemberIdWithPagination() {
-        long initialCount = wishRepository.count();
-
         Member member = new Member(1L, "test@example.com", "password");
         Product product1 = new Product(1L, "Product1", 100, "imageUrl1");
         Product product2 = new Product(2L, "Product2", 200, "imageUrl2");
@@ -55,9 +59,9 @@ public class WishRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Wish> wishPage = wishRepository.findAllByMemberId(1L, pageable);
 
-        assertThat(wishPage.getTotalElements()).isEqualTo(initialCount + 2);
+        assertThat(wishPage.getTotalElements()).isEqualTo(2);
         assertThat(wishPage.getContent()).hasSize(
-            (int) Math.min(initialCount + 2, pageable.getPageSize()));
+            (int) Math.min(2, pageable.getPageSize()));
     }
 
     @Test

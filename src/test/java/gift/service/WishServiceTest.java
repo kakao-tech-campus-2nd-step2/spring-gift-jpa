@@ -1,5 +1,6 @@
 package gift.service;
 
+import static gift.util.Constants.PERMISSION_DENIED;
 import static gift.util.Constants.PRODUCT_NOT_FOUND;
 import static gift.util.Constants.WISH_ALREADY_EXISTS;
 import static gift.util.Constants.WISH_NOT_FOUND;
@@ -15,6 +16,7 @@ import gift.dto.wish.WishCreateRequest;
 import gift.dto.wish.WishResponse;
 import gift.exception.product.ProductNotFoundException;
 import gift.exception.wish.DuplicateWishException;
+import gift.exception.wish.PermissionDeniedException;
 import gift.exception.wish.WishNotFoundException;
 import gift.model.Member;
 import gift.model.Product;
@@ -122,7 +124,7 @@ public class WishServiceTest {
 
         when(wishRepository.findById(1L)).thenReturn(Optional.of(wish));
 
-        wishService.deleteWish(1L);
+        wishService.deleteWish(1L, 1L);
     }
 
     @Test
@@ -131,10 +133,26 @@ public class WishServiceTest {
         when(wishRepository.findById(999L)).thenReturn(Optional.empty());
 
         WishNotFoundException exception = assertThrows(WishNotFoundException.class, () -> {
-            wishService.deleteWish(999L);
+            wishService.deleteWish(999L, 1L);
         });
 
         assertEquals(WISH_NOT_FOUND + "999", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("위시리스트에서 다른 사용자의 상품 삭제 시도")
+    public void testDeleteWishPermissionDenied() {
+        Member member = new Member(1L, "test@example.com", "password");
+        Product product = new Product(1L, "Product", 100, "imageUrl");
+        Wish wish = new Wish(1L, member, product);
+
+        when(wishRepository.findById(1L)).thenReturn(Optional.of(wish));
+
+        PermissionDeniedException exception = assertThrows(PermissionDeniedException.class, () -> {
+            wishService.deleteWish(1L, 2L);
+        });
+
+        assertEquals(PERMISSION_DENIED, exception.getMessage());
     }
 
     @Test

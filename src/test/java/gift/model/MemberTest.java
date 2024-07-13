@@ -44,4 +44,13 @@ public class MemberTest {
         assertThat(member.isPasswordMatching("password")).isTrue();
         assertThat(member.isPasswordMatching("wrongpassword")).isFalse();
     }
+
+    @Test
+    @DisplayName("Member 모델 ID 매칭 테스트")
+    public void testIdMatching() {
+        Member member = new Member(1L, "test@example.com", "password");
+
+        assertThat(member.isIdMatching(1L)).isTrue();
+        assertThat(member.isIdMatching(2L)).isFalse();
+    }
 }
