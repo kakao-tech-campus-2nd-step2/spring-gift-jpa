@@ -25,12 +25,4 @@ public record WishResponseDto(Long id, Long productId, ProductName productName,
         }
         return wishResponseDtos;
     }
-
-    public static List<WishResponseDto> wishListToWishResponseList(Page<Wish> wishes) {
-        List<WishResponseDto> wishResponseDtos = new ArrayList<>();
-        for (Wish wish : wishes.getContent()) {
-            wishResponseDtos.add(new WishResponseDto(wish));
-        }
-        return wishResponseDtos;
-    }
 }
