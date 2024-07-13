@@ -18,13 +18,13 @@ public class Wishlist {
     private Product product;
 
     @Column(name = "count_product", nullable = false)
-    private int count_product;
+    private int countProduct;
 
     protected Wishlist() {}
 
-    public Wishlist(Member member, Product product, int count_product) {
+    public Wishlist(Member member, Product product, int countProduct) {
         this.member = member;
         this.product = product;
-        this.count_product = count_product;
+        this.countProduct = countProduct;
     }
 }
