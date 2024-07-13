@@ -33,7 +33,7 @@ class WishControllerTest {
   }
 
   @Test
-  void getWishList() {
+  void getWishListTest() {
     Pageable pageable = PageRequest.of(0, 5);
     MemberDto memberDto1 = new MemberDto(1L, "a@naver.com", "abcde");
     memberController.userSignUp(memberDto1);
@@ -79,7 +79,7 @@ class WishControllerTest {
   }
 
   @Test
-  void addProductToWishList() {
+  void addProductToWishListTest() {
     MemberDto memberDto1 = new MemberDto(1L, "a@naver.com", "abcde");
     memberController.userSignUp(memberDto1);
 
@@ -103,7 +103,7 @@ class WishControllerTest {
   }
 
   @Test
-  void deleteProductToWishList() {
+  void deleteProductToWishListTest() {
     MemberDto memberDto1 = new MemberDto(1L, "a@naver.com", "abcde");
     memberController.userSignUp(memberDto1);
 
