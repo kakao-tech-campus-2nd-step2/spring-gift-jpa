@@ -3,7 +3,8 @@ package gift.controller;
 import gift.model.AuthInfo;
 import gift.model.WishListDTO;
 import gift.service.WishListService;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,10 +29,16 @@ public class WishListController {
 
     @GetMapping
     public ResponseEntity<?> getWishList(@RequestParam long memberId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "4") int size,
         AuthInfo authInfo) {
         if (authInfo.id() == memberId) {
-            List<WishListDTO> wishLists = wishListService.getWishListByMemberId(memberId);
-            return ResponseEntity.ok(wishLists);
+            Page<WishListDTO> wishListsPage = wishListService.getWishListByMemberId(memberId, page,
+                size);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("X-Page-Number", String.valueOf(wishListsPage.getNumber()));
+            headers.add("X-Page-Size", String.valueOf(wishListsPage.getSize()));
+            return ResponseEntity.ok().headers(headers).body(wishListsPage);
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("위시 리스트를 확인할 권한이 없습니다.");
     }

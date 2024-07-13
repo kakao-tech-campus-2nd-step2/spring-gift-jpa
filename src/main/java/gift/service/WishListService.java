@@ -11,6 +11,10 @@ import gift.repository.ProductRepository;
 import gift.repository.WishListRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,11 +50,19 @@ public class WishListService {
             .collect(Collectors.toList());
     }
 
-    public List<WishListDTO> getWishListByMemberId(long memberId) {
-        List<WishList> wishlists = wishListRepository.findWishListByMemberId(memberId);
-        return wishlists.stream()
+    public Page<WishListDTO> getWishListByMemberId(long memberId, int page, int size) {
+        Pageable pageRequest = createPageRequestUsing(page, size);
+
+        List<WishList> allWishlists = wishListRepository.findWishListByMemberId(memberId);
+        List<WishListDTO> allWishListDTO = allWishlists.stream()
             .map(this::convertToDTO)
             .collect(Collectors.toList());
+
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), allWishlists.size());
+
+        List<WishListDTO> pageContent = allWishListDTO.subList(start, end);
+        return new PageImpl<>(pageContent, pageRequest, allWishListDTO.size());
     }
 
     public WishListDTO updateWishListQuantity(WishListDTO wishListDTO) {
@@ -83,5 +95,9 @@ public class WishListService {
         String productName = wishList.getProduct().getName();
         return new WishListDTO(wishList.getEmail(), memberId, productName,
             wishList.getQuantity());
+    }
+
+    private Pageable createPageRequestUsing(int page, int size) {
+        return PageRequest.of(page, size);
     }
 }
