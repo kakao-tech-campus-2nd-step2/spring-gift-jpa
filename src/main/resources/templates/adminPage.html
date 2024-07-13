@@ -94,9 +94,25 @@
         <th>
           <input type="checkbox" th:onclick="mainCheckboxOnClick()"/>
         </th>
-        <th>ID</th>
+        <th>
+          ID
+          <button
+              id="page-sort-by-id"
+              th:data-sort-order="${products.getSort().getOrderFor('id')}"
+              onclick=idColumnPageSort()>
+            O
+          </button>
+        </th>
         <th>Product Name</th>
-        <th>Price</th>
+        <th>
+          Price
+          <button
+              id="page-sort-by-price"
+              th:data-sort-order="${products.getSort().getOrderFor('price')}"
+              onclick=priceColumnPageSort()
+          >O
+          </button>
+        </th>
         <th>ImageUrl</th>
         <th>Action</th>
       </tr>
