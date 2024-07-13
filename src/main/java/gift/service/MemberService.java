@@ -21,9 +21,10 @@ public class MemberService {
         return convertToDTO(memberRepository.save(member));
     }
 
-    public Member findMemberByCredentials(String email, String password) {
-        return memberRepository.findByEmailAndPassword(email, password)
-            .orElseThrow(() -> new RepositoryException(ErrorCode.MEMBER_NOT_FOUND, email));
+    public MemberDTO findMemberByCredentials(String email, String password) {
+        Member foundMember = memberRepository.findByEmailAndPassword(email, password)
+            .orElseThrow(() -> new RepositoryException(ErrorCode.MEMBER_NOT_FOUND, email, password));
+        return convertToDTO(foundMember);
     }
 
     private MemberDTO convertToDTO(Member member) {
