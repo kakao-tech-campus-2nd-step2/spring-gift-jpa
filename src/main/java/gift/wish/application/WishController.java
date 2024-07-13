@@ -1,7 +1,7 @@
 package gift.wish.application;
 
-import gift.common.validation.LoginUser;
-import gift.user.domain.User;
+import gift.common.validation.LoginMember;
+import gift.member.domain.Member;
 import gift.wish.application.dto.request.WishRequest;
 import gift.wish.application.dto.response.WishPageResponse;
 import gift.wish.application.dto.response.WishResponse;
@@ -41,9 +41,9 @@ public class WishController {
     })
     @PostMapping()
     public ResponseEntity<Void> saveWish(@RequestBody WishRequest wishRequest,
-                                         @LoginUser User loginUser
+                                         @LoginMember Member loginMember
     ) {
-        var wishId = wishService.saveWish(wishRequest.toWishParam(loginUser.getId()));
+        var wishId = wishService.saveWish(wishRequest.toWishParam(loginMember.getId()));
 
         return ResponseEntity.created(URI.create("/api/wishes/" + wishId))
                 .build();
@@ -58,9 +58,9 @@ public class WishController {
     @ResponseStatus(HttpStatus.OK)
     public void modifyWish(@PathVariable("wishId") Long wishId,
                            @RequestBody WishRequest wishRequest,
-                           @LoginUser User loginUser
+                           @LoginMember Member loginMember
     ) {
-        wishService.updateWish(wishRequest.toWishParam(loginUser.getId()), wishId);
+        wishService.updateWish(wishRequest.toWishParam(loginMember.getId()), wishId);
     }
 
     @Operation(summary = "위시리스트 목록 조회", description = "위시리스트 목록을 조회합니다.")
@@ -68,10 +68,10 @@ public class WishController {
             @ApiResponse(responseCode = "200", description = "위시리스트 목록 조회 성공"),
     })
     @GetMapping()
-    public ResponseEntity<WishPageResponse> getWishList(@LoginUser User loginUser,
+    public ResponseEntity<WishPageResponse> getWishList(@LoginMember Member loginMember,
                                                         Pageable pageable
     ) {
-        var wishInfos = wishService.getWishList(loginUser.getId(), pageable);
+        var wishInfos = wishService.getWishList(loginMember.getId(), pageable);
 
         var response = WishPageResponse.from(wishInfos);
         return ResponseEntity.ok()
@@ -85,9 +85,9 @@ public class WishController {
     })
     @GetMapping("/{wishId}")
     public ResponseEntity<WishResponse> getWishDetail(@PathVariable("wishId") Long wishId,
-                                                      @LoginUser User loginUser
+                                                      @LoginMember Member loginMember
     ) {
-        var wishInfo = wishService.getWish(wishId, loginUser.getId());
+        var wishInfo = wishService.getWish(wishId, loginMember.getId());
 
         var response = WishResponse.from(wishInfo);
         return ResponseEntity.ok()
@@ -102,8 +102,8 @@ public class WishController {
     @DeleteMapping("/{wishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteWish(@PathVariable("wishId") Long wishId,
-                           @LoginUser User loginUser
+                           @LoginMember Member loginMember
     ) {
-        wishService.deleteWish(wishId, loginUser.getId());
+        wishService.deleteWish(wishId, loginMember.getId());
     }
 }

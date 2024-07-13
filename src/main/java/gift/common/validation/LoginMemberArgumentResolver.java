@@ -1,8 +1,8 @@
 package gift.common.validation;
 
-import gift.user.domain.User;
-import gift.user.exception.UserAuthorizedErrorException;
-import gift.user.persistence.UserRepository;
+import gift.member.domain.Member;
+import gift.member.exception.MemberAuthorizedErrorException;
+import gift.member.persistence.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -10,16 +10,16 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
-    private final UserRepository userRepository;
+public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
+    private final MemberRepository memberRepository;
 
-    public LoginUserArgumentResolver(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public LoginMemberArgumentResolver(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterAnnotation(LoginUser.class) != null;
+        return parameter.getParameterAnnotation(LoginMember.class) != null;
     }
 
     @Override
@@ -30,9 +30,9 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
             throw new IllegalArgumentException("Request 정보가 존재하지 않습니다.");
         }
 
-        User user = userRepository.findByUsername((String) request.getAttribute("username"))
-                .orElseThrow(UserAuthorizedErrorException::new);
+        Member member = memberRepository.findByUsername((String) request.getAttribute("username"))
+                .orElseThrow(MemberAuthorizedErrorException::new);
 
-        return user;
+        return member;
     }
 }

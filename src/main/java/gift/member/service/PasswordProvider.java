@@ -1,4 +1,4 @@
-package gift.user.service;
+package gift.member.service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

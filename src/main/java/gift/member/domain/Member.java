@@ -1,4 +1,4 @@
-package gift.user.domain;
+package gift.member.domain;
 
 import gift.wish.domain.Wish;
 import jakarta.persistence.Column;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class User {
+public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,13 +33,13 @@ public class User {
     private Role role;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "member_id")
     private List<Wish> wishes = new ArrayList<>();
 
-    protected User() {
+    protected Member() {
     }
 
-    public User(String username, String password) {
+    public Member(String username, String password) {
         this.username = username;
         this.password = password;
         this.role = Role.USER;

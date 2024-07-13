@@ -1,8 +1,8 @@
-package gift.user.application;
+package gift.member.application;
 
-import gift.user.application.dto.request.UserSignUpRequest;
-import gift.user.application.dto.response.UserSignInResponse;
-import gift.user.service.UserService;
+import gift.member.application.dto.request.MemberSignUpRequest;
+import gift.member.application.dto.response.MemberSignInResponse;
+import gift.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "User", description = "User관련 API")
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
-    private final UserService userService;
+public class MemberController {
+    private final MemberService memberService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @Operation(summary = "회원 가입", description = "회원 가입을 합니다.")
@@ -31,10 +31,10 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "회원가입이 올바르게 이루어지지 않음")
     })
     @PostMapping("/sign-up")
-    public ResponseEntity<UserSignInResponse> signUp(@RequestBody UserSignUpRequest userSignupRequest) {
-        var savedUserInfo = userService.signUp(userSignupRequest.toServiceDto());
+    public ResponseEntity<MemberSignInResponse> signUp(@RequestBody MemberSignUpRequest memberSignupRequest) {
+        var savedUserInfo = memberService.signUp(memberSignupRequest.toServiceDto());
 
-        var response = UserSignInResponse.from(savedUserInfo);
+        var response = MemberSignInResponse.from(savedUserInfo);
 
         return ResponseEntity.created(URI.create("/api/users/" + savedUserInfo.id()))
                 .body(response);
@@ -46,10 +46,10 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음")
     })
     @PostMapping("/sign-in")
-    public ResponseEntity<UserSignInResponse> signIn(@RequestBody UserSignUpRequest userSignupRequest) {
-        var signInUserInfo = userService.signIn(userSignupRequest.toServiceDto());
+    public ResponseEntity<MemberSignInResponse> signIn(@RequestBody MemberSignUpRequest memberSignupRequest) {
+        var signInUserInfo = memberService.signIn(memberSignupRequest.toServiceDto());
 
-        var response = UserSignInResponse.from(signInUserInfo);
+        var response = MemberSignInResponse.from(signInUserInfo);
 
         return ResponseEntity.ok()
                 .body(response);

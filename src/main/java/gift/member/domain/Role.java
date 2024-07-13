@@ -1,4 +1,4 @@
-package gift.user.domain;
+package gift.member.domain;
 
 public enum Role {
     USER("USER"), ADMIN("ADMIN");

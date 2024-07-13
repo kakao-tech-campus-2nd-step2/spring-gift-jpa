@@ -1,7 +1,7 @@
 package gift.wish.domain;
 
+import gift.member.domain.Member;
 import gift.product.domain.Product;
-import gift.user.domain.User;
 import gift.wish.exception.WishCanNotModifyException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,21 +28,21 @@ public class Wish {
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     protected Wish() {
     }
 
-    public Wish(Long id, Integer amount, Product product, User user) {
+    public Wish(Long id, Integer amount, Product product, Member member) {
         this.id = id;
         this.amount = amount;
         this.product = product;
-        this.user = user;
+        this.member = member;
     }
 
-    public Wish(Integer amount, Product product, User user) {
-        this(null, amount, product, user);
+    public Wish(Integer amount, Product product, Member member) {
+        this(null, amount, product, member);
     }
 
     public Long getId() {
@@ -57,15 +57,15 @@ public class Wish {
         return product;
     }
 
-    public void modify(final int amount, final Product product, final User user) {
-        checkOwner(user);
+    public void modify(final int amount, final Product product, final Member member) {
+        checkOwner(member);
         checkProduct(product);
         this.amount = amount;
     }
 
-    private void checkOwner(final User user) {
-        if (!this.user.getId()
-                .equals(user.getId())) {
+    private void checkOwner(final Member member) {
+        if (!this.member.getId()
+                .equals(member.getId())) {
             throw new WishCanNotModifyException();
         }
     }
@@ -78,6 +78,6 @@ public class Wish {
     }
 
     public boolean isOwner(final Long userId) {
-        return this.user.getId().equals(userId);
+        return this.member.getId().equals(userId);
     }
 }

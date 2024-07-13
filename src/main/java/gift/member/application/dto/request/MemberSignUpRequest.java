@@ -1,21 +1,21 @@
-package gift.user.application.dto.request;
+package gift.member.application.dto.request;
 
 import static gift.common.validation.ValidateErrorMessage.INVALID_USER_NAME_NULL;
 import static gift.common.validation.ValidateErrorMessage.INVALID_USER_NAME_PATTERN;
 import static gift.common.validation.ValidateErrorMessage.INVALID_USER_PASSWORD_NULL;
 
-import gift.user.service.dto.UserInfoParam;
+import gift.member.service.dto.MemberInfoParam;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
-public record UserSignUpRequest(
+public record MemberSignUpRequest(
         @NotNull(message = INVALID_USER_NAME_NULL)
         @Email(message = INVALID_USER_NAME_PATTERN)
         String username,
         @NotNull(message = INVALID_USER_PASSWORD_NULL)
         String password
 ) {
-    public UserInfoParam toServiceDto() {
-        return new UserInfoParam(username, password);
+    public MemberInfoParam toServiceDto() {
+        return new MemberInfoParam(username, password);
     }
 }

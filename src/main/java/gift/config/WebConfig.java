@@ -1,9 +1,9 @@
 package gift.config;
 
 import gift.common.validation.AuthInterceptor;
-import gift.common.validation.LoginUserArgumentResolver;
-import gift.user.persistence.UserRepository;
-import gift.user.service.JwtProvider;
+import gift.common.validation.LoginMemberArgumentResolver;
+import gift.member.persistence.MemberRepository;
+import gift.member.service.JwtProvider;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -13,11 +13,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     private final JwtProvider jwtProvider;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
-    public WebConfig(JwtProvider jwtProvider, UserRepository userRepository) {
+    public WebConfig(JwtProvider jwtProvider, MemberRepository memberRepository) {
         this.jwtProvider = jwtProvider;
-        this.userRepository = userRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -29,6 +29,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new LoginUserArgumentResolver(userRepository));
+        resolvers.add(new LoginMemberArgumentResolver(memberRepository));
     }
 }

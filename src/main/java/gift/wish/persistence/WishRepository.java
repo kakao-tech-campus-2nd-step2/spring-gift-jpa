@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WishRepository extends JpaRepository<Wish, Long> {
-    @Query("SELECT w FROM Wish w JOIN FETCH w.user JOIN FETCH w.product WHERE w.id = :wishId")
+    @Query("SELECT w FROM Wish w JOIN FETCH w.member JOIN FETCH w.product WHERE w.id = :wishId")
     Optional<Wish> findWishByIdWithUserAndProduct(Long wishId);
 
-    @Query("SELECT w FROM Wish w JOIN FETCH w.user JOIN FETCH w.product WHERE w.user.id = :userId")
-    Page<Wish> findWishesByUserIdWithUserAndProduct(Long userId, Pageable pageable);
+    @Query("SELECT w FROM Wish w JOIN FETCH w.member JOIN FETCH w.product WHERE w.member.id = :memberId")
+    Page<Wish> findWishesByUserIdWithMemberAndProduct(Long memberId, Pageable pageable);
 }

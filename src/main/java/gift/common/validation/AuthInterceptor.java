@@ -1,6 +1,6 @@
 package gift.common.validation;
 
-import gift.user.service.JwtProvider;
+import gift.member.service.JwtProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
