@@ -25,14 +25,12 @@ public class ApiMemberController {
     @PostMapping()
     public ResponseEntity<Map<String, String>> signUp(@RequestBody Map<String, String> request) {
         System.out.println("[ApiMemberController] signUp()");
-
         return memberService.signUp(new Member(request.get("email"), request.get("password")));
     }
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> request) {
         System.out.println("[ApiMemberController] login()");
-
         return memberService.login(new Member(request.get("email"), request.get("password")));
     }
 }
