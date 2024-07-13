@@ -73,3 +73,28 @@ li {
   color: #666;
   font-style: italic;
 }
+
+.pagination {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  display: block;
+  padding: 8px 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #333;
+  text-decoration: none;
+}
+
+.page-link:hover {
+  background-color: #e9ecef;
+}
