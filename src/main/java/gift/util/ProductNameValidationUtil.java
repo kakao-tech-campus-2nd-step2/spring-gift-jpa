@@ -4,7 +4,8 @@ import gift.exception.CustomException;
 
 import java.util.regex.Pattern;
 
-import static gift.exception.ErrorCode.*;
+import static gift.exception.ErrorCode.KAKAO_CONTAIN_ERROR;
+import static gift.exception.ErrorCode.SPECIAL_CHAR_ERROR;
 
 public class ProductNameValidationUtil {
 
