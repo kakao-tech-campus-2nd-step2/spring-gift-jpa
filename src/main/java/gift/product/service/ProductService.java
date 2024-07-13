@@ -6,7 +6,6 @@ import gift.product.persistence.ProductRepository;
 import gift.product.service.dto.ProductInfo;
 import gift.product.service.dto.ProductPageInfo;
 import gift.product.service.dto.ProductParam;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,15 +45,8 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductPageInfo getProducts(Pageable pageable) {
         Page<Product> productPage = productRepository.findAll(pageable);
-        List<Product> foundProducts = productPage.getContent();
 
-        var totalElements = productPage.getTotalElements();
-        var currentPage = productPage.getNumber();
-        var totalPages = productPage.getTotalPages();
-        var productInfo = foundProducts.stream()
-                .map(ProductInfo::from)
-                .toList();
-        return ProductPageInfo.of(productInfo, totalElements, totalPages, currentPage);
+        return ProductPageInfo.from(productPage);
     }
 
     @Transactional
