@@ -1,6 +1,7 @@
 package gift.global.component;
 
 import gift.global.annotation.Products;
+import gift.global.dto.PageRequestDto;
 import gift.product.dto.ProductResponseDto;
 import gift.product.service.ProductService;
 import java.lang.reflect.ParameterizedType;
@@ -43,8 +44,11 @@ public class ProductsResolver implements HandlerMethodArgumentResolver {
     public List<ProductResponseDto> resolveArgument(MethodParameter parameter,
         ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        List<ProductResponseDto> products = productService.selectProducts();
 
+        int pageNumber = Integer.parseInt(webRequest.getParameter("page-no"));
+        int sortingState = Integer.parseInt(webRequest.getParameter("sorting-state"));
+
+        List<ProductResponseDto> products = productService.selectProducts(new PageRequestDto(pageNumber, sortingState));
         return products;
     }
 }
