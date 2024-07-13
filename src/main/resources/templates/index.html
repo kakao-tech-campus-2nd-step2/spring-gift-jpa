@@ -24,7 +24,7 @@
                 <th>Price</th>
                 <th>Actions</th>
             </tr>
-            <tr th:each="product: ${products}">
+            <tr th:each="product: ${pages.content}">
                 <td>
                     <a th:href="@{'/admin/products/' + ${product.id}}">
                         <img th:src="@{${product.imageUrl}}" alt="no image" class="product-img"/>

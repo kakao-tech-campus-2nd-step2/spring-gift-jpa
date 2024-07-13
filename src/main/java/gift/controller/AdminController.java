@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/admin/products")
@@ -20,8 +21,8 @@ public class AdminController {
     }
 
     @GetMapping
-    public String getProducts(Model model) {
-        model.addAttribute("products", productService.getProducts());
+    public String getProducts(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+        model.addAttribute("pages", productService.getProducts(page));
         return "index";
     }
 
