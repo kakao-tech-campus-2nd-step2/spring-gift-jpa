@@ -10,6 +10,8 @@ import gift.product.restapi.dto.response.PagedProductResponse;
 import gift.product.restapi.dto.response.ProductResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,10 +27,9 @@ public class ProductController {
 
     @GetMapping("/api/products")
     public PagedProductResponse getAllProducts(
-            @RequestParam(required = false, defaultValue = "1") Integer page,
-            @RequestParam(required = false, defaultValue = "10") Integer size
+            @PageableDefault(size = 10) Pageable pageable
     ) {
-        PagedDto<Product> pagedProducts = productService.findAll(page - 1, size);
+        PagedDto<Product> pagedProducts = productService.findAll(pageable);
         return PagedProductResponse.from(pagedProducts);
     }
 

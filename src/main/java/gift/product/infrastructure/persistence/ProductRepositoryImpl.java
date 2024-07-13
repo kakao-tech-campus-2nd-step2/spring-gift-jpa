@@ -7,6 +7,7 @@ import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -52,14 +53,13 @@ public class ProductRepositoryImpl implements ProductRepository {
                 .toList();
     }
 
-    public PagedDto<Product> findAll(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
+    public PagedDto<Product> findAll(Pageable pageable) {
         Page<Product> pagedProducts = jpaProductRepository
-                .findAll(pageRequest)
+                .findAll(pageable)
                 .map(ProductEntity::toDomain);
         return new PagedDto<>(
-                page,
-                size,
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
                 pagedProducts.getTotalElements(),
                 pagedProducts.getTotalPages(),
                 pagedProducts.getContent()

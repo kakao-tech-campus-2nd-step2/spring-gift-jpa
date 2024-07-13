@@ -7,11 +7,11 @@ import gift.core.domain.product.ProductService;
 import gift.core.domain.wishes.WishesService;
 import gift.wishes.restapi.dto.request.AddWishRequest;
 import gift.wishes.restapi.dto.response.PagedWishResponse;
-import gift.wishes.restapi.dto.response.WishResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 public class WishesController {
@@ -30,10 +30,9 @@ public class WishesController {
     @GetMapping("/api/wishes")
     public PagedWishResponse getWishes(
             @LoggedInUser Long userId,
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer size
+            @PageableDefault(size = 10) Pageable pageable
     ) {
-        PagedDto<Product> pagedWishes = wishesService.getWishlistOfUser(userId, page - 1, size);
+        PagedDto<Product> pagedWishes = wishesService.getWishlistOfUser(userId, pageable);
         return PagedWishResponse.from(pagedWishes);
     }
 

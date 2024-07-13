@@ -13,6 +13,7 @@ import gift.user.infrastructure.persistence.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -64,13 +65,13 @@ public class WishesRepositoryImpl implements WishesRepository {
     }
 
     @Override
-    public PagedDto<Product> getWishlistOfUser(User user, Integer page, Integer size) {
+    public PagedDto<Product> getWishlistOfUser(User user, Pageable pageable) {
         Page<Product> pagedProducts = jpaWishRepository
-                .findAllByUser(UserEntity.from(user), PageRequest.of(page, size))
+                .findAllByUser(UserEntity.from(user), pageable)
                 .map((entity -> entity.getProduct().toDomain()));
         return new PagedDto<>(
-                page,
-                size,
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
                 pagedProducts.getTotalElements(),
                 pagedProducts.getTotalPages(),
                 pagedProducts.getContent()
