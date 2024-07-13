@@ -13,7 +13,9 @@ import gift.repository.MemberRepository;
 import gift.repository.WishRepository;
 import gift.util.converter.MemberConverter;
 import gift.util.converter.WishListConverter;
-import gift.util.validator.ParameterValidator;
+import gift.util.validator.databaseValidator.MemberDatabaseValidator;
+import gift.util.validator.databaseValidator.ProductDatabaseValidator;
+import gift.util.validator.databaseValidator.WishListFieldDatabaseValidator;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +28,18 @@ public class WishListService {
 
     private final MemberRepository memberRepository;
     private final WishRepository wishRepository;
-    private final ParameterValidator parameterValidator;
+    private final WishListFieldDatabaseValidator wishListFieldDatabaseValidator;
+    private final MemberDatabaseValidator memberDatabaseValidator;
 
     @Autowired
     public WishListService(MemberRepository memberRepository,
-            WishRepository wishRepository, ParameterValidator parameterValidator) {
+            WishRepository wishRepository,
+            WishListFieldDatabaseValidator wishListFieldDatabaseValidator,
+            MemberDatabaseValidator memberDatabaseValidator) {
         this.memberRepository = memberRepository;
         this.wishRepository = wishRepository;
-        this.parameterValidator = parameterValidator;
+        this.wishListFieldDatabaseValidator = wishListFieldDatabaseValidator;
+        this.memberDatabaseValidator = memberDatabaseValidator;
     }
 
     @Transactional(readOnly = true)
@@ -52,7 +58,7 @@ public class WishListService {
 
     @Transactional
     public void addWishes(MemberDTO memberDTO, ProductDTO productDTO) {
-        Map<String, Object> validatedParameterMap = parameterValidator.validateParameter(memberDTO,
+        Map<String, Object> validatedParameterMap = wishListFieldDatabaseValidator.validateProductParameter(memberDTO,
                 productDTO);
         Member member = (Member) validatedParameterMap.get("member");
         Product product = (Product) validatedParameterMap.get("product");
@@ -71,20 +77,20 @@ public class WishListService {
     public void removeWishListProduct(MemberDTO memberDTO, Long id)
             throws NoSuchProductIdException, EmptyResultDataAccessException {
         try {
-            Map<String, Object> validatedParameterMap = parameterValidator.validateParameter(
+            Map<String, Object> validatedParameterMap = wishListFieldDatabaseValidator.validateProductParameter(
                     memberDTO, id);
             Member member = (Member) validatedParameterMap.get("member");
             Product product = (Product) validatedParameterMap.get("product");
             wishRepository.deleteByMemberAndProductId(member, product.getId());
         } catch (NoSuchProductIdException e) { //제품 목록에는 없는데 유저는 존재하는 경우
-            wishRepository.deleteByMemberAndProductId(parameterValidator.validateMember(memberDTO), id);
+            wishRepository.deleteByMemberAndProductId(memberDatabaseValidator.validateMember(memberDTO), id);
         }
     }
 
     @Transactional
     public void setWishListNumber(MemberDTO memberDTO, ProductDTO productDTO, Integer quantity)
             throws RuntimeException {
-        Map<String, Object> validatedParameterMap = parameterValidator.validateParameter(memberDTO,
+        Map<String, Object> validatedParameterMap = wishListFieldDatabaseValidator.validateProductParameter(memberDTO,
                 productDTO);
         Member member = (Member) validatedParameterMap.get("member");
         Product product = (Product) validatedParameterMap.get("product");

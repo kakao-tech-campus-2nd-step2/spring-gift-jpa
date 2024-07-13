@@ -8,7 +8,7 @@ import gift.exception.InternalServerExceptions.InternalServerException;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import gift.util.converter.ProductConverter;
-import gift.util.validator.ParameterValidator;
+import gift.util.validator.databaseValidator.ProductDatabaseValidator;
 import gift.util.validator.entityValidator.ProductValidator;
 import java.util.List;
 import java.util.Optional;
@@ -21,15 +21,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductService {
 
-    private final ParameterValidator parameterValidator;
+    private final ProductDatabaseValidator productDatabaseValidator;
     private final ProductRepository productRepository;
     private final WishRepository wishRepository;
 
     @Autowired
-    public ProductService(ParameterValidator parameterValidator,
+    public ProductService(ProductDatabaseValidator productDatabaseValidator,
             ProductRepository productRepository, WishRepository wishRepository) {
         this.productRepository = productRepository;
-        this.parameterValidator = parameterValidator;
+        this.productDatabaseValidator = productDatabaseValidator;
         this.wishRepository = wishRepository;
     }
 
@@ -56,7 +56,7 @@ public class ProductService {
 
     @Transactional
     public void updateProduct(Long id, ProductDTO productDTO) throws RuntimeException {
-        parameterValidator.validateParameter(id, productDTO);
+        productDatabaseValidator.validateProductParameter(id, productDTO);
         ProductValidator.validateProduct(productDTO);
         Optional<Product> productInDb = productRepository.findById(id);
 
