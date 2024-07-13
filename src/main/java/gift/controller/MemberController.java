@@ -36,7 +36,7 @@ public class MemberController {
             Member savedMember = memberService.createMember(member);
             Map<String, String> response = new HashMap<>();
             response.put("token", jwtService.generateToken(savedMember));
-            logger.debug("Register - Generated Token: " + response.get("token"));
+            logger.debug("Register - Generated Token: {}", response.get("token"));
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             throw new RuntimeException("Error during registration: " + e.getMessage(), e);
@@ -49,7 +49,7 @@ public class MemberController {
 
         Map<String, String> response = new HashMap<>();
         response.put("token", jwtService.generateToken(foundMember));
-        logger.debug("Login - Generated Token: " + response.get("token"));
+        logger.debug("Login - Generated Token: {}", response.get("token"));
         return ResponseEntity.ok(response);
     }
 
