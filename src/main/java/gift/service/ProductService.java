@@ -1,16 +1,16 @@
 package gift.service;
 
 import gift.model.Product;
+import gift.model.ProductDto;
 import gift.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
-
 @Service
 public class ProductService {
-
   private final ProductRepository productRepository;
 
   @Autowired
@@ -18,19 +18,21 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
-  public List<Product> findAll() {
-    return productRepository.findAll();
+  public Page<ProductDto> findAll(Pageable pageable) {
+    return productRepository.findAll(pageable).map(this::convertToDto);
   }
 
-  public Optional<Product> findById(Long id) {
-    return productRepository.findById(id);
+  public Optional<ProductDto> findById(Long id) {
+    return productRepository.findById(id).map(this::convertToDto);
   }
 
-  public Product save(Product product) {
-    return productRepository.save(product);
+  public ProductDto save(ProductDto productDto) {
+    Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+    Product savedProduct = productRepository.save(product);
+    return convertToDto(savedProduct);
   }
 
-  public boolean updateProduct(Long id, Product productDetails) {
+  public boolean updateProduct(Long id, ProductDto productDetails) {
     return productRepository.findById(id).map(product -> {
       product.update(productDetails.getName(), productDetails.getPrice(), productDetails.getImageUrl());
       productRepository.save(product);
@@ -40,5 +42,9 @@ public class ProductService {
 
   public void deleteById(Long id) {
     productRepository.deleteById(id);
+  }
+
+  private ProductDto convertToDto(Product product) {
+    return new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
   }
 }

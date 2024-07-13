@@ -1,88 +1,101 @@
 package gift;
 
 import gift.model.Product;
+import gift.model.ProductDto;
 import gift.repository.ProductRepository;
 import gift.service.ProductService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
 
-  @MockBean
+  @Mock
   private ProductRepository productRepository;
 
-  @Autowired
+  @InjectMocks
   private ProductService productService;
-
-  @BeforeEach
-  public void setUp() {
-    MockitoAnnotations.openMocks(this);
-  }
 
   @Test
   public void testFindAll() {
-    Product product1 = new Product();
-    product1.update("아이스 카페 아메리카노 T", 4500, "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
-    product1.setId(1L);
+    Product product1 = new Product("Product 1", 1000, "http://example.com/product1.jpg");
+    Product product2 = new Product("Product 2", 2000, "http://example.com/product2.jpg");
 
-    Product product2 = new Product();
-    product2.update("아이스 카페 라떼 T", 4500, "https://st.kakaocdn.net/product/gift/product.jpg");
-    product2.setId(2L);
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Product> productPage = new PageImpl<>(Arrays.asList(product1, product2), pageable, 2);
 
-    when(productRepository.findAll()).thenReturn(Arrays.asList(product1, product2));
+    when(productRepository.findAll(pageable)).thenReturn(productPage);
 
-    List<Product> products = productService.findAll();
-    assertEquals(2, products.size());
-    verify(productRepository, times(1)).findAll();
+    var products = productService.findAll(pageable);
+
+    assertEquals(2, products.getTotalElements());
+    assertEquals("Product 1", products.getContent().get(0).getName());
+    assertEquals("Product 2", products.getContent().get(1).getName());
+
+    verify(productRepository, times(1)).findAll(pageable);
   }
 
   @Test
   public void testFindById() {
-    Product product = new Product();
-    product.update("아이스 카페 아메리카노 T", 4500, "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
-    product.setId(1L);
+    Product product = new Product("Product 1", 1000, "http://example.com/product1.jpg");
 
     when(productRepository.findById(1L)).thenReturn(Optional.of(product));
 
-    Optional<Product> foundProduct = productService.findById(1L);
-    assertTrue(foundProduct.isPresent());
-    assertEquals(product.getId(), foundProduct.get().getId());
+    var productDto = productService.findById(1L);
+
+    assertTrue(productDto.isPresent());
+    assertEquals("Product 1", productDto.get().getName());
+
     verify(productRepository, times(1)).findById(1L);
   }
 
   @Test
   public void testSave() {
-    Product product = new Product();
-    product.update("Product 1", 1000, "http://example.com/product1.jpg");
+    ProductDto productDto = new ProductDto(1L,"Product 1", 1000, "http://example.com/product1.jpg");
+    Product product = new Product("Product 1", 1000, "http://example.com/product1.jpg");
 
-    Product savedProduct = new Product();
-    savedProduct.update("Product 1", 1000, "http://example.com/product1.jpg");
-    savedProduct.setId(1L);
+    when(productRepository.save(any(Product.class))).thenReturn(product);
 
-    when(productRepository.save(any(Product.class))).thenReturn(savedProduct);
+    var savedProductDto = productService.save(productDto);
 
-    Product result = productService.save(product);
+    assertEquals("Product 1", savedProductDto.getName());
 
-    assertAll(
-            () -> assertThat(result.getId()).isNotNull(),
-            () -> assertThat(result.getName()).isEqualTo(product.getName()),
-            () -> assertThat(result.getPrice()).isEqualTo(product.getPrice()),
-            () -> assertThat(result.getImageUrl()).isEqualTo(product.getImageUrl())
-    );
+    verify(productRepository, times(1)).save(any(Product.class));
+  }
 
+  @Test
+  public void testUpdateProduct() {
+    Product product = new Product("Product 1", 1000, "http://example.com/product1.jpg");
+    ProductDto productDto = new ProductDto(1L,"Updated Product", 1500, "http://example.com/updated.jpg");
+
+    when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+    boolean isUpdated = productService.updateProduct(1L, productDto);
+
+    assertTrue(isUpdated);
+    assertEquals("Updated Product", product.getName());
+
+    verify(productRepository, times(1)).findById(1L);
     verify(productRepository, times(1)).save(product);
+  }
+
+  @Test
+  public void testDeleteById() {
+    productService.deleteById(1L);
+
+    verify(productRepository, times(1)).deleteById(1L);
   }
 }
