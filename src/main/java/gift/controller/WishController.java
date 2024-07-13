@@ -4,6 +4,10 @@ import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
 import gift.security.LoginMember;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +25,15 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Wish>> getWishList(@LoginMember Member member) {
-        List<Wish> wishList = wishService.getWishesByMember(member);
-        return ResponseEntity.ok(wishList);
+    public ResponseEntity<Page<Wish>> getWishList(
+            @LoginMember Member member,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(defaultValue = "asc") String direction) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sort));
+        Page<Wish> wishPage = wishService.getWishPage(member, pageable);
+        return ResponseEntity.ok(wishPage);
     }
 
     @PostMapping
@@ -33,8 +43,8 @@ public class WishController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> removeFromWishList(@LoginMember Member member, @RequestParam Wish wish) {
-        wishService.deleteWish(wish);
+    public ResponseEntity<Void> removeFromWishList(@LoginMember Member member, @RequestParam Product product) {
+        wishService.deleteWish(product);
         return ResponseEntity.noContent().build();
     }
 }

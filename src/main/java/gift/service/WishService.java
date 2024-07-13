@@ -4,10 +4,9 @@ import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
 import gift.repository.WishRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class WishService{
@@ -16,10 +15,8 @@ public class WishService{
         this.wishRepository = wishRepository;
     }
 
-    public List<Wish> getWishesByMember(Member member) {
-        return member.getWishes().stream()
-                .filter(w -> !w.isDeleted())
-                .collect(Collectors.toList());
+    public Page<Wish> getWishPage(Member member, Pageable pageable) {
+        return wishRepository.findByMember(member, pageable);
     }
 
     public void addWish(Member member, Product product) {
@@ -29,8 +26,8 @@ public class WishService{
         wishRepository.save(wish);
     }
 
-    public void deleteWish(Wish wish) {
+    public void deleteWish(Product product) {
+        Wish wish = wishRepository.findByProduct(product);
         wish.setDeleted(true);
     }
-
 }
