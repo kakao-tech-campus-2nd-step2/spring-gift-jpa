@@ -3,9 +3,9 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import gift.member.dto.MemberRequest;
-import gift.member.entity.MemberEntity;
-import gift.member.repository.MemberRepository;
+import gift.domain.member.dto.MemberRequest;
+import gift.domain.member.entity.Member;
+import gift.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +21,10 @@ class MemberRepositoryTest {
     void findByEmail() {
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        MemberEntity expected = memberRepository.save(new MemberEntity(request.getEmail(), request.getPassword()));
+        Member expected = memberRepository.save(new Member(request.getEmail(), request.getPassword()));
 
         // when
-        MemberEntity actual = memberRepository.findByEmail(request.getEmail()).orElseThrow();
+        Member actual = memberRepository.findByEmail(request.getEmail()).orElseThrow();
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -35,10 +35,10 @@ class MemberRepositoryTest {
     void findById(){
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        MemberEntity expected = memberRepository.save(new MemberEntity(request.getEmail(), request.getPassword()));
+        Member expected = memberRepository.save(new Member(request.getEmail(), request.getPassword()));
 
         // when
-        MemberEntity actual = memberRepository.findById(expected.getId()).orElseThrow();
+        Member actual = memberRepository.findById(expected.getId()).orElseThrow();
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -49,10 +49,10 @@ class MemberRepositoryTest {
     void save(){
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        MemberEntity expected = new MemberEntity(request.getEmail(), request.getPassword());
+        Member expected = new Member(request.getEmail(), request.getPassword());
 
         // when
-        MemberEntity actual = memberRepository.save(expected);
+        Member actual = memberRepository.save(expected);
 
         // then
         assertAll(
@@ -67,7 +67,7 @@ class MemberRepositoryTest {
     void delete(){
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        MemberEntity savedMember = memberRepository.save(new MemberEntity(request.getEmail(), request.getPassword()));
+        Member savedMember = memberRepository.save(new Member(request.getEmail(), request.getPassword()));
 
         // when
         memberRepository.delete(savedMember);
