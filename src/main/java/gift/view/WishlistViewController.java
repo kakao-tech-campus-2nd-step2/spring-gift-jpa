@@ -57,11 +57,10 @@ public class WishlistViewController {
         return "add_wishlist";
     }
     @PostMapping("{id}/save")
-    public String saveWishlist(@PathVariable Long id, @RequestBody List<WishlistDTO> wishlistDTOList) {
+    public String saveWishlist(@PathVariable("id") Long userId, @RequestBody List<WishlistDTO> wishlistDTOList) {
         List<WishlistItem> wishlistItemList = new ArrayList<>();
         for(WishlistDTO wishlistDTO : wishlistDTOList){
             WishlistItem wishlistItem = new WishlistItem();
-            Long userId = wishlistDTO.getUserId();
             wishlistItem.setUser(userService.findById(userId).get());
 
             Long productId = wishlistDTO.getProductId();
@@ -70,7 +69,7 @@ public class WishlistViewController {
             wishlistItem.setAmount(wishlistDTO.getAmount());
             wishlistItemList.add(wishlistItem);
         }
-        wishlistService.saveWishlistItems(wishlistItemList);
-        return "redirect:/wishlist/" + id;
+        wishlistService.saveWishlistItemsWithUserId(userId, wishlistItemList);
+        return "redirect:/wishlist/" + userId;
     }
 }
