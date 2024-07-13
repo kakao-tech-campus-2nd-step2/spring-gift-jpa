@@ -2,7 +2,7 @@ package gift.wishlist.service;
 
 import gift.product.model.dto.Product;
 import gift.product.service.ProductService;
-import gift.user.model.dto.User;
+import gift.user.model.dto.AppUser;
 import gift.user.service.UserService;
 import gift.wishlist.model.WishListRepository;
 import gift.wishlist.model.dto.AddWishRequest;
@@ -46,9 +46,9 @@ public class WishListService {
 
     @Transactional
     public void addWish(Long userId, AddWishRequest addWishRequest) {
-        User user = userService.findUser(userId);
+        AppUser appUser = userService.findUser(userId);
         Product product = productService.findProduct(addWishRequest.productId());
-        Wish wish = new Wish(user, product, addWishRequest.quantity());
+        Wish wish = new Wish(appUser, product, addWishRequest.quantity());
         wishListRepository.save(wish);
     }
 

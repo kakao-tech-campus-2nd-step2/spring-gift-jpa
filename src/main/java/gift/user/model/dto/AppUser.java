@@ -2,14 +2,17 @@ package gift.user.model.dto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import security.SHA256Util;
 
 @Entity
-@Table(name = "AppUser")
-public class User {
+@Table(name = "app_user")
+public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,16 +26,17 @@ public class User {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private String role = "USER";
+    private Role role = Role.USER;
 
     @Column(length = 255)
     private String salt;
 
-    public User() {
+    public AppUser() {
     }
 
-    public User(String email, String password, String role, String salt) {
+    public AppUser(String email, String password, Role role, String salt) {
         this.email = email;
         this.password = password;
         this.role = role;
@@ -71,11 +75,11 @@ public class User {
         this.isActive = isActive;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -85,5 +89,10 @@ public class User {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public boolean isPasswordCorrect(String inputPassword) {
+        String hashedInputPassword = SHA256Util.encodePassword(inputPassword, this.salt);
+        return this.password.equals(hashedInputPassword);
     }
 }

@@ -1,7 +1,7 @@
 package gift.wishlist.model.dto;
 
 import gift.product.model.dto.Product;
-import gift.user.model.dto.User;
+import gift.user.model.dto.AppUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,7 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Wish")
+@Table(name = "wish")
 public class Wish {
 
     @Id
@@ -22,7 +22,7 @@ public class Wish {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private AppUser appUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
@@ -37,8 +37,8 @@ public class Wish {
     public Wish() {
     }
 
-    public Wish(User user, Product product, int quantity) {
-        this.user = user;
+    public Wish(AppUser appUser, Product product, int quantity) {
+        this.appUser = appUser;
         this.product = product;
         this.quantity = quantity;
     }
@@ -51,12 +51,12 @@ public class Wish {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getUser() {
+        return appUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     public Product getProduct() {

@@ -15,9 +15,9 @@ public class SignUpRequest {
     private String password;
 
     @Nullable
-    private String role;
+    private Role role;
 
-    public SignUpRequest(String email, String password, String role) {
+    public SignUpRequest(String email, String password, Role role) {
         this.email = email;
         this.password = password;
         this.role = role;
@@ -39,11 +39,11 @@ public class SignUpRequest {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

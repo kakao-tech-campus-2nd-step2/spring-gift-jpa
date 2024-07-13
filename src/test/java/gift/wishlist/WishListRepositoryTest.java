@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import gift.product.model.ProductRepository;
 import gift.product.model.dto.Product;
 import gift.user.model.UserRepository;
-import gift.user.model.dto.User;
+import gift.user.model.dto.AppUser;
+import gift.user.model.dto.Role;
 import gift.wishlist.model.WishListRepository;
 import gift.wishlist.model.dto.Wish;
-import gift.wishlist.model.dto.WishListResponse;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,29 +29,28 @@ public class WishListRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    private User user;
+    private AppUser appUser;
     private Product product;
 
     @BeforeEach
     public void setUp() {
-        user = new User("aabb@kakao.com", "1234", "USER", "aaaa");
-        product = new Product("Test", 1000, "url");
+        appUser = new AppUser("aabb@kakao.com", "1234", Role.USER, "aaaa");
+        product = new Product("Test", 1000, "url", appUser);
 
-        user = userRepository.save(user);
+        appUser = userRepository.save(appUser);
         product = productRepository.save(product);
 
-        Wish wish = new Wish(user, product, 1);
+        Wish wish = new Wish(appUser, product, 1);
         wishListRepository.save(wish);
     }
 
     @Test
     public void testFindWishesByUserId() {
-        System.out.println("user = " + user.getId());
+        System.out.println("appUser = " + appUser.getId());
         // 테스트 시작
-        List<WishListResponse> results = wishListRepository.findWishesByUserId(user.getId());
+        List<Wish> results = wishListRepository.findWishesByUserIdAndIsActiveTrue(appUser.getId());
 
         assertThat(results).isNotEmpty();
-        assertThat(results.get(0).getProductName()).isEqualTo(product.getName());
-        assertThat(results.get(0).getProductId()).isEqualTo(product.getId());
+        assertThat(results.get(0).getProduct().getId()).isEqualTo(product.getId());
     }
 }

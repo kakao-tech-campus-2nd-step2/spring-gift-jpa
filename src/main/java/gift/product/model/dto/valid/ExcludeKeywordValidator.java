@@ -15,7 +15,8 @@ public class ExcludeKeywordValidator implements ConstraintValidator<ExcludeKeywo
     public boolean isValid(String name, ConstraintValidatorContext context) {
         if (!excludeKeyword.isEmpty() && name.contains(excludeKeyword)) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("상품 이름에 '카카오'를 포함할 수 없습니다. 담당 MD와 협의 후 사용해주세요.")
+            context.buildConstraintViolationWithTemplate(
+                            String.format("상품 이름에 '%s'를 포함할 수 없습니다. 담당 MD와 협의 후 사용해주세요.", excludeKeyword))
                     .addConstraintViolation();
             return false;
         }

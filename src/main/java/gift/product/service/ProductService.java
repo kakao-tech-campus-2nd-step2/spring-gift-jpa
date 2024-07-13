@@ -5,6 +5,9 @@ import gift.product.model.dto.CreateProductRequest;
 import gift.product.model.dto.Product;
 import gift.product.model.dto.ProductResponse;
 import gift.product.model.dto.UpdateProductRequest;
+import gift.user.exception.ForbiddenException;
+import gift.user.model.dto.AppUser;
+import gift.user.model.dto.Role;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,16 +37,18 @@ public class ProductService {
     }
 
     @Transactional
-    public void addProduct(CreateProductRequest createProductRequest) {
+    public void addProduct(AppUser appUser, CreateProductRequest createProductRequest) {
         Product product = new Product(createProductRequest.name(), createProductRequest.price(),
-                createProductRequest.imageUrl());
+                createProductRequest.imageUrl(), appUser);
         productRepository.save(product);
     }
 
     @Transactional
-    public void updateProduct(Long id, UpdateProductRequest updateProductRequest) {
+    public void updateProduct(AppUser appUser, Long id, UpdateProductRequest updateProductRequest) {
         Product product = productRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
+        checkProductOwner(appUser, product);
+
         product.setName(updateProductRequest.name());
         product.setPrice(updateProductRequest.price());
         product.setImageUrl(updateProductRequest.imageUrl());
@@ -51,10 +56,19 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteProduct(Long id) {
+    public void deleteProduct(AppUser appUser, Long id) {
         Product product = productRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product"));
+        checkProductOwner(appUser, product);
+
         product.setActive(false);
         productRepository.save(product);
+    }
+
+    private void checkProductOwner(AppUser appUser, Product product) {
+        if (product.getSeller().equals(appUser) || appUser.getRole() == Role.ADMIN) {
+            return;
+        }
+        throw new ForbiddenException("해당 상품에 대한 권한이 없습니다.");
     }
 }
