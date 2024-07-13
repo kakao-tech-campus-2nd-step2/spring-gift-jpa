@@ -3,7 +3,7 @@ package gift.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -26,7 +26,7 @@ public class Product {
     @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL,
             mappedBy = "product", orphanRemoval = true)
-    private Set<Wish> wishes;
+    private List<Wish> wishes;
 
     public Product() {}
 
@@ -69,11 +69,11 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Set<Wish> getWishes() {
+    public List<Wish> getWishes() {
         return wishes;
     }
 
-    public void setWishes(Set<Wish> wishes) {
+    public void setWishes(List<Wish> wishes) {
         this.wishes = wishes;
     }
 }
