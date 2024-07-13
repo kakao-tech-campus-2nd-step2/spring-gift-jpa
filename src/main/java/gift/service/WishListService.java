@@ -11,6 +11,9 @@ import gift.exception.BadRequestExceptions.NoSuchProductIdException;
 import gift.exception.BadRequestExceptions.UserNotFoundException;
 import gift.repository.MemberRepository;
 import gift.repository.WishRepository;
+import gift.util.converter.MemberConverter;
+import gift.util.converter.WishListConverter;
+import gift.util.validator.ParameterValidator;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +39,14 @@ public class WishListService {
     public WishListDTO getWishList(MemberDTO memberDTO)
             throws RuntimeException {
 
-        Optional<Member> optionalMember = memberRepository.findByEmail(
-                new Member(memberDTO).getEmail());
+        Optional<Member> optionalMember =
+                memberRepository.findByEmail(MemberConverter.convertToMember(memberDTO).getEmail());
+
         if (optionalMember.isEmpty()) {
             throw new UserNotFoundException(memberDTO.getEmail() + "을(를) 가지는 유저를 찾을 수 없습니다.");
         }
-
-        return optionalMember.get().convertToWishListDTO();
+        Member member = optionalMember.get();
+        return WishListConverter.convertToWishListDTO(member.getWishList());
     }
 
     @Transactional
@@ -54,12 +58,12 @@ public class WishListService {
 
         Optional<Wish> optionalWish = wishRepository.findByMemberAndProduct(member, product);
         if (optionalWish.isEmpty()) {
-            Wish wish = member.addWish(product);
+            Wish wish = new Wish(member, product, 1);
             wishRepository.save(wish);
             return;
         }
-        Wish wish = optionalWish.get().getMember().addWish(product);
-        wishRepository.save(wish);
+        Wish existingWish = optionalWish.get();
+        existingWish.incrementQuantity();
     }
 
     @Transactional
@@ -70,11 +74,9 @@ public class WishListService {
                     memberDTO, id);
             Member member = (Member) validatedParameterMap.get("member");
             Product product = (Product) validatedParameterMap.get("product");
-
-            member.removeWish(product);
-            wishRepository.deleteByMemberAndProduct_Id(member, id);
+            wishRepository.deleteByMemberAndProduct_Id(member, product.getId());
         } catch (NoSuchProductIdException e) { //제품 목록에는 없는데 유저는 존재하는 경우
-            wishRepository.deleteByMemberAndProduct_Id(new Member(memberDTO), id);
+            wishRepository.deleteByMemberAndProduct_Id(parameterValidator.validateMember(memberDTO), id);
         }
     }
 
@@ -85,16 +87,13 @@ public class WishListService {
                 productDTO);
         Member member = (Member) validatedParameterMap.get("member");
         Product product = (Product) validatedParameterMap.get("product");
-
         Optional<Wish> optionalWish = wishRepository.findByMemberAndProduct(member, product);
 
         if (optionalWish.isEmpty()) {
             throw new BadRequestException("위시리스트에 그러한 품목을 찾을 수 없습니다.");
         }
-
         Wish wish = optionalWish.get();
-        wish.setQuantity(quantity);
-        wishRepository.save(wish);
+        wish.changeQuantity(quantity);
     }
 
 }
