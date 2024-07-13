@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -123,5 +126,14 @@ public class ProductService {
         product.setPrice(updatedProduct.getPrice());
         product.setImageUrl(updatedProduct.getImageUrl());
         return productRepository.save(product);
+    }
+
+    public Page<Product> getProductPages(int pageNumber) {
+        var pageable = PageRequest.of(pageNumber, 5, Sort.by("id"));
+        return productRepository.findAll(pageable);
+    }
+    public Page<Product> getProductList(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        return productRepository.findAll(pageable);
     }
 }
