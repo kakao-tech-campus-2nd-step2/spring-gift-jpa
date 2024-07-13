@@ -50,4 +50,8 @@ public class Member {
     public boolean isPasswordMatching(String password) {
         return this.password.equals(password);
     }
+
+    public boolean isIdMatching(Long id) {
+        return this.id.equals(id);
+    }
 }

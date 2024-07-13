@@ -1,5 +1,6 @@
 package gift.service;
 
+import static gift.util.Constants.PERMISSION_DENIED;
 import static gift.util.Constants.WISH_ALREADY_EXISTS;
 import static gift.util.Constants.WISH_NOT_FOUND;
 
@@ -8,6 +9,7 @@ import gift.dto.product.ProductResponse;
 import gift.dto.wish.WishCreateRequest;
 import gift.dto.wish.WishResponse;
 import gift.exception.wish.DuplicateWishException;
+import gift.exception.wish.PermissionDeniedException;
 import gift.exception.wish.WishNotFoundException;
 import gift.model.Member;
 import gift.model.Product;
@@ -53,11 +55,15 @@ public class WishService {
         return convertToDTO(savedWish);
     }
 
-    public void deleteWish(Long id) {
-        if (wishRepository.findById(id).isEmpty()) {
-            throw new WishNotFoundException(WISH_NOT_FOUND + id);
+    public void deleteWish(Long wishId, Long memberId) {
+        Wish wish = wishRepository.findById(wishId)
+            .orElseThrow(() -> new WishNotFoundException(WISH_NOT_FOUND + wishId));
+
+        if (!wish.isOwnedBy(memberId)) {
+            throw new PermissionDeniedException(PERMISSION_DENIED);
         }
-        wishRepository.deleteById(id);
+
+        wishRepository.delete(wish);
     }
 
     // Mapper methods
