@@ -2,8 +2,8 @@ package gift.entity;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "wishlist")
@@ -13,18 +13,8 @@ public class Wishlist {
     private Long id;
     private String email;
 
-    @OneToMany(mappedBy = "wishlist", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
-    private Set<Product> products = new HashSet<>();
-
-    public void addProduct(Product product) {
-        this.products.add(product);
-        product.setWishlist(this);
-    }
-
-    public void removeProduct(Product product) {
-        products.remove(product);
-        product.setWishlist(null);
-    }
+    @OneToMany(mappedBy = "wishlist", cascade = CascadeType.ALL)
+    private List<ProductWishlist> productWishlist = new ArrayList<>();
 
     public Wishlist() {
     }
@@ -47,13 +37,5 @@ public class Wishlist {
 
     public Long getId() {
         return id;
-    }
-
-    public Set<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(Set<Product> products) {
-        this.products = products;
     }
 }

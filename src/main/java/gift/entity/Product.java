@@ -1,7 +1,9 @@
 package gift.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -14,18 +16,8 @@ public class Product {
     private int price;
     private String imageurl;
 
-    @ManyToOne
-    @JoinColumn(name = "wishlist_id")
-    @JsonIgnore
-    private Wishlist wishlist;
-
-    public Wishlist getWishlist() {
-        return wishlist;
-    }
-
-    public void setWishlist(Wishlist wishlist) {
-        this.wishlist = wishlist;
-    }
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductWishlist> productWishlist = new ArrayList<>();
 
     public Product() {
     }
