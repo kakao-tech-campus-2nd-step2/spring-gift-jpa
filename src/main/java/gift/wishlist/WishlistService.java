@@ -5,11 +5,14 @@ import gift.member.Member;
 import gift.member.MemberRepository;
 import gift.product.Product;
 import gift.product.ProductRepository;
+import gift.product.ProductResponseDto;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -39,6 +42,11 @@ public class WishlistService {
         }
 
         return products;
+    }
+
+    public Page<Product> checkWishlist(Pageable pageable) {
+        Page<Wishlist> wishlistPage = wishlistRepository.findAll(pageable);
+        return wishlistPage.map(Wishlist::getProduct);
     }
 
     @Transactional
