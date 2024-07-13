@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -51,18 +52,18 @@ public class WishController {
     }
 
     @PatchMapping
-    public ResponseEntity updateWishes(
+    public ResponseEntity<?> updateWishes(
         @LoginUserId Long userId, @RequestBody List<UpdateWishRequest> requests
     ) {
         wishService.updateWishes(requests);
         return ResponseEntity.ok(null);
     }
 
-    @DeleteMapping
-    public ResponseEntity deleteWishes(
-        @LoginUserId Long userId, @RequestBody List<UpdateWishRequest> requests
+    @DeleteMapping({"id"})
+    public ResponseEntity<?> deleteWishes(
+        @LoginUserId Long userId, @RequestParam Long id
     ) {
-        wishService.deleteWishes(requests);
+        wishService.deleteWish(id);
         return ResponseEntity.ok(null);
     }
 }
