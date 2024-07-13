@@ -31,12 +31,15 @@ public class GlobalMapper {
     }
 
     public static ProductResponse toProductResponse(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
-            product.getImageUrl());
+        return new ProductResponse(product.getId(),product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public static LoginResponse toLoginResponse(Member member) {
         return new LoginResponse(member.getId(), member.getEmail(), member.getGrade());
+    }
+
+    public static LoginResponse toLoginResponse(MemberResponse member) {
+        return new LoginResponse(member.id(), member.email(), member.grade());
     }
 
     public static WishResponse toWishResponse(Wish wish) {
