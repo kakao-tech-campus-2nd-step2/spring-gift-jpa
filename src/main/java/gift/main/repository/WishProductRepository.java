@@ -11,5 +11,7 @@ import java.util.Optional;
 public interface WishProductRepository extends JpaRepository<WishProduct, Long> {
     void deleteByProductIdAndUserId(Long productId, Long userId);
 
+    boolean existsByProductIdAndUserId(Long productId, Long userId);
+
     Optional<List<WishProduct>> findAllByUserId(Long userId);
 }
