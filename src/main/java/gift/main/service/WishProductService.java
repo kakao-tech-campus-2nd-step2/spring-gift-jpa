@@ -31,7 +31,7 @@ public class WishProductService {
         this.userRepository = userRepository;
     }
 
-    public List<WishProductResponce>  getWishProducts(Long userId) {
+    public List<WishProductResponce> getWishProducts(Long userId) {
         List<WishProductResponce> wishProducts = wishProductRepository.findAllByUserId(userId)
                 .orElseGet(() -> List.of())
                 .stream()
@@ -41,9 +41,10 @@ public class WishProductService {
         return wishProducts;
 
     }
+
     public Page<WishProductResponce> getWishProductPage(Long userId, int pageNum) {
         Pageable pageable = PageRequest.of(pageNum, 10);
-        Page<WishProductResponce> wishProductResponcePage = wishProductRepository.findAllByUserId(userId,pageable)
+        Page<WishProductResponce> wishProductResponcePage = wishProductRepository.findAllByUserId(userId, pageable)
                 .map(wishProduct -> new WishProductResponce(wishProduct));
 
         return wishProductResponcePage;
@@ -57,7 +58,7 @@ public class WishProductService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         if (wishProductRepository.existsByProductIdAndUserId(productId, user.getId())) {
             throw new CustomException(ErrorCode.ALREADY_EXISTING_WISH_LIST)
-            ;
+                    ;
         }
         wishProductRepository.save(new WishProduct(product, user));
     }

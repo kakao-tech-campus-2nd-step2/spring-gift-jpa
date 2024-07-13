@@ -1,6 +1,5 @@
 package gift.main.dto;
 
-import gift.main.entity.Product;
 import gift.main.entity.WishProduct;
 
 public record WishProductResponce(Long id, String name, int price, String imageUrl, String seller) {

@@ -6,7 +6,6 @@ import gift.main.annotation.SessionUser;
 import gift.main.dto.UserVo;
 import gift.main.entity.Role;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
 /*

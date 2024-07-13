@@ -3,7 +3,6 @@ package gift.main.controller;
 import gift.main.annotation.SessionUser;
 import gift.main.dto.UserVo;
 import gift.main.dto.WishProductResponce;
-import gift.main.entity.WishProduct;
 import gift.main.service.ProductService;
 import gift.main.service.WishProductService;
 import org.springframework.data.domain.Page;
@@ -39,7 +38,7 @@ public class WishlistController {
     }
 
     @GetMapping("/wishlistpage/{pageNum}")
-    public ResponseEntity<?> getWishProductPage(@SessionUser UserVo sessionUser,@PathVariable(name = "pageNum") Optional<Integer> pageNum) {
+    public ResponseEntity<?> getWishProductPage(@SessionUser UserVo sessionUser, @PathVariable(name = "pageNum") Optional<Integer> pageNum) {
         Page<WishProductResponce> wishProductPage = wishProductService.getWishProductPage(sessionUser.getId(), pageNum.orElse(0));
         return ResponseEntity.ok(wishProductPage);
     }
