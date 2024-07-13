@@ -1,5 +1,6 @@
 package gift.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
@@ -26,6 +27,7 @@ public class Product {
     @Column
     private String description;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes;
 
