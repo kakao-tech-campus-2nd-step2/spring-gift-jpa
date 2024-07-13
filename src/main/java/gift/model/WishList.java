@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,9 +18,10 @@ public class WishList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
     @JsonProperty("member_id")
-    private Long memberId;
+    private Member member;
 
     @Column(name = "product_id", nullable = false)
     @JsonProperty("product_id")
@@ -27,9 +30,9 @@ public class WishList {
 
     public WishList() {}
 
-    public WishList(Long memberId, Long productId) {
+    public WishList(Member member, Long productId) {
 
-        this.memberId = memberId;
+        this.member = member;
         this.productId = productId;
     }
 
@@ -41,12 +44,12 @@ public class WishList {
         this.id = id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
     public Long getProductId() {
