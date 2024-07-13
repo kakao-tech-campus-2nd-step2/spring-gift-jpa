@@ -11,7 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
-@Sql(scripts = "/sql/insert_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/sql/insert_three_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class UserRepositoryTest {
 
     @Autowired

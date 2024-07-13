@@ -14,7 +14,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 @DataJpaTest
-@Sql(scripts = {"/sql/insert_products.sql", "/sql/insert_users.sql", "/sql/insert_wishes.sql"},
+@Sql(scripts = {"/sql/insert_five_products.sql", "/sql/insert_three_users.sql",
+    "/sql/insert_four_wishes.sql"},
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 class WishRepositoryTest {
 
