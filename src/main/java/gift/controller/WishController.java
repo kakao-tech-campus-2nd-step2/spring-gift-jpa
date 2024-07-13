@@ -1,12 +1,17 @@
 package gift.controller;
 
 import gift.annotation.LoginUserId;
+import gift.config.PageConfig;
 import gift.dto.wish.AddWishRequest;
 import gift.dto.wish.UpdateWishRequest;
 import gift.dto.wish.WishResponse;
 import gift.service.WishService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +32,15 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishResponse>> getWishes(@LoginUserId Long userId) {
-        return ResponseEntity.ok(wishService.getWishes(userId));
+    public ResponseEntity<Page<WishResponse>> getWishes(
+        @LoginUserId Long userId,
+        @PageableDefault(
+            size = PageConfig.PAGE_PER_COUNT,
+            sort = PageConfig.SORT_STANDARD,
+            direction = Direction.DESC
+        ) Pageable pageable
+    ) {
+        return ResponseEntity.ok(wishService.getWishes(userId, pageable));
     }
 
     @PostMapping
