@@ -1,8 +1,11 @@
 package gift.Controller;
 
+import gift.DTO.ProductDTO;
 import gift.Entity.ProductEntity;
 import gift.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +19,8 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public List<ProductEntity> getAllProducts() {
-        return productService.findAllProducts();
+    public Page<ProductDTO> getAllProducts(Pageable pageable) {
+        return productService.getProducts(pageable);
     }
 
     @GetMapping("/{id}")
