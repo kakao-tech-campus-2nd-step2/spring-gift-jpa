@@ -23,6 +23,7 @@ public class ProductController {
         this.productService = productService;
     }
 
+    // 차후에 삭제 예정
     @GetMapping("/all")
     public ResponseEntity<ResultResponseDto<List<Product>>> getAllProducts() {
         List<Product> products = productService.getAllProducts();

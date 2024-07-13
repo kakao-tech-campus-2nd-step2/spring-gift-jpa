@@ -27,9 +27,16 @@ public class WishController {
         this.authService = authService;
     }
 
-    @GetMapping("")
+    // 차후에 삭제 예정
+    @GetMapping("/all")
     public ResponseEntity<ResultResponseDto<List<WishResponseDto>>> getAllWishes(@Login AuthInfo authInfo) {
         List<WishResponseDto> wishResponseDtos = wishService.getAllWishesByMember(authService.getMemberById(authInfo.memberId()));
+        return ResponseHelper.createResponse(ResultCode.GET_ALL_WISHES_SUCCESS, wishResponseDtos);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<ResultResponseDto<List<WishResponseDto>>> getWishesByPage(@RequestParam(name = "page") int page, @Login AuthInfo authInfo) {
+        List<WishResponseDto> wishResponseDtos = wishService.getWishesByMemberAndPage(authService.getMemberById(authInfo.memberId()), page);
         return ResponseHelper.createResponse(ResultCode.GET_ALL_WISHES_SUCCESS, wishResponseDtos);
     }
 
