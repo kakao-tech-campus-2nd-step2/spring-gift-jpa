@@ -14,7 +14,12 @@
 ## 2단계
 ### 기능 요구 사항
 객체의 참조와 테이블의 외래 키를 매핑해서 객체에서는 참조를 사용하고 테이블에서는 외래 키를 사용할 수 있도록 한다.
-
 ### 구현할 기능 목록
 - [x] Product 도메인 객체와 WishList 도메인 객체 간의 연관관계 매핑 
 - [x] Member 도메인 객체와 WishList 도메인 객체 간의 연관관계 매핑
+## 3단계
+### 기능 요구 사항
+상품과 위시 리스트 보기에 페이지네이션을 구현한다.
+### 구현할 기능 목록
+- [ ] WishListService 와 WishListController 에서 페이지네이션 구현
+- [ ] ProductService 와 ProductController 에서 페이지네이션 구현
