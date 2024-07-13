@@ -1,9 +1,30 @@
 package gift.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "product")
 public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+
+    @Column(nullable = false)
+    @JsonProperty("price")
     private int price;
+
+    @Column(nullable = false, length = 15)
+    @JsonProperty("name")
+    private String name;
+
+    @Column(name = "image_url", nullable = false)
+    @JsonProperty("image_url")
     private String imageUrl;
 
     // 기본 생성자
@@ -11,8 +32,7 @@ public class Product {
     }
 
     // 매개변수가 있는 생성자
-    public Product(Long id, String name, int price, String imageUrl) {
-        this.id = id;
+    public Product(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

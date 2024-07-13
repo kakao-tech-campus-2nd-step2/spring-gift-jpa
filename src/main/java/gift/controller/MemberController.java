@@ -5,6 +5,7 @@ import gift.model.Member;
 import gift.service.MemberService;
 import gift.util.JwtUtil;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,19 +30,17 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
         }
         Member registeredMember = memberService.registerMember(member);
-        String token = jwtUtil.generateToken(registeredMember.getId(), registeredMember.getName(),
-            registeredMember.getRole());
+        String token = jwtUtil.generateToken(registeredMember.getId(), registeredMember.getEmail());
         return ResponseEntity.ok(Map.of("token", token));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Member member) {
-        Member authenticatedMember = memberService.authenticate(member.getEmail(), member.getPassword());
-        if (authenticatedMember == null) {
+        Optional<Member> authenticatedMember = memberService.authenticate(member.getEmail(), member.getPassword());
+        if (authenticatedMember.isEmpty()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid email or password");
         }
-        String token = jwtUtil.generateToken(authenticatedMember.getId(),
-            authenticatedMember.getName(), authenticatedMember.getRole());
+        String token = jwtUtil.generateToken(authenticatedMember.get().getId(), authenticatedMember.get().getEmail());
         return ResponseEntity.ok(Map.of("token", token));
     }
 }
