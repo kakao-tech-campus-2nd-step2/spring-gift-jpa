@@ -37,8 +37,8 @@ public class ProductService {
         return productResponces;
     }
 
-    public Page<ProductResponce> getProductPage(int pageNum) {
-        Pageable pageable = PageRequest.of(pageNum, 10);
+    public Page<ProductResponce> getProductPage(int pageNum,int productNum) {
+        Pageable pageable = PageRequest.of(pageNum, productNum);
         Page<ProductResponce> productPage = productRepository.findAll(pageable)
                 .map(product -> new ProductResponce(product));
         return productPage;

@@ -37,9 +37,15 @@ public class WishlistController {
         return ResponseEntity.ok(wishProducts);
     }
 
-    @GetMapping("/wishlistpage/{pageNum}")
-    public ResponseEntity<?> getWishProductPage(@SessionUser UserVo sessionUser, @PathVariable(name = "pageNum") Optional<Integer> pageNum) {
-        Page<WishProductResponce> wishProductPage = wishProductService.getWishProductPage(sessionUser.getId(), pageNum.orElse(0));
+    @GetMapping("/wishlistpage/{pageNum}/{productNum}")
+    public ResponseEntity<?> getWishProductPage(
+            @SessionUser UserVo sessionUser,
+            @PathVariable(name = "pageNum") Optional<Integer> pageNum,
+            @PathVariable(name = "productNum") Optional<Integer> productNum) {
+        Page<WishProductResponce> wishProductPage = wishProductService.getWishProductPage(
+                sessionUser.getId(),
+                pageNum.orElse(0),
+                productNum.orElse(10));
         return ResponseEntity.ok(wishProductPage);
     }
 

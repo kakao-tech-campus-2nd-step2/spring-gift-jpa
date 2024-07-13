@@ -42,8 +42,8 @@ public class WishProductService {
 
     }
 
-    public Page<WishProductResponce> getWishProductPage(Long userId, int pageNum) {
-        Pageable pageable = PageRequest.of(pageNum, 10);
+    public Page<WishProductResponce> getWishProductPage(Long userId, int pageNum,int productNum) {
+        Pageable pageable = PageRequest.of(pageNum, productNum);
         Page<WishProductResponce> wishProductResponcePage = wishProductRepository.findAllByUserId(userId, pageable)
                 .map(wishProduct -> new WishProductResponce(wishProduct));
 
