@@ -24,8 +24,8 @@ public class WishlistController {
     }
 
     @GetMapping()
-    public List<Product> getWishlists(HttpServletRequest request,
-                                      Pageable pageable) {
+    public List<Product> getWishlist(HttpServletRequest request,
+                                     Pageable pageable) {
         String email = (String) request.getAttribute("email");
         return wishlistService.getWishlistProducts(email, pageable).getContent();
     }
@@ -37,10 +37,10 @@ public class WishlistController {
         return ResponseEntity.status(HttpStatus.OK).body("Wishlist created");
     }
 
-    @DeleteMapping()
-    public ResponseEntity<String> deleteWishlist(HttpServletRequest request) {
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<String> deleteWishlist(@PathVariable("id") Long id, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
-        wishlistService.deleteWishlist(email);
+        wishlistService.deleteWishlist(email, id);
         return ResponseEntity.status(HttpStatus.OK).body("Wishlist deleted");
     }
 }
