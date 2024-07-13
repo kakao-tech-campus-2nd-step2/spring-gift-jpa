@@ -22,7 +22,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id")
+    @Column(name = "product_id")
     private Long id;
 
     @NotBlank(message = "상품 이름을 입력해주세요.")
