@@ -91,7 +91,6 @@ public class ProductRepositoryTest {
 
         // when
         productRepository.delete(saved);
-
         Optional<Product> expect = productRepository.findById(id);
 
         // then
