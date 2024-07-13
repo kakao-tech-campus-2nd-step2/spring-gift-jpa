@@ -57,4 +57,10 @@ public class GlobalExceptionHandler {
     public BadResponse handleBadRequestException(UserException.BadRequest e){
         return new BadResponse(e.getDetailMessage());
     }
+    @ExceptionHandler(WishException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public BadResponse handleBadWishRequestException(WishException e){
+        return new BadResponse(e.getDetailMessage());
+    }
 }

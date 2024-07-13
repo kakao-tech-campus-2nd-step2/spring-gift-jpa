@@ -6,6 +6,8 @@ import gift.dto.ProductUpdateRequestDTO;
 import gift.exception.ProductErrorCode;
 import gift.exception.ProductException;
 import gift.repository.ProductJdbcRepository;
+import gift.repository.ProductJpaRepository;
+import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +27,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class ProductController {
 
-    private final ProductJdbcRepository productjdbcRepository;
-
+    private final ProductService productService;
     @Autowired
-    public ProductController(ProductJdbcRepository productRepository) {
-        this.productjdbcRepository = productRepository;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
-
 
     // 상품 모두 조회
     @GetMapping("/api/products")
     public String responseAllProducts(Model model){
-        List<Product> productsList = productjdbcRepository.findAll();
+
+        List<Product> productsList = productService.findAll();
         model.addAttribute("products", productsList);
         return "index";
     }
@@ -60,15 +61,14 @@ public class ProductController {
             model.addAttribute("org.springframework.validation.BindingResult.productRequestDTO", bindingResult);
             return "new-product-form";
         }
-        productjdbcRepository.save(Product.fromEntity(requestDTO));
+        productService.save(Product.fromEntity(requestDTO));
         return "redirect:/api/products";
     }
 
     // 상품 수정 폼
     @GetMapping("/api/products/edit/{id}")
     public String editProductForm(@PathVariable("id") long id, Model model) {
-        Product product = productjdbcRepository.findById(id)
-            .orElseThrow(() -> new ProductException(ProductErrorCode.ID_NOT_EXISTS));
+        Product product = productService.findById(id);
 
         if (product != null) {
             model.addAttribute("product", product);
@@ -85,29 +85,24 @@ public class ProductController {
             model.addAttribute("org.springframework.validation.BindingResult.product", bindingResult);
             return "modify-product-form";
         }
-        productjdbcRepository.update(requestDTO);
+        productService.updateProduct(requestDTO);
         return "redirect:/api/products";
     }
 
     // 상품 삭제
     @DeleteMapping("/api/products/{id}")
     public String deleteOneProduct(@PathVariable("id") long id) {
-        productjdbcRepository.findById(id)
-                .orElseThrow(() -> new ProductException(ProductErrorCode.ID_NOT_EXISTS));
+        productService.findById(id);
 
-        productjdbcRepository.deleteById(id);
+        productService.deleteById(id);
         return "index";
     }
 
     // 선택된 상품 삭제
     @DeleteMapping("/api/products/delete-selected")
     public ResponseEntity<String> deleteSelectedProducts(@RequestBody List<Long> ids) {
-        for (Long id : ids) {
-            productjdbcRepository.findById(id)
-                .orElseThrow(() -> new ProductException(ProductErrorCode.ID_NOT_EXISTS));
+        productService.deleteSelectedProducts(ids);
 
-            productjdbcRepository.deleteById(id);
-        }
         return new ResponseEntity<>("Selected products deleted successfully.", HttpStatus.OK);
     }
 }

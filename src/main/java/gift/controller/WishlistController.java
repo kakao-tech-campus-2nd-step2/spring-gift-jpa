@@ -33,18 +33,18 @@ public class WishlistController {
     @PostMapping("/api/wishlist")
     @ResponseBody
     public Wishlist.Response addItem(@RequestHeader("Authorization") String accessToken, @RequestBody Wishlist.Request request){
-        long userId = wishlistService.findUserId(accessToken);
+//        long userId = wishlistService.findUserId(accessToken);
 
-        Wishlist.Response item = wishlistService.addItemToWishlist(userId, request);
+        Wishlist.Response item = wishlistService.addItemToWishlist(accessToken, request);
         return item;
     }
     // 장바구니 상품 삭제
     @DeleteMapping("/api/wishlist")
     @ResponseBody
     public Wishlist.Response deleteItem(@RequestHeader("Authorization") String accessToken, @RequestBody Wishlist.Request request){
-        long userId = wishlistService.findUserId(accessToken);
+//        long userId = wishlistService.findUserId(accessToken);
 
-        Wishlist.Response item = wishlistService.deleteItemFromWishlist(userId, request);
+        Wishlist.Response item = wishlistService.deleteItemFromWishlist(accessToken, request);
         return item;
     }
 }

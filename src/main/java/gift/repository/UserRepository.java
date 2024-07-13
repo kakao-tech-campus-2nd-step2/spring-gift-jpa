@@ -49,12 +49,9 @@ public class UserRepository {
         return new RowMapper<User>() {
             @Override
             public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return User.builder()
-                    .id(rs.getLong("id"))
-                    .email(rs.getString("email"))
-                    .password(rs.getString("password"))
-                    .accessToken(rs.getString("accessToken"))
-                    .build();
+                return new User(rs.getLong("id"), rs.getString("email"),
+                    rs.getString("password"), rs.getString("accessToken"));
+
             }
         };
     }
