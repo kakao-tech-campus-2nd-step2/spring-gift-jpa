@@ -28,8 +28,12 @@ class WishRepositoryTest {
 
     @Test
     void testSaveWish() {
-        Member member = memberRepository.save(new Member.MemberBuilder().email("test@example.com").password("password").build());
-        Product product = productRepository.save(new Product.ProductBuilder().name("Product1").price(BigDecimal.valueOf(10.00)).imageUrl("http://example.com/product1.jpg").description("Description for Product1").build());
+        Member member = memberRepository.save(new Member.MemberBuilder()
+            .email("test@example.com").password("password").build());
+        Product product = productRepository.save(new Product.ProductBuilder().name("Product1")
+            .price(BigDecimal.valueOf(10.00))
+            .imageUrl("http://example.com/product1.jpg")
+            .description("Description for Product1").build());
         Wish expected = new Wish.WishBuilder().member(member).product(product).build();
         Wish actual = wishRepository.save(expected);
         assertThat(actual.getId()).isNotNull();
@@ -39,8 +43,14 @@ class WishRepositoryTest {
 
     @Test
     void testFindByMemberId() {
-        Member member = memberRepository.save(new Member.MemberBuilder().email("test@example.com").password("password").build());
-        Product product = productRepository.save(new Product.ProductBuilder().name("Product1").price(BigDecimal.valueOf(10.00)).imageUrl("http://example.com/product1.jpg").description("Description for Product1").build());
+        Member member = memberRepository.save(new Member.MemberBuilder()
+            .email("test@example.com")
+            .password("password")
+            .build());
+        Product product = productRepository.save(new Product.ProductBuilder().name("Product1")
+            .price(BigDecimal.valueOf(10.00))
+            .imageUrl("http://example.com/product1.jpg")
+            .description("Description for Product1").build());
         wishRepository.save(new Wish.WishBuilder().member(member).product(product).build());
 
         List<Wish> wishes = wishRepository.findAllByMemberId(member.getId());
