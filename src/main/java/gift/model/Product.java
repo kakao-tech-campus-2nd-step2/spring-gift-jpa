@@ -14,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 
 @Entity
 @Table(name="products")
-@Validated
 public class Product {
 
     @Id
