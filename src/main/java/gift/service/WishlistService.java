@@ -44,9 +44,8 @@ public class WishlistService {
         Product product = productRepository.findById(wishlist.getProduct().getId())
         		.orElseThrow(() -> new InvalidProductException("The product does not exits."));
         
-        wishlist.setUser(user);
-        wishlist.setProduct(product);
-        wishlistRepository.save(wishlist);
+        Wishlist newWishlist = new Wishlist(user, product);
+        wishlistRepository.save(newWishlist);
 	}
 	
 	public void removeWishlist(String token, Wishlist wishlist, BindingResult bindingResult) {
