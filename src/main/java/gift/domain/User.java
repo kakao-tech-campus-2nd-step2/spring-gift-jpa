@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -24,9 +25,8 @@ public class User {
     @Column
     private String accessToken;
 
-    @OneToMany(cascade = CascadeType.ALL,
-        mappedBy = "user_tb", orphanRemoval = true)
-    private List<Wish> wishList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    private List<Wish> wishList = new ArrayList<>();
 
     public User() {
     }
@@ -39,7 +39,7 @@ public class User {
     }
 
     public User(String email, String password, String accessToken) {
-        this.id = -1;
+        this.id = 0;
         this.email = email;
         this.password = password;
         this.accessToken = accessToken;
