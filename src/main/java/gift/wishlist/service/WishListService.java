@@ -1,5 +1,7 @@
 package gift.wishlist.service;
 
+import gift.global.dto.PageRequestDto;
+import gift.global.utility.SortingStateUtility;
 import gift.permission.repository.PermissionRepository;
 import gift.product.entity.Product;
 import gift.product.repository.ProductRepository;
@@ -9,12 +11,19 @@ import gift.wishlist.dto.WishListResponseDto;
 import gift.wishlist.entity.WishList;
 import gift.wishlist.model.WishListId;
 import gift.wishlist.repository.WishListRepository;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 @Transactional
 public class WishListService {
 
@@ -46,9 +55,14 @@ public class WishListService {
 
     // 위시리스트를 읽어오는 핸들러
     @Transactional(readOnly = true)
-    public List<WishListResponseDto> readWishProducts(long userId) {
+    public List<WishListResponseDto> readWishProducts(long userId, @Valid PageRequestDto pageRequestDto) {
+        int pageNumber = pageRequestDto.pageNumber();
+        int pageSize = PageRequestDto.PAGE_SIZE;
+        Sort sort = SortingStateUtility.getSort(pageRequestDto.sortingState());
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
         // 특정 userId를 갖는 위시리스트 불러오기
-        List<WishList> wishProducts = wishListRepository.findByWishListIdUserUserId(userId);
+        Page<WishList> wishProducts = wishListRepository.findByWishListIdUserUserId(userId, pageable);
 
         return wishProducts.stream().map(wishList -> {
            long wishUserId = wishList.getWishListId().getUser().getUserId();

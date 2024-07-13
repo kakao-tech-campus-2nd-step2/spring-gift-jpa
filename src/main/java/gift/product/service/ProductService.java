@@ -1,17 +1,26 @@
 package gift.product.service;
 
+import gift.global.dto.PageRequestDto;
+import gift.global.utility.SortingStateUtility;
 import gift.product.dto.ProductRequestDto;
 import gift.product.dto.ProductResponseDto;
 import gift.product.entity.Product;
 import gift.product.repository.ProductRepository;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 @Service
+@Validated
 @Transactional(readOnly = true)
 public class ProductService {
     private final ProductRepository productRepository;
@@ -36,8 +45,14 @@ public class ProductService {
     }
 
     // 전체 제품 정보를 반환하는 함수
-    public List<ProductResponseDto> selectProducts() {
-        List<Product> products = productRepository.findAll();
+    public List<ProductResponseDto> selectProducts(@Valid PageRequestDto pageRequestDto) {
+        int pageNumber = pageRequestDto.pageNumber();
+        int pageSize = PageRequestDto.PAGE_SIZE;
+        Sort sort = SortingStateUtility.getSort(pageRequestDto.sortingState());
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+        Page<Product> products = productRepository.findAll(pageable);
         return products.stream().map(product -> new ProductResponseDto(product.getProductId(),
             product.getName(), product.getPrice(), product.getImage())).collect(Collectors.toList());
     }
