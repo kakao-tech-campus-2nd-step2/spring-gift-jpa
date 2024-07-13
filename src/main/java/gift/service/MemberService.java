@@ -18,7 +18,7 @@ public class MemberService {
     public String login(Member member) {
         Member foundMember = repository.findByEmail(member.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
-        foundMember.validateEmail(foundMember.getEmail()); // 이메일 검증
+        foundMember.validateEmail(foundMember.getEmail());
         return createJwtToken(foundMember.getId(), foundMember.getEmail());
     }
 
