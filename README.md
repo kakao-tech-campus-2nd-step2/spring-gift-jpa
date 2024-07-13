@@ -1,7 +1,5 @@
 # spring-gift-jpa
 
-- [x] Member, Wish 연관 관계 매핑
-- [x] Product, Wish 연관 관계 매핑
-- [x] MemberRepositoryTest
-- [x] WishRepositoryTest
-- [x] ProductRepositoryTest
+- [x] 페이지네이션 구현
+    - [x] 홈 html 수정
+    - [x] product Controller, Service, Repository에 페이지네이션 기능 구현
