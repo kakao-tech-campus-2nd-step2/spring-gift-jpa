@@ -1,16 +1,19 @@
-package gift.product.domain;
+package gift.domain.product.dto;
 
-public class Product {
-
+public class ProductResponse {
     private Long id;
     private String name;
     private int price;
     private String imageUrl;
 
-    public Product() {
+    public ProductResponse(){
     }
 
-    public Product(Long id, String name, int price, String imageUrl) {
+    public ProductResponse(String name, int price, String imageUrl) {
+        this(null, name, price, imageUrl);
+    }
+
+    public ProductResponse(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -32,6 +35,4 @@ public class Product {
     public String getImageUrl() {
         return this.imageUrl;
     }
-
-
 }
