@@ -23,6 +23,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     Optional<User> findById(Long id);
     /*
+     * User 정보를 id를 기준으로 DB에서 찾아와 반환
+     */
+    Optional<User> findById(Long id);
+    /*
      * User 정보를 userId를 기준으로 DB에서 찾아와 반환
      */
     User findByUserId(String userId);
