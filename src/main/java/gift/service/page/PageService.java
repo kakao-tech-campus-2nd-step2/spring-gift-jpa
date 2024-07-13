@@ -1,4 +1,4 @@
-package gift.service;
+package gift.service.page;
 
 import gift.exception.InvalidPageRequestException;
 import org.springframework.data.domain.Pageable;

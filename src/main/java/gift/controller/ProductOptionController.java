@@ -2,8 +2,8 @@ package gift.controller;
 
 import gift.dto.ProductOptionRequest;
 import gift.dto.ProductOptionResponse;
-import gift.service.PageService;
 import gift.service.ProductOptionService;
+import gift.service.page.PageService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
