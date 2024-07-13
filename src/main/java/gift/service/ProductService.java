@@ -1,8 +1,10 @@
 package gift.service;
 
+import gift.exception.ErrorCode;
 import gift.exception.RepositoryException;
 import gift.model.Product;
 import gift.model.ProductDTO;
+import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -16,14 +18,10 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public void createProduct(ProductDTO productDTO) {
+    public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = new Product(productDTO.id(), productDTO.name(), productDTO.price(),
             productDTO.imageUrl());
-        try {
-            productRepository.save(product);
-        } catch (Exception e) {
-            throw new RepositoryException("해당 상품을 데이터 베이스에 추가할 수 없습니다.");
-        }
+        return convertToDTO(productRepository.save(product));
     }
 
     public List<ProductDTO> getAllProduct() {
@@ -35,25 +33,21 @@ public class ProductService {
 
     public ProductDTO getProductById(long id) {
         Product product = productRepository.findById(id)
-            .orElseThrow(() -> new RepositoryException("데이터 베이스에서 해당 id의 상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new RepositoryException(ErrorCode.PRODUCT_NOT_FOUND, ""));
         return convertToDTO(product);
     }
 
-    public void updateProduct(long id, ProductDTO productDTO) {
+    public ProductDTO updateProduct(long id, ProductDTO productDTO) {
         Product product = new Product(id, productDTO.name(), productDTO.price(),
             productDTO.imageUrl());
-        try {
-            productRepository.save(product);
-        } catch (Exception e) {
-            throw new RepositoryException("데이터 베이스에서 해당 상품을 찾을 수 없어 상품 정보를 업데이트 할 수 없습니다.");
-        }
+        return convertToDTO(productRepository.save(product));
     }
 
     public String deleteProduct(long id) {
         try {
             productRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RepositoryException("데이터 베이스에서 해당 상품을 찾을 수 없어 삭제할 수 없습니다.");
+            throw new RepositoryException(ErrorCode.PRODUCT_NOT_FOUND, "");
         }
         return "성공적으로 삭제되었습니다.";
     }

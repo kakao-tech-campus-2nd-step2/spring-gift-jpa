@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,28 +18,30 @@ public class WishList {
     private long id;
     @Column(name = "email", nullable = false)
     private String email;
-    @Column(name = "memberId", nullable = false)
-    private long memberId;
-    @Column(name = "productName", nullable = false)
-    private String productName;
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+    @ManyToOne
+    @JoinColumn(name = "product_name", nullable = false)
+    private Product product;
     @Column(name = "quantity", nullable = false)
     private long quantity;
 
     protected WishList() {
     }
 
-    public WishList(String email, long memberId, String productName, long quantity) {
+    public WishList(String email, Member member, Product product, long quantity) {
         this.email = email;
-        this.memberId = memberId;
-        this.productName = productName;
+        this.member = member;
+        this.product = product;
         this.quantity = quantity;
     }
 
-    public WishList(long id, String email, long memberId, String productName, long quantity) {
+    public WishList(long id, String email, Member member, Product product, long quantity) {
         this.id = id;
         this.email = email;
-        this.memberId = memberId;
-        this.productName = productName;
+        this.member = member;
+        this.product = product;
         this.quantity = quantity;
     }
 
@@ -57,12 +61,12 @@ public class WishList {
         this.email = email;
     }
 
-    public String getproductName() {
-        return productName;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setproductName(String productName) {
-        this.productName = productName;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public long getQuantity() {
@@ -73,11 +77,11 @@ public class WishList {
         this.quantity = quantity;
     }
 
-    public long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public void setMemberId(long memberId) {
-        this.memberId = memberId;
+    public void setMember(Member member) {
+        this.member = member;
     }
 }

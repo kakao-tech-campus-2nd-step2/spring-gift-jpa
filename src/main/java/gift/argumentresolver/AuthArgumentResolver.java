@@ -38,6 +38,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         } catch (Exception e) {
             throw new UnauthorizedException("유효하지 않은 토큰입니다.");
         }
-        return new AuthInfo(tokenId);
+        return new AuthInfo(Long.parseLong(tokenId));
     }
 }

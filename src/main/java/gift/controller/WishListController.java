@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/api/wishlist")
@@ -26,47 +27,41 @@ public class WishListController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishListDTO>> getAllWishList() {
-        List<WishListDTO> wishlists = wishListService.getAllWishList();
-        return ResponseEntity.ok(wishlists);
-    }
-
-    @GetMapping("/{memberId}")
-    public ResponseEntity<?> getWishList(@PathVariable long memberId,
+    public ResponseEntity<?> getWishList(@RequestParam long memberId,
         AuthInfo authInfo) {
-        long tokenId = Long.parseLong(authInfo.id());
-        if (tokenId == memberId) {
-            List<WishListDTO> wishLists = wishListService.getWishListById(memberId);
+        if (authInfo.id() == memberId) {
+            List<WishListDTO> wishLists = wishListService.getWishListByMemberId(memberId);
             return ResponseEntity.ok(wishLists);
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("위시 리스트를 확인할 권한이 없습니다.");
     }
 
-    @PostMapping("/{memberId}/product")
-    public ResponseEntity<?> createWishList(@PathVariable String memberId,
+    @PostMapping("/{memberId}/products")
+    public ResponseEntity<?> createWishList(@PathVariable long memberId,
         @RequestBody WishListDTO wishListDTO, AuthInfo authInfo) {
-        if (authInfo.id().equals(memberId)) {
-            wishListService.createWishList(wishListDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(wishListDTO);
+        if (authInfo.id() == memberId) {
+            WishListDTO createdWishList = wishListService.createWishList(wishListDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdWishList);
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("위시 리스트를 확인할 권한이 없습니다.");
     }
 
-    @PutMapping("/{memberId}")
-    public ResponseEntity<?> updateWishListQuantity(@PathVariable String memberId,
+    @PutMapping("/{memberId}/products/{productName}")
+    public ResponseEntity<?> updateWishListQuantity(@PathVariable long memberId,
+        @PathVariable String productName,
         @RequestBody WishListDTO wishListDTO, AuthInfo authInfo) {
-        if (authInfo.id().equals(memberId)) {
-            wishListService.updateWishListQuantity(wishListDTO);
-            return ResponseEntity.noContent().build();
+        if (authInfo.id() == memberId) {
+            WishListDTO updatedWishList = wishListService.updateWishListQuantity(wishListDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedWishList);
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("위시 리스트를 확인할 권한이 없습니다.");
     }
 
-    @DeleteMapping("/{memberId}/{productName}")
+    @DeleteMapping("/{memberId}/products/{productName}")
     public ResponseEntity<?> deleteWishList(@PathVariable long memberId,
         @PathVariable String productName,
         AuthInfo authInfo) {
-        if (authInfo.id().equals(Long.toString(memberId))) {
+        if (authInfo.id() == memberId) {
             wishListService.deleteWishList(memberId, productName);
             return ResponseEntity.noContent().build();
         }
