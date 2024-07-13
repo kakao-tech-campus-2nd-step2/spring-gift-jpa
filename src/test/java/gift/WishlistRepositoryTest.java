@@ -96,7 +96,6 @@ public class WishlistRepositoryTest {
     assertThat(wishlistPage.getNumber()).isEqualTo(0);
     assertThat(wishlistPage.getSize()).isEqualTo(3);
   }
-
   private Member createAndSaveMember(String email, String password) {
     Member member = new Member();
     member.setEmail(email);

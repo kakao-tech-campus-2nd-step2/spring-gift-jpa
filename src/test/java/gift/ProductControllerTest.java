@@ -15,14 +15,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 public class ProductControllerTest {
-
   @InjectMocks
   private ProductController productController;
 
@@ -120,7 +118,6 @@ public class ProductControllerTest {
     ResponseEntity<Void> response = productController.deleteProduct(1L);
 
     assertThat(response.getStatusCodeValue()).isEqualTo(204);
-
     verify(productService, times(1)).findById(1L);
     verify(productService, times(1)).deleteById(1L);
   }
