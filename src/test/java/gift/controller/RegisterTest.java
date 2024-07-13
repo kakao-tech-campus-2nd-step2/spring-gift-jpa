@@ -2,7 +2,7 @@ package gift.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.member.dto.MemberRequest;
+import gift.domain.member.dto.MemberRequest;
 import java.net.URI;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
