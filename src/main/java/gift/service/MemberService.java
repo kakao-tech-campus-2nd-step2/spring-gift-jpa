@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.dao.MemberDao;
 import gift.model.Member;
+import gift.repository.MemberRepository;
 import gift.util.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,26 +10,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberService {
 
-    private final MemberDao memberDao;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
-    public MemberService(MemberDao memberDao, JwtTokenProvider jwtTokenProvider) {
-        this.memberDao = memberDao;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.passwordEncoder = new BCryptPasswordEncoder();
-    }
+    private JwtTokenProvider jwtTokenProvider;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public String registerMember(Member member) {
         // 비밀번호 암호화
         member.setPassword(passwordEncoder.encode(member.getPassword()));
-        memberDao.registerMember(member);
+        memberRepository.save(member);
         return jwtTokenProvider.createToken(member.getEmail());
     }
 
     public String login(String email, String password) {
-        Member member = memberDao.findByEmail(email);
+        Member member = memberRepository.findByEmail(email);
         // 비밀번호 검증
         if (member != null && passwordEncoder.matches(password, member.getPassword())) {
             return jwtTokenProvider.createToken(email);
@@ -38,6 +35,6 @@ public class MemberService {
     }
 
     public Member findByEmail(String email) {
-        return memberDao.findByEmail(email);
+        return memberRepository.findByEmail(email);
     }
 }

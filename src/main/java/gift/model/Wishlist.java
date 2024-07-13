@@ -3,7 +3,6 @@ package gift.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "wishes")
 public class Wishlist {
 
     @Id

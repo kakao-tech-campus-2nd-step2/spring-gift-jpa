@@ -18,12 +18,12 @@ public class MemberDao {
     }
 
     public void registerMember(Member member){
-        String sql = "INSERT INTO members (email, password) VALUES (?, ?)";
+        String sql = "INSERT INTO member (email, password) VALUES (?, ?)";
         jdbcTemplate.update(sql, member.getEmail(), member.getPassword());
     }
 
     public Member findByEmail(String email) {
-        String sql = "SELECT * FROM members WHERE email = ?";
+        String sql = "SELECT * FROM member WHERE email = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{email}, new MemberRowMapper());
     }
 

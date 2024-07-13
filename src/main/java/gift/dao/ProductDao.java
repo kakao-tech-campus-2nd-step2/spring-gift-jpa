@@ -19,27 +19,27 @@ public class ProductDao {
     }
 
     public List<Product> getAllProducts() {
-        String sql = "SELECT * FROM products";
+        String sql = "SELECT * FROM product";
         return jdbcTemplate.query(sql, new ProductRowMapper());
     }
 
     public Product getProductById(Long id) {
-        String sql = "SELECT * FROM products WHERE id = ?";
+        String sql = "SELECT * FROM product WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new ProductRowMapper(), id);
     }
 
     public void addProduct(Product product) {
-        String sql = "INSERT INTO products (name, price, image_url) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public void updateProduct(Long id, Product product) {
-        String sql = "UPDATE products SET name = ?, price = ?, image_url = ? WHERE id = ?";
+        String sql = "UPDATE product SET name = ?, price = ?, image_url = ? WHERE id = ?";
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl(), id);
     }
 
     public void deleteProduct(Long id) {
-        String sql = "DELETE FROM products WHERE id = ?";
+        String sql = "DELETE FROM product WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
