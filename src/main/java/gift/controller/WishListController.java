@@ -5,9 +5,7 @@ import gift.service.WishListService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/wishlist")
 public class WishListController {
+
     private final WishListService wishListService;
 
     public WishListController(WishListService wishListService) {
@@ -38,19 +37,17 @@ public class WishListController {
         if (email == null) {
             return "redirect:/users/login";
         }
-        Sort sort;
-        if (direction.equalsIgnoreCase(Sort.Direction.DESC.name())) {
-            sort = Sort.by(sortBy).descending();
-        } else {
-            sort = Sort.by(sortBy).ascending();
-        }
-        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Pageable pageable = wishListService.createPageRequest(page, size, sortBy, direction);
         Page<WishListDTO> wishListPage = wishListService.getWishListByUser(email, pageable);
+
+        // 모델에 데이터 추가
         model.addAttribute("wishList", wishListPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", wishListPage.getTotalPages());
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("direction", direction);
+
         return "wishlist";
     }
 
@@ -72,7 +69,6 @@ public class WishListController {
     public String removeProductFromWishList(@PathVariable Long productId, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
         wishListService.removeProductFromWishList(email, productId);
-
         return "redirect:/wishlist";
     }
 }
