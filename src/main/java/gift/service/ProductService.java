@@ -70,7 +70,7 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long id) throws RuntimeException {
         try {
-            wishRepository.deleteByProduct_Id(id); // 외래키 제약조건
+            wishRepository.deleteByProductId(id); // 외래키 제약조건
             productRepository.deleteById(id);
         } catch (Exception e) {
             if (e instanceof EmptyResultDataAccessException) {
