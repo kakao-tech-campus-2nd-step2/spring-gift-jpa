@@ -19,9 +19,7 @@ public class UserRepositoryTest {
 
     @Test
     void save() {
-        User expected = new User();
-        expected.setEmail("test@test.com");
-        expected.setPassword("pw");
+    	User expected = new User("test@test.com", "pw");
         User actual = userRepository.save(expected);
         assertThat(actual.getId()).isNotNull();
         assertThat(actual.getEmail()).isEqualTo(expected.getEmail());
@@ -30,9 +28,7 @@ public class UserRepositoryTest {
     @Test
     void findByEmail() {
         String expectedEmail = "test@test.com";
-        User user = new User();
-        user.setEmail(expectedEmail);
-        user.setPassword("pw");
+        User user = new User(expectedEmail, "pw");
         userRepository.save(user);
         Optional<User> actual = userRepository.findByEmail(expectedEmail);
         assertThat(actual).isPresent();
