@@ -1,7 +1,8 @@
 package gift.controller.page;
 
-import gift.entity.ProductRecord;
-import gift.repository.ProductDAO;
+import gift.dto.product.ProductRequestDTO;
+import gift.dto.product.ProductResponseDTO;
+import gift.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,23 +12,23 @@ import java.util.List;
 
 @Controller
 public class AdminController {
-    private final ProductDAO productDAO;
+    private final ProductService productService;
 
-    AdminController(ProductDAO productDAO) {
-        this.productDAO = productDAO;
+    public AdminController(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/")
     public String admin(Model model) {
-        List<ProductRecord> products = productDAO.getAllRecords();
+        List<ProductResponseDTO> products = productService.getAllProducts();
 
         model.addAttribute("products", products);
         return "admin";
     }
 
     @GetMapping("/products/{id}/edit")
-    public String editProduct(@PathVariable int id, Model model) {
-        ProductRecord product = productDAO.getRecord(id);
+    public String editProduct(@PathVariable long id, Model model) {
+        ProductResponseDTO product = productService.getProduct(id);
         model.addAttribute("product", product);
 
         return "product_edit";

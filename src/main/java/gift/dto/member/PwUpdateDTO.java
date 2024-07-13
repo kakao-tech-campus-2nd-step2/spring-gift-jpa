@@ -1,4 +1,4 @@
-package gift.dto.user;
+package gift.dto.member;
 
 import jakarta.validation.constraints.Pattern;
 

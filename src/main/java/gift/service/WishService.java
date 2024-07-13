@@ -1,59 +1,83 @@
 package gift.service;
 
-import gift.dto.wish.WishCreateDTO;
-import gift.dto.wish.WishInfoDTO;
+import gift.entity.Member;
+import gift.entity.Product;
+import gift.entity.Wish;
 import gift.dto.wish.WishRequestDTO;
 import gift.dto.wish.WishResponseDTO;
 import gift.exception.ForbiddenRequestException;
-import gift.repository.UserDAO;
-import gift.repository.WishDAO;
+import gift.exception.NoSuchMemberException;
+import gift.exception.NoSuchProductException;
+import gift.exception.NoSuchWishException;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
+import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class WishService {
-    private final WishDAO wishDAO;
-    private final UserDAO userDAO;
+    private final WishRepository wishRepository;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
-    public WishService(WishDAO wishDAO, UserDAO userDAO) {
-        this.wishDAO = wishDAO;
-        this.userDAO = userDAO;
+    public WishService(WishRepository wishRepository, MemberRepository memberRepository, ProductRepository productRepository) {
+        this.wishRepository = wishRepository;
+        this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
     }
 
     public List<WishResponseDTO> getWishes(String email) {
-        long userId = userDAO.findUserByEmail(email).id();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(NoSuchMemberException::new);
 
-        return wishDAO.findWishes(userId).stream().map((wish) -> new WishResponseDTO(
-                wish.id(),
-                wish.productId(),
-                wish.quantity()
-        )).toList();
+        return member.getAllWishes()
+                .stream()
+                .map(WishResponseDTO::from)
+                .toList();
     }
 
     public WishResponseDTO addWish(String email, WishRequestDTO wishRequestDTO) {
-        long userId = userDAO.findUserByEmail(email).id();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(NoSuchMemberException::new);
 
-        WishInfoDTO wishInfoDTO = wishDAO.create(new WishCreateDTO(
-                userId,
-                wishRequestDTO.productId(),
-                wishRequestDTO.quantity()
+        Product product = productRepository.findById(wishRequestDTO.productId())
+                .orElseThrow(NoSuchProductException::new);
+
+        Wish wish = wishRepository.save(new Wish(
+                member,
+                product
         ));
 
-        return new WishResponseDTO(
-                wishInfoDTO.id(),
-                wishInfoDTO.productId(),
-                wishInfoDTO.quantity()
-        );
+        member.addWish(wish);
+        product.addWish(wish);
+
+        return WishResponseDTO.from(wish);
     }
 
     public void deleteWish(String email, long wishId) {
-        long userId = userDAO.findUserByEmail(email).id();
-
-        if (wishDAO.wishOwner(wishId) != userId) {
+        if (!isOwner(email, wishId)) {
             throw new ForbiddenRequestException("user is not owner of wish");
         }
 
-        wishDAO.delete(wishId);
+        Wish wish = wishRepository.findById(wishId)
+                        .orElseThrow(NoSuchWishException::new);
+
+        wish.getOwner().removeWish(wish);
+        wish.getProduct().removeWish(wish);
+        wishRepository.delete(wish);
+
+    }
+
+    private boolean isOwner(String email, long wishId) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(NoSuchMemberException::new);
+
+        Member wishOwner = wishRepository.findById(wishId)
+                .orElseThrow(NoSuchProductException::new)
+                .getOwner();
+
+        return wishOwner.equals(member);
     }
 }

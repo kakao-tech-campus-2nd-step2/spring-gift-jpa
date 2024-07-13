@@ -1,10 +1,10 @@
-package gift.controller.user;
+package gift.controller.member;
 
 import gift.annotation.TokenEmail;
-import gift.dto.user.PwUpdateDTO;
-import gift.dto.user.UserResponseDTO;
+import gift.dto.member.PwUpdateDTO;
+import gift.dto.member.MemberResponseDTO;
 import gift.exception.ForbiddenRequestException;
-import gift.service.UserService;
+import gift.service.MemberService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,23 +12,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class UserController {
-    private final UserService userService;
+public class MemberController {
+    private final MemberService memberService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @GetMapping("/api/users")
-    public ResponseEntity<List<UserResponseDTO>> getUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<MemberResponseDTO>> getUsers() {
+        return ResponseEntity.ok(memberService.getAllUsers());
     }
 
 
 
     @DeleteMapping("/api/users")
     public ResponseEntity<Void> deleteUser(@TokenEmail String email) {
-        userService.deleteUser(email);
+        memberService.deleteUser(email);
         return ResponseEntity.noContent().build();
     }
 
@@ -40,7 +40,7 @@ public class UserController {
             throw new ForbiddenRequestException("password changing is not allowed");
         }
 
-        userService.updatePw(email, pwUpdateDTO);
+        memberService.updatePw(email, pwUpdateDTO);
 
         return ResponseEntity.ok("Password updated successfully");
     }

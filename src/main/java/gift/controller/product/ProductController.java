@@ -1,7 +1,9 @@
 package gift.controller.product;
 
-import gift.entity.ProductRecord;
-import gift.repository.ProductDAO;
+import gift.dto.product.ProductPatchDTO;
+import gift.dto.product.ProductResponseDTO;
+import gift.dto.product.ProductRequestDTO;
+import gift.repository.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,55 +11,42 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 public class ProductController {
-    private final ProductDAO productDAO;
+    private final gift.service.ProductService productService;
 
-    ProductController(ProductDAO productDAO) {
-        this.productDAO = productDAO;
+    public ProductController(gift.service.ProductService productService, ProductRepository productRepository) {
+        this.productService = productService;
     }
 
     @GetMapping("/api/products")
-    public ResponseEntity<List<ProductRecord>> getAllProducts() {
-        return ResponseEntity.ok(productDAO.getAllRecords());
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @PostMapping("/api/products")
-    public ResponseEntity<ProductRecord> addProduct(@Valid @RequestBody ProductRecord product) {
-        ProductRecord result = productDAO.addNewRecord(product);
+    public ResponseEntity<ProductResponseDTO> addProduct(@Valid @RequestBody ProductRequestDTO product) {
+        ProductResponseDTO result = productService.addProduct(product);
 
         return makeCreatedResponse(result);
     }
 
     @DeleteMapping("/api/products/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
-        productDAO.deleteRecord(id);
+    public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
+        productService.deleteProduct(id);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/api/products/{id}")
-    public ResponseEntity<ProductRecord> updateProduct(@PathVariable int id, @Valid @RequestBody ProductRecord product) {
-        ProductRecord result;
-        try {
-            result = productDAO.replaceRecord(id, product);
-
-            return ResponseEntity.ok(result);
-        } catch (NoSuchElementException e) {
-            result =  productDAO.addNewRecord(product, id);
-
-            return makeCreatedResponse(result);
-        }
-    }
-
     @PatchMapping("/api/products/{id}")
-    public ResponseEntity<ProductRecord> updateProductPartially(@PathVariable int id, @Valid @RequestBody ProductRecord patch) {
-        return ResponseEntity.ok(productDAO.updateRecord(id, patch));
+    public ResponseEntity<ProductResponseDTO> updateProductPartially(@PathVariable long id, @Valid @RequestBody ProductPatchDTO patch) {
+        ProductResponseDTO productResponseDTO = productService.updateProduct(id, patch);
+
+        return ResponseEntity.ok(productResponseDTO);
     }
 
-    private ResponseEntity<ProductRecord> makeCreatedResponse(ProductRecord product) {
+    private ResponseEntity<ProductResponseDTO> makeCreatedResponse(ProductResponseDTO product) {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/products/"+ product.id())
                 .build()
