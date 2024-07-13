@@ -23,7 +23,6 @@ class ProductControllerTest {
     private int port;
 
     @Autowired
-    //private ProductDao productDao;
     private TestRestTemplate restTemplate;
 
     @Test

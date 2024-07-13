@@ -1,21 +1,42 @@
 package gift.product;
 
-import java.util.concurrent.atomic.AtomicLong;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = "product")
 public class Product {
-    private Long id;
-    private String name;
-    private int price;
-    private String url;
 
-    public Product(String name, int price, String url) {
-        this.id = idCounter.getAndIncrement();
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Long id;
+
+   @Column(name = "name", nullable = false)
+   private String name;
+
+   @Column(name = "price", nullable = false)
+   private int price;
+
+   @Column(name = "image_url", nullable = false)
+   private String imageUrl;
+
+   protected Product() {}
+
+    public Product(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
-        this.url = url;
+        this.imageUrl = imageUrl;
     }
 
-    private static AtomicLong idCounter = new AtomicLong(1);
+    public void update(String name, int price, String imageUrl){
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
 
     public Long getId() {
         return id;
@@ -29,8 +50,8 @@ public class Product {
         return price;
     }
 
-    public String getUrl() {
-        return url;
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
 
