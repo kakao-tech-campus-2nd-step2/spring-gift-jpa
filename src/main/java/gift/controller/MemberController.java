@@ -1,10 +1,10 @@
 package gift.controller;
 
 import gift.dto.LoginDTO;
-import gift.dto.UserDTO;
-import gift.service.UserService;
+import gift.dto.MemberDTO;
+import gift.service.MemberService;
 import gift.util.JwtUtil;
-import gift.model.User;
+import gift.model.Member;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,37 +16,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/members")
-public class UserController {
+public class MemberController {
 
-    private final UserService userService;
+    private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
-    public UserController(UserService userService, JwtUtil jwtUtil) {
-        this.userService = userService;
+    public MemberController(MemberService memberService, JwtUtil jwtUtil) {
+        this.memberService = memberService;
         this.jwtUtil = jwtUtil;
     }
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
-        model.addAttribute("userDTO", new UserDTO("", "", ""));
-        return "register_user_form";
+        model.addAttribute("memberDTO", new MemberDTO("", "", ""));
+        return "register_member_form";
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute @Valid UserDTO userDTO, BindingResult result,
+    public String registerUser(@ModelAttribute @Valid MemberDTO memberDTO, BindingResult result,
         Model model) {
         if (result.hasErrors()) {
-            return "register_user_form";
+            return "register_member_form";
         }
 
-        User existingUser = userService.findUserByEmail(userDTO.email());
-        if (existingUser != null) {
+        Member existingMember = memberService.findMemberByEmail(memberDTO.email());
+        if (existingMember != null) {
             model.addAttribute("emailError", "이메일이 이미 존재합니다.");
-            return "register_user_form";
+            return "register_member_form";
         }
 
-        User user = new User(null, userDTO.name(), userDTO.email(), userDTO.password(), "user");
-        userService.saveUser(userDTO);
+        Member member = new Member(null, memberDTO.name(), memberDTO.email(), memberDTO.password(),
+            "user");
+        memberService.saveMember(memberDTO);
 
         return "register_success";
     }
@@ -54,23 +55,23 @@ public class UserController {
     @GetMapping("/login")
     public String showLoginForm(Model model) {
         model.addAttribute("loginDTO", new LoginDTO("", ""));
-        return "login_user_form";
+        return "login_member_form";
     }
 
     @PostMapping("/login")
     public String loginUser(@ModelAttribute @Valid LoginDTO loginDTO, BindingResult result,
         Model model) {
         if (result.hasErrors()) {
-            return "login_user_form";
+            return "login_member_form";
         }
 
-        User user = userService.findUserByEmail(loginDTO.email());
-        if (user == null || !user.password().equals(loginDTO.password())) {
+        Member member = memberService.findMemberByEmail(loginDTO.email());
+        if (member == null || !member.getPassword().equals(loginDTO.password())) {
             model.addAttribute("loginError", "잘못된 이메일 또는 비밀번호입니다.");
-            return "login_user_form";
+            return "login_member_form";
         }
 
-        String token = jwtUtil.generateToken(user.email(), user.role());
+        String token = jwtUtil.generateToken(member.getEmail(), member.getRole());
         model.addAttribute("token", token);
 
         return "login_success";

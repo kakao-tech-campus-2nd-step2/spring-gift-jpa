@@ -3,6 +3,7 @@ package gift.service;
 import gift.model.Product;
 import gift.model.Wishlist;
 import gift.repository.WishlistRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,17 +21,20 @@ public class WishlistService {
     }
 
     public List<Product> getWishlist(String email) {
-        List<Wishlist> wishlistItems = wishlistRepository.getWishlist(email);
+        List<Wishlist> wishlistItems = wishlistRepository.findByMemberEmail(email);
         return wishlistItems.stream()
-            .map(item -> productService.findProductsById(item.productId()))
+            .map(item -> productService.findProductsById(item.getProductId()))
             .collect(Collectors.toList());
     }
 
+    @Transactional
     public void addWishlist(String email, Long productId) {
-        wishlistRepository.addWishlist(email, productId);
+        Wishlist wishlist = new Wishlist(null, email, productId);
+        wishlistRepository.save(wishlist);
     }
 
+    @Transactional
     public void removeWishlist(String email, Long productId) {
-        wishlistRepository.removeWishlist(email, productId);
+        wishlistRepository.deleteByMemberEmailAndProductId(email, productId);
     }
 }

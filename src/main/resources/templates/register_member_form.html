@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>회원 가입</h1>
-<form th:action="@{/members/register}" th:object="${userDTO}" method="post">
+<form th:action="@{/members/register}" th:object="${memberDTO}" method="post">
   <div>
     <label for="name">이름:</label>
     <input type="text" id="name" th:field="*{name}"/>

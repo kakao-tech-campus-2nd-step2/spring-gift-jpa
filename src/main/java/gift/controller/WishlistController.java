@@ -1,10 +1,10 @@
 package gift.controller;
 
 import gift.dto.WishlistRequest;
+import gift.model.Member;
 import gift.service.WishlistService;
 import gift.model.Product;
-import gift.model.User;
-import gift.annotation.LoginUser;
+import gift.annotation.LoginMember;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -29,31 +29,32 @@ public class WishlistController {
 
     @PostMapping
     @ResponseBody
-    public String addWishlist(@RequestBody WishlistRequest wishlistRequest, @LoginUser User user) {
-        if (user == null) {
+    public String addWishlist(@RequestBody WishlistRequest wishlistRequest,
+        @LoginMember Member member) {
+        if (member == null) {
             return "redirect:/members/login";
         }
-        wishlistService.addWishlist(user.email(), wishlistRequest.productId());
+        wishlistService.addWishlist(member.getEmail(), wishlistRequest.productId());
         return "위시리스트에 추가되었습니다.";
     }
 
     @GetMapping
-    public String getWishlist(@LoginUser User user, Model model) {
-        if (user == null) {
+    public String getWishlist(@LoginMember Member member, Model model) {
+        if (member == null) {
             return "redirect:/members/login";
         }
-        List<Product> wishlist = wishlistService.getWishlist(user.email());
+        List<Product> wishlist = wishlistService.getWishlist(member.getEmail());
         model.addAttribute("wishlist", wishlist);
         return "wishlist";
     }
 
     @DeleteMapping("/{productId}")
     @ResponseBody
-    public String removeWishlist(@PathVariable Long productId, @LoginUser User user) {
-        if (user == null) {
+    public String removeWishlist(@PathVariable Long productId, @LoginMember Member member) {
+        if (member == null) {
             return "redirect:/members/login";
         }
-        wishlistService.removeWishlist(user.email(), productId);
+        wishlistService.removeWishlist(member.getEmail(), productId);
         return "{\"status\": \"success\"}";
     }
 }

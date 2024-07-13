@@ -3,6 +3,7 @@ package gift.service;
 import gift.model.Product;
 import gift.dto.ProductDTO;
 import gift.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -16,30 +17,37 @@ public class ProductService {
     }
 
     public List<Product> findAllProducts() {
-        return productRepository.findProductsAll();
+        return productRepository.findAll();
     }
 
     public Product findProductsById(Long id) {
-        return productRepository.findProductsById(id);
+        return productRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public void saveProduct(ProductDTO productDTO) {
-        productRepository.saveProduct(toEntity(productDTO, null));
+        productRepository.save(toEntity(productDTO, null));
     }
 
+    @Transactional
     public void updateProduct(ProductDTO productDTO, Long id) {
-        productRepository.updateProduct(toEntity(productDTO, id), id);
+        productRepository.save(toEntity(productDTO, id));
     }
 
+    @Transactional
     public void deleteProduct(Long id) {
-        productRepository.deleteProduct(id);
+        productRepository.deleteById(id);
     }
 
     public static ProductDTO toDTO(Product product) {
-        return new ProductDTO(product.name(), String.valueOf(product.price()), product.imageUrl());
+        return new ProductDTO(product.getName(), String.valueOf(product.getPrice()),
+            product.getImageUrl());
     }
 
-    private static Product toEntity(ProductDTO productDTO, Long id) {
-        return new Product(id, productDTO.name(), productDTO.price(), productDTO.imageUrl());
+    public static Product toEntity(ProductDTO productDTO, Long id) {
+        Product product = new Product(id, productDTO.name(), productDTO.price(),
+            productDTO.imageUrl());
+        product.validate();
+        return product;
     }
 }
