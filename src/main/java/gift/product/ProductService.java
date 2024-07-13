@@ -3,6 +3,7 @@ package gift.product;
 import gift.exception.InvalidProduct;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,23 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllPrdouct() {
-        return productRepository.findAll();
+    public List<ProductResponseDto> getAllPrdouct() {
+        return productRepository.findAll().stream()
+            .map(product -> new ProductResponseDto(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl()))
+            .collect(Collectors.toList());
     }
 
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
+    public Optional<ProductResponseDto> getProductById(Long id) {
+        return productRepository.findById(id)
+            .map(product -> new ProductResponseDto(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl()));
     }
 
     public ProductResponseDto postProduct(ProductRequestDto productRequestDto) {

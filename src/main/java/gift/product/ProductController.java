@@ -27,24 +27,16 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<ProductResponseDto> getAllProducts() {
         return productService.getAllPrdouct();
     }
 
     @GetMapping("/{id}")
     public ProductResponseDto getProduct(@PathVariable Long id) {
-        Optional<Product> product = productService.getProductById(id);
-        if (product == null) {
-            throw new InvalidProduct("유효하지 않은 상품입니다");
-        }
-
-        return new ProductResponseDto(
-            product.get().getId(),
-            product.get().getName(),
-            product.get().getPrice(),
-            product.get().getImageUrl()
-        );
+        return productService.getProductById(id)
+            .orElseThrow(() -> new InvalidProduct("유효하지 않은 상품입니다"));
     }
+
 
     @PostMapping
     public ProductResponseDto addProduct(@RequestBody @Valid ProductRequestDto productRequestDto) {

@@ -50,12 +50,12 @@ public class WishlistService {
 
     @Transactional
     public HttpEntity<String> deleteWishlist(Long productId, Long memberId) {
-        List<Wishlist> w1 = wishlistRepository.findByProductId(productId);
-        List<Wishlist> w2 = wishlistRepository.findByMemberId(memberId);
+        List<Wishlist> wishlist1 = wishlistRepository.findByProductId(productId);
+        List<Wishlist> wishlist2 = wishlistRepository.findByMemberId(memberId);
 
         Wishlist wishlistItem = null;
-        for (Wishlist item : w1) {
-            if (w2.contains(item)) {
+        for (Wishlist item : wishlist1) {
+            if (wishlist2.contains(item)) {
                 wishlistItem = item;
                 break;
             }
