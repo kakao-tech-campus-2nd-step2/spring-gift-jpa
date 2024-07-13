@@ -3,6 +3,7 @@ package gift.wish.application;
 import gift.common.validation.LoginUser;
 import gift.user.domain.User;
 import gift.wish.application.dto.request.WishRequest;
+import gift.wish.application.dto.response.WishPageResponse;
 import gift.wish.application.dto.response.WishResponse;
 import gift.wish.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,7 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -67,14 +68,14 @@ public class WishController {
             @ApiResponse(responseCode = "200", description = "위시리스트 목록 조회 성공"),
     })
     @GetMapping()
-    public ResponseEntity<List<WishResponse>> getWishList(@LoginUser User loginUser) {
-        var wishInfos = wishService.getWishList(loginUser.getId());
+    public ResponseEntity<WishPageResponse> getWishList(@LoginUser User loginUser,
+                                                        Pageable pageable
+    ) {
+        var wishInfos = wishService.getWishList(loginUser.getId(), pageable);
 
-        var responses = wishInfos.stream()
-                .map(WishResponse::from)
-                .toList();
+        var response = WishPageResponse.from(wishInfos);
         return ResponseEntity.ok()
-                .body(responses);
+                .body(response);
     }
 
     @Operation(summary = "위시리스트 상세 조회", description = "위시리스트 상세 정보를 조회합니다.")

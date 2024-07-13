@@ -9,8 +9,10 @@ import gift.wish.domain.Wish;
 import gift.wish.exception.WishNotFoundException;
 import gift.wish.persistence.WishRepository;
 import gift.wish.service.dto.WishInfo;
+import gift.wish.service.dto.WishPageInfo;
 import gift.wish.service.dto.WishParam;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,14 +53,10 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishInfo> getWishList(final Long userId) {
-        List<Wish> wishes = wishRepository.findWishesByUserIdWithUserAndProduct(userId);
+    public WishPageInfo getWishList(final Long userId, final Pageable pageable) {
+        Page<Wish> wishes = wishRepository.findWishesByUserIdWithUserAndProduct(userId, pageable);
 
-        var responses = wishes.stream()
-                .map(WishInfo::from)
-                .toList();
-
-        return responses;
+        return WishPageInfo.from(wishes);
     }
 
     @Transactional(readOnly = true)
