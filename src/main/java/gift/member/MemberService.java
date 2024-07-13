@@ -19,11 +19,9 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public Member getMemberByEmail(String userEmail) {
+    public Optional<Member> getMemberByEmail(String userEmail) {
         return memberRepository.findByEmail(userEmail);
     }
-
-
 
     public ResponseEntity<TokenResponseDto> register(Member member) throws AlreadyExistMember {
         Optional<Member> existMember = memberRepository.findByEmailAndPassword(member.getEmail(),member.getPassword());

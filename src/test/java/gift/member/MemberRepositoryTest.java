@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -44,13 +45,13 @@ class MemberRepositoryTest {
     void findByEmail() {
         Member expected = new Member("westzeroright", "errorai");
         memberRepository.save(expected);
-        Member actual = memberRepository.findByEmail(expected.getEmail());
+        Optional<Member> actual = memberRepository.findByEmail(expected.getEmail());
 
         assertAll(
-            () -> assertThat(actual.getId()).isNotNull(),
-            () -> assertThat(actual.getId()).isEqualTo(expected.getId()),
-            () -> assertThat(actual.getEmail()).isEqualTo("westzeroright"),
-            () -> assertThat(actual.getPassword()).isEqualTo("errorai")
+            () -> assertThat(actual.get().getId()).isNotNull(),
+            () -> assertThat(actual.get().getId()).isEqualTo(expected.getId()),
+            () -> assertThat(actual.get().getEmail()).isEqualTo("westzeroright"),
+            () -> assertThat(actual.get().getPassword()).isEqualTo("errorai")
         );
     }
 }

@@ -68,5 +68,4 @@ public class WishlistService {
             throw new InvalidProduct("잘못된 접근입니다");
         }
     }
-
 }

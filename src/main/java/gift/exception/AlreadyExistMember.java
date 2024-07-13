@@ -1,6 +1,6 @@
 package gift.exception;
 
-public class AlreadyExistMember extends Exception{
+public class AlreadyExistMember extends RuntimeException{
 
     public AlreadyExistMember(String message) {
         super(message);

@@ -1,5 +1,6 @@
 package gift.login;
 
+import gift.member.MemberRepository;
 import gift.member.MemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +16,12 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     private final MemberService memberService;
     private final Logger log = LoggerFactory.getLogger(getClass());
+    private final MemberRepository memberRepository;
 
-    public LoginMemberArgumentResolver(MemberService memberService) {
+    public LoginMemberArgumentResolver(MemberService memberService,
+        MemberRepository memberRepository) {
         this.memberService = memberService;
+        this.memberRepository = memberRepository;
     }
 
     @Override
