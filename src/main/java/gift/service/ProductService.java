@@ -49,6 +49,7 @@ public class ProductService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDTO> getProductList() {
         return ProductConverter.convertToProductDTO(productRepository.findAll());
     }

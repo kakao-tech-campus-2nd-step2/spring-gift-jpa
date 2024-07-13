@@ -3,7 +3,6 @@ package gift.service;
 
 import gift.dto.MemberDTO;
 import gift.entity.Member;
-import gift.exception.BadRequestExceptions.BadRequestException;
 import gift.exception.BadRequestExceptions.EmailAlreadyHereException;
 import gift.exception.BadRequestExceptions.UserNotFoundException;
 import gift.exception.InternalServerExceptions.DuplicatedUserException;
@@ -11,7 +10,6 @@ import gift.exception.InternalServerExceptions.InternalServerException;
 import gift.repository.MemberRepository;
 import gift.util.converter.MemberConverter;
 import gift.util.validator.entityValidator.MemberValidator;
-import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -42,6 +40,7 @@ public class MemberService {
 
     }
 
+    @Transactional(readOnly = true)
     public void login(MemberDTO memberDTO) throws RuntimeException {
         if (memberRepository.countByEmail(memberDTO.getEmail()) < 1) {
             throw new UserNotFoundException("아이디 또는 비밀번호가 올바르지 않습니다.");
@@ -53,6 +52,7 @@ public class MemberService {
 
     }
 
+    @Transactional(readOnly = true)
     public MemberDTO getMember(String email) throws RuntimeException {
         if (memberRepository.countByEmail(email) == 1) {
             return MemberConverter.convertToMemberDTO(memberRepository.findByEmail(email).get());

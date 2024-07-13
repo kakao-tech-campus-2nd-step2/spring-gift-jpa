@@ -36,6 +36,7 @@ public class WishListService {
         this.parameterValidator = parameterValidator;
     }
 
+    @Transactional(readOnly = true)
     public WishListDTO getWishList(MemberDTO memberDTO)
             throws RuntimeException {
 
