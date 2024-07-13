@@ -22,16 +22,8 @@ public class ProductResponseDTO {
         this.name = name;
     }
 
-    public int getPrice() {
-        return price;
-    }
-
     public void setPrice(int price) {
         this.price = price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
