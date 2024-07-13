@@ -6,6 +6,7 @@ import gift.global.response.SimpleResultResponseDto;
 import gift.global.utils.ResponseHelper;
 import gift.product.domain.Product;
 import gift.product.dto.ProductRequestDto;
+import gift.product.dto.ProductResponseListDto;
 import gift.product.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -31,8 +32,8 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResultResponseDto<List<Product>>> getProductsByPage(@RequestParam(name = "page") int page) {
-        List<Product> products = productService.getProductsByPage(page);
+    public ResponseEntity<ResultResponseDto<ProductResponseListDto>> getProductsByPage(@RequestParam(name = "page") int page) {
+        ProductResponseListDto products = productService.getProductsByPage(page);
         return ResponseHelper.createResponse(ResultCode.GET_ALL_PRODUCTS_SUCCESS, products);
     }
 

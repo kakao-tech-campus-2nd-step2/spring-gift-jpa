@@ -1,6 +1,7 @@
 package gift.product.service;
 
 import gift.product.domain.Product;
+import gift.product.dto.ProductResponseListDto;
 import gift.product.dto.ProductServiceDto;
 import gift.product.exception.ProductNotFoundException;
 import gift.product.repository.ProductRepository;
@@ -24,9 +25,9 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public List<Product> getProductsByPage(int page) {
+    public ProductResponseListDto getProductsByPage(int page) {
         Page<Product> products = productRepository.findAll(PageRequest.of(page, PAGE_SIZE));
-        return products.getContent();
+        return ProductResponseListDto.productPageToProductResponseListDto(products);
     }
 
     public Product getProductById(Long id) {
