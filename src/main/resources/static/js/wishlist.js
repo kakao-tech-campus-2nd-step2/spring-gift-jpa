@@ -76,7 +76,7 @@ function deleteCheckedProduct(temp) {
 }
 
 function loadPage(pageNum) {
-    fetch(`/wishes?(page=${pageNum})`, {
+    fetch(`/wishes?page=${pageNum}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
