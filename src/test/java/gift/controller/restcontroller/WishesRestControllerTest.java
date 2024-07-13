@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.MethodParameter;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -64,7 +65,7 @@ class WishesRestControllerTest {
         // given
         int dataCount = 5;
         doReturn(wishList(dataCount)).when(wishService)
-                .findAllByMemberId(1L);
+                .findAllWishPagingByMemberId(1L, PageRequest.of(0, 10));
 
         // when
         ResultActions resultActions = mockMvc.perform(

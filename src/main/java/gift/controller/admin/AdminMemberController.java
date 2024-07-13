@@ -5,11 +5,12 @@ import gift.controller.dto.response.MemberResponse;
 import gift.service.MemberService;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/admin/member")
@@ -21,8 +22,9 @@ public class AdminMemberController {
     }
 
     @GetMapping("")
-    public String getMembers(Model model) {
-        List<MemberResponse> members = memberService.findAll();
+    public String getMembers(Model model,
+             @PageableDefault(size = 10)Pageable pageable) {
+        Page<MemberResponse> members = memberService.findAllMemberPaging(pageable);
         model.addAttribute("members", members);
         return "member/members";
     }

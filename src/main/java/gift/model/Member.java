@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
+import java.time.LocalDateTime;
+
 @Entity
 public class Member extends BasicEntity {
 
@@ -21,8 +23,11 @@ public class Member extends BasicEntity {
 
     protected Member() {}
 
-    public Member(Long id) {
-        super(id);
+    public Member(Long id, String email, String password, Role role, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        super(id, createdAt, updatedAt);
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 
     public Member(String email, String password, Role role) {

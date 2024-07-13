@@ -8,14 +8,14 @@ import java.time.LocalDateTime;
 @Table(indexes = @Index(name = "idx_member_id", columnList = "member_id"))
 public class Wish extends BasicEntity{
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Column(nullable = false)
     private int productCount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
@@ -39,6 +39,14 @@ public class Wish extends BasicEntity{
         this.member = member;
         this.productCount = productCount;
         this.product = product;
+    }
+
+    public boolean isOwner(Long memberId) {
+        return member.getId().equals(memberId);
+    }
+
+    public boolean containsProduct(Long productId) {
+        return product.getId().equals(productId);
     }
 
     public Member getMember() {

@@ -36,6 +36,6 @@ public class AdminLoginController {
                 .build();
         response.addHeader("Set-Cookie", cookie.toString());
 
-        return "index";
+        return "redirect:/admin";
     }
 }
