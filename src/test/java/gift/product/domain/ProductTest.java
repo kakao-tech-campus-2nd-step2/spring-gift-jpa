@@ -1,9 +1,8 @@
-package gift.model;
+package gift.product.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import gift.product.domain.Product;
 import gift.product.exception.ProductNoConferredException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
