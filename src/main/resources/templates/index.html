@@ -26,20 +26,30 @@
     <!-- AJAX를 통해 데이터를 로드 -->
     </tbody>
 </table>
+<div>
+    <button id="prevPage">Previous</button>
+    <button id="nextPage">Next</button>
+</div>
 </body>
 <script>
-    $(document).ready(function() {
-        // 페이지 로드 시 AJAX를 통해 데이터 가져오기
+    var currentPage = 0;
+    var pageSize = 5;
+
+    function getProducts(page){
         $.ajax({
             url: '/api/products',
             method: 'GET',
-            dataType: 'json',
+            data : {
+                page : page,
+                size : pageSize
+            },
             success: function(data) {
+                var contents = data.content;
                 var tbody = $('#product-tbody');
                 tbody.empty(); // 초기화
 
                 // 데이터에 따라 테이블 행을 생성
-                data.forEach(function(product) {
+                contents.forEach(function(product) {
                     // 한 행의 내용
                     var row = `
                         <tr>
@@ -53,11 +63,30 @@
                         </tr>
                     `;
                     tbody.append(row);
+
+                    currentPage = data.number;
+
+                    $('#prevPage').prop('disabled', data.first);
+                    $('#nextPage').prop('disabled', data.last);
                 });
             },
             error: function(err) {
                 alert("error occur! [error code : " + err.status + "]");
             }
+        });
+    }
+
+    $(document).ready(function() {
+        getProducts(currentPage);
+
+        $('#prevPage').click(function() {
+            if (currentPage > 0) {
+                getProducts(currentPage - 1);
+            }
+        });
+
+        $('#nextPage').click(function() {
+            getProducts(currentPage + 1);
         });
 
         if(localStorage.getItem('token')){

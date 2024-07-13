@@ -5,6 +5,7 @@ import gift.DTO.User.UserRequest;
 import gift.DTO.User.UserResponse;
 import gift.security.JwtTokenProvider;
 import gift.service.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,8 +51,11 @@ public class UserController {
      * 모든 User의 정보 가져오기
      */
     @GetMapping("/api/users")
-    public ResponseEntity<List<UserResponse>> readUsers() {
-        List<UserResponse> all = userService.findAll();
+    public ResponseEntity<Page<UserResponse>> readUsers(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size
+    ) {
+        Page<UserResponse> all = userService.findAll(page, size);
 
         return new ResponseEntity<>(all, HttpStatus.OK);
     }

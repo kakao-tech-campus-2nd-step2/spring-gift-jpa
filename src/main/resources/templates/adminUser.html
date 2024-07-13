@@ -52,24 +52,34 @@
         <th scope="col">Option</th>
     </tr>
     </thead>
-    <tbody id="product-tbody">
+    <tbody id="user-tbody">
     <!-- AJAX를 통해 데이터를 로드 -->
     </tbody>
 </table>
+<div>
+    <button id="prevPage">Previous</button>
+    <button id="nextPage">Next</button>
+</div>
 </body>
 <script>
-    $(document).ready(function() {
-        // 페이지 로드 시 AJAX를 통해 데이터 가져오기
+    var currentPage = 0;
+    var pageSize = 5;
+
+    function getUsers(page){
         $.ajax({
             url: '/api/users',
             method: 'GET',
-            dataType: 'json',
+            data : {
+                page : page,
+                size : pageSize
+            },
             success: function(data) {
-                var tbody = $('#product-tbody');
+                var contents = data.content;
+                var tbody = $('#user-tbody');
                 tbody.empty(); // 초기화
 
                 // 데이터에 따라 테이블 행을 생성
-                data.forEach(function(user) {
+                contents.forEach(function(user) {
                     // 한 행의 내용
                     var row = `
                         <tr>
@@ -83,11 +93,31 @@
                         </tr>
                     `;
                     tbody.append(row);
+
+                    currentPage = data.number;
+
+                    $('#prevPage').prop('disabled', data.first);
+                    $('#nextPage').prop('disabled', data.last);
                 });
             },
             error: function(err) {
                 alert("error occur! [error code : " + err.status + "]");
             }
+        });
+    }
+
+    $(document).ready(function() {
+        // 페이지 로드 시 AJAX를 통해 데이터 가져오기
+        getUsers(currentPage);
+
+        $('#prevPage').click(function() {
+            if (currentPage > 0) {
+                getUsers(currentPage - 1);
+            }
+        });
+
+        $('#nextPage').click(function() {
+            getUsers(currentPage + 1);
         });
 
         if(localStorage.getItem('token')){

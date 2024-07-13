@@ -2,6 +2,7 @@ package gift.DTO.Wish;
 
 import gift.DTO.Product.ProductResponse;
 import gift.DTO.User.UserResponse;
+import gift.domain.WishProduct;
 
 public class WishProductResponse {
     Long id;
@@ -9,11 +10,11 @@ public class WishProductResponse {
     ProductResponse product;
     int count;
 
-    public WishProductResponse(Long id, UserResponse user, ProductResponse product, int count) {
-        this.id = id;
-        this.user = user;
-        this.product = product;
-        this.count = count;
+    public WishProductResponse(WishProduct wishProduct) {
+        this.id = wishProduct.getId();
+        this.user = new UserResponse(wishProduct.getUser());
+        this.product = new ProductResponse(wishProduct.getProduct());
+        this.count = wishProduct.getCount();
     }
 
     public Long getId(){

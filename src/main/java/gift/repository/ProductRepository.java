@@ -1,6 +1,8 @@
 package gift.repository;
 
 import gift.domain.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,7 +12,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     /*
      * DB에 저장된 모든 Product 정보를 가져와 반환
      */
-    List<Product> findAll();
+    Page<Product> findAll(Pageable pageable);
     /*
      * DB에 저장된 Product 중, ID를 기준으로 하나를 선택하여 반환
      */
