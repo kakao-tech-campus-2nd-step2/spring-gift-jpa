@@ -14,6 +14,7 @@
     <div class="container">
         <h2>위시 리스트 확인</h2>
         <p>위시 상품을 확인하고 삭제할 수 있습니다.</p>
+        <a type="button" class="btn btn-info " href="/spring-gift/product">물건보러 가기</a>
     </div>
     <div class="container">
         <table class="table table-striped">
@@ -27,28 +28,36 @@
                 <th></th>
             </tr>
             </thead>
-            <tbody id=wishProducts></tbody>
+            <tbody id=wishProductList></tbody>
         </table>
     </div>
+
+    <div class="container">
+        <ul class="pagination justify-content-center" id="pagination"></ul>
+    </div>
+
 </div>
 
 <script>
     $(document).ready(function () {
-        loadProducts();
+        let currentPage = 0;
+
         // 상품 리스트 로드하기
-        function loadProducts() {
+        function loadProducts(pageNum) {
             $.ajax({
                 type: 'GET',
-                url: '/spring-gift/wishlists',
+                url: '/spring-gift/wishlistpage/'+pageNum,
                 success: function (response) {
-                    var wishProducts = response;
+                    var wishProducts = response.content;
+                    var totalPages = response.totalPages;
                     var html = '';
+
                     wishProducts.forEach(function (product) {
                         html += '<tr>' +
                             '<td>' + product.id + '</td>' +
                             '<td>' + product.name + '</td>' +
                             '<td>' + product.price + '</td>' +
-                            '<td>' + product.imageUrl + '</td>' +
+                            '<td>' + product.imag + '</td>' +
                             '<td>' + product.seller + '</td>' +
                             '<td>' +
                             '<div style="display: flex; justify-content: center; gap: 10px;">' +
@@ -57,7 +66,8 @@
                             '</td>' +
                             '</tr>';
                     });
-                    $('#wishProducts').html(html);
+                    $('#wishProductList').html(html);
+                    setupPagination(totalPages, pageNum);
                 },
                 error: function (error) {
                     alert(error);
@@ -65,9 +75,42 @@
             });
         }
 
+        // 페이지네이션 설정
+        function setupPagination(totalPages, currentPage) {
 
+            let paginationHtml = '';
 
-        // 등록버튼 클릭시, 위시리스트 담기
+            // 처음 버튼
+            paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="0">처음</a></li>';
+
+            // 중간 페이지 버튼들
+            const startPage = Math.max(0, currentPage - 2);
+            const endPage = Math.min(totalPages - 1, currentPage + 2);
+
+            for (let i = startPage; i <= endPage; i++) {
+                if (i === currentPage) {
+                    paginationHtml += '<li class="page-item active"><a class="page-link" href="javascript:void(0);" data-page="' + i + '">' + i + '</a></li>';
+                } else {
+                    paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="' + i + '">' + i + '</a></li>';
+                }
+            }
+
+            // 마지막 버튼
+            paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="' + (totalPages - 1) + '">마지막</a></li>';
+
+            $('#pagination').html(paginationHtml);
+        }
+
+        // 페이지 링크 클릭 이벤트 처리
+        $(document).on('click', '.page-link', function () {
+            const pageNum = $(this).data('page');
+            if (pageNum !== undefined && pageNum !== currentPage) {
+                currentPage = pageNum;
+                loadProducts(currentPage);
+            }
+        });
+
+        // 등록버튼 클릭시, 위시리스트 삭제
         $(document).on('click', '.delete-button', function () {
             var productId = $(this).data('id');
             $.ajax({
@@ -85,7 +128,7 @@
         });
 
         // 초기 로드
-        loadProducts();
+        loadProducts(currentPage);
     });
 </script>
 </body>

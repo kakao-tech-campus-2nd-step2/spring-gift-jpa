@@ -6,11 +6,13 @@ import gift.main.dto.WishProductResponce;
 import gift.main.entity.WishProduct;
 import gift.main.service.ProductService;
 import gift.main.service.WishProductService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class WishlistController {
@@ -34,6 +36,12 @@ public class WishlistController {
     public ResponseEntity<?> getWishProduct(@SessionUser UserVo sessionUser) {
         List<WishProductResponce> wishProducts = wishProductService.getWishProducts(sessionUser.getId());
         return ResponseEntity.ok(wishProducts);
+    }
+
+    @GetMapping("/wishlistpage/{pageNum}")
+    public ResponseEntity<?> getWishProductPage(@SessionUser UserVo sessionUser,@PathVariable(name = "pageNum") Optional<Integer> pageNum) {
+        Page<WishProductResponce> wishProductPage = wishProductService.getWishProductPage(sessionUser.getId(), pageNum.orElse(0));
+        return ResponseEntity.ok(wishProductPage);
     }
 
     @Transactional

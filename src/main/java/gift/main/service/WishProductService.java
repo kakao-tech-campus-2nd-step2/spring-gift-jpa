@@ -10,6 +10,9 @@ import gift.main.entity.WishProduct;
 import gift.main.repository.ProductRepository;
 import gift.main.repository.UserRepository;
 import gift.main.repository.WishProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,6 +39,14 @@ public class WishProductService {
                 .collect(Collectors.toList());
 
         return wishProducts;
+
+    }
+    public Page<WishProductResponce> getWishProductPage(Long userId, int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, 10);
+        Page<WishProductResponce> wishProductResponcePage = wishProductRepository.findAllByUserId(userId,pageable)
+                .map(wishProduct -> new WishProductResponce(wishProduct));
+
+        return wishProductResponcePage;
 
     }
 
