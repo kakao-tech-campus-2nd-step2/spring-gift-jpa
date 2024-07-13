@@ -1,6 +1,6 @@
-package gift.product.dto;
+package gift.domain.product.dto;
 
-import gift.product.entity.ProductEntity;
+import gift.domain.product.entity.Product;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -39,9 +39,5 @@ public class ProductRequest {
 
     public String getImageUrl() {
         return imageUrl;
-    }
-
-    public ProductEntity toProductEntity() {
-        return new ProductEntity(this.name, this.price, this.imageUrl);
     }
 }
