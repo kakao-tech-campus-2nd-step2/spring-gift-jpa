@@ -5,14 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import gift.product.domain.Product;
-import gift.product.dto.ProductRequest;
-import gift.product.entity.ProductEntity;
-import gift.product.repository.ProductRepository;
-import gift.product.service.ProductService;
+import gift.domain.product.dto.ProductRequest;
+import gift.domain.product.dto.ProductResponse;
+import gift.domain.product.entity.Product;
+import gift.domain.product.repository.ProductRepository;
+import gift.domain.product.service.ProductService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -33,16 +38,15 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("Id로 Product 조회 테스트")
-    void find(){
+    void getProduct(){
         // given
         Long id = 1L;
-        ProductEntity productEntity = new ProductEntity("test", 1000, "test.jpg");
-        Product expected = entityToDomain(productEntity);
+        Product expected = new Product(1L, "test", 1000, "test.jpg");
 
-        doReturn(Optional.of(productEntity)).when(productRepository).findById(id);
+        doReturn(Optional.of(expected)).when(productRepository).findById(id);
 
         // when
-        Product actual = productService.getProduct(id);
+        ProductResponse actual = productService.getProduct(id);
 
         // then
         assertAll(
@@ -54,23 +58,37 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("모든 Product 조회 테스트")
-    void findAll() {
+    void getAllProducts() {
         // given
-        ProductEntity product1 = new ProductEntity("test1", 1000, "test1.jpg");
-        ProductEntity product2 = new ProductEntity("test2", 2000, "test2.jpg");
+        Product product1 = new Product(1L, "test1", 1000, "test1.jpg");
+        Product product2 = new Product(2L, "test2", 2000, "test2.jpg");
 
-        List<ProductEntity> productList = Arrays.asList(product1, product2);
-        List<Product> expected = productList.stream().map(this::entityToDomain).toList();
+        List<Product> productList = Arrays.asList(product1, product2);
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Product> pageList = new PageImpl<>(productList, pageable, productList.size());
 
-        doReturn(productList).when(productRepository).findAll();
+        List<ProductResponse> expected = Arrays.asList(entityToDto(product1), entityToDto(product2));
+
+        doReturn(pageList).when(productRepository).findAll(pageable);
 
         // when
-        List<Product> actual = productService.getAllProducts();
+        List<ProductResponse> actual = productService.getAllProducts(pageable.getPageNumber(), pageable.getPageSize());
 
         // then
-        assertThat(actual).isNotNull();
-        assertThat(actual).hasSize(2);
-        assertThat(actual).containsExactlyInAnyOrder(expected.get(0), expected.get(1));
+        assertAll(
+            () -> assertThat(actual).isNotNull(),
+            () -> assertThat(actual).hasSize(2),
+            () -> {
+                for (int i = 0; i < expected.size(); i++) {
+                    final int index = i;
+                    assertAll(
+                        () -> assertThat(actual.get(index).getName()).isEqualTo(expected.get(index).getName()),
+                        () -> assertThat(actual.get(index).getPrice()).isEqualTo(expected.get(index).getPrice()),
+                        () -> assertThat(actual.get(index).getImageUrl()).isEqualTo(expected.get(index).getImageUrl())
+                    );
+                }
+            }
+        );
 
     }
 
@@ -79,15 +97,14 @@ class ProductServiceTest {
     void create() {
         // given
         ProductRequest productRequest = new ProductRequest("test", 1000, "test.jpg");
-        ProductEntity savedProduct = new ProductEntity(productRequest.getName(), productRequest.getPrice(),
+        Product savedProduct = new Product(productRequest.getName(), productRequest.getPrice(),
             productRequest.getImageUrl());
-        
-        Product expected = entityToDomain(savedProduct);
+        ProductResponse expected = new ProductResponse(savedProduct.getName(), savedProduct.getPrice(),savedProduct.getImageUrl());
 
-        doReturn(savedProduct).when(productRepository).save(any(ProductEntity.class));
+        doReturn(savedProduct).when(productRepository).save(any(Product.class));
 
         // when
-        Product actual = productService.addProduct(productRequest);
+        ProductResponse actual = productService.addProduct(productRequest);
 
         // then
         assertAll(
@@ -99,21 +116,21 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("product 업데이트 테스트")
-    void update() {
+    void updateProduct() {
         // given
         Long id = 1L;
         ProductRequest productRequest = new ProductRequest("update", 1000, "update.jpg");
-        ProductEntity savedProductEntity = new ProductEntity("saved", 2000, "preTest.jpg");
-        ProductEntity updatedProductEntity = new ProductEntity("update", 1000, "update.jpg");
+        Product savedProduct = mock(Product.class);
+        Product updatedProduct = new Product("update", 1000, "update.jpg");
 
-        Product expected = entityToDomain(updatedProductEntity);
+        ProductResponse expected = new ProductResponse(updatedProduct.getName(), updatedProduct.getPrice(), updatedProduct.getImageUrl());
 
-        doReturn(Optional.of(savedProductEntity)).when(productRepository).findById(id);
-        doNothing().when(savedProductEntity).update(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
-        doReturn(updatedProductEntity).when(productRepository).save(any(ProductEntity.class));
+        doReturn(Optional.of(savedProduct)).when(productRepository).findById(id);
+        doNothing().when(savedProduct).update(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        doReturn(updatedProduct).when(productRepository).save(any(Product.class));
 
         // when
-        Product actual = productService.updateProduct(id, productRequest);
+        ProductResponse actual = productService.updateProduct(id, productRequest);
 
         // then
         assertAll(
@@ -128,7 +145,7 @@ class ProductServiceTest {
     void delete() {
         // given
         Long id = 1L;
-        ProductEntity savedProduct = new ProductEntity("test", 1000, "test.jpg");
+        Product savedProduct = new Product("test", 1000, "test.jpg");
 
         doReturn(Optional.of(savedProduct)).when(productRepository).findById(id);
 
@@ -139,7 +156,7 @@ class ProductServiceTest {
         verify(productRepository, times(1)).delete(savedProduct);
     }
 
-    private Product entityToDomain(ProductEntity productEntity){
-        return new Product(productEntity.getId(), productEntity.getName(), productEntity.getPrice(),productEntity.getImageUrl());
+    private ProductResponse entityToDto(Product product){
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 }
