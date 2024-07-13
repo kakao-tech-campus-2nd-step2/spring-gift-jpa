@@ -1,6 +1,8 @@
 package gift.product;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -52,9 +54,11 @@ public class ProductController {
 
     @GetMapping("/products/pages")
     public ResponseEntity<Page<Product>> getProductsPage(@RequestParam(required = false, defaultValue = "0", value = "page") int page,
-                                                         @RequestParam(required = false, defaultValue = "10", value = "size") int size) {
+                                                         @RequestParam(required = false, defaultValue = "10", value = "size") @Min(1) @Max(20) int size,
+                                                         @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy,
+                                                         @RequestParam(required = false, defaultValue = "asc", value = "sortDirection") String sortDirection) {
 
-        return ResponseEntity.ok(productService.getProductPages(page, size));
+        return ResponseEntity.ok(productService.getProductPages(page, size, sortBy, sortDirection));
 
     }
 

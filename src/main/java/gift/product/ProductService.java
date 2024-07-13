@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProductService {
@@ -17,9 +18,12 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Page<Product> getProductPages(int pageNum, int size) {
+    public Page<Product> getProductPages(int pageNum, int size, String sortBy, String sortDirection) {
+        Pageable pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Order.asc(sortBy)));
+        if (Objects.equals(sortDirection, "desc")) {
+            pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Order.desc(sortBy)));
+        }
 
-        Pageable pageable = PageRequest.of(pageNum, size, Sort.by("id"));
         return productRepository.findAll(pageable);
     }
 
