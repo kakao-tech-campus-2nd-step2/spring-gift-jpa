@@ -39,25 +39,15 @@ public class WishListService {
         this.jwtUtil = jwtUtil;
     }
 
-    public Page<WishListDTO> getWishListsByUserId(long id, int page, int size, String sortDirection,
+    public Page<WishListDTO> getWishListsByUserId(long id, int page, int size, Direction direction,
         String sortBy) {
-        Direction direction = Direction.ASC;
-        if (!(sortBy.equals("id") || sortBy.equals("productId")
-            || sortBy.equals("num"))) {
-            sortBy = "id";
-        }
-        if (sortDirection.equals("desc") || sortDirection.equals("내림차순")) {
-            direction = Direction.DESC;
-        }
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageRequest = PageRequest.of(page, size, sort);
-        List<WishListDTO> wishLists = wishListRepository.findAllByUserId(id, sort).stream()
+        Page<WishList> wishListPage = wishListRepository.findAllByUserId(id, pageRequest);
+        List<WishListDTO> wishLists = wishListPage.stream()
             .map(WishListDTO::fromWishList)
             .toList();
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), wishLists.size());
-        List<WishListDTO> pageContent = wishLists.subList(start, end);
-        return new PageImpl<>(pageContent, pageRequest, wishLists.size());
+        return new PageImpl<>(wishLists, pageRequest, wishListPage.getTotalElements());
     }
 
     public void extractEmailFromTokenAndValidate(HttpServletRequest request, String email) {

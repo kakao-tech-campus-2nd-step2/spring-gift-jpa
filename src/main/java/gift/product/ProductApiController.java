@@ -3,6 +3,7 @@ package gift.product;
 import jakarta.validation.Valid;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/products")
 public class ProductApiController {
 
+    private static final String DEFAULT_SORT_BY = "id";
+    private static final int MAX_SIZE = 15;
     private final ProductService productService;
 
     public ProductApiController(ProductService productService) {
@@ -32,8 +35,19 @@ public class ProductApiController {
         @RequestParam(value = "size", required = false, defaultValue = "10") int size,
         @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy,
         @RequestParam(value = "sortDirection", required = false, defaultValue = "asc") String sortDirection) {
+        if(size>MAX_SIZE){
+            size = MAX_SIZE;
+        }
+        if (!(sortBy.equals("id") || sortBy.equals("name"))) {
+            sortBy = DEFAULT_SORT_BY;
+        }
+        SortDirection sortDirection1 = SortDirection.ASC;
+        if (sortDirection.equals("desc") || sortDirection.equals("내림차순")) {
+            sortDirection1 = SortDirection.DESC;
+        }
+        Direction direction = (sortDirection1 == SortDirection.ASC) ? Direction.ASC : Direction.DESC;
         Page<ProductDTO> productPage = productService.getAllProducts(page, size, sortBy,
-            sortDirection);
+            direction);
         return ResponseEntity.ok(productPage);
     }
 
@@ -45,9 +59,11 @@ public class ProductApiController {
     }
 
     @PostMapping
-    public ResponseEntity<String> addProduct(@Valid @RequestBody ProductDTO productDTO, BindingResult result) {
+    public ResponseEntity<String> addProduct(@Valid @RequestBody ProductDTO productDTO,
+        BindingResult result) {
         if (result.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getAllErrors().toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(result.getAllErrors().toString());
         }
         productService.addProduct(productDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("상품이 추가되었습니다.");
@@ -57,7 +73,8 @@ public class ProductApiController {
     public ResponseEntity<String> updateWishList(@PathVariable("id") Long id,
         @Valid @RequestBody ProductDTO productDTO, BindingResult result) throws NotFoundException {
         if (result.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getAllErrors().toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(result.getAllErrors().toString());
         }
         productDTO.setId(id);
         productService.updateProduct(productDTO);
@@ -69,5 +86,9 @@ public class ProductApiController {
         throws NotFoundException {
         productService.deleteProduct(id);
         return ResponseEntity.ok().body("삭제되었습니다.");
+    }
+
+    public enum SortDirection {
+        ASC, DESC;
     }
 }

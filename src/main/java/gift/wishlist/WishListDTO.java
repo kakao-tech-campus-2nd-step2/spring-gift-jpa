@@ -14,10 +14,6 @@ public class WishListDTO {
         this.num = num;
     }
 
-    public long getUserId() {
-        return userId;
-    }
-
     public long getProductId() {
         return productId;
     }

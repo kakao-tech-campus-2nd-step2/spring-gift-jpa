@@ -21,14 +21,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public Page<ProductDTO> getAllProducts(int page, int size, String sortBy, String sortDirection) {
-        Direction direction = Direction.ASC;
-        if (!(sortBy.equals("id") || sortBy.equals("name"))) {
-            sortBy = "id";
-        }
-        if (sortDirection.equals("desc") || sortDirection.equals("내림차순")) {
-            direction = Direction.DESC;
-        }
+    public Page<ProductDTO> getAllProducts(int page, int size, String sortBy, Direction direction) {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageRequest = PageRequest.of(page, size, sort);
         Page<Product> productPage = productRepository.findAll(pageRequest);
