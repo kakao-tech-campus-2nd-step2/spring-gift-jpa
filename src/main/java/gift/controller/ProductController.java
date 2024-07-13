@@ -9,8 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -21,7 +19,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Product>> getAllProducts(@RequestParam(value ="page", required = false, defaultValue = "0") int page) {
+    public ResponseEntity<Page<Product>> getAllProducts(@RequestParam(value = "page", required = false, defaultValue = "0") int page) {
         Page<Product> products = productService.getAllProducts(page);
         return ResponseEntity.ok(products);
     }

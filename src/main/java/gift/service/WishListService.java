@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static gift.constant.Message.ADD_SUCCESS_MSG;
 import static gift.constant.Message.DELETE_SUCCESS_MSG;
