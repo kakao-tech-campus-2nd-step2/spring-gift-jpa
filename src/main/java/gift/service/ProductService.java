@@ -3,9 +3,10 @@ package gift.service;
 import gift.entity.Product;
 import gift.exception.BusinessException;
 import gift.repository.ProductRepository;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,8 +19,10 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public Page<Product> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        System.out.println("Pageable: Page " + page + ", Size " + size);
+        return productRepository.findAll(pageable);
     }
 
     public Product findById(Long id) {
