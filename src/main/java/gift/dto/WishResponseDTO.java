@@ -1,18 +1,22 @@
 package gift.dto;
 
-import gift.entity.ProductInfo;
-
-import java.util.List;
-
 public class WishResponseDTO{
 
     private String email;
-    private List<ProductInfo> Products;
+    private String ProductName;
+    private String ImageUrl;
+    private Integer Count;
+    private int Price;
 
+    public WishResponseDTO() {
+    }
 
-    public WishResponseDTO(String email, List<ProductInfo> products) {
+    public WishResponseDTO(String email, String productName, String imageUrl, Integer count, int price) {
         this.email = email;
-        Products = products;
+        this.ProductName = productName;
+        this.ImageUrl = imageUrl;
+        this.Count = count;
+        this.Price = price;
     }
 
     public String getEmail() {
@@ -23,11 +27,35 @@ public class WishResponseDTO{
         this.email = email;
     }
 
-    public List<ProductInfo> getProducts() {
-        return Products;
+    public String getProductName() {
+        return ProductName;
     }
 
-    public void setProducts(List<ProductInfo> products) {
-        Products = products;
+    public void setProductName(String productName) {
+        ProductName = productName;
+    }
+
+    public String getImageUrl() {
+        return ImageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        ImageUrl = imageUrl;
+    }
+
+    public Integer getCount() {
+        return Count;
+    }
+
+    public void setCount(Integer count) {
+        Count = count;
+    }
+
+    public int getPrice() {
+        return Price;
+    }
+
+    public void setPrice(int price) {
+        Price = price;
     }
 }
