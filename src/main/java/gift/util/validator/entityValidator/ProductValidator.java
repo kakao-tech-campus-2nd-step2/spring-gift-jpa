@@ -1,4 +1,4 @@
-package gift.validator.entityValidator;
+package gift.util.validator.entityValidator;
 
 import gift.dto.ProductDTO;
 import gift.exception.BadRequestExceptions.BadRequestException;
@@ -18,13 +18,13 @@ public class ProductValidator {
             "^((http(s)?)://)?(www.)?([a-zA-Z0-9]+)\\.[a-z]+([a-zA-z0-9.?#]+)?"
     );
 
-    public void validate(ProductDTO productDTO) {
+    public static void validate(ProductDTO productDTO) {
         validateName(productDTO.name());
         validatePrice(productDTO.price());
         validateImageUrl(productDTO.imageUrl());
     }
 
-    private void validateName(String name) {
+    private static void validateName(String name) {
         if (name == null || name.isBlank()) {
             throw new BlankContentException("상품 이름을 입력해주세요.");
         }
@@ -39,7 +39,7 @@ public class ProductValidator {
         }
     }
 
-    private void validatePrice(Integer price) {
+    private static void validatePrice(Integer price) {
         if (price == null) {
             throw new BlankContentException("가격을 입력해주세요.");
         }
@@ -48,7 +48,7 @@ public class ProductValidator {
         }
     }
 
-    private void validateImageUrl(String imageUrl) {
+    private static void validateImageUrl(String imageUrl) {
         if (imageUrl == null || imageUrl.isBlank()) {
             throw new BlankContentException("이미지 URL을 입력해주세요.");
         }

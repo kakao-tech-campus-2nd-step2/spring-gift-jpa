@@ -1,4 +1,4 @@
-package gift.service;
+package gift.util.validator;
 
 import gift.dto.MemberDTO;
 import gift.dto.ProductDTO;
