@@ -5,10 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import org.springframework.validation.annotation.Validated;
 
 // 사용자가 입력하는 dto
-@Validated
 public record ProductRequestDto(
     @Size(max = 15, message = "상품명은 최대 15자입니다.")
     @NotBlank(message = "상품명은 공백일 수 없습니다.")
