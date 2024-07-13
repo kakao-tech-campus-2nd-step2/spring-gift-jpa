@@ -9,23 +9,25 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
-    @Column(name = "product_name", nullable = false)
-    private String productName;
+    @ManyToOne
+    @JoinColumn(name = "product_name", referencedColumnName = "name", nullable = false)
+    private Product product;
 
     public Wish() {}
 
-    public Wish(Long id, String productName, Long memberId) {
+    public Wish(Long id, Product product, Member member) {
         this.id = id;
-        this.productName = productName;
-        this.memberId = memberId;
+        this.product = product;
+        this.member = member;
     }
 
-    public Wish(String productName, Long memberId) {
-        this.productName = productName;
-        this.memberId = memberId;
+    public Wish(Product product, Member member) {
+        this.product = product;
+        this.member = member;
     }
 
     public Long getId() {
@@ -36,13 +38,13 @@ public class Wish {
         this.id = id;
     }
 
-    public String getProductName() {
-        return productName;
+    public Product getProduct() {
+        return product;
     }
 
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
 }

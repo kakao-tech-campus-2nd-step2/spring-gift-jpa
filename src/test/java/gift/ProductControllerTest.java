@@ -1,7 +1,7 @@
 package gift;
 
-import gift.dao.ProductDAO;
 import gift.domain.Product;
+import gift.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ public class ProductControllerTest {
     private MockMvc mockMvc;  //Spring MockMvc 프레임워크를 사용하여 HTTP 요청 및 응답 테스트
 
     @Autowired
-    private ProductDAO productDAO;
+    private ProductRepository productRepository;
 
     private Product sampleProduct = new Product(null, "아이스 카페 아메리카노 T", 4500L,
             "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
@@ -34,7 +34,7 @@ public class ProductControllerTest {
 
     @BeforeEach
     void setUp() {
-        productDAO.save(sampleProduct);
+        productRepository.save(sampleProduct);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class ProductControllerTest {
     @DisplayName("상품 수정 테스트")
     void editProductTest() throws Exception {
 
-        Product existingProduct = productDAO.findAll().get(0);
+        Product existingProduct = productRepository.findAll().get(0);
 
         mockMvc.perform(put("/api/products/" + existingProduct.getId())
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -87,7 +87,7 @@ public class ProductControllerTest {
     @DisplayName("상품 삭제 테스트")
     void deleteProductTest() throws Exception {
 
-        Product existingProduct = productDAO.findAll().get(0);
+        Product existingProduct = productRepository.findAll().get(0);
         String productName = existingProduct.getName();
 
         mockMvc.perform(delete("/api/products/" + existingProduct.getId())

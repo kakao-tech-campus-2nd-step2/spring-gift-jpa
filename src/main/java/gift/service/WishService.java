@@ -1,8 +1,12 @@
 package gift.service;
 
 import gift.domain.Wish;
+import gift.domain.Member;
+import gift.domain.Product;
 import gift.dto.WishRequest;
 import gift.dto.WishResponse;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,21 +17,28 @@ import java.util.stream.Collectors;
 public class WishService {
 
     private WishRepository wishRepository;
+    private MemberRepository memberRepository;
+    private ProductRepository productRepository;
 
-    public WishService(WishRepository wishRepository) {
+    public WishService(WishRepository wishRepository, MemberRepository memberRepository, ProductRepository productRepository) {
         this.wishRepository = wishRepository;
+        this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
     }
 
     public List<WishResponse> getWishes(Long memberId) {
         return wishRepository.findByMemberId(memberId).stream()
-                .map(wish -> new WishResponse(wish.getId(), wish.getProductName(), wish.getMemberId()))
+                .map(wish -> new WishResponse(wish.getId(), wish.getProduct().getName(), wish.getMember().getId()))
                 .collect(Collectors.toList());
     }
 
     public WishResponse addWish(WishRequest wishRequest, Long memberId) {
-        Wish wish = new Wish(wishRequest.getProductName(), memberId);
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
+        Product product = productRepository.findByName(wishRequest.getProductName()).orElseThrow(() -> new IllegalArgumentException("Invalid product name"));
+
+        Wish wish = new Wish(product, member);
         wishRepository.save(wish);
-        return new WishResponse(wish.getId(), wish.getProductName(), wish.getMemberId());
+        return new WishResponse(wish.getId(), wish.getProduct().getName(), wish.getMember().getId());
     }
 
     public void removeWish(Long wishId) {
