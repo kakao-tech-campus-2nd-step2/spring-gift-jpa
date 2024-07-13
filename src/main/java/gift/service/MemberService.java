@@ -9,6 +9,8 @@ import gift.exception.BadRequestExceptions.UserNotFoundException;
 import gift.exception.InternalServerExceptions.DuplicatedUserException;
 import gift.exception.InternalServerExceptions.InternalServerException;
 import gift.repository.MemberRepository;
+import gift.util.converter.MemberConverter;
+import gift.util.validator.entityValidator.MemberValidator;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,28 +21,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final EntityValidator entityValidator;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository, EntityValidator entityValidator) {
+    public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        this.entityValidator = entityValidator;
     }
 
     @Transactional
     public void register(MemberDTO memberDTO) throws RuntimeException {
         try {
-            Member member = entityValidator.validateMember(memberDTO);
+            MemberValidator.validate(memberDTO);
+            Member member = MemberConverter.convertToMember(memberDTO);
             memberRepository.save(member);
         } catch (Exception e) {
             if (e instanceof DataIntegrityViolationException) {
                 throw new EmailAlreadyHereException("이미 있는 이메일입니다.");
             }
-
-            if (e instanceof ConstraintViolationException) {
-                throw new BadRequestException(e.getMessage());
-            }
-
             throw new InternalServerException(e.getMessage());
         }
 
