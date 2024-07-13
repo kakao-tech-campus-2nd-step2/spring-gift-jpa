@@ -1,10 +1,12 @@
 package gift.service;
 
 import gift.exception.ForbiddenWordException;
+import gift.exception.NonIntegerPriceException;
 import gift.exception.ProductNotFoundException;
 import gift.model.Product;
 import gift.repository.ProductRepository;
 import jakarta.validation.Valid;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +38,13 @@ public class ProductService {
         return product.orElse(null);
     }
 
-    public Product createProduct(@Valid Product product) {
+    public Product createProduct(@Valid Product product) throws NonIntegerPriceException {
         if (product.getName().contains("카카오")) {
             throw new ForbiddenWordException("상품 이름에 '카카오'가 포함된 경우 담당 MD와 협의가 필요합니다.");
+        }
+        var priceValue = new BigDecimal(product.getPrice());
+        if (priceValue.scale() > 0 && priceValue.stripTrailingZeros().scale() > 0) {
+            throw new NonIntegerPriceException("상품 가격은 소수점이 없어야 합니다");
         }
         return productRepository.save(product);
     }
