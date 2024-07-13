@@ -57,7 +57,7 @@ public class ProductWebController {
     }
 
     @PostMapping(value = "/edit/{id}", consumes = "application/x-www-form-urlencoded;charset=UTF-8")
-    public String editProduct(@RequestParam Long id, @RequestParam String name, @RequestParam BigDecimal price, @RequestParam String imageUrl) {
+    public String editProduct(@PathVariable Long id, @RequestParam String name, @RequestParam BigDecimal price, @RequestParam String imageUrl) {
         Product product = new Product.ProductBuilder()
             .id(id)
             .name(name)
