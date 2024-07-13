@@ -25,9 +25,11 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Product>> getProducts(@RequestParam int page,
-                                                    @RequestParam int size) {
-        return ResponseEntity.ok().body(productService.getProducts(page, size));
+    public ResponseEntity<List<Product>> getProducts(@RequestParam int page, @RequestParam int size,
+        @RequestParam String criterion, @RequestParam String direction) {
+
+        return ResponseEntity.ok()
+            .body(productService.getProducts(page, size, criterion, direction));
     }
 
     @PostMapping()

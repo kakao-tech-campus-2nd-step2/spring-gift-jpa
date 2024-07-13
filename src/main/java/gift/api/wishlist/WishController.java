@@ -24,9 +24,11 @@ public class WishController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Wish>> getItems(@LoginMember Long memberId,
-                                    @RequestParam int page, @RequestParam int size) {
-        return ResponseEntity.ok().body(wishService.getItems(memberId, page, size));
+    public ResponseEntity<List<Wish>> getItems(@LoginMember Long memberId, @RequestParam int page,
+        @RequestParam int size, @RequestParam String criterion, @RequestParam String direction) {
+
+        return ResponseEntity.ok()
+            .body(wishService.getItems(memberId, page, size, criterion, direction));
     }
 
     @PostMapping()
