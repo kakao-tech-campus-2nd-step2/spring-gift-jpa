@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.config.PageConfig;
 import gift.dto.product.AddProductRequest;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.UpdateProductRequest;
@@ -9,6 +10,8 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +36,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> getAllProducts(Pageable pageable) {
+    public ResponseEntity<Page<ProductResponse>> getAllProducts(
+        @PageableDefault(
+            size = PageConfig.PAGE_PER_COUNT,
+            sort = PageConfig.SORT_STANDARD,
+            direction = Direction.DESC
+        ) Pageable pageable) {
         try {
             Page<ProductResponse> products = productService.getAllProducts(pageable);
             return ResponseEntity.ok(products);
