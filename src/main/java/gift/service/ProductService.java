@@ -25,13 +25,12 @@ public class ProductService {
     public Page<Product> getAllProduct(int page, int size) {
         Pageable pageRequest = createPageRequestUsing(page, size);
 
-        List<Product> allProducts = productRepository.findAll();
-
         int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), allProducts.size());
+        int end = start + pageRequest.getPageSize();
+        if (page > 0) { start += 1; }
 
-        List<Product> pageContent = allProducts.subList(start, end);
-        return new PageImpl<>(pageContent, pageRequest, allProducts.size());
+        List<Product> pageContent = productRepository.findByProductIdBetween(start, end);
+        return new PageImpl<>(pageContent, pageRequest, pageContent.size());
     }
 
     private Pageable createPageRequestUsing(int page, int size) {
