@@ -2,10 +2,9 @@ package gift.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import java.io.Serializable;
 import org.hibernate.validator.constraints.Length;
 
-public class NameDTO implements Serializable {
+public class NameDTO {
 
     @NotNull(message = "이름을 입력해주세요.")
     @Length(min = 1, max = 15, message = "1자 ~ 15자까지 가능합니다.")

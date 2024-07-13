@@ -1,9 +1,7 @@
 package gift.dto;
 
-import gift.model.Name;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import java.io.Serializable;
 
 public class ProductDTO {
 
