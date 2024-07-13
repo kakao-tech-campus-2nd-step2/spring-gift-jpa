@@ -30,7 +30,6 @@ class WishRepositoryTest {
     private Member member2;
 
     private Product product;
-    private Product product2;
 
     @BeforeEach
     void setUp() throws Exception {
