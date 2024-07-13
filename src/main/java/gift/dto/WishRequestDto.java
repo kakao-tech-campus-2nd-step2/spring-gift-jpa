@@ -1,7 +1,5 @@
 package gift.dto;
 
-import gift.domain.Product;
-
 public class WishRequestDto {
     private Long productId;
     private int quantity;

@@ -1,7 +1,7 @@
 package gift.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.domain.Member;
 import gift.domain.Product;
@@ -11,7 +11,6 @@ import gift.repository.fixture.ProductFixture;
 import gift.repository.fixture.WishFixture;
 import jakarta.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

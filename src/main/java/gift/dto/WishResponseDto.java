@@ -1,7 +1,5 @@
 package gift.dto;
 
-import gift.domain.Member;
-import gift.domain.Product;
 
 public class WishResponseDto {
     private Long id;
