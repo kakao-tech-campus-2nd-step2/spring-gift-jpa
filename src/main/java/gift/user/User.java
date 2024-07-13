@@ -18,7 +18,6 @@ public class User {
     private String password;
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<WishList> wishes = new ArrayList<>();
-    ;
 
     public User() {
     }

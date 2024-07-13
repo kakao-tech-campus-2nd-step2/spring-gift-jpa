@@ -19,7 +19,6 @@ public class Product {
     private String imageUrl;
     @OneToMany(mappedBy = "product", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<WishList> wishes = new ArrayList<>();
-    ;
 
     public Product() {
     }
