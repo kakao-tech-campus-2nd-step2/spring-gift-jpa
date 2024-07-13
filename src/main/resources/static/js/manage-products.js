@@ -1,11 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
+    let currentPage = 0;
+    const productList = document.getElementById('product-list');
+    const prevPageButton = document.getElementById('prevPage');
+    const nextPageButton = document.getElementById('nextPage');
+
     loadProducts();
 
+    prevPageButton.addEventListener('click', () => {
+        if (currentPage > 0) {
+            currentPage--;
+            loadProducts();
+        }
+    });
+
+    nextPageButton.addEventListener('click', () => {
+        currentPage++;
+        loadProducts();
+    });
+
     function loadProducts() {
-        fetch('/api/products')
-            .then(response => response.json())
-            .then(products => {
-                const productList = document.getElementById('product-list');
+        fetch(`/api/products?page=${currentPage}`)
+            .then(response => {
+                if(!response.ok) { throw new Error(response.statusText); }
+                return response.json();
+            })
+            .then(data => {
+                const products = data.content;
                 productList.innerHTML = '';
                 products.forEach(product => {
                     const row = document.createElement('tr');
@@ -21,6 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                     productList.appendChild(row);
                 });
+                prevPageButton.disabled = products.first;
+                nextPageButton.disabled = products.last;
+            })
+            .catch(error => {
+                console.error('[Error]상품 불러오기 에러:', error)
             });
     }
 
