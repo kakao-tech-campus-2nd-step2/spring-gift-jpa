@@ -3,6 +3,7 @@ package gift.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.dto.ProductRequest;
+import gift.dto.ProductResponse;
 import gift.dto.RegisterRequest;
 import gift.dto.WishProductAddRequest;
 import gift.dto.WishProductResponse;
@@ -21,9 +22,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -145,7 +148,7 @@ class WishProductControllerTest {
         var addResult = mockMvc.perform(postRequest);
         //then
         addResult.andExpect(status().isCreated());
-        var wishProducts = wishProductService.getWishProducts(memberId);
+        var wishProducts = wishProductService.getWishProducts(memberId, PageRequest.of(0, 10));
         Assertions.assertThat(wishProducts.size()).isEqualTo(1);
         Assertions.assertThat(wishProducts.get(0).count()).isEqualTo(20);
 
@@ -169,7 +172,7 @@ class WishProductControllerTest {
         var managerWishResult = managerReadResult.andExpect(status().isOk()).andReturn();
         var managerWishLength = managerWishResult.getResponse().getContentLength();
         Assertions.assertThat(managerWishLength).isEqualTo(0);
-        var memberWishProducts = wishProductService.getWishProducts(memberId);
+        var memberWishProducts = wishProductService.getWishProducts(memberId, PageRequest.of(0, 10));
         Assertions.assertThat(memberWishProducts.size()).isEqualTo(2);
 
         for (var wishProduct : memberWishProducts) {
@@ -191,7 +194,7 @@ class WishProductControllerTest {
         var result = mockMvc.perform(putRequest);
         //then
         result.andExpect(status().isNoContent());
-        var wishProducts = wishProductService.getWishProducts(memberId);
+        var wishProducts = wishProductService.getWishProducts(memberId, PageRequest.of(0, 10));
         Assertions.assertThat(wishProducts.size()).isEqualTo(1);
         Assertions.assertThat(wishProducts.get(0).count()).isEqualTo(30);
 
@@ -213,7 +216,36 @@ class WishProductControllerTest {
         var result = mockMvc.perform(putRequest);
         //then
         result.andExpect(status().isNoContent());
-        var wishProducts = wishProductService.getWishProducts(memberId);
+        var wishProducts = wishProductService.getWishProducts(memberId, PageRequest.of(0, 10));
         Assertions.assertThat(wishProducts.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("위시 리스트 상품 11개인 경우에 조회시 10개만 조회된다.")
+    void getWishProductsWithPageable() throws Exception {
+        //given
+        var productResponseList = new ArrayList<ProductResponse>();
+        for (int i = 0; i < 11; i++) {
+            var productRequest = new ProductRequest("상품이름", 10000, "이미지");
+            var productResponse = productService.addProduct(productRequest, MemberRole.MEMBER);
+            productResponseList.add(productResponse);
+            var wishProduct = new WishProductAddRequest(productResponse.id(), 10);
+            wishProductService.addWishProduct(wishProduct, memberId);
+        }
+        var getRequest = get("/api/wishes?page=0")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + memberToken);
+        //when
+        var getResult = mockMvc.perform(getRequest);
+        //then
+        var wishProductResult = getResult.andExpect(status().isOk()).andReturn();
+        var wishProductListString = wishProductResult.getResponse().getContentAsString();
+        var wishProductList = objectMapper.readValue(wishProductListString, new TypeReference<List<WishProductResponse>>() {
+        });
+        Assertions.assertThat(wishProductList.size()).isEqualTo(10);
+
+        for (var product : productResponseList) {
+            productService.deleteProduct(product.id());
+        }
     }
 }
