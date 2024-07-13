@@ -38,12 +38,16 @@ public class Member {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void update(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public boolean isEmailMatching(String email) {
+        return this.email.equals(email);
+    }
+
+    public boolean isPasswordMatching(String password) {
+        return this.password.equals(password);
     }
 }
