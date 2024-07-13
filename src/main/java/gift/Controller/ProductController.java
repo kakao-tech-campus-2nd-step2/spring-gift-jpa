@@ -3,7 +3,8 @@ package gift.Controller;
 import gift.DTO.ProductDto;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +26,8 @@ public class ProductController {
   }
 
   @GetMapping
-  public List<ProductDto> getAllProducts() {
-    return productService.getAllProducts();
+  public ResponseEntity<Page<ProductDto>> getAllProducts(Pageable pageable) {
+    return ResponseEntity.ok(productService.getAllProducts(pageable));
   }
 
   @GetMapping("/{id}")
