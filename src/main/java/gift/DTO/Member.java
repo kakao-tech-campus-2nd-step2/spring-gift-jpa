@@ -1,14 +1,14 @@
 package gift.DTO;
 
-public class User {
+public class Member {
 
     private String email;
     private String password;
 
-    public User() {
+    public Member() {
     }
 
-    public User(String email, String password) {
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
     }

@@ -2,7 +2,7 @@ package gift.controller.signup;
 
 import gift.DTO.SignupRequest;
 import gift.DTO.SignupResponse;
-import gift.service.UserService;
+import gift.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,18 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/signup")
 public class SignupController {
 
-    private final UserService userService;
+    private final MemberService memberService;
 
     @Autowired
-    public SignupController(UserService userService) {
-        this.userService = userService;
+    public SignupController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @PostMapping
     public ResponseEntity<SignupResponse> signup(
         @RequestBody SignupRequest signupRequest,
         Model model) {
-        SignupResponse signupResponse = userService.registerUser(signupRequest);
+        SignupResponse signupResponse = memberService.registerMember(signupRequest);
         return new ResponseEntity<>(signupResponse, HttpStatus.CREATED);
     }
 }

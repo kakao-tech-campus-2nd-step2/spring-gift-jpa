@@ -4,8 +4,8 @@ import gift.DTO.LoginRequest;
 import gift.DTO.LoginResponse;
 import gift.DTO.SignupRequest;
 import gift.DTO.SignupResponse;
-import gift.domain.User;
-import gift.repository.UserRepository;
+import gift.domain.Member;
+import gift.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -16,48 +16,48 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class MemberService {
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final Key key;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
         String secretKey = "s3cr3tK3yF0rJWTt0k3nG3n3r@ti0n12345678"; // 256 bits
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public SignupResponse registerUser(SignupRequest signupRequest) {
-        userRepository.findByEmail(signupRequest.getEmail()).ifPresent(p -> {
+    public SignupResponse registerMember(SignupRequest signupRequest) {
+        memberRepository.findByEmail(signupRequest.getEmail()).ifPresent(p -> {
             throw new RuntimeException("Email already exists");
         });
-        User user = new User(signupRequest.getEmail(), signupRequest.getPassword());
-        userRepository.save(user);
+        Member member = new Member(signupRequest.getEmail(), signupRequest.getPassword());
+        memberRepository.save(member);
 
-        String welcome = "Welcome, " + user.getEmail() + "!";
+        String welcome = "Welcome, " + member.getEmail() + "!";
         return new SignupResponse(welcome);
     }
 
-    public LoginResponse loginUser(LoginRequest loginRequest) throws Exception {
-        Optional<User> user = userRepository.findByEmail(loginRequest.getEmail()); // Email이 PK
+    public LoginResponse loginMember(LoginRequest loginRequest) throws Exception {
+        Optional<Member> user = memberRepository.findByEmail(loginRequest.getEmail()); // Email이 PK
         user.orElseThrow(() -> new RuntimeException("Invalid email or password"));
-        User registeredUser = user.get();
-        if (registeredUser.getPassword().equals(loginRequest.getPassword())) {
-            String token = generateToken(registeredUser);
+        Member registeredMember = user.get();
+        if (registeredMember.getPassword().equals(loginRequest.getPassword())) {
+            String token = generateToken(registeredMember);
             return new LoginResponse(token);
         }
         throw new Exception("Invalid email or password");
     }
 
-    public Optional<User> getUserByEmail(String email) {
-       return userRepository.findByEmail(email);
+    public Optional<Member> getMemberByEmail(String email) {
+       return memberRepository.findByEmail(email);
     }
 
-    private String generateToken(User user) {
+    private String generateToken(Member member) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
-            .setSubject(user.getEmail())
+            .setSubject(member.getEmail())
             .setIssuedAt(new Date(now))
             .setExpiration(new Date(now + 3600000)) // 1 hour validity
             .signWith(key)

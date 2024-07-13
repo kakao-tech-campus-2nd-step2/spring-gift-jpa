@@ -1,8 +1,6 @@
 package gift.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,8 +23,8 @@ public class Wishlist {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
@@ -35,13 +33,13 @@ public class Wishlist {
     public Wishlist() {
     }
 
-    public Wishlist(User user, Product product) {
-        this.user = user;
+    public Wishlist(Member member, Product product) {
+        this.member = member;
         this.product = product;
     }
 
     public String getUserEmail() {
-        return user.getEmail();
+        return member.getEmail();
     }
 
     public Long getProductId() {
