@@ -16,6 +16,10 @@ INSERT INTO member VALUES (1, 'member1.com', 'asdf');
 INSERT INTO member VALUES (2, 'member2.com', 'asdf');
 
 -- wish data for test
-INSERT INTO wish VALUES (100, 1, 1);
-INSERT INTO wish VALUES (101, 1, 2);
-INSERT INTO wish VALUES (102, 2, 4);
+INSERT INTO wish VALUES (1, 1, 1);
+INSERT INTO wish VALUES (2, 1, 2);
+INSERT INTO wish VALUES (3, 2, 4);
+INSERT INTO wish VALUES (4, 1, 4);
+INSERT INTO wish VALUES (5, 1, 3);
+INSERT INTO wish VALUES (6, 2, 1);
+INSERT INTO wish VALUES (7, 2, 3);
