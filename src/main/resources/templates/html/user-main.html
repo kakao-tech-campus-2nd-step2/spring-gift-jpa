@@ -167,6 +167,7 @@
       function loadCurrentPage() {
         const userId = document.body.getAttribute('data-userId');
         const token = document.body.getAttribute('data-token');
+        // 왜 안되는지 연구해보기
         const targetUrl = `/users/${userId}/main?page-no=0&&sorting-state=0`;
         const headers = { Authorization: token };
         requestView(targetUrl, headers);
