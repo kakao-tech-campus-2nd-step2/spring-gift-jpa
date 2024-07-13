@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ProductController {
@@ -29,10 +31,22 @@ public class ProductController {
         this.productService = productService;
     }
 
+
     @GetMapping("/")
-    public String getAllMyProducts(Model model) {
-        var productList = productService.getAllProducts();
-        model.addAttribute("productList", productList);
+    public String getProductList(@RequestParam(value = "page", defaultValue = "0") int page, Model model) {
+        int pageSize = 10; // 한 페이지에 표시할 상품 개수
+        Page<Product> productPage = productService.getProductList(page, pageSize);
+
+        model.addAttribute("productList", productPage.getContent());
+        model.addAttribute("totalPages", productPage.getTotalPages());  // 총 페이지 수를 모델에 추가
+
+        return "getproducts";
+    }
+
+    @GetMapping("/{pageNumber}")
+    public String getMyProductsPage(@PathVariable("pageNumber") int pageNumber, Model model) {
+        var productList = productService.getProductPages(pageNumber);
+        model.addAttribute("productList", productList.getContent());
         return "getproducts";
     }
 
@@ -45,7 +59,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/product/{id}")
     public String getProductById(@PathVariable(name = "id") Long id, Model model) {
         Map<String, Object> response = new HashMap<>();
         try {
