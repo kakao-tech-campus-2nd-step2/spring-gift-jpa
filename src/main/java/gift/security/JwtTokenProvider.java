@@ -1,9 +1,8 @@
 package gift.security;
 
 import gift.DTO.Token;
-import gift.DTO.UserDTO;
+import gift.DTO.User.UserRequest;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +21,7 @@ public class JwtTokenProvider {
     /*
      * User의 정보를 갖고 Token을 생성하는 로직
      */
-    public Token makeToken(UserDTO user) {
+    public Token makeToken(UserRequest user) {
         Long nowMillis = System.currentTimeMillis();
         Date now = new Date(System.currentTimeMillis());
 

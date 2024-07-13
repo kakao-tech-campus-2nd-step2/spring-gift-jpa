@@ -1,5 +1,6 @@
 package gift.repository;
 
+import gift.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      */
     Product save(Product product);
     /*
-     *
+     * id로 DB에 해당 Product가 존재하는지 확인
      */
     boolean existsById(Long id);
     /*

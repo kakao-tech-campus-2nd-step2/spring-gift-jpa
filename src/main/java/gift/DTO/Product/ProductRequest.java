@@ -1,10 +1,9 @@
-package gift.DTO;
+package gift.DTO.Product;
 
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class ProductDTO {
-    private Long id;
+public class ProductRequest {
     @Size(min=1, max=15, message = "상품명은 1자 이상 15자 이하여야 합니다")
     @Pattern.List({
         @Pattern(regexp = "^[가-힣a-zA-Z0-9\\s\\(\\)\\[\\]\\+\\-\\&\\/\\_]+$",
@@ -15,18 +14,14 @@ public class ProductDTO {
     private int price;
     private String imageUrl;
 
-    public ProductDTO(){
+    public ProductRequest(){
 
     }
 
-    public ProductDTO(Long id, String name, int price, String imageUrl) {
-        this.id = id;
+    public ProductRequest(String name, int price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-    }
-    public Long getId(){
-        return id;
     }
 
     public String getName() {

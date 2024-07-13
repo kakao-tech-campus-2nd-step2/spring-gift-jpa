@@ -5,8 +5,9 @@
  */
 package gift.controller;
 
-import gift.DTO.ProductDTO;
-import gift.DTO.UserDTO;
+import gift.DTO.Product.ProductRequest;
+import gift.DTO.Product.ProductResponse;
+import gift.DTO.User.UserRequest;
 import gift.security.AuthenticateMember;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
@@ -29,8 +30,8 @@ public class ProductController {
      * GET 요청에 따라 Json 형식 배열을 반환
      */
     @GetMapping("/api/products")
-    public ResponseEntity<List<ProductDTO>> getProducts() {
-        List<ProductDTO> products = productService.loadAllProduct();
+    public ResponseEntity<List<ProductResponse>> getProducts() {
+        List<ProductResponse> products = productService.readAllProduct();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -41,9 +42,7 @@ public class ProductController {
      * + 제한 조건 : 글자수 15자 이하, 특수문자 제한, 제품명에 카카오가 들어가면 Exception
      */
     @PostMapping("/api/products")
-    public ResponseEntity<Void> createProduct(
-            @Valid @RequestBody ProductDTO product, @AuthenticateMember UserDTO user
-    ){
+    public ResponseEntity<Void> createProduct(@Valid @RequestBody ProductRequest product){
         productService.createProduct(product);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -61,16 +60,14 @@ public class ProductController {
     /*
      * 상품 수정
      * PUT 요청에 따라 다음과 같은 결과 값을 반환
-     * Product 정보와 리소스 URI가 일치하지 않으면 : 400 BAD_REQUEST
      * 리소스 URI에 대해, 해당 URI가 배정된 객체가 없으면 : 404 NOT_FOUND
      * 수정 성공 : 200 OK
      */
     @PutMapping("/api/products/{productId}")
-    public ResponseEntity<Void>modifyProduct(@PathVariable("productId") Long id, @Valid @RequestBody ProductDTO product){
+    public ResponseEntity<Void>modifyProduct(@PathVariable("productId") Long id, @Valid @RequestBody ProductRequest product){
         if(!productService.isDuplicate(id)){
             return new ResponseEntity<>((HttpStatus.NOT_FOUND));
         }
-
         productService.updateProduct(product, id);
         return new ResponseEntity<>((HttpStatus.OK));
     }

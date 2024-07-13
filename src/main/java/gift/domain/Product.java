@@ -14,7 +14,6 @@ public class Product {
     private int price;
     @Column(name = "imageUrl", nullable = false)
     private String imageUrl;
-
     protected Product(){
 
     }
@@ -50,6 +49,12 @@ public class Product {
     }
 
     public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void updateEntity(String name, int price, String imageUrl){
+        this.name = name;
+        this.price = price;
         this.imageUrl = imageUrl;
     }
 }

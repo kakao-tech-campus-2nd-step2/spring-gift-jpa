@@ -64,3 +64,11 @@
     1. 코드 리펙터링 : Domain 객체를 엔티티로 사용
     2. 코드 리펙터링 : Spring Application 동작 시 수행되던 table 생성 로직 삭제
     3. 코드 리펙터링 : Repository 클래스 내용 JPA에 맞게 변경
+
+### step 2. 연관 관계 매핑
+- JPA를 이용하여 객체의 참조와 테이블의 Foreign 키를 매핑하기
+- 필요한 사항
+    1. 코드 리펙터링 : WishProduct 엔티티의 필드 변경 id-> 실제 클래스 객체
+    2. 코드 리펙터링 : 해당 변경에 맞게 DAO 클래스와 Service, Controller 모두 변경
+- 추가 사항
+    - DTO 클래스의 Response와 Request 분리

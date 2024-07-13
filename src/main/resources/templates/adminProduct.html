@@ -93,7 +93,7 @@
         if(localStorage.getItem('token')){
             var inline = $('#header');
             inline.empty();
-            inline.append('<a href="wishList" className="header-link">위시리스트</a>\n' +
+            inline.append('<a href="" onclick="logoutFunction()" className="header-link">로그아웃</a>\n' +
                 '            <a href="adminUsers" className="header-link">유저관리</a>');
         }
     });

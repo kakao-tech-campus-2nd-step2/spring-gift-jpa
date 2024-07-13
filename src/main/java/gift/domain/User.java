@@ -10,15 +10,15 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @Column(nullable = false, unique = true)
-    String userId;
+    private String userId;
     @Column(nullable = false, unique = true)
-    String email;
+    private String email;
     @Column(nullable = false)
-    String password;
+    private String password;
     @Column(nullable = false)
-    Boolean admin;
+    private Boolean admin;
 
     protected User(){
 
@@ -30,7 +30,9 @@ public class User {
         this.password = password;
         this.admin = false;
     }
-
+    public Long getId() {
+        return id;
+    }
     public String getUserId(){
         return userId;
     }
@@ -55,5 +57,10 @@ public class User {
 
     public void setAdmin(Boolean admin) {
         this.admin = admin;
+    }
+
+    public void updateEntity(String email, String password){
+        this.email = email;
+        this.password = password;
     }
 }

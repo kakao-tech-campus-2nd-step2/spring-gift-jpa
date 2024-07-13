@@ -13,6 +13,9 @@
     <tr>
         <th scope="col">Id</th>
         <th scope="col">ProductId</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Image</th>
         <th scope="col">Count</th>
         <th scope="col">Option</th>
     </tr>
@@ -41,11 +44,14 @@
                     // 한 행의 내용
                     var row = `
                         <tr>
-                            <td>${wishProduct.userId}</td>
-                            <td>${wishProduct.productId}</td>
+                            <td>${wishProduct.user.id}</td>
+                            <td>${wishProduct.product.id}</td>
+                            <td>${wishProduct.product.name}</td>
+                            <td>${wishProduct.product.price}</td>
+                            <td><img src="${wishProduct.product.imageUrl}" alt="image"/></td>
                             <td>${wishProduct.count}</td>
                             <td>
-                                <a href="#" onclick="deleteFunction(${wishProduct.productId})">삭제</a>
+                                <a href="#" onclick="deleteFunction(${wishProduct.id})">삭제</a>
                             </td>
                         </tr>
                     `;

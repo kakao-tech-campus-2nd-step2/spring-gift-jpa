@@ -1,15 +1,13 @@
 package gift.service;
 
-import gift.DTO.Token;
-import gift.DTO.UserDTO;
+import gift.DTO.User.UserRequest;
+import gift.DTO.User.UserResponse;
 import gift.domain.User;
 import gift.repository.UserRepository;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -22,11 +20,12 @@ public class UserService {
     /*
      * 모든 User의 정보를 반환하는 로직
      */
-    public List<UserDTO> findAll(){
-        List<UserDTO> list = new ArrayList<>();
+    public List<UserResponse> findAll(){
+        List<UserResponse> list = new ArrayList<>();
         List<User> all = userRepository.findAll();
         for (User user : all) {
-            list.add(new UserDTO(
+            list.add(new UserResponse(
+                    user.getId(),
                     user.getUserId(),
                     user.getEmail(),
                     user.getPassword()
@@ -35,52 +34,71 @@ public class UserService {
         return list;
     }
     /*
-     * User의 정보를 저장하는 로직
+     * User의 정보를 userId를 기준으로 찾는 로직
      */
-    public void createUser(UserDTO user){
-        userRepository.save(new User(
-                user.getUserId(),
-                user.getEmail(),
-                user.getPassword()
-        ));
-    }
-    /*
-     * User의 정보를 email을 기준으로 찾는 로직
-     */
-    public UserDTO loadOneUser(String userId){
+    public UserResponse loadOneUser(String userId){
         User user = userRepository.findByUserId(userId);
-        return new UserDTO(
+        return new UserResponse(
+                user.getId(),
                 user.getUserId(),
                 user.getEmail(),
                 user.getPassword()
         );
     }
     /*
+     * 위와 동일, 오버로딩
+     */
+    public UserResponse loadOneUser(Long id){
+        User user = userRepository.findById(id).orElseThrow(NullPointerException::new);
+        return new UserResponse(
+                user.getId(),
+                user.getUserId(),
+                user.getEmail(),
+                user.getPassword()
+        );
+    }
+    /*
+     * User의 정보를 저장하는 로직
+     */
+    @Transactional
+    public void createUser(UserRequest user){
+        userRepository.save(new User(
+                user.getUserId(),
+                user.getEmail(),
+                user.getPassword()
+        ));
+    }
+    @Transactional
+    public void delete(Long id){
+        userRepository.deleteById(id);
+    }
+    /*
+     * user 정보를 업데이트하는 로직
+     */
+    @Transactional
+    public void update(UserRequest user){
+        User byUserId = userRepository.findByUserId(user.getUserId());
+        byUserId.updateEntity(user.getEmail(), user.getPassword());
+    }
+    /*
      * userId의 중복 여부를 확인하는 로직
      */
-    public boolean isDuplicate(UserDTO user){
-        List<UserDTO> all = findAll();
-        for (UserDTO userDTO : all) {
-            if(userDTO.getUserId().equals(user.getUserId()))
-                return true;
-        }
-        return false;
+    public boolean isDuplicate(UserRequest user){
+        return userRepository.existsByUserId(user.getUserId());
+    }
+    /*
+     * 위와 동일 ( overloading )
+     */
+    public boolean isDuplicate(Long id){
+        return userRepository.existsById(id);
     }
     /*
      * 로그인을 위한 확인을 해주는 로직
      */
-    public boolean login(UserDTO user){
-        List<UserDTO> all = findAll();
-        for (UserDTO userDTO : all) {
-            if(userDTO.getUserId().equals(user.getUserId()) && userDTO.getPassword().equals(user.getPassword()))
-                return true;
-        }
-        return false;
+    public boolean login(UserRequest user){
+        return userRepository.existsByUserIdAndPassword(user.getUserId(), user.getPassword());
     }
     /*
      * user 정보를 삭제하는 로직
      */
-    public void delete(String userId){
-        userRepository.deleteByUserId(userId);
-    }
 }

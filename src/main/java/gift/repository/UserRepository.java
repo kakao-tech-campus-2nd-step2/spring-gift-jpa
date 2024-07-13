@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     /*
@@ -16,11 +17,27 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     List<User> findAll();
     /*
+     * User 정보를 id를 기준으로 DB에서 찾아와 반환
+     */
+    Optional<User> findById(Long id);
+    /*
      * User 정보를 userId를 기준으로 DB에서 찾아와 반환
      */
     User findByUserId(String userId);
     /*
-     * User 정보를 userId를 기준으로 DB에서 삭제
+     * User 정보를 id를 기준으로 DB에서 삭제
      */
-    void deleteByUserId(String userId);
+    void deleteById(Long id);
+    /*
+     * User 정보가 DB에 존재하는지 userId를 통해 검증
+     */
+    boolean existsByUserId(String userId);
+    /*
+     * User 정보가 DB에 존재하는지 id를 통해 검증
+     */
+    boolean existsById(Long id);
+    /*
+     * User 정보가 DB에 존재하는지 userId와 password를 통해 검증
+     */
+    boolean existsByUserIdAndPassword(String userId, String password);
 }

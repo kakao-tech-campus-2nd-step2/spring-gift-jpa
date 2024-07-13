@@ -1,7 +1,8 @@
 package gift.controller;
 
 import gift.DTO.Token;
-import gift.DTO.UserDTO;
+import gift.DTO.User.UserRequest;
+import gift.DTO.User.UserResponse;
 import gift.security.JwtTokenProvider;
 import gift.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class UserController {
      * 성공시 : 200 OK 및 User 정보로 만든 Token 반환
      */
     @PostMapping("/login")
-    public ResponseEntity<Token> giveToken(@RequestBody UserDTO user){
+    public ResponseEntity<Token> giveToken(@RequestBody UserRequest user){
         if(!userService.login(user)){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -38,7 +39,7 @@ public class UserController {
      * 회원가입 성공시 : 201 Created
      */
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody UserDTO user){
+    public ResponseEntity<Void> register(@RequestBody UserRequest user){
         if(userService.isDuplicate(user))
             return new ResponseEntity<>(HttpStatus.CONFLICT);
 
@@ -48,29 +49,37 @@ public class UserController {
     /*
      * 모든 User의 정보 가져오기
      */
-    @GetMapping("/users")
-    public ResponseEntity<List<UserDTO>> readUsers() {
-        List<UserDTO> all = userService.findAll();
+    @GetMapping("/api/users")
+    public ResponseEntity<List<UserResponse>> readUsers() {
+        List<UserResponse> all = userService.findAll();
 
         return new ResponseEntity<>(all, HttpStatus.OK);
     }
     /*
      * 유저 정보 수정하기
      */
-    @PutMapping("/users/{userId}")
-    public ResponseEntity<Void> updateUsers(@PathVariable("userId") String userId){
-        if(!userService.isDuplicate(userService.loadOneUser(userId)))
-            return new ResponseEntity<>(HttpStatus.OK);
+    @PutMapping("/api/users/{id}")
+    public ResponseEntity<Void> updateUsers(@PathVariable("id") Long id, @RequestBody UserRequest user){
+        if(!id.equals(userService.loadOneUser(user.getUserId()).getId())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(!userService.isDuplicate(user))
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        userService.update(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
     /*
      * 유저 정보 삭제하기
      */
-    @DeleteMapping("/users/{userId}")
-    public ResponseEntity<Void> deleteUsers(@PathVariable("userId") String userId){
-        userService.delete(userId);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+    @DeleteMapping("/api/users/{id}")
+    public ResponseEntity<Void> deleteUsers(@PathVariable("id") Long id){
+        if(userService.isDuplicate(id)){
+            userService.delete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

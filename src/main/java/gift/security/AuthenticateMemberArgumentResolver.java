@@ -1,9 +1,8 @@
 package gift.security;
 
-import gift.DTO.UserDTO;
-import gift.security.AuthenticateMember;
+import gift.DTO.User.UserRequest;
+import gift.DTO.User.UserResponse;
 import gift.service.UserService;
-import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -46,12 +45,12 @@ public class AuthenticateMemberArgumentResolver implements HandlerMethodArgument
         token = token.substring(7); // "Bearer " 부분을 제거
 
         String userId = jwtTokenProvider.getClaimsFromToken(token);
-        UserDTO user = userService.loadOneUser(userId);
+        UserResponse userRes = userService.loadOneUser(userId);
 
-        if (user == null) {
+        if (userRes == null) {
             throw new IllegalArgumentException("Member not found for token: " + token);
         }
 
-        return user;
+        return userRes;
     }
 }

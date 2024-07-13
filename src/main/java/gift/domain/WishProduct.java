@@ -7,31 +7,37 @@ import jakarta.persistence.*;
 public class WishProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long Id;
-    @Column(nullable = false)
-    String userId;
-    @Column(nullable = false)
-    Long productId;
+    private Long id;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
     @Column(nullable = false)
     int count;
+
 
     protected WishProduct(){
 
     }
 
-    public WishProduct(String userId, Long productId) {
-        this.userId = userId;
-        this.productId = productId;
+    public WishProduct(User user, Product product) {
+        this.user = user;
+        this.product = product;
         count = 1;
 
     }
 
-    public String getUserId() {
-        return userId;
+    public Long getId(){
+        return id;
+    }
+    public User getUser() {
+        return user;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
     public int getCount(){
         return count;
