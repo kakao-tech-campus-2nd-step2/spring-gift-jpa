@@ -1,6 +1,7 @@
 package gift.controller;
 
 import gift.service.ProductService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +19,8 @@ public class AdminController {
     }
 
     @GetMapping("/products")
-    public String getProducts(Model model) {
-        var products = productService.getProducts();
+    public String getProducts(Pageable pageable, Model model) {
+        var products = productService.getProducts(pageable);
         model.addAttribute("data", "관리자");
         model.addAttribute("products", products);
         return "views/products";

@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -18,10 +20,12 @@ class ProductServiceTest {
     @Autowired
     private ProductService productService;
 
+    private final Pageable pageable = PageRequest.of(0, 10);
+
     @AfterEach
     @DisplayName("상품 레포지토리 초기화하기")
     void deleteBaseData() {
-        var products = productService.getProducts();
+        var products = productService.getProducts(pageable);
         for (var product : products) {
             productService.deleteProduct(product.id());
         }
@@ -81,11 +85,11 @@ class ProductServiceTest {
         //given
         var productRequest = new ProductRequest("상품1", 10000, "이미지 주소");
         var savedProduct = productService.addProduct(productRequest, MemberRole.MEMBER);
-        Assertions.assertThat(productService.getProducts().size()).isEqualTo(1);
+        Assertions.assertThat(productService.getProducts(pageable).size()).isEqualTo(1);
         var id = savedProduct.id();
         //when
         productService.deleteProduct(id);
         //then
-        Assertions.assertThat(productService.getProducts().size()).isEqualTo(0);
+        Assertions.assertThat(productService.getProducts(pageable).size()).isEqualTo(0);
     }
 }

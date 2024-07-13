@@ -47,14 +47,6 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getProducts() {
-        return productRepository.findAll()
-                .stream()
-                .map(this::getProductResponseFromProduct)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
     public List<ProductResponse> getProducts(Pageable pageable) {
         return productRepository.findAll(pageable)
                 .stream()
