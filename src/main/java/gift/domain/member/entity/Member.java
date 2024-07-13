@@ -1,6 +1,6 @@
-package gift.member.entity;
+package gift.domain.member.entity;
 
-import gift.wishlist.entity.WishEntity;
+import gift.domain.wishlist.entity.Wish;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "member")
-public class MemberEntity {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,16 +26,16 @@ public class MemberEntity {
     @Column
     private String password;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL)
-    private List<WishEntity> wishEntityList;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Wish> wishList;
 
-    public MemberEntity() {
+    protected Member() {
     }
 
-    public MemberEntity(String email, String password) {
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
-        this.wishEntityList = new ArrayList<>();
+        this.wishList = new ArrayList<>();
     }
 
     public Long getId() {
@@ -50,16 +50,16 @@ public class MemberEntity {
         return password;
     }
 
-    public List<WishEntity> getWishEntityList() {
-        return wishEntityList;
+    public List<Wish> getWishList() {
+        return wishList;
     }
 
-    public void addWishEntity(WishEntity wishEntity) {
-        this.wishEntityList.add(wishEntity);
-        wishEntity.updateMemberEntity(this);
+    public void addWish(Wish wish) {
+        this.wishList.add(wish);
+        wish.updateMember(this);
     }
 
-    public void removeWishEntity(WishEntity wishEntity) {
-        this.wishEntityList.remove(wishEntity);
+    public void removeWish(Wish wish) {
+        this.wishList.remove(wish);
     }
 }
