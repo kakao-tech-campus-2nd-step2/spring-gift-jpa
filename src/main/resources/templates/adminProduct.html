@@ -71,6 +71,9 @@
             <tbody id="productList"></tbody>
         </table>
     </div>
+    <div class="container">
+        <ul class="pagination justify-content-center" id="pagination"></ul>
+    </div>
 </div>
 
 <!-- 모달 창 -->
@@ -111,7 +114,7 @@
 
 <script>
     $(document).ready(function () {
-        loadProducts();
+        let currentPage = 0;
 
         // 상품 등록하기
         $('#registerButton').on('click', function (e) {
@@ -172,19 +175,21 @@
             $("#imageUrl").val("");
         }
         // 상품 리스트 로드하기
-        function loadProducts() {
+        function loadProducts(pageNum) {
             $.ajax({
                 type: 'GET',
-                url: '/spring-gift/products',
+                url: '/spring-gift/productpage/' + pageNum,
                 success: function (response) {
-                    var products = response;
+                    var products = response.content;
+                    var totalPages = response.totalPages;
                     var html = '';
+
                     products.forEach(function (product) {
                         html += '<tr>' +
                             '<td>' + product.id + '</td>' +
                             '<td>' + product.name + '</td>' +
                             '<td>' + product.price + '</td>' +
-                            '<td>' + product.imageUrl + '</td>' +
+                            '<td>' + product.imag + '</td>' +
                             '<td>' + product.seller + '</td>' +
                             '<td>' +
                             '<div style="display: flex; justify-content: center; gap: 10px;">' +
@@ -195,12 +200,62 @@
                             '</tr>';
                     });
                     $('#productList').html(html);
+                    setupPagination(totalPages, pageNum);
                 },
                 error: function (error) {
                     alert(error);
                 }
             });
         }
+        function setupPagination(totalPages, currentPage) {
+
+            let paginationHtml = '';
+
+            // 처음 버튼
+            paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="0">처음</a></li>';
+
+            // 중간 페이지 버튼들
+            const startPage = Math.max(0, currentPage - 2);
+            const endPage = Math.min(totalPages - 1, currentPage + 2);
+
+            for (let i = startPage; i <= endPage; i++) {
+                if (i === currentPage) {
+                    paginationHtml += '<li class="page-item active"><a class="page-link" href="javascript:void(0);" data-page="' + i + '">' + i + '</a></li>';
+                } else {
+                    paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="' + i + '">' + i + '</a></li>';
+                }
+            }
+
+            // 마지막 버튼
+            paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="' + (totalPages - 1) + '">마지막</a></li>';
+
+            $('#pagination').html(paginationHtml);
+        }
+
+        $(document).on('click', '.page-link', function () {
+            const pageNum = $(this).data('page');
+            if (pageNum !== undefined && pageNum !== currentPage) {
+                currentPage = pageNum;
+                loadProducts(currentPage);
+            }
+        });
+
+        $(document).on('click', '.add-button', function () {
+            var productId = $(this).data('id');
+            $.ajax({
+                type: 'POST',
+                url: '/spring-gift/wishlist/' + productId,
+                success: function (response) {
+                    alert('상품이 위시리스트에 담겼습니다.');
+                    loadProducts(currentPage);
+                },
+                error: function (xhr, status, error) {
+                    var errorResponse = JSON.parse(xhr.responseText);
+                    alert(errorResponse.errorMessage);
+                }
+            });
+        });
+
 
         // 수정 버튼 클릭 시 모달 창 띄우기
         $(document).on('click', '.edit-button', function () {
@@ -235,7 +290,7 @@
                     console.log("Product updated successfully:", response);
                     alert('상품이 수정되었습니다.');
                     $('#editModal').modal('hide');
-                    loadProducts();
+                    loadProducts(currentPage);
                 },
                 error: function (xhr, status, error) {
 
@@ -254,7 +309,7 @@
                 url: '/spring-gift/admin/product/' + productId,
                 success: function (response) {
                     alert('상품이 삭제되었습니다.');
-                    loadProducts();
+                    loadProducts(currentPage);
                 },
                 error: function (xhr, status, error) {
                     var errorResponse = JSON.parse(xhr.responseText);
@@ -264,7 +319,7 @@
         });
 
         // 초기 로드
-        loadProducts();
+        loadProducts(currentPage);
     });
 </script>
 </body>
