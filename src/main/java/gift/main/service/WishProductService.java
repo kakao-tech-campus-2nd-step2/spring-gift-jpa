@@ -44,10 +44,6 @@ public class WishProductService {
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
         User user = userRepository.findByEmail(sessionUser.getEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
-        if (wishProductRepository.existsByProductIdAndUserId(productId, user.getId())) {
-            throw new CustomException(ErrorCode.ALREADY_EXISTING_WISH_LIST)
-            ;
-        }
         wishProductRepository.save(new WishProduct(product, user));
     }
 
