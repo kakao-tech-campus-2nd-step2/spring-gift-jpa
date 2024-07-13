@@ -34,27 +34,28 @@ public class WishService {
     @Transactional(readOnly = true)
     public Page<WishResponseDto> getProductsByUserEmail(String email, int page, WishSortBy sortBy) {
         Sort sort = createSort(sortBy);
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort); // 페이지 크기를 10으로 고정
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
+
         Page<Wish> wishPage = wishRepository.findByUserEmail(email, pageable);
+
+        // 존재하지 않는 페이지를 요청한 경우 처리
+        if (page > wishPage.getTotalPages() - 1 && page != 0) {
+            pageable = PageRequest.of(wishPage.getTotalPages() - 1, PAGE_SIZE, sort);
+            wishPage = wishRepository.findByUserEmail(email, pageable);
+        }
+
         return wishPage.map(this::convertToWishResponseDto);
     }
 
     private Sort createSort(WishSortBy sortBy) {
-        switch (sortBy) {
-            case PRODUCT_NAME_ASC:
-                return Sort.by(Sort.Direction.ASC, "product.name");
-            case PRODUCT_NAME_DESC:
-                return Sort.by(Sort.Direction.DESC, "product.name");
-            case COUNT_ASC:
-                return Sort.by(Sort.Direction.ASC, "count");
-            case COUNT_DESC:
-                return Sort.by(Sort.Direction.DESC, "count");
-            case ID_DESC:
-                return Sort.by(Sort.Direction.DESC, "id");
-            case ID_ASC:
-            default:
-                return Sort.by(Sort.Direction.ASC, "id");
-        }
+        return switch (sortBy) {
+            case PRODUCT_NAME_ASC -> Sort.by("product.name").ascending();
+            case PRODUCT_NAME_DESC -> Sort.by("product.name").descending();
+            case COUNT_ASC -> Sort.by("count").ascending();
+            case COUNT_DESC -> Sort.by("count").descending();
+            case ID_ASC -> Sort.by("id").ascending();
+            case ID_DESC -> Sort.by("id").descending();
+        };
     }
 
     @Transactional
