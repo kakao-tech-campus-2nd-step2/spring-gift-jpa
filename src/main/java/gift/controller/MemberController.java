@@ -2,7 +2,6 @@ package gift.controller;
 
 import gift.constants.SuccessMessage;
 import gift.dto.ProductDto;
-import gift.dto.WishlistRequest;
 import gift.entity.Member;
 import gift.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -69,7 +68,7 @@ public class MemberController {
     public ResponseEntity<String> addWishlist(@PathVariable("productId") Long productId,
         HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
-        memberService.addWishlist(new WishlistRequest(email, productId));
+        memberService.addWishlist(email, productId);
 
         return ResponseEntity.ok(SuccessMessage.ADD_WISHLIST_SUCCESS_MSG);
     }
@@ -82,7 +81,7 @@ public class MemberController {
     public ResponseEntity<String> deleteWishlist(@PathVariable("productId") Long productId,
         HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
-        memberService.deleteWishlist(new WishlistRequest(email, productId));
+        memberService.deleteWishlist(email, productId);
 
         return ResponseEntity.ok(SuccessMessage.DELETE_WISHLIST_SUCCESS_MSG);
     }

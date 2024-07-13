@@ -2,7 +2,6 @@ package gift.service;
 
 import gift.constants.ErrorMessage;
 import gift.dto.ProductDto;
-import gift.dto.WishlistRequest;
 import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wishlist;
@@ -74,15 +73,15 @@ public class MemberService {
     /**
      * 위시 리스트에 상품 추가
      *
-     * @param wish
+     * @param email, productId
      */
-    public void addWishlist(WishlistRequest wish) {
-        wishlistJpaDao.findByMember_EmailAndProduct_Id(wish.getEmail(), wish.getProductId())
+    public void addWishlist(String email, Long productId) {
+        wishlistJpaDao.findByMember_EmailAndProduct_Id(email, productId)
             .ifPresent(v -> {
                 throw new IllegalArgumentException(ErrorMessage.WISHLIST_ALREADY_EXISTS_MSG);
             });
 
-        Wishlist wishlist = convertWishlistRequestToWishlist(wish);
+        Wishlist wishlist = convertWishlistRequestToWishlist(email, productId);
         wishlist.getMember().getWishlist().add(wishlist);
         wishlist.getProduct().getWishlist().add(wishlist);
         wishlistJpaDao.save(wishlist);
@@ -91,22 +90,22 @@ public class MemberService {
     /**
      * 위시 리스트에서 상품 삭제
      *
-     * @param wish
+     * @param email, productId
      */
-    public void deleteWishlist(WishlistRequest wish) {
-        wishlistJpaDao.findByMember_EmailAndProduct_Id(wish.getEmail(), wish.getProductId())
+    public void deleteWishlist(String email, Long productId) {
+        wishlistJpaDao.findByMember_EmailAndProduct_Id(email, productId)
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.WISHLIST_NOT_EXISTS_MSG));
 
-        wishlistJpaDao.deleteByMember_EmailAndProduct_Id(wish.getEmail(), wish.getProductId());
+        wishlistJpaDao.deleteByMember_EmailAndProduct_Id(email, productId);
     }
 
     /**
-     * WishlistRequest를 Wishlist Entity로 변환
+     * email, productId를 Wishlist Entity로 변환
      */
-    private Wishlist convertWishlistRequestToWishlist(WishlistRequest wish) {
-        Member member = memberJpaDao.findByEmail(wish.getEmail())
+    private Wishlist convertWishlistRequestToWishlist(String email, Long productId) {
+        Member member = memberJpaDao.findByEmail(email)
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.MEMBER_NOT_EXISTS_MSG));
-        Product product = productJpaDao.findById(wish.getProductId())
+        Product product = productJpaDao.findById(productId)
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.PRODUCT_NOT_EXISTS_MSG));
         return new Wishlist(member, product);
     }
