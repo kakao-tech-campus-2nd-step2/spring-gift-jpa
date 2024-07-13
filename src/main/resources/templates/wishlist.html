@@ -58,6 +58,35 @@
         });
       });
 
+      // 추가: 정렬 링크 클릭 이벤트 처리
+      document.querySelectorAll('.sort-link').forEach(link => {
+        link.addEventListener('click', function(event) {
+          event.preventDefault();
+          const url = link.getAttribute('href');
+
+          fetch(url, {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => {
+            if (response.status === 200) {
+              return response.text();
+            } else {
+              throw new Error('페이지를 불러오는 데 실패했습니다.');
+            }
+          })
+          .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+          })
+          .catch(error => alert(error.message));
+        });
+      });
+
       document.querySelectorAll('.pagination-link').forEach(link => {
         link.addEventListener('click', function(event) {
           event.preventDefault();
@@ -96,9 +125,9 @@
 <table>
   <thead>
   <tr>
-    <th><a th:href="@{/wishlist(sortBy='product.id', direction=${direction == 'asc' ? 'desc' : 'asc'})}">ID</a></th>
-    <th><a th:href="@{/wishlist(sortBy='product.name.name', direction=${direction == 'asc' ? 'desc' : 'asc'})}">이름</a></th>
-    <th><a th:href="@{/wishlist(sortBy='product.price', direction=${direction == 'asc' ? 'desc' : 'asc'})}">가격</a></th>
+    <th><a th:href="@{/wishlist(sortBy='product.id', direction=${direction == 'asc' ? 'desc' : 'asc'})}" class="sort-link">ID</a></th>
+    <th><a th:href="@{/wishlist(sortBy='product.name.name', direction=${direction == 'asc' ? 'desc' : 'asc'})}" class="sort-link">이름</a></th>
+    <th><a th:href="@{/wishlist(sortBy='product.price', direction=${direction == 'asc' ? 'desc' : 'asc'})}" class="sort-link">가격</a></th>
     <th>URL</th>
     <th>액션</th>
   </tr>
