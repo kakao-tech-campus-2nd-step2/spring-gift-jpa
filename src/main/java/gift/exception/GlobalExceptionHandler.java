@@ -9,6 +9,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -47,5 +48,20 @@ public class GlobalExceptionHandler {
     public String handleNotRegisterdAccount(ForbiddenException e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         return "redirect:/";
+    }
+
+    @ExceptionHandler(NonIntegerPriceException.class)
+    public String handleNonIntegerPrice(NonIntegerPriceException e, Model model) {
+        model.addAttribute("errorMessage", e.getMessage());
+        return "addproductform";
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<String> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String name = ex.getName();
+        String type = ex.getRequiredType().getSimpleName();
+        Object value = ex.getValue();
+        String message = String.format("'%s' should be a valid '%s' and '%s' isn't", name, type, value);
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 }
