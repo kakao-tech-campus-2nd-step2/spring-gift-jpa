@@ -19,3 +19,4 @@ List<Product> products = wishlist.getProducts();
 
 ### product &rarr; wishlist (ManyToOne)
 
+### product(OneToMany) &lrarr; product_wishlist(ManyToOne) &lrarr; wishlist(OneToMany)
