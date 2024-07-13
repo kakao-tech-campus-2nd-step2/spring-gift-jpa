@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class WishListService {
@@ -50,11 +51,14 @@ public class WishListService {
         wishListRepository.deleteById(id);
     }
 
-    public Page<WishListDTO> getWishListsPages(int pageNum, int size, User user) {
-        List<WishListDTO> wishListDTOS = findByUser(user);
-        PageRequest pageRequest = PageRequest.of(pageNum, size, Sort.by("id"));
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), wishListDTOS.size());
-        return new PageImpl<>(wishListDTOS.subList(start, end), pageRequest, wishListDTOS.size());
+    public Page<WishListDTO> getWishListsPages(int pageNum, int size, User user, String sortBy, String sortDirection) {
+        Pageable pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Order.asc(sortBy)));
+        if (Objects.equals(sortDirection, "desc")) {
+            pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Order.desc(sortBy)));
+        }
+
+        Page<WishList> wishLists = wishListRepository.findByUser(user, pageable);
+        return wishLists.map(WishListDTO::new);
+
     }
 }
