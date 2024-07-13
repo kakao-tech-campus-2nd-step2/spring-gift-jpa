@@ -1,8 +1,8 @@
-package gift.member.controller;
+package gift.domain.member.controller;
 
-import gift.member.domain.Member;
-import gift.member.dto.MemberRequest;
-import gift.member.service.MemberService;
+import gift.domain.member.dto.MemberRequest;
+import gift.domain.member.dto.MemberResponse;
+import gift.domain.member.service.MemberService;
 import gift.util.dto.JwtResponse;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -26,14 +26,14 @@ public class MemberController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Member>> getAllMember() {
-        List<Member> memberList = memberService.getAllMember();
+    public ResponseEntity<List<MemberResponse>> getAllMember() {
+        List<MemberResponse> memberList = memberService.getAllMember();
         return new ResponseEntity<>(memberList, HttpStatus.OK);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<JwtResponse> register(@RequestBody MemberRequest memberDto) {
-        String token = memberService.register(memberDto);
+    public ResponseEntity<JwtResponse> register(@RequestBody MemberRequest memberRequest) {
+        String token = memberService.register(memberRequest);
 
         return new ResponseEntity<>(new JwtResponse(token), HttpStatus.CREATED);
     }
