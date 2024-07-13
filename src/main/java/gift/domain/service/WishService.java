@@ -7,9 +7,7 @@ import gift.domain.dto.response.WishResponse;
 import gift.domain.entity.Member;
 import gift.domain.entity.Product;
 import gift.domain.entity.Wish;
-import gift.domain.exception.ProductNotFoundException;
 import gift.domain.exception.ProductNotIncludedInWishlistException;
-import gift.domain.repository.ProductRepository;
 import gift.domain.repository.WishRepository;
 import java.util.List;
 import java.util.Optional;
@@ -20,17 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class WishService {
 
     private final WishRepository wishRepository;
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    public WishService(WishRepository wishRepository, ProductRepository productRepository) {
+    public WishService(WishRepository wishRepository, ProductService productService) {
         this.wishRepository = wishRepository;
-        this.productRepository = productRepository;
-    }
-
-    @Transactional
-    protected Product getProductByIdOrThrow(Long productId) {
-        //존재하지 않는 상품이면 예외 발생
-        return productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
+        this.productService = productService;
     }
 
     @Transactional(readOnly = true)
@@ -42,7 +34,7 @@ public class WishService {
 
     @Transactional
     public WishAddResponse addWishlist(Member member, WishRequest wishRequest) {
-        Product product = getProductByIdOrThrow(wishRequest.productId());
+        Product product = productService.getProductById(wishRequest.productId());
         Optional<Wish> search = wishRepository.findWishByMemberAndProduct(member, product);
 
         //아이템이 없고 수량이 1 이상일 때 새 데이터 삽입
@@ -71,7 +63,7 @@ public class WishService {
 
     @Transactional
     public WishResponse updateWishlist(Member member, WishRequest wishRequest) {
-        Product product = getProductByIdOrThrow(wishRequest.productId());
+        Product product = productService.getProductById(wishRequest.productId());
         Wish wish = wishRepository.findWishByMemberAndProduct(member, product)
             .orElseThrow(ProductNotIncludedInWishlistException::new);
         wish.set(wishRequest);
@@ -80,7 +72,7 @@ public class WishService {
 
     @Transactional
     public void deleteWishlist(Member member, WishDeleteRequest deleteRequestDto) {
-        Product product = getProductByIdOrThrow(deleteRequestDto.productId());
+        Product product = productService.getProductById(deleteRequestDto.productId());
         wishRepository.deleteByMemberAndProduct(member, product);
     }
 }

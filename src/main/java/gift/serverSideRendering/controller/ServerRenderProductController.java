@@ -45,7 +45,7 @@ public class ServerRenderProductController {
 
     @GetMapping("/update/{id}")
     public String showUpdateProductForm(@PathVariable("id") Long id, Model model) {
-        ProductResponse product = service.getProductById(id);
+        ProductResponse product = ProductResponse.of(service.getProductById(id));
         ProductRequest dto = new ProductRequest(product.name(), product.price(), product.imageUrl());
         model.addAttribute("productRequestDto", dto);
         model.addAttribute("productId", id);

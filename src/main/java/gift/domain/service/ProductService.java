@@ -20,10 +20,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse getProductById(Long id) {
-        return ProductResponse.of(productRepository.findById(id)
-            //존재하지 않는 상품 참조 시도시 예외 발생
-            .orElseThrow(ProductNotFoundException::new));
+    public Product getProductById(Long id) {
+        //존재하지 않는 상품이면 예외 발생
+        return productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
     }
 
     @Transactional(readOnly = true)
