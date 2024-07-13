@@ -6,13 +6,11 @@ import gift.model.Member;
 import gift.model.Product;
 import gift.model.WishList;
 import gift.model.WishListDTO;
+import gift.model.WishListPageDTO;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishListRepository;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,26 +41,15 @@ public class WishListService {
         return convertToDTO(wishListRepository.save(wishList));
     }
 
-    public List<WishListDTO> getAllWishList() {
-        List<WishList> wishlists = wishListRepository.findAll();
-        return wishlists.stream()
+    public WishListPageDTO getWishListByMemberId(long memberId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<WishListDTO> wishListPage = wishListRepository.findWishListByMemberId(memberId,
+                pageable)
             .map(this::convertToDTO)
-            .collect(Collectors.toList());
-    }
+            .stream()
+            .toList();
 
-    public Page<WishListDTO> getWishListByMemberId(long memberId, int page, int size) {
-        Pageable pageRequest = createPageRequestUsing(page, size);
-
-        List<WishList> allWishlists = wishListRepository.findWishListByMemberId(memberId);
-        List<WishListDTO> allWishListDTO = allWishlists.stream()
-            .map(this::convertToDTO)
-            .collect(Collectors.toList());
-
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), allWishlists.size());
-
-        List<WishListDTO> pageContent = allWishListDTO.subList(start, end);
-        return new PageImpl<>(pageContent, pageRequest, allWishListDTO.size());
+        return new WishListPageDTO(page, size, wishListPage.size(), wishListPage);
     }
 
     public WishListDTO updateWishListQuantity(WishListDTO wishListDTO) {
@@ -96,7 +83,4 @@ public class WishListService {
         return new WishListDTO(memberId, productId, wishList.getQuantity());
     }
 
-    private Pageable createPageRequestUsing(int page, int size) {
-        return PageRequest.of(page, size);
-    }
 }

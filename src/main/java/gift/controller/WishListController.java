@@ -2,9 +2,8 @@ package gift.controller;
 
 import gift.model.AuthInfo;
 import gift.model.WishListDTO;
+import gift.model.WishListPageDTO;
 import gift.service.WishListService;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,11 +29,8 @@ public class WishListController {
     public ResponseEntity<?> getWishList(@RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "4") int size, AuthInfo authInfo) {
         long memberId = authInfo.id();
-        Page<WishListDTO> wishListsPage = wishListService.getWishListByMemberId(memberId, page, size);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Page-Number", String.valueOf(wishListsPage.getNumber()));
-        headers.add("X-Page-Size", String.valueOf(wishListsPage.getSize()));
-        return ResponseEntity.ok().headers(headers).body(wishListsPage);
+        WishListPageDTO wishListsPage = wishListService.getWishListByMemberId(memberId, page, size);
+        return ResponseEntity.ok().body(wishListsPage.wishlists());
     }
 
     @PostMapping
