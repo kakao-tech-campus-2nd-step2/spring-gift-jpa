@@ -36,7 +36,6 @@ public class ProductService {
         return product.orElse(null);
     }
 
-
     public Product createProduct(@Valid Product product) {
         if (product.getName().contains("카카오")) {
             throw new ForbiddenWordException("상품 이름에 '카카오'가 포함된 경우 담당 MD와 협의가 필요합니다.");
@@ -116,7 +115,7 @@ public class ProductService {
         return productRepository.findById(id).isEmpty();
     }
 
-    public Product updateProductByName(String name, @Valid Product updatedProduct){
+    public Product updateProductByName(String name, @Valid Product updatedProduct) {
         var existingProduct = productRepository.findByName(name);
         if (existingProduct.isEmpty()) {
             throw new ProductNotFoundException("수정할 상품이 존재하지 않습니다!");
@@ -132,6 +131,7 @@ public class ProductService {
         var pageable = PageRequest.of(pageNumber, 5, Sort.by("id"));
         return productRepository.findAll(pageable);
     }
+
     public Page<Product> getProductList(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
         return productRepository.findAll(pageable);
