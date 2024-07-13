@@ -5,6 +5,8 @@ import gift.domain.Product;
 import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,4 +48,13 @@ public class ProductService {
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
+
+    public Page<Product> getPagedProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
+    // dto로 변경하면 필요한 거
+//    private ProductRegisterRequestDto convertToDto(Product product) {
+//        return new ProductRegisterRequestDto(product.getName(), product.getPrice(), product.getImageUrl());
+//    }
 }
