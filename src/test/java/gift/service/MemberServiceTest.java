@@ -6,11 +6,10 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import gift.member.domain.Member;
-import gift.member.dto.MemberRequest;
-import gift.member.entity.MemberEntity;
-import gift.member.service.MemberService;
-import gift.member.repository.MemberRepository;
+import gift.domain.member.dto.MemberRequest;
+import gift.domain.member.entity.Member;
+import gift.domain.member.service.MemberService;
+import gift.domain.member.repository.MemberRepository;
 import gift.util.JwtUtil;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
@@ -36,9 +35,9 @@ class MemberServiceTest {
     void register() {
         //given
         MemberRequest memberRequest = new MemberRequest("test@email.com", "password");
-        MemberEntity savedMember = new MemberEntity(memberRequest.getEmail(), memberRequest.getPassword());
+        Member savedMember = new Member(memberRequest.getEmail(), memberRequest.getPassword());
 
-        doReturn(savedMember).when(memberRepository).save(any(MemberEntity.class));
+        doReturn(savedMember).when(memberRepository).save(any(Member.class));
         doReturn("jwtToken").when(jwtUtil).generateToken(any(Member.class));
 
         // when
@@ -53,7 +52,7 @@ class MemberServiceTest {
     void loginSuccess() {
         // given
         MemberRequest memberRequest = new MemberRequest("test@google.co.kr", "password");
-        MemberEntity savedMember = new MemberEntity(memberRequest.getEmail(), memberRequest.getPassword());
+        Member savedMember = new Member(memberRequest.getEmail(), memberRequest.getPassword());
 
         doReturn(Optional.of(savedMember)).when(memberRepository).findByEmail(any(String.class));
         doReturn("jwtToken").when(jwtUtil).generateToken(any(Member.class));
@@ -70,7 +69,7 @@ class MemberServiceTest {
     void loginFail(){
         // given
         MemberRequest memberRequest = new MemberRequest("test@google.co.kr", "wrongPassword");
-        MemberEntity savedMember = new MemberEntity(memberRequest.getEmail(), "password");
+        Member savedMember = new Member(memberRequest.getEmail(), "password");
 
         doReturn(Optional.of(savedMember)).when(memberRepository).findByEmail(any(String.class));
 
@@ -82,20 +81,20 @@ class MemberServiceTest {
     }
 
     public void deleteMember(Long id){
-        MemberEntity memberEntity = memberRepository.findById(id).orElseThrow(()->new EntityNotFoundException("not found Entity"));
-        memberRepository.delete(memberEntity);
+        Member member = memberRepository.findById(id).orElseThrow(()->new EntityNotFoundException("not found Entity"));
+        memberRepository.delete(member);
     }
     @Test
     @DisplayName("멤버 삭제 테스트")
-    void delete(){
+    void deleteMember(){
         // given
         Long id = 1L;
-        MemberEntity savedMember = new MemberEntity("test@gmail.co.kr", "password");
+        Member savedMember = new Member(1L,"test@gmail.co.kr", "password");
 
         // when
         doReturn(Optional.of(savedMember)).when(memberRepository).findById(id);
-
-        // then4
+        memberService.deleteMember(id);
+        // then
         verify(memberRepository, times(1)).delete(savedMember);
     }
 
@@ -104,7 +103,7 @@ class MemberServiceTest {
     void getMemberFromToken(){
         // given
         String RequestToken = "jwtToken";
-        MemberEntity savedMember = new MemberEntity("test@google.co.kr", "password");
+        Member savedMember = new Member("test@google.co.kr", "password");
 
         doReturn("email").when(jwtUtil).getEmailFromToken(RequestToken);
         doReturn(Optional.of(savedMember)).when(memberRepository).findByEmail("email");
