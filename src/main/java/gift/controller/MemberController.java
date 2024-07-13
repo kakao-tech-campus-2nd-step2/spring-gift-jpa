@@ -54,11 +54,14 @@ public class MemberController {
     }
 
     private Member getValidMember(Member member) {
-        Optional<Member> foundMemberOpt = memberService.getMemberByEmail(member.getEmail());
-        if (foundMemberOpt.isEmpty() || !isPasswordValid(foundMemberOpt.get(), member.getPassword())) {
+        Member foundMember = memberService.getMemberByEmail(member.getEmail())
+            .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+
+        if (!isPasswordValid(foundMember, member.getPassword())) {
             throw new IllegalArgumentException("Invalid email or password");
         }
-        return foundMemberOpt.get();
+
+        return foundMember;
     }
 
     private boolean isPasswordValid(Member foundMember, String password) {
