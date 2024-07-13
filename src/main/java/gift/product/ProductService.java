@@ -20,16 +20,6 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponseDto> getAllPrdouct() {
-        return productRepository.findAll().stream()
-            .map(product -> new ProductResponseDto(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl()))
-            .collect(Collectors.toList());
-    }
-
     public Page<ProductResponseDto> getAllProducts(Pageable pageable) {
         Page<Product> productPage = productRepository.findAll(pageable);
 

@@ -13,8 +13,6 @@ public interface WishlistRepository extends JpaRepository<Wishlist,Long>,
 
     List<Wishlist> findByProductId(Long productId);
 
-    void deleteByProductId(Long productId);
-
     List<Wishlist> findByMemberId(Long memberId);
 
     Page<Wishlist> findAll(Pageable pageable);

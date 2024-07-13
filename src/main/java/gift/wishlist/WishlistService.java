@@ -33,17 +33,6 @@ public class WishlistService {
         this.memberRepository = memberRepository;
     }
 
-    public List<Product> checkWishlist() {
-        List<Wishlist> wishlists = wishlistRepository.findAll();
-        List<Product> products = new ArrayList<>();
-
-        for (Wishlist wishlist : wishlists) {
-            products.add(wishlist.getProduct());
-        }
-
-        return products;
-    }
-
     public Page<Product> checkWishlist(Pageable pageable) {
         Page<Wishlist> wishlistPage = wishlistRepository.findAll(pageable);
         return wishlistPage.map(Wishlist::getProduct);
