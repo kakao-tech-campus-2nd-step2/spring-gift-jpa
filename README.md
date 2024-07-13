@@ -9,6 +9,8 @@
 - Git의 커밋 단위는 앞 단계에서 README.md에 정리한 기능 목록 단위로
   추가한다. [AngularJS Git Commit Message Convention](https://gist.github.com/stephenparish/9941e89d80e2bc58a153)을 참고해 커밋
   메시지를 작성한다.
+- 상품과 위시 리스트 보기에 페이지네이션을 구현한다.
+- 페이지네이션은 원하는 정렬 방법, 페이지 크기 및 페이지에 따라 정보를 전달하는 방법이다.
 
 ### 프로그래밍 요구 사항
 
