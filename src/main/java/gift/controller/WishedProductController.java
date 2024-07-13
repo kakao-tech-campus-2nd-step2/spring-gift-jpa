@@ -30,21 +30,21 @@ public class WishedProductController {
 
     @GetMapping
     public ResponseEntity<Collection<WishedProductDTO>> getWishedProducts(@LoginMember MemberDTO memberDTO) {
-        return ResponseEntity.ok().body(wishedProductService.findAll(memberDTO.email()));
+        return ResponseEntity.ok().body(wishedProductService.getWishedProducts(memberDTO));
     }
 
     @PostMapping
     public ResponseEntity<WishedProductDTO> addWishedProduct(@LoginMember MemberDTO memberDTO, @Valid @RequestBody WishedProductDTO wishedProductDTO) {
-        return ResponseEntity.ok().body(wishedProductService.save(memberDTO.email(), wishedProductDTO));
+        return ResponseEntity.ok().body(wishedProductService.addWishedProduct(memberDTO, wishedProductDTO));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<WishedProductDTO> deleteWishedProduct(@PathVariable("id") long id, @LoginMember MemberDTO memberDTO) {
-        return ResponseEntity.ok().body(wishedProductService.delete(id));
+        return ResponseEntity.ok().body(wishedProductService.deleteWishedProduct(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<WishedProductDTO> updateWishedProduct(@PathVariable("id") long id, @LoginMember MemberDTO memberDTO, @Valid @RequestBody WishedProductDTO wishedProductDTO) {
-        return ResponseEntity.ok().body(wishedProductService.update(id, memberDTO.email(), wishedProductDTO));
+    @PutMapping
+    public ResponseEntity<WishedProductDTO> updateWishedProduct(@LoginMember MemberDTO memberDTO, @Valid @RequestBody WishedProductDTO wishedProductDTO) {
+        return ResponseEntity.ok().body(wishedProductService.updateWishedProduct(wishedProductDTO));
     }
 }

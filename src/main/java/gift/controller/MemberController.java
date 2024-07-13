@@ -26,7 +26,7 @@ public class MemberController {
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@Valid @RequestBody MemberDTO memberDTO) {
-        return ResponseEntity.ok().body(memberService.save(memberDTO));
+        return ResponseEntity.ok().body(memberService.register(memberDTO));
     }
 
     @PostMapping("/login")
@@ -39,6 +39,6 @@ public class MemberController {
         @LoginMember MemberDTO memberDTO,
         @Valid @RequestBody MemberPasswordDTO memberPasswordDTO
     ) {
-        return ResponseEntity.ok().body(memberService.update(memberDTO, memberPasswordDTO));
+        return ResponseEntity.ok().body(memberService.changePassword(memberDTO, memberPasswordDTO));
     }
 }

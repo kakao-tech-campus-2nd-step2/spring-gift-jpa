@@ -3,9 +3,12 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import gift.domain.Member;
+import gift.domain.Product;
 import gift.domain.WishedProduct;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +19,29 @@ public class WishedProductRepositoryTest {
 
     @Autowired
     private WishedProductRepository wishedProductRepository;
+    @Autowired
     private MemberRepository memberRepository;
+    @Autowired
     private ProductRepository productRepository;
+
+    private Member member;
+    private Product product;
+    private WishedProduct wishedProduct;
+
+    @BeforeEach
+    void setup() {
+        member = new Member("admin@gmail.com", "admin");
+        memberRepository.save(member);
+        product = new Product("test", 1000, "testImage");
+        productRepository.save(product);
+        wishedProduct = new WishedProduct(member, product, 3);
+    }
 
     @DisplayName("위시리스트 상품 추가")
     @Test
     void save() {
         // given
-        WishedProduct expected = new WishedProduct("admin@gmail.com", 1L, 3);
+        WishedProduct expected = wishedProduct;
 
         // when
         WishedProduct actual = wishedProductRepository.save(expected);
@@ -41,15 +59,11 @@ public class WishedProductRepositoryTest {
     @Test
     void findByMemberEmail() {
         // given
-        String memberEmail = "admin@gmail.com";
-        WishedProduct wishedProduct1 = new WishedProduct(memberEmail, 1L, 3);
-        WishedProduct wishedProduct2 = new WishedProduct(memberEmail, 2L, 7);
-        wishedProduct1 = wishedProductRepository.save(wishedProduct1);
-        wishedProduct2 = wishedProductRepository.save(wishedProduct2);
-        List<WishedProduct> expected = new ArrayList<>(List.of(wishedProduct1, wishedProduct2));
+        WishedProduct savedWishedProduct = wishedProductRepository.save(wishedProduct);
+        List<WishedProduct> expected = new ArrayList<>(List.of(savedWishedProduct));
 
         // when
-        List<WishedProduct> actual = wishedProductRepository.findByMemberEmail(memberEmail);
+        List<WishedProduct> actual = wishedProductRepository.findByMember(member);
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -59,7 +73,6 @@ public class WishedProductRepositoryTest {
     @Test
     void delete() {
         // given
-        WishedProduct wishedProduct = new WishedProduct("admin@gmail.com", 1L, 3);
         long id = wishedProductRepository.save(wishedProduct).getId();
 
         // when
@@ -73,9 +86,8 @@ public class WishedProductRepositoryTest {
     @Test
     void update() {
         // given
-        WishedProduct wishedProduct = new WishedProduct("admin@gmail.com", 1L, 3);
-        long id = wishedProductRepository.save(wishedProduct).getId();
-        WishedProduct expected = new WishedProduct(id, "admin@gmail.com", 1L, 5);
+        WishedProduct expected = wishedProductRepository.save(wishedProduct);
+        expected.setAmount(5);
 
         // when
         WishedProduct actual = wishedProductRepository.save(expected);

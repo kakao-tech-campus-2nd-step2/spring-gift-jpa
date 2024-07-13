@@ -3,60 +3,62 @@ package gift.domain;
 import gift.dto.WishedProductDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class WishedProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    @Column(name = "member_email", nullable = false)
-    String memberEmail;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_email", nullable = false)
+    private Member member;
 
-    @Column(name = "product_id", nullable = false)
-    Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     @Column(name = "amount", nullable = false)
-    int amount;
+    private int amount;
 
     protected WishedProduct() {
 
     }
 
-    public WishedProduct(String memberEmail, Long productId, int amount) {
-        this.memberEmail = memberEmail;
-        this.productId = productId;
+    public WishedProduct(Member member, Product product, int amount) {
+        this.member = member;
+        this.product = product;
         this.amount = amount;
-    }
-
-    public WishedProduct(long id, String memberEmail, Long productId, int amount) {
-        this.id = id;
-        this.memberEmail = memberEmail;
-        this.productId = productId;
-        this.amount = amount;
+        member.getWishList().add(this);
     }
 
     public WishedProductDTO toDTO() {
-        return new WishedProductDTO(id, memberEmail, productId, amount);
+        return new WishedProductDTO(id, member.getEmail(), product.getId(), amount);
     }
-
     public Long getId() {
         return id;
     }
 
     public String getMemberEmail() {
-        return memberEmail;
+        return member.getEmail();
     }
 
     public Long getProductId() {
-        return productId;
+        return product.getId();
     }
 
     public int getAmount() {
         return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }

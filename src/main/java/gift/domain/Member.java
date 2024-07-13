@@ -4,7 +4,10 @@ import gift.dto.MemberDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "member")
@@ -12,10 +15,13 @@ public class Member {
 
     @Id
     @Column(name = "email", nullable = false)
-    String email;
+    private String email;
 
     @Column(name = "password", nullable = false)
-    String password;
+    private String password;
+
+    @OneToMany(mappedBy = "member")
+    private List<WishedProduct> wishList = new ArrayList<>();
 
     protected Member() {
 
@@ -36,5 +42,9 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public List<WishedProduct> getWishList() {
+        return wishList;
     }
 }

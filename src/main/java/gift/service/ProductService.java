@@ -19,32 +19,32 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductDTO> findAll() {
+    public List<ProductDTO> getProducts() {
         return productRepository.findAll()
             .stream()
             .map(product -> product.toDTO())
             .collect(Collectors.toList());
     }
 
-    public ProductDTO findById(Long id) {
+    public ProductDTO getProduct(Long id) {
         return productRepository.findById(id)
             .orElseThrow(NoSuchProductException::new)
             .toDTO();
     }
 
-    public ProductDTO save(ProductDTO productDTO) {
+    public ProductDTO addProduct(ProductDTO productDTO) {
         return productRepository.save(productDTO.toEntity()).toDTO();
     }
 
-    public ProductDTO update(long id, ProductDTO productDTO) {
-        findById(id);
+    public ProductDTO updateProduct(long id, ProductDTO productDTO) {
+        getProduct(id);
         Product product = new Product(id, productDTO.name(), productDTO.price(), productDTO.imageUrl());
         return productRepository.save(product).toDTO();
     }
 
-    public ProductDTO delete(long id) {
-        ProductDTO deletedProductDTO = findById(id);
-        productRepository.deleteById(id);
+    public ProductDTO deleteProduct(long id) {
+        ProductDTO deletedProductDTO = getProduct(id);
+        productRepository.delete(deletedProductDTO.toEntity());
         return deletedProductDTO;
     }
 }

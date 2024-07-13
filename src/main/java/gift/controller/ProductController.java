@@ -30,27 +30,27 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<Collection<ProductDTO>> getProducts() {
-        return ResponseEntity.ok().body(productService.findAll());
+        return ResponseEntity.ok().body(productService.getProducts());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProduct(@PathVariable("id") Long id) {
-        return ResponseEntity.ok().body(productService.findById(id));
+        return ResponseEntity.ok().body(productService.getProduct(id));
     }
 
     @PostMapping
     public ResponseEntity<ProductDTO> addProduct(@Valid @RequestBody ProductDTO productDTO) {
-        ProductDTO addedProductDTO = productService.save(productDTO);
+        ProductDTO addedProductDTO = productService.addProduct(productDTO);
         return ResponseEntity.created(URI.create(BASE_PATH + addedProductDTO.id())).body(addedProductDTO);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable("id") long id, @Valid @RequestBody ProductDTO productDTO) {
-        return ResponseEntity.ok().body(productService.update(id, productDTO));
+        return ResponseEntity.ok().body(productService.updateProduct(id, productDTO));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ProductDTO> deleteProduct(@PathVariable("id") long id) {
-        return ResponseEntity.ok().body(productService.delete(id));
+        return ResponseEntity.ok().body(productService.deleteProduct(id));
     }
 }
