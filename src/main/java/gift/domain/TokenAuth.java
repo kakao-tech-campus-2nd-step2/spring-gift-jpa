@@ -12,8 +12,8 @@ public class TokenAuth {
     @Column(nullable = false, length = 255)
     private String token;
 
-    @ManyToOne
-    @JoinColumn(name = "member", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     public TokenAuth(String token, Member member) {

@@ -22,7 +22,7 @@ public class Product {
     @Column(nullable = false, name = "image_url")
     private String imageUrl;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WishlistItem> wishlistItems;
 
     public Product() { }
