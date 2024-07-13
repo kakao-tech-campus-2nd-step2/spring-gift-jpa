@@ -8,8 +8,6 @@ import gift.model.ProductPageDTO;
 import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,7 +29,10 @@ public class ProductService {
 
     public ProductPageDTO getAllProduct(int pageNum, int size) {
         Pageable pageable = PageRequest.of(pageNum, size);
-        List<ProductDTO> productPage = productRepository.findAll(pageable).map(this::convertToDTO).stream().toList();
+        List<ProductDTO> productPage = productRepository.findAll(pageable)
+            .map(this::convertToDTO)
+            .stream()
+            .toList();
 
         return new ProductPageDTO(pageNum, size, productPage.size(), productPage);
     }
