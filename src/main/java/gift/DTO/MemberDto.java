@@ -37,9 +37,4 @@ public class MemberDto {
     return this.password;
   }
 
-  public boolean matchLoginInfo(Optional<UserEntity> userByEmail) {
-    return this.email.equals(userByEmail.get().getEmail()) && this.password.equals(
-      userByEmail.get().getPassword());
-  }
-
 }
