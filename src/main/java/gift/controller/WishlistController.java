@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/api/wishlist")
 public class WishlistController {
 
-
     private final WishlistService wishlistService;
 
     public WishlistController(WishlistService wishlistService) {
