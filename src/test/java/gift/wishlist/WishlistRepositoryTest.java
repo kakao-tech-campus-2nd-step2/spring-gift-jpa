@@ -68,7 +68,6 @@ class WishlistRepositoryTest {
         assertAll(
             () -> assertThat(isWishlist.size()).isEqualTo(0)
         );
-
     }
 
     @Test
@@ -89,7 +88,6 @@ class WishlistRepositoryTest {
             () -> assertThat(actual.getProduct().getId()).isEqualTo(1L),
             () -> assertThat(actual.getMember().getId()).isEqualTo(1L)
         );
-
     }
 
     @Test
@@ -112,7 +110,6 @@ class WishlistRepositoryTest {
         assertAll(
             () -> assertThat(wishlist.size()).isEqualTo(2)
         );
-
     }
 
 }

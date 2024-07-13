@@ -41,7 +41,6 @@ class MemberRepositoryTest {
             () -> assertThat(actual.getEmail()).isEqualTo("westzeroright"),
             () -> assertThat(actual.getPassword()).isEqualTo("errorai")
         );
-
     }
 
     @Test

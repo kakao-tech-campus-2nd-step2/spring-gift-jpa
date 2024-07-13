@@ -60,7 +60,6 @@ class ProductRepositoryTest {
         assertAll(
             () -> assertThat(productList.size()).isEqualTo(3)
         );
-
     }
 
     @Test
