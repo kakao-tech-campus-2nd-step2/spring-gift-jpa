@@ -30,8 +30,8 @@ public class UserService {
             });
         User registeredUser = userRepository.save(UserMapper.toUser(request));
 
-        return UserMapper.toResponse(jwtUtil.generateToken(registeredUser.id(),
-            registeredUser.email()));
+        return UserMapper.toResponse(jwtUtil.generateToken(registeredUser.getId(),
+            registeredUser.getEmail()));
     }
 
     public UserResponse loginUser(UserLoginRequest userRequest) {
@@ -39,7 +39,7 @@ public class UserService {
                 userRequest.password())
             .orElseThrow(() -> new UserNotFoundException("로그인할 수 없습니다."));
 
-        String token = jwtUtil.generateToken(user.id(), user.email());
+        String token = jwtUtil.generateToken(user.getId(), user.getEmail());
 
         return UserMapper.toResponse(token);
     }

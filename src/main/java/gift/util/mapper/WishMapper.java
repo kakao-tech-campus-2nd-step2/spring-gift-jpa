@@ -8,12 +8,12 @@ public class WishMapper {
 
     public static WishResponse toResponse(Wish wish) {
         Product product = Product.builder()
-            .id(wish.product().id())
-            .name(wish.product().name())
-            .price(wish.product().price())
-            .imageUrl(wish.product().imageUrl())
+            .id(wish.getProduct().getId())
+            .name(wish.getProduct().getName())
+            .price(wish.getProduct().getPrice())
+            .imageUrl(wish.getProduct().getImageUrl())
             .build();
-        return new WishResponse(wish.id(), product, wish.quantity());
+        return new WishResponse(wish.getId(), product, wish.getQuantity());
     }
 
 }

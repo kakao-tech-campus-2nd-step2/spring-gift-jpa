@@ -11,58 +11,6 @@ import jakarta.persistence.Table;
 @Table(name = "products")
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private Integer price;
-
-    @Column
-    private String imageUrl;
-
-    private Product(Builder builder) {
-        this.id = builder.id;
-        this.name = builder.name;
-        this.price = builder.price;
-        this.imageUrl = builder.imageUrl;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public Long id() {
-        return id;
-    }
-
-    public String name() {
-        return name;
-    }
-
-    public Integer price() {
-        return price;
-    }
-
-    public String imageUrl() {
-        return imageUrl;
-    }
-
-    public void changeName(String name) {
-        this.name = name;
-    }
-
-    public void changePrice(Integer price) {
-        this.price = price;
-    }
-
-    public void changeImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     public static class Builder {
 
         private Long id;
@@ -95,7 +43,60 @@ public class Product {
         }
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(length = 15, nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private Integer price;
+
+    @Column(nullable = false)
+    private String imageUrl;
+
     protected Product() {
     }
+
+    private Product(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.price = builder.price;
+        this.imageUrl = builder.imageUrl;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void changeName(String name) {
+        this.name = name;
+    }
+
+    public void changePrice(Integer price) {
+        this.price = price;
+    }
+
+    public void changeImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
 
 }

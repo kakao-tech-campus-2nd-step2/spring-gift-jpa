@@ -3,51 +3,20 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.entity.User;
-import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
+@Sql(scripts = "/sql/insert_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private TestEntityManager entityManager;
-
-    @BeforeEach
-    void setUp() {
-        userRepository.deleteAll();
-        entityManager.getEntityManager()
-            .createNativeQuery("ALTER TABLE users ALTER COLUMN id RESTART WITH 1")
-            .executeUpdate();
-        insertion();
-    }
-
-    void insertion() {
-        User user1 = User.builder()
-            .email("user1@example.com")
-            .password("password1")
-            .build();
-
-        User user2 = User.builder()
-            .email("user2@example.com")
-            .password("password2")
-            .build();
-
-        User user3 = User.builder()
-            .email("user3@example.com")
-            .password("password3")
-            .build();
-
-        userRepository.saveAll(List.of(user1, user2, user3));
-    }
 
     @Test
     @DisplayName("register user test")
@@ -63,8 +32,8 @@ class UserRepositoryTest {
 
         // then
         assertThat(userRepository.findAll()).hasSize(4);
-        assertThat(actual.id()).isNotNull().isEqualTo(4L);
-        assertThat(actual.email()).isEqualTo("newuser@email.com");
+        assertThat(actual.getId()).isNotNull().isEqualTo(4L);
+        assertThat(actual.getEmail()).isEqualTo("newuser@email.com");
     }
 
     @Test
@@ -79,8 +48,8 @@ class UserRepositoryTest {
 
         // then
         assertThat(actual).isNotNull();
-        assertThat(actual.id()).isEqualTo(expected.id());
-        assertThat(actual.email()).isEqualTo(expected.email());
+        assertThat(actual.getId()).isEqualTo(expected.getId());
+        assertThat(actual.getEmail()).isEqualTo(expected.getEmail());
     }
 
     @Test
@@ -104,8 +73,8 @@ class UserRepositoryTest {
 
         // then
         assertThat(actual).isNotNull();
-        assertThat(actual.id()).isEqualTo(2L);
-        assertThat(actual.email()).isEqualTo(email);
+        assertThat(actual.getId()).isEqualTo(2L);
+        assertThat(actual.getEmail()).isEqualTo(email);
     }
 
     @Test
@@ -133,8 +102,8 @@ class UserRepositoryTest {
 
         // then
         assertThat(actual).isNotNull();
-        assertThat(actual.id()).isEqualTo(2L);
-        assertThat(actual.email()).isEqualTo(email);
+        assertThat(actual.getId()).isEqualTo(2L);
+        assertThat(actual.getEmail()).isEqualTo(email);
     }
 
     @Test

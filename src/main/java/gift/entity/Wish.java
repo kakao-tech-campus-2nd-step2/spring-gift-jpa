@@ -2,66 +2,18 @@ package gift.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "wishes")
 public class Wish {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private Integer quantity;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
-    private Wish(Builder builder) {
-        this.id = builder.id;
-        this.quantity = builder.quantity;
-        this.user = builder.user;
-        this.product = builder.product;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public Long id() {
-        return id;
-    }
-
-    public Integer quantity() {
-        return quantity;
-    }
-
-    public User user() {
-        return user;
-    }
-
-    public Product product() {
-        return product;
-    }
-
-    public void changeQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public boolean isQuantityZero() {
-        return quantity <= 0;
-    }
 
     public static class Builder {
 
@@ -96,7 +48,61 @@ public class Wish {
 
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    @Positive
+    private Integer quantity;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false,
+        foreignKey = @ForeignKey(name = "fk_wishes_user_id_ref_users_id"))
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false,
+        foreignKey = @ForeignKey(name = "fk_wishes_product_id_ref_products_id"))
+    private Product product;
+
     protected Wish() {
     }
+
+    private Wish(Builder builder) {
+        this.id = builder.id;
+        this.quantity = builder.quantity;
+        this.user = builder.user;
+        this.product = builder.product;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void changeQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public boolean isQuantityZero() {
+        return quantity <= 0;
+    }
+
 
 }

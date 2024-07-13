@@ -32,7 +32,7 @@ public class ProductService {
     }
 
     public Long addProduct(AddProductRequest request) {
-        return productRepository.save(ProductMapper.toProduct(request)).id();
+        return productRepository.save(ProductMapper.toProduct(request)).getId();
     }
 
     public void updateProduct(Long id, UpdateProductRequest request) {

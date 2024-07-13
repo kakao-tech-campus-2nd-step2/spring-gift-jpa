@@ -14,46 +14,6 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(unique = true, nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private Set<Wish> wishes;
-
-    private User(Builder builder) {
-        this.id = builder.id;
-        this.email = builder.email;
-        this.password = builder.password;
-        this.wishes = builder.wishes;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public Long id() {
-        return id;
-    }
-
-    public String email() {
-        return email;
-    }
-
-    public void changePassword(String password) {
-        this.password = password;
-    }
-
-    public Set<Wish> wishes() {
-        return wishes;
-    }
-
     public static class Builder {
 
         private Long id;
@@ -86,6 +46,48 @@ public class User {
         }
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Set<Wish> wishes;
+
     protected User() {
     }
+
+    private User(Builder builder) {
+        this.id = builder.id;
+        this.email = builder.email;
+        this.password = builder.password;
+        this.wishes = builder.wishes;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Wish> wishes() {
+        return wishes;
+    }
+
+
 }

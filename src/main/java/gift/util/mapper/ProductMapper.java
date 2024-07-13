@@ -22,8 +22,8 @@ public class ProductMapper {
     }
 
     public static ProductResponse toResponse(Product product) {
-        return new ProductResponse(product.id(), product.name(), product.price(),
-            product.imageUrl());
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
+            product.getImageUrl());
     }
 
 }
