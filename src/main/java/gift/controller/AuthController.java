@@ -31,9 +31,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginMember(@RequestBody MemberDTO memberDTO) {
-        Member member = memberService.findMemberByCredentials(memberDTO.email(),
+        MemberDTO member = memberService.findMemberByCredentials(memberDTO.email(),
             memberDTO.password());
-        String token = jwtUtil.generateToken(member.getId());
+        String token = jwtUtil.generateToken(member.id());
         return ResponseEntity.ok("Bearer " + token);
     }
 }
