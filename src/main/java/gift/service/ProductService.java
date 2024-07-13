@@ -29,19 +29,18 @@ public class ProductService {
     }
 
     public Product getProduct(Long productId) {
-        Product product = productRepository.findById(productId);
+        Product product = productRepository.findById(productId).orElseThrow();
         return product;
     }
 
     public Product updateProduct(Long productId, UpdateProductDto productDto) {
-        Product product = productRepository.findById(productId);
+        Product product = productRepository.findById(productId).orElseThrow();
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setImageUrl(productDto.getImageUrl());
-        productRepository.update(product);
+        productRepository.save(product);
         return product;
     }
-
 
     public void deleteProduct(Long productId) {
         productRepository.deleteById(productId);
