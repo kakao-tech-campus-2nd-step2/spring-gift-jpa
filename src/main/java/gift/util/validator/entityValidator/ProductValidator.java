@@ -18,7 +18,7 @@ public class ProductValidator {
             "^((http(s)?)://)?(www.)?([a-zA-Z0-9]+)\\.[a-z]+([a-zA-z0-9.?#]+)?"
     );
 
-    public static void validate(ProductDTO productDTO) {
+    public static void validateProduct(ProductDTO productDTO) {
         validateName(productDTO.name());
         validatePrice(productDTO.price());
         validateImageUrl(productDTO.imageUrl());
