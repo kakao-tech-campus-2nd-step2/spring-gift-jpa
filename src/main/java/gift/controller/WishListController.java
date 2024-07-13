@@ -84,7 +84,6 @@ public class WishListController {
             PagingResponse<WishResponse> pagingResponse = new PagingResponse<>(page, wishResponses, size, userWishes.getTotalElements(), userWishes.getTotalPages());
             return ResponseEntity.ok(pagingResponse);
         }
-        PagingResponse<WishResponse> emptyPagingResponse = new PagingResponse<>(page, Collections.emptyList(), size, 0, 0);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(emptyPagingResponse);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
