@@ -14,15 +14,6 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    public String generateToken(Long userId) {
-        return Jwts.builder()
-                .setSubject(userId.toString())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hour
-                .signWith(SignatureAlgorithm.HS256, secretKey.getBytes())
-                .compact();
-    }
-
     public Claims extractClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey.getBytes())
