@@ -10,6 +10,8 @@ import gift.exception.wish.WishNotFoundException;
 import gift.repository.WishRepository;
 import gift.util.mapper.WishMapper;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,16 +28,14 @@ public class WishService {
         this.userService = userService;
     }
 
-    public List<WishResponse> getWishes(Long userId) {
-        List<Wish> wishes = wishRepository.findByUserId(userId);
+    public Page<WishResponse> getWishes(Long userId, Pageable pageable) {
+        Page<Wish> wishes = wishRepository.findByUserId(userId, pageable);
 
         if (wishes == null || wishes.isEmpty()) {
             throw new WishNotFoundException("위시리스트가 존재하지 않습니다.");
         }
 
-        return wishes.stream()
-            .map(WishMapper::toResponse)
-            .toList();
+        return wishes.map(WishMapper::toResponse);
     }
 
     public Long addWish(Long userId, AddWishRequest request) {
