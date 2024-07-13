@@ -1,10 +1,12 @@
 package gift.controller;
 
 import gift.Login;
+import gift.domain.Product;
 import gift.dto.LoginMember;
 import gift.dto.WishProduct;
 import gift.dto.response.WishProductsResponse;
 import gift.service.WishListService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +23,10 @@ public class WishListController {
     }
 
     @GetMapping
-    public List<WishProductsResponse> getWishList(@Login LoginMember member) {
-        return wishListService.getWishList(member.getId());
+    public ResponseEntity<Page<WishProductsResponse>> getWishList(@Login LoginMember member,
+                                                                  @RequestParam(value ="page", required = false, defaultValue = "0") int page) {
+        Page<WishProductsResponse> wishes = wishListService.getWishList(member.getId(), page);
+        return ResponseEntity.ok(wishes);
     }
 
     @PostMapping("/{productId}")
