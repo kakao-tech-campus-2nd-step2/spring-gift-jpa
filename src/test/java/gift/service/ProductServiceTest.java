@@ -22,6 +22,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 public class ProductServiceTest {
 
@@ -35,14 +39,16 @@ public class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("모든 상품 조회")
+    @DisplayName("모든 상품 조회 (페이지네이션 적용)")
     public void testGetAllProducts() {
         Product product = new Product(1L, "Test Product", 100, "test.jpg");
-        when(productRepository.findAll()).thenReturn(List.of(product));
+        Pageable pageable = PageRequest.of(0, 10);
+        when(productRepository.findAll(pageable))
+            .thenReturn(new PageImpl<>(List.of(product), pageable, 1));
 
-        List<ProductResponse> products = productService.getAllProducts();
-        assertEquals(1, products.size());
-        assertEquals("Test Product", products.getFirst().name());
+        Page<ProductResponse> products = productService.getAllProducts(pageable);
+        assertEquals(1, products.getTotalElements());
+        assertEquals("Test Product", products.getContent().getFirst().name());
     }
 
     @Test
