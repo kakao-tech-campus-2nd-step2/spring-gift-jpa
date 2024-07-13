@@ -1,12 +1,12 @@
 package gift.controller;
 
-import gift.entity.LoginUser;
-import gift.entity.Wish;
+import gift.dto.TokenLoginRequestDTO;
+import gift.dto.WishResponseDTO;
 import gift.service.LoginMember;
 import gift.service.WishService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/wishes")
@@ -17,22 +17,28 @@ public class WishController {
         this.wishService = wishService;
     }
 
-    @PostMapping("/{productId}")
-    public void create(@PathVariable("productId") long productId, @LoginMember LoginUser loginUser) {
+    @PostMapping("/post")
+    public ResponseEntity<String> addWish(@RequestParam("productId") Long productId,
+                                          @LoginMember TokenLoginRequestDTO tokenLoginRequestDTO) {
         System.out.println("post");
-        wishService.addWish(productId, loginUser);
+        wishService.addWish(productId, tokenLoginRequestDTO);
+        return ResponseEntity.ok("Wish added");
     }
 
-    @GetMapping
-    public List<Wish> getWishes(@LoginMember LoginUser loginUser) {
+    @GetMapping("/get")
+    public ResponseEntity<WishResponseDTO> getWishes(@LoginMember TokenLoginRequestDTO tokenLoginRequestDTO) {
         System.out.println("get");
-        return wishService.getWishesByMemberId(loginUser);
+        WishResponseDTO wishes = wishService.getWishesByMemberId(tokenLoginRequestDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                        .body(wishes);
     }
 
     @DeleteMapping("/{productId}")
-    public void delete(@PathVariable("productId") long productId, @LoginMember LoginUser loginUser) {
+    public ResponseEntity<String> deleteWish(@PathVariable("productId") Long productId,
+                                             @LoginMember TokenLoginRequestDTO loginUser) {
         System.out.println("delete");
         wishService.removeWish(productId, loginUser);
+        return ResponseEntity.ok("Wish deleted");
     }
 
 }

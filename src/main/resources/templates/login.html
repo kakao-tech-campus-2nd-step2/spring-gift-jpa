@@ -6,7 +6,7 @@
 </head>
 <body>
 <h2>Login</h2>
-<form th:action="@{/members/login}" method="post" th:object="${user}">
+<form th:action="@{/login}" method="post" th:object="${userDTO}">
     <div>
         <label for="email">Username:</label>
         <input type="text" id="email" name="email" />
@@ -15,15 +15,6 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" />
     </div>
-    <div>
-        <label>Role:</label>
-        <input type="radio" id="admin" name="type" value="1">
-        <label for="admin">Admin</label>
-        <input type="radio" id="user" name="type" value="2" checked>
-        <label for="user">User</label>
-    </div>
-
-    <input type="hidden" id="token" name="token" th:value="${token}" />
 
     <div>
         <button type="submit">Login</button>

@@ -1,5 +1,6 @@
 package gift.exceptionhandler;
 
+import gift.dto.ErrorResponse;
 import io.jsonwebtoken.JwtException;
 import jdk.jfr.Description;
 import org.springframework.dao.DataAccessException;
@@ -20,11 +21,25 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @Description("Product-service error")
+    @ExceptionHandler(value = ProductException.class)
+    public ResponseEntity<ErrorResponse> handleProductNotFound(ProductException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
     @Description("api exception")
     @ExceptionHandler(value = ApiException.class)
     public ResponseEntity<String> handleApiException(ApiException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+
+    @ExceptionHandler(value = WishException.class)
+    public ResponseEntity<ErrorResponse> handleWishException(ProductException e) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
 
     @Description("database access exception")
     @ExceptionHandler(value = DatabaseAccessException.class)

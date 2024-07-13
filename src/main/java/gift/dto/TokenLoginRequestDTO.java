@@ -1,13 +1,11 @@
-package gift.entity;
+package gift.dto;
 
-public class LoginUser {
+public class TokenLoginRequestDTO {
     private String email;
-    private String type;
     private String token;
-    public LoginUser() {}
-    public LoginUser(String email, String type, String token) {
+    public TokenLoginRequestDTO() {}
+    public TokenLoginRequestDTO(String email, String token) {
         this.email = email;
-        this.type = type;
         this.token = token;
     }
 
@@ -17,14 +15,6 @@ public class LoginUser {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getToken() {

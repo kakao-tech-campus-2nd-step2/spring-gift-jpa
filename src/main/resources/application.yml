@@ -3,25 +3,31 @@ spring:
     name: spring-gift
   thymeleaf:
     cache: false
-    check-template-location: true
-    prefix: classpath:/templates/
-    suffix: .html
   h2:
     console:
       enabled: true
   datasource:
-    driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:test
-    username: sa
-    password:
   jpa:
     hibernate:
-      ddl-auto: none
-  sql:
-    init:
-      schema-locations: classpath:/db/schema.sql
-      data-locations: classpath:/db/data.sql
-      mode: always
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    defer-datasource-initialization:
+      true
+
+
+
 jwt:
   secret: Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=
   expiration: 86400
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
