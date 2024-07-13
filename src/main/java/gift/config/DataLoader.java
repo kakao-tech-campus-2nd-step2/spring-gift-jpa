@@ -3,7 +3,6 @@ package gift.config;
 import gift.domain.Product;
 import gift.repository.ProductRepository;
 import java.math.BigDecimal;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 

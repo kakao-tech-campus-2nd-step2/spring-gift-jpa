@@ -1,7 +1,5 @@
 package gift.service;
 
-import gift.domain.Member;
-import gift.domain.Product;
 import gift.domain.Wish;
 import gift.repository.WishRepository;
 import org.springframework.transaction.annotation.Transactional;

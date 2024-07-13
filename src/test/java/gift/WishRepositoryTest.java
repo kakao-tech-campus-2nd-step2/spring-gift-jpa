@@ -11,19 +11,15 @@ import gift.repository.WishRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 class WishRepositoryTest {
 
-    @Autowired
     private WishRepository wishRepository;
 
-    @Autowired
     private MemberRepository memberRepository;
 
-    @Autowired
     private ProductRepository productRepository;
 
     @Test
