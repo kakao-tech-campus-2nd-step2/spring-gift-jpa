@@ -13,6 +13,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishService {
@@ -28,6 +29,7 @@ public class WishService {
         this.userService = userService;
     }
 
+    @Transactional(readOnly = true)
     public Page<WishResponse> getWishes(Long userId, Pageable pageable) {
         Page<Wish> wishes = wishRepository.findByUserId(userId, pageable);
 
@@ -38,6 +40,7 @@ public class WishService {
         return wishes.map(WishMapper::toResponse);
     }
 
+    @Transactional
     public Long addWish(Long userId, AddWishRequest request) {
         Product product = productService.getProductById(request.productId());
         User user = userService.getUserById(userId);
@@ -52,6 +55,7 @@ public class WishService {
         return savedWish.getId();
     }
 
+    @Transactional
     public void updateWishes(List<UpdateWishRequest> requests) {
         for (UpdateWishRequest request : requests) {
             Wish wish = getWish(request.id());
@@ -60,7 +64,8 @@ public class WishService {
         }
     }
 
-    private void updateWish(Wish wish) {
+    @Transactional
+    protected void updateWish(Wish wish) {
         if (wish.isQuantityZero()) {
             deleteWish(wish);
             return;
@@ -69,17 +74,20 @@ public class WishService {
         wishRepository.save(wish);
     }
 
+    @Transactional
     public void deleteWishes(List<UpdateWishRequest> requests) {
         for (UpdateWishRequest request : requests) {
             deleteWish(getWish(request.id()));
         }
     }
 
-    private void deleteWish(Wish wish) {
+    @Transactional
+    protected void deleteWish(Wish wish) {
         wishRepository.delete(wish);
     }
 
-    private Wish getWish(Long id) {
+    @Transactional(readOnly = true)
+    protected Wish getWish(Long id) {
         return wishRepository.findById(id)
             .orElseThrow(() -> new WishNotFoundException("위시리스트를 찾을 수 없습니다."));
     }
