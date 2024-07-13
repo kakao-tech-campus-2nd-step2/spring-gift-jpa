@@ -232,7 +232,7 @@ class WishProductControllerTest {
             var wishProduct = new WishProductAddRequest(productResponse.id(), 10);
             wishProductService.addWishProduct(wishProduct, memberId);
         }
-        var getRequest = get("/api/wishes?page=0")
+        var getRequest = get("/api/wishes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken);
         //when

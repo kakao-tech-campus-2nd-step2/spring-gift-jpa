@@ -185,14 +185,14 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("11개의 상품을 등록하였을 때, 조회의 결과는 10개의 상품만을 반환한다.")
+    @DisplayName("11개의 상품을 등록하였을 때, 2번째 페이지의 조회의 결과는 1개의 상품만을 반환한다.")
     void getProductsWithPageable() throws Exception {
         //given
         var productRequest = new ProductRequest("햄버거()[]+-&/_**", 1000, "이미지 주소");
         for (int i = 0; i < 11; i++) {
             productService.addProduct(productRequest, MemberRole.MEMBER);
         }
-        var getRequest = get("/api/products")
+        var getRequest = get("/api/products?page=1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken);
         //when
@@ -202,6 +202,6 @@ class ProductControllerTest {
         var productListString = productResult.getResponse().getContentAsString();
         var productList = objectMapper.readValue(productListString, new TypeReference<List<Product>>() {
         });
-        Assertions.assertThat(productList.size()).isEqualTo(10);
+        Assertions.assertThat(productList.size()).isEqualTo(1);
     }
 }
