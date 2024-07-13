@@ -4,8 +4,10 @@ import gift.model.Member;
 import gift.model.WishList;
 import gift.repository.MemberRepository;
 import gift.repository.WishlistRepository;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,13 +24,15 @@ public class WishlistService {
     public WishList addProduct(Long memberId, Long productId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found"));
         WishList wishlist = new WishList(member, productId);
-        return wishlistRepository.save(wishlist);
+        WishList savedWishlist = wishlistRepository.save(wishlist);
+        return savedWishlist;
 
     }
 
-    public List<WishList> getProductsByMember(Long memberId) {
+    public Page<WishList> getProductsByMember(Long memberId, int page, int size) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("Member not found"));
-        return wishlistRepository.findByMember(member);
+        Pageable pageable = PageRequest.of(page, size);
+        return wishlistRepository.findByMember(member, pageable);
     }
 
     public void deleteById(Long productId) {
