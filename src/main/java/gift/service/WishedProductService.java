@@ -8,9 +8,10 @@ import gift.exception.NoSuchProductException;
 import gift.exception.NoSuchWishedProductException;
 import gift.repository.ProductRepository;
 import gift.repository.WishedProductRepository;
-import java.util.Collection;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,11 +26,10 @@ public class WishedProductService {
         this.productRepository = productDAO;
     }
 
-    public Collection<WishedProductDTO> getWishedProducts(MemberDTO memberDTO) {
-        return wishedProductRepository.findByMember(memberDTO.toEntity())
-            .stream()
-            .map(wishedProduct -> wishedProduct.toDTO())
-            .collect(Collectors.toList());
+    public Page<WishedProductDTO> getWishedProducts(MemberDTO memberDTO, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return wishedProductRepository.findByMember(memberDTO.toEntity(), pageable)
+            .map(wishedProduct -> wishedProduct.toDTO());
     }
 
     public WishedProductDTO addWishedProduct(MemberDTO memberDTO, WishedProductDTO wishedProductDTO) {
