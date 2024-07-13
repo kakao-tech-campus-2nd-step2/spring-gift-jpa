@@ -1,7 +1,6 @@
 package gift.user;
 
-import gift.auth.JwtUtil;
-import jakarta.transaction.Transactional;
+import gift.util.JwtUtil;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;

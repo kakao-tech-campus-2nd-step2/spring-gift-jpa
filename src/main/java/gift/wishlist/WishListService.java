@@ -1,6 +1,6 @@
 package gift.wishlist;
 
-import gift.auth.JwtUtil;
+import gift.util.JwtUtil;
 import gift.product.Product;
 import gift.product.ProductDTO;
 import gift.product.ProductService;
@@ -9,7 +9,6 @@ import gift.user.UserDTO;
 import gift.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,7 +28,6 @@ public class WishListService {
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    @Autowired
     public WishListService(WishListRepository wishListRepository, ProductService productService,
         UserService userService,
         JwtUtil jwtUtil) {

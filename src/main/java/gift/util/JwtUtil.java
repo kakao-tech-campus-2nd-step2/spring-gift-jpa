@@ -1,4 +1,4 @@
-package gift.auth;
+package gift.util;
 
 import gift.user.UserDTO;
 import io.jsonwebtoken.Claims;
@@ -34,6 +34,7 @@ public class JwtUtil {
     }
 
     private Jws<Claims> parseClaimsJws(String token) {
-        return Jwts.parser().setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8)).build().parseClaimsJws(token);
+        return Jwts.parser().setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8)).build()
+            .parseClaimsJws(token);
     }
 }
