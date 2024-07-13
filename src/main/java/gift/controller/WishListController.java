@@ -1,5 +1,6 @@
 package gift.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import gift.service.WishListService;
@@ -17,7 +19,6 @@ import gift.dto.request.WishListRequest;
 import gift.util.JwtUtil;
 import jakarta.validation.Valid;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/wishlist")
@@ -31,17 +32,17 @@ public class WishListController {
         this.jwtUtil = jwtUtil;
     }
 
-    @GetMapping()
-    public ResponseEntity<List<WishListDto>> getWishList(@RequestHeader("Authorization") String authorizationHeader, MemberDto memberDto){
+    @GetMapping
+    public ResponseEntity<Page<WishListDto>> getWishList(@RequestHeader("Authorization") String authorizationHeader, MemberDto memberDto, @RequestParam(defaultValue = "0") int page){
         if (!jwtUtil.validateToken(authorizationHeader, memberDto)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        List<WishListDto> wishlist = wishListService.findWishListById(jwtUtil.extractToken(authorizationHeader));
-        return new ResponseEntity<>(wishlist, HttpStatus.OK);
+        Page<WishListDto> wishListPage = wishListService.findWishListById(jwtUtil.extractToken(authorizationHeader), page);
+        return new ResponseEntity<>(wishListPage, HttpStatus.OK);
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Void> addWishList(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody WishListRequest wishListRequest, MemberDto memberDto){
         
         if (!jwtUtil.validateToken(authorizationHeader, memberDto)) {
@@ -52,7 +53,7 @@ public class WishListController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseEntity<Void> deleteWishList(@RequestHeader("Authorization") String authorizationHeader, @Valid @RequestBody WishListRequest wishListRequest, MemberDto memberDto){
         
         if (!jwtUtil.validateToken(authorizationHeader, memberDto)) {

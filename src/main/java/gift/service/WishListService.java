@@ -11,8 +11,12 @@ import gift.repository.WishListRepository;
 import gift.util.JwtUtil;
 import jakarta.transaction.Transactional;
 
-import java.util.stream.Collectors;
+import java.util.ArrayList;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -34,13 +38,14 @@ public class WishListService {
     }
 
     @Transactional
-    public List<WishListDto> findWishListById(String token) {
+    public Page<WishListDto> findWishListById(String token, int page) {
 
         long memberId = (long)jwtUtil.extractAllClaims(token).get("id");
-        List<WishList> wishlist = wishListRepository.findByMemberId(memberId);
-        return wishlist.stream()
-        .map(WishListDto::fromEntity)
-        .collect(Collectors.toList());
+
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("product.id"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return wishListRepository.findByMemberId(pageable, memberId).map(WishListDto::fromEntity);
     }
 
     @Transactional
