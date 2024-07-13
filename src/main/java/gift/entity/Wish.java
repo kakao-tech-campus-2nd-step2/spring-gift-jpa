@@ -15,6 +15,7 @@ import jakarta.validation.constraints.Positive;
 @Table(name = "wishes")
 public class Wish {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
