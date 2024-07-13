@@ -4,6 +4,9 @@ import gift.product.domain.Product;
 import gift.product.dto.ProductServiceDto;
 import gift.product.exception.ProductNotFoundException;
 import gift.product.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +14,7 @@ import java.util.List;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private static final int PAGE_SIZE = 10;
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -18,6 +22,10 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    public Page<Product> getProductsByPage(int page) {
+        return productRepository.findAll(PageRequest.of(page, PAGE_SIZE));
     }
 
     public Product getProductById(Long id) {
@@ -43,4 +51,5 @@ public class ProductService {
         productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
     }
+
 }
