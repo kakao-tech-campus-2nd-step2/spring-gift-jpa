@@ -1,5 +1,6 @@
 package gift.product.service;
 
+import gift.product.dto.MemberDTO;
 import gift.product.repository.MemberRepository;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.Member;
@@ -29,24 +30,35 @@ public class MemberService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity<Map<String, String>> signUp(Member member) {
-        memberValidation.signUpValidation(member);
-        memberRepository.save(new Member(member.getEmail(), passwordEncoder.encode(member.getPassword())));
-        return new ResponseEntity<>(responseToken(jwtUtil.generateToken(member.getEmail())), HttpStatus.OK);
+    public ResponseEntity<Map<String, String>> signUp(MemberDTO memberDTO) {
+        System.out.println("[MemberService] signUp()");
+        memberValidation.signUpValidation(memberDTO.getEmail());
+
+        Member member = convertDTOToMember(memberDTO);
+        memberRepository.save(member);
+
+        String token = jwtUtil.generateToken(member.getEmail());
+        return new ResponseEntity<>(responseToken(token), HttpStatus.OK);
     }
 
-    public ResponseEntity<Map<String, String>> login(Member member) {
-        Member findMember = memberValidation.loginValidation(member.getEmail());
+    public ResponseEntity<Map<String, String>> login(MemberDTO memberDTO) {
+        memberValidation.loginValidation(memberDTO);
 
-        if(!passwordEncoder.matches(member.getPassword(), findMember.getPassword()))
-            throw new LoginFailedException("비밀번호가 틀립니다.");
-
-        return new ResponseEntity<>(responseToken(jwtUtil.generateToken(member.getEmail())), HttpStatus.OK);
+        Member member = convertDTOToMember(memberDTO);
+        String token = jwtUtil.generateToken(member.getEmail());
+        return new ResponseEntity<>(responseToken(token), HttpStatus.OK);
     }
 
     public Map<String, String> responseToken(String token) {
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
         return response;
+    }
+
+    public Member convertDTOToMember(MemberDTO memberDTO) {
+        return new Member(
+                memberDTO.getEmail(),
+                passwordEncoder.encode(memberDTO.getPassword())
+        );
     }
 }

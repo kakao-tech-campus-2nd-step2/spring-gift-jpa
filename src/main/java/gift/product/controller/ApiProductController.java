@@ -1,6 +1,6 @@
 package gift.product.controller;
 
-import gift.product.model.Product;
+import gift.product.dto.ProductDTO;
 import gift.product.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,35 +22,31 @@ public class ApiProductController {
     }
 
     @GetMapping("/list")
-    public Page<Product> showProductList(Pageable pageable) {
+    public Page<ProductDTO> showProductList(Pageable pageable) {
         System.out.println("[ProductController] showProductList()");
         return productService.getAllProducts(pageable);
     }
 
     @PostMapping()
-    public ResponseEntity<String> registerProduct(@Valid @RequestBody Product product) {
+    public ResponseEntity<String> registerProduct(@Valid @RequestBody ProductDTO productDTO) {
         System.out.println("[ProductController] registerProduct()");
-        return productService.registerProduct(product);
+        return productService.registerProduct(productDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
+    public ResponseEntity<String> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO productDTO) {
         System.out.println("[ProductController] updateProduct()");
-        return productService.updateProduct(id, new Product(product.getName(),product.getPrice(), product.getImageUrl()));
+        return productService.updateProduct(id, productDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         System.out.println("[ProductController] deleteProduct()");
-        if (productService.existsById(id)) {
-            productService.deleteProduct(id);
-            return ResponseEntity.ok("Product deleted successfully");
-        }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
     }
 
     @GetMapping("/search")
-    public Page<Product> searchProduct(@RequestParam("keyword") String keyword, Pageable pageable) {
+    public Page<ProductDTO> searchProduct(@RequestParam("keyword") String keyword, Pageable pageable) {
         System.out.println("[ProductController] searchProduct()");
         return productService.searchProducts(keyword, pageable);
     }

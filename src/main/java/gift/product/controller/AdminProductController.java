@@ -1,8 +1,7 @@
 package gift.product.controller;
 
-import gift.product.model.Product;
+import gift.product.dto.ProductDTO;
 import gift.product.service.ProductService;
-import gift.product.validation.ProductValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -32,45 +31,44 @@ public class AdminProductController {
     @GetMapping("/register")
     public String showProductForm(Model model) {
         System.out.println("[ProductController] showProductForm()");
-        model.addAttribute("product", new Product("", 0, ""));
+        model.addAttribute("product", new ProductDTO("", 0, ""));
         return "product-form";
     }
 
     @PostMapping()
-    public String registerProduct(@Valid @ModelAttribute Product product, BindingResult bindingResult, Model model) {
+    public String registerProduct(@Valid @ModelAttribute ProductDTO productDTO, BindingResult bindingResult, Model model) {
         System.out.println("[ProductController] registerProduct()");
         if (bindingResult.hasErrors()) {
-            model.addAttribute("product", product);
+            model.addAttribute("product", productDTO);
             return "product-form";
         }
-        productService.registerProduct(product);
+        productService.registerProduct(productDTO);
         return "redirect:/admin/product/list";
     }
 
     @GetMapping("/update/{id}")
     public String updateProductForm(@PathVariable Long id, Model model) {
         System.out.println("[ProductController] updateProductForm()");
-        Product product = productService.getProductById(id);
-        model.addAttribute("product", product);
+        ProductDTO productDTO = productService.getDTOById(id);
+        model.addAttribute("product", productDTO);
         return "product-update-form";
     }
 
     @PutMapping("/{id}")
-    public String updateProduct(@PathVariable Long id, @ModelAttribute Product product, BindingResult bindingResult, Model model) {
+    public String updateProduct(@PathVariable Long id, @ModelAttribute ProductDTO productDTO, BindingResult bindingResult, Model model) {
         System.out.println("[ProductController] updateProduct()");
         if (bindingResult.hasErrors()) {
-            model.addAttribute("product", product);
+            model.addAttribute("product", productDTO);
             return "product-form";
         }
-        productService.updateProduct(id, product);
+        productService.updateProduct(id, productDTO);
         return "redirect:/admin/product/list";
     }
 
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable Long id, Model model) {
         System.out.println("[ProductController] deleteProduct()");
-        if(productService.existsById(id))
-            productService.deleteProduct(id);
+        productService.deleteProduct(id);
         return "redirect:/admin/product/list";
     }
 
