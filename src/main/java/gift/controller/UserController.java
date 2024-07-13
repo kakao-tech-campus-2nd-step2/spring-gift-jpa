@@ -5,10 +5,11 @@ import gift.service.UserService;
 import gift.util.UserUtility;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/user")
@@ -33,11 +34,5 @@ public class UserController {
     public ResponseEntity<Object> login(@RequestBody @Valid UserDTO form) {
         String accessToken = userService.login(form);
         return ResponseEntity.ok().body(userUtility.accessTokenToObject(accessToken));
-    }
-
-    @ExceptionHandler(ResponseStatusException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ResponseEntity<String> handleForbidden(ResponseStatusException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 }
