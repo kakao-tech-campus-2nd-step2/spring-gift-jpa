@@ -22,10 +22,6 @@ public class ProductService {
         return productRepository.findAll(pageable);
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
-
     public Product getProductById(Long id){
         return productRepository.findProductById(id);
     }

@@ -30,10 +30,6 @@ public class WishlistService {
         return wishlistRepository.getAllWishlist(email, pageable);
     }
 
-
-    //    public List<Product> getAllWishlist(String email) {
-//        return wishlistRepository.findAllProductInWishlistByEmail(email);
-//    }
     public Product getProductById(long id){
         return productRepository.findProductById(id);
     }
