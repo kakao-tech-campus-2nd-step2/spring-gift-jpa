@@ -1,4 +1,4 @@
-package gift.dto.member;
+package gift.util.pagenation;
 
 public record PageInfoDTO(
         int page,

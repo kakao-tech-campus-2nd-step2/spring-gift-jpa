@@ -1,6 +1,8 @@
 package gift.controller.member;
 
+import gift.annotation.PageInfo;
 import gift.annotation.TokenEmail;
+import gift.util.pagenation.PageInfoDTO;
 import gift.dto.member.PwUpdateDTO;
 import gift.dto.member.MemberResponseDTO;
 import gift.exception.ForbiddenRequestException;
@@ -20,10 +22,12 @@ public class MemberController {
     }
 
     @GetMapping("/api/users")
-    public ResponseEntity<List<MemberResponseDTO>> getUsers() {
-        return ResponseEntity.ok(memberService.getAllUsers());
+    public ResponseEntity<List<MemberResponseDTO>> getUsers(
+            @PageInfo
+            PageInfoDTO pageInfoDTO
+    ) {
+        return ResponseEntity.ok(memberService.getAllUsers(pageInfoDTO));
     }
-
 
 
     @DeleteMapping("/api/users")

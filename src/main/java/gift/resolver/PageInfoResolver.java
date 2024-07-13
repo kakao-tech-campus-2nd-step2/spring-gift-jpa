@@ -1,8 +1,7 @@
 package gift.resolver;
 
 import gift.annotation.PageInfo;
-import gift.annotation.TokenEmail;
-import gift.dto.member.PageInfoDTO;
+import gift.util.pagenation.PageInfoDTO;
 import gift.exception.InvalidPageRequestException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;

@@ -1,6 +1,6 @@
 ### GET request to example server
-GET http://localhost:8080/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+GET http://localhost:8080/api/users?size=3&page=1&sort=email&asc=false
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwODU5MjQ1LCJleHAiOjE3MjA4NjI4NDV9.p7GAp7NKO1tfcvzaEH_rj8FtDWa_J1nOA4aWYi7d3hk
 
 ### signup request
 POST http://localhost:8080/signup
@@ -13,11 +13,11 @@ Content-Type: application/json
 
 ### account deletion request
 DELETE http://localhost:8080/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwODU5MjQ1LCJleHAiOjE3MjA4NjI4NDV9.p7GAp7NKO1tfcvzaEH_rj8FtDWa_J1nOA4aWYi7d3hk
 
 ### password change request
 PATCH http://localhost:8080/api/password-change
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwODU5MjQ1LCJleHAiOjE3MjA4NjI4NDV9.p7GAp7NKO1tfcvzaEH_rj8FtDWa_J1nOA4aWYi7d3hk
 Content-Type: application/json
 
 {
@@ -29,7 +29,7 @@ POST http://localhost:8080/signup
 Content-Type: application/json
 
 {
-  "email": "emailll@email.com",
+  "email": "email0@email.com",
   "password": "aB12345678"
 }
 
@@ -44,12 +44,12 @@ Content-Type: application/json
 
 ### wish get request
 GET http://localhost:8080/api/wishes
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwODU5MjQ1LCJleHAiOjE3MjA4NjI4NDV9.p7GAp7NKO1tfcvzaEH_rj8FtDWa_J1nOA4aWYi7d3hk
 
 
 ### wish post request
 POST http://localhost:8080/api/wishes
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwODU5MjQ1LCJleHAiOjE3MjA4NjI4NDV9.p7GAp7NKO1tfcvzaEH_rj8FtDWa_J1nOA4aWYi7d3hk
 Content-Type: application/json
 
 {
@@ -59,11 +59,11 @@ Content-Type: application/json
 
 ### wish delete request
 DELETE http://localhost:8080/api/wishes/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwODU5MjQ1LCJleHAiOjE3MjA4NjI4NDV9.p7GAp7NKO1tfcvzaEH_rj8FtDWa_J1nOA4aWYi7d3hk
 
 ### product post request
 POST http://localhost:8080/api/products
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwODU5MjQ1LCJleHAiOjE3MjA4NjI4NDV9.p7GAp7NKO1tfcvzaEH_rj8FtDWa_J1nOA4aWYi7d3hk
 Content-Type: application/json
 
 {
