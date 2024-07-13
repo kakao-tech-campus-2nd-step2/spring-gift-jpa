@@ -29,7 +29,7 @@ public class MemberService {
         memberJpaRepository.save(request.toEntity());
     }
 
-    //@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public String login(MemberRequest.Login request) {
         Member member = memberJpaRepository.findByEmail(request.email())
             .orElseThrow(() -> new NotFoundException("User not found."));
@@ -40,7 +40,7 @@ public class MemberService {
         return jwtProvider.createToken(member.getId(), member.getRole());
     }
 
-    //@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public MemberResponse.Info getUser(Long memberId) {
         var member = memberJpaRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException("User not found."));

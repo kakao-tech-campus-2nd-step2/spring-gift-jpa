@@ -72,7 +72,7 @@ public class WishService {
         throw new IllegalArgumentException("본인의 위시리스트만 삭제 가능합니다.");
     }
 
-    //@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public PageResponse<WishResponse.Info> getWishesPaging(Long memberId, Pageable pageable) {
         Page<Wish> wishPage = wishJpaRepository.findAllByMemberByIdDesc(memberId, pageable);
         var content = wishPage.getContent().stream()

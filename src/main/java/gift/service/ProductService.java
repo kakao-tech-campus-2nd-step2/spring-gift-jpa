@@ -9,6 +9,7 @@ import gift.global.validate.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -19,7 +20,7 @@ public class ProductService {
         this.productJpaRepository = productJpaRepository;
     }
 
-    //@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public ProductResponse.Info getProduct(Long id) {
         var product = productJpaRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
@@ -43,7 +44,7 @@ public class ProductService {
         productJpaRepository.deleteById(id);
     }
 
-    //@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public PageResponse<ProductResponse.Info> getProductsPaging(Pageable pageable) {
         Page<Product> productPage = productJpaRepository.findAllByOrderByIdDesc(
             pageable);
