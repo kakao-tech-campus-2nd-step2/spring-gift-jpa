@@ -3,9 +3,10 @@ package gift.service;
 import gift.entity.Product;
 import gift.exception.BusinessException;
 import gift.repository.ProductRepository;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,15 +19,14 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    public Page<Product> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productRepository.findAll(pageable);
     }
 
-    public Optional<Product> findById(Long id) {
-        if (productRepository.findById(id).isEmpty()) {
-            throw new BusinessException("해당 아이디에 대한 상품이 존재하지 않습니다.");
-        }
-        return productRepository.findById(id);
+    public Product findById(Long id) {
+        return productRepository.findById(id)
+            .orElseThrow(() -> new BusinessException("해당 아이디에 대한 상품이 존재하지 않습니다."));
     }
 
     public Product save(Product product) {

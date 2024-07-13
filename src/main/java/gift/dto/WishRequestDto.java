@@ -3,7 +3,7 @@ package gift.dto;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.PositiveOrZero;
 
-public class WishlistRequestDto {
+public class WishRequestDto {
 
     @NotEmpty(message = "상품 ID는 필수 입니다.")
     private Long productId;
@@ -11,7 +11,7 @@ public class WishlistRequestDto {
     @PositiveOrZero(message = "수량은 0개 이상이어야 합니다.")
     private int quantity;
 
-    public WishlistRequestDto(Long productId, int quantity) {
+    public WishRequestDto(Long productId, int quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }

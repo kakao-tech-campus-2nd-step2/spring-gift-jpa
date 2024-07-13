@@ -1,11 +1,14 @@
 package gift.controller;
 
 import gift.annotation.LoginMember;
-import gift.dto.WishlistRequestDto;
-import gift.entity.Wish;
+import gift.dto.WishRequestDto;
+import gift.dto.WishResponseDto;
 import gift.service.WishService;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,16 +32,20 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Wish>> getAllByMemberId(@LoginMember Long memberId) {
-        return new ResponseEntity<>(wishService.getWishlist(memberId), HttpStatus.OK);
+    public ResponseEntity<Page<WishResponseDto>> getAllByMemberId(@LoginMember Long memberId,
+        @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<WishResponseDto> wishlist = wishService.getWishlist(memberId, pageable);
+
+        return new ResponseEntity<>(wishlist, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<String> addWishlist(@LoginMember Long memberId,
-        @RequestBody WishlistRequestDto wishlistRequestDto) {
-        wishService.addWishlist(new Wish(memberId, wishlistRequestDto.getProductId(),
-            wishlistRequestDto.getQuantity()));
-        return new ResponseEntity<>(HttpStatus.OK);
+        @RequestBody WishRequestDto wishlistRequestDto) {
+        wishService.addWishlist(memberId, wishlistRequestDto.getProductId(),
+            wishlistRequestDto.getQuantity());
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{productId}")

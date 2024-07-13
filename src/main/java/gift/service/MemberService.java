@@ -34,4 +34,9 @@ public class MemberService {
             .orElseThrow(() -> new BusinessException("해당 이메일로 등록된 사용자 정보가 없습니다."));
         return member.getId();
     }
+
+    public Member getMemberById(Long id) {
+        return memberRepository.findById(id)
+            .orElseThrow(() -> new BusinessException("해당 id로 등록된 사용자 정보가 없습니다."));
+    }
 }
