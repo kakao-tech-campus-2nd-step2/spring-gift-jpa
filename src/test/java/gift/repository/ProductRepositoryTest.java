@@ -2,7 +2,8 @@ package gift.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import gift.entity.Product;
+import gift.product.entity.Product;
+import gift.product.repository.ProductRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,11 @@
-package gift.service;
+package gift.user.service;
 
-import gift.entity.Member;
-import gift.repository.MemberRepository;
+import gift.user.dto.UserDto;
+import gift.user.entity.User;
+import gift.user.entity.UserRole;
+import gift.user.repository.UserRepository;
 import gift.security.JwtTokenProvider;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,43 +13,43 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Service
-public class MemberService {
+public class UserService {
 
-  private final MemberRepository memberRepository;
+  private final UserRepository userRepository;
   private final BCryptPasswordEncoder passwordEncoder;
   private final JwtTokenProvider tokenProvider;
-  private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
 
   @Autowired
-  public MemberService(MemberRepository memberRepository, JwtTokenProvider tokenProvider) {
-    this.memberRepository = memberRepository;
+  public UserService(UserRepository userRepository, JwtTokenProvider tokenProvider) {
+    this.userRepository = userRepository;
     this.passwordEncoder = new BCryptPasswordEncoder();
     this.tokenProvider = tokenProvider;
   }
-  public String register(String email, String password) {
-    if (memberRepository.findByEmail(email).isPresent()){
+  public String register(@Valid UserDto userDto) {
+    if (userRepository.findByEmail(userDto.getEmail()).isPresent()){
       throw new RuntimeException("이미 존재하는 이메일입니다.");
     }
 
-    Member member = new Member();
-    member.setEmail(email);
-    member.setPassword(passwordEncoder.encode(password));
-    memberRepository.save(member);
-    return tokenProvider.createToken(member.getEmail());
+    User user = new User();
+    user.setEmail(userDto.getEmail());
+    user.setPassword(userDto.getPassword());
+    user.setRole(userDto.getUserRole());
+    return tokenProvider.createToken(user.getEmail());
   }
 
   public String authenticate(String email, String password) {
-    Member member = memberRepository.findByEmail(email)
+    User user = userRepository.findByEmail(email)
         .orElseThrow(() -> new RuntimeException("이메일 또는 비밀번호가 올바르지 않습니다."));
-    if (!passwordEncoder.matches(password, member.getPassword())) {
+    if (!passwordEncoder.matches(password, user.getPassword())) {
       throw new RuntimeException("이메일 또는 비밀번호가 올바르지 않습니다.");
     }
-    return tokenProvider.createToken(member.getEmail());
+    return tokenProvider.createToken(user.getEmail());
   }
 
-  public Member getMemberFromToken(String token) {
+  public User getMemberFromToken(String token) {
     String email = tokenProvider.getEmailFromToken(token);
-    return memberRepository.findByEmail(email)
+    return userRepository.findByEmail(email)
         .orElseThrow(() -> new RuntimeException("Invalid token"));
   }
+
 }

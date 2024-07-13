@@ -1,4 +1,4 @@
-package gift.entity;
+package gift.product.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,17 +34,6 @@ public class Product {
   @NotBlank(message = "이미지 URL을 입력해야 합니다.")
   @Column(name = "imageUrl", nullable = false)
   private String imageUrl;
-
-
-  public Product(long id, String name, int price, String imageUrl) {
-    this.id = id;
-    this.name = name;
-    this.price = price;
-    this.imageUrl = imageUrl;
-  }
-  public Product() {
-
-  }
 
 
   public Long getId() {

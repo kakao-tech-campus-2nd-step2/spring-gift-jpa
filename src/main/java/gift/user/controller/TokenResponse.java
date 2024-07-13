@@ -1,6 +1,6 @@
-package gift.controller;
+package gift.user.controller;
 
-class TokenResponse {
+public class TokenResponse {
 
   private String token;
 

@@ -2,9 +2,12 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.entity.Wish;
-import gift.entity.Member;
-import gift.entity.Product;
+import gift.product.repository.ProductRepository;
+import gift.user.repository.UserRepository;
+import gift.wish.entity.Wish;
+import gift.user.entity.User;
+import gift.product.entity.Product;
+import gift.wish.repository.WishRepository;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -18,14 +21,14 @@ public class WishRepositoryTest {
   private WishRepository wishRepository;
 
   @Autowired
-  private MemberRepository memberRepository;
+  private UserRepository memberRepository;
 
   @Autowired
   private ProductRepository productRepository;
 
   @Test
   public void testSaveAndFindById() {
-    Member member = new Member();
+    User member = new User();
     member.setEmail("test@example.com");
     member.setPassword("password");
     memberRepository.save(member);
@@ -50,7 +53,7 @@ public class WishRepositoryTest {
 
   @Test
   public void testFindByMemberEmail() {
-    Member member = new Member();
+    User member = new User();
     member.setEmail("test@example.com");
     member.setPassword("password");
     memberRepository.save(member);
@@ -85,7 +88,7 @@ public class WishRepositoryTest {
 
   @Test
   public void testFindByProductId() {
-    Member member = new Member();
+    User member = new User();
     member.setEmail("test2@example.com");
     member.setPassword("password");
     memberRepository.save(member);
@@ -109,7 +112,7 @@ public class WishRepositoryTest {
 
   @Test
   public void testDeleteWish() {
-    Member member = new Member();
+    User member = new User();
     member.setEmail("delete@example.com");
     member.setPassword("password");
     memberRepository.save(member);

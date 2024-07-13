@@ -1,12 +1,14 @@
-package gift.service;
+package gift.product.service;
 
-import gift.entity.Product;
-import gift.repository.ProductRepository;
-import java.util.List;
-import java.util.Optional;
+import gift.product.dto.ProductDto;
+import gift.product.entity.Product;
+import gift.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -18,35 +20,44 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
-  public List<Product> findAll() {
+  public List<ProductDto> findAll() {
     try {
-      return productRepository.findAll();
+      return productRepository.findAll().stream()
+          .map(this::convertToDto)
+          .collect(Collectors.toList());
     } catch (Exception e) {
       throw new RuntimeException("모든 상품을 조회하는 중에 오류가 발생했습니다.", e);
     }
   }
 
-  public Optional<Product> getProductById(long id) {
+  public Optional<ProductDto> getProductById(long id) {
     try {
-      return productRepository.findById(id);
+      return productRepository.findById(id).map(this::convertToDto);
     } catch (Exception e) {
       throw new RuntimeException("ID가 " + id + "인 상품을 조회하는 중에 오류가 발생했습니다.", e);
     }
   }
 
-  public Product addProduct(Product product) {
+  public ProductDto addProduct(ProductDto productDto) {
     try {
+      Product product = convertToEntity(productDto);
       validateProduct(product);
-      return productRepository.save(product);
+      Product savedProduct = productRepository.save(product);
+      return convertToDto(savedProduct);
     } catch (Exception e) {
       throw new RuntimeException("상품을 추가하는 중에 오류가 발생했습니다.", e);
     }
   }
 
-  public Product updateProduct(Product product) {
+  public ProductDto updateProduct(long id, ProductDto productDto) {
     try {
-      validateProduct(product);
-      return productRepository.save(product);
+      Product existingProduct = productRepository.findById(id)
+          .orElseThrow(() -> new RuntimeException("ID가 " + id + "인 상품이 존재하지 않습니다."));
+      Product updatedProduct = convertToEntity(productDto);
+      updatedProduct.setId(existingProduct.getId());
+      validateProduct(updatedProduct);
+      Product savedProduct = productRepository.save(updatedProduct);
+      return convertToDto(savedProduct);
     } catch (Exception e) {
       throw new RuntimeException("상품을 업데이트하는 중에 오류가 발생했습니다.", e);
     }
@@ -71,5 +82,22 @@ public class ProductService {
       throw new IllegalArgumentException("상품 이미지 URL은 비어 있을 수 없습니다.");
     }
   }
-}
 
+  private Product convertToEntity(ProductDto productDto) {
+    Product product = new Product();
+    product.setId(productDto.getId());
+    product.setName(productDto.getName());
+    product.setPrice(productDto.getPrice());
+    product.setImageUrl(productDto.getImageUrl());
+    return product;
+  }
+
+  private ProductDto convertToDto(Product product) {
+    return new ProductDto(
+        product.getId(),
+        product.getName(),
+        product.getPrice(),
+        product.getImageUrl()
+    );
+  }
+}
