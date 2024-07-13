@@ -1,20 +1,20 @@
 package gift.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.springframework.lang.NonNull;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tokens")
+@Table(name = "token")
 public class Token {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    @NonNull
+    @Column(nullable = false)
     private String tokenValue;
 
     public Token() {

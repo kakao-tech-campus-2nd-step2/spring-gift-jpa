@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.dto.ProductDto;
 import gift.entity.Product;
 import gift.repository.ProductRepositoryInterface;
 import jakarta.transaction.Transactional;
@@ -35,7 +34,7 @@ public class ProductService {
 
     public void update(Long id, String name, Long price, String url) {
         Product actualProduct = productRepositoryInterface.findById(id).orElseThrow(() -> new RuntimeException("상품을 찾지 못했습니다."));
-        actualProduct.update(name,price,url);
+        actualProduct.update(name, price, url);
     }
 
     public void delete(Long id) {

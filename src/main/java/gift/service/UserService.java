@@ -44,10 +44,7 @@ public class UserService {
     public boolean login(String email, String password) throws AuthenticationException {
         UserDto.Response dbUserDto = UserDto.Response.fromEntity(userRepositoryInterface.findByEmail(email));
 
-        if (validatePassword(password, dbUserDto.getPassword())) {
-            return true;
-        }
-        return false;
+        return validatePassword(password, dbUserDto.getPassword());
     }
 
     private boolean validatePassword(String inputPassword, String dbUserPassword) throws AuthenticationException {

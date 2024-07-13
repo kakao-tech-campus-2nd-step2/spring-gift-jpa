@@ -109,9 +109,9 @@ public class ProductDto {
 
     public static class Response {
         private Long id;
-        private String name;
-        private String url;
-        private Long price;
+        private final String name;
+        private final String url;
+        private final Long price;
 
         public Response(String name, Long price, String url) {
             this.name = name;
