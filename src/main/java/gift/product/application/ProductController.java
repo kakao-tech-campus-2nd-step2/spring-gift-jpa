@@ -1,6 +1,7 @@
 package gift.product.application;
 
 import gift.product.application.dto.request.ProductRequest;
+import gift.product.application.dto.response.ProductPageResponse;
 import gift.product.application.dto.response.ProductResponse;
 import gift.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,8 +10,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -77,14 +79,12 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "상품 목록 조회 성공"),
     })
     @GetMapping()
-    public ResponseEntity<List<ProductResponse>> getProductList() {
-        var productInfos = productService.getProducts();
+    public ResponseEntity<ProductPageResponse> getProductList(@PageableDefault Pageable pageable) {
+        var productInfo = productService.getProducts(pageable);
 
-        var responses = productInfos.stream()
-                .map(ProductResponse::from)
-                .toList();
+        var response = ProductPageResponse.from(productInfo);
         return ResponseEntity.ok()
-                .body(responses);
+                .body(response);
     }
 
     @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
