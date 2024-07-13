@@ -2,6 +2,7 @@ package gift.product.controller;
 
 import gift.product.model.Product;
 import gift.product.service.ProductService;
+import gift.product.validation.ProductValidation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;

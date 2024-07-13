@@ -7,7 +7,6 @@ import gift.product.model.Wish;
 import gift.product.util.JwtUtil;
 import gift.product.validation.WishListValidation;
 import jakarta.servlet.http.HttpServletRequest;
-
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +52,6 @@ public class WishListService {
                         productRepository.findById(requestBody.get("productId")).get()
                 )
         );
-
         return ResponseEntity.status(HttpStatus.CREATED).body("WishProduct registered successfully");
     }
 

@@ -1,5 +1,4 @@
 package gift.product.repository;
-
 import gift.product.model.Wish;
 
 import org.springframework.data.domain.Page;
