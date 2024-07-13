@@ -26,6 +26,7 @@ public class WishlistItem {
 
     public WishlistItem() { }
 
+
     public Member getMember() {
         return member;
     }
