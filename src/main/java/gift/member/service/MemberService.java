@@ -45,8 +45,8 @@ public class MemberService {
     }
 
     private void validateMemberExists(Long id) {
-        if (memberRepository.existsById(id)) {
-            throw new DuplicateEmailException();
+        if (!memberRepository.existsById(id)) {
+            throw new MemberNotFoundException();
         }
     }
 
