@@ -27,12 +27,7 @@ public class ProductService {
 
         List<Product> all = productRepository.findAll();
         for (Product product : all) {
-            products.add(new ProductResponse(
-                    product.getId(),
-                    product.getName(),
-                    product.getPrice(),
-                    product.getImageUrl()
-            ));
+            products.add(new ProductResponse(product));
         }
         return products;
     }
@@ -41,12 +36,7 @@ public class ProductService {
      */
     public ProductResponse readOneProduct(Long id){
         Product product = productRepository.findById(id).orElseThrow(NoSuchFieldError::new);
-        return new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl()
-        );
+        return new ProductResponse(product);
     }
     /*
      * 객체를 전달받아 DB에 저장

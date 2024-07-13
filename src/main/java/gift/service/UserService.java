@@ -24,12 +24,7 @@ public class UserService {
         List<UserResponse> list = new ArrayList<>();
         List<User> all = userRepository.findAll();
         for (User user : all) {
-            list.add(new UserResponse(
-                    user.getId(),
-                    user.getUserId(),
-                    user.getEmail(),
-                    user.getPassword()
-            ));
+            list.add(new UserResponse(user));
         }
         return list;
     }
@@ -38,24 +33,14 @@ public class UserService {
      */
     public UserResponse loadOneUser(String userId){
         User user = userRepository.findByUserId(userId);
-        return new UserResponse(
-                user.getId(),
-                user.getUserId(),
-                user.getEmail(),
-                user.getPassword()
-        );
+        return new UserResponse(user);
     }
     /*
      * 위와 동일, 오버로딩
      */
     public UserResponse loadOneUser(Long id){
         User user = userRepository.findById(id).orElseThrow(NullPointerException::new);
-        return new UserResponse(
-                user.getId(),
-                user.getUserId(),
-                user.getEmail(),
-                user.getPassword()
-        );
+        return new UserResponse(user);
     }
     /*
      * User의 정보를 저장하는 로직

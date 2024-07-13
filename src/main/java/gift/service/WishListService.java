@@ -43,19 +43,9 @@ public class WishListService {
             User userEntity = wishProduct.getUser();
             Product productEntity = wishProduct.getProduct();
 
-            UserResponse user = new UserResponse(
-                    userEntity.getId(),
-                    userEntity.getUserId(),
-                    userEntity.getEmail(),
-                    userEntity.getPassword()
-            );
+            UserResponse user = new UserResponse(userEntity);
 
-            ProductResponse product = new ProductResponse(
-                    productEntity.getId(),
-                    productEntity.getName(),
-                    productEntity.getPrice(),
-                    productEntity.getImageUrl()
-            );
+            ProductResponse product = new ProductResponse(productEntity);
 
             WishProductResponse wishProductResponse = new WishProductResponse(
                     wishProduct.getId(),
