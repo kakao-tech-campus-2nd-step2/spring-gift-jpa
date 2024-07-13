@@ -22,6 +22,8 @@ public class AdminPageController {
     public String adminPage(Model model, Pageable pageable) {
         Page<Product> products = productService.getAllProducts(pageable);
 
+        model.addAttribute("headerText", "Manage products");
+        model.addAttribute("jsSrc", "../adminPage.js");
         model.addAttribute("products", products);
         model.addAttribute("page", pageable.getPageNumber() + 1);
         model.addAttribute("totalProductsSize", products.getTotalElements());
@@ -29,6 +31,6 @@ public class AdminPageController {
         model.addAttribute("pageLists",
             IntStream.range(1, products.getTotalPages() + 1).boxed().toList());
 
-        return "adminPage";
+        return "basicPage";
     }
 }

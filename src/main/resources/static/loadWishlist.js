@@ -11,7 +11,12 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => {
           if (response.ok) {
-            response.text().then(html => document.write(html))
+            response.text().then(
+                html => {
+                  document.open()
+                  document.write(html)
+                  document.close()
+                })
           }
         })
       }

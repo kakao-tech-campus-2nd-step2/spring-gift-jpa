@@ -10,6 +10,8 @@ import gift.product.ProductRepository;
 import gift.token.MemberTokenDTO;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,9 +31,14 @@ public class WishlistService {
         this.entityManager = entityManager;
     }
 
-    public List<Product> getAllWishlists(MemberTokenDTO memberTokenDTO) {
+    public Page<Product> getAllWishlists(MemberTokenDTO memberTokenDTO, Pageable pageable) {
         return wishlistRepository
-            .findAllByMemberEmail(memberTokenDTO.getEmail())
+            .findAllByMemberEmail(memberTokenDTO.getEmail(), pageable)
+            .map(Wishlist::getProduct);
+    }
+
+    public List<Product> getAllWishlists(MemberTokenDTO memberTokenDTO) {
+        return wishlistRepository.findAllByMemberEmail(memberTokenDTO.getEmail())
             .stream()
             .map(Wishlist::getProduct)
             .toList();
