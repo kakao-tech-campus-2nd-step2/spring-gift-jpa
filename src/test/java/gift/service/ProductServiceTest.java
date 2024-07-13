@@ -2,11 +2,13 @@ package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import gift.dto.product.AddProductRequest;
 import gift.dto.product.ProductResponse;
 import gift.dto.product.UpdateProductRequest;
 import gift.entity.Product;
@@ -26,7 +28,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
-class ProductServiceTest {
+class ProductServiceTest implements AutoCloseable {
 
     @InjectMocks
     private ProductService productService;
@@ -34,10 +36,18 @@ class ProductServiceTest {
     @Mock
     private ProductRepository productRepository;
 
+    private AutoCloseable closeable;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
     }
+
+    @Override
+    public void close() throws Exception {
+        closeable.close();
+    }
+
 
     @Test
     @DisplayName("getAllProducts empty test")
@@ -120,6 +130,28 @@ class ProductServiceTest {
         assertThat(actual.getPrice()).isEqualTo(expected.getPrice());
         assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl());
         verify(productRepository, times(1)).findById(2L);
+    }
+
+    @Test
+    @DisplayName("Add product test")
+    void addProductTest() {
+        // given
+        AddProductRequest request = new AddProductRequest("Product A", 1000,
+            "http://example.com/images/product_a.jpg");
+        Product savedProduct = Product.builder()
+            .id(1L)
+            .name("Product A")
+            .price(1000)
+            .imageUrl("http://example.com/images/product_a.jpg")
+            .build();
+        when(productRepository.save(any(Product.class))).thenReturn(savedProduct);
+
+        // when
+        Long savedId = productService.addProduct(request);
+
+        // then
+        assertThat(savedId).isNotNull();
+        verify(productRepository, times(1)).save(any(Product.class));
     }
 
     @Test
