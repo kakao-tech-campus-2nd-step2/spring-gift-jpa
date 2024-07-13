@@ -32,7 +32,7 @@ public class MemberService {
         // 클레임은 토큰에 대한 추가적인 정보를 제공하거나 토큰의 권한, 만료 시간 등을 명시하는 데 사용됩니다
 
         // Jwt = JSON Web Token
-        String token = Jwts.builder() // Jwt Builder 객체 생성 -> Builder Pattern -> 김태연 교수님
+        String token = Jwts.builder() // Jwt Builder 객체 생성 -> Builder Pattern
             .subject(savedMember.getId().toString()) // Jwt의 subject는 saveMember의 ID로 한다
             .claim("email",
                 savedMember.getEmail()) // Claim은 토큰에 포함된 정보의 한 조각으로 키-값 쌍으로 이루어짐. 여기서 "email"이라는 키에 savedMember의 이메일 값을 할당
