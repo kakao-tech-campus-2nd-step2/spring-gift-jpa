@@ -47,6 +47,7 @@ class WishlistRepositoryTest {
             memberRepository.findById(1L).get(),
             productRepository.findById(1L).get()
         );
+      
         Wishlist actual = wishlistRepository.save(expected);
         assertAll(
             () -> assertThat(actual).isEqualTo(expected)
