@@ -1,7 +1,5 @@
 package gift.controller;
 
-import gift.dto.CreateProduct;
-import gift.dto.EditProduct;
 import gift.dto.ProductDto;
 import gift.entity.Product;
 import gift.service.ProductService;
@@ -20,7 +18,7 @@ public class productController {
     }
 
     @PostMapping("")
-    public ProductDto.Request createProduct(@RequestBody CreateProduct.Request request) {
+    public ProductDto.Request createProduct(@RequestBody ProductDto.Request request) {
 
         Product newProduct = productService.createProduct(request.getName(),request.getPrice(),request.getUrl());
 

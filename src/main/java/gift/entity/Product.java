@@ -1,14 +1,8 @@
 package gift.entity;
 
 
-import gift.dto.ProductDto;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
 import java.util.List;
 
 @Entity
@@ -25,7 +19,7 @@ public class Product {
     @Column(nullable = false)
     private Long price;
 
-    @OneToMany(mappedBy="product")
+    @OneToMany(mappedBy = "product")
     private List<Wish> wishes;
 
     public Product() {
@@ -66,11 +60,7 @@ public class Product {
         return url;
     }
 
-    public List<Wish> getWishes(){
+    public List<Wish> getWishes() {
         return wishes;
-    }
-
-    public void setWished(List<Wish> wishes) {
-        this.wishes =wishes;
     }
 }

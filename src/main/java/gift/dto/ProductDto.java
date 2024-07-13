@@ -5,86 +5,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 public class ProductDto {
 
-    public static class Request {
-
-        private Long id;
-        private String name;
-        private Long price;
-        private String url;
-
-        public Request(String name, Long price, String url) {
-            if (checkValidProductName(name)) {
-                this.name = name;
-                this.price = price;
-                this.url = url;
-            }
-        }
-
-        public Request(Long id, String name, Long price, String url) {
-            this.id = id;
-            this.name = name;
-            this.price = price;
-            this.url = url;
-        }
-
-        public Long getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Long getPrice() {
-            return price;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-    }
-
-    public static class Response {
-        private Long id;
-        private String name;
-        private String url;
-        private Long price;
-
-        public Response(String name, Long price, String url) {
-            this.name = name;
-            this.price = price;
-            this.url = url;
-        }
-
-        public Response(Long id, String name, Long price, String url) {
-            this.id = id;
-            this.name = name;
-            this.price = price;
-            this.url = url;
-        }
-
-        public static Response fromEntity(Product product) {
-            return new Response(product.getName(), product.getPrice(), product.getUrl());
-        }
-
-        public Long getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Long getPrice() {
-            return price;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-    }
-
     public static boolean checkValidProductName(String name) {
         boolean result = true;
         if (!(checkValidLength(name, 1, 15))) {
@@ -144,6 +64,88 @@ public class ProductDto {
     @ExceptionHandler({IllegalProductNameLengthException.class, IllegalProductNameCharacterException.class, IllegalProductNameKeywordException.class})
     public static String handleProductNameExceptions(RuntimeException e) {
         return e.getMessage();
+    }
+
+    public static class Request {
+
+        private Long id;
+        private String name;
+        private Long price;
+        private String url;
+
+        public Request(String name, Long price, String url) {
+            if (checkValidProductName(name)) {
+                this.name = name;
+                this.price = price;
+                this.url = url;
+            }
+        }
+
+        public Request(Long id, String name, Long price, String url) {
+            if (checkValidProductName(name)) {
+                this.id = id;
+                this.name = name;
+                this.price = price;
+                this.url = url;
+            }
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Long getPrice() {
+            return price;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+    }
+
+    public static class Response {
+        private Long id;
+        private String name;
+        private String url;
+        private Long price;
+
+        public Response(String name, Long price, String url) {
+            this.name = name;
+            this.price = price;
+            this.url = url;
+        }
+
+        public Response(Long id, String name, Long price, String url) {
+            this.id = id;
+            this.name = name;
+            this.price = price;
+            this.url = url;
+        }
+
+        public static Response fromEntity(Product product) {
+            return new Response(product.getName(), product.getPrice(), product.getUrl());
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Long getPrice() {
+            return price;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
     }
 
     public static class IllegalProductNameLengthException extends IllegalArgumentException {
