@@ -19,8 +19,8 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public Optional<Member> getMemberByEmail(String userEmail) {
-        return memberRepository.findByEmail(userEmail);
+    public Member getMemberByEmail(String userEmail) {
+        return memberRepository.findByEmail(userEmail).get();
     }
 
     public ResponseEntity<TokenResponseDto> register(Member member) throws AlreadyExistMember {

@@ -19,21 +19,20 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @JoinColumn(name = "member_id")
+    @ManyToOne
+    private Member member;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @JoinColumn(name = "product_id")
+    @ManyToOne
+    private Product product;
 
-    protected Wishlist() {}
-
-    public Wishlist(Long memberId, Long productId) {
-        this.memberId = memberId;
-        this.productId = productId;
+    public Wishlist() {
     }
 
-    public Long getId() {
-        return id;
+    public Wishlist(Member member, Product product) {
+        this.member = member;
+        this.product = product;
     }
 
     public Member getMember() {
