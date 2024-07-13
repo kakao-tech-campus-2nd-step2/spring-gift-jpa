@@ -14,22 +14,24 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 
+
 @Service
 public class TokenService {
 
     private final TokenSpringDataJpaRepository tokenRepository;
-    private final SecretKey secretKey;
 
-    public TokenService(TokenSpringDataJpaRepository tokenRepository, @Value("${jwt.secretKey}") String secretKey) {
+    @Value("${jwt.secret-key}")
+    private String secretKey;
+
+    public TokenService(TokenSpringDataJpaRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
-        this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String saveToken(Member member) {
+    public String saveToken(Member member){
         String accessToken = Jwts.builder()
                 .setSubject(member.getId().toString())
                 .claim("email", member.getEmail())
-                .signWith(secretKey)
+                .signWith(getSecretKey())
                 .compact();
         return tokenRepository.save(new TokenAuth(accessToken, member)).getToken();
     }
@@ -47,6 +49,10 @@ public class TokenService {
     public Claims parseToken(String token) {
         JwtParser parser = (JwtParser) Jwts.parser().setSigningKey(secretKey);
         return parser.parseClaimsJws(token).getBody();
+    }
+
+    private SecretKey getSecretKey() {
+        return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
 }

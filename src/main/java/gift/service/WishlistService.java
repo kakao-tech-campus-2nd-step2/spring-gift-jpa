@@ -33,6 +33,7 @@ public class WishlistService {
         Long memberId = Long.valueOf(tokenService.getMemberIdFromToken(token));
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
         Product product = productRepository.findById(wishlistNameRequest.getProductId()).orElseThrow(() -> new MemberNotFoundException("존재하지 않는 상품입니다."));
+
         WishlistItem item = new WishlistItem(member, product);
         wishlistRepository.save(item);
     }

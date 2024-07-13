@@ -25,9 +25,9 @@ public class WishlistController {
         wishlistService.addItemToWishlist(request, token);
     }
 
-    @DeleteMapping("/{itemId}")
-    public void deleteFromWishlist(@PathVariable Long itemId, @RequestHeader("Authorization") String token) {
-        wishlistService.deleteItemFromWishlist(itemId, token);
+    @DeleteMapping("/delete/{productId}")
+    public void deleteItemFromWishlist(@PathVariable Long productId, @RequestHeader("Authorization") String token) {
+        wishlistService.deleteItemFromWishlist(productId, token);
     }
 
     @GetMapping("/member/{memberId}")
