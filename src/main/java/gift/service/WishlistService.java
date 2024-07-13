@@ -1,9 +1,9 @@
 package gift.service;
 
 import gift.exception.ResourceNotFoundException;
-import gift.model.Product;
-import gift.model.Wishlist;
-import gift.model.WishlistDTO;
+import gift.entity.Product;
+import gift.entity.Wishlist;
+import gift.entity.WishlistDTO;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;

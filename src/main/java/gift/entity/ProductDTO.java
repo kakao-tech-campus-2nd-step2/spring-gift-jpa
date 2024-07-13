@@ -1,6 +1,6 @@
-package gift.model;
+package gift.entity;
 
-import gift.util.NameConstraint;
+import gift.validation.constraint.NameConstraint;
 import jakarta.validation.constraints.NotNull;
 
 public class ProductDTO {

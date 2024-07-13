@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.model.Product;
-import gift.model.WishlistDTO;
+import gift.entity.Product;
+import gift.entity.WishlistDTO;
 import gift.service.WishlistService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

@@ -1,5 +1,6 @@
-package gift.util;
+package gift.validation.constraint;
 
+import gift.validation.validator.UserEmailValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

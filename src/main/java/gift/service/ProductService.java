@@ -1,8 +1,8 @@
 package gift.service;
 
 import gift.exception.ResourceNotFoundException;
-import gift.model.Product;
-import gift.model.ProductDTO;
+import gift.entity.Product;
+import gift.entity.ProductDTO;
 import gift.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

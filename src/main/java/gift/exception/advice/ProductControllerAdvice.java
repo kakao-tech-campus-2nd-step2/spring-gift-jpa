@@ -1,4 +1,4 @@
-package gift.util;
+package gift.exception.advice;
 
 import gift.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;

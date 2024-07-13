@@ -1,6 +1,6 @@
-package gift.model;
+package gift.entity;
 
-import gift.util.ProductIdConstraint;
+import gift.validation.constraint.ProductIdConstraint;
 import jakarta.validation.constraints.NotNull;
 
 public class WishlistDTO {

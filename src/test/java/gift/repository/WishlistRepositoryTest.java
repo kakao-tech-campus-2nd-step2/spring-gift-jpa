@@ -1,8 +1,8 @@
 package gift.repository;
 
-import gift.model.Product;
-import gift.model.ProductDTO;
-import gift.model.Wishlist;
+import gift.entity.Product;
+import gift.entity.ProductDTO;
+import gift.entity.Wishlist;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

@@ -1,6 +1,6 @@
-package gift.model;
+package gift.entity;
 
-import gift.util.EmailConstraint;
+import gift.validation.constraint.EmailConstraint;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 

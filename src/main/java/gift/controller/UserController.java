@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.model.UserDTO;
+import gift.entity.UserDTO;
 import gift.service.UserService;
 import gift.util.UserUtility;
 import jakarta.validation.Valid;

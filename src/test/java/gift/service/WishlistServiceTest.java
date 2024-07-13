@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.model.Product;
-import gift.model.WishlistDTO;
+import gift.entity.Product;
+import gift.entity.WishlistDTO;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

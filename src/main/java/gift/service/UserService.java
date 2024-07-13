@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.model.User;
-import gift.model.UserDTO;
+import gift.entity.User;
+import gift.entity.UserDTO;
 import gift.repository.UserRepository;
 import gift.util.UserUtility;
 import org.springframework.beans.factory.annotation.Autowired;

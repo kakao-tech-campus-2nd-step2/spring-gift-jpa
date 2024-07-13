@@ -1,5 +1,6 @@
-package gift.util;
+package gift.validation.validator;
 
+import gift.validation.constraint.NameConstraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

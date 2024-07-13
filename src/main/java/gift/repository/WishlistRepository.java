@@ -1,7 +1,7 @@
 package gift.repository;
 
-import gift.model.Product;
-import gift.model.Wishlist;
+import gift.entity.Product;
+import gift.entity.Wishlist;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

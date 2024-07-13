@@ -1,7 +1,7 @@
 package gift.util;
 
 
-import gift.model.UserDTO;
+import gift.entity.UserDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.assertj.core.api.Assertions;
