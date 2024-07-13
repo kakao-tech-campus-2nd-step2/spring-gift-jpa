@@ -23,32 +23,24 @@ public class AuthService {
 	@Autowired
 	private UserRepository userRespository;
 	
-	private String secret = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
+	private final String secret = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
 	
 	public void createUser(User user, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
-			throw new InvalidUserException(bindingResult.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
-		}
+		validateBindingResult(bindingResult);
 		userRespository.save(user);
 	}
 	
 	public User searchUser(String email, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
-			throw new InvalidUserException(bindingResult.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
-		}        
+		validateBindingResult(bindingResult);       
         return userRespository.findByEmail(email)
         		.orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
 	}
 	
 	public Map<String, String> loginUser(User user, BindingResult bindingResult){
 		User registeredUser = searchUser(user.getEmail(), bindingResult);
-		if(!registeredUser.getPassword().equals(user.getPassword())) {
-			throw new InvalidUserException("The email doesn't exist or the password id incorrect.", HttpStatus.FORBIDDEN);
-		}
+		validatePassword(user.getPassword(), registeredUser.getPassword());
 		String token = grantAccessToken(registeredUser);
-		Map<String, String> response = new HashMap<>();
-		response.put("token", token);
-		return response;
+		return loginResponse(token);
 	}
 	
 	public String grantAccessToken(User user) {
@@ -71,4 +63,22 @@ public class AuthService {
             throw new UnauthorizedException("Invalid or expired token");
         }
     }
+	
+	private void validateBindingResult(BindingResult bindingResult) {
+		if(bindingResult.hasErrors()) {
+			throw new InvalidUserException(bindingResult.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	private void validatePassword(String inputPassword, String storedPassword) {
+		if(!inputPassword.equals(storedPassword)) {
+			throw new InvalidUserException("The email doesn't or thr password is incorrect.", HttpStatus.FORBIDDEN);
+		}
+	}
+	
+	private Map<String, String> loginResponse(String token){
+		Map<String, String> response = new HashMap<>();
+		response.put("token", token);
+		return response;
+	}
 }
