@@ -6,37 +6,35 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 @Embeddable
-public class ProductPrice {
+public class ImageUrl {
 
-    @Column(name = "price")
-    private Long value;
+    @Column(name = "image_url")
+    private String value;
 
-    public ProductPrice() {
+    public ImageUrl() {
     }
 
-    public ProductPrice(Long value) {
-        if (value < 0) {
-            throw new ProductValidException(ErrorCode.PRODUCT_PRICE_OUT_OF_RANGE_ERROR);
-        }
+    public ImageUrl(String value) {
         this.value = value;
     }
 
-    public Long getValue() {
+    public String getValue() {
         return value;
     }
 
     @Override
     public String toString() {
-        return Long.toString(value);
+        return value;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProductPrice that = (ProductPrice) o;
+        ImageUrl that = (ImageUrl) o;
         return Objects.equals(value, that.value);
     }
 

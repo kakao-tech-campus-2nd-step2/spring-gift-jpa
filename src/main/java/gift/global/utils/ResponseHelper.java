@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 public class ResponseHelper {
-    private ResponseHelper() {}
+    private ResponseHelper() {
+    }
 
     public static <T> ResponseEntity<ResultResponseDto<T>> createResponse(ResultCode resultCode, T data) {
         ResultResponseDto<T> resultResponseDto = new ResultResponseDto<>(resultCode, data);

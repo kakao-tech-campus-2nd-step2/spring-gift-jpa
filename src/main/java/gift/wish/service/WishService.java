@@ -2,7 +2,11 @@ package gift.wish.service;
 
 import gift.member.domain.Member;
 import gift.member.exception.MemberNotFoundException;
+import gift.member.service.MemberService;
+import gift.product.domain.Product;
+import gift.product.service.ProductService;
 import gift.wish.domain.Wish;
+import gift.wish.dto.WishResponseDto;
 import gift.wish.dto.WishServiceDto;
 import gift.wish.exception.WishNotFoundException;
 import gift.wish.repository.WishRepository;
@@ -13,27 +17,45 @@ import java.util.List;
 @Service
 public class WishService {
     private final WishRepository wishRepository;
+    private final MemberService memberService;
+    private final ProductService productService;
 
-    public WishService(WishRepository wishRepository) {
+    public WishService(WishRepository wishRepository, MemberService memberService, ProductService productService) {
         this.wishRepository = wishRepository;
+        this.memberService = memberService;
+        this.productService = productService;
     }
 
-    public List<Wish> getAllWishesByMember(Member member) {
-        return wishRepository.findAllByMemberId(member.getId());
+    public List<WishResponseDto> getAllWishesByMember(Member member) {
+        return WishResponseDto.wishListToWishResponseList(
+                wishRepository.findAllByMemberId(member.getId()));
     }
 
-    public Wish getWishById(Long id) {
-        return wishRepository.findById(id)
-                .orElseThrow(WishNotFoundException::new);
+    public WishResponseDto getWishById(Long id) {
+        return new WishResponseDto(wishRepository.findById(id)
+                .orElseThrow(WishNotFoundException::new));
     }
 
-    public void createWish(WishServiceDto wishServiceDto) {
-        wishRepository.save(wishServiceDto.toWish());
+    public Wish createWish(WishServiceDto wishServiceDto) {
+        return wishRepository.save(findOrCreateWish(wishServiceDto));
     }
 
-    public void updateWish(WishServiceDto wishServiceDto) {
+    private Wish findOrCreateWish(WishServiceDto wishServiceDto) {
+        // Wish가 존재하지 않으면 새로운 Wish 생성
+        Wish wish = wishRepository.findByMemberIdAndProductId(wishServiceDto.memberId(), wishServiceDto.productId())
+                .orElseGet(() -> getWishByWishServiceDto(wishServiceDto));
+
+        if (!wish.checkNew()) {
+            // Wish가 이미 존재하면 productCount 증가
+            wish.increaseProductCount(wishServiceDto.productCount());
+        }
+
+        return wish;
+    }
+
+    public Wish updateWish(WishServiceDto wishServiceDto) {
         validateWishExists(wishServiceDto.id());
-        wishRepository.save(wishServiceDto.toWish());
+        return wishRepository.save(getWishByWishServiceDto(wishServiceDto));
     }
 
     public void deleteWish(Long id) {
@@ -41,9 +63,14 @@ public class WishService {
         wishRepository.deleteById(id);
     }
 
-    private void validateWishExists(Long id) {
-        wishRepository.findById(id)
-                .orElseThrow(MemberNotFoundException::new);
+    private Wish getWishByWishServiceDto(WishServiceDto wishServiceDto) {
+        Member member = memberService.getMemberById(wishServiceDto.memberId());
+        Product product = productService.getProductById(wishServiceDto.productId());
+        return wishServiceDto.toWish(member, product);
     }
 
+    private void validateWishExists(Long id) {
+        wishRepository.findById(id)
+                .orElseThrow(WishNotFoundException::new);
+    }
 }

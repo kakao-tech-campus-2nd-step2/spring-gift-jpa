@@ -9,7 +9,7 @@ import gift.global.security.Login;
 import gift.global.utils.ResponseHelper;
 import gift.wish.domain.Wish;
 import gift.wish.dto.WishRequestDto;
-import gift.wish.dto.WishUpdateRequestDto;
+import gift.wish.dto.WishResponseDto;
 import gift.wish.service.WishService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,15 +28,15 @@ public class WishController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResultResponseDto<List<Wish>>> getAllWishes(@Login AuthInfo authInfo) {
-        List<Wish> wishes = wishService.getAllWishesByMember(authService.getMemberById(authInfo.memberId()));
-        return ResponseHelper.createResponse(ResultCode.GET_ALL_WISHES_SUCCESS, wishes);
+    public ResponseEntity<ResultResponseDto<List<WishResponseDto>>> getAllWishes(@Login AuthInfo authInfo) {
+        List<WishResponseDto> wishResponseDtos = wishService.getAllWishesByMember(authService.getMemberById(authInfo.memberId()));
+        return ResponseHelper.createResponse(ResultCode.GET_ALL_WISHES_SUCCESS, wishResponseDtos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResultResponseDto<Wish>> getWishById(@PathVariable(name = "id") Long id, @Login AuthInfo authInfo) {
-        Wish wish = wishService.getWishById(id);
-        return ResponseHelper.createResponse(ResultCode.GET_ALL_WISHES_SUCCESS, wish);
+    public ResponseEntity<ResultResponseDto<WishResponseDto>> getWishById(@PathVariable(name = "id") Long id, @Login AuthInfo authInfo) {
+        WishResponseDto wishResponseDto = wishService.getWishById(id);
+        return ResponseHelper.createResponse(ResultCode.GET_ALL_WISHES_SUCCESS, wishResponseDto);
     }
 
     @PostMapping("")
@@ -53,7 +53,7 @@ public class WishController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<SimpleResultResponseDto> deleteMember(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<SimpleResultResponseDto> deleteWish(@PathVariable(name = "id") Long id) {
         wishService.deleteWish(id);
         return ResponseHelper.createSimpleResponse(ResultCode.DELETE_WISH_SUCCESS);
     }

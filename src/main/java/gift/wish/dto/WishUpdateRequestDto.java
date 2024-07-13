@@ -8,5 +8,5 @@ public record WishUpdateRequestDto(ProductCount productCount) {
     public WishUpdateRequestDto {
         Objects.requireNonNull(productCount);
     }
-    
+
 }

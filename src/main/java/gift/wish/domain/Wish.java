@@ -1,5 +1,7 @@
 package gift.wish.domain;
 
+import gift.member.domain.Member;
+import gift.product.domain.Product;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 
@@ -11,17 +13,27 @@ public class Wish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long memberId;
-    private Long productId;
+
+    // wish list 를 가져올 때, member 는 사용되는 경우가 적으므로, LAZY 로 가져온다
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    // wish list 를 가져올 때, product 는 거의 무조건 사용되므로, EAGER 로 가져온다
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     @Embedded
     private ProductCount productCount;
 
-    public Wish() {}
+    public Wish() {
+    }
 
-    public Wish(Long id, Long memberId, Long productId, ProductCount productCount) {
+    public Wish(Long id, Member member, Product product, ProductCount productCount) {
         this.id = id;
-        this.memberId = memberId;
-        this.productId = productId;
+        this.member = member;
+        this.product = product;
         this.productCount = productCount;
     }
 
@@ -33,12 +45,12 @@ public class Wish {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Product getProduct() {
+        return product;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Member getMember() {
+        return member;
     }
 
     public ProductCount getProductCount() {
@@ -56,6 +68,10 @@ public class Wish {
 
     @Override
     public int hashCode() {
-        return id.intValue();
+        return Objects.hash(id);
+    }
+
+    public void increaseProductCount(ProductCount productCount) {
+        this.productCount = new ProductCount(this.productCount.getValue() + productCount.getValue());
     }
 }

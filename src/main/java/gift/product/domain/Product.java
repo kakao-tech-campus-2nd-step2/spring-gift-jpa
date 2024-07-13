@@ -1,7 +1,6 @@
 package gift.product.domain;
 
 import gift.product.dto.ProductRequestDto;
-import gift.wish.domain.Wish;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 
@@ -17,12 +16,14 @@ public class Product {
     private ProductName name;
     @Embedded
     private ProductPrice price;
-    private String imageUrl;
+    @Embedded
+    private ImageUrl imageUrl;
 
     // JDBC 에서 엔티티 클래스를 인스턴스화할 때 반드시 기본 생성자와 파라미터 생성자가 필요하다
-    public Product() {}
+    public Product() {
+    }
 
-    public Product(Long id, ProductName name, ProductPrice price, String imageUrl) {
+    public Product(Long id, ProductName name, ProductPrice price, ImageUrl imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -49,7 +50,7 @@ public class Product {
         return price;
     }
 
-    public String getImageUrl() {
+    public ImageUrl getImageUrl() {
         return imageUrl;
     }
 
@@ -68,6 +69,6 @@ public class Product {
 
     @Override
     public int hashCode() {
-        return id.intValue();
+        return Objects.hash(id);
     }
 }
