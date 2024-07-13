@@ -3,7 +3,6 @@ package gift.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "wishes")
 public class Wishlist {
 
     @Id
@@ -17,6 +16,10 @@ public class Wishlist {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    public Wishlist() {
+    }
+
 
     // Getters와 Setters
     public Long getId() {

@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/wishlist")
 public class WishlistController {
 
-    @Autowired
-    private WishlistService wishlistService;
+    private final WishlistService wishlistService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    public WishlistController(WishlistService wishlistService, JwtTokenProvider jwtTokenProvider) {
+        this.wishlistService = wishlistService;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
     @GetMapping
     public ResponseEntity<List<Product>> getWishlistItems(@RequestHeader("Authorization") String token) {
