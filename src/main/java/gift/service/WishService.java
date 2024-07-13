@@ -12,6 +12,9 @@ import gift.exception.NoSuchWishException;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
+import gift.util.pagenation.PageInfoDTO;
+import gift.util.pagenation.PageableGenerator;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,11 +31,13 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
-    public List<WishResponseDTO> getWishes(String email) {
+    public List<WishResponseDTO> getWishes(String email, PageInfoDTO pageInfoDTO) {
+        Pageable pageable = PageableGenerator.generatePageable(pageInfoDTO);
+
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(NoSuchMemberException::new);
 
-        return member.getAllWishes()
+        return wishRepository.findAllByMember(member, pageable)
                 .stream()
                 .map(WishResponseDTO::from)
                 .toList();

@@ -1,7 +1,7 @@
 package gift.config;
 
-import gift.resolver.PageInfoResolver;
-import gift.resolver.TokenEmailResolver;
+import gift.custom_annotation.resolver.PageInfoResolver;
+import gift.custom_annotation.resolver.TokenEmailResolver;
 import gift.security.authfilter.AuthenticationFilter;
 import gift.security.jwt.TokenExtractor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

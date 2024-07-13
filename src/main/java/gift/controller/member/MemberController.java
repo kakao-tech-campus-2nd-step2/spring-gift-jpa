@@ -1,7 +1,7 @@
 package gift.controller.member;
 
-import gift.annotation.PageInfo;
-import gift.annotation.TokenEmail;
+import gift.custom_annotation.annotation.PageInfo;
+import gift.custom_annotation.annotation.TokenEmail;
 import gift.util.pagenation.PageInfoDTO;
 import gift.dto.member.PwUpdateDTO;
 import gift.dto.member.MemberResponseDTO;

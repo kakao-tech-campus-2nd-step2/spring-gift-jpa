@@ -1,6 +1,6 @@
-package gift.resolver;
+package gift.custom_annotation.resolver;
 
-import gift.annotation.PageInfo;
+import gift.custom_annotation.annotation.PageInfo;
 import gift.util.pagenation.PageInfoDTO;
 import gift.exception.InvalidPageRequestException;
 import org.springframework.core.MethodParameter;

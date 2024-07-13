@@ -29,7 +29,7 @@ POST http://localhost:8080/signup
 Content-Type: application/json
 
 {
-  "email": "email0@email.com",
+  "email": "emailll@email.com",
   "password": "aB12345678"
 }
 
@@ -43,7 +43,7 @@ Content-Type: application/json
 }
 
 ### wish get request
-GET http://localhost:8080/api/wishes
+GET http://localhost:8080/api/wishes?size=15&sort=member&page=0
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwODU5MjQ1LCJleHAiOjE3MjA4NjI4NDV9.p7GAp7NKO1tfcvzaEH_rj8FtDWa_J1nOA4aWYi7d3hk
 
 
@@ -53,7 +53,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsI
 Content-Type: application/json
 
 {
-  "userId": 5,
+  "userId": 1,
   "productId": 1
 }
 
