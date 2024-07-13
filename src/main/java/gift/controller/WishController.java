@@ -11,12 +11,14 @@ import gift.services.MemberService;
 import gift.services.WishService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -44,8 +46,8 @@ public class WishController {
 
 //    Wishlist 조회
     @GetMapping
-    public ResponseEntity<WishListRequestStateDTO> getWishlistById(@LoginMember MemberDto memberDto) {
-        List<WishDto> wishes = wishService.getWishListById(memberDto.getId());
+    public ResponseEntity<WishListRequestStateDTO> getWishlistById(@LoginMember MemberDto memberDto, @RequestParam int page, @RequestParam int size) {
+        Page<WishDto> wishes = wishService.getWishListById(memberDto.getId(), page, size);
         return ResponseEntity.ok().body(new WishListRequestStateDTO(
             RequestStatus.success,
             null,
