@@ -1,17 +1,9 @@
 package gift.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-
-public class ProductDTO {
+public class ProductResponseDTO {
     private Long id;
-
-    @NotBlank(message = "상품 이름은 필수 입력 사항입니다.")
     private String name;
-
-    @NotNull(message = "가격을 입력해주세요.")
     private int price;
-
     private String imageUrl;
 
     public Long getId() {

@@ -1,18 +1,26 @@
 package gift.controller;
 
 import gift.domain.Product;
-import gift.dto.ProductDTO;
+import gift.dto.ProductRequestDTO;
+import gift.dto.ProductResponseDTO;
 import gift.repository.ProductRepository;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.stereotype.Controller;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/products")
@@ -27,36 +35,37 @@ public class ProductController {
     }
 
     @GetMapping
-    public String getProducts(Model model,
-                              @RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "10") int size,
-                              @RequestParam(defaultValue = "name,asc") String[] sort) {
+    public ResponseEntity<List<ProductResponseDTO>> getProducts(Model model,
+                                                                @RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "10") int size,
+                                                                @RequestParam(defaultValue = "name,asc") String[] sort) {
         Page<Product> productPage = productService.getProducts(page, size, sort);
 
-        model.addAttribute("productPage", productPage);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("pageSize", size);
-        return "products";
+        List<ProductResponseDTO> productResponseDTOList = productPage.stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(productResponseDTOList, HttpStatus.OK);
     }
 
     @GetMapping("/new")
     public String newProductForm(Model model) {
-        model.addAttribute("productDTO", new ProductDTO());
+        model.addAttribute("productRequestDTO", new ProductRequestDTO());
         return "productForm";
     }
 
     @PostMapping
-    public String createProduct(@Valid @ModelAttribute("productDTO") ProductDTO productDTO, BindingResult bindingResult, Model model) {
+    public String createProduct(@Valid @ModelAttribute("productRequestDTO") ProductRequestDTO productRequestDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "productForm";
         }
 
-        if (productDTO.getName().contains("카카오")) {
+        if (productRequestDTO.getName().contains("카카오")) {
             model.addAttribute("errorMessage", "담당 MD와 협의된 경우에만 '카카오'를 포함할 수 있습니다.");
             return "productForm";
         }
 
-        Product product = convertToProduct(productDTO);
+        Product product = convertToEntity(productRequestDTO);
         productRepository.save(product);
         return "redirect:/api/products";
     }
@@ -66,13 +75,13 @@ public class ProductController {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid product id: " + id));
 
-        ProductDTO productDTO = convertToProductDTO(product);
-        model.addAttribute("productDTO", productDTO);
+        ProductRequestDTO productRequestDTO = convertToRequestDTO(product);
+        model.addAttribute("productRequestDTO", productRequestDTO);
         return "productForm";
     }
 
     @PostMapping("/edit/{id}")
-    public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute("productDTO") ProductDTO updatedProductDTO, BindingResult bindingResult, Model model) {
+    public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute("productRequestDTO") ProductRequestDTO updatedProductDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "productForm";
         }
@@ -83,7 +92,7 @@ public class ProductController {
         }
 
         updatedProductDTO.setId(id);
-        Product updatedProduct = convertToProduct(updatedProductDTO);
+        Product updatedProduct = convertToEntity(updatedProductDTO);
         productRepository.save(updatedProduct);
         return "redirect:/api/products";
     }
@@ -94,21 +103,30 @@ public class ProductController {
         return "redirect:/api/products";
     }
 
-    private Product convertToProduct(ProductDTO productDTO) {
+    private Product convertToEntity(ProductRequestDTO productRequestDTO) {
         Product product = new Product();
-        product.setId(productDTO.getId());
-        product.setName(productDTO.getName());
-        product.setPrice(productDTO.getPrice());
-        product.setImageUrl(productDTO.getImageUrl());
+        product.setId(productRequestDTO.getId());
+        product.setName(productRequestDTO.getName());
+        product.setPrice(productRequestDTO.getPrice());
+        product.setImageUrl(productRequestDTO.getImageUrl());
         return product;
     }
 
-    private ProductDTO convertToProductDTO(Product product) {
-        ProductDTO productDTO = new ProductDTO();
-        productDTO.setId(product.getId());
-        productDTO.setName(product.getName());
-        productDTO.setPrice(product.getPrice());
-        productDTO.setImageUrl(product.getImageUrl());
-        return productDTO;
+    private ProductRequestDTO convertToRequestDTO(Product product) {
+        ProductRequestDTO productRequestDTO = new ProductRequestDTO();
+        productRequestDTO.setId(product.getId());
+        productRequestDTO.setName(product.getName());
+        productRequestDTO.setPrice(product.getPrice());
+        productRequestDTO.setImageUrl(product.getImageUrl());
+        return productRequestDTO;
+    }
+
+    private ProductResponseDTO convertToResponseDTO(Product product) {
+        ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+        productResponseDTO.setId(product.getId());
+        productResponseDTO.setName(product.getName());
+        productResponseDTO.setPrice(product.getPrice());
+        productResponseDTO.setImageUrl(product.getImageUrl());
+        return productResponseDTO;
     }
 }
