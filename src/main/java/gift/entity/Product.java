@@ -44,10 +44,10 @@ public class Product {
         this.url = url;
     }
 
-    public void update(ProductDto productDto) {
-        this.name = productDto.getName();
-        this.price = productDto.getPrice();
-        this.url = productDto.getUrl();
+    public void update(String name, Long price, String url) {
+        this.name = name;
+        this.price = price;
+        this.url = url;
     }
 
     public Long getId() {
