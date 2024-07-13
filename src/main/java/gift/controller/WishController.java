@@ -35,7 +35,7 @@ public class WishController {
         System.out.println("get");
         List<WishResponseDTO> wishes = wishService.getWishesByMemberId(tokenLoginRequestDTO);
         return ResponseEntity.status(HttpStatus.OK)
-                        .body(wishes);
+                .body(wishes);
     }
 
     @DeleteMapping("/{productId}")
@@ -48,7 +48,7 @@ public class WishController {
 
     @GetMapping("/get-page/{memberId}")
     public ResponseEntity<Page<WishResponseDTO>> getPageById(@PageableDefault(page=1) Pageable pageable,
-                                                @PathVariable("memberId") Long memberId){
+                                                             @PathVariable("memberId") Long memberId){
         System.out.println("get - page");
         Page<WishResponseDTO> wishPages = wishService.paging(pageable);
         return ResponseEntity.status(HttpStatus.OK)

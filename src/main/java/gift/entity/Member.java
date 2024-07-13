@@ -66,9 +66,4 @@ public class Member {
         this.wishes = wishes;
     }
 
-    public boolean validatePassword(String password) {
-        return this.password
-                .equals(password);
-    }
-
 }
