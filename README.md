@@ -72,3 +72,13 @@
     2. 코드 리펙터링 : 해당 변경에 맞게 DAO 클래스와 Service, Controller 모두 변경
 - 추가 사항
     - DTO 클래스의 Response와 Request 분리
+
+### step 3. 페이지네이션
+- Spring data의 Pageable 객체를 사용하여 findAll 명령에 대한 응답을 Page 단위로 끊어서 받기
+  - 필요한 사항
+    1. 코드 리펙터링 : Repository 클래스의 메서드 반환값 변경 : List<Object> -> Page<Object>
+    2. 코드 리펙터링 : Service 클래스의 메서드 로직 변경 : 매개변수 - page (페이지 수), size (페이지 하나에 들어갈 데이터 수)
+       - 해당 정보들로 Pageable 객체를 생성하여 Repository 객체의 매개변수로 사용
+    3. 코드 리펙터링 : Controller 클래스의 get 요청 메서드 매개변수를 page, size로 변경 
+       - 반환 값은 List<Object> 형태에서 Page<Object> 형태로 변하고 이를 가져다가 Front에 적용하여 페이지네이션 구현!
+    4. 페이지 형식을 적용한 View 만들기
