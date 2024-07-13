@@ -12,9 +12,8 @@ import java.util.List;
 import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
-@Table(name = "users")
+@Table(name="users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

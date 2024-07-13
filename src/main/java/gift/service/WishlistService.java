@@ -59,5 +59,4 @@ public class WishlistService {
         }
         return new ArrayList<>(userWishlistMap.values());
     }
-
 }
