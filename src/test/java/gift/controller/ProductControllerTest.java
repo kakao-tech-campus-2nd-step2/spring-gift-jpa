@@ -204,4 +204,30 @@ class ProductControllerTest {
         });
         Assertions.assertThat(productList.size()).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("잘못된 정렬 데이터가 올 경우 예외를 던진다.")
+    void getProductsInvalidPageSort() throws Exception {
+        //given
+        var getRequest = get("/api/products?sort=name,desc")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + memberToken);
+        //when
+        var getResult = mockMvc.perform(getRequest);
+        //then
+        getResult.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("잘못된 크기 데이터가 올 경우 예외를 던진다.")
+    void getProductsInvalidPageSize() throws Exception {
+        //given
+        var getRequest = get("/api/products?size=30")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + memberToken);
+        //when
+        var getResult = mockMvc.perform(getRequest);
+        //then
+        getResult.andExpect(status().isBadRequest());
+    }
 }

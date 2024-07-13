@@ -232,7 +232,7 @@ class WishProductControllerTest {
             var wishProduct = new WishProductAddRequest(productResponse.id(), 10);
             wishProductService.addWishProduct(wishProduct, memberId);
         }
-        var getRequest = get("/api/wishes")
+        var getRequest = get("/api/wishes?page=-1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken);
         //when
@@ -247,5 +247,31 @@ class WishProductControllerTest {
         for (var product : productResponseList) {
             productService.deleteProduct(product.id());
         }
+    }
+
+    @Test
+    @DisplayName("잘못된 정렬 데이터가 올 경우 예외를 던진다.")
+    void getWishProductsInvalidPageSort() throws Exception {
+        //given
+        var getRequest = get("/api/wishes?sort=id,asc")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + memberToken);
+        //when
+        var getResult = mockMvc.perform(getRequest);
+        //then
+        getResult.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("잘못된 크기 데이터가 올 경우 예외를 던진다.")
+    void getWishProductsInvalidPageSize() throws Exception {
+        //given
+        var getRequest = get("/api/wishes?size=3")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + memberToken);
+        //when
+        var getResult = mockMvc.perform(getRequest);
+        //then
+        getResult.andExpect(status().isBadRequest());
     }
 }
