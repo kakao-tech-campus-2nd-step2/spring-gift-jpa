@@ -2,18 +2,15 @@ package gift.service;
 
 import gift.domain.Product;
 import gift.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static gift.util.ProductNameValidationUtil.isValidProductName;
 import static gift.constant.Message.*;
 
 @Service
 public class ProductService {
 
-    @Autowired
     private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
@@ -29,9 +26,7 @@ public class ProductService {
     }
 
     public String addProduct(Product newProduct) {
-        if (isValidProductName(newProduct.getName())) {
-            productRepository.insertProduct(newProduct);
-        }
+        productRepository.insertProduct(newProduct);
         return ADD_SUCCESS_MSG;
     }
 
@@ -39,7 +34,7 @@ public class ProductService {
 
         Product productToUpdate = productRepository.selectOneProduct(productId);
 
-        if ((product.getName() != null) & (isValidProductName(product.getName()))) {
+        if (product.getName() != null) {
             productToUpdate.setName(product.getName());
         }
         if (product.getPrice() > 0) {

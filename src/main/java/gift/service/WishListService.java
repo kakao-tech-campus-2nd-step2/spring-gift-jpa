@@ -19,8 +19,9 @@ public class WishListService {
         this.wishListRepository = wishListRepository;
     }
 
-    public List<Product> getWishList(String email) {
-        return wishListRepository.selectWishList(email);
+    public List<Product> getWishList(Long memberId) {
+        List<Long> productIds = wishListRepository.selectProductIdsFromWishList(memberId);
+        return wishListRepository.selectProductsFromWishList(productIds);
     }
 
     public String addWishProduct(WishProduct wishProduct) {

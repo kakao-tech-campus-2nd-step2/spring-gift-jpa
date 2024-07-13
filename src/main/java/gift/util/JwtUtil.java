@@ -11,9 +11,9 @@ public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String secretKey;
-    public String createJWT(String email) {
+    public String createJWT(Long id) {
         Claims claims = Jwts.claims();
-        claims.put("email", email);
+        claims.put("id", id);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -21,9 +21,9 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String getEmailFromJWT(String token) {
+    public Long getIdFromJWT(String token) {
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-        return claims.get("email", String.class);
+        return claims.get("id", Long.class);
     }
 
     public String getJWT(String authorization){

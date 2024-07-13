@@ -1,5 +1,6 @@
 package gift.domain;
 
+import gift.util.ProductNameValidationUtil;
 import jakarta.validation.constraints.*;
 
 import static gift.constant.Message.*;
@@ -22,6 +23,7 @@ public class Product {
     public Product() {}
 
     public Product(long id, String name, int price, String imageUrl) {
+        ProductNameValidationUtil.isValidProductName(name);
         this.id =  id;
         this.name = name;
         this.price = price;
@@ -49,6 +51,7 @@ public class Product {
     }
 
     public void setName(String name) {
+        ProductNameValidationUtil.isValidProductName(name);
         this.name = name;
     }
 

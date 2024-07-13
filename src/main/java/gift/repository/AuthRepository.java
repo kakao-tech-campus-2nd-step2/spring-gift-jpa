@@ -25,7 +25,7 @@ public class AuthRepository {
     }
 
     public Optional<Member> selectMember(String email) {
-        var sql = "SELECT email, password FROM members WHERE email = :email";
+        var sql = "SELECT id, email, password FROM members WHERE email = :email";
         MapSqlParameterSource params = new MapSqlParameterSource("email", email);
         return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper<>(Member.class)));
     }

@@ -1,20 +1,20 @@
 package gift.dto;
 
 public class WishProduct {
-    private String email;
+    private Long memberId;
     private Long productId;
 
-    public WishProduct(String email, Long productId) {
-        this.email = email;
+    public WishProduct(Long memberId, Long productId) {
+        this.memberId = memberId;
         this.productId = productId;
     }
 
-    public String getEmail() {
-        return email;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 
     public Long getProductId() {
