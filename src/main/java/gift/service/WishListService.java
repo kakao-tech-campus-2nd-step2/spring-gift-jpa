@@ -1,11 +1,13 @@
 package gift.service;
 
+import gift.domain.WishList;
 import gift.domain.WishListRequest;
 import gift.domain.WishListResponse;
 import gift.repository.WishListRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WishListService {
@@ -15,16 +17,20 @@ public class WishListService {
         this.wishListRepository = wishListRepository;
     }
 
-    public void create(WishListRequest wishListRequest) {
-        wishListRepository.create(wishListRequest);
+    public void save(WishListRequest wishListRequest) {
+        WishList wishList = WishList.MapWishListRequestToWishList(wishListRequest);
+        wishListRepository.save(wishList);
     }
 
     public List<WishListResponse> findById(String jwtId) {
-        return wishListRepository.findById(jwtId);
+        List<WishList> wishLists =  wishListRepository.findByMemberId(jwtId);
+        return wishLists.stream()
+                .map(WishList::MapWishListToWishListResponse)
+                .collect(Collectors.toList());
     }
 
-    public boolean delete(String jwtId, Long menuId) {
-        if (wishListRepository.delete(jwtId, menuId)) return true;
-        else return false;
+    public void delete(Long Id) {
+        wishListRepository.deleteById(Id);
     }
 }
+

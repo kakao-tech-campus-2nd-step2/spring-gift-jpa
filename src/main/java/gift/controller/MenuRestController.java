@@ -21,16 +21,15 @@ public class MenuRestController {
     }
 
     @PostMapping
-    public ResponseEntity<String> save(
+    public ResponseEntity<Object> save(
             @ModelAttribute @Valid MenuRequest request,
             BindingResult result
     ) {
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(result.getFieldError().getDefaultMessage());
-        }
-        else{
-            menuService.save(request);
-            return ResponseEntity.ok().body("successfully saved");
+        } else {
+            MenuResponse menuResponse = menuService.save(request);
+            return ResponseEntity.ok().body(menuResponse);
         }
     }
 
@@ -40,19 +39,15 @@ public class MenuRestController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<String> update(
+    public ResponseEntity<Object> update(
             @PathVariable("id") Long id,
             @Valid @ModelAttribute MenuRequest request
     ) {
-        menuService.update(
-                id,
-                request
-        );
-        return ResponseEntity.ok().body("successfully updated");
+        return ResponseEntity.ok().body(menuService.update(id, request));
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Object> delete(@PathVariable("id") Long id) {
         menuService.delete(id);
         return ResponseEntity.ok().body("successfully deleted");
     }

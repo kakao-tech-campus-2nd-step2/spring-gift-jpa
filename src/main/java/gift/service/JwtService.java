@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.crypto.SecretKey;
+import java.util.Date;
 
 @Service
 public class JwtService {
@@ -18,6 +19,8 @@ public class JwtService {
         return Jwts.builder()
                 .claim("id",id)
                 .signWith(key)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+60*10000))
                 .compact();
     }
 
@@ -35,10 +38,10 @@ public class JwtService {
         String accessToken = getJWT();
         System.out.println(accessToken);
         if(accessToken == null){
-            return null;
+            throw new JwtException("토큰이 유효하지 않습니다.");
         }
         if(accessToken.isEmpty()){
-            return null;
+            throw new JwtException("토큰이 유효하지 않습니다.");
         }
         Jws<Claims> jws;
 

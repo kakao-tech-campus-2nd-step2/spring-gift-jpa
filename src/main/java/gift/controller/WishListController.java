@@ -2,70 +2,59 @@ package gift.controller;
 
 import gift.domain.WishListRequest;
 import gift.domain.WishListResponse;
+import gift.repository.MemberRepository;
+import gift.repository.MenuRepository;
 import gift.service.JwtService;
 import gift.service.WishListService;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/wishlists")
 public class WishListController {
     private final WishListService wishListService;
     private final JwtService jwtService;
+    private final MenuRepository menuRepository;
+    private final MemberRepository memberRepository;
 
-    public WishListController(WishListService wishListService, JwtService jwtService){
+    public WishListController(WishListService wishListService, JwtService jwtService, MenuRepository menuRepository, MemberRepository memberRepository){
         this.wishListService = wishListService;
         this.jwtService = jwtService;
+        this.menuRepository = menuRepository;
+        this.memberRepository = memberRepository;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<String> create(
+    @PostMapping("/save")
+    public ResponseEntity<String> save(
             @RequestHeader("Authorization") String token,
             @RequestParam("menuId") Long menuId
     ) {
         String jwtId = jwtService.getMemberId();
-        WishListRequest wishListRequest = new WishListRequest(jwtId,menuId);
-        wishListService.create(wishListRequest);
+        WishListRequest wishListRequest = new WishListRequest(
+                memberRepository.findById(jwtId).get(),
+                menuRepository.findById(menuId).get());
+        wishListService.save(wishListRequest);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization",token.replace("Bearer ",""));
         return ResponseEntity.ok().headers(headers).body("success");
     }
 
     @GetMapping("/read")
-    public ResponseEntity<HashMap<String,Object>> read(){
+    public ResponseEntity<List<WishListResponse>> read(){
         String jwtId = jwtService.getMemberId();
-        if(jwtId == null){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }
-        else{
-            List<WishListResponse> nowWishList = wishListService.findById(jwtId);
-            HashMap<String,Object> answer = new HashMap<>();
-            answer.put("data",nowWishList);
-            return ResponseEntity.ok().body(answer);
-        }
+        List<WishListResponse> nowWishList = wishListService.findById(jwtId);
+        return ResponseEntity.ok().body(nowWishList);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ResponseEntity<String> delete(
-            @RequestParam("menuId") Long menuId
+            @RequestParam("Id") Long id
     ){
-        String jwtId = jwtService.getMemberId();
-        if(jwtId == null){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
-        }
-        else{
-            if(wishListService.delete(jwtId,menuId)){
-                return ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
-            }
-            else{
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("해당 메뉴가 존재하지 않습니다.");
-            }
-        }
+        jwtService.getMemberId();
+        wishListService.delete(id);
+        return ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
     }
 }

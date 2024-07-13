@@ -1,6 +1,7 @@
 package gift.domain;
 
 public record WishListResponse(
-        Long menuId
+        Long Id,
+        Menu menu
 ) {
 }
