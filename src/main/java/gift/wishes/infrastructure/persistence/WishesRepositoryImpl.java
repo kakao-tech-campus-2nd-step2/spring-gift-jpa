@@ -3,6 +3,7 @@ package gift.wishes.infrastructure.persistence;
 import gift.core.PagedDto;
 import gift.core.domain.product.Product;
 import gift.core.domain.product.exception.ProductNotFoundException;
+import gift.core.domain.user.User;
 import gift.core.domain.user.exception.UserNotFoundException;
 import gift.core.domain.wishes.WishesRepository;
 import gift.product.infrastructure.persistence.JpaProductRepository;
@@ -55,23 +56,17 @@ public class WishesRepositoryImpl implements WishesRepository {
     }
 
     @Override
-    public List<Product> getWishlistOfUser(Long userId) {
-        UserEntity user = jpaUserRepository
-                .findById(userId)
-                .orElseThrow(UserNotFoundException::new);
-        return jpaWishRepository.findAllByUser(user)
+    public List<Product> getWishlistOfUser(User user) {
+        return jpaWishRepository.findAllByUser(UserEntity.from(user))
                 .stream()
                 .map((entity -> entity.getProduct().toDomain()))
                 .toList();
     }
 
     @Override
-    public PagedDto<Product> getWishlistOfUser(Long userId, Integer page, Integer size) {
-        UserEntity user = jpaUserRepository
-                .findById(userId)
-                .orElseThrow(UserNotFoundException::new);
+    public PagedDto<Product> getWishlistOfUser(User user, Integer page, Integer size) {
         Page<Product> pagedProducts = jpaWishRepository
-                .findAllByUser(user, PageRequest.of(page, size))
+                .findAllByUser(UserEntity.from(user), PageRequest.of(page, size))
                 .map((entity -> entity.getProduct().toDomain()));
         return new PagedDto<>(
                 page,

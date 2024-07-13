@@ -4,6 +4,9 @@ import gift.core.PagedDto;
 import gift.core.domain.product.Product;
 import gift.core.domain.product.ProductRepository;
 import gift.core.domain.product.exception.ProductNotFoundException;
+import gift.core.domain.user.User;
+import gift.core.domain.user.UserRepository;
+import gift.core.domain.user.exception.UserNotFoundException;
 import gift.core.domain.wishes.WishesService;
 import gift.core.domain.wishes.WishesRepository;
 import gift.core.domain.wishes.exception.WishAlreadyExistsException;
@@ -17,14 +20,17 @@ import java.util.List;
 public class WishesServiceImpl implements WishesService {
     private final ProductRepository productRepository;
     private final WishesRepository wishesRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public WishesServiceImpl(
             WishesRepository wishesRepository,
-            ProductRepository productRepository
+            ProductRepository productRepository,
+            UserRepository userRepository
     ) {
         this.wishesRepository = wishesRepository;
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -48,11 +54,13 @@ public class WishesServiceImpl implements WishesService {
 
     @Override
     public List<Product> getWishlistOfUser(Long userId) {
-        return List.copyOf(wishesRepository.getWishlistOfUser(userId));
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        return List.copyOf(wishesRepository.getWishlistOfUser(user));
     }
 
     @Override
     public PagedDto<Product> getWishlistOfUser(Long userId, Integer page, Integer size) {
-        return wishesRepository.getWishlistOfUser(userId, page, size);
+        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        return wishesRepository.getWishlistOfUser(user, page, size);
     }
 }

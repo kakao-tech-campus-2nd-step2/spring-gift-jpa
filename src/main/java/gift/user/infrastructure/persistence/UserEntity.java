@@ -1,9 +1,7 @@
 package gift.user.infrastructure.persistence;
 
-import gift.wishes.infrastructure.persistence.WishEntity;
+import gift.core.domain.user.User;
 import jakarta.persistence.*;
-
-import java.util.List;
 
 @Entity
 @Table(name = "`user`")
@@ -35,4 +33,7 @@ public class UserEntity {
         return name;
     }
 
+    public static UserEntity from(User user) {
+        return new UserEntity(user.id(), user.name());
+    }
 }

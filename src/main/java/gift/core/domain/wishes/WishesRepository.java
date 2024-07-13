@@ -2,6 +2,7 @@ package gift.core.domain.wishes;
 
 import gift.core.PagedDto;
 import gift.core.domain.product.Product;
+import gift.core.domain.user.User;
 
 import java.util.List;
 
@@ -13,8 +14,8 @@ public interface WishesRepository {
 
     boolean exists(Long userId, Long productId);
 
-    List<Product> getWishlistOfUser(Long userId);
+    List<Product> getWishlistOfUser(User user);
 
-    PagedDto<Product> getWishlistOfUser(Long userId, Integer page, Integer size);
+    PagedDto<Product> getWishlistOfUser(User user, Integer page, Integer size);
 
 }
