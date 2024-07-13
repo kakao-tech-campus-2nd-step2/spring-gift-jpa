@@ -76,14 +76,20 @@ public class MemberService {
      * @param email, productId
      */
     public void addWishlist(String email, Long productId) {
+        Member member = memberJpaDao.findByEmail(email)
+            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.MEMBER_NOT_EXISTS_MSG));
+        Product product = productJpaDao.findById(productId)
+            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.PRODUCT_NOT_EXISTS_MSG));
+
         wishlistJpaDao.findByMember_EmailAndProduct_Id(email, productId)
             .ifPresent(v -> {
                 throw new IllegalArgumentException(ErrorMessage.WISHLIST_ALREADY_EXISTS_MSG);
             });
 
-        Wishlist wishlist = convertWishlistRequestToWishlist(email, productId);
-        wishlist.getMember().getWishlist().add(wishlist);
-        wishlist.getProduct().getWishlist().add(wishlist);
+        Wishlist wishlist = new Wishlist(member, product);
+        member.getWishlist().add(wishlist);
+        product.getWishlist().add(wishlist);
+
         wishlistJpaDao.save(wishlist);
     }
 
@@ -97,16 +103,5 @@ public class MemberService {
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.WISHLIST_NOT_EXISTS_MSG));
 
         wishlistJpaDao.deleteByMember_EmailAndProduct_Id(email, productId);
-    }
-
-    /**
-     * email, productId를 Wishlist Entity로 변환
-     */
-    private Wishlist convertWishlistRequestToWishlist(String email, Long productId) {
-        Member member = memberJpaDao.findByEmail(email)
-            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.MEMBER_NOT_EXISTS_MSG));
-        Product product = productJpaDao.findById(productId)
-            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.PRODUCT_NOT_EXISTS_MSG));
-        return new Wishlist(member, product);
     }
 }
