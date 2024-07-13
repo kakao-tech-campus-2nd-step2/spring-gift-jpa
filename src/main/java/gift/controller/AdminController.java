@@ -8,6 +8,9 @@ import gift.model.Member;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,8 +42,15 @@ public class AdminController {
 
     // 상품 관리
     @GetMapping("/products")
-    public String getAllProducts(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+    public String getAllProducts(Model model, Pageable pageable) {
+        int page = pageable.getPageNumber();
+        int size = 10; // 기본 페이지 크기: 10
+        Pageable defaultPageable = PageRequest.of(page, size);
+
+        Page<ProductResponse> productPage = productService.getAllProducts(defaultPageable);
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
         return "products";
     }
 

@@ -9,8 +9,8 @@ import gift.exception.product.InvalidProductPriceException;
 import gift.exception.product.ProductNotFoundException;
 import gift.model.Product;
 import gift.repository.ProductRepository;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,11 +22,9 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    // 모든 상품 조회
-    public List<ProductResponse> getAllProducts() {
-        return productRepository.findAll().stream()
-            .map(ProductService::convertToDTO)
-            .collect(Collectors.toList());
+    // 모든 상품 조회 (페이지네이션)
+    public Page<ProductResponse> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable).map(ProductService::convertToDTO);
     }
 
     // ID로 상품 조회
