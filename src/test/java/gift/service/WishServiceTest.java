@@ -28,6 +28,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 public class WishServiceTest {
 
@@ -134,17 +138,18 @@ public class WishServiceTest {
     }
 
     @Test
-    @DisplayName("회원의 위시리스트 조회 테스트")
+    @DisplayName("회원의 위시리스트 조회 테스트 (페이지네이션 적용)")
     public void testGetWishlistByMemberId() {
         Member member = new Member(1L, "test@example.com", "password");
         Product product = new Product(1L, "Product", 100, "imageUrl");
         Wish wish = new Wish(1L, member, product);
+        Pageable pageable = PageRequest.of(0, 10);
+        when(wishRepository.findAllByMemberId(1L, pageable))
+            .thenReturn(new PageImpl<>(List.of(wish), pageable, 1));
 
-        when(wishRepository.findAllByMemberId(1L)).thenReturn(List.of(wish));
-
-        List<WishResponse> wishlist = wishService.getWishlistByMemberId(1L);
-        assertEquals(1, wishlist.size());
-        assertEquals(1L, wishlist.getFirst().memberId());
-        assertEquals(1L, wishlist.getFirst().productId());
+        Page<WishResponse> wishlist = wishService.getWishlistByMemberId(1L, pageable);
+        assertEquals(1, wishlist.getTotalElements());
+        assertEquals(1L, wishlist.getContent().getFirst().memberId());
+        assertEquals(1L, wishlist.getContent().getFirst().productId());
     }
 }

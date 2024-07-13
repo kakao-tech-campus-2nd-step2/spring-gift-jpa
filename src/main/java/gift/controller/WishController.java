@@ -4,7 +4,6 @@ import gift.dto.wish.WishCreateRequest;
 import gift.dto.wish.WishResponse;
 import gift.service.WishService;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;

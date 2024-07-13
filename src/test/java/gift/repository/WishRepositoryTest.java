@@ -10,6 +10,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
@@ -35,8 +38,8 @@ public class WishRepositoryTest {
     }
 
     @Test
-    @DisplayName("모든 위시리스트 항목 조회")
-    public void testFindAllByMemberId() {
+    @DisplayName("모든 위시리스트 항목 조회 (페이지네이션 적용)")
+    public void testFindAllByMemberIdWithPagination() {
         long initialCount = wishRepository.count();
 
         Member member = new Member(1L, "test@example.com", "password");
@@ -49,7 +52,12 @@ public class WishRepositoryTest {
         wishRepository.save(wish1);
         wishRepository.save(wish2);
 
-        assertThat(wishRepository.findAllByMemberId(1L)).hasSize((int) initialCount + 2);
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Wish> wishPage = wishRepository.findAllByMemberId(1L, pageable);
+
+        assertThat(wishPage.getTotalElements()).isEqualTo(initialCount + 2);
+        assertThat(wishPage.getContent()).hasSize(
+            (int) Math.min(initialCount + 2, pageable.getPageSize()));
     }
 
     @Test

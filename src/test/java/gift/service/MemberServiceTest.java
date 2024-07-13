@@ -114,7 +114,7 @@ public class MemberServiceTest {
 
         List<MemberResponse> members = memberService.getAllMembers();
         assertEquals(1, members.size());
-        assertEquals("test@example.com", members.get(0).email());
+        assertEquals("test@example.com", members.getFirst().email());
     }
 
     @Test

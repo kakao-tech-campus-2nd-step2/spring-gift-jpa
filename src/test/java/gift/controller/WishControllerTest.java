@@ -15,6 +15,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -32,15 +36,19 @@ public class WishControllerTest {
     }
 
     @Test
-    @DisplayName("위시리스트 조회")
+    @DisplayName("위시리스트 조회 (페이지네이션 적용)")
     public void testGetWishlist() {
         WishResponse wishResponse = new WishResponse(1L, 1L, 1L);
-        when(wishService.getWishlistByMemberId(1L)).thenReturn(List.of(wishResponse));
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<WishResponse> page = new PageImpl<>(List.of(wishResponse), pageable, 1);
 
-        ResponseEntity<List<WishResponse>> response = wishController.getWishlist(1L);
+        when(wishService.getWishlistByMemberId(1L, pageable)).thenReturn(page);
+
+        ResponseEntity<Page<WishResponse>> response = wishController.getWishlist(1L, pageable);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(1, response.getBody().size());
+        assertEquals(1, response.getBody().getTotalElements());
+        assertEquals(1, response.getBody().getContent().size());
     }
 
     @Test
