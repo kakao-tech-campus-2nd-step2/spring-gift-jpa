@@ -1,4 +1,4 @@
-package gift.service;
+package gift.util.converter;
 
 import gift.dto.ProductDTO;
 import gift.entity.Product;
@@ -15,5 +15,9 @@ public class ProductConverter {
             return new ProductDTO(product.getId(), product.getName(), product.getPrice(),
                     product.getImageUrl());
         }).collect(Collectors.toList());
+    }
+
+    public static Product convertToProduct(ProductDTO productDTO){
+        return new Product(productDTO.name(), productDTO.price(), productDTO.imageUrl());
     }
 }
