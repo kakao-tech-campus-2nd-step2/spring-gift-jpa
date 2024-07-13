@@ -20,8 +20,8 @@ public class ProductService {
         this.productRepositoryInterface = productRepositoryInterface;
     }
 
-    public Product createProduct(ProductDto productDto) {
-        Product newProduct = new Product(productDto.getName(), productDto.getPrice(), productDto.getUrl());
+    public Product createProduct(String name, Long price, String url) {
+        Product newProduct = new Product(name, price, url);
         return productRepositoryInterface.save(newProduct);
     }
 

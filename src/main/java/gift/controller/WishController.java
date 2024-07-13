@@ -19,10 +19,7 @@ public class WishController {
 
     @PostMapping()
     public void save(@RequestBody WishDto.Request request) {
-        wishService.save(new WishDto(
-                request.getProductId(),
-                request.getTokenValue())
-        );
+        wishService.save(request.getProductId(), request.getTokenValue());
     }
 
     @GetMapping()

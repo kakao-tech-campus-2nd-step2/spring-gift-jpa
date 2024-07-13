@@ -37,12 +37,14 @@ public class AuthController {
 
     @PostMapping("/save")
     public TokenDto save(@ModelAttribute UserDto.Request request) {
-        return userService.save(request);
+        return userService.save(request.getEmail(), request.getPassword());
     }
 
     @PostMapping("/user/login")
     public TokenDto login(@ModelAttribute UserDto.Request request) throws AuthenticationException {
-        userService.login(new UserDto(request.getId(), request.getEmail(), request.getPassword()));
-        return userService.generateTokenDtoFrom(request.getEmail());
+        if (userService.login(request.getEmail(), request.getPassword())) {
+            return userService.generateTokenDtoFrom(request.getEmail());
+        }
+        throw new AuthenticationException("로그인 실패");
     }
 }

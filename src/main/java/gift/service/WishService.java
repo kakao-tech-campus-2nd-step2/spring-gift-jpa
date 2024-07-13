@@ -25,10 +25,9 @@ public class WishService {
 
     }
 
-    public WishDto save(WishDto wishDto) {
+    public WishDto save(Long productId, String tokenValue) {
 
-        Long userId = translateIdFrom(wishDto.getTokenValue());
-        Long productId = wishDto.getProductId();
+        Long userId = translateIdFrom(tokenValue);
         Wish newWish = new Wish(userId, productId);
 
         return WishDto.fromEntity(wishRepositoryInterface.save(newWish));

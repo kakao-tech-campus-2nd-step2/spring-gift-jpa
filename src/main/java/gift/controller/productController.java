@@ -22,13 +22,7 @@ public class productController {
     @PostMapping("")
     public ProductDto createProduct(@RequestBody CreateProduct.Request request) {
 
-        Product newProduct = productService.createProduct(
-                new ProductDto(
-                        request.getName(),
-                        request.getPrice(),
-                        request.getUrl()
-                )
-        );
+        Product newProduct = productService.createProduct(request.getName(),request.getPrice(),request.getUrl());
 
         return new ProductDto(
                 newProduct.getId(),
