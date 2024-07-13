@@ -10,6 +10,7 @@ import gift.dto.WishDto;
 import gift.services.MemberService;
 import gift.services.WishService;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,7 @@ public class WishController {
     public final WishService wishService;
     public final MemberService memberService;
 
+    @Autowired
     public WishController(WishService wishService, MemberService memberService) {
         this.wishService = wishService;
         this.memberService = memberService;
@@ -32,7 +34,8 @@ public class WishController {
 //    Wish 추가
     @PostMapping
     public ResponseEntity<RequestStateDTO> addWish(@LoginMember MemberDto memberDto, @RequestBody RequestWishDto requestWishDto) {
-        wishService.addWish(memberDto.getId(), requestWishDto.getProductId());
+
+        wishService.addWish(memberDto, requestWishDto.getProductId());
         return ResponseEntity.ok().body(new RequestStateDTO(
             RequestStatus.success,
             null
