@@ -3,6 +3,7 @@ package gift.service;
 import gift.domain.Member;
 import gift.domain.TokenAuth;
 import gift.exception.UnAuthorizationException;
+import gift.repository.member.MemberSpringDataJpaRepository;
 import gift.repository.token.TokenSpringDataJpaRepository;
 
 import io.jsonwebtoken.Jwts;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -28,6 +30,9 @@ public class TokenServiceTest {
     @Mock
     private TokenSpringDataJpaRepository tokenRepository;
 
+    @Mock
+    private MemberSpringDataJpaRepository memberRepository;
+
     @InjectMocks
     private TokenService tokenService;
 
@@ -40,9 +45,10 @@ public class TokenServiceTest {
         Member member = new Member(EMAIL, "password");
         member.setId(MEMBER_ID);
 
-        TokenAuth tokenAuth = new TokenAuth(TOKEN, EMAIL);
+        TokenAuth tokenAuth = new TokenAuth(TOKEN, member);
         when(tokenRepository.save(any(TokenAuth.class))).thenReturn(tokenAuth);
         when(tokenRepository.findByToken(TOKEN)).thenReturn(Optional.of(tokenAuth));
+        when(memberRepository.findById(MEMBER_ID)).thenReturn(Optional.of(member));
     }
 
     @Test
@@ -61,7 +67,7 @@ public class TokenServiceTest {
         TokenAuth tokenAuth = tokenService.findToken(TOKEN);
 
         assertNotNull(tokenAuth);
-        assertEquals(EMAIL, tokenAuth.getEmail());
+        assertEquals(EMAIL, tokenAuth.getMember().getEmail());
     }
 
     @Test

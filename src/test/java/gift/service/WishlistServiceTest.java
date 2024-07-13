@@ -1,8 +1,12 @@
 package gift.service;
 
+import gift.domain.Member;
+import gift.domain.Product;
 import gift.domain.WishlistItem;
 import gift.dto.request.WishlistNameRequest;
 import gift.exception.MemberNotFoundException;
+import gift.repository.member.MemberSpringDataJpaRepository;
+import gift.repository.product.ProductSpringDataJpaRepository;
 import gift.repository.wishlist.WishlistSpringDataJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,21 +34,43 @@ public class WishlistServiceTest {
     @Mock
     private TokenService tokenService;
 
+    @Mock
+    private MemberSpringDataJpaRepository memberRepository;
+
+    @Mock
+    private ProductSpringDataJpaRepository productRepository;
+
     @InjectMocks
     private WishlistService wishlistService;
 
     private final static Long MEMBER_ID = 1L;
     private final static Long PRODUCT_ID = 100L;
 
+    private Member member;
+    private Product product;
+    private String validToken = "valid_token";
+
     @BeforeEach
     public void setup() {
-        when(tokenService.getMemberIdFromToken(anyString())).thenReturn(MEMBER_ID.toString());
+        member = new Member("test@example.com", "password");
+        member.setId(MEMBER_ID);
+
+        product = new Product("Product 1", 100, "test-url");
+        product.setId(PRODUCT_ID);
+
+        when(tokenService.getMemberIdFromToken(validToken)).thenReturn(MEMBER_ID.toString());
+        when(memberRepository.findById(MEMBER_ID)).thenReturn(Optional.of(member));
+        when(productRepository.findById(PRODUCT_ID)).thenReturn(Optional.of(product));
     }
 
     @Test
     public void testAddItemToWishlist() {
         WishlistNameRequest request = new WishlistNameRequest(MEMBER_ID, PRODUCT_ID);
-        wishlistService.addItemToWishlist(request, "dummy_token");
+        WishlistItem wishlistItem = new WishlistItem(member, product);
+
+        when(wishlistRepository.save(any(WishlistItem.class))).thenReturn(wishlistItem);
+
+        wishlistService.addItemToWishlist(request, validToken);
 
         verify(wishlistRepository, times(1)).save(any(WishlistItem.class));
     }
@@ -52,23 +78,22 @@ public class WishlistServiceTest {
 
     @Test
     public void testDeleteItemFromWishlist() {
-        WishlistItem wishlistItem = new WishlistItem(MEMBER_ID, PRODUCT_ID);
-        when(wishlistRepository.findByMemberId(MEMBER_ID))
-                .thenReturn(Arrays.asList(wishlistItem));
+        WishlistItem wishlistItem = new WishlistItem(member, product);
+        when(wishlistRepository.findByMemberId(MEMBER_ID)).thenReturn(Arrays.asList(wishlistItem));
 
-        wishlistService.deleteItemFromWishlist(PRODUCT_ID, "dummy_token");
+        wishlistService.deleteItemFromWishlist(PRODUCT_ID, validToken);
 
-        verify(wishlistRepository, times(1)).delete(wishlistItem);
+        verify(wishlistRepository, times(1)).delete(any(WishlistItem.class));
     }
 
 
     @Test
     public void testDeleteItemFromWishlistMemberNotFound() {
-        when(wishlistRepository.findByMemberId(MEMBER_ID))
-                .thenReturn(Arrays.asList());
+        when(wishlistRepository.findByMemberId(MEMBER_ID)).thenReturn(Arrays.asList());
 
-        assertThrows(MemberNotFoundException.class,
-                () -> wishlistService.deleteItemFromWishlist(PRODUCT_ID, "dummy_token"));
+        assertThrows(MemberNotFoundException.class, () -> {
+            wishlistService.deleteItemFromWishlist(PRODUCT_ID, validToken);
+        });
 
         verify(wishlistRepository, never()).deleteById(anyLong());
     }
@@ -76,8 +101,8 @@ public class WishlistServiceTest {
     @Test
     public void testGetWishlistByMemberId() {
         List<WishlistItem> expectedItems = Arrays.asList(
-                new WishlistItem(MEMBER_ID, PRODUCT_ID),
-                new WishlistItem(MEMBER_ID, PRODUCT_ID + 1)
+                new WishlistItem(member, product),
+                new WishlistItem(member, new Product("Product 2", 200, "test-url-2"))
         );
 
         when(wishlistRepository.findByMemberId(MEMBER_ID)).thenReturn(expectedItems);
@@ -85,7 +110,7 @@ public class WishlistServiceTest {
         List<WishlistItem> actualItems = wishlistService.getWishlistByMemberId(MEMBER_ID);
 
         assertEquals(expectedItems.size(), actualItems.size());
-        assertEquals(expectedItems.get(0).getProductId(), actualItems.get(0).getProductId());
-        assertEquals(expectedItems.get(1).getProductId(), actualItems.get(1).getProductId());
+        assertEquals(expectedItems.get(0).getProduct().getId(), actualItems.get(0).getProduct().getId());
+        assertEquals(expectedItems.get(1).getProduct().getId(), actualItems.get(1).getProduct().getId());
     }
 }

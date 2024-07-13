@@ -38,6 +38,10 @@ public class Product {
         return id;
     }
 
+    public void setId(Long productId) {
+        this.id = productId;
+    }
+
     public String getName() {
         return name;
     }
@@ -70,4 +74,5 @@ public class Product {
     public static Product RequestToEntity(ProductRequest productRequest) {
         return new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
     }
+
 }
