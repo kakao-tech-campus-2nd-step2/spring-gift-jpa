@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.entity.Product;
 import gift.service.ProductService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -30,6 +31,7 @@ public class ProductControllerTest {
     private ProductService productService;
 
     @Test
+    @DisplayName("전체 상품 조회")
     public void getAllProducts() throws Exception {
         Page<Product> products = new PageImpl<>(Arrays.asList(
                 new Product(1L, "Product1", 100, "url1"),
@@ -44,6 +46,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 추가")
     public void addProduct() throws Exception {
         Product product = new Product(1L, "Product1", 100, "url1");
         given(productService.save(any(Product.class))).willReturn(product);
@@ -56,6 +59,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 수정")
     public void updateProduct() throws Exception {
         Product product = new Product(1L, "Product1", 100, "url1");
         given(productService.save(any(Product.class))).willReturn(product);
@@ -68,6 +72,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @DisplayName("상품 삭제")
     public void deleteProduct() throws Exception {
         mockMvc.perform(delete("/api/products/1"))
                 .andExpect(status().isNoContent());
