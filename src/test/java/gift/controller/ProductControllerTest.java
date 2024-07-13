@@ -18,7 +18,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ProductControllerTest {
@@ -44,7 +43,6 @@ class ProductControllerTest {
     }
 
     @Test
-    @Transactional
     void read() {
         Product product = productRepository.save(new Product("test", 1000,"test.jpg"));
         System.out.println("테스트" + product.getName() +"id 값"+ product.getId());
@@ -58,7 +56,6 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("Product 생성 API 테스트")
-    @Transactional
     void create() {
         var request = new ProductRequest("product", 1000, "image.jpg");
         var url = "http://localhost:" + port + "/api/products";
@@ -69,7 +66,6 @@ class ProductControllerTest {
     }
 
     @Test
-    @Transactional
     void update() {
         Product product = productRepository.save(new Product("test", 1000,"test.jpg"));
         var id = 1L;
@@ -82,7 +78,6 @@ class ProductControllerTest {
     }
 
     @Test
-    @Transactional
     void delete() {
         Product product = productRepository.save(new Product("test", 1000,"test.jpg"));
         var id = 1L;
