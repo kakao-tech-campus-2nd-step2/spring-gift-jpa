@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 
-public class ProductRequestDto {
+public class ProductChangeRequestDto {
     @Length(min = 1, max = 15, message = "상품의 이름은 공백을 포함하여 최대 15자까지 입력할 수 있습니다.")
     @Pattern(
             regexp = "^[a-zA-Z0-9가-힣()\\[\\]+\\-&/_]*$",

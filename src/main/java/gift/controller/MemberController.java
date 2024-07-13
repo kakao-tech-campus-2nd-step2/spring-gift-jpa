@@ -1,7 +1,7 @@
 package gift.controller;
 
 import gift.authentication.LoginMember;
-import gift.domain.member.Member;
+import gift.authentication.UserDetails;
 import gift.dto.*;
 import gift.service.WishService;
 import org.springframework.http.HttpStatus;
@@ -34,23 +34,23 @@ public class MemberController {
     }
 
     @PostMapping("/wishes")
-    public ResponseEntity<SuccessResponse> addNewWish(
-            @LoginMember Member member,
+    public ResponseEntity<ApiResponse> addNewWish(
+            @LoginMember UserDetails userDetails,
             @RequestBody WishAddRequestDto request) {
-        wishService.addWish(member.getId(), request);
-        return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "위시 리스트 등록에 성공하였습니다."));
+        wishService.addWish(userDetails.id(), request);
+        return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, "위시 리스트 등록에 성공하였습니다."));
     }
 
     @GetMapping("/wishes")
-    public ResponseEntity<List<WishResponseDto>> getMemberWishList(@LoginMember Member member) {
-        return ResponseEntity.ok(wishService.getAllWishes(member.getId()));
+    public ResponseEntity<List<WishResponseDto>> getMemberWishList(@LoginMember UserDetails userDetails) {
+        return ResponseEntity.ok(wishService.getAllWishes(userDetails.id()));
     }
 
     @DeleteMapping("/wishes/{id}")
-    public ResponseEntity<SuccessResponse> deleteWish(
-            @LoginMember Member member,
+    public ResponseEntity<ApiResponse> deleteWish(
+            @LoginMember UserDetails userDetails,
             @PathVariable("id") Long productId) {
-        wishService.deleteWish(member.getId(), productId);
-        return ResponseEntity.ok(new SuccessResponse(HttpStatus.NO_CONTENT, "성공적으로 삭제되었습니다."));
+        wishService.deleteWish(userDetails.id(), productId);
+        return ResponseEntity.ok(new ApiResponse(HttpStatus.NO_CONTENT, "성공적으로 삭제되었습니다."));
     }
 }

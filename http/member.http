@@ -1,0 +1,42 @@
+## 멤버 관련
+### 1.회원가입
+POST http://localhost:8080/api/members/signup
+Content-Type: application/json
+
+{
+  "email" : "test2@gmail.com",
+  "name" : "test",
+  "password" : "password"
+}
+
+### 2.로그인
+POST http://localhost:8080/api/members/login
+Content-Type: application/json
+
+{
+  "email": "test2@gmail.com",
+  "password": "password"
+}
+
+> {%
+ client.global.set("authorizationToken", "Bearer " + response.body.token);
+ console.log("Auth token : " + client.global.get("authorizationToken"));
+%}
+
+### 3. wish 등록
+POST http://localhost:8080/api/members/wishes
+Content-Type: application/json
+Authorization: {{authorizationToken}}
+
+{
+  "productId": "1",
+  "quantity": "10"
+}
+
+### 4. wish 삭제
+DELETE http://localhost:8080/api/members/wishes/1
+Authorization: {{authorizationToken}}
+
+### 4. wish 조회
+GET http://localhost:8080/api/members/wishes
+Authorization: {{authorizationToken}}
