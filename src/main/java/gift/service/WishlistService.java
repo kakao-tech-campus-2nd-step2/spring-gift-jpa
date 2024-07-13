@@ -1,10 +1,12 @@
 package gift.service;
 
-import gift.exception.ResourceNotFoundException;
 import gift.entity.Product;
+import gift.entity.ProductWishlist;
 import gift.entity.Wishlist;
 import gift.entity.WishlistDTO;
+import gift.exception.ResourceNotFoundException;
 import gift.repository.ProductRepository;
+import gift.repository.ProductWishlistRepository;
 import gift.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,25 +23,27 @@ public class WishlistService {
 
     private final WishlistRepository wishlistRepository;
     private final ProductRepository productRepository;
+    private final ProductWishlistRepository productWishlistRepository;
 
     @Autowired
-    public WishlistService(WishlistRepository wishlistRepository, ProductRepository productRepository) {
+    public WishlistService(WishlistRepository wishlistRepository, ProductRepository productRepository, ProductWishlistRepository productWishlistRepository) {
         this.wishlistRepository = wishlistRepository;
         this.productRepository = productRepository;
+        this.productWishlistRepository = productWishlistRepository;
     }
 
     public Page<Product> getWishlistProducts(String email, Pageable pageable) {
-        Page<Product> wishlist = wishlistRepository.findWishlistProductByEmail(email, pageable);
+        Optional<Wishlist> wishlist = wishlistRepository.findByEmail(email);
         if (wishlist.isEmpty()) {
-            Wishlist save = wishlistRepository.save(new Wishlist(email));
-
-            List<Product> products = save.getProducts().stream().collect(Collectors.toList());
-            int start = (int) pageable.getOffset();
-            int end = Math.min((start + pageable.getPageSize()), products.size());
-
-            return new PageImpl<>(products.subList(start, end), pageable, products.size());
+            wishlist = Optional.of(wishlistRepository.save(new Wishlist(email)));
         }
-        return wishlist;
+
+        Page<ProductWishlist> productWishlists = productWishlistRepository.findByWishlistId(wishlist.get().getId(), pageable);
+        List<Product> products = productWishlists.stream()
+                .map(productWishlist -> productWishlist.getProduct())
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(products, pageable, productWishlists.getTotalElements());
     }
 
     public void addWishlistProduct(String email, WishlistDTO wishlistDTO) {
@@ -53,16 +57,16 @@ public class WishlistService {
             wishlist = Optional.of(saved);
         }
 
-        wishlist.get().addProduct(product);
+        ProductWishlist productWishlist = new ProductWishlist(product, wishlist.get());
+        productWishlistRepository.save(productWishlist);
 
-        wishlistRepository.save(wishlist.get());
     }
 
-    public void deleteWishlist(String email) {
+    public void deleteWishlist(String email, Long productId) {
         Optional<Wishlist> wishlist = wishlistRepository.findByEmail(email);
         if (wishlist.isEmpty()) {
             return;
         }
-        wishlistRepository.delete(wishlist.get());
+        productWishlistRepository.deleteByProductIdAndWishlistId(productId, wishlist.get().getId());
     }
 }
