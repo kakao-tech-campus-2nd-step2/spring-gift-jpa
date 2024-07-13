@@ -1,6 +1,7 @@
 package gift.global.exception;
 
 import gift.global.dto.ApiResponseDto;
+import jakarta.validation.ConstraintViolationException;
 import java.util.NoSuchElementException;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -39,6 +40,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResponseStatusException.class)
     public ApiResponseDto handler(ResponseStatusException responseStatusException) {
         String message = responseStatusException.getMessage();
+        return new ApiResponseDto(message);
+    }
+
+    // Validated에 걸린 경우
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ApiResponseDto handler(ConstraintViolationException constraintViolationException) {
+        String message = constraintViolationException.getMessage().split(":")[1].trim();
         return new ApiResponseDto(message);
     }
 
