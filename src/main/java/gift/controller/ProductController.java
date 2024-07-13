@@ -23,7 +23,7 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public String getAllProducts(Model model, @PageableDefault(size = 3, sort = "id") Pageable pageable) {
+    public String getAllProducts(Model model, @PageableDefault(size = 3) Pageable pageable) {
         ProductsPageResponseDTO products = productService.getAllProducts(pageable);
         model.addAttribute("products", products);
         return "manage";
