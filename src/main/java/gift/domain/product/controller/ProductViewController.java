@@ -1,7 +1,7 @@
-package gift.product.controller;
+package gift.domain.product.controller;
 
-import gift.product.dto.ProductRequest;
-import gift.product.service.ProductService;
+import gift.domain.product.dto.ProductRequest;
+import gift.domain.product.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
