@@ -3,7 +3,6 @@ package gift.resolver;
 import gift.anotation.LoginMember;
 import gift.service.MemberService;
 import gift.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
