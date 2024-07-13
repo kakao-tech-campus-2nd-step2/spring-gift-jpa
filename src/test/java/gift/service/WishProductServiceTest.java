@@ -142,4 +142,21 @@ class WishProductServiceTest {
 
         wishProductService.deleteWishProduct(wishProduct.id());
     }
+
+    @Test
+    @DisplayName("2개의 상품이 추가된 상황에서 size 가 1인 페이지로 조회하면 결과의 길이는 1이다.")
+    void getProductsWishPageSize1() {
+        //given
+        var wishProduct1AddRequest = new WishProductAddRequest(product1Id, 5);
+        var wishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, memberId);
+        var wishProduct2AddRequest = new WishProductAddRequest(product2Id, 5);
+        var wishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, memberId);
+        //when
+        var wishProducts = wishProductService.getWishProducts(memberId, PageRequest.of(0, 1));
+        //then
+        Assertions.assertThat(wishProducts.size()).isEqualTo(1);
+
+        wishProductService.deleteWishProduct(wishProduct1.id());
+        wishProductService.deleteWishProduct(wishProduct2.id());
+    }
 }

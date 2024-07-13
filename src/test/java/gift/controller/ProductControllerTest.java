@@ -192,7 +192,7 @@ class ProductControllerTest {
         for (int i = 0; i < 11; i++) {
             productService.addProduct(productRequest, MemberRole.MEMBER);
         }
-        var getRequest = get("/api/products?page=0")
+        var getRequest = get("/api/products")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + memberToken);
         //when
