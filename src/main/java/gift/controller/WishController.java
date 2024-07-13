@@ -22,7 +22,7 @@ public class WishController {
         this.wishService = wishService;
     }
 
-    @PostMapping("/post")
+    @PostMapping()
     public ResponseEntity<String> addWish(@RequestParam("productId") Long productId,
                                           @LoginMember TokenLoginRequestDTO tokenLoginRequestDTO) {
         System.out.println("post");
@@ -30,7 +30,7 @@ public class WishController {
         return ResponseEntity.ok("Wish added");
     }
 
-    @GetMapping("/get")
+    @GetMapping()
     public ResponseEntity<List<WishResponseDTO>> getWishes(@LoginMember TokenLoginRequestDTO tokenLoginRequestDTO) {
         System.out.println("get");
         List<WishResponseDTO> wishes = wishService.getWishesByMemberId(tokenLoginRequestDTO);

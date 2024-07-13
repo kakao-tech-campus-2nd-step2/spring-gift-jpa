@@ -1,10 +1,10 @@
 package gift.service;
 
 import gift.authorization.JwtUtil;
-import gift.dto.TokenLoginRequestDTO;
 import gift.dto.MemberDTO;
+import gift.dto.TokenLoginRequestDTO;
 import gift.entity.Member;
-import gift.exceptionhandler.DuplicateValueException;
+import gift.exception.DuplicateValueException;
 import gift.repository.MemberRepository;
 import io.jsonwebtoken.JwtException;
 import jdk.jfr.Description;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MemberService {
@@ -23,13 +22,6 @@ public class MemberService {
     public MemberService(MemberRepository repository , JwtUtil jwtUtil) {
         this.repository = repository;
         this.jwtUtil = jwtUtil;
-    }
-
-    public Member toEntity(MemberDTO dto) {
-        Member member = new Member();
-        member.setEmail(dto.email());
-        member.setPassword(dto.password());
-        return member;
     }
 
     public String signUp(MemberDTO memberDTO) {
@@ -46,16 +38,11 @@ public class MemberService {
 
     public String login(MemberDTO memberDTO) {
         String email = memberDTO.email();
-        Optional<Member> existingMember = repository.findByEmail(email);
-        existingMember.orElseThrow(() -> new DuplicateValueException("id와 비밀번호를 다시 확인하세요"));
-        if(memberDTO
-                .password()
-                .equals(existingMember.get()
-                .getPassword())) {
-            String token = jwtUtil.generateToken(existingMember.get());
-            return token;
-        }
-        throw new DuplicateValueException("id와 비밀번호를 다시 확인하세요");
+        String password = memberDTO.password();
+        Member existingMember = repository.findByEmailAndPassword(email, password)
+                .orElseThrow(() -> new DuplicateValueException("로그인이 실패하였습니다."));
+        String token = jwtUtil.generateToken(existingMember);
+        return token;
     }
 
     public void tokenLogin(TokenLoginRequestDTO tokenLoginRequestDTO) {
@@ -67,6 +54,13 @@ public class MemberService {
     @Description("임시 확인용 service")
     public List<Member> getAllUsers() {
         return repository.findAll();
+    }
+
+    public Member toEntity(MemberDTO dto) {
+        Member member = new Member();
+        member.setEmail(dto.email());
+        member.setPassword(dto.password());
+        return member;
     }
 
 }

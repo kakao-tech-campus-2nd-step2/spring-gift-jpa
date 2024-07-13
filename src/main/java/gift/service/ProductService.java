@@ -2,7 +2,7 @@ package gift.service;
 
 import gift.dto.ProductDTO;
 import gift.entity.Product;
-import gift.exceptionhandler.ProductException;
+import gift.exception.ProductException;
 import gift.repository.ProductRepository;
 import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
@@ -25,14 +25,6 @@ public class ProductService {
         this.repository = repository;
     }
 
-    public static Product toEntity(ProductDTO dto) {
-        Product product = new Product();
-        product.setName(dto.name());
-        product.setPrice(dto.price());
-        product.setImageUrl(dto.imageUrl());
-        return product;
-    }
-
     public Product getProduct(long productId) {
         Optional<Product> product = repository.findById(productId);
         return product.orElseThrow(() -> new ProductException("상품을 찾을 수 없습니다."));
@@ -40,7 +32,7 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         List<Product> products = repository.findAll();
-        if (products.isEmpty()) throw new ProductException("상품이 존재하지 않습니다.");
+        //if (products.isEmpty()) throw new ProductException("상품이 존재하지 않습니다.");
         return products;
     }
 
@@ -74,5 +66,14 @@ public class ProductService {
         product.setImageUrl(productDTO.imageUrl());
         repository.save(product);
     }
+
+    public static Product toEntity(ProductDTO dto) {
+        Product product = new Product();
+        product.setName(dto.name());
+        product.setPrice(dto.price());
+        product.setImageUrl(dto.imageUrl());
+        return product;
+    }
+
 
 }

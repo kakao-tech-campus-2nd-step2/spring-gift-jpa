@@ -5,7 +5,7 @@ import gift.dto.WishResponseDTO;
 import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wish;
-import gift.exceptionhandler.WishException;
+import gift.exception.WishException;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
@@ -129,6 +129,5 @@ public class WishService {
 
         return wishResponseDTOs;
     }
-
 
 }

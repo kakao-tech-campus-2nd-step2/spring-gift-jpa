@@ -1,4 +1,4 @@
-package gift.exceptionhandler;
+package gift.exception;
 
 public class ApiException extends RuntimeException {
 
