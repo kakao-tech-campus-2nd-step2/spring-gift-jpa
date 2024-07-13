@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.*;
 
 import gift.model.user.UserRequest;
 import java.net.URI;
+import java.util.Map;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +30,7 @@ public class UserControllerTest {
     private static final String loginUrl = "/api/v1/user/login";
 
     @Test
+    @DisplayName("회원가입")
     void register() {
         var url = "http://localhost:" + port + registerUrl;
         var userRequest = new UserRequest("yso8296", "yso8296@gmail.com");
@@ -39,6 +42,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("로그인")
     void login() {
         var url = "http://localhost:" + port + registerUrl;
         var userRequest = new UserRequest("yso8296", "yso8296@gmail.com");
@@ -48,7 +52,6 @@ public class UserControllerTest {
         url = "http://localhost:" + port + loginUrl;
         requestEntity = new RequestEntity<>(userRequest, HttpMethod.POST, URI.create(url));
         var actual = restTemplate.exchange(requestEntity, String.class);
-
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }
