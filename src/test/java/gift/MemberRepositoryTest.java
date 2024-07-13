@@ -20,10 +20,11 @@ public class MemberRepositoryTest {
     private Member createMember(String email, String password) {
         return new Member(email, password);
     }
+
     @Test
     void save() {
         var expected = createMember("test", "password");
-        var actual = members.save(expected);
+        members.save(expected);
         assertThat(members.findAll()).isNotEmpty();
     }
 

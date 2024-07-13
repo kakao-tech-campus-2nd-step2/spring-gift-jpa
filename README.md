@@ -21,5 +21,5 @@
 ### 기능 요구 사항
 상품과 위시 리스트 보기에 페이지네이션을 구현한다.
 ### 구현할 기능 목록
-- [ ] WishListService 와 WishListController 에서 페이지네이션 구현
-- [ ] ProductService 와 ProductController 에서 페이지네이션 구현
+- [x] WishListService 와 WishListController 에서 페이지네이션 구현
+- [x] ProductService 와 ProductController 에서 페이지네이션 구현
