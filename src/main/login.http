@@ -32,23 +32,22 @@ host: localhost:8080
 ###
 POST /wishlist/add HTTP/1.1
 Authorization: Bearer POST /wishlist/add HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJhZG1pbjhAZW1haWwuY29tIiwiaWF0IjoxNzIwNjk3NDg4LCJleHAiOjE3MjA2OTk4ODh9.nGw15Pjt-LvgfVJnBb8I7KOYVTQ04Xwf022D_UT_aco
-content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJhZG1pbjhAZW1haWwuY29tIiwiaWF0IjoxNzIwODgzMzE0LCJleHAiOjE3MjA4ODU3MTR9.ERJQn3ykzmwmY0CpFSlxO_uVwD6iIA_cfAOa-FFTjlo
+content-type: application/x-www-form-urlencoded
 host: localhost:8080
 
-{
-  "product_id": 77
-}
+
+productId: 77
+
 ####
 POST /wishlist/add HTTP/1.1
 Authorization: Bearer POST /wishlist/add HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJhZG1pbjhAZW1haWwuY29tIiwiaWF0IjoxNzIwNTkwMzQxLCJleHAiOjE3MjA1OTI3NDF9._YaAVYJHIYG0_qCrq4FiBiGaFS9kPW0D3k9ajW_48Dk
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJhZG1pbjhAZW1haWwuY29tIiwiaWF0IjoxNzIwODg3NTA5LCJleHAiOjE3MjA4ODk5MDl9.VIuXdi9ZFQqsk9Pqnrg_07tdq1jibnmJq2slfllvvos
 content-type: application/json
 host: localhost:8080
 
 {
-  "member_id": 75,
-  "product_id": 78
+  "productId": 78
 }
 ####
 POST /wishlist/add HTTP/1.1
