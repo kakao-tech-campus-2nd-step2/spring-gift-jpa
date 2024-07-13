@@ -56,7 +56,6 @@ public class WishesRepositoryImpl implements WishesRepository {
 
     @Override
     public List<Product> getWishlistOfUser(Long userId) {
-        System.out.println(userId);
         UserEntity user = jpaUserRepository
                 .findById(userId)
                 .orElseThrow(UserNotFoundException::new);
