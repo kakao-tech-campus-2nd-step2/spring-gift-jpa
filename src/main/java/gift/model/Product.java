@@ -1,6 +1,5 @@
 package gift.model;
 
-import java.beans.ConstructorProperties;
 import gift.exception.InvalidProductException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
