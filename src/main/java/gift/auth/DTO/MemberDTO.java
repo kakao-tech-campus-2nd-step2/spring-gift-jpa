@@ -33,6 +33,11 @@ public class MemberDTO {
         this.password = password;
     }
 
+    public MemberDTO(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     // 기본 생성자
     public MemberDTO() {
     }

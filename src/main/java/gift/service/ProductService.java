@@ -4,10 +4,12 @@ import gift.DTO.ProductDTO;
 import gift.aspect.CheckProductExists;
 import gift.mapper.ProductMapper;
 import gift.model.product.ProductRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class ProductService {
 
     ProductRepository productRepository;

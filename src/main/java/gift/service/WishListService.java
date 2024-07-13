@@ -6,6 +6,7 @@ import gift.aspect.CheckProductExists;
 import gift.auth.DTO.MemberDTO;
 import gift.mapper.WishListMapper;
 import gift.model.wishlist.WishListRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
  * WhishListService 클래스는 WishList 관련 비즈니스 로직을 처리하는 서비스 클래스입니다
  */
 @Service
+@Transactional
 public class WishListService {
 
     private final WishListRepository wishListRepository;
@@ -21,7 +23,7 @@ public class WishListService {
     private final WishListMapper wishListMapper;
 
     /**
-     * WhishListService 생성자W
+     * WhishListService 생성자
      *
      * @param wishListRepository WishListDAO 객체
      */

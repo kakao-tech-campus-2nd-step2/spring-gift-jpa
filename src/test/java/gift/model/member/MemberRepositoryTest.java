@@ -22,7 +22,8 @@ public class MemberRepositoryTest {
         member.setDelete(false);
         memberRepository.save(member);
 
-        boolean exists = memberRepository.existsByEmailAndPasswordAndDeleteFalse("test@example.com", "password");
+        boolean exists = memberRepository.existsByEmailAndPasswordAndDeleteFalse("test@example.com",
+            "password");
 
         assertThat(exists).isTrue();
     }
@@ -36,7 +37,8 @@ public class MemberRepositoryTest {
         member.setDelete(false);
         memberRepository.save(member);
 
-        MemberEntity foundMember = memberRepository.findByEmailAndPasswordAndDeleteFalse("test@example.com", "password");
+        MemberEntity foundMember = memberRepository.findByEmailAndPasswordAndDeleteFalse(
+            "test@example.com", "password");
 
         assertThat(foundMember).isNotNull();
         assertThat(foundMember.getEmail()).isEqualTo("test@example.com");
@@ -51,7 +53,8 @@ public class MemberRepositoryTest {
         member.setDelete(true);
         memberRepository.save(member);
 
-        MemberEntity foundMember = memberRepository.findByEmailAndPasswordAndDeleteFalse("test@example.com", "password");
+        MemberEntity foundMember = memberRepository.findByEmailAndPasswordAndDeleteFalse(
+            "test@example.com", "password");
 
         assertThat(foundMember).isNull();
     }
