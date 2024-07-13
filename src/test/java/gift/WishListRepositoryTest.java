@@ -65,6 +65,9 @@ public class WishListRepositoryTest {
         // 위시리스트 조회해서 삽입한 것과 같은지 확인
         Assertions.assertThat(wishListRepository.findById(wishListId).get().getWishListId().getProduct() == actualProduct).isTrue();
         Assertions.assertThat(wishListRepository.findById(wishListId).get().getWishListId().getUser() == actualUser).isTrue();
+
+        // userId를 기반으로 DB를 검색하는 명령어 확인 (WishList -> WishListId -> User의 userId)
+        Assertions.assertThat(wishListRepository.findByWishListIdUserUserId(actualUser.getUserId())).size().isEqualTo(1);
     }
 
     @Test
