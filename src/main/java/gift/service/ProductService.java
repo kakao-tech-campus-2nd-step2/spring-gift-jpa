@@ -4,10 +4,11 @@ import gift.domain.Product;
 import gift.dto.CreateProductDto;
 import gift.dto.UpdateProductDto;
 import gift.repository.ProductRepository;
-import gift.validation.ProductValidation;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+
 
 @Service
 public class ProductService {
@@ -23,9 +24,8 @@ public class ProductService {
         return product;
     }
 
-
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     public Product getProduct(Long productId) {
