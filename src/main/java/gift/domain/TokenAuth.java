@@ -27,10 +27,6 @@ public class TokenAuth {
         return token;
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public Member getMember() {
         return member;
     }

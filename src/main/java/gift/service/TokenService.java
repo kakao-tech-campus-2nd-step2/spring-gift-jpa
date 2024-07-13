@@ -20,11 +20,11 @@ public class TokenService {
 
     private final TokenSpringDataJpaRepository tokenRepository;
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
+    private final String secretKey;
 
-    public TokenService(TokenSpringDataJpaRepository tokenRepository) {
+    public TokenService(TokenSpringDataJpaRepository tokenRepository, @Value("${jwt.secret-key}") String secretKey) {
         this.tokenRepository = tokenRepository;
+        this.secretKey = secretKey;
     }
 
     public String saveToken(Member member){
@@ -33,7 +33,9 @@ public class TokenService {
                 .claim("email", member.getEmail())
                 .signWith(getSecretKey())
                 .compact();
-        return tokenRepository.save(new TokenAuth(accessToken, member)).getToken();
+        TokenAuth newTokenAuth = new TokenAuth(accessToken, member);
+        tokenRepository.save(newTokenAuth);
+        return newTokenAuth.getToken();
     }
 
     public TokenAuth findToken(String token) {
@@ -47,7 +49,9 @@ public class TokenService {
     }
 
     public Claims parseToken(String token) {
-        JwtParser parser = (JwtParser) Jwts.parser().setSigningKey(secretKey);
+        JwtParser parser = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build();
         return parser.parseClaimsJws(token).getBody();
     }
 

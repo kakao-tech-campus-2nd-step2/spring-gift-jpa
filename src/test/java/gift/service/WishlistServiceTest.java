@@ -58,13 +58,13 @@ public class WishlistServiceTest {
         product = new Product("Product 1", 100, "test-url");
         product.setId(PRODUCT_ID);
 
-        when(tokenService.getMemberIdFromToken(validToken)).thenReturn(MEMBER_ID.toString());
-        when(memberRepository.findById(MEMBER_ID)).thenReturn(Optional.of(member));
-        when(productRepository.findById(PRODUCT_ID)).thenReturn(Optional.of(product));
     }
 
     @Test
     public void testAddItemToWishlist() {
+        when(tokenService.getMemberIdFromToken(validToken)).thenReturn(MEMBER_ID.toString());
+        when(memberRepository.findById(MEMBER_ID)).thenReturn(Optional.of(member));
+
         WishlistNameRequest request = new WishlistNameRequest(MEMBER_ID, PRODUCT_ID);
         WishlistItem wishlistItem = new WishlistItem(member, product);
 
@@ -78,17 +78,23 @@ public class WishlistServiceTest {
 
     @Test
     public void testDeleteItemFromWishlist() {
+        when(tokenService.getMemberIdFromToken(validToken)).thenReturn(MEMBER_ID.toString());
+        when(memberRepository.findById(MEMBER_ID)).thenReturn(Optional.of(member));
+
         WishlistItem wishlistItem = new WishlistItem(member, product);
         when(wishlistRepository.findByMemberId(MEMBER_ID)).thenReturn(Arrays.asList(wishlistItem));
 
         wishlistService.deleteItemFromWishlist(PRODUCT_ID, validToken);
 
-        verify(wishlistRepository, times(1)).delete(any(WishlistItem.class));
+        verify(wishlistRepository, times(1)).deleteByMemberIdAndProductId(MEMBER_ID, PRODUCT_ID);
     }
 
 
     @Test
     public void testDeleteItemFromWishlistMemberNotFound() {
+        when(tokenService.getMemberIdFromToken(validToken)).thenReturn(MEMBER_ID.toString());
+        when(memberRepository.findById(MEMBER_ID)).thenReturn(Optional.of(member));
+
         when(wishlistRepository.findByMemberId(MEMBER_ID)).thenReturn(Arrays.asList());
 
         assertThrows(MemberNotFoundException.class, () -> {
@@ -100,9 +106,11 @@ public class WishlistServiceTest {
 
     @Test
     public void testGetWishlistByMemberId() {
+        Product product2 = new Product("Product 2", 200, "test-url-2");
+        product2.setId(2L);
         List<WishlistItem> expectedItems = Arrays.asList(
                 new WishlistItem(member, product),
-                new WishlistItem(member, new Product("Product 2", 200, "test-url-2"))
+                new WishlistItem(member, product2)
         );
 
         when(wishlistRepository.findByMemberId(MEMBER_ID)).thenReturn(expectedItems);

@@ -39,7 +39,9 @@ public class ProductServiceTest {
 
     @Test
     public void testFindOne() {
+        Long productId = 1L;
         Product product = new Product("Product 1", 100,"test-url");
+        product.setId(productId);
 
         given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
 
