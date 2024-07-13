@@ -9,6 +9,9 @@ import gift.main.entity.Product;
 import gift.main.entity.User;
 import gift.main.repository.ProductRepository;
 import gift.main.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +35,13 @@ public class ProductService {
                 .collect(Collectors.toList()); //변환된 요소 각각을 리스트로~!
 
         return productResponces;
+    }
+
+    public Page<ProductResponce> getProductPage(int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, 10);
+        Page<ProductResponce> productPage = productRepository.findAll(pageable)
+                .map(product -> new ProductResponce(product));
+        return productPage;
     }
 
     @Transactional
