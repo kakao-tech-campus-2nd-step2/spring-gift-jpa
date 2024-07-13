@@ -3,9 +3,8 @@ INSERT INTO product (name, price, description, image_url) VALUES
 
 
 INSERT INTO users (email, password) VALUES ('pjhcsols@naver.com', '$2a$10$ENYqGvZ3p6LvtsBnRWINSOJHKlMt1Ykgb3.jCnoKkrhMihviXhkDu'); -- password is '1q2w3e4r!'
-/*
+
 INSERT INTO wishes (product_id, user_id, amount, is_deleted) VALUES (1, 1, 5, FALSE);
 INSERT INTO wishes (product_id, user_id, amount, is_deleted) VALUES (2, 1, 3, FALSE);
 
 
- */
