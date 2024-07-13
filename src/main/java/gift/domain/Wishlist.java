@@ -24,12 +24,12 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false, insertable = false, updatable = false)
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     public Wishlist() {
@@ -46,5 +46,9 @@ public class Wishlist {
 
     public Long getProductId() {
         return product.getId();
+    }
+
+    public Product getProduct() {
+        return product;
     }
 }

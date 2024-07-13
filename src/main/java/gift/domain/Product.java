@@ -1,7 +1,9 @@
 package gift.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,16 +20,17 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(name = "price", nullable = false)
+    @Column(nullable = false)
     private int price;
 
-    @Column(name = "image_url", nullable = false)
+    @Column(name = "image_url")
     private String imageUrl;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product",
+               cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Wishlist> wishes = new ArrayList<>();
 
     public Product() {

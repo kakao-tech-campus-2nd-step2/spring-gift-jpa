@@ -1,9 +1,11 @@
 package gift.service;
 
 import gift.domain.Product;
+import gift.domain.User;
 import gift.domain.Wishlist;
 import gift.repository.WishlistRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,31 +14,35 @@ public class WishlistService {
 
     private final WishlistRepository wishlistRepository;
     private final ProductService productService;
+    private final UserService userService;
 
     @Autowired
-    public WishlistService(WishlistRepository wr, ProductService ps) {
+    public WishlistService(WishlistRepository wr, ProductService ps, UserService us) {
         wishlistRepository = wr;
         productService = ps;
+        userService = us;
     }
 
     public List<Product> getWishlistByEmail(String email) {
-        // 1. 사용자 이메일을 기반으로 Wishlist 레파지토리에서 productId 리스트를 가져온다
+        // 1. 사용자 이메일을 기반으로 Wishlist 레파지토리에서 product를 가져온다
         // 2. 리스트에 들어있는 id들을 Product 레파지토리에서 검색하여 상품 목록 리턴
-        List<Wishlist> wishes = wishlistRepository.findByEmail(email);
-        List<Long> productIds = wishes.stream().map(wish -> wish.getProductId()).toList();
-        return productService.getAllProductsByIds(productIds);
+        List<Wishlist> wishes = wishlistRepository.findByUser_Email(email);
+        return wishes.stream().map(wish -> wish.getProduct()).toList();
     }
 
     public void addWishlist(String email, Long productId) {
-        productService.getProductById(productId)
-            .orElseThrow(() -> new RuntimeException("Invalid Product ID"));
+        Optional<Product> product = productService.getProductById(productId);
+        product.orElseThrow(() -> new RuntimeException("Invalid Product ID"));
         // 사용자 이메일과 제품 ID를 사용하여 위시리스트에 추가
-        Wishlist wish = new Wishlist(email, productId);
+
+        Optional<User> user = userService.getUserByEmail(email);
+        user.orElseThrow(() -> new RuntimeException("Invalid Email"));
+        Wishlist wish = new Wishlist(user.get(), product.get());
         wishlistRepository.save(wish);
     }
 
     public void removeWishlist(String email, Long productId) {
-        Wishlist wish = wishlistRepository.findByEmailAndProductId(email, productId)
+        Wishlist wish = wishlistRepository.findByUser_EmailAndProduct_Id(email, productId)
             .orElseThrow(() -> new RuntimeException("Wish Not Found"));
         wishlistRepository.delete(wish);
     }
