@@ -4,7 +4,6 @@ import gift.main.annotation.SessionUser;
 import gift.main.dto.UserVo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.Session;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -17,7 +16,6 @@ public class SessionUserArgumentResolver implements HandlerMethodArgumentResolve
         return parameter.getParameterType().equals(UserVo.class)
                 && parameter.hasParameterAnnotation(SessionUser.class);
     }
-
 
 
     @Override //넣어줄 반환값을 넣어준다.

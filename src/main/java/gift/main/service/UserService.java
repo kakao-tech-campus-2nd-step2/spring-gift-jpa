@@ -1,11 +1,10 @@
 package gift.main.service;
 
+import gift.main.Exception.CustomException;
+import gift.main.Exception.ErrorCode;
 import gift.main.dto.UserJoinRequest;
 import gift.main.dto.UserLoginRequest;
 import gift.main.entity.User;
-import gift.main.Exception.ErrorCode;
-import gift.main.Exception.CustomException;
-
 import gift.main.repository.UserRepository;
 import gift.main.util.JwtUtil;
 import org.springframework.stereotype.Service;
@@ -28,9 +27,10 @@ public class UserService {
     public String joinUser(UserJoinRequest userJoinRequest) {
         //유효성 검사해야하는데용~!
         if (userRepository.existsByEmail(userJoinRequest.email())) {
-            throw new CustomException(ErrorCode.ALREADY_EMAIL.getErrorMessage(), ErrorCode.ALREADY_EMAIL.getHttpStatus());
+            throw new CustomException(ErrorCode.ALREADY_EMAIL);
         }
-        User userdto = new User(userJoinRequest) ;
+        User userdto = new User(userJoinRequest);
+
         User user = userRepository.save(userdto);
         return jwtUtil.createToken(user);
 
@@ -38,10 +38,8 @@ public class UserService {
 
 
     public String loginUser(UserLoginRequest userLoginRequest) {
-        User user = userRepository.findByEmailAndPassword(userLoginRequest.email(),userLoginRequest.password());
-        if (user == null) {
-            throw new CustomException(ErrorCode.ERROR_LOGIN.getErrorMessage(), ErrorCode.ERROR_LOGIN.getHttpStatus());
-        }
+        User user = userRepository.findByEmailAndPassword(userLoginRequest.email(), userLoginRequest.password())
+                .orElseThrow(() -> new CustomException(ErrorCode.ERROR_LOGIN));
         return jwtUtil.createToken(user);
     }
 

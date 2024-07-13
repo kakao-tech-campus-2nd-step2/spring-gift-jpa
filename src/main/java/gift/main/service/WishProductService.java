@@ -1,7 +1,13 @@
 package gift.main.service;
 
+import gift.main.Exception.CustomException;
+import gift.main.Exception.ErrorCode;
 import gift.main.dto.UserVo;
+import gift.main.entity.Product;
+import gift.main.entity.User;
 import gift.main.entity.WishProduct;
+import gift.main.repository.ProductRepository;
+import gift.main.repository.UserRepository;
 import gift.main.repository.WishProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,19 +17,31 @@ import java.util.List;
 public class WishProductService {
 
     private final WishProductRepository wishProductRepository;
+    private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
-    public WishProductService(WishProductRepository wishProductRepository) {
+    public WishProductService(WishProductRepository wishProductRepository, ProductRepository productRepository, UserRepository userRepository) {
         this.wishProductRepository = wishProductRepository;
-    }
-
-    public void addWishlistProduct(Long productId, UserVo sessionUser) {
-        wishProductRepository.deleteByProductIdAndUserId(productId, sessionUser.getId());
+        this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
     public List<WishProduct> getWishProducts(Long userId) {
-        List<WishProduct> wishProducts = wishProductRepository.findAllByUserId(userId);
+        List<WishProduct> wishProducts = wishProductRepository.findAllByUserId(userId)
+                .orElseGet(() -> List.of());
+
         return wishProducts;
+
     }
+
+    public void addWishlistProduct(Long productId, UserVo sessionUser) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+        User user = userRepository.findByEmail(sessionUser.getEmail())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        wishProductRepository.save(new WishProduct(product, user));
+    }
+
 
     public void deleteProducts(Long productId, UserVo sessionUserVo) {
         wishProductRepository.deleteByProductIdAndUserId(productId, sessionUserVo.getId());

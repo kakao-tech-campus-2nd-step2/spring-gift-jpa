@@ -64,6 +64,7 @@
                 <th>Name</th>
                 <th>Price</th>
                 <th>Image</th>
+                <th>Seller</th>
                 <th></th>
             </tr>
             </thead>
@@ -155,6 +156,7 @@
                             '<td>' + product.name + '</td>' +
                             '<td>' + product.price + '</td>' +
                             '<td>' + product.imageUrl + '</td>' +
+                            '<td>' + product.seller+ '</td>' +
                             '</tr>';
                     } else {
                         html += '<tr><td colspan="4">상품을 찾을 수 없습니다.</td></tr>';
@@ -188,6 +190,7 @@
                             '<td>' + product.name + '</td>' +
                             '<td>' + product.price + '</td>' +
                             '<td>' + product.imageUrl + '</td>' +
+                            '<td>' + product.seller + '</td>' +
                             '<td>' +
                             '<div style="display: flex; justify-content: center; gap: 10px;">' +
                             '<button class="btn btn-warning btn-sm edit-button" data-id="' + product.id + '" data-name="' + product.name + '" data-price="' + product.price + '" data-imageurl="' + product.imageUrl + '" style="width: 100px;">수정하기</button>' +

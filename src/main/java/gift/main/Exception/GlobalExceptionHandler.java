@@ -1,4 +1,5 @@
 package gift.main.Exception;
+
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public String handleGeneralException(Model model, Exception e) {
-        model.addAttribute("error",e.getMessage());
+        model.addAttribute("error", e.getMessage());
         String refererUrl = " http://localhost:8080/spring-gift/";
         model.addAttribute("refererUrl", refererUrl);
         return "error/error";

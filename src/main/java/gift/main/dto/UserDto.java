@@ -1,7 +1,7 @@
 package gift.main.dto;
 
 
-public  class UserDto {
+public class UserDto {
     private final String name;
     private final String email;
     private final String password;

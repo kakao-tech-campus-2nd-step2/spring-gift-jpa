@@ -53,7 +53,7 @@
                 name: $('#joinName').val(),
                 email: $('#joinEmail').val(),
                 password: $('#joinPassword').val(),
-                role: $('#role').is(':checked') ? 'admin' : 'user'
+                role: $('#role').is(':checked') ? 'ADMIN' : 'USER'
             };
             $.ajax({
                 type: 'POST',

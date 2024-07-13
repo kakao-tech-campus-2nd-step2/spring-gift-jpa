@@ -42,7 +42,6 @@ public class User {
     }
 
 
-
     public User(long id, String name, String email, String password, String role) {
         this.id = id;
         this.name = name;

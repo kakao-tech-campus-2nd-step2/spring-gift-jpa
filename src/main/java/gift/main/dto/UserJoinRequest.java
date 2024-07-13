@@ -11,7 +11,7 @@ public record UserJoinRequest(
         String email,
         @NotBlank(message = "패스워드 입력해주세요.")
         String password,
-        String role ) {
+        String role) {
 
 
 }

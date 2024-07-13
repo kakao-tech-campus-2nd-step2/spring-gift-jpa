@@ -1,8 +1,7 @@
 package gift.main.repository;
 
-import gift.main.Exception.CustomException;
+
 import gift.main.entity.Product;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -21,7 +20,6 @@ class ProductRepositoryTest {
     private ProductRepository productRepository;
 
     @Test
-    @Transactional
     public void 조회() {
         //givem
         String name = "물건";
@@ -36,7 +34,6 @@ class ProductRepositoryTest {
     }
 
     @Test
-    @Transactional
     public void 모두조회() {
         //given
         productRepository.save(new Product("테스트1", 123, "123"));
@@ -53,7 +50,6 @@ class ProductRepositoryTest {
 
 
     @Test
-    @Transactional
     public void 수정() {
         //given
         Product product = new Product("테스트용", 123, "123");
@@ -61,7 +57,7 @@ class ProductRepositoryTest {
 
         //when
         String newName = "newName";
-        product1.setName(newName);
+        product1.updateValue(newName,123,"123");
         productRepository.save(product1);
 
         //then
@@ -70,7 +66,6 @@ class ProductRepositoryTest {
     }
 
     @Test
-    @Transactional
     public void 삭제() {
         //given
         Product product = new Product("테스트용", 123, "123");
