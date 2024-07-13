@@ -30,5 +30,5 @@
 ## step 3
 
 - Pagination 구현 및 적용
-  - [ ] Product
+  - [x] Product
   - [ ] Wish
