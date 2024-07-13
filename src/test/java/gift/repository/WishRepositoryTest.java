@@ -7,10 +7,12 @@ import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
 import java.util.List;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 @DataJpaTest
 class WishRepositoryTest {
@@ -24,12 +26,11 @@ class WishRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
-    @Order(1)
     @Test
     void save() {
         Member expectedMember = saveMember("member1@example.com", "password1", "member1", "user");
         Product expectedProduct = saveProduct("gamza", 500, "gamza.jpg");
-        Wish expected = getWish(expectedMember, expectedProduct);
+        Wish expected = createWish(expectedMember, expectedProduct);
 
         Wish actual = wishRepository.save(expected);
 
@@ -45,22 +46,24 @@ class WishRepositoryTest {
     void findAllByMemberId() {
         Member expectedMember = saveMember("member1@example.com", "password1", "member1", "user");
         Product expectedProduct1 = saveProduct("gamza", 500, "gamza.jpg");
-        Wish expected1 = getWish(expectedMember, expectedProduct1);
+        Wish expected1 = createWish(expectedMember, expectedProduct1);
         Product expectedProduct2 = saveProduct("goguma", 1500, "goguma.jpg");
-        Wish expected2 = getWish(expectedMember, expectedProduct2);
+        Wish expected2 = createWish(expectedMember, expectedProduct2);
         wishRepository.save(expected1);
         wishRepository.save(expected2);
 
-        List<Wish> actual = wishRepository.findAllByMemberId(expectedMember.getId());
+        List<Wish> actual = wishRepository.findAllByMemberId(expectedMember.getId(),
+            PageRequest.of(0, 10, Sort.by(
+                Direction.ASC, "product"))).getContent();
 
-        assertThat(actual).isEqualTo(List.of(expected1, expected2));
+        assertThat(actual).containsExactly(expected1, expected2);
     }
 
     @Test
     void findByMemberIdAndProductId() {
         Member expectedMember = saveMember("member1@example.com", "password1", "member1", "user");
         Product expectedProduct = saveProduct("gamza", 500, "gamza.jpg");
-        Wish expected = getWish(expectedMember, expectedProduct);
+        Wish expected = createWish(expectedMember, expectedProduct);
 
         wishRepository.save(expected);
 
@@ -80,7 +83,7 @@ class WishRepositoryTest {
     void deleteByMemberIdAndProductId() {
         Member expectedMember = saveMember("member1@example.com", "password1", "member1", "user");
         Product expectedProduct = saveProduct("gamza", 500, "gamza.jpg");
-        Wish expected = getWish(expectedMember, expectedProduct);
+        Wish expected = createWish(expectedMember, expectedProduct);
         wishRepository.save(expected);
 
         wishRepository.deleteByMemberIdAndProductId(expected.getMember().getId(),
@@ -101,7 +104,7 @@ class WishRepositoryTest {
         return memberRepository.save(member);
     }
 
-    private Wish getWish(Member expectedMember, Product expectedProduct) {
+    private Wish createWish(Member expectedMember, Product expectedProduct) {
         return new Wish(
             expectedMember, expectedProduct, 1);
     }

@@ -1,7 +1,6 @@
 package gift.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import gift.model.dto.MemberRequestDto;
 import java.net.URI;
@@ -17,6 +16,7 @@ import org.springframework.http.RequestEntity;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class MemberControllerTest {
+
     @LocalServerPort
     private int port;
 

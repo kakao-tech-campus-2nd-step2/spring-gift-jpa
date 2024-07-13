@@ -22,7 +22,6 @@ public class Product {
     private String imageUrl;
 
     protected Product() {
-
     }
 
     public Product(String name, int price, String imageUrl) {

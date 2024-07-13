@@ -26,11 +26,4 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(memberException.getMemberErrorCode().getHttpStatus())
             .body(memberException.getMessage());
     }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(
-        IllegalArgumentException illegalArgumentException) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(illegalArgumentException.getMessage());
-    }
 }

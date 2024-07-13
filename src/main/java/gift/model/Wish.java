@@ -53,15 +53,7 @@ public class Wish {
         return count;
     }
 
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public void setCount(Integer count) {
+    public void changeCount(Integer count) {
         this.count = count;
     }
 }

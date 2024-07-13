@@ -1,10 +1,10 @@
 package gift.model.dto;
 
-public class MemberResponseDto {
+public class TokenResponseDto {
 
     private final String accessToken;
 
-    public MemberResponseDto(String accessToken) {
+    public TokenResponseDto(String accessToken) {
         this.accessToken = accessToken;
     }
 

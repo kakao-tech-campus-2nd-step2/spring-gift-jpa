@@ -56,7 +56,8 @@ class ProductControllerTest {
         return headers;
     }
 
-    private ProductRequestDto addProduct(String name, Integer price, String imageUrl, String url, HttpHeaders headers) {
+    private ProductRequestDto addProduct(String name, Integer price, String imageUrl, String url,
+        HttpHeaders headers) {
         var expected = new ProductRequestDto(name, price, imageUrl);
         var expected1RequestEntity = new RequestEntity<>(expected, headers, HttpMethod.POST,
             URI.create(url));

@@ -14,6 +14,17 @@
 
 ### 2단계 기능 요구 사항
 객체의 참조와 테이블의 외래 키를 매핑해서 객체에서는 참조를 사용하고 테이블에서는 외래 키를 사용할 수 있도록 한다.
-- [ ] Wish Entity 수정
-- [ ] WishRepository 수정
-- [ ] Test 코드 수정
+- [x] Wish Entity 수정
+- [x] WishRepository 수정
+- [x] Test 코드 수정
+
+### 3단계 기능 요구 사항
+상품과 위시 리스트 보기에 페이지네이션을 구현한다.
+대부분의 게시판은 모든 게시글을 한 번에 표시하지 않고 여러 페이지로 나누어 표시한다. 정렬 방법을 설정하여 보고 싶은 정보의 우선 순위를 정할 수도 있다.
+페이지네이션은 원하는 정렬 방법, 페이지 크기 및 페이지에 따라 정보를 전달하는 방법이다.
+- [x] WishRepository Pageable 로 바꾸기
+- [x] WishService Page 로 수정
+- [x] WishController 수정
+- [x] ProductRepository Pageable 로 바꾸기
+- [x] ProductService Page 로 수정
+- [x] ProductController 수정
