@@ -43,8 +43,8 @@ public class ProductService {
     }
 
     public ProductDTO deleteProduct(long id) {
-        ProductDTO deletedProductDTO = getProduct(id);
-        productRepository.delete(deletedProductDTO.toEntity());
-        return deletedProductDTO;
+        Product deletedProduct = productRepository.findById(id).orElseThrow(NoSuchProductException::new);
+        productRepository.delete(deletedProduct);
+        return deletedProduct.toDTO();
     }
 }
