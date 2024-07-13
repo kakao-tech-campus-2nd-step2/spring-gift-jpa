@@ -20,12 +20,15 @@ class ProductRepositoryTest {
 
         // when
         Product savedProduct = productRepository.save(product);
+        Product foundProduct = productRepository.findById(savedProduct.getId()).orElse(null);
 
         // then
-        assertThat(savedProduct.getId()).isNotNull();
-        assertThat(savedProduct.getName()).isEqualTo("Test Product");
-        assertThat(savedProduct.getImageUrl()).isEqualTo("https://example.com/image.jpg");
-        assertThat(savedProduct.getPrice()).isEqualTo(1000);
+        assertThat(foundProduct).isNotNull();
+        assertThat(foundProduct.getId()).isEqualTo(savedProduct.getId());
+        assertThat(foundProduct.getName()).isEqualTo("Test Product");
+        assertThat(foundProduct.getImageUrl()).isEqualTo("https://example.com/image.jpg");
+        assertThat(foundProduct.getPrice()).isEqualTo(1000);
     }
 }
+
 

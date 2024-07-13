@@ -94,7 +94,7 @@
 - [x] Repository - JPA에서 자동으로 만들어줘서 구현안해도되는 코드 삭제
 - [x] LoginMemberArgumentResolver - 토큰 파싱 시, 문자 길이로 값 사용해보기
 - [x] JwtTokenProvider - 변수명으로 86400000 수정
-- [ ] 테스트 코드 수정 - 저장하고 repository에서 불러와보기
+- [x] 테스트 코드 수정 - 저장하고 repository에서 불러와보기
 
 # 3단계 과제
 
