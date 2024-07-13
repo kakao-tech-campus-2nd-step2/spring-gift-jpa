@@ -2,6 +2,7 @@ package gift;
 
 import gift.permission.repository.PermissionRepository;
 import gift.user.entity.User;
+import java.util.NoSuchElementException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +50,11 @@ public class PermissionRepositoryTest {
 
         // 크기가 2이어야 함.
         Assertions.assertThat(permissionRepository.count()).isEqualTo(2);
-        // 유저들을 조회
+        // 유저들을 조회.
         Assertions.assertThat(permissionRepository.findAll()).contains(user1).contains(user2);
-        // 없는 이메일을 조회하면 null을 반환.
-        Assertions.assertThat(permissionRepository.findByEmail("kangji0615@gmail.com")).isNull();
+        // 없는 이메일을 조회해서 가져오면 예외를 반환.
+        Assertions.assertThatCode(() -> permissionRepository.findByEmail("kangji0615@gmail.com").get()).isInstanceOf(
+            NoSuchElementException.class);
     }
 
     @Test

@@ -2,6 +2,7 @@ package gift.global.exception;
 
 import gift.global.dto.ApiResponseDto;
 import java.util.NoSuchElementException;
+import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
@@ -11,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 // 반환 타입을 ApiResponseDto로 통일시키면서 global하게 바꿨습니다.
 @RestControllerAdvice
+@Order(value = 10)
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

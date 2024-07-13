@@ -1,8 +1,8 @@
 package gift.global.component;
 
+import gift.global.annotation.Products;
 import gift.product.dto.ProductResponseDto;
 import gift.product.service.ProductService;
-import gift.global.annotation.Products;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

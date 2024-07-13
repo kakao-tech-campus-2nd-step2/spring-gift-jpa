@@ -1,8 +1,8 @@
 package gift.user.controller;
 
+import gift.global.annotation.Products;
 import gift.product.dto.ProductResponseDto;
 import gift.wishlist.dto.WishListResponseDto;
-import gift.global.annotation.Products;
 import gift.wishlist.service.WishListService;
 import java.util.List;
 import org.springframework.http.HttpHeaders;

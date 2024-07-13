@@ -1,8 +1,8 @@
 package gift.permission.controller;
 
 import gift.global.dto.ApiResponseDto;
-import gift.permission.service.PermissionService;
 import gift.global.dto.TokenDto;
+import gift.permission.service.PermissionService;
 import gift.user.dto.UserRequestDto;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
