@@ -21,7 +21,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 public class WishListRepositoryTest {
 
     @Autowired
-    private WishListRepository wishListRepository;
+    private WishListRepository wishlists;
     @Autowired
     private ProductRepository products;
     @Autowired
@@ -30,6 +30,10 @@ public class WishListRepositoryTest {
     private Product productB;
     private Member memberA;
     private Member memberB;
+
+    private WishList createWishList(Member member, Product product, long quantity) {
+        return new WishList(member, product, quantity);
+    }
 
     @BeforeEach
     void setUp() {
@@ -47,43 +51,44 @@ public class WishListRepositoryTest {
     }
 
     @Test
-    @DisplayName("WishListA 저장 / 삭제")
-    void saveWishListA() {
-        WishList expected = new WishList(memberA.getEmail(), memberA, productA, 1);
-        WishList actual = wishListRepository.save(expected);
-        assertThat(actual).isEqualTo(expected);
-
-        wishListRepository.deleteById(actual.getId());
-        assertThat(wishListRepository.findAll()).isEmpty();
+    @DisplayName("WishList 저장")
+    void save() {
+        var expected = createWishList(memberA, productA, 1);
+        wishlists.save(expected);
+        assertThat(wishlists.findAll()).isNotEmpty();
     }
 
     @Test
-    @DisplayName("memberA와 memberB의 WishList 저장 / 조회")
+    @DisplayName("memberA와 memberB의 WishList 조회")
     void saveWishLists() {
-        WishList wishList1 = new WishList(memberA.getEmail(), memberA, productA, 1);
-        wishListRepository.save(wishList1);
-        WishList wishList2 = new WishList(memberB.getEmail(), memberB, productA, 1);
-        wishListRepository.save(wishList2);
-        WishList wishList3 = new WishList(memberB.getEmail(), memberB, productB, 2);
-        wishListRepository.save(wishList3);
+        var wishList1 = createWishList(memberA, productA, 1);
+        wishlists.save(wishList1);
+        var wishList2 = createWishList(memberB, productA, 2);
+        wishlists.save(wishList2);
+        var wishList3 = createWishList(memberB, productB, 1);
+        wishlists.save(wishList3);
+
         assertAll(
             () -> assertThat(
-                wishListRepository.findWishListByMemberId(memberA.getId()).size()).isEqualTo(1),
+                wishlists.findWishListByMemberId(memberA.getId()).size()).isEqualTo(1),
             () -> assertThat(
-                wishListRepository.findWishListByMemberId(memberB.getId()).size()).isEqualTo(2)
+                wishlists.findWishListByMemberId(memberB.getId()).size()).isEqualTo(2)
         );
     }
 
+    @DisplayName("WishList 업데이트")
     @Test
-    void findByMemberIdAndProductName() {
-        WishList wishList1 = new WishList(memberA.getEmail(), memberA, productA, 1);
-        WishList wishList2 = new WishList(memberA.getEmail(), memberA, productB, 1);
-        wishListRepository.save(wishList1);
-        wishListRepository.save(wishList2);
+    void update() {
+        var wishlist = new WishList(memberA, productA, 1);
+        wishlists.save(wishlist);
 
-        assertThat(wishListRepository.findByMemberIdAndProductName(memberA.getId(),
-            productA.getName()).orElseThrow(
-            () -> new RepositoryException(ErrorCode.PRODUCT_NOT_FOUND, productA.getName()))
-        ).isNotNull();
+        var update = wishlists.findByMemberIdAndProductId(memberA.getId(), productA.getId())
+            .orElseThrow(
+                () -> new RepositoryException(ErrorCode.WISHLIST_NOT_FOUND, memberA.getId(),
+                    productA.getId()));
+
+        update.setQuantity(3);
+
+        assertThat(update.getQuantity()).isEqualTo(3);
     }
 }
