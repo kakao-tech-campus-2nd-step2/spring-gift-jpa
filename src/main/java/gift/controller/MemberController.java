@@ -8,8 +8,7 @@ import gift.service.MemberService;
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/members")
 public class MemberController {
 
-    private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
     private final MemberService memberService;
     private final JwtService jwtService;
 
@@ -37,7 +35,6 @@ public class MemberController {
             Member savedMember = memberService.createMember(member);
             Map<String, String> response = new HashMap<>();
             response.put("token", jwtService.generateToken(savedMember));
-            logger.debug("Register - Generated Token: {}", response.get("token"));
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             throw new RuntimeException("Error during registration: " + e.getMessage(), e);
@@ -51,7 +48,6 @@ public class MemberController {
 
         Map<String, String> response = new HashMap<>();
         response.put("token", jwtService.generateToken(foundMember));
-        logger.debug("Login - Generated Token: {}", response.get("token"));
         return ResponseEntity.ok(response);
     }
 

@@ -36,7 +36,6 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-            logger.debug("Claims: " + claims);
             return claimsResolver.apply(claims);
         } catch (Exception e) {
             logger.error("Error parsing token", e);
