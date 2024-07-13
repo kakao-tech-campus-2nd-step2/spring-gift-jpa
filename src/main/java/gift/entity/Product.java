@@ -48,11 +48,6 @@ public class Product {
     public Product() {
     }
 
-    public Product(ProductDTO productDTO) {
-        this(productDTO.id(), productDTO.name(), productDTO.price(), productDTO.imageUrl());
-        blankCatch(productDTO);
-    }
-
     public Product(String name, Integer price, String imageUrl) {
         this.name = name;
         this.price = price;
@@ -99,13 +94,6 @@ public class Product {
         this.setName(product.getName());
         this.setPrice(product.getPrice());
         this.setImageUrl(product.getImageUrl());
-    }
-
-    private void blankCatch(ProductDTO productDTO) throws BlankContentException {
-        if (productDTO.name().isBlank() || productDTO.price() == null || productDTO.imageUrl()
-                .isBlank()) {
-            throw new BlankContentException("입력 값에 빈 곳이 있습니다. 다시 입력해주세요");
-        }
     }
 
     @Override
