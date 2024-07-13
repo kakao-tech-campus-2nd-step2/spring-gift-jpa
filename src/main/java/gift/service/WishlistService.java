@@ -28,16 +28,14 @@ public class WishlistService {
 
     public Page<Wishlist> getAllWishlist(String token, int page, int size) {
         Pageable pageRequest = createPageRequestUsing(page, size);
-
         var member_id = memberRepository.searchIdByToken(token);
 
-        List<Wishlist> allWishlist = wishlistRepository.findByMember_id(member_id);
-
         int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), allWishlist.size());
+        int end = start + pageRequest.getPageSize();
+        if (page > 0) { start += 1; }
 
-        List<Wishlist> pageContent = allWishlist.subList(start, end);
-        return new PageImpl<>(pageContent, pageRequest, allWishlist.size());
+        List<Wishlist> pageContent = wishlistRepository.findByIdAndIdAndMember_id(start, end, member_id);
+        return new PageImpl<>(pageContent, pageRequest, pageContent.size());
     }
 
     private Pageable createPageRequestUsing(int page, int size) {
@@ -55,16 +53,16 @@ public class WishlistService {
         }
     }
 
-    public void changeNum(String token, int product_id, int num) {
+    public void changeNum(String token, int product_id, int count) {
         var member_id = memberRepository.searchIdByToken(token);
         var member = memberRepository.findById(member_id);
         var product = productRepository.findById(product_id);
 
         try {
-            if (num == 0) {
+            if (count == 0) {
                 wishlistRepository.deleteByMember_idAndMember_id(member_id, product_id);
             } else {
-                var wishlist = new Wishlist(member, product, num);
+                var wishlist = new Wishlist(member, product, count);
                 wishlistRepository.save(wishlist);
             }
         }
