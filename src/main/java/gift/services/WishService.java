@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,14 +37,14 @@ public class WishService {
 
     //    Wishlist 조회
     @Transactional
-    public List<WishDto> getWishListById(Long memberId) {
-        List<Wish> wishList = wishRepository.findAllByMemberId(memberId);
-        return wishList.stream()
-            .map(wish -> new WishDto(
-                wish.getMember().getId(),
-                wish.getProduct().getId()
-            ))
-            .collect(Collectors.toList());
+    public Page<WishDto> getWishListById(Long memberId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<Wish> wishList = wishRepository.findAllByMemberId(memberId, pageable);
+
+        return wishList.map(wish -> new WishDto(
+            wish.getMember().getId(),
+            wish.getProduct().getId()
+        ));
     }
 
 //    Wish 추가
