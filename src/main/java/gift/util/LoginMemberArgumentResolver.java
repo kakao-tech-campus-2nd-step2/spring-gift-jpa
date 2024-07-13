@@ -40,11 +40,11 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         String authorizationHeader = webRequest.getHeader("Authorization");
         if (authorizationHeader == null) {
             logger.warn("Authorization header is missing");
-            return null;
+            throw new IllegalArgumentException("Authorization header is missing");
         }
         if (!authorizationHeader.startsWith("Bearer ")) {
             logger.warn("Authorization header is invalid");
-            return null;
+            throw new IllegalArgumentException("Authorization header is invalid");
         }
 
         String token = authorizationHeader.substring(7);
@@ -52,7 +52,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         String email = jwtUtil.extractEmail(token);
         if (email == null) {
             logger.warn("Email extracted from token is null");
-            return null;
+            throw new IllegalArgumentException("Invalid token");
         }
 
         logger.debug("Extracted Email: " + email);
@@ -63,7 +63,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
             return member;
         } else {
             logger.warn("No member found for email: " + email);
-            return null;
+            throw new IllegalArgumentException("Member not found");
         }
     }
 }
