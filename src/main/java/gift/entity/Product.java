@@ -4,25 +4,15 @@ import gift.dto.ProductDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@EntityListeners(AuditingEntityListener.class)
 @Entity
-public class Product {
+public class Product extends BaseEntity {
 
-    @Id
-    long id;
-
-    @Column(name = "name", length = 15, nullable = false)
+    @Column(name = "name", length = 15, nullable = false, unique = true)
     String name;
 
     @Column(name = "price", nullable = false)
@@ -31,12 +21,6 @@ public class Product {
     @Column(name = "imageurl")
     String imageUrl;
 
-    @CreatedDate
-    private LocalDateTime createdDate;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedDate;
-
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Wishlist> wishlist = new ArrayList<>();
 
@@ -44,19 +28,18 @@ public class Product {
     }
 
     public Product(ProductDto productDto) {
-        this(productDto.getId(), productDto.getName(), productDto.getPrice(),
-            productDto.getImageUrl());
+        this(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
     }
 
-    public Product(long id, String name, long price, String imageUrl) {
-        this.id = id;
+    public Product(String name, long price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public long getId() {
-        return id;
+    @Override
+    public Long getId() {
+        return super.getId();
     }
 
     public String getName() {
@@ -73,5 +56,11 @@ public class Product {
 
     public List<Wishlist> getWishlist() {
         return wishlist;
+    }
+
+    public void updateProduct(ProductDto productDto) {
+        this.name = productDto.getName();
+        this.price = productDto.getPrice();
+        this.imageUrl = productDto.getImageUrl();
     }
 }

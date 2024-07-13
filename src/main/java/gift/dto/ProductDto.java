@@ -10,8 +10,7 @@ import jakarta.validation.constraints.Size;
 
 public class ProductDto {
 
-    @NotNull
-    private final long id;
+    private final Long id;
 
     @NotBlank(message = ErrorMessage.PRODUCT_NAME_VALID_NOT_BLANK_MSG)
     @Size(min = 1, max = 15, message = ErrorMessage.PRODUCT_NAME_VALID_SIZE_MSG)
@@ -28,7 +27,7 @@ public class ProductDto {
 
     private final String imageUrl;
 
-    public ProductDto(long id, String name, long price, String imageUrl) {
+    public ProductDto(Long id, String name, long price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -36,13 +35,10 @@ public class ProductDto {
     }
 
     public ProductDto(Product p) {
-        id = p.getId();
-        name = p.getName();
-        price = p.getPrice();
-        imageUrl = p.getImageUrl();
+        this(p.getId(), p.getName(), p.getPrice(), p.getImageUrl());
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

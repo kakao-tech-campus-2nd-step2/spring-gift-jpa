@@ -25,7 +25,7 @@ class WishlistJpaDaoTest {
 
     Wishlist generateWishlist() {
         Member member = new Member("sgoh", "pass");
-        Product product = new Product(1L, "coffee", 4500L, "http");
+        Product product = new Product("coffee", 4500L, "http");
         Wishlist wishlist = new Wishlist(member, product);
 
         member.getWishlist().add(wishlist);

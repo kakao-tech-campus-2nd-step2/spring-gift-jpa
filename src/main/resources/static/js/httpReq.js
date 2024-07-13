@@ -2,7 +2,6 @@ function addOne() {
      event.preventDefault();
 
     var formData = {
-        'id' : $('#id').val(),
         'name' : $('#name').val(),
         'price' : $('#price').val(),
         'imageUrl' : $('#imageUrl').val()
