@@ -11,10 +11,10 @@
    
 **💻JdbcTEmplate 기반 코드를 JPA로 Refactoring**   
 - JPA로 Refactoring
-    - [ ] Member
-    - [ ] Product
-    - [ ] Wish
+    - [X] Member
+    - [X] Product
+    - [X] Wish
 - @DataJpaTest 사용하여 테스트
-  - [ ] Member Test
-  - [ ] Product Test
-  - [ ] Wish Test
+  - [X] Member Test
+  - [X] Product Test
+  - [X] Wish Test
