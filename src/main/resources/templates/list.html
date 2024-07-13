@@ -1,28 +1,24 @@
-<div th:fragment="productTable" xmlns:th="http://www.w3.org/1999/xhtml">
-    <table id="productTable">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>imgUrl</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="product : ${products}">
-            <td th:text="${product.id}">0</td>
-            <td th:text="${product.name}">name</td>
-            <td th:text="${product.price}">0</td>
-            <td th:text="${product.imgUrl}">image</td>
-            <td>
-                <a th:href="@{/products/{id}(id=${product.id})}">View</a>
-                <a th:href="@{/products/edit/{id}(id=${product.id})}">Edit</a>
-                <form th:action="@{/products/delete/{id}(id=${product.id})}" method="post">
-                    <button type="submit">Delete</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Wish List</title>
+</head>
+<body>
+<h1>Wish List</h1>
+
+<a href="/wishlist/add">Add New Product</a>
+
+<h2>Your Wish List</h2>
+<ul>
+    <li th:each="wish : ${wishlist}">
+        <span th:text="${wish.product}"></span>
+        <a th:href="@{/wishlist/edit/{id}(id=${wish.id})}">Edit</a>
+        <form th:action="@{/wishlist/delete/{id}(id=${wish.id})}" method="post" style="display:inline;">
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+
+</body>
+</html>
