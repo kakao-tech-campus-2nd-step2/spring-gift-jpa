@@ -1,6 +1,7 @@
 package gift.wishlist.controller;
 
 import gift.global.dto.ApiResponseDto;
+import gift.global.dto.PageRequestDto;
 import gift.wishlist.dto.WishListRequestDto;
 import gift.wishlist.dto.WishListResponseDto;
 import gift.wishlist.service.WishListService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 // 개인의 wish list db를 조작해서 결과를 가져오는 api 컨트롤러
@@ -32,10 +34,13 @@ public class WishListApiController {
         return new ApiResponseDto(ApiResponseDto.SUCCESS);
     }
 
-    // 한 유저의 위시 리스트 가져오기
+    // 한 유저의 위시 페이지 가져오기
     @GetMapping("/products")
-    public List<WishListResponseDto> getWishProducts(@PathVariable(name = "user_id") long userId) {
-        return wishListService.readWishProducts(userId);
+    public List<WishListResponseDto> getWishProducts(@PathVariable(name = "user_id") long userId,
+        @RequestParam(name = "page-no") int pageNumber,
+        @RequestParam(name = "sorting-state") int sortingState) {
+        PageRequestDto pageRequestDto = new PageRequestDto(pageNumber, sortingState);
+        return wishListService.readWishProducts(userId, pageRequestDto);
     }
 
     // + 버튼 눌러서 하나 증가.

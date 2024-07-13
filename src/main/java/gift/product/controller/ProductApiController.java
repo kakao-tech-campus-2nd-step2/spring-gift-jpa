@@ -2,13 +2,10 @@ package gift.product.controller;
 
 import gift.global.dto.ApiResponseDto;
 import gift.product.dto.ProductRequestDto;
-import gift.product.dto.ProductResponseDto;
 import gift.product.service.ProductService;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,11 +33,12 @@ public class ProductApiController {
         return new ApiResponseDto(ApiResponseDto.SUCCESS);
     }
 
-    // 전체 제품을 조회하는 핸들러
-    @GetMapping("/user/products")
-    public List<ProductResponseDto> readUserProducts() {
-        return productService.selectProducts();
-    }
+    // 페이지 내의 제품을 조회하는 핸들러. resolver에 의해 쓸 데가 없어졌습니다.
+//    @GetMapping("/products/pages/{page-no}")
+//    public int readUserProducts(@PathVariable(name = "page-no") int pageNumber,
+//        @RequestParam(name = "sorting-state") int sortingState) {
+//        return productService.selectProducts();
+//    }
 
     // id가 i인 상품을 수정하는 핸들러
     @PutMapping("/products/{product-id}")
