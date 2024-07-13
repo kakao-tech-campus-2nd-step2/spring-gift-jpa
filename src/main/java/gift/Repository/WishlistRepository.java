@@ -5,6 +5,8 @@ import gift.Model.Product;
 import gift.Model.Wishlist;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -39,4 +41,7 @@ public interface WishlistRepository extends JpaRepository<Wishlist,Long> {
     @Query("SELECT wishlist.id FROM Wishlist wishlist WHERE wishlist.member.email = :email AND wishlist.product.id = :id")
     Long getWishlistIdByMemberEmailAndProductId(@Param("email") String email, @Param("id") Long id);
 
+    @Transactional
+    @Query("SELECT wishlist.product FROM Wishlist wishlist WHERE wishlist.member.email = :email")
+    Page<Product> getAllWishlist(@Param("email") String email, Pageable pageable);
 }
