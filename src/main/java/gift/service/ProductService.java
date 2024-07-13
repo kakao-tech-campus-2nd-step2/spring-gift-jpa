@@ -1,5 +1,6 @@
 package gift.service;
 
+
 import gift.model.Product;
 import gift.repository.ProductRepository;
 import java.util.List;
@@ -33,5 +34,6 @@ public class ProductService {
 
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
+
     }
 }

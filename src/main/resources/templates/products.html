@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <title>Product List</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/authSetup.js"></script> <!-- th:src에서 src로 수정 -->
+
+    <script type="text/javascript" src="/js/authSetup.js"></script> 
 </head>
 <body>
 <h1>Product List</h1>
 <table border="1" id="product-table">
+
     <thead>
+
     <tr>
         <th>ID</th>
         <th>Name</th>
@@ -17,6 +20,7 @@
         <th>Image</th>
         <th>Actions</th>
     </tr>
+
     </thead>
     <tbody> <!-- tbody 추가 -->
     </tbody>
@@ -48,8 +52,11 @@
             }
         };
         getProducts.init();
+
 </script>
 <br>
 <a href="/api/admin/products/add">Add Product</a>
 </body>
+
 </html>
+

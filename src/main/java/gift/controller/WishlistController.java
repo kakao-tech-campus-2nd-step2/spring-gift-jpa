@@ -21,6 +21,7 @@ public class WishlistController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+
     @GetMapping
     public ResponseEntity<List<Product>> getWishlistItems(@RequestHeader("Authorization") String token) {
         String email = jwtTokenProvider.getEmail(token.substring(7));

@@ -19,17 +19,23 @@ public class ProductDao {
     }
 
     public List<Product> getAllProducts() {
+
         String sql = "SELECT * FROM product";
+
         return jdbcTemplate.query(sql, new ProductRowMapper());
     }
 
     public Product getProductById(Long id) {
+
         String sql = "SELECT * FROM product WHERE id = ?";
+
         return jdbcTemplate.queryForObject(sql, new ProductRowMapper(), id);
     }
 
     public void addProduct(Product product) {
+
         String sql = "INSERT INTO product (name, price, image_url) VALUES (?, ?, ?)";
+
         jdbcTemplate.update(sql, product.getName(), product.getPrice(), product.getImageUrl());
     }
 
