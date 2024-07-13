@@ -21,6 +21,15 @@ create table product
     name        varchar(255),
     price       int,
     imageurl    varchar(255),
-    wishlist_id BIGINT,
-    FOREIGN KEY (wishlist_id) REFERENCES wishlist (id) ON DELETE SET NULL
+    wishlist_id BIGINT
 );
+
+drop table if exists product_wishlist CASCADE;
+create table product_wishlist
+(
+    id          bigint AUTO_INCREMENT PRIMARY KEY,
+    product_id  bigint,
+    wishlist_id bigint,
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE,
+    FOREIGN KEY (wishlist_id) REFERENCES wishlist (id) ON DELETE CASCADE
+)
