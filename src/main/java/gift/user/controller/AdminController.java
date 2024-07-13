@@ -5,17 +5,13 @@ import gift.product.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @Secured("ROLE_ADMIN")
@@ -30,8 +26,13 @@ public class AdminController {
   }
 
   @GetMapping
-  public String showAllProducts(Model model) {
-    model.addAttribute("products", productService.findAll());
+  public String showAllProducts(Model model, Pageable pageable) {
+    Page<ProductDto> products = productService.findAll(pageable);
+    model.addAttribute("products", products);
+    model.addAttribute("currentPage", products.getNumber());
+    model.addAttribute("totalPages", products.getTotalPages());
+    model.addAttribute("totalItems", products.getTotalElements());
+    model.addAttribute("pageSize", products.getSize());
     return "product-list";
   }
 

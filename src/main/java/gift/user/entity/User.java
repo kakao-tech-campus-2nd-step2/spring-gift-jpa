@@ -24,7 +24,6 @@ public class User {
   @Column(nullable = false)
   private String password;
 
-  @NotEmpty(message = "역할을 입력해야 합니다.")
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
   private UserRole role;

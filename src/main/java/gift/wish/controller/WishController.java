@@ -6,10 +6,10 @@ import gift.security.LoginMember;
 import gift.wish.service.WishService;
 import gift.user.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/wishes")
@@ -23,8 +23,8 @@ public class WishController {
   }
 
   @GetMapping
-  public ResponseEntity<List<WishDto>> getAllWishes(@LoginMember User member) {
-    List<WishDto> wishes = wishService.getWishesByMemberEmail(member.getEmail());
+  public ResponseEntity<Page<WishDto>> getAllWishes(@LoginMember User member, Pageable pageable) {
+    Page<WishDto> wishes = wishService.getWishesByMemberEmail(member.getEmail(), pageable);
     return ResponseEntity.ok(wishes);
   }
 

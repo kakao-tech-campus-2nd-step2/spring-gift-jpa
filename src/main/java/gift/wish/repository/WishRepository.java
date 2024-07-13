@@ -4,6 +4,8 @@ import gift.user.entity.User;
 import gift.product.entity.Product;
 import gift.wish.entity.Wish;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -16,4 +18,6 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
   Optional<Wish> findByUserAndProduct(User user, Product product);
 
   List<Wish> findByProductId(Long productId);
+
+  Page<Wish> findByUser(User user, Pageable pageable);
 }

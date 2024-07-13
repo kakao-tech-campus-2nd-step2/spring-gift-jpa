@@ -6,9 +6,9 @@ import gift.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class ProductService {
@@ -20,11 +20,9 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
-  public List<ProductDto> findAll() {
+  public Page<ProductDto> findAll(Pageable pageable) {
     try {
-      return productRepository.findAll().stream()
-          .map(this::convertToDto)
-          .collect(Collectors.toList());
+      return productRepository.findAll(pageable).map(this::convertToDto);
     } catch (Exception e) {
       throw new RuntimeException("모든 상품을 조회하는 중에 오류가 발생했습니다.", e);
     }

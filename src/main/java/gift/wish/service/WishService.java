@@ -10,6 +10,8 @@ import gift.user.repository.UserRepository;
 import gift.product.repository.ProductRepository;
 import gift.wish.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,11 +32,11 @@ public class WishService {
     this.productRepository = productRepository;
   }
 
-  public List<WishDto> getWishesByMemberEmail(String memberEmail) {
+  public Page<WishDto> getWishesByMemberEmail(String memberEmail, Pageable pageable) {
     User user = userRepository.findByEmail(memberEmail)
         .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
-    List<Wish> wishes = wishRepository.findByUser(user);
-    return wishes.stream().map(wish -> new WishDto(
+    Page<Wish> wishes = wishRepository.findByUser(user, pageable);
+    return wishes.map(wish -> new WishDto(
         wish.getId(),
         new UserDto(
             wish.getUser().getId(),
@@ -48,7 +50,7 @@ public class WishService {
             wish.getProduct().getPrice(),
             wish.getProduct().getImageUrl()
         )
-    )).collect(Collectors.toList());
+    ));
   }
 
   public WishDto addWish(WishDto wishDto) {
