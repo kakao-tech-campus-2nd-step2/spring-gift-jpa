@@ -28,15 +28,15 @@ public class MemberService {
                 .orElseThrow(MemberNotFoundException::new);
     }
 
-    public void createMember(MemberServiceDto memberServiceDto) {
+    public Member createMember(MemberServiceDto memberServiceDto) {
         validateEmailAndNicknameUnique(memberServiceDto);
-        memberRepository.save(memberServiceDto.toMember());
+        return memberRepository.save(memberServiceDto.toMember());
     }
 
-    public void updateMember(MemberServiceDto memberServiceDto) {
+    public Member updateMember(MemberServiceDto memberServiceDto) {
         validateMemberExists(memberServiceDto.id());
         validateEmailAndNicknameUnique(memberServiceDto);
-        memberRepository.save(memberServiceDto.toMember());
+        return memberRepository.save(memberServiceDto.toMember());
     }
 
     public void deleteMember(Long id) {
