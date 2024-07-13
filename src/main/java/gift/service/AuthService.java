@@ -32,8 +32,7 @@ public class AuthService {
 	
 	public User searchUser(String email, BindingResult bindingResult) {
 		validateBindingResult(bindingResult);       
-        return userRespository.findByEmail(email)
-        		.orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
+        return findByEmail(email);
 	}
 	
 	public Map<String, String> loginUser(User user, BindingResult bindingResult){
@@ -80,5 +79,10 @@ public class AuthService {
 		Map<String, String> response = new HashMap<>();
 		response.put("token", token);
 		return response;
+	}
+	
+	private User findByEmail(String email) {
+		return userRespository.findByEmail(email)
+	    		.orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found"));
 	}
 }

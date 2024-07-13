@@ -20,34 +20,46 @@ public class ProductService {
     }
 
     public Product getProduct(long id) {
-        return productRepository.findById(id)
-        		.orElseThrow(() -> new InvalidProductException("Product not found with id: " + id));
+        return findProductById(id);
     }
 
     public Product createProduct(Product product, BindingResult bindingResult) {
-    	if (bindingResult.hasErrors()) {
-            throw new InvalidProductException(bindingResult.getFieldError().getDefaultMessage());
-        }
+    	validateBindingResult(bindingResult);
         return productRepository.save(product);
     }
 
     public void updateProduct(long id, Product updatedProduct, BindingResult bindingResult) {
-    	if(bindingResult.hasErrors()) {
-    		throw new InvalidProductException(bindingResult.getFieldError().getDefaultMessage());
-    	}
-    	if(!updatedProduct.getId().equals(id)) {
-    		throw new InvalidProductException("Product Id mismatch.");
-    	}
-    	if(!productRepository.existsById(id)) {
-    		throw new InvalidProductException("Product not found with id: " + id);
-    	}
+    	validateBindingResult(bindingResult);
+    	validProductId(id, updatedProduct);
+    	validateProductId(id);
     	productRepository.save(updatedProduct);
     }
 
     public void deleteProduct(long id) {
-        if(!productRepository.existsById(id)) {
-        	throw new InvalidProductException("Product not found with id: " + id);
-        }
+    	validateProductId(id);
         productRepository.deleteById(id);
+    }
+    
+    private void validateBindingResult(BindingResult bindingResult) {
+    	if(bindingResult.hasErrors()) {
+    		throw new InvalidProductException(bindingResult.getFieldError().getDefaultMessage());
+    	}
+    }
+    
+    private void validProductId(long id, Product updatedProduct) {
+    	if(!updatedProduct.getId().equals(id)) {
+    		throw new InvalidProductException("Product Id mismatch.");
+    	}
+    }
+    
+    private void validateProductId(long id) {
+    	if(!productRepository.existsById(id)) {
+    		throw new InvalidProductException("Product not found");
+    	}
+    }
+    
+    public Product findProductById(long id) {
+	    return productRepository.findById(id)
+	    		.orElseThrow(() -> new InvalidProductException("Product not found"));
     }
 }

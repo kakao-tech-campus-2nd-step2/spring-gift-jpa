@@ -28,59 +28,63 @@ public class WishlistService {
 	private AuthService authService;
 	
 	public List<Wishlist> getWishlist(String token, BindingResult bindingResult) {
-        String email = authService.parseToken(token);
-        User user = authService.searchUser(email, bindingResult);
+        User user = getUserFormToekn(token, bindingResult);
         return wishlistRepository.findByUserId(user.getId());
     }
 	
 	public void addWishlist(String token, Wishlist wishlist, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
-			throw new InvalidProductException(bindingResult.getFieldError().getDefaultMessage());
-		}
-		
-		String email = authService.parseToken(token);
-        User user = authService.searchUser(email, bindingResult);
-        
-        Product product = productRepository.findById(wishlist.getProduct().getId())
-        		.orElseThrow(() -> new InvalidProductException("The product does not exits."));
-        
+		validateBindingResult(bindingResult);
+		User user = getUserFormToekn(token, bindingResult);
+        Product product = findProductById(wishlist.getProduct().getId());
         Wishlist newWishlist = new Wishlist(user, product);
         wishlistRepository.save(newWishlist);
 	}
 	
 	public void removeWishlist(String token, Wishlist wishlist, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
-			throw new InvalidProductException(bindingResult.getFieldError().getDefaultMessage());
-		}
-		String email = authService.parseToken(token);
-        User user = authService.searchUser(email, bindingResult);
-		
-        Wishlist deleteWishlist = wishlistRepository.findById(wishlist.getId())
-        		.orElseThrow(() -> new InvalidProductException("Product colud not be removed from wishlist."));
-        if(!deleteWishlist.getUser().equals(user)) {
-        	throw new UnauthorizedException("You do not have permission to remove this wishlist item.");
-        }
+		validateBindingResult(bindingResult);
+		User user = getUserFormToekn(token, bindingResult);
+        Wishlist deleteWishlist = findWishlistById(wishlist.getId());
+        validateUserPermission(deleteWishlist, user);
         wishlistRepository.delete(deleteWishlist);
 	}
 	
 	public void updateWishlistQuantity(String token, Wishlist wishlist, BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
-			throw new InvalidProductException(bindingResult.getFieldError().getDefaultMessage());
-		}
-		String email = authService.parseToken(token);
-        User user = authService.searchUser(email, bindingResult);
-		
-        Wishlist updateWishlist = wishlistRepository.findById(wishlist.getId())
-        		.orElseThrow(() -> new InvalidProductException("Product could not be update in wishlist."));
-        if(!updateWishlist.getUser().equals(user)) {
-        	throw new UnauthorizedException("You do not have permission to remove this wishlist item.");
-        }
-        
+		validateBindingResult(bindingResult);
+		User user = getUserFormToekn(token, bindingResult);
+        Wishlist updateWishlist = findWishlistById(wishlist.getId());
+        validateUserPermission(updateWishlist, user);
         if(wishlist.getQuantity() == 0) {
         	wishlistRepository.delete(updateWishlist);
         	return;
         }
         updateWishlist.setQuantity(wishlist.getQuantity());
         wishlistRepository.save(updateWishlist);
+	}
+	
+	private void validateBindingResult(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidProductException(bindingResult.getFieldError().getDefaultMessage());
+        }
+    }
+	
+	private User getUserFormToekn(String token, BindingResult bindingResult) {
+		String email = authService.parseToken(token);
+		return authService.searchUser(email, bindingResult);
+	}
+	
+	private void validateUserPermission(Wishlist wishlist, User user) {
+		if(!wishlist.getUser().equals(user)) {
+			throw new UnauthorizedException("You do not have permission to perform this action on the wishlist item.");
+		}
+	}
+	
+	private Product findProductById(Long id) {
+		return productRepository.findById(id)
+				.orElseThrow(() -> new InvalidProductException("The product does not exits."));
+	}
+	
+	private Wishlist findWishlistById(Long id) {
+		return wishlistRepository.findById(id)
+				.orElseThrow(() -> new InvalidProductException("Wishlist item not found."));
 	}
 }
