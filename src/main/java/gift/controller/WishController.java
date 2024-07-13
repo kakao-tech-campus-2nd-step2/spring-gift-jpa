@@ -36,7 +36,7 @@ public class WishController {
     @ResponseStatus(HttpStatus.OK)
     public Page<WishResponseDto> getWishes(@LoginUser User user,
         @Valid @RequestBody WishSearchRequestDto requestDto) {
-        return wishService.getProductsByUserEmail(user.getEmail(), requestDto.getPage(),
+        return wishService.getWishesByUserEmail(user.getEmail(), requestDto.getPage(),
             requestDto.getSortBy());
     }
 
@@ -54,9 +54,9 @@ public class WishController {
     }
 
     @PutMapping
-    public ResponseEntity<Map<String, Object>> updateWishProduct(
+    public ResponseEntity<Map<String, Object>> updateWish(
         @Valid @RequestBody WishUpdateRequestDto wishUpdateRequestDto, @LoginUser User user) {
-        WishResponseDto wishedProduct = wishService.updateWishProduct(user.getEmail(),
+        WishResponseDto wishedProduct = wishService.updateWish(user.getEmail(),
             wishUpdateRequestDto);
 
         Map<String, Object> response = new HashMap<>();
@@ -69,7 +69,7 @@ public class WishController {
 
     @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteWishProduct(@PathVariable Long productId, @LoginUser User user) {
-        wishService.deleteWishProduct(user.getEmail(), productId);
+    public void deleteWish(@PathVariable Long productId, @LoginUser User user) {
+        wishService.deleteWish(user.getEmail(), productId);
     }
 }
