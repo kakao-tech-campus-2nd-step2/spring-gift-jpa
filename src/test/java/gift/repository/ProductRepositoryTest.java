@@ -21,39 +21,51 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        productRepository.save(new Product(name, price, imageUrl));
+        productRepository.deleteAll();
     }
 
     @Test
     void saveProductTest() {
-        var expected = new Product(name, price, imageUrl);
-        var actual = productRepository.findAll().getFirst();
-        assertThat(actual).isEqualTo(expected);
+        // Given
+        var product = new Product(name, price, imageUrl);
+
+        // When
+        productRepository.save(product);
+
+        // Then
+        var savedProduct = productRepository.findAll().getFirst();
+        assertThat(savedProduct).isEqualTo(product);
     }
 
     @Test
     void findProductByName() {
-        var expected = new Product(name, price, imageUrl);
-        var actual = productRepository.findByName(name);
-        assertTrue(actual.isPresent());
-        assertThat(actual.get()).isEqualTo(expected);
-    }
+        // Given
+        var product = new Product(name, price, imageUrl);
+        productRepository.save(product);
 
+        // When
+        var foundProduct = productRepository.findByName(name);
+
+        // Then
+        assertTrue(foundProduct.isPresent());
+        assertThat(foundProduct.get()).isEqualTo(product);
+    }
 
     @Test
     void deleteProductByIdTest() {
-        var expected = new Product("sampleName", 10000, "product.jpg");
-        var sample2 = new Product("sample2", 10200, "product2.jpg");
+        // Given
+        var product1 = new Product("sampleName", 10000, "product.jpg");
+        var product2 = new Product("sample2", 10200, "product2.jpg");
+        productRepository.save(product1);
+        productRepository.save(product2);
 
-        productRepository.save(expected);
-        productRepository.save(sample2);
+        // When
+        productRepository.deleteById(product1.getId());
 
-        productRepository.deleteById(expected.getId());
-
+        // Then
         assertAll(
-            () -> assertThat(productRepository.findById(expected.getId()).isPresent()).isFalse(),
+            () -> assertThat(productRepository.findById(product1.getId()).isPresent()).isFalse(),
             () -> assertThat(productRepository.findAll().isEmpty()).isFalse()
         );
-
     }
 }
