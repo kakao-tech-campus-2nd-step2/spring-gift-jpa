@@ -1,36 +1,35 @@
 package gift.DTO;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 public class WishListDto {
+
   private Long id;
+  @NotBlank
   private Long userId;
+  @NotBlank
   private Long productId;
+  private MemberDto memberDto;
+  private ProductDto productDto;
 
   public WishListDto() {
   }
 
-  public WishListDto(Long id, Long userId, Long productId){
-    this.id=id;
-    this.userId=userId;
-    this.productId=productId;
+  public WishListDto(Long id, MemberDto memberDto, ProductDto productDto) {
+    this.id = id;
+    this.memberDto = memberDto;
+    this.productDto = productDto;
   }
 
   public Long getId() {
     return this.id;
   }
 
-  public Long getUserId() {
-    return this.userId;
+  public MemberDto getMemberDto() {
+    return this.memberDto;
   }
 
-  public Long getProductId() {
-    return this.productId;
+  public ProductDto getProductDto() {
+    return this.productDto;
   }
-
 }

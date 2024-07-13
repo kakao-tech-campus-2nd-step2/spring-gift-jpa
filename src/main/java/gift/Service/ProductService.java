@@ -1,11 +1,11 @@
 package gift.Service;
 
-import gift.DTO.ProductEntity;
-import gift.Repository.ProductDao;
-import jakarta.validation.Valid;
+import gift.ConverterToDto;
+import gift.DTO.Product;
+import gift.DTO.ProductDto;
+import gift.Repository.ProductRepository;
 import java.util.List;
-import java.util.Optional;
-
+import java.util.stream.Collectors;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,43 +13,54 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Service
 public class ProductService {
 
-  private final ProductDao productDao;
+  private final ProductRepository productRepository;
 
-  public ProductService(ProductDao productDao) {
-    this.productDao = productDao;
+  public ProductService(ProductRepository productRepository) {
+    this.productRepository = productRepository;
   }
 
-  public List<ProductEntity> getAllProducts() {
-    List<ProductEntity> productEntities = productDao.findAll();
-    return productEntities;
+  public List<ProductDto> getAllProducts() {
+    List<Product> product = productRepository.findAll();
+    List<ProductDto> productDtos = product.stream()
+      .map(ConverterToDto::convertToProductDto)
+      .collect(Collectors.toList());
+
+    return productDtos;
   }
 
-  public Optional<ProductEntity> getProductById(Long id) {
-    return productDao.findById(id);
+  public ProductDto getProductById(Long id) {
+    Product product = (productRepository.findById(id)
+      .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다.", 1)));
+
+    return ConverterToDto.convertToProductDto(product);
   }
 
-  public ProductEntity addProduct(@Valid ProductEntity productEntity) {
-    productDao.save(productEntity);
-    return productEntity;
+  public ProductDto addProduct(ProductDto productDto) {
+    Product product = new Product(productDto.getId(), productDto.getName(),
+      productDto.getPrice(), productDto.getImageUrl());
+    productRepository.save(product);
+
+    return productDto;
   }
 
-  public Optional<ProductEntity> updateProduct(Long id, @Valid ProductEntity updatedProductEntity) {
-    Optional<ProductEntity> existingProductDto = productDao.findById(id);
-    ProductEntity newProduct = new ProductEntity(id,
-      updatedProductEntity.getName(), updatedProductEntity.getPrice(), updatedProductEntity.getImageUrl());
-    productDao.deleteById(id);
-    productDao.save(newProduct);
-    return Optional.of(newProduct);
+  public ProductDto updateProduct(Long id, ProductDto updatedProductDto) {
+    Product existingProduct = productRepository.findById(id)
+      .orElseThrow(() -> new EmptyResultDataAccessException("해당 상품이 없습니다.", 1));
+    Product newProduct = new Product(id,
+      updatedProductDto.getName(), updatedProductDto.getPrice(),
+      updatedProductDto.getImageUrl());
+    productRepository.deleteById(id);
+    productRepository.save(newProduct);
+
+    return ConverterToDto.convertToProductDto(newProduct);
   }
 
-  public Optional<ProductEntity> deleteProduct(@PathVariable Long id) {
-    Optional<ProductEntity> existingProductDto = productDao.findById(id);
-    if (existingProductDto == null) {
-      throw new EmptyResultDataAccessException("해당 데이터가 없습니다", 1);
-    }
-    productDao.deleteById(id);
+  public ProductDto deleteProduct(@PathVariable Long id) {
+    Product existingProduct = productRepository.findById(id)
+      .orElseThrow(() -> new EmptyResultDataAccessException("해당 데이터가 없습니다", 1));
+    productRepository.deleteById(id);
 
-    return existingProductDto;
+    return ConverterToDto.convertToProductDto(existingProduct);
   }
 
 }

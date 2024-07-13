@@ -1,8 +1,10 @@
 package gift.Service;
 
+import gift.ConverterToDto;
 import gift.DTO.JwtToken;
-import gift.DTO.UserEntity;
-import gift.Repository.UserDao;
+import gift.DTO.Member;
+import gift.DTO.MemberDto;
+import gift.Repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -20,22 +22,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 
-  private final UserDao userDao;
-
-  public JwtService(UserDao userDao) {
-    this.userDao = userDao;
-  }
-
+  private final MemberRepository memberRepository;
   @Value("${jwt.secret}")
   private String key;
 
-  public JwtToken createAccessToken(Optional<UserEntity> userDto) {
+  public JwtService(MemberRepository memberRepository) {
+    this.memberRepository = memberRepository;
+  }
+
+  public JwtToken createAccessToken(MemberDto memberDto) {
     Instant now = Instant.now();
     Instant expiresAt = now.plus(1, ChronoUnit.DAYS); // 현재 시각에서 1일 뒤로 만료 설정
     String accessToken = Jwts.builder()
       .setHeaderParam("typ", "Bearer") // 토큰 타입을 지정
-      .setSubject(userDto.get().getEmail())
-      .claim("email", userDto.get().getEmail())
+      .setSubject(memberDto.getEmail())
+      .claim("email", memberDto.getEmail())
       .setIssuedAt(Date.from(now)) // 토큰 발행 시간 설정
       .setExpiration(Date.from(expiresAt))
       .signWith(Keys.hmacShaKeyFor(key.getBytes()), SignatureAlgorithm.HS256)
@@ -55,14 +56,15 @@ public class JwtService {
     }
   }
 
-  public Optional<UserEntity> getUserEmailFromToken(String token) {
+  public MemberDto getUserEmailFromToken(String token) {
     JwtParser jwtParser = Jwts.parser()
       .setSigningKey(Keys.hmacShaKeyFor(key.getBytes()))
       .build();
 
     Jws<Claims> claims = jwtParser.parseClaimsJws(token);
     String email = claims.getBody().get("email", String.class);
-
-    return userDao.findByEmail(email);
+    Member member = memberRepository.findByEmail(email).get();
+    MemberDto memberDto = ConverterToDto.convertToUserDto(member);
+    return memberDto;
   }
 }

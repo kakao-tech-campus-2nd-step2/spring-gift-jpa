@@ -2,7 +2,7 @@ package gift.DTO;
 
 public class JwtToken {
 
-  private String accessToken;
+  private final String accessToken;
   private String refreshToken;
 
   public JwtToken(String accessToken) {
