@@ -31,6 +31,11 @@ public class Wish {
     }
 
     public Wish(Member member, Product product) {
+        this(null, member, product);
+    }
+
+    public Wish(Long id, Member member, Product product) {
+        this.id = id;
         this.member = member;
         this.product = product;
 
