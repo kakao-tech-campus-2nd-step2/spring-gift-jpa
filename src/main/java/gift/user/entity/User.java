@@ -31,15 +31,7 @@ public class User {
         this.password = password;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
+    public void updatePassword(String password) {
         this.password = password;
     }
 

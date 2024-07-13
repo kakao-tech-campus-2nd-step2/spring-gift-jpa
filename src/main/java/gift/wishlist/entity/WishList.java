@@ -28,15 +28,11 @@ public class WishList {
         return wishListId;
     }
 
-    public void setWishListId(WishListId wishListId) {
-        this.wishListId = wishListId;
-    }
-
     public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void updateQuantity(int quantity) {
         this.quantity = quantity;
     }
 }

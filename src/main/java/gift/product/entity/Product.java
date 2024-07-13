@@ -34,19 +34,9 @@ public class Product {
         this.image = image;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public void setName(String name) {
+    public void updateProduct(String name, int price, String image) {
         this.name = name;
-    }
-
-    public void setPrice(int price) {
         this.price = price;
-    }
-
-    public void setImage(String image) {
         this.image = image;
     }
 
