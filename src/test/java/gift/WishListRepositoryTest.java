@@ -77,7 +77,7 @@ public class WishListRepositoryTest {
         WishList wishList = new WishList(wishListId, 1);
 
         WishList actualWishList = wishListRepository.save(wishList);
-        actualWishList.setQuantity(5);
+        actualWishList.updateQuantity(5);
 
         // 바꾼 quantity가 잘 적용됐는지 확인
         Assertions.assertThat(wishListRepository.findById(wishListId).get().getQuantity()).isEqualTo(5);

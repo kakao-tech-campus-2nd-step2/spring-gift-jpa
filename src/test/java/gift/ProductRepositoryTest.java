@@ -53,13 +53,12 @@ public class ProductRepositoryTest {
     @Test
     public void UpdateTest() {
         Product product = new Product("물감", 3000, "mulgam.png");
-        String newName = "페인트";
 
         Product actual = productRepository.save(product);
-        actual.setName(newName);
+        actual.updateProduct("페인트", 10000, "paint.png");
 
         // 더티 체킹에 의해 DB에도 업데이트 쿼리가 적용되어야 함.
-        Assertions.assertThat(productRepository.existsByName(newName)).isTrue();
+        Assertions.assertThat(productRepository.existsByName("페인트")).isTrue();
     }
 
     @Test

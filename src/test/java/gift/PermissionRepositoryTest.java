@@ -58,13 +58,13 @@ public class PermissionRepositoryTest {
     @Test
     public void UpdateTest() {
         User user = new User("kangwlgns@daum.net", "aaaaa11111");
-        String newEmail = "luckyrkd@naver.com";
+        String newPassword = "qwer1234";
 
         User actual = permissionRepository.save(user);
-        actual.setEmail(newEmail);
+        actual.updatePassword(newPassword);
 
         // 더티 체킹에 의해 DB에도 업데이트 쿼리가 적용되어야 함.
-        Assertions.assertThat(permissionRepository.existsByEmail(newEmail)).isTrue();
+        Assertions.assertThat(permissionRepository.existsByPassword(newPassword)).isTrue();
     }
 
     @Test
