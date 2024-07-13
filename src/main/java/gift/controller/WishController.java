@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,23 +39,26 @@ public class WishController {
     }
 
     @GetMapping
-    public List<WishDTO> getWishes(@RequestParam Long memberId,
-                                   @RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "10") int size,
-                                   @RequestParam(defaultValue = "id,asc") String[] sort) {
+    public ResponseEntity<List<WishDTO>> getWishes(@RequestParam Long memberId,
+                                                   @RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "10") int size,
+                                                   @RequestParam(defaultValue = "id,asc") String[] sort) {
         Sort.Direction direction = Sort.Direction.fromString(sort[1]);
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
         Page<Wish> wishPage = wishService.getWishes(memberId, pageable);
 
-        return wishPage.stream()
+        List<WishDTO> wishDTOList = wishPage.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+
+        return new ResponseEntity<>(wishDTOList, HttpStatus.OK);
     }
 
     @DeleteMapping("/remove")
     @ResponseBody
-    public void removeWish(@RequestBody WishDTO wishDTO) {
+    public ResponseEntity<Void> removeWish(@RequestBody WishDTO wishDTO) {
         wishService.removeWish(wishDTO.getMemberId(), wishDTO.getProductName());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     private WishDTO convertToDto(Wish wish) {
