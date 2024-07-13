@@ -1,8 +1,10 @@
 package gift.service;
 
 import gift.dto.TokenLoginRequestDTO;
+import gift.dto.WishResponseDTO;
 import gift.entity.Member;
 import gift.entity.Product;
+import gift.entity.ProductInfo;
 import gift.entity.Wish;
 import gift.exceptionhandler.WishException;
 import gift.repository.MemberRepository;
@@ -12,6 +14,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,9 +81,26 @@ public class WishService {
 
     }
 
-    public List<Wish> getWishesByMemberId(TokenLoginRequestDTO tokenLoginRequestDTO) {
-        Long memberId = findByEmail(tokenLoginRequestDTO.getEmail());
+    public WishResponseDTO getWishesByMemberId(TokenLoginRequestDTO tokenLoginRequestDTO) {
+        String email = tokenLoginRequestDTO.getEmail();
+        Long memberId = findByEmail(email);
         List<Wish> wishlist = wishRepository.findByMemberId(memberId);
-        return wishlist;
+        List<ProductInfo> productInfo = new ArrayList<>();
+
+        for (Wish wish : wishlist) {
+            Integer count = wish.getCount();
+            Product product = wish.getProduct();
+            productInfo.add(new ProductInfo(product.getName(),
+                    product.getPrice(),
+                    product.getImageUrl(),
+                    count
+                    )
+            );
+        }
+
+        return new WishResponseDTO(email, productInfo);
     }
+
+
+
 }

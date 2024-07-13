@@ -1,14 +1,12 @@
 package gift.controller;
 
 import gift.dto.TokenLoginRequestDTO;
-import gift.entity.Wish;
+import gift.dto.WishResponseDTO;
 import gift.service.LoginMember;
 import gift.service.WishService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/wishes")
@@ -28,11 +26,11 @@ public class WishController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<List<Wish>> getWishes(@LoginMember TokenLoginRequestDTO tokenLoginRequestDTO) {
+    public ResponseEntity<WishResponseDTO> getWishes(@LoginMember TokenLoginRequestDTO tokenLoginRequestDTO) {
         System.out.println("get");
-        List<Wish> Wishes =  wishService.getWishesByMemberId(tokenLoginRequestDTO);
-        return ResponseEntity.status(HttpStatus.OK).
-                body(Wishes);
+        WishResponseDTO wishes = wishService.getWishesByMemberId(tokenLoginRequestDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                        .body(wishes);
     }
 
     @DeleteMapping("/{productId}")
