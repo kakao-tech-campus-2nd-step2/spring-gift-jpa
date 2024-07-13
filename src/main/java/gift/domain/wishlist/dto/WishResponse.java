@@ -1,19 +1,18 @@
-package gift.wishlist.domain;
+package gift.domain.wishlist.dto;
 
-public class Wish {
-
+public class WishResponse {
     private Long id;
     private Long memberId;
     private Long productId;
 
-    public Wish() {
+    public WishResponse() {
     }
 
-    public Wish(Long memberId, Long productId) {
+    public WishResponse(Long memberId, Long productId) {
         this(null, memberId, productId);
     }
 
-    public Wish(Long id, Long memberId, Long productId) {
+    public WishResponse(Long id, Long memberId, Long productId) {
         this.id = id;
         this.memberId = memberId;
         this.productId = productId;
