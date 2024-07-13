@@ -6,6 +6,9 @@ import gift.dto.product.ProductResponseDTO;
 import gift.entity.Product;
 import gift.exception.NoSuchProductException;
 import gift.repository.ProductRepository;
+import gift.util.pagenation.PageInfoDTO;
+import gift.util.pagenation.PageableGenerator;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +23,15 @@ public class ProductService {
 
     public List<ProductResponseDTO> getAllProducts() {
         return productRepository.findAll()
+                .stream()
+                .map(ProductResponseDTO::from)
+                .toList();
+    }
+
+    public List<ProductResponseDTO> getAllProducts(PageInfoDTO pageInfoDTO) {
+        Pageable pageable = PageableGenerator.generatePageable(pageInfoDTO);
+
+        return productRepository.findAll(pageable)
                 .stream()
                 .map(ProductResponseDTO::from)
                 .toList();

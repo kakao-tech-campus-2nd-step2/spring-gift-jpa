@@ -1,9 +1,11 @@
 package gift.controller.product;
 
+import gift.custom_annotation.annotation.PageInfo;
 import gift.dto.product.ProductPatchDTO;
 import gift.dto.product.ProductResponseDTO;
 import gift.dto.product.ProductRequestDTO;
 import gift.repository.ProductRepository;
+import gift.util.pagenation.PageInfoDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +23,11 @@ public class ProductController {
     }
 
     @GetMapping("/api/products")
-    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts(
+            @PageInfo
+            PageInfoDTO pageInfoDTO
+    ) {
+        return ResponseEntity.ok(productService.getAllProducts(pageInfoDTO));
     }
 
     @PostMapping("/api/products")
