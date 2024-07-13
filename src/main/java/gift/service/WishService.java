@@ -1,9 +1,7 @@
 package gift.service;
 
-import gift.dto.ProductsPageResponseDTO;
 import gift.dto.WishPageResponseDTO;
 import gift.dto.WishRequestDTO;
-import gift.dto.WishResponseDTO;
 import gift.model.Product;
 import gift.model.User;
 import gift.model.Wish;
