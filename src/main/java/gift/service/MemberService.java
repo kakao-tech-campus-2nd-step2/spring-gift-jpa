@@ -66,11 +66,7 @@ public class MemberService {
             throw new DuplicatedUserException(email + "is Duplicated in DB");
         }
 
-        if (memberRepository.countByEmail(email) < 1) {
-            throw new UserNotFoundException(email + "을(를) 가지는 유저를 찾을 수 없습니다.");
-        }
-
-        return null;
+        throw new UserNotFoundException(email + "을(를) 가지는 유저를 찾을 수 없습니다.");
     }
 
 
