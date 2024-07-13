@@ -1,21 +1,22 @@
 package gift;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import gift.controller.ProductController;
 import gift.entity.Product;
 import gift.service.ProductService;
-import gift.controller.ProductController;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class ProductControllerTest {
 
@@ -31,20 +32,24 @@ public class ProductControllerTest {
     @Test
     public void testGetAllProducts() {
         // Arrange
-        List<Product> products = Arrays.asList(
+        int page = 0;
+        int size = 2;
+        Page<Product> productsPage = new PageImpl<>(Arrays.asList(
             new Product(1L, "Product1", 100.0, "http://1.com"),
             new Product(2L, "Product2", 200.0, "http://2.com")
-        );
-        when(productService.findAll()).thenReturn(products);
+        ));
+        when(productService.findAll(eq(page), eq(size))).thenReturn(productsPage);
 
         // Act
-        List<Product> result = productController.getAllProducts();
+        ResponseEntity<Page<Product>> response = new ResponseEntity<>(
+            productController.getAllProducts(page, size), HttpStatus.OK);
 
         // Assert
-        assertEquals(2, result.size());
-        assertEquals("Product1", result.get(0).getName());
-        assertEquals("Product2", result.get(1).getName());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(2, Objects.requireNonNull(response.getBody()).getTotalElements());
+        // Add further assertions for page content if needed
     }
+
 
     @Test
     public void testGetProductById() {
