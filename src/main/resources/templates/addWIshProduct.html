@@ -29,7 +29,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="product : ${products.productDTOList}" th:data-id="${product.id}">
+        <tr th:each="product : ${products.products}" th:data-id="${product.id}">
             <td><input type="checkbox"></td>
             <td th:text="${product.name}"></td>
             <td th:text="${product.price}"></td>
@@ -37,6 +37,22 @@
         </tr>
         </tbody>
     </table>
+<!--    <ul class="pagination justify-content-center">-->
+<!--        <li class="page-item" th:classappend="${products.currentPage == 0} ? 'disabled'">-->
+<!--            <a class="page-link" th:href="@{/v3/products(page=${products.currentPage - 1})}" aria-label="Previous">-->
+<!--                <span aria-hidden="true">&laquo;</span>-->
+<!--            </a>-->
+<!--        </li>-->
+<!--        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, products.totalPages - 1)}"-->
+<!--            th:classappend="${pageNum == products.currentPage} ? 'active'">-->
+<!--            <a class="page-link" th:href="@{/v3/products(page=${pageNum})}" th:text="${pageNum + 1}">1</a>-->
+<!--        </li>-->
+<!--        <li class="page-item" th:classappend="${products.currentPage + 1 == products.totalPages} ? 'disabled'">-->
+<!--            <a class="page-link" th:href="@{/v3/products(page=${products.currentPage + 1})}" aria-label="Next">-->
+<!--                <span aria-hidden="true">&raquo;</span>-->
+<!--            </a>-->
+<!--        </li>-->
+<!--    </ul>-->
 </div>
 </body>
 </html>
