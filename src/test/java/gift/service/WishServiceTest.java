@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 
 import gift.dto.member.MemberResponse;
 import gift.dto.product.ProductResponse;
-import gift.dto.wish.WishRequest;
+import gift.dto.wish.WishCreateRequest;
 import gift.dto.wish.WishResponse;
 import gift.exception.product.ProductNotFoundException;
 import gift.exception.wish.DuplicateWishException;
@@ -52,17 +52,20 @@ public class WishServiceTest {
     @DisplayName("위시리스트에 상품 추가 성공 테스트")
     public void testAddWishSuccess() {
         Member member = new Member(1L, "test@example.com", "password");
+        MemberResponse memberResponse = new MemberResponse(1L, "test@example.com", null);
         ProductResponse productResponse = new ProductResponse(1L, "Product", 100, "imageUrl");
         Product product = new Product(productResponse.id(), productResponse.name(),
             productResponse.price(), productResponse.imageUrl());
 
+        when(memberService.getMemberById(1L)).thenReturn(memberResponse);
         when(productService.getProductById(1L)).thenReturn(productResponse);
         when(memberService.convertToEntity(any(MemberResponse.class))).thenReturn(member);
+        when(productService.convertToEntity(any(ProductResponse.class))).thenReturn(product);
         when(wishRepository.existsByMemberIdAndProductId(1L, 1L)).thenReturn(false);
         when(wishRepository.save(any(Wish.class))).thenReturn(new Wish(1L, member, product));
 
-        WishRequest wishRequest = new WishRequest(member, product);
-        WishResponse response = wishService.addWish(wishRequest);
+        WishCreateRequest wishCreateRequest = new WishCreateRequest(1L);
+        WishResponse response = wishService.addWish(wishCreateRequest, 1L);
 
         assertEquals(member, response.member());
         assertEquals(product, response.product());
@@ -72,14 +75,13 @@ public class WishServiceTest {
     @Test
     @DisplayName("위시리스트에 없는 상품 ID 추가 시도")
     public void testAddWishProductNotFound() {
-        WishRequest wishRequest = new WishRequest(new Member(1L, "test@example.com", "password"),
-            new Product(999L, "Nonexistent", 0, ""));
+        WishCreateRequest wishCreateRequest = new WishCreateRequest(999L);
 
         when(productService.getProductById(999L)).thenThrow(
             new ProductNotFoundException(PRODUCT_NOT_FOUND + 999));
 
         ProductNotFoundException exception = assertThrows(ProductNotFoundException.class, () -> {
-            wishService.addWish(wishRequest);
+            wishService.addWish(wishCreateRequest, 1L);
         });
 
         assertEquals(PRODUCT_NOT_FOUND + "999", exception.getMessage());
@@ -89,15 +91,19 @@ public class WishServiceTest {
     @DisplayName("위시리스트에 이미 존재하는 상품 추가 시도")
     public void testAddWishDuplicate() {
         Member member = new Member(1L, "test@example.com", "password");
+        MemberResponse memberResponse = new MemberResponse(1L, "test@example.com", null);
         Product product = new Product(1L, "Product", 100, "imageUrl");
+        ProductResponse productResponse = new ProductResponse(1L, "Product", 100, "imageUrl");
 
-        when(productService.getProductById(1L)).thenReturn(
-            new ProductResponse(1L, "Product", 100, "imageUrl"));
+        when(memberService.getMemberById(1L)).thenReturn(memberResponse);
+        when(productService.getProductById(1L)).thenReturn(productResponse);
+        when(memberService.convertToEntity(any(MemberResponse.class))).thenReturn(member);
+        when(productService.convertToEntity(any(ProductResponse.class))).thenReturn(product);
         when(wishRepository.existsByMemberIdAndProductId(1L, 1L)).thenReturn(true);
 
-        WishRequest wishRequest = new WishRequest(member, product);
+        WishCreateRequest wishCreateRequest = new WishCreateRequest(1L);
         DuplicateWishException exception = assertThrows(DuplicateWishException.class, () -> {
-            wishService.addWish(wishRequest);
+            wishService.addWish(wishCreateRequest, 1L);
         });
 
         assertEquals(WISH_ALREADY_EXISTS, exception.getMessage());
@@ -138,7 +144,7 @@ public class WishServiceTest {
 
         List<WishResponse> wishlist = wishService.getWishlistByMemberId(1L);
         assertEquals(1, wishlist.size());
-        assertEquals(member, wishlist.get(0).member());
-        assertEquals(product, wishlist.get(0).product());
+        assertEquals(member, wishlist.getFirst().member());
+        assertEquals(product, wishlist.getFirst().product());
     }
 }

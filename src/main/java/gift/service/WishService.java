@@ -3,10 +3,15 @@ package gift.service;
 import static gift.util.Constants.WISH_ALREADY_EXISTS;
 import static gift.util.Constants.WISH_NOT_FOUND;
 
+import gift.dto.member.MemberResponse;
+import gift.dto.product.ProductResponse;
+import gift.dto.wish.WishCreateRequest;
 import gift.dto.wish.WishRequest;
 import gift.dto.wish.WishResponse;
 import gift.exception.wish.DuplicateWishException;
 import gift.exception.wish.WishNotFoundException;
+import gift.model.Member;
+import gift.model.Product;
 import gift.model.Wish;
 import gift.repository.WishRepository;
 import java.util.List;
@@ -18,10 +23,13 @@ public class WishService {
 
     private final WishRepository wishRepository;
     private final ProductService productService;
+    private final MemberService memberService;
 
-    public WishService(WishRepository wishRepository, ProductService productService) {
+    public WishService(WishRepository wishRepository, ProductService productService,
+        MemberService memberService) {
         this.wishRepository = wishRepository;
         this.productService = productService;
+        this.memberService = memberService;
     }
 
     public List<WishResponse> getWishlistByMemberId(Long memberId) {
@@ -30,14 +38,19 @@ public class WishService {
             .collect(Collectors.toList());
     }
 
-    public WishResponse addWish(WishRequest wishRequest) {
-        productService.getProductById(wishRequest.product().getId());
+    public WishResponse addWish(WishCreateRequest wishCreateRequest, Long memberId) {
+        MemberResponse memberResponse = memberService.getMemberById(memberId);
+        Member member = memberService.convertToEntity(memberResponse);
 
-        if (wishRepository.existsByMemberIdAndProductId(wishRequest.member().getId(),
-            wishRequest.product().getId())) {
+        ProductResponse productResponse = productService.getProductById(
+            wishCreateRequest.productId());
+        Product product = productService.convertToEntity(productResponse);
+
+        if (wishRepository.existsByMemberIdAndProductId(member.getId(), product.getId())) {
             throw new DuplicateWishException(WISH_ALREADY_EXISTS);
         }
 
+        WishRequest wishRequest = new WishRequest(member, product);
         Wish wish = convertToEntity(wishRequest);
         Wish savedWish = wishRepository.save(wish);
         return convertToDTO(savedWish);

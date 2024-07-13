@@ -1,12 +1,7 @@
 package gift.controller;
 
-import gift.dto.member.MemberResponse;
-import gift.dto.product.ProductResponse;
 import gift.dto.wish.WishCreateRequest;
-import gift.dto.wish.WishRequest;
 import gift.dto.wish.WishResponse;
-import gift.model.Member;
-import gift.model.Product;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import gift.service.WishService;
@@ -49,16 +44,7 @@ public class WishController {
     public ResponseEntity<WishResponse> addWish(
         @Valid @RequestBody WishCreateRequest wishCreateRequest,
         @RequestAttribute("memberId") Long memberId) {
-
-        MemberResponse memberResponse = memberService.getMemberById(memberId);
-        Member member = memberService.convertToEntity(memberResponse);
-
-        ProductResponse productResponse = productService.getProductById(wishCreateRequest.productId());
-        Product product = productService.convertToEntity(productResponse);
-
-        WishRequest wishRequest = new WishRequest(member, product);
-        WishResponse createdWish = wishService.addWish(wishRequest);
-
+        WishResponse createdWish = wishService.addWish(wishCreateRequest, memberId);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdWish);
     }
 

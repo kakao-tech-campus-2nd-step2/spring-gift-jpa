@@ -23,7 +23,8 @@ public class MemberController {
 
     // 회원가입 (회원 추가)
     @PostMapping("/register")
-    public ResponseEntity<MemberResponse> register(@Valid @RequestBody MemberRequest memberRequest) {
+    public ResponseEntity<MemberResponse> register(
+        @Valid @RequestBody MemberRequest memberRequest) {
         MemberResponse registeredMember = memberService.registerMember(memberRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(registeredMember);
     }
