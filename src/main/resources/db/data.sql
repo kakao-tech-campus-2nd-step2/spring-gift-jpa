@@ -1,8 +1,15 @@
 -- product data for test
 INSERT INTO product (id, name, price, image_url) VALUES (1, '아이스 카페 아메리카노 T', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
-INSERT INTO product (id, name, price, image_url) VALUES (2, '아이스 카페 라테 T', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
-INSERT INTO product (id, name, price, image_url) VALUES (3, '아이스 카푸치노 T', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
-INSERT INTO product (id, name, price, image_url) VALUES (4, '핫 카페 아메리카노 T', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
+INSERT INTO product (id, name, price, image_url) VALUES (2, '아이스 카페 아메리카노 G', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
+INSERT INTO product (id, name, price, image_url) VALUES (3, '아이스 카페 아메리카노 V', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
+INSERT INTO product (id, name, price, image_url) VALUES (4, '아이스 카페 라테 T', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
+INSERT INTO product (id, name, price, image_url) VALUES (5, '아이스 카페 라테 G', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
+INSERT INTO product (id, name, price, image_url) VALUES (6, '아이스 카페 라테 V', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
+INSERT INTO product (id, name, price, image_url) VALUES (7, '아이스 카푸치노 T', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
+INSERT INTO product (id, name, price, image_url) VALUES (8, '아이스 카푸치노 G', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
+INSERT INTO product (id, name, price, image_url) VALUES (9, '아이스 카푸치노 V', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
+INSERT INTO product (id, name, price, image_url) VALUES (10, '자바칩 프라푸치노 T', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
+INSERT INTO product (id, name, price, image_url) VALUES (11, '시그니처 초콜릿 T', 4500, 'https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg');
 
 -- member data for test
 INSERT INTO member VALUES (1, 'member1.com', 'asdf');
