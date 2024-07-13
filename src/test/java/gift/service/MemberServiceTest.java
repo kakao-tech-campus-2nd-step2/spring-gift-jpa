@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
+
     @InjectMocks
     private MemberService memberService;
     @Mock
@@ -66,7 +67,7 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("비밀번호 불일치 시 로그인 실패 테스트")
-    void loginFail(){
+    void loginFail() {
         // given
         MemberRequest memberRequest = new MemberRequest("test@google.co.kr", "wrongPassword");
         Member savedMember = new Member(memberRequest.getEmail(), "password");
@@ -80,16 +81,18 @@ class MemberServiceTest {
         assertThat(responseToken).isNull();
     }
 
-    public void deleteMember(Long id){
-        Member member = memberRepository.findById(id).orElseThrow(()->new EntityNotFoundException("not found Entity"));
+    public void deleteMember(Long id) {
+        Member member = memberRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("not found Entity"));
         memberRepository.delete(member);
     }
+
     @Test
     @DisplayName("멤버 삭제 테스트")
-    void deleteMember(){
+    void deleteMember() {
         // given
         Long id = 1L;
-        Member savedMember = new Member(1L,"test@gmail.co.kr", "password");
+        Member savedMember = new Member(1L, "test@gmail.co.kr", "password");
 
         // when
         doReturn(Optional.of(savedMember)).when(memberRepository).findById(id);
@@ -100,7 +103,7 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("토큰으로 저장된 멤버 가져오기 테스트")
-    void getMemberFromToken(){
+    void getMemberFromToken() {
         // given
         String RequestToken = "jwtToken";
         Member savedMember = new Member("test@google.co.kr", "password");

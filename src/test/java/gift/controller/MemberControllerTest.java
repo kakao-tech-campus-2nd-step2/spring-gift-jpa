@@ -1,6 +1,7 @@
 package gift.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import gift.domain.member.dto.MemberRequest;
 import gift.domain.member.entity.Member;
 import gift.domain.member.service.MemberService;
@@ -17,8 +18,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
+
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class MemberControllerTest {
+
     @LocalServerPort
     private int port;
 
@@ -38,11 +41,12 @@ class MemberControllerTest {
     }
 
     @AfterEach
-    public void afterEach(){
+    public void afterEach() {
         // 유저 삭제
         Member member = memberService.getMemberFromToken(token);
         memberService.deleteMember(member.getId());
     }
+
     @Test
     @DisplayName("로그인 성공 E2E 테스트")
     void loginSuccess() {

@@ -24,6 +24,7 @@ import org.springframework.http.RequestEntity;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class WishControllerTest {
+
     @LocalServerPort
     private int port;
 
@@ -88,7 +89,7 @@ class WishControllerTest {
     void deleteWishTest() {
         // given
         // 테스트를 위한 wish 1개 생성
-        var request = new WishRequest(memberService.getMemberFromToken(token).getId(),1L);
+        var request = new WishRequest(memberService.getMemberFromToken(token).getId(), 1L);
         wishService.addWish(request);
 
         var id = 1L;

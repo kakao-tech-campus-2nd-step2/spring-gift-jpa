@@ -28,6 +28,7 @@ class WishRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
+
     @Test
     @DisplayName("memberId로 wish 리스트 가져오는 findAllByMember 테스트")
     void findAllByMemberEntity() {
@@ -58,7 +59,7 @@ class WishRepositoryTest {
 
     @Test
     @DisplayName("findById 테스트")
-    void findById(){
+    void findById() {
         // given
         Member requestMember = new Member("test", "password");
         Member savedMember = memberRepository.save(requestMember);
@@ -78,7 +79,7 @@ class WishRepositoryTest {
 
     @Test
     @DisplayName("save 테스트")
-    void save(){
+    void save() {
         // given
         Member requestMember = new Member("test", "password");
         Member savedMember = memberRepository.save(requestMember);
@@ -101,7 +102,7 @@ class WishRepositoryTest {
 
     @Test
     @DisplayName("delete 테스트")
-    void delete(){
+    void delete() {
         // given
         Member requestMember = new Member("test", "password");
         Member savedMember = memberRepository.save(requestMember);

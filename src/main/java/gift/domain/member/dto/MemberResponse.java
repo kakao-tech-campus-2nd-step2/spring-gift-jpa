@@ -1,6 +1,7 @@
 package gift.domain.member.dto;
 
 public class MemberResponse {
+
     String email;
     String password;
 

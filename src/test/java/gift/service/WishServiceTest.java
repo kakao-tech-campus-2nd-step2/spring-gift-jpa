@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
 import gift.domain.wishlist.dto.WishRequest;
 import gift.domain.member.entity.Member;
 import gift.domain.product.entity.Product;
@@ -31,6 +32,7 @@ import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class WishServiceTest {
+
     @InjectMocks
     WishService wishService;
     @Mock
@@ -61,18 +63,21 @@ class WishServiceTest {
         List<WishResponse> expected = wishList.stream().map(this::entityToDto).toList();
 
         // when
-        List<WishResponse> actual = wishService.getWishesByMember(savedMember,pageable.getPageNumber(),
+        List<WishResponse> actual = wishService.getWishesByMember(savedMember,
+            pageable.getPageNumber(),
             pageable.getPageSize());
 
         // then
         assertAll(
             () -> assertThat(actual).hasSize(2),
             () -> assertThat(actual.get(0).getMemberId()).isEqualTo(expected.get(0).getMemberId()),
-            () -> assertThat(actual.get(0).getProductId()).isEqualTo(expected.get(0).getProductId()),
+            () -> assertThat(actual.get(0).getProductId()).isEqualTo(
+                expected.get(0).getProductId()),
             () -> assertThat(actual.get(1).getMemberId()).isEqualTo(expected.get(1).getMemberId()),
             () -> assertThat(actual.get(1).getProductId()).isEqualTo(expected.get(1).getProductId())
         );
     }
+
     @Test
     @DisplayName("위시 리스트 추가 테스트")
     void addWish() {
@@ -80,13 +85,16 @@ class WishServiceTest {
         WishRequest wishRequest = new WishRequest(1L, 1L);
 
         Member savedMember = new Member(1L, "email@google.com", "password");
-        Product savedProduct = new Product(1L, "test", 1000, "test.jpg");;
+        Product savedProduct = new Product(1L, "test", 1000, "test.jpg");
+        ;
 
         Wish saveWish = new Wish(savedMember, savedProduct);
         WishResponse expected = entityToDto(saveWish);
 
-        doReturn(Optional.of(savedMember)).when(memberRepository).findById(wishRequest.getMemberId());
-        doReturn(Optional.of(savedProduct)).when(productRepository).findById(wishRequest.getProductId());
+        doReturn(Optional.of(savedMember)).when(memberRepository)
+            .findById(wishRequest.getMemberId());
+        doReturn(Optional.of(savedProduct)).when(productRepository)
+            .findById(wishRequest.getProductId());
         doReturn(saveWish).when(wishRepository).save(any(Wish.class));
 
         // when
@@ -114,6 +122,7 @@ class WishServiceTest {
         verify(wishRepository, times(1)).delete(wish);
 
     }
+
     private WishResponse entityToDto(Wish wish) {
         return new WishResponse(wish.getId(), wish.getMember().getId(),
             wish.getProduct().getId());

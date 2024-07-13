@@ -1,12 +1,13 @@
 package gift.domain.product.dto;
 
 public class ProductResponse {
+
     private Long id;
     private String name;
     private int price;
     private String imageUrl;
 
-    public ProductResponse(){
+    public ProductResponse() {
     }
 
     public ProductResponse(String name, int price, String imageUrl) {

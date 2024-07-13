@@ -29,7 +29,8 @@ public class WishController {
         @RequestParam(defaultValue = "10") int pageSize
     ) {
 
-        return new ResponseEntity<>(wishService.getWishesByMember(member, pageNo, pageSize), HttpStatus.OK);
+        return new ResponseEntity<>(wishService.getWishesByMember(member, pageNo, pageSize),
+            HttpStatus.OK);
     }
 
     @PostMapping

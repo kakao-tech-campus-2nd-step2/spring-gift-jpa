@@ -14,16 +14,17 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 class ProductRepositoryTest {
-    
+
     @Autowired
     private ProductRepository productRepository;
+
     @Test
     void findByName() {
     }
 
     @Test
     @DisplayName("findById 테스트")
-    void findById(){
+    void findById() {
         // given
         ProductRequest request = new ProductRequest("test", 1000, "test.jpg");
         Product expected = productRepository.save(dtoToEntity(request));
@@ -37,10 +38,11 @@ class ProductRepositoryTest {
 
     @Test
     @DisplayName("save 테스트")
-    void save(){
+    void save() {
         // given
         ProductRequest request = new ProductRequest("test", 1000, "test.jpg");
-        Product expected = new Product(request.getName(),request.getPrice(),request.getImageUrl());
+        Product expected = new Product(request.getName(), request.getPrice(),
+            request.getImageUrl());
 
         // when
         Product actual = productRepository.save(expected);
@@ -56,7 +58,7 @@ class ProductRepositoryTest {
 
     @Test
     @DisplayName("delete 테스트")
-    void delete(){
+    void delete() {
         // given
         ProductRequest request = new ProductRequest("test", 1000, "test.jpg");
         Product savedProduct = productRepository.save(dtoToEntity(request));
@@ -67,6 +69,7 @@ class ProductRepositoryTest {
         // then
         assertTrue(productRepository.findById(savedProduct.getId()).isEmpty());
     }
+
     private Product dtoToEntity(ProductRequest productRequest) {
         return new Product(productRequest.getName(), productRequest.getPrice(),
             productRequest.getImageUrl());

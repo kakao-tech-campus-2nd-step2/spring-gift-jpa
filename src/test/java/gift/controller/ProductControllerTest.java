@@ -21,6 +21,7 @@ import org.springframework.http.RequestEntity;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ProductControllerTest {
+
     @LocalServerPort
     private int port;
 
@@ -44,8 +45,8 @@ class ProductControllerTest {
 
     @Test
     void read() {
-        Product product = productRepository.save(new Product("test", 1000,"test.jpg"));
-        System.out.println("테스트" + product.getName() +"id 값"+ product.getId());
+        Product product = productRepository.save(new Product("test", 1000, "test.jpg"));
+        System.out.println("테스트" + product.getName() + "id 값" + product.getId());
 
         var url = "http://localhost:" + port + "/api/products/1";
         var request = new RequestEntity<>(HttpMethod.GET, URI.create(url));
@@ -67,7 +68,7 @@ class ProductControllerTest {
 
     @Test
     void update() {
-        Product product = productRepository.save(new Product("test", 1000,"test.jpg"));
+        Product product = productRepository.save(new Product("test", 1000, "test.jpg"));
         var id = 1L;
         var request = new ProductRequest("product", 1000, "image.jpg");
         var url = "http://localhost:" + port + "/api/products/" + id;
@@ -79,7 +80,7 @@ class ProductControllerTest {
 
     @Test
     void delete() {
-        Product product = productRepository.save(new Product("test", 1000,"test.jpg"));
+        Product product = productRepository.save(new Product("test", 1000, "test.jpg"));
         var id = 1L;
         var url = "http://localhost:" + port + "/api/products/" + id;
 

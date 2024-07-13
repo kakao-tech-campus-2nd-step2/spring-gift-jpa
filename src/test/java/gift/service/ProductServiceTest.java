@@ -31,6 +31,7 @@ import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
+
     @InjectMocks
     ProductService productService;
     @Mock
@@ -38,7 +39,7 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("Id로 Product 조회 테스트")
-    void getProduct(){
+    void getProduct() {
         // given
         Long id = 1L;
         Product expected = new Product(1L, "test", 1000, "test.jpg");
@@ -67,12 +68,14 @@ class ProductServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         Page<Product> pageList = new PageImpl<>(productList, pageable, productList.size());
 
-        List<ProductResponse> expected = Arrays.asList(entityToDto(product1), entityToDto(product2));
+        List<ProductResponse> expected = Arrays.asList(entityToDto(product1),
+            entityToDto(product2));
 
         doReturn(pageList).when(productRepository).findAll(pageable);
 
         // when
-        List<ProductResponse> actual = productService.getAllProducts(pageable.getPageNumber(), pageable.getPageSize());
+        List<ProductResponse> actual = productService.getAllProducts(pageable.getPageNumber(),
+            pageable.getPageSize());
 
         // then
         assertAll(
@@ -82,9 +85,12 @@ class ProductServiceTest {
                 for (int i = 0; i < expected.size(); i++) {
                     final int index = i;
                     assertAll(
-                        () -> assertThat(actual.get(index).getName()).isEqualTo(expected.get(index).getName()),
-                        () -> assertThat(actual.get(index).getPrice()).isEqualTo(expected.get(index).getPrice()),
-                        () -> assertThat(actual.get(index).getImageUrl()).isEqualTo(expected.get(index).getImageUrl())
+                        () -> assertThat(actual.get(index).getName()).isEqualTo(
+                            expected.get(index).getName()),
+                        () -> assertThat(actual.get(index).getPrice()).isEqualTo(
+                            expected.get(index).getPrice()),
+                        () -> assertThat(actual.get(index).getImageUrl()).isEqualTo(
+                            expected.get(index).getImageUrl())
                     );
                 }
             }
@@ -99,7 +105,8 @@ class ProductServiceTest {
         ProductRequest productRequest = new ProductRequest("test", 1000, "test.jpg");
         Product savedProduct = new Product(productRequest.getName(), productRequest.getPrice(),
             productRequest.getImageUrl());
-        ProductResponse expected = new ProductResponse(savedProduct.getName(), savedProduct.getPrice(),savedProduct.getImageUrl());
+        ProductResponse expected = new ProductResponse(savedProduct.getName(),
+            savedProduct.getPrice(), savedProduct.getImageUrl());
 
         doReturn(savedProduct).when(productRepository).save(any(Product.class));
 
@@ -123,10 +130,12 @@ class ProductServiceTest {
         Product savedProduct = mock(Product.class);
         Product updatedProduct = new Product("update", 1000, "update.jpg");
 
-        ProductResponse expected = new ProductResponse(updatedProduct.getName(), updatedProduct.getPrice(), updatedProduct.getImageUrl());
+        ProductResponse expected = new ProductResponse(updatedProduct.getName(),
+            updatedProduct.getPrice(), updatedProduct.getImageUrl());
 
         doReturn(Optional.of(savedProduct)).when(productRepository).findById(id);
-        doNothing().when(savedProduct).update(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
+        doNothing().when(savedProduct).update(productRequest.getName(), productRequest.getPrice(),
+            productRequest.getImageUrl());
         doReturn(updatedProduct).when(productRepository).save(any(Product.class));
 
         // when
@@ -156,7 +165,8 @@ class ProductServiceTest {
         verify(productRepository, times(1)).delete(savedProduct);
     }
 
-    private ProductResponse entityToDto(Product product){
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    private ProductResponse entityToDto(Product product) {
+        return new ProductResponse(product.getId(), product.getName(), product.getPrice(),
+            product.getImageUrl());
     }
 }

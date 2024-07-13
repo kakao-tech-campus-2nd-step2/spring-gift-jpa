@@ -60,7 +60,7 @@ public class MemberService {
             return memberRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("유저가 존재하지 않습니다.")
-            );
+                );
         }
         return null;
     }

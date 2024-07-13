@@ -16,12 +16,14 @@ class MemberRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
     @Test
     @DisplayName("findByEmail 테스트")
     void findByEmail() {
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        Member expected = memberRepository.save(new Member(request.getEmail(), request.getPassword()));
+        Member expected = memberRepository.save(
+            new Member(request.getEmail(), request.getPassword()));
 
         // when
         Member actual = memberRepository.findByEmail(request.getEmail()).orElseThrow();
@@ -32,10 +34,11 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("findById 테스트")
-    void findById(){
+    void findById() {
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        Member expected = memberRepository.save(new Member(request.getEmail(), request.getPassword()));
+        Member expected = memberRepository.save(
+            new Member(request.getEmail(), request.getPassword()));
 
         // when
         Member actual = memberRepository.findById(expected.getId()).orElseThrow();
@@ -46,7 +49,7 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("save 테스트")
-    void save(){
+    void save() {
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
         Member expected = new Member(request.getEmail(), request.getPassword());
@@ -64,10 +67,11 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("delete 테스트")
-    void delete(){
+    void delete() {
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        Member savedMember = memberRepository.save(new Member(request.getEmail(), request.getPassword()));
+        Member savedMember = memberRepository.save(
+            new Member(request.getEmail(), request.getPassword()));
 
         // when
         memberRepository.delete(savedMember);

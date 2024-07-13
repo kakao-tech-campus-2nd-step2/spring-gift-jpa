@@ -1,6 +1,7 @@
 package gift.domain.wishlist.dto;
 
 public class WishResponse {
+
     private Long id;
     private Long memberId;
     private Long productId;

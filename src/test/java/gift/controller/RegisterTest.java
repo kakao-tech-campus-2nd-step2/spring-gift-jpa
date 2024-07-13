@@ -14,8 +14,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
+
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class RegisterTest {
+
     @LocalServerPort
     private int port;
 
