@@ -5,12 +5,11 @@ import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wish;
 import gift.exception.BusinessException;
-import gift.repository.MemberRepository;
 import gift.repository.WishRepository;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,27 +20,27 @@ public class WishService {
     private final ProductService productService;
 
     @Autowired
-    public WishService(WishRepository wishRepository, MemberService memberService, ProductService productService) {
+    public WishService(WishRepository wishRepository, MemberService memberService,
+        ProductService productService) {
         this.wishRepository = wishRepository;
         this.memberService = memberService;
         this.productService = productService;
     }
 
-    public List<WishResponseDto> getWishlist(Long memberId) {
-        List<Wish> wishes = wishRepository.findByMemberId(memberId);
-        return wishes.stream()
-            .map(wish -> {
-                WishResponseDto response = new WishResponseDto();
-                response.setId(wish.getId());
-                response.setProductId(wish.getProduct().getId());
-                response.setProductName(wish.getProduct().getName());
-                response.setProductImageUrl(wish.getProduct().getImageUrl());
-                response.setProductQuantity(wish.getQuantity());
-                return response;
-            }).collect(Collectors.toList());
+    public Page<WishResponseDto> getWishlist(Long memberId, Pageable pageable) {
+        Page<Wish> wishes = wishRepository.findByMemberId(memberId, pageable);
+        return wishes.map(wish -> {
+            WishResponseDto response = new WishResponseDto();
+            response.setId(wish.getId());
+            response.setProductId(wish.getProduct().getId());
+            response.setProductName(wish.getProduct().getName());
+            response.setProductImageUrl(wish.getProduct().getImageUrl());
+            response.setProductQuantity(wish.getQuantity());
+            return response;
+        });
     }
 
-    public Wish addWishlist(Long memberId, Long productId, int quantity) {
+    public void addWishlist(Long memberId, Long productId, int quantity) {
         Optional<Wish> wishlists = wishRepository.findByMemberIdAndProductId(memberId,
             productId);
         Member member = memberService.getMemberById(memberId);
@@ -51,14 +50,16 @@ public class WishService {
         if (wishlists.isPresent()) {
             Wish existingWish = wishlists.get();
             existingWish.setQuantity(quantity);
-            return wishRepository.save(existingWish);
+            wishRepository.save(existingWish);
+            return;
         }
-        return wishRepository.save(wish);
+
+        wishRepository.save(wish);
     }
 
-
     public void deleteById(Long memberId, Long productId) {
-        Wish wish = wishRepository.findByMemberIdAndProductId(memberId, productId).orElseThrow(() -> new BusinessException("삭제할 아이템을 찾을 수 없습니다."));
+        Wish wish = wishRepository.findByMemberIdAndProductId(memberId, productId)
+            .orElseThrow(() -> new BusinessException("삭제할 아이템을 찾을 수 없습니다."));
         wishRepository.delete(wish);
     }
 }
