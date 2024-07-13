@@ -54,7 +54,6 @@ public class WishlistViewController {
         Page<Product> products = productService.getAllProducts(pageable);
         model.addAttribute("products", products);
         model.addAttribute("userId", userId);
-        System.out.println("return add_wishlist");
         return "add_wishlist";
     }
     @PostMapping("{id}/save")
