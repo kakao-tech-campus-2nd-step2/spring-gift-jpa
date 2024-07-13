@@ -6,7 +6,6 @@ import gift.domain.product.entity.Product;
 import gift.domain.product.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +33,7 @@ public class ProductService {
         return productRepository.findAll(pageable)
             .stream()
             .map(this::entityToDto)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     public ProductResponse addProduct(ProductRequest productRequest) {
