@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.MemberDTO;
 import gift.service.JwtService;
 import gift.util.LoginMember;
 import gift.domain.Member;
@@ -7,7 +8,6 @@ import gift.service.MemberService;
 import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +31,9 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> register(@Valid @RequestBody Member member) {
+    public ResponseEntity<Map<String, String>> register(@Valid @RequestBody MemberDTO memberDTO) {
         try {
+            Member member = memberDTO.toEntity();
             Member savedMember = memberService.createMember(member);
             Map<String, String> response = new HashMap<>();
             response.put("token", jwtService.generateToken(savedMember));
@@ -44,7 +45,8 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody Member member) {
+    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody MemberDTO memberDTO) {
+        Member member = memberDTO.toEntity();
         Member foundMember = getValidMember(member);
 
         Map<String, String> response = new HashMap<>();

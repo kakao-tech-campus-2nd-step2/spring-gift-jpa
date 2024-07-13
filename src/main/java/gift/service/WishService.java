@@ -22,9 +22,7 @@ public class WishService {
     }
 
     @Transactional
-    public void addWish(Long memberId, Long productId) {
-        Wish wish = new Wish.WishBuilder().member(new Member.MemberBuilder()
-            .id(memberId).build()).product(new Product.ProductBuilder().id(productId).build()).build();
+    public void addWish(Wish wish) {
         wishRepository.save(wish);
     }
 
