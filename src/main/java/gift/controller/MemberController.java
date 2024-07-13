@@ -3,6 +3,7 @@ package gift.controller;
 import gift.exception.ForbiddenException;
 import gift.model.Member;
 import gift.service.MemberService;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,8 @@ public class MemberController {
             .orElseGet(() -> { // isEmpty
                 Map<String, Object> response = new HashMap<>();
                 response.put("message", "Registration failed");
-                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+                response.put("errors", Collections.singletonList("email: 올바른 형식의 이메일 주소여야 합니다"));
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             });
     }
 

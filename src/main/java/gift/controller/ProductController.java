@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.exception.NonIntegerPriceException;
 import gift.exception.ProductNotFoundException;
 import gift.model.Product;
 import gift.service.ProductService;
@@ -27,13 +28,15 @@ public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService
+    ) {
         this.productService = productService;
     }
 
 
     @GetMapping("/")
-    public String getProductList(@RequestParam(value = "page", defaultValue = "0") int page, Model model) {
+    public String getProductList(@RequestParam(value = "page", defaultValue = "0") int page,
+        Model model) {
         int pageSize = 10; // 한 페이지에 표시할 상품 개수
         Page<Product> productPage = productService.getProductList(page, pageSize);
 
@@ -80,9 +83,17 @@ public class ProductController {
     }
 
     @PostMapping("/product/add")
-    public String createProduct(@Valid @ModelAttribute(name = "product") Product product) {
-        productService.createProduct(product);
-        return "redirect:/";
+    public String createProduct(@Valid @ModelAttribute(name = "product") Product product,
+        Model model)
+        throws NonIntegerPriceException {
+        try {
+            productService.createProduct(product);
+            return "redirect:/";
+        } catch (NonIntegerPriceException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("product", product);  // 입력된 데이터 유지
+            return "addproductform";  // 같은 페이지로 돌아감
+        }
     }
 
     @GetMapping(value = "/product/update/{id}")
