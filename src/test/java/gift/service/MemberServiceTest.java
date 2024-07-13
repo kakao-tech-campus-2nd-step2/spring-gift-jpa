@@ -6,10 +6,11 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import gift.domain.Member;
-import gift.dto.MemberRequest;
-import gift.entity.MemberEntity;
-import gift.repository.MemberRepository;
+import gift.member.domain.Member;
+import gift.member.dto.MemberRequest;
+import gift.member.entity.MemberEntity;
+import gift.member.service.MemberService;
+import gift.member.repository.MemberRepository;
 import gift.util.JwtUtil;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;

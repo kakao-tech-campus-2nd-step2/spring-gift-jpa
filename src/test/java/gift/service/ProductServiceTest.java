@@ -8,10 +8,11 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import gift.domain.Product;
-import gift.dto.ProductRequest;
-import gift.entity.ProductEntity;
-import gift.repository.ProductRepository;
+import gift.product.domain.Product;
+import gift.product.dto.ProductRequest;
+import gift.product.entity.ProductEntity;
+import gift.product.repository.ProductRepository;
+import gift.product.service.ProductService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;

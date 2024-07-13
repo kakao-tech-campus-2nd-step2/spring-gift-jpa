@@ -1,9 +1,9 @@
 package gift.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import gift.domain.Member;
-import gift.dto.MemberRequest;
-import gift.service.MemberService;
+import gift.member.domain.Member;
+import gift.member.dto.MemberRequest;
+import gift.member.service.MemberService;
 import java.net.URI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

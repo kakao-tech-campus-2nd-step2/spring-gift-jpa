@@ -2,9 +2,9 @@ package gift.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.dto.ProductRequest;
-import gift.entity.ProductEntity;
-import gift.repository.ProductRepository;
+import gift.product.dto.ProductRequest;
+import gift.product.entity.ProductEntity;
+import gift.product.repository.ProductRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.net.URI;

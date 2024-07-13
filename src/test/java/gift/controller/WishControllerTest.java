@@ -2,12 +2,12 @@ package gift.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.domain.Member;
-import gift.dto.MemberRequest;
-import gift.dto.ProductIdRequest;
-import gift.dto.WishRequest;
-import gift.service.MemberService;
-import gift.service.WishService;
+import gift.member.domain.Member;
+import gift.member.dto.MemberRequest;
+import gift.wishlist.dto.ProductIdRequest;
+import gift.wishlist.dto.WishRequest;
+import gift.member.service.MemberService;
+import gift.wishlist.service.WishService;
 import java.net.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
