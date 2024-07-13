@@ -1,12 +1,26 @@
 package gift.product.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+@Entity(name = "product")
 public class Product {
 
-
+    @Id
+    @Column(name = "product_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private Double price;
     private String imageUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private WishList wishList;
 
     public Product(String name, Double price, String imageUrl) {
         this.name = name;
@@ -57,9 +71,9 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    //    public Product(String name, Double price, String imageUrl) {
-//        this(null, name, price, imageUrl);
-//    }
+    public void setWishList(WishList wishList) {
+        this.wishList = wishList;
+    }
 
 }
 

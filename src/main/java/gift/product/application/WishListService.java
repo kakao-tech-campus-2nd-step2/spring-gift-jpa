@@ -2,48 +2,55 @@ package gift.product.application;
 
 import gift.product.domain.Product;
 import gift.product.domain.WishList;
+import gift.product.domain.WishListProduct;
+import gift.product.infra.ProductRepository;
 import gift.product.infra.WishListRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class WishListService {
 
     private final WishListRepository wishListRepository;
+    private final ProductRepository productRepository;
 
-    public WishListService(WishListRepository wishListRepository) {
+    public WishListService(WishListRepository wishListRepository, ProductRepository productRepository) {
         this.wishListRepository = wishListRepository;
+        this.productRepository = productRepository;
     }
 
     public WishList getWishListByUserId(Long userId) {
         return wishListRepository.findByUserId(userId);
     }
 
-    public void addProductToWishList(Long userId, Product product) {
+
+    public WishList getProductsInWishList(Long userId) {
+        return wishListRepository.findByUserId(userId);
+    }
+
+
+    @Transactional
+    public void addProductToWishList(Long userId, Long productId) {
         WishList wishList = wishListRepository.findByUserId(userId);
+        Product product = productRepository.findById(productId).orElseThrow();
+
         if (wishList == null) {
             wishList = new WishList();
-            wishList.setUserId(userId);
             wishList = wishListRepository.save(wishList);
         }
-        wishListRepository.addProductToWishList(wishList.getId(), product);
+        product.setWishList(wishList);
+
+        WishListProduct wishListProduct = new WishListProduct(product, wishList);
+        wishList.addWishListProduct(wishListProduct);
+
+        wishListRepository.save(wishList);
     }
 
-    public List<Product> getProductsInWishList(Long userId) {
-        WishList wishList = wishListRepository.findByUserId(userId);
-        if (wishList != null) {
-            return wishListRepository.findProductsByWishListId(wishList.getId());
-        }
-        return null;
-    }
-
-
+    @Transactional
     public void deleteProductFromWishList(Long userId, Long productId) {
         WishList wishList = wishListRepository.findByUserId(userId);
         if (wishList != null) {
-            wishListRepository.deleteProductFromWishList(wishList.getId(), productId);
+            wishList.removeWishListProduct(productId);
         }
     }
 }

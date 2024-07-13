@@ -1,13 +1,29 @@
 package gift.user.domain;
 
+import gift.product.domain.WishList;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity(name = "users")
 public class User {
 
+    @Id
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
     private String name;
     private String email;
 
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<WishList> wishLists = new ArrayList<>();
 
     public User() {
     }
@@ -47,5 +63,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<WishList> getWishLists() {
+        return wishLists;
+    }
+
+    public void setWishLists(List<WishList> wishLists) {
+        this.wishLists = wishLists;
     }
 }
