@@ -23,7 +23,7 @@ public class Gift {
     private String imageUrl;
 
     @OneToMany(mappedBy = "gift", cascade = CascadeType.REMOVE)
-    private List<Wish> wishes = new ArrayList<>();
+    protected List<Wish> wishes = new ArrayList<>();
 
     public Gift() {
     }
