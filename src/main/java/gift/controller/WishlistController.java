@@ -24,17 +24,17 @@ public class WishlistController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Page<WishlistItem>> getWishlist(@PathVariable("id") Long userId,
-                                                        @RequestParam(defaultValue = "0") int page,
-                                                        @RequestParam(defaultValue = "10") int size) {
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<WishlistItem> wishlist = wishlistService.getWishlistByUserId(userId, pageable);
         return new ResponseEntity<>(wishlist, HttpStatus.OK);
     }
 
 
-    @PostMapping("/save")
-    public ResponseEntity<List<WishlistItem>> createWishlist(@RequestBody List<WishlistItem> wishlistItems) {
-        List<WishlistItem> savedItems = wishlistService.saveWishlistItems(wishlistItems);
+    @PostMapping("/{id}/save")
+    public ResponseEntity<List<WishlistItem>> createWishlist(@PathVariable("id") Long userId, @RequestBody List<WishlistItem> wishlistItems) {
+        List<WishlistItem> savedItems = wishlistService.saveWishlistItemsWithUserId(userId, wishlistItems);
         return new ResponseEntity<>(savedItems, HttpStatus.CREATED);
     }
 }
