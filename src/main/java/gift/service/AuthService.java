@@ -4,9 +4,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,7 +15,7 @@ import gift.exception.UserNotFoundException;
 import gift.model.User;
 import gift.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Service
 public class AuthService {
@@ -27,7 +24,6 @@ public class AuthService {
 	private UserRepository userRespository;
 	
 	private String secret = "Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=";
-	private SecretKey secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
 	
 	public void createUser(User user, BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
@@ -58,19 +54,19 @@ public class AuthService {
 	public String grantAccessToken(User user) {
 		return Jwts.builder()
 		    .setSubject(user.getId().toString())
-		    .claim("email", user.getEmail())
-		    .signWith(secretKey, SignatureAlgorithm.HS256)
+		    .claim("userEmail", user.getEmail())
+		    .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
 		    .compact();
 	}
 	
 	public String parseToken(String token) {
         try {
             return Jwts.parser()
-                    .verifyWith(secretKey)
+                    .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
                     .build()
                     .parseSignedClaims(token.replace("Bearer ", ""))
                     .getPayload()
-                    .get("email", String.class);
+                    .get("userEmail", String.class);
         } catch(Exception e) {
             throw new UnauthorizedException("Invalid or expired token");
         }
