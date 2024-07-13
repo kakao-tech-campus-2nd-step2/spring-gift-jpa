@@ -1,8 +1,10 @@
 package gift.controller;
 
 import gift.model.ProductDTO;
+import gift.model.ProductPageDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -28,13 +30,10 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>> getAllProduct(
+    public ResponseEntity<?> getAllProduct(
         @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Page<ProductDTO> productsPage = productService.getAllProduct(page, size);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Page-Number", String.valueOf(productsPage.getNumber()));
-        headers.add("X-Page-Size", String.valueOf(productsPage.getSize()));
-        return ResponseEntity.ok().headers(headers).body(productsPage);
+        ProductPageDTO productPage = productService.getAllProduct(page, size);
+        return ResponseEntity.ok().body(productPage.products());
     }
 
     @GetMapping("/{id}")

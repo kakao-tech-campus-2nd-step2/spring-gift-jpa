@@ -4,6 +4,7 @@ import gift.exception.ErrorCode;
 import gift.exception.RepositoryException;
 import gift.model.Product;
 import gift.model.ProductDTO;
+import gift.model.ProductPageDTO;
 import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,22 +29,11 @@ public class ProductService {
         return convertToDTO(productRepository.save(product));
     }
 
-    public Page<ProductDTO> getAllProduct(int page, int size) {
-        Pageable pageRequest = createPageRequestUsing(page, size);
-        List<Product> allProducts = productRepository.findAll();
-        List<ProductDTO> allProductDTO = allProducts.stream()
-            .map(this::convertToDTO)
-            .collect(Collectors.toList());
+    public ProductPageDTO getAllProduct(int pageNum, int size) {
+        Pageable pageable = PageRequest.of(pageNum, size);
+        List<ProductDTO> productPage = productRepository.findAll(pageable).map(this::convertToDTO).stream().toList();
 
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), allProductDTO.size());
-
-        List<ProductDTO> pageContent = allProductDTO.subList(start, end);
-        return new PageImpl<>(pageContent, pageRequest, allProductDTO.size());
-    }
-
-    private Pageable createPageRequestUsing(int page, int size) {
-        return PageRequest.of(page, size);
+        return new ProductPageDTO(pageNum, size, productPage.size(), productPage);
     }
 
     public List<ProductDTO> getAllProductByList() {
