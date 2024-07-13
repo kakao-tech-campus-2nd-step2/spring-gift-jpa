@@ -1,9 +1,8 @@
 package gift.controller;
 
 import gift.annotation.LoginMember;
-import gift.dto.WishlistRequestDto;
-import gift.entity.Member;
-import gift.entity.Wish;
+import gift.dto.WishResponseDto;
+import gift.dto.WishRequestDto;
 import gift.service.WishService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +28,14 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Wish>> getAllByMemberId(@LoginMember Long memberId) {
-        return new ResponseEntity<>(wishService.getWishlist(memberId), HttpStatus.OK);
+    public ResponseEntity<List<WishResponseDto>> getAllByMemberId(@LoginMember Long memberId) {
+        List<WishResponseDto> wishList = wishService.getWishlist(memberId);
+        return new ResponseEntity<>(wishList, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<String> addWishlist(@LoginMember Long memberId,
-        @RequestBody WishlistRequestDto wishlistRequestDto) {
+        @RequestBody WishRequestDto wishlistRequestDto) {
         wishService.addWishlist(memberId, wishlistRequestDto.getProductId(), wishlistRequestDto.getQuantity());
         return new ResponseEntity<>(HttpStatus.OK);
     }
