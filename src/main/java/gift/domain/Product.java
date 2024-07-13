@@ -2,11 +2,6 @@ package gift.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -19,15 +14,9 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "상품 이름은 필수 입력 항목입니다.")
-    @Size(max = 15, message = "상품 이름은 최대 15자까지 입력할 수 있습니다.")
-    @Pattern(regexp = "^[\\p{L}0-9 ()\\[\\]+\\-&/_]+$", message = "상품 이름에 사용 가능한 특수문자는 ( ), [ ], +, -, &, /, _ 입니다")
-    @Pattern(regexp = "^(?!.*(?i)(kakao|카카오).*$).*$", message = "상품 이름에 '카카오'를 사용할 수 없습니다.")
     @Column(nullable = false, length = 15)
     private String name;
 
-    @NotNull(message = "가격은 필수 입력 항목입니다.")
-    @DecimalMin(value = "0.0", inclusive = false, message = "가격은 0보다 커야 합니다.")
     @Column(nullable = false)
     private BigDecimal price;
 
@@ -36,6 +25,7 @@ public class Product {
 
     @Column
     private String description;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes;
 
@@ -69,6 +59,10 @@ public class Product {
 
     public String getDescription() {
         return description;
+    }
+
+    public List<Wish> getWishes() {
+        return wishes;
     }
 
     public static class ProductBuilder {
