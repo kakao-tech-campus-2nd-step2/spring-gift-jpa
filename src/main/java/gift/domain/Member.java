@@ -11,7 +11,7 @@ import jakarta.persistence.OneToMany;
 import java.util.List;
 
 @Entity
-public class Member extends BaseEntity {
+public class Member extends BaseTimeEntity {
 
     @Embedded
     private Email email;
@@ -28,7 +28,7 @@ public class Member extends BaseEntity {
     protected Member() {
     }
 
-    public static class Builder extends BaseEntity.Builder<Member.Builder> {
+    public static class Builder extends BaseTimeEntity.Builder<Member.Builder> {
 
         private Email email;
         private Password password;
