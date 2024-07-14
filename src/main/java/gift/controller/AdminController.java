@@ -8,6 +8,10 @@ import gift.model.Member;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,14 +37,18 @@ public class AdminController {
 
     @GetMapping("")
     public String adminHome(Model model) {
-        model.addAttribute("message", "Welcome to the Admin Panel!");
+        model.addAttribute("message", "관리자 페이지");
         return "admin";
     }
 
     // 상품 관리
     @GetMapping("/products")
-    public String getAllProducts(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+    public String getAllProducts(Model model,
+        @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<ProductResponse> productPage = productService.getAllProducts(pageable);
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("currentPage", pageable.getPageNumber());
+        model.addAttribute("totalPages", productPage.getTotalPages());
         return "products";
     }
 
@@ -51,31 +59,31 @@ public class AdminController {
     }
 
     @PostMapping("/products")
-    public String addProduct(@Valid @ModelAttribute("product") ProductRequest productDTO,
+    public String addProduct(@Valid @ModelAttribute("product") ProductRequest productRequest,
         BindingResult result) {
         if (result.hasErrors()) {
             return "product_form";
         }
-        productService.addProduct(productDTO);
+        productService.addProduct(productRequest);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/products/{id}/edit")
     public String showEditProductForm(@PathVariable("id") Long id, Model model) {
-        ProductResponse productDto = productService.getProductById(id);
-        model.addAttribute("product", productDto);
+        ProductResponse productResponse = productService.getProductById(id);
+        model.addAttribute("product", productResponse);
         return "product_edit";
     }
 
     @PutMapping("/products/{id}")
     public String updateProduct(@PathVariable("id") Long id,
-        @Valid @ModelAttribute ProductRequest productDTO, BindingResult result, Model model) {
+        @Valid @ModelAttribute ProductRequest productRequest, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("product", productDTO);
+            model.addAttribute("product", productRequest);
             model.addAttribute("org.springframework.validation.BindingResult.product", result);
             return "product_edit";
         }
-        productService.updateProduct(id, productDTO);
+        productService.updateProduct(id, productRequest);
         return "redirect:/admin/products";
     }
 
@@ -111,20 +119,20 @@ public class AdminController {
 
     @GetMapping("/members/{id}/edit")
     public String showEditMemberForm(@PathVariable("id") Long id, Model model) {
-        MemberResponse memberDto = memberService.getMemberById(id);
-        model.addAttribute("member", new Member(memberDto.id(), memberDto.email(), null));
+        MemberResponse memberResponse = memberService.getMemberById(id);
+        model.addAttribute("member", new Member(memberResponse.id(), memberResponse.email(), null));
         return "member_edit";
     }
 
     @PutMapping("/members/{id}")
     public String updateMember(@PathVariable("id") Long id,
-        @Valid @ModelAttribute MemberRequest memberDTO, BindingResult result, Model model) {
+        @Valid @ModelAttribute MemberRequest memberRequest, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("member", memberDTO);
+            model.addAttribute("member", memberRequest);
             model.addAttribute("org.springframework.validation.BindingResult.member", result);
             return "member_edit";
         }
-        memberService.updateMember(id, memberDTO);
+        memberService.updateMember(id, memberRequest);
         return "redirect:/admin/members";
     }
 

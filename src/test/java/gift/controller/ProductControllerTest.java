@@ -27,6 +27,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -50,13 +54,20 @@ public class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("모든 상품 조회")
+    @DisplayName("모든 상품 조회 (페이지네이션 적용)")
     public void testGetAllProducts() throws Exception {
-        when(productService.getAllProducts()).thenReturn(List.of(productDTO));
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<ProductResponse> page = new PageImpl<>(List.of(productDTO), pageable, 1);
 
-        mockMvc.perform(get("/api/products"))
+        when(productService.getAllProducts(any(Pageable.class))).thenReturn(page);
+
+        mockMvc.perform(get("/api/products")
+                .param("page", "0")
+                .param("size", "10"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].name").value("Test Product"));
+            .andExpect(jsonPath("$.content[0].name").value("Test Product"))
+            .andExpect(jsonPath("$.totalElements").value(1))
+            .andExpect(jsonPath("$.totalPages").value(1));
     }
 
     @Test

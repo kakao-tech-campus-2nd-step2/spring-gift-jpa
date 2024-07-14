@@ -4,7 +4,10 @@ import gift.dto.product.ProductRequest;
 import gift.dto.product.ProductResponse;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,8 +30,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        List<ProductResponse> products = productService.getAllProducts();
+    public ResponseEntity<Page<ProductResponse>> getAllProducts(
+        @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<ProductResponse> products = productService.getAllProducts(pageable);
         return ResponseEntity.ok(products);
     }
 
@@ -40,15 +44,15 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductResponse> addProduct(
-        @Valid @RequestBody ProductRequest productDTO) {
-        ProductResponse createdProduct = productService.addProduct(productDTO);
+        @Valid @RequestBody ProductRequest productRequest) {
+        ProductResponse createdProduct = productService.addProduct(productRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id,
-        @Valid @RequestBody ProductRequest productDTO) {
-        ProductResponse updatedProduct = productService.updateProduct(id, productDTO);
+        @Valid @RequestBody ProductRequest productRequest) {
+        ProductResponse updatedProduct = productService.updateProduct(id, productRequest);
         return ResponseEntity.ok(updatedProduct);
     }
 

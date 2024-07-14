@@ -6,10 +6,14 @@ import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
@@ -18,6 +22,11 @@ public class WishRepositoryTest {
 
     @Autowired
     private WishRepository wishRepository;
+
+    @BeforeEach
+    public void setUp() {
+        wishRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("위시리스트 항목 추가 및 ID로 조회")
@@ -35,10 +44,8 @@ public class WishRepositoryTest {
     }
 
     @Test
-    @DisplayName("모든 위시리스트 항목 조회")
-    public void testFindAllByMemberId() {
-        long initialCount = wishRepository.count();
-
+    @DisplayName("모든 위시리스트 항목 조회 (페이지네이션 적용)")
+    public void testFindAllByMemberIdWithPagination() {
         Member member = new Member(1L, "test@example.com", "password");
         Product product1 = new Product(1L, "Product1", 100, "imageUrl1");
         Product product2 = new Product(2L, "Product2", 200, "imageUrl2");
@@ -49,7 +56,12 @@ public class WishRepositoryTest {
         wishRepository.save(wish1);
         wishRepository.save(wish2);
 
-        assertThat(wishRepository.findAllByMemberId(1L)).hasSize((int) initialCount + 2);
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Wish> wishPage = wishRepository.findAllByMemberId(1L, pageable);
+
+        assertThat(wishPage.getTotalElements()).isEqualTo(2);
+        assertThat(wishPage.getContent()).hasSize(
+            (int) Math.min(2, pageable.getPageSize()));
     }
 
     @Test

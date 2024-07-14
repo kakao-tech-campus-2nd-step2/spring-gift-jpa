@@ -44,7 +44,7 @@ public class MemberService {
         Member member = memberRepository.findByEmail(memberDTO.email())
             .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
 
-        if (!member.getPassword().equals(memberDTO.password())) {
+        if (!member.isPasswordMatching(memberDTO.password())) {
             throw new ForbiddenException(INVALID_CREDENTIALS);
         }
 
@@ -71,8 +71,10 @@ public class MemberService {
         Member member = memberRepository.findById(id)
             .orElseThrow(() -> new ForbiddenException(INVALID_CREDENTIALS));
 
-        if (!member.getEmail().equals(memberDTO.email()) && memberRepository.existsByEmail(
-            memberDTO.email())) {
+        boolean emailChanged = !member.isEmailMatching(memberDTO.email());
+        boolean emailAlreadyUsed = memberRepository.existsByEmail(memberDTO.email());
+
+        if (emailChanged && emailAlreadyUsed) {
             throw new EmailAlreadyUsedException(EMAIL_ALREADY_USED);
         }
 
