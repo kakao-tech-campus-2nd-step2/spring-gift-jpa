@@ -1,4 +1,4 @@
-package gift.domain.model;
+package gift.domain.model.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

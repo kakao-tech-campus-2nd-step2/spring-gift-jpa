@@ -1,6 +1,6 @@
 package gift.domain.repository;
 
-import gift.domain.model.Wish;
+import gift.domain.model.entity.Wish;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,6 @@
-package gift.domain.model;
+package gift.domain.model.dto;
+
+import gift.domain.model.entity.User;
 
 public class UserResponseDto {
 
@@ -9,7 +11,6 @@ public class UserResponseDto {
         this.user = user;
         this.token = token;
     }
-
     public User getUser() {
         return user;
     }

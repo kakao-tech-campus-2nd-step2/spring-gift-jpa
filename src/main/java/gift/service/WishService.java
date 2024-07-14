@@ -1,6 +1,10 @@
 package gift.service;
 
-import gift.domain.model.*;
+import gift.domain.model.dto.WishResponseDto;
+import gift.domain.model.dto.WishUpdateRequestDto;
+import gift.domain.model.entity.Product;
+import gift.domain.model.entity.User;
+import gift.domain.model.entity.Wish;
 import gift.domain.repository.WishRepository;
 import gift.exception.DuplicateWishItemException;
 import gift.exception.NoSuchWishException;
@@ -10,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.stream.Collectors;
 
 @Service
-public class WishListService {
+public class WishService {
 
     private final WishRepository wishRepository;
     private final ProductService productService;
     private final UserService userService;
 
-    public WishListService(WishRepository wishRepository, ProductService productService,
+    public WishService(WishRepository wishRepository, ProductService productService,
         UserService userService) {
         this.wishRepository = wishRepository;
         this.productService = productService;
@@ -52,7 +56,8 @@ public class WishListService {
     }
 
     @Transactional
-    public WishResponseDto updateWishProduct(String email, WishUpdateRequestDto wishUpdateRequestDto) {
+    public WishResponseDto updateWishProduct(String email,
+        WishUpdateRequestDto wishUpdateRequestDto) {
         productService.validateExistProductId(wishUpdateRequestDto.getProductId());
         Wish wish = validateExistWishProduct(email, wishUpdateRequestDto.getProductId());
         wish.setCount(wishUpdateRequestDto.getCount());

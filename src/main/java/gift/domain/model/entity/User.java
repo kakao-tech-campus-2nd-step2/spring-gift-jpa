@@ -1,4 +1,4 @@
-package gift.domain.model;
+package gift.domain.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;

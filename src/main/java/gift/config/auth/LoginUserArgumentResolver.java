@@ -1,6 +1,6 @@
 package gift.config.auth;
 
-import gift.domain.model.User;
+import gift.domain.model.entity.User;
 import gift.exception.UnauthorizedException;
 import gift.service.UserService;
 import gift.util.JwtUtil;

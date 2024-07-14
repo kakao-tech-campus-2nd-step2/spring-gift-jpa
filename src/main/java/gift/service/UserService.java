@@ -1,8 +1,8 @@
 package gift.service;
 
-import gift.domain.model.User;
-import gift.domain.model.UserRequestDto;
-import gift.domain.model.UserResponseDto;
+import gift.domain.model.entity.User;
+import gift.domain.model.dto.UserRequestDto;
+import gift.domain.model.dto.UserResponseDto;
 import gift.domain.repository.UserRepository;
 import gift.exception.BadCredentialsException;
 import gift.exception.DuplicateEmailException;

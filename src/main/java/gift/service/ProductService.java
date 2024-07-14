@@ -1,10 +1,10 @@
 package gift.service;
 
-import gift.domain.model.ProductAddRequestDto;
-import gift.domain.model.ProductResponseDto;
-import gift.domain.model.ProductUpdateRequestDto;
+import gift.domain.model.dto.ProductAddRequestDto;
+import gift.domain.model.dto.ProductResponseDto;
+import gift.domain.model.dto.ProductUpdateRequestDto;
 import gift.domain.repository.ProductRepository;
-import gift.domain.model.Product;
+import gift.domain.model.entity.Product;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
