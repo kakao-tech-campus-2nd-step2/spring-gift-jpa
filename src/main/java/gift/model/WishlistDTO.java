@@ -6,31 +6,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 public class WishlistDTO {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    @Column
     Long userId;
-    @Column
     Long productId;
-    @Column
     Long amount;
 
-    public WishlistDTO(Long id, Long userId, Long productId, Long amount) {
-        this.id = id;
+    public WishlistDTO(Long userId, Long productId, Long amount) {
         this.userId = userId;
         this.productId = productId;
         this.amount = amount;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getUserId() {
         return userId;
     }

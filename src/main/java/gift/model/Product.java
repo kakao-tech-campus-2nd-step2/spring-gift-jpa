@@ -14,16 +14,15 @@ import org.springframework.validation.annotation.Validated;
 
 @Entity
 @Table(name="products")
-@Validated
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Size(max = 15, message = "Name must be up to 15 characters")
-    @Pattern(regexp = "^[A-Za-z0-9 ()\\[\\]+\\-&/_ㄱ-ㅣ가-힣]+$", message = "Special characters allowed: (),[],+,-,&,/,_")
-    @Pattern(regexp = "^(?!.*카카오).*$", message = "Name cannot contain '카카오'. Please consult with the MD.")
+    @Size(max = 15, message = "이름은 최대 15글자입니다.")
+    @Pattern(regexp = "^[A-Za-z0-9 ()\\[\\]+\\-&/_ㄱ-ㅣ가-힣]+$", message = "특수문자는 (),[],+,-,&,/,_만 허용됩니다.")
+    @Pattern(regexp = "^(?!.*카카오).*$", message = "'카카오'가 들어간 제품명은 MD와 상의해주세요.")
     private String name;
     @NotNull
     private long price;
