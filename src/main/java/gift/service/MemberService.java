@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.model.CreateJwtToken;
-import gift.model.LogInMemberDTO;
+import gift.DTO.LogInMemberDTO;
 import gift.model.Member;
 import gift.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
