@@ -2,7 +2,9 @@ package gift.mapper;
 
 import gift.domain.product.Product;
 import gift.web.dto.ProductDto;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ProductMapper {
 
     public ProductDto toDto(Product product) {
