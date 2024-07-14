@@ -71,4 +71,14 @@ public class Wish {
     public void set(WishRequest request) {
         this.quantity = request.quantity();
     }
+
+    @Override
+    public String toString() {
+        return "Wish{" +
+            "id=" + id +
+            ", product=" + product +
+            ", member=" + member +
+            ", quantity=" + quantity +
+            '}';
+    }
 }
