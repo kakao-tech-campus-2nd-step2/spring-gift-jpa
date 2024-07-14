@@ -5,6 +5,7 @@ import gift.domain.WishList;
 import gift.domain.WishListRequest;
 import gift.domain.WishListResponse;
 import gift.repository.WishListRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +24,8 @@ public class WishListService {
         wishListRepository.save(wishList);
     }
 
-    public List<WishListResponse> findById(String jwtId) {
-        List<WishList> wishLists =  wishListRepository.findByMemberId(jwtId);
+    public List<WishListResponse> findById(String jwtId, Pageable pageable) {
+        List<WishList> wishLists =  wishListRepository.findByMemberId(jwtId,pageable);
         return wishLists.stream()
                 .map(WishListController::MapWishListToWishListResponse)
                 .collect(Collectors.toList());

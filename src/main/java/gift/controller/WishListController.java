@@ -7,6 +7,7 @@ import gift.service.JwtService;
 import gift.service.MemberService;
 import gift.service.MenuService;
 import gift.service.WishListService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,9 +46,11 @@ public class WishListController {
     }
 
     @GetMapping("/read")
-    public ResponseEntity<List<WishListResponse>> read() {
+    public ResponseEntity<List<WishListResponse>> read(
+            Pageable pageable
+    ) {
         String jwtId = jwtService.getMemberId();
-        List<WishListResponse> nowWishList = wishListService.findById(jwtId);
+        List<WishListResponse> nowWishList = wishListService.findById(jwtId,pageable);
         return ResponseEntity.ok().body(nowWishList);
     }
 
