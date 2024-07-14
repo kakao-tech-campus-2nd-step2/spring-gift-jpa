@@ -10,8 +10,8 @@ import gift.model.wishList.WishListResponse;
 import gift.repository.ItemRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishListRepository;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,13 +30,12 @@ public class WishListService {
         this.wishListRepository = wishListRepository;
         this.userRepository = userRepository;
     }
+
     @Transactional(readOnly = true)
-    public List<WishListResponse> getWishList(Long userId) {
-        List<WishItem> list = wishListRepository.findAllByUserId(userId);
-        return list.stream()
-            .map(o -> new WishListResponse(o.getId(), o.getItem().toItemDTO()))
-            .collect(Collectors.toList());
+    public Page<WishListResponse> getWishList(Long userId, Pageable pageable) {
+        return wishListRepository.findAllByUserId(userId, pageable).map(WishItem::toResponse);
     }
+
     @Transactional
     public Long addToWishList(Long userId, Long itemId) {
         Item item = itemRepository.findById(itemId)
@@ -46,6 +45,7 @@ public class WishListService {
         WishItem wishItem = new WishItem(0L, user, item);
         return wishListRepository.save(wishItem).getId();
     }
+
     @Transactional
     public void deleteFromWishList(Long id) {
         wishListRepository.deleteById(id);
