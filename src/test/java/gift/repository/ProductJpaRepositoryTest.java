@@ -4,7 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.model.product.Product;
-import gift.repository.product.ProductJpaRepository;
+import gift.repository.product.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,20 +13,20 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 public class ProductJpaRepositoryTest {
 
     @Autowired
-    private ProductJpaRepository productJpaRepository;
+    private ProductRepository productRepository;
 
     @Test
     public void save() {
         // given
         Product product = new Product(1L, "product1", 1000, "product1.jpg");
         // when
-        productJpaRepository.save(product);
+        productRepository.save(product);
         // then
         assertAll(
-            () -> assertThat(productJpaRepository.findById(1L).get().getName()).isEqualTo(
+            () -> assertThat(productRepository.findById(1L).get().getName()).isEqualTo(
                 "product1"),
-            () -> assertThat(productJpaRepository.findById(1L).get().getPrice()).isEqualTo(1000),
-            () -> assertThat(productJpaRepository.findById(1L).get().getImageUrl()).isEqualTo(
+            () -> assertThat(productRepository.findById(1L).get().getPrice()).isEqualTo(1000),
+            () -> assertThat(productRepository.findById(1L).get().getImageUrl()).isEqualTo(
                 "product1.jpg")
         );
     }
@@ -35,27 +35,27 @@ public class ProductJpaRepositoryTest {
     public void delete() {
         // given
         Product product = new Product(1L, "product1", 1000, "product1.jpg");
-        productJpaRepository.save(product);
+        productRepository.save(product);
         // when
-        productJpaRepository.deleteById(1L);
+        productRepository.deleteById(1L);
         // then
-        assertThat(productJpaRepository.findById(1L)).isEmpty();
+        assertThat(productRepository.findById(1L)).isEmpty();
     }
 
     @Test
     public void update() {
         // given
         Product product = new Product(1L, "product1", 1000, "product1.jpg");
-        productJpaRepository.save(product);
+        productRepository.save(product);
         // when
         product.update("product2", 2000, "product2.jpg");
-        productJpaRepository.save(product);
+        productRepository.save(product);
         // then
         assertAll(
-            () -> assertThat(productJpaRepository.findById(1L).get().getName()).isEqualTo(
+            () -> assertThat(productRepository.findById(1L).get().getName()).isEqualTo(
                 "product2"),
-            () -> assertThat(productJpaRepository.findById(1L).get().getPrice()).isEqualTo(2000),
-            () -> assertThat(productJpaRepository.findById(1L).get().getImageUrl()).isEqualTo(
+            () -> assertThat(productRepository.findById(1L).get().getPrice()).isEqualTo(2000),
+            () -> assertThat(productRepository.findById(1L).get().getImageUrl()).isEqualTo(
                 "product2.jpg")
         );
     }
@@ -64,9 +64,9 @@ public class ProductJpaRepositoryTest {
     public void findById() {
         // given
         Product product = new Product(1L, "product1", 1000, "product1.jpg");
-        productJpaRepository.save(product);
+        productRepository.save(product);
         // when
-        Product findProduct = productJpaRepository.findById(1L).get();
+        Product findProduct = productRepository.findById(1L).get();
         // then
         assertAll(
             () -> assertThat(findProduct.getName()).isEqualTo("product1"),
