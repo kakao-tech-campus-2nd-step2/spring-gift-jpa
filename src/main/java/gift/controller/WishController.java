@@ -52,18 +52,18 @@ public class WishController {
     }
 
     @PatchMapping
-    public ResponseEntity<?> updateWishes(
+    public ResponseEntity<Void> updateWishes(
         @LoginUserId Long userId, @RequestBody List<UpdateWishRequest> requests
     ) {
         wishService.updateWishes(requests);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping({"id"})
-    public ResponseEntity<?> deleteWishes(
+    public ResponseEntity<Void> deleteWishes(
         @LoginUserId Long userId, @RequestParam Long id
     ) {
         wishService.deleteWish(id);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok().build();
     }
 }

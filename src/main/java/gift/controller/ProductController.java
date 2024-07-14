@@ -64,16 +64,16 @@ public class ProductController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody @Valid
+    public ResponseEntity<Void> updateProduct(@PathVariable Long id, @RequestBody @Valid
     UpdateProductRequest request) {
         productService.updateProduct(id, request);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok().build();
     }
 
     private HttpHeaders getProductLocationHeader(Long productId) {
