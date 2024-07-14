@@ -3,6 +3,7 @@ package gift.admin.presentation;
 import gift.product.application.dto.request.ProductRequest;
 import gift.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,10 +25,10 @@ public class AdminController {
     }
 
     @GetMapping()
-    public String getListProducts(Model model) {
-        var products = productService.getProducts();
+    public String getListProducts(Pageable pageable, Model model) {
+        var products = productService.getProducts(pageable);
 
-        model.addAttribute("products", products);
+        model.addAttribute("products", products.products());
         return "admin/list";
     }
 
