@@ -3,10 +3,10 @@ package gift.repository.product;
 import gift.model.product.Product;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-public interface ProductDao {
-
-    void insert(Product product);
+public interface ProductRepository {
 
     Optional<Product> findById(Long id);
 
@@ -14,9 +14,8 @@ public interface ProductDao {
 
     void deleteById(Long id);
 
-    void update(Product product);
+    Product save(Product entity);
 
-    List<Product> findPaging(int page, int size);
+    Page<Product> findAllByOrderByIdDesc(Pageable pageable);
 
-    Long count();
 }
