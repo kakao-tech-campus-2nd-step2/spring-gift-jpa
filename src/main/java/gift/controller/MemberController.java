@@ -1,3 +1,4 @@
+// MemberController
 package gift.controller;
 
 import gift.dto.MemberRequest;
@@ -5,13 +6,16 @@ import gift.dto.MemberResponse;
 import gift.service.MemberService;
 import gift.util.JwtUtil;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 @RequestMapping("/members")
 public class MemberController {
 
@@ -24,6 +28,27 @@ public class MemberController {
         this.jwtUtil = jwtUtil;
     }
 
+    @GetMapping("/login")
+    public String loginForm(Model model) {
+        model.addAttribute("memberRequest", new MemberRequest());
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String login(@Valid @ModelAttribute MemberRequest memberRequest, BindingResult bindingResult, Model model, HttpSession session) {
+        if (bindingResult.hasErrors()) {
+            return "login";
+        }
+        try {
+            String token = memberService.authenticate(memberRequest);
+            session.setAttribute("token", token);
+            return "redirect:/wishes/items";
+        } catch (IllegalArgumentException e) {
+            bindingResult.reject("error.login", "Invalid email or password");
+            return "login";
+        }
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody MemberRequest memberRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -32,20 +57,6 @@ public class MemberController {
         String token = memberService.register(memberRequest);
         MemberResponse response = new MemberResponse(token);
         return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody MemberRequest memberRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body("Invalid data");
-        }
-        try {
-            String token = memberService.authenticate(memberRequest);
-            MemberResponse response = new MemberResponse(token);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(403).body("Forbidden");
-        }
     }
 
     @GetMapping("/validate-token")
