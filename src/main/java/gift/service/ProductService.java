@@ -31,9 +31,9 @@ public class ProductService {
     }
 
     public boolean updateProduct(Long id, ProductDto productDto) {
-        Product product = new Product(new ProductName(productDto.name()),productDto.price(),productDto.imageUrl(),productDto.amount());
         if (productRepository.existsById(id)) {
-            product.setId(id);
+            Product product = productRepository.findById(id).get();
+            product.updateProduct(productDto);
             productRepository.save(product);
             return true;
         }

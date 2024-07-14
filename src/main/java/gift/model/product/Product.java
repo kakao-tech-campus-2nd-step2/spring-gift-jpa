@@ -1,5 +1,6 @@
 package gift.model.product;
 
+import gift.dto.ProductDto;
 import gift.model.wish.Wish;
 import jakarta.persistence.*;
 
@@ -34,13 +35,14 @@ public class Product {
         this.imageUrl = imageUrl;
         this.amount = amount;
     }
-
+    public void updateProduct(ProductDto productDto){
+        this.name = new ProductName(productDto.name());
+        this.price = productDto.price();
+        this.imageUrl = productDto.imageUrl();
+        this.amount = productDto.amount();
+    }
     public long getId() {
         return id;
-    }
-
-    public void setId(long id){
-        this.id = id;
     }
 
     public ProductName getName() {
