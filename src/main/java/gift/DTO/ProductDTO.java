@@ -1,15 +1,11 @@
-package gift.Entity;
+package gift.DTO;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 
-@Entity
-public class ProductEntity {
+public class ProductDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Size(max = 15, message = "상품 이름은 공백을 포함하여 최대 15자까지 입력할 수 있습니다.")
@@ -19,18 +15,17 @@ public class ProductEntity {
     private int price;
     private String imageUrl;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WishEntity> wishes;
+    private List<WishDTO> wishes;
 
-    public ProductEntity(long l, String product1, double v) {}
+    public ProductDTO() {}
 
-    public ProductEntity() {}
 
-    public ProductEntity(Long id, String name, int price, String imageUrl) {
+    public ProductDTO(Long id, String name, int price, String imageUrl, List<WishDTO> wishes) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.wishes = wishes;
     }
 
     public Long getId() {
@@ -65,11 +60,11 @@ public class ProductEntity {
         this.imageUrl = imageUrl;
     }
 
-    public List<WishEntity> getWishes() {
+    public List<WishDTO> getWishes() {
         return wishes;
     }
 
-    public void setWishes(List<WishEntity> wishes) {
+    public void setWishes(List<WishDTO> wishes) {
         this.wishes = wishes;
     }
 }

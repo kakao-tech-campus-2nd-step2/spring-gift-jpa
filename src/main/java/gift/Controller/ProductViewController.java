@@ -1,8 +1,10 @@
 package gift.Controller;
 
-import gift.Entity.ProductEntity;
+import gift.DTO.ProductDTO;
 import gift.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +17,10 @@ public class ProductViewController {
     private ProductService productService;
 
     @GetMapping("/products/view")
-    public String viewAllProducts(Model model) {
-        model.addAttribute("products", productService.findAllProducts());
+    public String viewAllProducts(Pageable pageable, Model model) {
+        Page<ProductDTO> productPage = productService.getProducts(pageable);
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("page", productPage);
         return "product-list";
     }
 
