@@ -1,11 +1,15 @@
 package gift.domain.product;
 
+import gift.domain.cart.CartItem;
 import gift.global.annotation.NotContainsValue;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -21,6 +25,9 @@ public class Product {
     private String name;
     private int price;
     private String imageUrl;
+
+    @OneToMany(mappedBy = "product_id", cascade = CascadeType.REMOVE)
+    private List<CartItem> cartItems;
 
     public static Product createProductFromProxy(Product proxyProduct) {
         return new Product(
