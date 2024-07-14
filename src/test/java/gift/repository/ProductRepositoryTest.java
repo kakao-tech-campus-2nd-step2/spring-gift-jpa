@@ -1,5 +1,6 @@
 package gift.repository;
 
+import gift.dto.ProductDto;
 import gift.model.product.Product;
 import gift.model.product.ProductName;
 import org.junit.jupiter.api.Test;
@@ -40,16 +41,14 @@ class ProductRepositoryTest {
     @Test
     void update(){
         Product expected = new Product(new ProductName("product1"),1000,"qwer.com",1000);
-        Product updatedProduct = new Product(new ProductName("product2"), 1500, "updated.com", 2000);
+        ProductDto updatedProduct = new ProductDto("product2", 1500, "updated.com", 2000);
 
         Product savedProduct = productRepository.save(expected);
-        Long productId = savedProduct.getId();
-        updatedProduct.setId(productId);
+        savedProduct.updateProduct(updatedProduct);
+        productRepository.save(savedProduct);
 
-        productRepository.save(updatedProduct);
-
-        Product fetchedProduct = productRepository.findById(productId).orElse(null);
-        assertThat(fetchedProduct.getName().getName()).isEqualTo(updatedProduct.getName().getName());
+        Product fetchedProduct = productRepository.findById(savedProduct.getId()).orElse(null);
+        assertThat(fetchedProduct.getName().getName()).isEqualTo(updatedProduct.name());
     }
 
     @Test
