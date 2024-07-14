@@ -3,8 +3,6 @@ package gift.controller;
 import gift.dto.MemberDto;
 import gift.dto.WishDto;
 import gift.model.member.LoginMember;
-import gift.model.member.Member;
-import gift.model.product.Product;
 import gift.model.wish.Wish;
 import gift.service.WishListService;
 import org.springframework.data.domain.Page;
@@ -13,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/wishlist")

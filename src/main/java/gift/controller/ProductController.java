@@ -12,8 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import gift.service.ProductService;
 
-import java.util.List;
-
 
 @RequestMapping("/api/products")
 @Controller
