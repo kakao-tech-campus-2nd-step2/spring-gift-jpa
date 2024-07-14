@@ -1,8 +1,5 @@
 package gift.annotation;
 
-import org.springframework.core.annotation.AliasFor;
-import org.springframework.web.bind.annotation.ValueConstants;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

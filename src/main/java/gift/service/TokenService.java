@@ -43,17 +43,17 @@ public class TokenService {
                 .orElseThrow(() -> new UnAuthorizationException("인증되지 않은 사용자입니다. 다시 로그인 해주세요."));
     }
 
-    public String getMemberIdFromToken(String token) {
-        Claims claims = parseToken(token);
-        return claims.getSubject();
-    }
-
-    public Claims parseToken(String token) {
-        JwtParser parser = Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .build();
-        return parser.parseClaimsJws(token).getBody();
-    }
+//    public String getMemberIdFromToken(String token) {
+//        Claims claims = parseToken(token);
+//        return claims.getSubject();
+//    }
+//
+//    public Claims parseToken(String token) {
+//        JwtParser parser = Jwts.parserBuilder()
+//                .setSigningKey(secretKey)
+//                .build();
+//        return parser.parseClaimsJws(token).getBody();
+//    }
 
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));

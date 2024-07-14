@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.domain.Member;
 import gift.domain.Product;
+import gift.domain.TokenAuth;
 import gift.domain.WishlistItem;
 import gift.dto.request.WishlistRequest;
 import gift.exception.MemberNotFoundException;
@@ -47,7 +48,8 @@ public class WishlistServiceTest {
 
     private Member member;
     private Product product;
-    private String validToken = "valid_token";
+    private String validToken = "valid.token.test";
+    private TokenAuth tokenAuth;
 
     @BeforeEach
     public void setup() {
@@ -57,12 +59,15 @@ public class WishlistServiceTest {
         product = new Product("Product 1", 100, "test-url");
         product.setId(PRODUCT_ID);
 
+        tokenAuth = new TokenAuth(validToken, member);
     }
 
     @Test
     public void testAddItemToWishlist() {
-        when(tokenService.getMemberIdFromToken(validToken)).thenReturn(MEMBER_ID.toString());
-        when(memberRepository.findById(MEMBER_ID)).thenReturn(Optional.of(member));
+
+        when(tokenService.findToken(validToken)).thenReturn(new TokenAuth(validToken, member));
+
+        when(productRepository.findById(PRODUCT_ID)).thenReturn(Optional.of(product));
 
         WishlistRequest request = new WishlistRequest(PRODUCT_ID);
         WishlistItem wishlistItem = new WishlistItem(member, product);
@@ -77,24 +82,22 @@ public class WishlistServiceTest {
 
     @Test
     public void testDeleteItemFromWishlist() {
-        when(tokenService.getMemberIdFromToken(validToken)).thenReturn(MEMBER_ID.toString());
-        when(memberRepository.findById(MEMBER_ID)).thenReturn(Optional.of(member));
+        when(tokenService.findToken(validToken)).thenReturn(new TokenAuth(validToken, member));
 
         WishlistItem wishlistItem = new WishlistItem(member, product);
-        when(wishlistRepository.findByMemberId(MEMBER_ID)).thenReturn(Arrays.asList(wishlistItem));
+        when(wishlistRepository.findByMemberIdAndProductId(MEMBER_ID, PRODUCT_ID)).thenReturn(Optional.of(wishlistItem));
 
         wishlistService.deleteItemFromWishlist(PRODUCT_ID, validToken);
 
-        verify(wishlistRepository, times(1)).deleteByMemberIdAndProductId(MEMBER_ID, PRODUCT_ID);
+        verify(wishlistRepository, times(1)).delete(wishlistItem);
     }
 
 
     @Test
     public void testDeleteItemFromWishlistMemberNotFound() {
-        when(tokenService.getMemberIdFromToken(validToken)).thenReturn(MEMBER_ID.toString());
-        when(memberRepository.findById(MEMBER_ID)).thenReturn(Optional.of(member));
+        when(tokenService.findToken(validToken)).thenReturn(new TokenAuth(validToken, member));
 
-        when(wishlistRepository.findByMemberId(MEMBER_ID)).thenReturn(Arrays.asList());
+        when(wishlistRepository.findByMemberIdAndProductId(MEMBER_ID, PRODUCT_ID)).thenReturn(Optional.empty());
 
         assertThrows(MemberNotFoundException.class, () -> {
             wishlistService.deleteItemFromWishlist(PRODUCT_ID, validToken);
