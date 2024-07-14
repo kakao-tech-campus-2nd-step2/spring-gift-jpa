@@ -19,12 +19,4 @@ public record ProductDto(
     Long price,
     String imageUrl
     ) {
-
-    public static ProductDto from(Product product) {
-        return new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-    }
-
-    public static Product toEntity(ProductDto productDto) {
-        return new Product(productDto.id(), productDto.name(), productDto.price(), productDto.imageUrl());
-    }
 }
