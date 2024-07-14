@@ -1,5 +1,7 @@
 package gift.wishlist.domain;
 
+import gift.member.domain.Member;
+import gift.product.domain.Product;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,30 +11,36 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    @Column(nullable = false)
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     public Wishlist() {
     }
 
-    public Wishlist(Long id, Long productId, Long memberId) {
+    public Wishlist(Member member, Product product) {
+        this(null, member, product);
+    }
+
+    public Wishlist(Long id, Member member, Product product) {
         this.id = id;
-        this.productId = productId;
-        this.memberId = memberId;
+        this.product = product;
+        this.member = member;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 }

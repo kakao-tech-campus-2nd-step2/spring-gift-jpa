@@ -12,6 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +56,7 @@ public class WishlistServiceTest {
         memberEmail = "test@example.com";
         member = new Member(memberId, memberEmail, "password");
         product = new Product(productId, "Product", 1000, "image");
-        wishlist = new Wishlist(wishlistId, memberId, productId);
+        wishlist = new Wishlist(wishlistId, member, product);
     }
 
     @Test
@@ -92,16 +96,39 @@ public class WishlistServiceTest {
     }
 
     @Test
-    public void 사용자의_위시리스트_조회() {
+    public void 사용자의_위시리스트_페이징_조회() {
         // Given
-        when(wishlistRepository.findByMemberId(memberId)).thenReturn(List.of(wishlist));
+        Wishlist wishlist2 = new Wishlist(2L, member, new Product(2L, "Product2", 2000, "image2"));
+        Page<Wishlist> page = new PageImpl<>(List.of(wishlist, wishlist2), PageRequest.of(0, 2), 2);
+        when(wishlistRepository.findAllByMemberId(eq(memberId), any(Pageable.class))).thenReturn(page);
+
+        Pageable pageable = PageRequest.of(0, 2);
 
         // When
-        List<WishlistResponse> result = wishlistService.findByMemberId(memberId);
+        Page<WishlistResponse> result = wishlistService.findAllByMemberId(memberId, pageable);
 
         // Then
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).getMemberId()).isEqualTo(memberId);
+        assertThat(result.getTotalElements()).isEqualTo(2);
+        assertThat(result.getContent()).hasSize(2);
+        assertThat(result.getContent().get(0).getMemberId()).isEqualTo(memberId);
+    }
+
+    @Test
+    public void 특정_상품의_위시리스트_페이징_조회() {
+        // Given
+        Wishlist wishlist2 = new Wishlist(2L, member, product);
+        Page<Wishlist> page = new PageImpl<>(List.of(wishlist, wishlist2), PageRequest.of(0, 2), 2);
+        when(wishlistRepository.findAllByProductId(eq(productId), any(Pageable.class))).thenReturn(page);
+
+        Pageable pageable = PageRequest.of(0, 2);
+
+        // When
+        Page<WishlistResponse> result = wishlistService.findAllByProductId(productId, pageable);
+
+        // Then
+        assertThat(result.getTotalElements()).isEqualTo(2);
+        assertThat(result.getContent()).hasSize(2);
+        assertThat(result.getContent().get(0).getProductId()).isEqualTo(productId);
     }
 
     @Test

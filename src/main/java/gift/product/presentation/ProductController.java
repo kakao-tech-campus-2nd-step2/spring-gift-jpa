@@ -5,10 +5,10 @@ import gift.product.application.ProductService;
 import gift.product.presentation.request.ProductCreateRequest;
 import gift.product.presentation.request.ProductUpdateRequest;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -25,8 +25,10 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<ProductResponse>> findAll() {
-        return ResponseEntity.ok(productService.findAll());
+    public ResponseEntity<Page<ProductResponse>> findAll(
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(productService.findAll(pageable));
     }
 
     @GetMapping("/{id}")

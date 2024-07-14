@@ -12,12 +12,16 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -66,17 +70,23 @@ public class ProductControllerTest {
     @Test
     void 모든상품조회시_상품목록반환() throws Exception {
         // Given
-        when(productService.findAll()).thenReturn(Collections.emptyList());
+        ProductResponse response1 = new ProductResponse(1L, "Product1", 1000, "http://example.com/image1.jpg");
+        ProductResponse response2 = new ProductResponse(2L, "Product2", 2000, "http://example.com/image2.jpg");
+        Page<ProductResponse> page = new PageImpl<>(List.of(response1, response2), PageRequest.of(0, 2), 2);
+        when(productService.findAll(any(Pageable.class))).thenReturn(page);
 
         // When
         MvcResult mvcResult = mockMvc.perform(get("/api/products")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("page", "0")
+                        .param("size", "2"))
                 .andExpect(status().isOk())
                 .andReturn();
 
         // Then
         String responseContent = mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8);
-        Assertions.assertTrue(responseContent.contains("[]"));
+        Assertions.assertTrue(responseContent.contains("\"content\":[{\"id\":1,\"name\":\"Product1\""));
+        Assertions.assertTrue(responseContent.contains("\"id\":2,\"name\":\"Product2\""));
     }
 
     @Test

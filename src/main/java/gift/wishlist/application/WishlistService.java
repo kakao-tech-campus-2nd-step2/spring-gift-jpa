@@ -7,10 +7,10 @@ import gift.product.domain.Product;
 import gift.product.domain.ProductRepository;
 import gift.wishlist.domain.Wishlist;
 import gift.wishlist.domain.WishlistRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -30,13 +30,18 @@ public class WishlistService {
         Member member = getMember(memberId);
         Product product = getProduct(productId);
 
-        Wishlist wishlist = new Wishlist(null, member.getId(), product.getId());
+        Wishlist wishlist = new Wishlist(member, product);
         wishlistRepository.save(wishlist);
     }
 
-    public List<WishlistResponse> findByMemberId(Long memberId) {
-        return wishlistRepository.findByMemberId(memberId)
-                .stream().map(WishlistResponse::from).toList();
+    public Page<WishlistResponse> findAllByMemberId(Long memberId, Pageable pageable) {
+        return wishlistRepository.findAllByMemberId(memberId, pageable)
+                .map(WishlistResponse::from);
+    }
+
+    public Page<WishlistResponse> findAllByProductId(Long productId, Pageable pageable) {
+        return wishlistRepository.findAllByProductId(productId, pageable)
+                .map(WishlistResponse::from);
     }
 
     @Transactional
