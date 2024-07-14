@@ -1,7 +1,5 @@
-package gift.product;
+package gift.exception;
 
-import gift.exception.AlreadyExistMember;
-import gift.exception.NotFoundMember;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;

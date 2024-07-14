@@ -1,9 +1,12 @@
 package gift.product;
 
 import gift.exception.InvalidProduct;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,14 +20,14 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponseDto> getAllPrdouct() {
-        return productRepository.findAll().stream()
-            .map(product -> new ProductResponseDto(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl()))
-            .collect(Collectors.toList());
+    public Page<ProductResponseDto> getAllProducts(Pageable pageable) {
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        return productPage.map(product -> new ProductResponseDto(
+            product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl()));
     }
 
     public Optional<ProductResponseDto> getProductById(Long id) {

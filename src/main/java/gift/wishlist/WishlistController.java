@@ -8,6 +8,8 @@ import gift.member.Member;
 import gift.product.Product;
 import gift.product.ProductService;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,8 +44,8 @@ public class WishlistController {
     }
 
     @GetMapping
-    public List<Product> getWishlist() {
-        return wishlistService.checkWishlist();
+    public Page<Product> getWishlist(Pageable pageable) {
+        return wishlistService.checkWishlist(pageable);
     }
 
     @DeleteMapping("/{id}")
