@@ -1,5 +1,6 @@
 package gift.user.infrastructure.persistence;
 
+import gift.core.domain.user.UserAccount;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -25,6 +26,10 @@ public class UserAccountEntity {
         this.userId = userId;
         this.email = email;
         this.password = password;
+    }
+
+    public static UserAccountEntity of(Long userId, UserAccount userAccount) {
+        return new UserAccountEntity(userId, userAccount.principal(), userAccount.credentials());
     }
 
     public Long getUserId() {

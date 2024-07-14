@@ -16,7 +16,7 @@ public class UserAccountRepositoryImpl implements UserAccountRepository {
 
     @Override
     public void save(Long userId, UserAccount userAccount) {
-        jpaUserAccountRepository.save(mapToUserAccountEntity(userAccount));
+        jpaUserAccountRepository.save(UserAccountEntity.of(userId, userAccount));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class UserAccountRepositoryImpl implements UserAccountRepository {
         return new UserAccount(entity.getEmail(), entity.getPassword());
     }
 
-    private UserAccountEntity mapToUserAccountEntity(UserAccount userAccount) {
-        return new UserAccountEntity(0L, userAccount.principal(), userAccount.credentials());
+    private UserAccountEntity mapToUserAccountEntity(Long userId, UserAccount userAccount) {
+        return new UserAccountEntity(userId, userAccount.principal(), userAccount.credentials());
     }
 }

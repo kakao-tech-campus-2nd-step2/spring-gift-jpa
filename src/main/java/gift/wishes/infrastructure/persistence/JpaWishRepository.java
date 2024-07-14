@@ -1,6 +1,8 @@
 package gift.wishes.infrastructure.persistence;
 
 import gift.user.infrastructure.persistence.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,5 +14,7 @@ public interface JpaWishRepository extends JpaRepository<WishEntity, Long> {
     void deleteByUser_IdAndProduct_Id(Long userId, Long productId);
 
     List<WishEntity> findAllByUser(UserEntity user);
+
+    Page<WishEntity> findAllByUser(UserEntity user, Pageable pageable);
 
 }

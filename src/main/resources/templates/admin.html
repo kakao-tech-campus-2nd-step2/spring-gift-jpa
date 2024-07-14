@@ -36,7 +36,7 @@
             .then(data => {
                 const tableBody = document.getElementById('productTable').getElementsByTagName('tbody')[0];
                 tableBody.innerHTML = '';
-                data.forEach(product => {
+                data.content.forEach(product => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                             <td>${product.id}</td>

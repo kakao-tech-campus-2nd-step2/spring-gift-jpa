@@ -1,15 +1,17 @@
 package gift.wishes.restapi;
 
 import gift.advice.LoggedInUser;
+import gift.core.PagedDto;
 import gift.core.domain.product.Product;
 import gift.core.domain.product.ProductService;
 import gift.core.domain.wishes.WishesService;
 import gift.wishes.restapi.dto.request.AddWishRequest;
-import gift.wishes.restapi.dto.response.WishResponse;
+import gift.wishes.restapi.dto.response.PagedWishResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 @RestController
 public class WishesController {
@@ -26,11 +28,12 @@ public class WishesController {
     }
 
     @GetMapping("/api/wishes")
-    public List<WishResponse> getWishes(@LoggedInUser Long userId) {
-        return wishesService.getWishlistOfUser(userId)
-                .stream()
-                .map(WishResponse::from)
-                .toList();
+    public PagedWishResponse getWishes(
+            @LoggedInUser Long userId,
+            @PageableDefault(size = 10) Pageable pageable
+    ) {
+        PagedDto<Product> pagedWishes = wishesService.getWishlistOfUser(userId, pageable);
+        return PagedWishResponse.from(pagedWishes);
     }
 
     @PostMapping("/api/wishes")

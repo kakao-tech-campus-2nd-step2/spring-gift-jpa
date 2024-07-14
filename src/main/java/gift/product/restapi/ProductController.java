@@ -1,13 +1,17 @@
 package gift.product.restapi;
 
+import gift.core.PagedDto;
 import gift.core.domain.product.Product;
 import gift.core.domain.product.ProductService;
 import gift.core.domain.product.exception.ProductNotFoundException;
 import gift.product.restapi.dto.request.ProductCreateRequest;
 import gift.product.restapi.dto.request.ProductUpdateRequest;
+import gift.product.restapi.dto.response.PagedProductResponse;
 import gift.product.restapi.dto.response.ProductResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,12 +26,11 @@ public class ProductController {
     }
 
     @GetMapping("/api/products")
-    public List<ProductResponse> getAllProducts() {
-        return productService
-                .findAll()
-                .stream()
-                .map(ProductResponse::from)
-                .toList();
+    public PagedProductResponse getAllProducts(
+            @PageableDefault(size = 10) Pageable pageable
+    ) {
+        PagedDto<Product> pagedProducts = productService.findAll(pageable);
+        return PagedProductResponse.from(pagedProducts);
     }
 
     @GetMapping("/api/products/{id}")

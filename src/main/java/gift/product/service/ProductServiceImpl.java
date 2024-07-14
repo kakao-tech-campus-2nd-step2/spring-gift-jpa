@@ -1,5 +1,6 @@
 package gift.product.service;
 
+import gift.core.PagedDto;
 import gift.core.domain.product.Product;
 import gift.core.domain.product.ProductRepository;
 import gift.core.domain.product.ProductService;
@@ -7,6 +8,7 @@ import gift.core.domain.product.exception.ProductAlreadyExistsException;
 import gift.core.domain.product.exception.ProductNotFoundException;
 import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,6 +54,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> findAll() {
         return productRepository.findAll();
+    }
+
+    @Override
+    public PagedDto<Product> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     @Override
