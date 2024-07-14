@@ -29,10 +29,8 @@ public class Member{
     private List<Wish> wishList;
 
     public Member(String email, String password) {
-        this.id = id;
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
     public Member() {
