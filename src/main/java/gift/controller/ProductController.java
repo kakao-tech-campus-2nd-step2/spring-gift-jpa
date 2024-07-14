@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.DTO.PageRequestDTO;
 import gift.service.ProductService;
 import gift.model.Product;
 import org.springframework.data.domain.Page;
@@ -17,9 +18,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public String getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "id") String sortBy,
+    public String getAllProducts(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "id") String sortBy,
                                  @RequestParam(defaultValue = "asc") String sortOrder, Model model) {
-        Page<Product> productPage = productService.getAllProducts(page, sortBy, sortOrder);
+        PageRequestDTO pageRequestDTO = new PageRequestDTO(page, sortBy, sortOrder);
+        Page<Product> productPage = productService.getAllProducts(pageRequestDTO);
+
         model.addAttribute("productList", productPage.getContent());
 
         int previousPage = productService.getPreviousPage(productPage);

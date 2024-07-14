@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.DTO.PageRequestDTO;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
@@ -25,11 +26,12 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public List<WishDTO> getWishlist(HttpServletRequest request, int page, String sortBy, String sortOrder) throws AuthenticationException {
+    public List<WishDTO> getWishlist(HttpServletRequest request, PageRequestDTO pageRequestDTO) throws AuthenticationException {
         long memberId = memberService.getIdByToken(request);
 
-        Sort sort = getSort(sortBy, sortOrder);
-        Pageable pageable = PageRequest.of(page, 10, sort);
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(),
+                pageRequestDTO.getSize(), pageRequestDTO.getSort());
+
         Page<Wish> pageWishlist = wishRepository.findByMember_Id(memberId, pageable);
         List<Wish> wishlist = pageWishlist.getContent();
 
@@ -38,14 +40,6 @@ public class WishService {
                 .collect(Collectors.toList());
 
         return list;
-    }
-
-    private Sort getSort(String sortBy, String sortOrder){
-        Sort sort = Sort.by(sortBy);
-        if(sortOrder.equals("desc")){
-            return sort.descending();
-        }
-        return sort;
     }
 
     public void postWishlist(Long productId, HttpServletRequest request) throws AuthenticationException {

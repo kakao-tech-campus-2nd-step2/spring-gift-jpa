@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.DTO.PageRequestDTO;
 import gift.DTO.WishDTO;
 import gift.service.WishService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,8 @@ public class WishController {
     public List<WishDTO> getWishlistController(HttpServletRequest request, @RequestParam(defaultValue = "0") int page,
                                             @RequestParam(defaultValue = "id") String sortBy,
                                             @RequestParam(defaultValue = "asc") String sortOrder) throws AuthenticationException {
-        return wishService.getWishlist(request, page, sortBy, sortOrder);
+        PageRequestDTO pageRequestDTO = new PageRequestDTO(page, sortBy, sortOrder);
+        return wishService.getWishlist(request, pageRequestDTO);
     }
 
     //위시리스트 상품 추가

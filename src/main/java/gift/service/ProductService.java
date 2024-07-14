@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.DTO.PageRequestDTO;
 import gift.model.Product;
 import gift.repository.ProductRepository;
 import org.springframework.data.domain.Page;
@@ -20,18 +21,11 @@ public class ProductService {
     }
 
     //전체 조회
-    public Page<Product> getAllProducts(int page, String sortBy, String sortOrder){
-        Sort sort = getSort(sortBy, sortOrder);
-        Pageable pageable = PageRequest.of(page, 10, sort);
-        return productRepository.findAll(pageable);
-    }
+    public Page<Product> getAllProducts(PageRequestDTO pageRequestDTO){
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(),
+                pageRequestDTO.getSize(), pageRequestDTO.getSort());
 
-    private Sort getSort(String sortBy, String sortOrder){
-        Sort sort = Sort.by(sortBy);
-        if(sortOrder.equals("desc")){
-            return sort.descending();
-        }
-        return sort;
+        return productRepository.findAll(pageable);
     }
 
     //하나 조회
