@@ -43,7 +43,7 @@ public class MemberService {
             .orElseThrow(() -> new MemberNotFoundException("멤버가 없슴다."));
 
         member.updateMember(memberDto.email(), memberDto.password());
-
+        // 의문 : jpa의 변경감지로 인해서 위의 updateMember에서 이미 업데이트 될 것인데, save를 또 할 필요가 있을까 ?
         return memberMapper.toDto(memberRepository.save(member));
     }
 
