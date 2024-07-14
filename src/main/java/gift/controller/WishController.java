@@ -2,6 +2,7 @@ package gift.controller;
 
 import gift.DTO.PageRequestDTO;
 import gift.DTO.WishDTO;
+import gift.model.Member;
 import gift.service.WishService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
@@ -21,16 +22,21 @@ public class WishController {
     //멤버 id로 해당 멤버의 위시리스트 가져옴
     @GetMapping("/getAllWishlist")
     public List<WishDTO> getWishlistController(HttpServletRequest request, @RequestParam(defaultValue = "0") int page,
-                                            @RequestParam(defaultValue = "id") String sortBy,
-                                            @RequestParam(defaultValue = "asc") String sortOrder) throws AuthenticationException {
+                                                               @RequestParam(defaultValue = "id") String sortBy,
+                                                               @RequestParam(defaultValue = "asc") String sortOrder) throws AuthenticationException {
+        long memberId = (long) request.getAttribute("memberId");
         PageRequestDTO pageRequestDTO = new PageRequestDTO(page, sortBy, sortOrder);
-        return wishService.getWishlist(request, pageRequestDTO);
+        List<WishDTO> wishlist = wishService.getWishlist(memberId, pageRequestDTO);
+
+        return wishlist;
     }
 
     //위시리스트 상품 추가
     @PostMapping("/addWishlist/{productid}")
     public void postWishlist(@PathVariable Long productid, HttpServletRequest request) throws AuthenticationException {
-        wishService.postWishlist(productid, request);
+        Member member = (Member) request.getAttribute("member");
+        //MemberDTO memberDTO = memberService.getMemberByAuth(request);
+        wishService.postWishlist(productid, member);
     }
 
     //위시리스크 상품 wishlist id 받아와 삭제

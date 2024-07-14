@@ -6,7 +6,6 @@ import gift.model.Product;
 import gift.model.Wish;
 import gift.DTO.WishDTO;
 import gift.repository.WishRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -16,19 +15,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class WishService {
-    private final MemberService memberService;
     private final ProductService productService;
     private final WishRepository wishRepository;
 
-    public WishService(MemberService memberService, ProductService productService, WishRepository wishRepository) {
-        this.memberService = memberService;
+    public WishService(ProductService productService, WishRepository wishRepository) {
         this.productService = productService;
         this.wishRepository = wishRepository;
     }
 
-    public List<WishDTO> getWishlist(HttpServletRequest request, PageRequestDTO pageRequestDTO) throws AuthenticationException {
-        long memberId = memberService.getIdByToken(request);
-
+    public List<WishDTO> getWishlist(long memberId, PageRequestDTO pageRequestDTO) throws AuthenticationException {
         Pageable pageable = PageRequest.of(pageRequestDTO.getPage(),
                 pageRequestDTO.getSize(), pageRequestDTO.getSort());
 
@@ -42,8 +37,7 @@ public class WishService {
         return list;
     }
 
-    public void postWishlist(Long productId, HttpServletRequest request) throws AuthenticationException {
-        Member member = memberService.getMemberByAuth(request);
+    public void postWishlist(Long productId, Member member) throws AuthenticationException {
         Product product = productService.getProductById(productId);
         Wish wish = new Wish(member, product);
         wishRepository.save(wish);
