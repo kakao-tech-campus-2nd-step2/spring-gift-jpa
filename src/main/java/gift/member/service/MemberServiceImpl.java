@@ -1,5 +1,6 @@
 package gift.member.service;
 
+<<<<<<<< HEAD:src/main/java/gift/member/service/MemberServiceImpl.java
 import gift.member.model.Member;
 import gift.member.repository.MemberRepository;
 import io.jsonwebtoken.Jwts;
@@ -14,10 +15,17 @@ import java.util.Optional;
 
 @Service
 public class MemberServiceImpl implements MemberService {
+========
+import gift.Login.model.Member;
 
-    private final MemberRepository memberRepository;
-    private final Key key;
+public interface MemberService {
 
+    void registerMember(String email, String password);
+>>>>>>>> upstream/pykido:src/main/java/gift/Login/service/MemberService.java
+
+    String generateToken(Member member);
+
+<<<<<<<< HEAD:src/main/java/gift/member/service/MemberServiceImpl.java
     public MemberServiceImpl(MemberRepository memberRepository, @Value("${jwt.secret}") String secretKey) {
         this.memberRepository = memberRepository;
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
@@ -56,4 +64,7 @@ public class MemberServiceImpl implements MemberService {
 
         return generateToken(member);
     }
+========
+    String login(String email, String password);
+>>>>>>>> upstream/pykido:src/main/java/gift/Login/service/MemberService.java
 }
