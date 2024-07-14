@@ -5,6 +5,8 @@ import gift.domain.Menu;
 import gift.domain.MenuRequest;
 import gift.domain.MenuResponse;
 import gift.repository.MenuRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +26,10 @@ public class MenuService {
         return MenuController.MapMenuToMenuResponse(menuRepository.save(menu));
     }
 
-    public List<MenuResponse> findall() {
-        List<Menu> menus = menuRepository.findAll();
+    public List<MenuResponse> findall(
+            Pageable pageable
+    ) {
+        Page<Menu> menus = menuRepository.findAll(pageable);
         return menus.stream()
                 .map(MenuController::MapMenuToMenuResponse)
                 .collect(Collectors.toList());
