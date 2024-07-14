@@ -1,6 +1,5 @@
 package gift.entity;
 
-import gift.dto.ProductDTO;
 import gift.exception.BadRequestExceptions.BadRequestException;
 import gift.exception.BadRequestExceptions.BlankContentException;
 import jakarta.persistence.Column;

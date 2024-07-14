@@ -1,7 +1,6 @@
 package gift.service;
 
 import gift.dto.ProductDTO;
-import gift.dto.WishDTO;
 import gift.entity.Product;
 import gift.exception.BadRequestExceptions.BadRequestException;
 import gift.exception.BadRequestExceptions.InvalidIdException;
@@ -9,7 +8,6 @@ import gift.exception.BadRequestExceptions.NoSuchProductIdException;
 import gift.exception.InternalServerExceptions.InternalServerException;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
-import gift.util.validator.databaseValidator.ProductDatabaseValidator;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;

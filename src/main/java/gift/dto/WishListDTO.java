@@ -3,7 +3,6 @@ package gift.dto;
 import gift.entity.Wish;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 

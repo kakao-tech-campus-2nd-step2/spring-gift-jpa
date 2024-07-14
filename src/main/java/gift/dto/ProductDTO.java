@@ -11,7 +11,6 @@ import jakarta.validation.constraints.Pattern;
 import java.util.Objects;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
-import org.springframework.data.domain.Page;
 
 public final class ProductDTO {
 
