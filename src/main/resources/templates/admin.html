@@ -31,6 +31,10 @@
     </tbody>
 </table>
 
+<div id="pagination" class="pagination">
+    <!-- 페이지네이션 버튼 동적으로 추가됨 -->
+</div>
+
 <br>
 <!--상품 추가-->
 <button class="add-button" type="button" onclick="toggleAddProductForm()">상품 추가</button>
@@ -60,11 +64,19 @@
 </form>
 
 <script>
-    function fetchProducts() {
-        $.get("/api/products", function(data) {
-            var productList = $("#product-list");
+    let currentPage = 0;
+    const pageSize = 5; // pageNation 페이지 size 설정 content 개수 설정
+    const buttonsPerPage = 5;
+
+    function fetchProducts(pageNumber = 0) {
+        $.get(`/api/products?pageNumber=${pageNumber}&pageSize=${pageSize}`, function(response) {
+            const products = response.content;
+            const totalPages = response.totalPages;
+
+            // 상품 목록을 갱신합니다.
+            const productList = $("#product-list");
             productList.empty();
-            data.forEach(function(product) {
+            products.forEach(function(product) {
                 productList.append(`
                     <tr>
                         <td>${product.name}</td>
@@ -77,7 +89,32 @@
                     </tr>
                 `);
             });
+
+            // 페이지네이션 갱신
+            updatePagination(totalPages, pageNumber);
         });
+    }
+
+    function updatePagination(totalPages, page) {
+        currentPage = page;
+        const pagination = $("#pagination");
+        pagination.empty();
+
+        const currentGroup = Math.floor(currentPage / buttonsPerPage);
+        const startPage = currentGroup * buttonsPerPage;
+        const endPage = Math.min(startPage + buttonsPerPage, totalPages);
+
+        if (currentGroup > 0) {
+            pagination.append(`<button onclick="fetchProducts(${startPage - 1})"><</button>`);
+        }
+
+        for (let i = startPage; i < endPage; i++) {
+            pagination.append(`<button onclick="fetchProducts(${i})" class="${i === currentPage ? 'active' : ''}">${i + 1}</button>`);
+        }
+
+        if (endPage < totalPages) {
+            pagination.append(`<button onclick="fetchProducts(${endPage})">></button>`);
+        }
     }
 
     // 상품 추가
