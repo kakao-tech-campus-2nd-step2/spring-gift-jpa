@@ -55,12 +55,6 @@ public class ProductService {
     }
 
     private Product getValidatedProduct(Long id) {
-        Optional<Product> productOptional = productRepository.findById(id);
-
-        if (productOptional.isEmpty()) {
-            throw new NoSuchElementException("해당 ID의 상품이 존재하지 않습니다.");
-        }
-
-        return productOptional.get();
+        return productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 ID의 상품이 존재하지 않습니다."));
     }
 }

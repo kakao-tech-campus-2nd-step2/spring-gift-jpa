@@ -57,22 +57,10 @@ public class WishService {
     }
 
     private Member getMember(LoginMember loginMember) {
-        Optional<Member> member = authRepository.findById(loginMember.id());
-
-        if (member.isEmpty()) {
-            throw new NoSuchElementException("회원 정보가 존재하지 않습니다.");
-        }
-
-        return member.get();
+        return authRepository.findById(loginMember.id()).orElseThrow(() -> new NoSuchElementException("회원 정보가 존재하지 않습니다."));
     }
 
     private Wish getValidatedWish(Long id, LoginMember loginMember) {
-        Optional<Wish> wishOptional = wishRepository.findByIdAndMemberId(id, loginMember.id());
-
-        if (wishOptional.isEmpty()) {
-            throw new NoSuchElementException("해당 ID의 위시 항목이 위시리스트에 존재하지 않습니다.");
-        }
-
-        return wishOptional.get();
+        return wishRepository.findByIdAndMemberId(id, loginMember.id()).orElseThrow(() -> new NoSuchElementException("해당 ID의 위시 항목이 위시리스트에 존재하지 않습니다."));
     }
 }
