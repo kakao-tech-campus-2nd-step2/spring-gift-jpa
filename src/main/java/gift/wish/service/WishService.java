@@ -35,7 +35,7 @@ public class WishService {
   public Page<WishDto> getWishesByMemberEmail(String memberEmail, Pageable pageable) {
     User user = userRepository.findByEmail(memberEmail)
         .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
-    Page<Wish> wishes = wishRepository.findByUser(user, pageable);
+    Page<Wish> wishes = wishRepository.findByUserId(user.getId(), pageable);
     return wishes.map(wish -> new WishDto(
         wish.getId(),
         new UserDto(
@@ -59,7 +59,7 @@ public class WishService {
     Product product = productRepository.findById(wishDto.getProduct().getId())
         .orElseThrow(() -> new RuntimeException("상품 정보를 찾을 수 없습니다."));
 
-    if (wishRepository.findByUserAndProduct(user, product).isPresent()) {
+    if (wishRepository.findByUserIdAndProduct(user.getId(), product).isPresent()) {
       throw new RuntimeException("중복된 위시리스트 항목입니다.");
     }
 
@@ -90,6 +90,6 @@ public class WishService {
         .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new RuntimeException("상품 정보를 찾을 수 없습니다."));
-    wishRepository.deleteByUserAndProduct(user, product);
+    wishRepository.deleteByUserIdAndProduct(user.getId(), product);
   }
 }

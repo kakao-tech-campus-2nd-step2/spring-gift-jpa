@@ -76,7 +76,7 @@ public class WishRepositoryTest {
   }
 
   @Test
-  public void testFindByUser() {
+  public void testFindByUserId() {
     // given
     User user = createAndSaveUser("test@example.com", "password");
     Product product1 = createAndSaveProduct("Test Product 1", 100, "http://example.com/image1.jpg");
@@ -85,7 +85,7 @@ public class WishRepositoryTest {
     createAndSaveWish(user, product2);
 
     // when
-    List<Wish> wishes = wishRepository.findByUser(user);
+    List<Wish> wishes = wishRepository.findByUserId(user.getId());
 
     // then
     assertThat(wishes).isNotEmpty();
@@ -124,7 +124,7 @@ public class WishRepositoryTest {
   }
 
   @Test
-  public void testFindByUserWithPagination() {
+  public void testFindByUserIdWithPagination() {
     // given
     User user = createAndSaveUser("pagination@example.com", "password");
     for (int i = 1; i <= 15; i++) {
@@ -134,7 +134,7 @@ public class WishRepositoryTest {
 
     // when
     Pageable pageable = PageRequest.of(0, 10);
-    Page<Wish> wishesPage = wishRepository.findByUser(user, pageable);
+    Page<Wish> wishesPage = wishRepository.findByUserId(user.getId(), pageable);
 
     // then
     assertThat(wishesPage.getContent()).isNotEmpty();

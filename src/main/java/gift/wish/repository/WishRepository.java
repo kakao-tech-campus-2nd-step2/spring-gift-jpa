@@ -1,9 +1,7 @@
 package gift.wish.repository;
 
-import gift.user.entity.User;
 import gift.product.entity.Product;
 import gift.wish.entity.Wish;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,18 +10,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
-  List<Wish> findByUser(User user);
+  List<Wish> findByUserId(Long userId);
 
-  void deleteByUserAndProduct(User user, Product product);
+  void deleteByUserIdAndProduct(Long userId, Product product);
 
-  Optional<Wish> findByUserAndProduct(User user, Product product);
+  Optional<Wish> findByUserIdAndProduct(Long userId, Product product);
 
   List<Wish> findByProductId(Long productId);
 
-  Page<Wish> findByUser(User user, Pageable pageable);
+  Page<Wish> findByUserId(Long userId, Pageable pageable);
 
   @Transactional
   @Modifying
