@@ -1,8 +1,9 @@
 package gift.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,8 +26,9 @@ public class WishlistController {
 	private WishlistService wishlistService;
 	
 	@GetMapping
-	public ResponseEntity<List<Wishlist>> getWishlist(@RequestHeader("Authorization") String token, BindingResult bindingResult){
-		List<Wishlist> wishlist = wishlistService.getWishlist(token, bindingResult);
+	public ResponseEntity<Page<Wishlist>> getWishlist(@RequestHeader("Authorization") String token, BindingResult bindingResult,
+			@PageableDefault(sort="name") Pageable pageable){
+		Page<Wishlist> wishlist = wishlistService.getWishlist(token, bindingResult, pageable);
 		if(wishlist.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		}
