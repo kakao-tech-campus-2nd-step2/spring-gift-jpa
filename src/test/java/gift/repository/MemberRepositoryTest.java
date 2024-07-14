@@ -12,19 +12,15 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 class MemberRepositoryTest {
 
+    @Autowired
     private MemberRepository memberRepository;
 
     private Member member;
     private Member invalidMember;
 
-    @Autowired
-    public MemberRepositoryTest(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
-
     @BeforeEach
     public void setUp() {
-        member = new Member(1L, "kbm", "kbm@kbm", "mbk", "user");
+        member = new Member(1L, "kbm", "kbm@kbm.com", "mbk", "user");
     }
 
 

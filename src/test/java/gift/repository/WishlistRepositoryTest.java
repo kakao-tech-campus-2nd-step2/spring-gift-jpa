@@ -18,20 +18,17 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 class WishlistRepositoryTest {
 
+    @Autowired
     private WishlistRepository wishlistRepository;
+
+    @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
     private ProductRepository productRepository;
 
     private Member savedMember;
     private Product savedProduct;
-
-    @Autowired
-    public WishlistRepositoryTest(WishlistRepository wishlistRepository,
-        MemberRepository memberRepository, ProductRepository productRepository) {
-        this.wishlistRepository = wishlistRepository;
-        this.memberRepository = memberRepository;
-        this.productRepository = productRepository;
-    }
 
     @BeforeEach
     public void setUp() {

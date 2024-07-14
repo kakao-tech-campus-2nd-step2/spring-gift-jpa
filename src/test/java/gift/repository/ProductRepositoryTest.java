@@ -13,16 +13,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 class ProductRepositoryTest {
 
+    @Autowired
     private ProductRepository productRepository;
 
     private Product product1;
     private Product product2;
     private Product invalidProduct;
-
-    @Autowired
-    public ProductRepositoryTest(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     @BeforeEach
     public void setUp() {
