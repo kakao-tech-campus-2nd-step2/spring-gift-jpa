@@ -9,6 +9,7 @@ import gift.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import java.security.Key;
 import java.util.Date;
 import java.util.Optional;
@@ -30,6 +31,7 @@ public class MemberService {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
+    @Transactional
     public SignupResponse registerMember(SignupRequest signupRequest) {
         memberRepository.findByEmail(signupRequest.getEmail()).ifPresent(p -> {
             throw new RuntimeException("Email already exists");

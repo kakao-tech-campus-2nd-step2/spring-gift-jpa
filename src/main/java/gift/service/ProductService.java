@@ -4,6 +4,7 @@ import gift.DTO.ProductResponse;
 import gift.domain.Product;
 import gift.DTO.ProductRequest;
 import gift.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,7 @@ public class ProductService {
         return response;
     }
 
+    @Transactional
     public ProductResponse addProduct(ProductRequest productRequest) {
         productRepository.findByName(productRequest.getName())
                             .ifPresent(p -> {
@@ -76,6 +78,7 @@ public class ProductService {
         return response;
     }
 
+    @Transactional
     public ProductResponse updateProduct(Long id, ProductRequest updatedProduct) {
         Product product = getProductByIdOrThrow(id);
         product.setName(updatedProduct.getName());
@@ -88,6 +91,7 @@ public class ProductService {
         return response;
     }
 
+    @Transactional
     public void deleteProduct(Long id) {
         Product product = getProductByIdOrThrow(id);
         productRepository.delete(product);
@@ -97,5 +101,4 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(() ->
             new RuntimeException("Product not found with id: " + id));
     }
-
 }
