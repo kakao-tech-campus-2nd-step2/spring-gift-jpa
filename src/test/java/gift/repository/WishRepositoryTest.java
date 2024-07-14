@@ -2,6 +2,8 @@ package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import gift.entity.Product;
+import gift.entity.User;
 import gift.entity.Wish;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;

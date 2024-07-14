@@ -50,6 +50,7 @@ public class ProductController {
         @Valid @RequestBody ProductRequest productRequest) {
         productService.updateProduct(id, productRequest);
         return ResponseEntity.ok("수정되었습니다.");
+            productRequest.getImg());
     }
 
     @DeleteMapping("/{id}")
