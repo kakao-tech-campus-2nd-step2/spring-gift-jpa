@@ -2,6 +2,7 @@ package gift.service.product;
 
 import gift.domain.product.Product;
 import gift.domain.product.ProductReposiotory;
+import gift.mapper.ProductMapper;
 import gift.web.dto.ProductDto;
 import gift.web.exception.ProductNotFoundException;
 import java.util.List;
@@ -11,38 +12,46 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
     private final ProductReposiotory productReposiotory;
+    private final ProductMapper productMapper;
 
-    public ProductService(ProductReposiotory productReposiotory) {
+    public ProductService(ProductReposiotory productReposiotory, ProductMapper productMapper) {
         this.productReposiotory = productReposiotory;
+        this.productMapper = productMapper;
     }
 
     public List<ProductDto> getProducts() {
         return productReposiotory.findAll()
             .stream()
-            .map(ProductDto::from)
+            .map(productMapper::toDto)
             .toList();
     }
 
     public ProductDto getProductById(Long id) {
         return productReposiotory.findById(id)
-            .map(ProductDto::from)
+            .map(productMapper::toDto)
             .orElseThrow(() -> new ProductNotFoundException("제품이 없슴다."));
     }
 
     public ProductDto createProduct(ProductDto productDto) {
-        return ProductDto.from(productReposiotory.save(ProductDto.toEntity(productDto)));
+        Product product = productReposiotory.save(productMapper.toEntity(productDto));
+        return productMapper.toDto(product);
     }
 
     public ProductDto updateProduct(Long id, ProductDto productDto) {
-        productReposiotory.findById(id)
+        Product product = productReposiotory.findById(id)
             .orElseThrow(() -> new ProductNotFoundException("제품이 없슴다."));
-        Product newProduct = ProductDto.toEntity(productDto);
-        productReposiotory.save(newProduct);
-        return ProductDto.from(newProduct);
+
+        product.updateProduct(
+            productDto.name(),
+            productDto.price(),
+            productDto.imageUrl()
+        );
+
+        return productMapper.toDto(productReposiotory.save(product));
     }
 
     public void deleteProduct(Long id) {
-        productReposiotory.findById(id)
+        Product product = productReposiotory.findById(id)
             .orElseThrow(() -> new ProductNotFoundException("제품이 없슴다."));
         productReposiotory.deleteById(id);
     }
