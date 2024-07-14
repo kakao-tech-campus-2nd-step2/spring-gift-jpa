@@ -150,16 +150,4 @@ public class Member {
     public int hashCode() {
         return Objects.hash(email, password, name, role);
     }
-
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", role='" + role + '\'' +
-                ", wishList=" + wishList +
-                '}';
-    }
 }

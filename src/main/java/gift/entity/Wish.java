@@ -27,7 +27,8 @@ public class Wish {
     @Column(nullable = false)
     private Integer quantity;
 
-    public Wish() { }
+    public Wish() {
+    }
 
     public Wish(Member member, Product product, Integer quantity) {
         this.member = member;
@@ -35,7 +36,9 @@ public class Wish {
         this.quantity = quantity;
     }
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
     public Product getProduct() {
         return product;
@@ -53,13 +56,17 @@ public class Wish {
         this.member = member;
     }
 
-    public Integer getQuantity() { return quantity; }
+    public Integer getQuantity() {
+        return quantity;
+    }
 
-    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 
-    public void incrementQuantity() { this.quantity++; }
-
-
+    public void incrementQuantity() {
+        this.quantity++;
+    }
 
 
     @Override
@@ -79,14 +86,5 @@ public class Wish {
     @Override
     public int hashCode() {
         return Objects.hash(id, member, product, quantity);
-    }
-
-    @Override
-    public String toString() {
-        return "Wish{" +
-                "id=" + id +
-                ", item=" + product +
-                ", quantity=" + quantity +
-                '}';
     }
 }
