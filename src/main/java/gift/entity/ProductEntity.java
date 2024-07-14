@@ -1,7 +1,9 @@
 package gift.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,10 +27,10 @@ public class ProductEntity {
     @Column(nullable = false)
     private String imageUrl;
 
-    @OneToMany(mappedBy = "productEntity")
+    @OneToMany(mappedBy = "productEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishListEntity> wishListEntities;
 
-    public ProductEntity() {}
+    public ProductEntity(Long id, String name, int price, String imageUrl) {}
 
     public ProductEntity(String name, int price, String imageUrl) {
         this.name = name;
@@ -55,16 +57,4 @@ public class ProductEntity {
     public List<WishListEntity> getWishListEntities() {
         return wishListEntities;
     }
-
-    public void setWishListEntities(List<WishListEntity> wishListEntities) {
-        this.wishListEntities = wishListEntities;
-    }
-
-    // 필드 업데이트를 위한 메서드
-    public void update(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-    }
-
 }

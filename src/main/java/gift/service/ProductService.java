@@ -32,6 +32,7 @@ public class ProductService {
 
     private ProductEntity toProductEntity(ProductDTO productDTO) {
         return new ProductEntity(
+            productDTO.getId(),
             productDTO.getName(),
             productDTO.getPrice(),
             productDTO.getImageUrl()
@@ -67,15 +68,19 @@ public class ProductService {
     @Transactional
     public ProductServiceStatus editProduct(Long id, ProductDTO productDTO) {
         try {
-            Optional<ProductEntity> existingProductEntityOpt = productRepository.findById(id);
-            if (existingProductEntityOpt.isPresent()) {
-                ProductEntity existingProductEntity = existingProductEntityOpt.get();
-                existingProductEntity.update(
-                    productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
-                productRepository.save(existingProductEntity);
-                return ProductServiceStatus.SUCCESS;
+            Optional<ProductEntity> existingProductEntityOptional = productRepository.findById(id);
+            if (!existingProductEntityOptional.isPresent()) {
+                return ProductServiceStatus.NOT_FOUND;
             }
-            return ProductServiceStatus.NOT_FOUND;
+            ProductEntity existingProductEntity = existingProductEntityOptional.get();
+            ProductEntity updatedProductEntity = new ProductEntity(
+                existingProductEntity.getId(),
+                productDTO.getName(),
+                productDTO.getPrice(),
+                productDTO.getImageUrl()
+            );
+            productRepository.save(updatedProductEntity);
+            return ProductServiceStatus.SUCCESS;
         } catch (Exception e) {
             return ProductServiceStatus.ERROR;
         }
