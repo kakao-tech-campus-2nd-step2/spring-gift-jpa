@@ -34,15 +34,7 @@ public class WishListEntity {
         return productEntity;
     }
 
-    public void setProductEntity(ProductEntity productEntity) {
-        this.productEntity = productEntity;
-    }
-
     public MemberEntity getUserEntity() {
         return userEntity;
-    }
-
-    public void setUserEntity(MemberEntity userEntity) {
-        this.userEntity = userEntity;
     }
 }
