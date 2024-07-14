@@ -42,7 +42,8 @@ public class Member {
     }
 
     public Member(String email, String password, String name, String role) {
-        validate(email, password);
+        validateEmail(email);
+        validatePassword(password);
         this.email = email;
         this.password = password;
         this.name = name;
@@ -83,11 +84,6 @@ public class Member {
     @Override
     public int hashCode() {
         return Objects.hash(email, password, name, role);
-    }
-
-    public void validate(String email, String password) {
-        validateEmail(email);
-        validatePassword(password);
     }
 
     private void validateEmail(String email) {

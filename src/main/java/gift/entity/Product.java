@@ -43,7 +43,9 @@ public class Product {
     }
 
     public Product(String name, Integer price, String imageUrl) {
-        validateProduct(name, price, imageUrl);
+        validateName(name);
+        validatePrice(price);
+        validateImageUrl(imageUrl);
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -66,12 +68,6 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-    }
-
-    private void validateProduct(String name, Integer price, String imageUrl) {
-        validateName(name);
-        validatePrice(price);
-        validateImageUrl(imageUrl);
     }
 
     private void validateName(String name) {
