@@ -32,8 +32,8 @@ public class WishController {
 
     @PostMapping
     @ResponseBody
-    public void addWish(@RequestBody Wish wish, @LoginMember Member member) {
-        wishService.addWish(member.getId(), wish.getProductName());
+    public void addWish(@RequestBody WishDTO wishDTO) {
+        wishService.addWish(wishDTO.getMemberId(), wishDTO.getProductName());
     }
 
     @GetMapping
@@ -45,8 +45,8 @@ public class WishController {
 
     @DeleteMapping("/remove")
     @ResponseBody
-    public void removeWish(@RequestBody Wish wish, @LoginMember Member member) {
-        wishService.removeWish(member.getId(), wish.getProductName());
+    public void removeWish(@RequestBody WishDTO wishDTO) {
+        wishService.removeWish(wishDTO.getMemberId(), wishDTO.getProductName());
     }
 
     private WishDTO convertToDto(Wish wish) {
