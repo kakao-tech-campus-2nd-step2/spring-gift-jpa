@@ -4,9 +4,11 @@ import gift.Model.Product;
 import gift.Model.RequestProduct;
 import gift.Repository.ProductRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -19,18 +21,21 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts() {
-        List<Product> list = productRepository.findAll();
-        return list;
+    public Page<Product> getAllProducts(int page, int pageSize, String sortField, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
+        Page<Product> productPage = productRepository.findAll(pageable);
+        return productPage;
     }
 
+    @Transactional
     public void addProduct(RequestProduct requestProduct) {
         Product product = new Product(requestProduct.name(), requestProduct.price(), requestProduct.imageUrl());
         productRepository.save(product);
     }
 
     public Product selectProduct(long id) {
-        Product product = productRepository.findById(id).orElseThrow(()->new NoSuchElementException("매칭되는 product가 없습니다"));
+        Product product = productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("매칭되는 product가 없습니다"));
         return product;
     }
 
@@ -42,6 +47,7 @@ public class ProductService {
         product.setImageUrl(requestProduct.imageUrl());
     }
 
+    @Transactional
     public void deleteProduct(long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("매칭되는 product가 없습니다"));
         productRepository.deleteById(product.getId());

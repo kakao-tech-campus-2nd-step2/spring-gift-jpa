@@ -14,21 +14,21 @@ import java.util.*;
 @RestController
 @RequestMapping("/api")
 public class WishController {
-    private final WishService WishService;
+    private final WishService wishService;
 
 
-    public WishController(WishService WishService) {
-        this.WishService = WishService;
+    public WishController(WishService wishService) {
+        this.wishService = wishService;
     }
 
     @PostMapping("/wishList")
     public void addWish(@ValidUser Member member, @RequestBody RequestWishDTO requestWishDTO) {
-        WishService.addWish(member, requestWishDTO);
+        wishService.addWish(member, requestWishDTO);
     }
 
     @GetMapping("/wishList")
     public ResponseEntity<Map<String, List<ResponseWishDTO>>> getWish(@ValidUser Member member) {
-        List<ResponseWishDTO> list = WishService.getWish(member);
+        List<ResponseWishDTO> list = wishService.getWish(member);
         Map<String, List<ResponseWishDTO>> response = new HashMap<>();
         response.put("wish", list);
 
@@ -37,7 +37,7 @@ public class WishController {
 
     @PutMapping("/wishList")
     public ResponseEntity<Map<String, List<ResponseWishDTO>>> editWish(@ValidUser Member member, @RequestBody RequestWishDTO requestWishDTO) {
-        List<ResponseWishDTO> list = WishService.editWish(member, requestWishDTO);
+        List<ResponseWishDTO> list = wishService.editWish(member, requestWishDTO);
         Map<String, List<ResponseWishDTO>> response = new HashMap<>();
         response.put("wish", list);
 
@@ -46,7 +46,7 @@ public class WishController {
 
     @DeleteMapping("/wishList")
     public ResponseEntity<Map<String, List<ResponseWishDTO>>> deleteWish(@ValidUser Member member, @RequestBody RequestWishDTO requestWishDTO) {
-        List<ResponseWishDTO> list = WishService.deleteWish(member, requestWishDTO);
+        List<ResponseWishDTO> list = wishService.deleteWish(member, requestWishDTO);
         Map<String, List<ResponseWishDTO>> response = new HashMap<>();
         response.put("wish", list);
 

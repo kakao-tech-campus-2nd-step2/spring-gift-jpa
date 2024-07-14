@@ -2,6 +2,7 @@ package gift.Controller;
 
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import gift.Model.Product;
 import gift.Model.RequestProduct;
@@ -22,9 +23,19 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public String getProduct(Model model) {
-        List<Product> list = productService.getAllProducts();
-        model.addAttribute("products", list);
+    public String getProduct(@RequestParam (defaultValue = "0", value="page") int page,
+                             @RequestParam (defaultValue = "3", value="size") int size,
+                             @RequestParam (defaultValue = "id", value="sortField") String sortField,
+                             @RequestParam (defaultValue = "ASC", value="sortDir") String sortDir,
+                             Model model) {
+        Page<Product> productPage = productService.getAllProducts(page, size, sortField, sortDir);
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("size", size);
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         return "products";
     }
 

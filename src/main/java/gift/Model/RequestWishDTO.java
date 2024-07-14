@@ -19,4 +19,12 @@ public class RequestWishDTO {
     public int getCount() {
         return count;
     }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }

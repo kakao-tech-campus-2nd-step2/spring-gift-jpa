@@ -9,9 +9,14 @@
 <table>
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Price</th>
+        <th><a th:href="@{/api/products(page=${currentPage}, size=${size}, sortField='id', sortDir=${reverseSortDir})}">ID</a>
+        </th>
+        <th>
+            <a th:href="@{/api/products(page=${currentPage}, size=${size}, sortField='name', sortDir=${reverseSortDir})}">Name</a>
+        </th>
+        <th>
+            <a th:href="@{/api/products(page=${currentPage}, size=${size}, sortField='price', sortDir=${reverseSortDir})}">Price</a>
+        </th>
         <th>Image URL</th>
         <th>Actions</th>
     </tr>
@@ -32,5 +37,17 @@
     </tr>
     </tbody>
 </table>
+<div>
+    <span th:if="${currentPage > 0}">
+        <a th:href="@{/api/products(page=${currentPage - 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}">Previous</a>
+    </span>
+    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+        <a th:href="@{/api/products(page=${i}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}"
+           th:text="${i + 1}">Page Number</a>
+    </span>
+    <span th:if="${currentPage < totalPages - 1}">
+        <a th:href="@{/api/products(page=${currentPage + 1}, size=${size}, sortField=${sortField}, sortDir=${sortDir})}">Next</a>
+    </span>
+</div>
 </body>
 </html>

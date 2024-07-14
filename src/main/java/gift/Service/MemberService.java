@@ -5,6 +5,7 @@ import gift.Model.Member;
 import gift.Model.RequestMember;
 import gift.Repository.MemberRepository;
 import gift.Util.JwtUtil;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -20,6 +21,7 @@ public class MemberService {
         this.jwtUtil = jwtUtil;
     }
 
+    @Transactional
     public void signUpUser(RequestMember requestMember){
         Member member  = new Member(requestMember.email(), requestMember.password());
         memberRepository.save(member);
