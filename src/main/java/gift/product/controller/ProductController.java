@@ -2,6 +2,7 @@ package gift.product.controller;
 
 import gift.product.model.Product;
 import gift.product.service.ProductService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -43,5 +44,14 @@ public class ProductController {
     public String deleteProduct(@PathVariable("id") Long id) {
         productService.deleteProduct(id);
         return "redirect:/products";
+    }
+
+    @GetMapping
+    @ResponseBody
+    public Page<Product> getProductsByPage(@RequestParam int page,
+                                           @RequestParam int size,
+                                           @RequestParam(defaultValue = "price") String sortBy,
+                                           @RequestParam(defaultValue = "desc") String direction) {
+        return productService.getProductsByPage(page, size, sortBy, direction);
     }
 }

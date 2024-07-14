@@ -5,9 +5,11 @@
 ### 1. `Pageable` 객체를 활용하여 페이지네이션을 구현
 - [x] wish list 페이지네이션 구현
   - ex) http://localhost:8080/wish/all?page=0&size=2&sortBy=price&direction=desc : 0번째 페이지, 페이지 크기는 2, 가격을 기준으로 내림차순 정렬하여 페이지네이션
-- [ ] product list 페이지네이션 구현
+- [x] product list 페이지네이션 구현
   - ex) http://localhost:8080/product/all?page=0&size=2&sortBy=price&direction=desc : 0번째 페이지, 페이지 크기는 2, 가격을 기준으로 내림차순 정렬하여 페이지네이션
 
 ### 2. 테스트 및 리팩토링 
+- [x] wish list 페이지네이션 테스트
+- [x] product list 페이지네이션 테스트
 
 
