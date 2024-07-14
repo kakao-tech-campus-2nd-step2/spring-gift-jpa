@@ -47,5 +47,7 @@ public class WishItem {
     public WishItem() {
     }
 
-
+    public WishListResponse toResponse() {
+        return new WishListResponse(id, item.toItemDTO());
+    }
 }
