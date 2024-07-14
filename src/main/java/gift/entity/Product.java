@@ -1,17 +1,12 @@
 package gift.entity;
 
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -26,9 +21,6 @@ public class Product {
     private String url;
     @Column(nullable = false)
     private Long price;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Wish> wishes = new ArrayList<>();
 
     public Product() {
     }
@@ -53,18 +45,6 @@ public class Product {
 
     public String getUrl() {
         return url;
-    }
-
-    public List<Wish> getWishes() {
-        return wishes;
-    }
-
-    public void addWish(Wish wish) {
-        wishes.add(wish);
-    }
-
-    public void removeWish(Wish wish) {
-        wishes.remove(wish);
     }
 
     public void update(String name, Long price, String url) {
