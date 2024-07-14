@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 class WishServiceTest {
@@ -28,9 +29,10 @@ class WishServiceTest {
     WishService wishService;
 
     @BeforeEach
-    void 상품_추가() {
-        for (int i = 1; i <= 20; i++) {
-            productRepository.save(new Product((long) i, "테스트" + i, 1000 + i, "테스트주소" + i));
+    void 위시리스트_항목_추가() {
+        for (int i = 1; i <= 9; i++) {
+            Product product = productRepository.save(new Product((long) i, "테스트" + i, 1000 + i, "테스트주소" + i));
+            wishService.insertWish(new WishDto(product.getId()), new LoginMember(1L));
         }
     }
 
@@ -41,10 +43,6 @@ class WishServiceTest {
         int SIZE = 4;
         String SORT = "product.name";
         String DIRECTION = "desc";
-
-        for (int i = 1; i <= WISH_COUNT; i++) {
-            wishService.insertWish(new WishDto((long) i), new LoginMember(1L));
-        }
 
         Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString(DIRECTION), SORT);
         Page<Wish> wishes = wishService.getWishAll(pageable);
