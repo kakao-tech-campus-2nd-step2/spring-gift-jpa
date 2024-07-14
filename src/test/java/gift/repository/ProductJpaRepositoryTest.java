@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.model.product.Product;
 import gift.repository.product.ProductRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,6 +17,7 @@ public class ProductJpaRepositoryTest {
     private ProductRepository productRepository;
 
     @Test
+    @DisplayName("상품 저장")
     public void save() {
         // given
         Product product = new Product(1L, "product1", 1000, "product1.jpg");
@@ -32,6 +34,7 @@ public class ProductJpaRepositoryTest {
     }
 
     @Test
+    @DisplayName("상품 삭제")
     public void delete() {
         // given
         Product product = new Product(1L, "product1", 1000, "product1.jpg");
@@ -43,6 +46,7 @@ public class ProductJpaRepositoryTest {
     }
 
     @Test
+    @DisplayName("상품 수정")
     public void update() {
         // given
         Product product = new Product(1L, "product1", 1000, "product1.jpg");
@@ -61,6 +65,7 @@ public class ProductJpaRepositoryTest {
     }
 
     @Test
+    @DisplayName("상품 조회")
     public void findById() {
         // given
         Product product = new Product(1L, "product1", 1000, "product1.jpg");
@@ -74,4 +79,5 @@ public class ProductJpaRepositoryTest {
             () -> assertThat(findProduct.getImageUrl()).isEqualTo("product1.jpg")
         );
     }
+
 }
