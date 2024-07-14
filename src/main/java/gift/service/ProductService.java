@@ -31,6 +31,11 @@ public class ProductService {
         return productOpt.map(ProductResponseDTO::new);
     }
 
+    public Product findProductEntityById(Long id) {
+        return productRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("상품 정보를 찾을 수 없습니다."));
+    }
+
     public List<ProductResponseDTO> createProduct(ProductRequestDTO productRequest) {
         Product product = new Product();
         product.setName(productRequest.getName());
