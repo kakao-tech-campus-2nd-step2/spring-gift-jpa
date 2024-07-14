@@ -30,8 +30,6 @@ public class ProductController {
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("currentPage", page);
-//        List<Product> products = productService.getAllProducts();
-//        model.addAttribute("products", products);
         return "productList";
     }
 
