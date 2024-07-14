@@ -1,6 +1,7 @@
 package gift.util;
 
-import gift.domain.Member;
+import gift.exception.MemberAuthorizationException;
+import gift.domain.member.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -37,7 +38,7 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload();
         } catch (JwtException e) {
-            return null;
+            throw new MemberAuthorizationException("토큰 Authorization 실패.");
         }
     }
 

@@ -2,7 +2,7 @@ package gift.resolver;
 
 import gift.annotation.LoginMember;
 import gift.exception.MemberAuthorizationException;
-import gift.service.MemberService;
+import gift.domain.member.service.MemberService;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;

@@ -3,14 +3,19 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import gift.entity.MemberEntity;
-import gift.entity.ProductEntity;
-import gift.entity.WishEntity;
-import java.util.List;
+import gift.domain.member.entity.Member;
+import gift.domain.member.repository.MemberRepository;
+import gift.domain.product.entity.Product;
+import gift.domain.wishlist.entity.Wish;
+import gift.domain.product.repository.ProductRepository;
+import gift.domain.wishlist.repository.WishRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 class WishRepositoryTest {
@@ -23,49 +28,50 @@ class WishRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
+
     @Test
     @DisplayName("memberId로 wish 리스트 가져오는 findAllByMember 테스트")
     void findAllByMemberEntity() {
         // given
-        MemberEntity member = new MemberEntity("test", "password");
-        MemberEntity savedMember = memberRepository.save(member);
+        Member requestMember = new Member("test", "password");
+        Member savedMember = memberRepository.save(requestMember);
 
-        ProductEntity product1 = new ProductEntity("product1", 1000, "product1.jpg");
-        ProductEntity product2 = new ProductEntity("product2", 2000, "product2.jpg");
+        Product requestProduct1 = new Product("product1", 1000, "product1.jpg");
+        Product requestProduct2 = new Product("product2", 2000, "product2.jpg");
+        Product savedProduct1 = productRepository.save(requestProduct1);
+        Product savedProduct2 = productRepository.save(requestProduct2);
 
-        ProductEntity savedProduct1 = productRepository.save(product1);
-        ProductEntity savedProduct2 = productRepository.save(product2);
+        Wish wish1 = new Wish(savedMember, savedProduct1);
+        Wish wish2 = new Wish(savedMember, savedProduct2);
 
-        WishEntity wish1 = new WishEntity(savedMember, savedProduct1);
-        WishEntity wish2 = new WishEntity(savedMember, savedProduct2);
+        Wish expected1 = wishRepository.save(wish1);
+        Wish expected2 = wishRepository.save(wish2);
 
-        WishEntity expected1 = wishRepository.save(wish1);
-        WishEntity expected2 = wishRepository.save(wish2);
-
+        Pageable pageable = PageRequest.of(0, 10);
         // when
-        List<WishEntity> actualList = wishRepository.findAllByMemberEntity(savedMember);
+        Page<Wish> actual = wishRepository.findAllByMember(savedMember, pageable);
 
         // then
-        assertThat(actualList).isNotNull();
-        assertThat(actualList).hasSize(2);
-        assertThat(actualList).containsExactlyInAnyOrder(expected1, expected2);
+        assertThat(actual).isNotNull();
+        assertThat(actual).hasSize(2);
+        assertThat(actual).containsExactlyInAnyOrder(expected1, expected2);
     }
 
     @Test
     @DisplayName("findById 테스트")
-    void findById(){
+    void findById() {
         // given
-        MemberEntity member = new MemberEntity("test", "password");
-        MemberEntity savedMember = memberRepository.save(member);
+        Member requestMember = new Member("test", "password");
+        Member savedMember = memberRepository.save(requestMember);
 
-        ProductEntity product = new ProductEntity("product", 1000, "product1.jpg");
-        ProductEntity savedProduct = productRepository.save(product);
+        Product requestProduct = new Product("product", 1000, "product1.jpg");
+        Product savedProduct = productRepository.save(requestProduct);
 
-        WishEntity request = new WishEntity(savedMember, savedProduct);
-        WishEntity expected = wishRepository.save(request);
+        Wish requestWish = new Wish(savedMember, savedProduct);
+        Wish expected = wishRepository.save(requestWish);
 
         // when
-        WishEntity actual = wishRepository.findById(expected.getId()).orElseThrow();
+        Wish actual = wishRepository.findById(expected.getId()).orElseThrow();
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -73,39 +79,39 @@ class WishRepositoryTest {
 
     @Test
     @DisplayName("save 테스트")
-    void save(){
+    void save() {
         // given
-        MemberEntity member = new MemberEntity("test", "password");
-        MemberEntity savedMember = memberRepository.save(member);
+        Member requestMember = new Member("test", "password");
+        Member savedMember = memberRepository.save(requestMember);
 
-        ProductEntity product = new ProductEntity("product", 1000, "product1.jpg");
-        ProductEntity savedProduct = productRepository.save(product);
+        Product requestProduct = new Product("product", 1000, "product1.jpg");
+        Product savedProduct = productRepository.save(requestProduct);
 
-        WishEntity expected = new WishEntity(savedMember, savedProduct);
+        Wish expected = new Wish(savedMember, savedProduct);
 
         // when
-        WishEntity actual = wishRepository.save(expected);
+        Wish actual = wishRepository.save(expected);
 
         // then
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
-            () -> assertThat(actual.getMemberEntity()).isEqualTo(expected.getMemberEntity()),
-            () -> assertThat(actual.getProductEntity()).isEqualTo(expected.getProductEntity())
+            () -> assertThat(actual.getMember()).isEqualTo(expected.getMember()),
+            () -> assertThat(actual.getProduct()).isEqualTo(expected.getProduct())
         );
     }
 
     @Test
     @DisplayName("delete 테스트")
-    void delete(){
+    void delete() {
         // given
-        MemberEntity member = new MemberEntity("test", "password");
-        MemberEntity savedMember = memberRepository.save(member);
+        Member requestMember = new Member("test", "password");
+        Member savedMember = memberRepository.save(requestMember);
 
-        ProductEntity product = new ProductEntity("product", 1000, "product1.jpg");
-        ProductEntity savedProduct = productRepository.save(product);
+        Product requestProduct = new Product("product", 1000, "product1.jpg");
+        Product savedProduct = productRepository.save(requestProduct);
 
-        WishEntity request = new WishEntity(savedMember, savedProduct);
-        WishEntity savedWish = wishRepository.save(request);
+        Wish request = new Wish(savedMember, savedProduct);
+        Wish savedWish = wishRepository.save(request);
 
         // when
         wishRepository.delete(savedWish);

@@ -3,8 +3,10 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import gift.dto.ProductRequest;
-import gift.entity.ProductEntity;
+import gift.domain.product.dto.ProductResponse;
+import gift.domain.product.repository.ProductRepository;
+import gift.domain.product.dto.ProductRequest;
+import gift.domain.product.entity.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,22 +14,23 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 class ProductRepositoryTest {
-    
+
     @Autowired
     private ProductRepository productRepository;
+
     @Test
     void findByName() {
     }
 
     @Test
     @DisplayName("findById 테스트")
-    void findById(){
+    void findById() {
         // given
         ProductRequest request = new ProductRequest("test", 1000, "test.jpg");
-        ProductEntity expected = productRepository.save(request.toProductEntity());
+        Product expected = productRepository.save(dtoToEntity(request));
 
         // when
-        ProductEntity actual = productRepository.findById(expected.getId()).orElseThrow();
+        Product actual = productRepository.findById(expected.getId()).orElseThrow();
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -35,13 +38,14 @@ class ProductRepositoryTest {
 
     @Test
     @DisplayName("save 테스트")
-    void save(){
+    void save() {
         // given
         ProductRequest request = new ProductRequest("test", 1000, "test.jpg");
-        ProductEntity expected = request.toProductEntity();
+        Product expected = new Product(request.getName(), request.getPrice(),
+            request.getImageUrl());
 
         // when
-        ProductEntity actual = productRepository.save(expected);
+        Product actual = productRepository.save(expected);
 
         // then
         assertAll(
@@ -54,10 +58,10 @@ class ProductRepositoryTest {
 
     @Test
     @DisplayName("delete 테스트")
-    void delete(){
+    void delete() {
         // given
         ProductRequest request = new ProductRequest("test", 1000, "test.jpg");
-        ProductEntity savedProduct = productRepository.save(request.toProductEntity());
+        Product savedProduct = productRepository.save(dtoToEntity(request));
 
         // when
         productRepository.delete(savedProduct);
@@ -65,4 +69,10 @@ class ProductRepositoryTest {
         // then
         assertTrue(productRepository.findById(savedProduct.getId()).isEmpty());
     }
+
+    private Product dtoToEntity(ProductRequest productRequest) {
+        return new Product(productRequest.getName(), productRequest.getPrice(),
+            productRequest.getImageUrl());
+    }
+
 }

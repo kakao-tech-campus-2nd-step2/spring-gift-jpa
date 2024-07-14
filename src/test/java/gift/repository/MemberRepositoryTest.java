@@ -3,8 +3,9 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import gift.dto.MemberRequest;
-import gift.entity.MemberEntity;
+import gift.domain.member.dto.MemberRequest;
+import gift.domain.member.entity.Member;
+import gift.domain.member.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +16,17 @@ class MemberRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
     @Test
     @DisplayName("findByEmail 테스트")
     void findByEmail() {
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        MemberEntity expected = memberRepository.save(new MemberEntity(request.getEmail(), request.getPassword()));
+        Member expected = memberRepository.save(
+            new Member(request.getEmail(), request.getPassword()));
 
         // when
-        MemberEntity actual = memberRepository.findByEmail(request.getEmail()).orElseThrow();
+        Member actual = memberRepository.findByEmail(request.getEmail()).orElseThrow();
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -31,13 +34,14 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("findById 테스트")
-    void findById(){
+    void findById() {
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        MemberEntity expected = memberRepository.save(new MemberEntity(request.getEmail(), request.getPassword()));
+        Member expected = memberRepository.save(
+            new Member(request.getEmail(), request.getPassword()));
 
         // when
-        MemberEntity actual = memberRepository.findById(expected.getId()).orElseThrow();
+        Member actual = memberRepository.findById(expected.getId()).orElseThrow();
 
         // then
         assertThat(actual).isEqualTo(expected);
@@ -45,13 +49,13 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("save 테스트")
-    void save(){
+    void save() {
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        MemberEntity expected = new MemberEntity(request.getEmail(), request.getPassword());
+        Member expected = new Member(request.getEmail(), request.getPassword());
 
         // when
-        MemberEntity actual = memberRepository.save(expected);
+        Member actual = memberRepository.save(expected);
 
         // then
         assertAll(
@@ -63,10 +67,11 @@ class MemberRepositoryTest {
 
     @Test
     @DisplayName("delete 테스트")
-    void delete(){
+    void delete() {
         // given
         MemberRequest request = new MemberRequest("test@google.co.kr", "password");
-        MemberEntity savedMember = memberRepository.save(new MemberEntity(request.getEmail(), request.getPassword()));
+        Member savedMember = memberRepository.save(
+            new Member(request.getEmail(), request.getPassword()));
 
         // when
         memberRepository.delete(savedMember);

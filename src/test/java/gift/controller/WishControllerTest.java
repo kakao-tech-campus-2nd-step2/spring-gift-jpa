@@ -2,12 +2,12 @@ package gift.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import gift.domain.Member;
-import gift.dto.MemberRequest;
-import gift.dto.ProductIdRequest;
-import gift.dto.WishRequest;
-import gift.service.MemberService;
-import gift.service.WishService;
+import gift.domain.member.dto.MemberRequest;
+import gift.domain.member.entity.Member;
+import gift.domain.wishlist.dto.ProductIdRequest;
+import gift.domain.wishlist.dto.WishRequest;
+import gift.domain.member.service.MemberService;
+import gift.domain.wishlist.service.WishService;
 import java.net.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +24,7 @@ import org.springframework.http.RequestEntity;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class WishControllerTest {
+
     @LocalServerPort
     private int port;
 
@@ -88,7 +89,7 @@ class WishControllerTest {
     void deleteWishTest() {
         // given
         // 테스트를 위한 wish 1개 생성
-        var request = new WishRequest(memberService.getMemberFromToken(token).getId(),1L);
+        var request = new WishRequest(memberService.getMemberFromToken(token).getId(), 1L);
         wishService.addWish(request);
 
         var id = 1L;
