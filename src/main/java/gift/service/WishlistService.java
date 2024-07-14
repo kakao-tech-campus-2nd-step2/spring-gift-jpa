@@ -1,14 +1,15 @@
 package gift.service;
 
+import gift.dto.WishResponse;
 import gift.entity.Product;
 import gift.entity.Wish;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class WishlistService {
@@ -21,19 +22,26 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    public Wish addProduct(Wish product) {
-        Optional<Wish> existingWish = wishlistRepository.findByMemberIdAndProductId(product.getMemberId(), product.getProductId());
+    public Wish addProduct(Wish wish) {
+        if (wish.getProduct() == null || wish.getProduct().getId() == 0) {
+            throw new IllegalArgumentException("Product must not be null");
+        }
+
+        Optional<Wish> existingWish = wishlistRepository.findByMemberIdAndProductId(wish.getMember().getId(), wish.getProduct().getId());
         if (existingWish.isPresent()) {
             Wish foundWish = existingWish.get();
-            foundWish.setProductNumber(foundWish.getProductNumber() + product.getProductNumber());
+            foundWish.setProductNumber(foundWish.getProductNumber() + wish.getProductNumber());
             return wishlistRepository.save(foundWish);
         } else {
-            return wishlistRepository.save(product);
+            return wishlistRepository.save(wish);
         }
     }
 
-    public List<Wish> getProductsByMemberId(Long memberId) {
-        return wishlistRepository.findByMemberId(memberId);
+    public List<WishResponse> getWishesByMemberId(Long memberId) {
+        List<Wish> wishes = wishlistRepository.findByMemberId(memberId);
+        return wishes.stream()
+                .map(wish -> new WishResponse(wish.getId(), wish.getProduct().getId(), wish.getProduct().getName(), wish.getProductNumber()))
+                .collect(Collectors.toList());
     }
 
     public void deleteItem(Long wishId) {

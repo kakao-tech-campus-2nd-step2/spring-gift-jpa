@@ -3,34 +3,26 @@ package gift.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "wishlist_items")
 public class Wish {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
-    @Column(name = "product_number", nullable = false)
     private int productNumber;
 
     public Wish() {}
 
-    public Wish(Long memberId, Long productId, int productNumber) {
-        this.memberId = memberId;
-        this.productId = productId;
-        this.productNumber = productNumber;
-    }
-
-    public Wish(Long id, Long memberId, Long productId, int productNumber) {
-        this.id = id;
-        this.memberId = memberId;
-        this.productId = productId;
+    public Wish(Member member, Product product, int productNumber) {
+        this.member = member;
+        this.product = product;
         this.productNumber = productNumber;
     }
 
@@ -38,28 +30,28 @@ public class Wish {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public int getProductNumber() {
-        return productNumber;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public int getProductNumber() {
+        return productNumber;
     }
 
     public void setProductNumber(int productNumber) {
