@@ -1,6 +1,5 @@
 package gift.controller;
 
-import gift.domain.Menu;
 import gift.domain.MenuRequest;
 import gift.domain.MenuResponse;
 import gift.service.MenuService;

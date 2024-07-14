@@ -2,15 +2,12 @@ package gift.service;
 
 import gift.domain.Member;
 import gift.domain.MemberRequest;
-import gift.domain.Menu;
 import gift.domain.WishList;
 import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class MemberService {
