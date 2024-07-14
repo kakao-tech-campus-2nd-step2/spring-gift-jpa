@@ -15,7 +15,7 @@ public class MemberController {
     }
 
     @PostMapping("/signin")
-    public String signinController(@RequestBody Member member) {
+    public String signinController(@RequestBody LogInMemberDTO member) {
         return memberService.signin(member);
     }
 

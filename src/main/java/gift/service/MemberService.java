@@ -18,8 +18,9 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public String signin(Member member){
-        if(!memberRepository.existsByEmail(member.getEmail())){
+    public String signin(LogInMemberDTO memberDTO){
+        if(!memberRepository.existsByEmail(memberDTO.getEmail())){
+            Member member = new Member(memberDTO.getEmail(), memberDTO.getPassword());
             memberRepository.save(member);
             return createJwtToken.createJwt(member.getId(), member.getEmail());
         }
