@@ -42,8 +42,8 @@ public class ProductDtoRepositoryTest {
     public void testGetAllProducts() {
         ProductDto productDto1 = new ProductDto(1L, "productDto1", 1000, "http://localhost:8080/image1.jpg", false);
         Product product = mapper.productDtoToEntity(productDto1);
-
         productJpaRepository.save(product);
+
         ProductDto productDto2 = new ProductDto(2L, "productDto2", 2000, "http://localhost:8080/image2.jpg", false);
         Product product2 = mapper.productDtoToEntity(productDto2);
 
