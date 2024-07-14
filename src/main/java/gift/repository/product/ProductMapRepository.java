@@ -23,7 +23,17 @@ public class ProductMapRepository implements ProductRepository {
     }
 
     @Override
-    public Page<Product> findAllByOrderByIdDesc(Pageable pageable) {
+    public Page<Product> findAll(Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<Product> findAllOrderByPrice(Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<Product> findByNameContaining(String name, Pageable pageable) {
         return null;
     }
 

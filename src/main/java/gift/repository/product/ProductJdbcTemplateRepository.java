@@ -53,7 +53,7 @@ public class ProductJdbcTemplateRepository implements ProductRepository {
     public void deleteById(Long id) {
         jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
-    
+
     public List<Product> findPaging(int page, int size) {
         int offset = (page) * size;
         return jdbcTemplate.query(SQL_SELECT_PAGING, productRowMapper, size, offset);
@@ -65,7 +65,17 @@ public class ProductJdbcTemplateRepository implements ProductRepository {
     }
 
     @Override
-    public Page<Product> findAllByOrderByIdDesc(Pageable pageable) {
+    public Page<Product> findAll(Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<Product> findAllOrderByPrice(Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<Product> findByNameContaining(String name, Pageable pageable) {
         return null;
     }
 
