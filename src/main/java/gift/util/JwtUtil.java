@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @PropertySource("classpath:application-secret.properties")
 public class JwtUtil {
+
     @Value("${jwt-secret-key}")
     private String secret;
     private JwtParser jwtParser;
@@ -23,14 +24,14 @@ public class JwtUtil {
         jwtParser = Jwts.parser().setSigningKey(secret);
     }
 
-    public String extractEmail(String token){
+    public String extractEmail(String token) {
         return jwtParser
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
 
-    public String extractUsername(String token){
+    public String extractUsername(String token) {
         return jwtParser
                 .parseClaimsJws(token)
                 .getBody()
