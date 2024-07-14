@@ -25,7 +25,7 @@ public class Product {
     @Column(nullable = false)
     private String imageUrl;
 
-    @OneToMany
+    @OneToMany(mappedBy = "product")
     private List<Wish> wishList;
 
     public Product(Long id, String name, Long price, String imageUrl) {

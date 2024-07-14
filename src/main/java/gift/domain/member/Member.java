@@ -25,10 +25,10 @@ public class Member{
     @ColumnDefault("'user'")
     private String role;
 
-    @OneToMany
+    @OneToMany(mappedBy = "member")
     private List<Wish> wishList;
 
-    public Member(Long id, String email, String password, String role) {
+    public Member(String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
