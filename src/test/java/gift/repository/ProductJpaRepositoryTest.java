@@ -85,7 +85,7 @@ public class ProductJpaRepositoryTest {
 
     @Test
     @DisplayName("상품 가격 정렬 조회")
-    public void testFindAllOrderByPrice() {
+    void testFindAllOrderByPrice() {
         //given
         Product product1 = new Product(1L, "product1", 300, "product1.jpg");
         Product product2 = new Product(2L, "product2", 200, "product2.jpg");
@@ -106,7 +106,7 @@ public class ProductJpaRepositoryTest {
 
     @Test
     @DisplayName("상품 이름으로 조회")
-    public void testFindByNameContaining() {
+    void testFindByNameContaining() {
         //given
         Product product1 = new Product(1L, "sampleProduct1", 300, "product1.jpg");
         Product product2 = new Product(2L, "product2", 200, "product2.jpg");
