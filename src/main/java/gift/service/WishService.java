@@ -1,22 +1,23 @@
 package gift.service;
 
+import gift.common.dto.PageResponse;
 import gift.common.exception.ExistWishException;
 import gift.common.exception.ProductNotFoundException;
 import gift.common.exception.UserNotFoundException;
 import gift.common.exception.WishNotFoundException;
 import gift.model.product.Product;
-import gift.model.product.ProductListResponse;
-import gift.model.product.ProductResponse;
 import gift.model.user.User;
 import gift.model.wish.Wish;
-import gift.model.wish.WishListResponse;
 import gift.model.wish.WishRequest;
 import gift.model.wish.WishResponse;
+import gift.model.wish.WishUpdateRequest;
 import gift.repository.ProductRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishRepository;
 import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,18 +37,15 @@ public class WishService {
     }
 
 
-    public WishListResponse findAllWish(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        List<Wish> wishList = wishRepository.findByUserId(userId);
+    public PageResponse<WishResponse> findAllWish(Long userId, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<Wish> wishList = wishRepository.findByUserId(userId, pageRequest);
 
-        List<WishResponse> responseList = wishList.stream()
-            .map(wish -> WishResponse.from(wish,
-                productRepository.findById(wish.getProduct().getId()).orElseThrow(
-                    ProductNotFoundException::new)))
+        List<WishResponse> wishResponses = wishList.getContent().stream()
+            .map(WishResponse::from)
             .toList();
 
-        WishListResponse responses = new WishListResponse(responseList);
-        return responses;
+        return PageResponse.from(wishResponses, wishList);
     }
 
     @Transactional
@@ -65,33 +63,29 @@ public class WishService {
     }
 
     @Transactional
-    public void updateWishList(Long userId, WishRequest wishRequest) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-
-        Product product = productRepository.findById(wishRequest.productId())
-            .orElseThrow(ProductNotFoundException::new);
-
-        Wish wish = wishRepository.findByProductIdAndUserId(wishRequest.productId(), userId)
-            .orElseThrow(WishNotFoundException::new);
-
+    public void updateWishList(Long userId, Long wishId, WishUpdateRequest wishRequest) {
         if (wishRequest.count() == 0) {
-            deleteWishList(userId, wishRequest.productId());
-        } else {
-            wish.updateWish(wishRequest.count());
+            deleteWishList(userId, wishId);
+            return;
         }
-    }
 
-    @Transactional
-    public void deleteWishList(Long userId, Long productId) {
-        User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        Wish wish = wishRepository.findById(wishId).orElseThrow(WishNotFoundException::new);
 
-        Product product = productRepository.findById(productId)
-            .orElseThrow(ProductNotFoundException::new);
-
-        if (!wishRepository.existsByProductIdAndUserId(productId, userId)) {
+        if (!wish.isOwner(userId)) {
             throw new WishNotFoundException();
         }
 
-        wishRepository.deleteByProductIdAndUserId(productId, userId);
+        wish.updateWish(wishRequest.count());
+    }
+
+    @Transactional
+    public void deleteWishList(Long userId, Long wishId) {
+        Wish wish = wishRepository.findById(wishId).orElseThrow(WishNotFoundException::new);
+
+        if (!wish.isOwner(userId)) {
+            throw new WishNotFoundException();
+        }
+
+        wishRepository.deleteById(wishId);
     }
 }

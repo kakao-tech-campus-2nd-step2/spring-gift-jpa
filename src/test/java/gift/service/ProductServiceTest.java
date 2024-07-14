@@ -3,17 +3,15 @@ package gift.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import gift.common.exception.ProductNotFoundException;
-import gift.model.product.Product;
-import gift.model.product.ProductListResponse;
+import gift.common.dto.PageResponse;
 import gift.model.product.ProductRequest;
 import gift.model.product.ProductResponse;
-import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
@@ -59,8 +57,10 @@ public class ProductServiceTest {
         ProductRequest productRequest2 = new ProductRequest("product2", 2000, "image2.jpg");
         productService.register(productRequest1);
         productService.register(productRequest2);
-        ProductListResponse products = productService.findAllProduct();
-        assertThat(products.productResponses()).hasSize(2);
+
+        PageResponse<ProductResponse> products = productService.findAllProduct(1, 10);
+
+        assertThat(products.size()).isEqualTo(2);
     }
 
     @Test
@@ -70,7 +70,9 @@ public class ProductServiceTest {
         productService.register(productRequest);
         ProductRequest updateRequest = new ProductRequest("update1", 2000, "update1.jpg");
         ProductResponse response = productService.register(productRequest);
+
         ProductResponse product = productService.updateProduct(response.id(), updateRequest);
+
         assertAll(
             () -> assertThat(product.name()).isEqualTo("update1"),
             () -> assertThat(product.price()).isEqualTo(2000),
@@ -85,8 +87,10 @@ public class ProductServiceTest {
         ProductRequest productRequest2 = new ProductRequest("product2", 2000, "image2.jpg");
         productService.register(productRequest1);
         productService.register(productRequest2);
+
         productService.deleteProduct(1L);
-        ProductListResponse products = productService.findAllProduct();
-        assertThat(products.productResponses()).hasSize(1);
+        PageResponse<ProductResponse> products = productService.findAllProduct(1, 10);
+
+        assertThat(products.size()).isEqualTo(1);
     }
 }

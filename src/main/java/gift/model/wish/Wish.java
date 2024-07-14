@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Wish {
@@ -20,13 +21,15 @@ public class Wish {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @NotNull
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
+    @NotNull
     private Product product;
 
-    @Column(nullable = false)
+    @NotNull
     private int count;
 
     protected Wish() {
@@ -57,5 +60,9 @@ public class Wish {
 
     public void updateWish(int count) {
         this.count = count;
+    }
+
+    public boolean isOwner(Long userId) {
+        return this.user.getId().equals(userId);
     }
 }

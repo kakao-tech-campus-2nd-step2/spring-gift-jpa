@@ -24,7 +24,9 @@ public class UserServiceTest {
     @DisplayName("회원가입")
     void register() {
         UserRequest userRequest = new UserRequest("yso8296", "yso8296@gmail.com");
+
         UserResponse actual = userService.register(userRequest);
+
         assertAll(
             () -> assertThat(actual.id()).isNotNull(),
             () -> assertThat(actual.password()).isEqualTo("yso8296"),

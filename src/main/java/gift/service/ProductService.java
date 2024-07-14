@@ -1,15 +1,16 @@
 package gift.service;
 
+import gift.common.dto.PageResponse;
 import gift.common.exception.ProductNotFoundException;
-import gift.common.exception.UserNotFoundException;
 import gift.model.product.Product;
-import gift.model.product.ProductListResponse;
 import gift.model.product.ProductRequest;
 import gift.model.product.ProductResponse;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
 import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,12 +37,12 @@ public class ProductService {
         return ProductResponse.from(product);
     }
 
-    public ProductListResponse findAllProduct() {
-        List<Product> productList = productRepository.findAll();
-        List<ProductResponse> responseList = productList.stream().map(ProductResponse::from)
+    public PageResponse<ProductResponse> findAllProduct(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
+        Page<Product> productList = productRepository.findAll(pageRequest);
+        List<ProductResponse> productResponses = productList.getContent().stream().map(ProductResponse::from)
             .toList();
-        ProductListResponse responses = new ProductListResponse(responseList);
-        return responses;
+        return PageResponse.from(productResponses, productList);
     }
 
     @Transactional

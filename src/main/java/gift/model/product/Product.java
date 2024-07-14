@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Product {
@@ -13,13 +14,14 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 15)
+    @NotNull
+    @Column(length = 15)
     private String name;
 
-    @Column(nullable = false)
+    @NotNull
     private int price;
 
-    @Column(nullable = false)
+    @NotNull
     private String imageUrl;
 
     protected Product() {

@@ -5,13 +5,17 @@ import gift.model.user.User;
 import gift.model.wish.Wish;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
     boolean existsByProductIdAndUserId(Long productId, Long userId);
 
-    List<Wish> findByUserId(Long userId);
+    @Query("SELECT w FROM Wish w JOIN FETCH w.product WHERE w.user.id = :userId")
+    Page<Wish> findByUserId(Long userId, Pageable pageable);
 
     void deleteByProductIdAndUserId(Long productId, Long userId);
 
