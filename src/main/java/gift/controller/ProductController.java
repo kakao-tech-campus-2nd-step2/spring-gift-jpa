@@ -4,11 +4,13 @@ import gift.dto.ProductRequest;
 import gift.model.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RequestMapping("/api")
 @RestController
@@ -26,8 +28,8 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> productsList = productService.getAllProducts();
+    public ResponseEntity<Page<Product>> getAllProducts(@PageableDefault(page = 0, size = 5) Pageable pageable) {
+        Page<Product> productsList = productService.getAllProducts(pageable);
         return ResponseEntity.ok().body(productsList);
     }
 

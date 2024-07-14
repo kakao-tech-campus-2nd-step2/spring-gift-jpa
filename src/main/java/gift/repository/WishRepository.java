@@ -3,6 +3,8 @@ package gift.repository;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,7 +20,7 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
             """;
 
     @Query(findAllByMemberIdQuery)
-    List<Product> findAllByMemberId(@Param("memberId") Long memberId);
+    Page<Product> findAllByMemberId(@Param("memberId") Long memberId, Pageable pageable);
 
     void deleteByProductAndMember(Product product, Member member);
 }
