@@ -1,5 +1,6 @@
 package gift.entity;
 
+import gift.exception.BadRequestExceptions.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -91,13 +92,13 @@ public class Member {
 
     private void validateEmail(String email) {
         if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
-            throw new IllegalArgumentException("올바른 이메일 형식이 아닙니다.");
+            throw new BadRequestException("올바른 이메일 형식이 아닙니다.");
         }
     }
 
     private void validatePassword(String password) {
         if (password == null || password.isBlank()) {
-            throw new IllegalArgumentException("비밀번호를 입력해주세요.");
+            throw new BadRequestException("비밀번호를 입력해주세요.");
         }
     }
 
