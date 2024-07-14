@@ -15,17 +15,17 @@ public class WishRestController {
     }
 
     @PostMapping()
-    public void addWish(@RequestHeader("Bearer") String token, @RequestParam String name){
-        wishService.add(token, name);
+    public void addWish(@RequestAttribute("Email") String email, @RequestParam String name){
+        wishService.add(email, name);
     }
 
     @DeleteMapping("/{name}")
-    public void deleteWishlist(@RequestHeader("Bearer") String token, @PathVariable String name){
-        wishService.delete(token, name);
+    public void deleteWishlist(@RequestAttribute("Email") String email, @PathVariable String name){
+        wishService.delete(email, name);
     }
 
     @GetMapping()
-    public List<String> viewAllWish(@RequestHeader("Bearer") String token){
-        return wishService.getAll(token);
+    public List<String> viewAllWish(@RequestAttribute("Email") String email){
+        return wishService.getAll(email);
     }
 }
