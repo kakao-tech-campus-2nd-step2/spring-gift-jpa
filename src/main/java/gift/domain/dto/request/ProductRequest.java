@@ -19,6 +19,10 @@ public record ProductRequest(
     @NotNull
     String imageUrl) {
 
+    public static ProductRequest of(Product product) {
+        return new ProductRequest(product.getName(), product.getPrice(), product.getImageUrl());
+    }
+
     public Product toEntity() {
         return new Product(name, price, imageUrl);
     }
