@@ -1,6 +1,6 @@
 package gift.controller.admin;
 
-import gift.DTO.Product;
+import gift.domain.Product;
 import gift.DTO.ProductRequest;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -43,7 +43,10 @@ public class AdminViewController {
     }
 
     @GetMapping("/form")
-    public String showProductForm(@RequestParam(required = false) Long id, Model model) {
+    public String showProductForm(
+        @RequestParam(required = false) Long id,
+        Model model
+    ) {
         if (id == null) {
             model.addAttribute("product", new ProductRequest("", 0, ""));
             model.addAttribute("isEditing", false);
@@ -68,8 +71,9 @@ public class AdminViewController {
         @Valid @ModelAttribute Product product,
         BindingResult bindingResult,
         @RequestParam(required = false, name = "_method")
-        String method, Model
-        model) {
+        String method,
+        Model model
+    ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("isEditing", isUpdateMethod(method));
             return "productForm";

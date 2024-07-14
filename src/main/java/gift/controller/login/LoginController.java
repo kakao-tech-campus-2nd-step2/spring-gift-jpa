@@ -2,7 +2,8 @@ package gift.controller.login;
 
 import gift.DTO.LoginRequest;
 import gift.DTO.LoginResponse;
-import gift.service.UserService;
+import gift.service.MemberService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,20 +16,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/login")
 public class LoginController {
 
-    private final UserService userService;
+    private final MemberService memberService;
 
     @Autowired
-    public LoginController(UserService userService) {
-        this.userService = userService;
+    public LoginController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @PostMapping
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(
+            @RequestBody
+            @Valid LoginRequest loginRequest
+    ) {
         try {
-            LoginResponse loginResponse = userService.loginUser(loginRequest);
+            LoginResponse loginResponse = memberService.loginMember(loginRequest);
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }

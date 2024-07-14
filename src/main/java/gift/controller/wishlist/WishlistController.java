@@ -1,7 +1,8 @@
 package gift.controller.wishlist;
 
-import gift.DTO.Product;
-import gift.service.UserService;
+import gift.domain.Product;
+import gift.service.MemberService;
+import gift.service.TokenService;
 import gift.service.WishlistService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,58 +14,70 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/wishlist")
 public class WishlistController {
 
-    private final UserService userService;
+    private final MemberService memberService;
     private final WishlistService wishlistService;
+    private final TokenService tokenService;
 
     @Autowired
-    public WishlistController(UserService userService, WishlistService wishlistService) {
-        this.userService = userService;
+    public WishlistController(
+        MemberService memberService,
+        WishlistService wishlistService,
+        TokenService tokenService
+    ) {
+        this.memberService = memberService;
         this.wishlistService = wishlistService;
-    }
-
-    private String getTokenFromHeader(String header) {
-        return header.substring(7);
+        this.tokenService = tokenService;
     }
 
     @GetMapping
     public ResponseEntity<List<Product>> getWishlist(
-        @RequestHeader("Authorization") String authorizationHeader) {
-
-        String token = getTokenFromHeader(authorizationHeader); // "Bearer " 부분을 제거
-        if (!userService.validateToken(token)) {
+        @RequestHeader("Authorization") String authorizationHeader,
+        @RequestParam(defaultValue = "0") Integer page,
+        @RequestParam(defaultValue = "2") Integer size
+    ) {
+        String token = tokenService.getBearerTokenFromHeader(authorizationHeader);
+        if (!tokenService.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        String email = userService.extractEmailFromToken(token);
-        List<Product> wishlist = wishlistService.getWishlistByEmail(email);
+
+        String email = tokenService.extractEmailFromToken(token);
+        List<Product> wishlist = wishlistService.getWishlistByEmail(email, page, size);
         return ResponseEntity.ok(wishlist);
     }
 
     @PostMapping("/{productId}")
     public ResponseEntity<String> addToWishlist(
-        @RequestHeader("Authorization") String authorizationHeader, @PathVariable Long productId) {
-        String token = getTokenFromHeader(authorizationHeader); // "Bearer " 부분을 제거
-        if (!userService.validateToken(token)) {
+        @RequestHeader("Authorization") String authorizationHeader,
+        @PathVariable Long productId
+    ) {
+        String token = tokenService.getBearerTokenFromHeader(authorizationHeader);
+        if (!tokenService.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
-        String email = userService.extractEmailFromToken(token);
+        String email = tokenService.extractEmailFromToken(token);
+
         wishlistService.addWishlist(email, productId);
         return ResponseEntity.ok("Product added to wishlist");
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<String> removeFromWishlist(
-        @RequestHeader("Authorization") String authorizationHeader, @PathVariable Long productId) {
-        String token = getTokenFromHeader(authorizationHeader); // "Bearer " 부분 제거
-        if (!userService.validateToken(token)) {
+        @RequestHeader("Authorization") String authorizationHeader,
+        @PathVariable Long productId
+    ) {
+        String token = tokenService.getBearerTokenFromHeader(authorizationHeader);
+        if (!tokenService.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
-        String email = userService.extractEmailFromToken(token);
+        String email = tokenService.extractEmailFromToken(token);
+
         wishlistService.removeWishlist(email, productId);
         return ResponseEntity.ok("Product removed from wishlist");
     }

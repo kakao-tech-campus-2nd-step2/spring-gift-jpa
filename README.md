@@ -9,5 +9,10 @@
 AngularJS Git Commit Message Conventions을 참고해 커밋 메시지를 작성한다.
 ## 🚀 1단계 - 엔티티 매핑
 ### 구현할 기능
-- [ ] Domain 모델 Entity로 매팡
-- [ ] Repository 계층 JPA로 리팩터링
+- [X] Domain 모델 Entity로 매핑
+- [X] Repository 계층 JPA로 리팩터링
+
+## 🚀 2단계 - 연관 관계 매핑
+### 구현할 기능
+- [ ] JdbcTemplate 기반 코드를 JPA로 리팩터링하고 실제 도메인 모델을 어떻게 구성하고 객체와 테이블을 어떻게 매핑해야 하는지 알아본다.
+- [ ] 객체의 참조와 테이블의 외래 키를 매핑해서 객체에서는 참조를 사용하고 테이블에서는 외래 키를 사용할 수 있도록 한다.
