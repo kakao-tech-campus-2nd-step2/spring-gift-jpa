@@ -43,13 +43,19 @@ public class Member {
         this.email = email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    /**
+     * 비즈니스 로직을 통한 Member 정보 업데이트
+     * @param newEmail 업데이트할 이메일
+     * @param newPassword 업데이트할 비밀번호
+     */
+    public void updateMemberInfo(String newEmail, String newPassword) {
+        if (!this.email.equals(newEmail)) {
+            setEmail(newEmail);
+        }
 
-    public void update(String email, String password) {
-        this.email = email;
-        this.password = password;
+        if (newPassword != null && !newPassword.isEmpty() &&!this.password.equals(newPassword)) {
+            this.password = newPassword;
+        }
     }
 
     /**

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestPropertySource(locations = "classpath:application-test.properties")
 class WishlistRepositoryTest {
 
     @Autowired
@@ -59,7 +61,7 @@ class WishlistRepositoryTest {
     @DisplayName("Wish save (add)")
     void save() {
         // given
-        Wish expected = new Wish(savedMember.getId(), savedProduct1.getId());
+        Wish expected = new Wish(savedMember, savedProduct1);
 
         // when
         wishlistRepository.save(expected);
@@ -72,8 +74,8 @@ class WishlistRepositoryTest {
     @DisplayName("Find All Wish")
     void findAllWish() {
         // given
-        Wish wish1 = wishlistRepository.save(new Wish(savedMember.getId(), savedProduct1.getId()));
-        Wish wish2 = wishlistRepository.save(new Wish(savedMember.getId(), savedProduct2.getId()));
+        Wish wish1 = wishlistRepository.save(new Wish(savedMember, savedProduct1));
+        Wish wish2 = wishlistRepository.save(new Wish(savedMember, savedProduct2));
 
         // when
         List<Wish> wishList = wishlistRepository.findAll();
@@ -90,8 +92,8 @@ class WishlistRepositoryTest {
     @DisplayName("Find Wish By member id (member-pk)")
     void findWishListByMemberId() {
         // given
-        wishlistRepository.save(new Wish(savedMember.getId(), savedProduct1.getId()));
-        wishlistRepository.save(new Wish(savedMember.getId(), savedProduct2.getId()));
+        wishlistRepository.save(new Wish(savedMember, savedProduct1));
+        wishlistRepository.save(new Wish(savedMember, savedProduct2));
 
         // when
         List<Wish> all = wishlistRepository.findAll();
@@ -104,7 +106,7 @@ class WishlistRepositoryTest {
     @DisplayName("Delete Wish by id")
     void deleteWishById() {
         // given
-        Wish savedWish = wishlistRepository.save(new Wish(savedMember.getId(), savedProduct1.getId()));
+        Wish savedWish = wishlistRepository.save(new Wish(savedMember, savedProduct1));
         Long wishId = savedWish.getId();
 
         // when
