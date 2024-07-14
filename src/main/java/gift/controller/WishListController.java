@@ -1,14 +1,13 @@
 package gift.controller;
 
 import gift.annotation.LoginUser;
-import gift.dto.ProductRequestDTO;
-import gift.dto.ProductsResponseDTO;
-import gift.dto.WishRequestDTO;
-import gift.dto.WishResponseDTO;
+import gift.dto.*;
 import gift.model.User;
 import gift.service.ProductService;
 import gift.service.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,15 +24,15 @@ public class WishListController {
     ProductService productService;
 
     @GetMapping
-    public String getWishlist(@LoginUser User user, Model model) {
-        WishResponseDTO wishProducts = wishService.getWishlist(user.getId());
+    public String getWishlist(@LoginUser User user, Model model, @PageableDefault(size = 3) Pageable pageable) {
+        WishPageResponseDTO wishProducts = wishService.getWishlist(user.getId(), pageable);
         model.addAttribute("wishProducts", wishProducts);
         return "wishlist";
     }
 
     @GetMapping("/addWishProduct")
-    public String addWishProductPage(@LoginUser User user, Model model) {
-        ProductsResponseDTO products = productService.getAllProducts();
+    public String addWishProductPage(@LoginUser User user, Model model, @PageableDefault(size = 3) Pageable pageable) {
+        ProductsPageResponseDTO products = productService.getAllProducts(pageable);
         model.addAttribute("products", products);
         return "addWishProduct"; // addWishProduct.html로 이동
     }
@@ -47,10 +46,10 @@ public class WishListController {
 
 
     @DeleteMapping
-    public String deleteWishProduct(@LoginUser User user, @RequestBody WishRequestDTO wishRequestDTO, Model model) {
+    public String deleteWishProduct(@LoginUser User user, @RequestBody WishRequestDTO wishRequestDTO, Model model, @PageableDefault(size = 3) Pageable pageable) {
         wishService.deleteWishProduct(user.getId(), wishRequestDTO.productId());
 
-        WishResponseDTO wishProducts = wishService.getWishlist(user.getId());
+        WishPageResponseDTO wishProducts = wishService.getWishlist(user.getId(), pageable);
         model.addAttribute("wishProducts", wishProducts);
 
         return "wishlist";

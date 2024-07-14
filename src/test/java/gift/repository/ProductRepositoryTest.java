@@ -1,11 +1,12 @@
 package gift.repository;
 
 import gift.model.Product;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +20,8 @@ class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
+
+    private Pageable pageable;
 
     private Product product1;
     private Product product2;
@@ -51,7 +54,7 @@ class ProductRepositoryTest {
     @Test
     void findAllById() {
         List<Long> ids = Arrays.asList(product1.getId(), product2.getId());
-        List<Product> products = productRepository.findAllById(ids);
+        Page<Product> products = productRepository.findAllById(ids, pageable);
 
         assertThat(products).hasSize(2).contains(product1, product2);
     }

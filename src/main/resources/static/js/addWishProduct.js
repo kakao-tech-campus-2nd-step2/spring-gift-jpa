@@ -64,3 +64,30 @@ function returnWishProduct() {
         alert(`An error occurred: ${error.message}`);
     });
 }
+
+function loadPage(pageNum) {
+    fetch(`/wishes/addWishProduct?page=${pageNum}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem("token")
+        }
+    })
+    .then(response => {
+            if (!response.ok) {
+                return response.text().then(errorText => {
+                    throw new Error(`Failed to fetch getWish: ${errorText}`);
+                });
+            }
+            return response.text();
+        })
+    .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+        })
+    .catch(error => {
+        console.error('Error:', error);
+        alert(`An error occurred: ${error.message}`);
+    });
+}

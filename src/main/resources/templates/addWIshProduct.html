@@ -29,7 +29,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="product : ${products.productDTOList}" th:data-id="${product.id}">
+        <tr th:each="product : ${products.products}" th:data-id="${product.id}">
             <td><input type="checkbox"></td>
             <td th:text="${product.name}"></td>
             <td th:text="${product.price}"></td>
@@ -37,6 +37,21 @@
         </tr>
         </tbody>
     </table>
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${products.currentPage == 0} ? 'disabled'">
+            <button class="page-link" aria-label="Previous" th:onclick="'loadPage(' + (${products.currentPage - 1}) + ')'" th:disabled="${products.currentPage == 0}">
+                <span aria-hidden="true">&laquo;</span>
+            </button>
+        </li>
+        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, products.totalPages - 1)}" th:classappend="${pageNum == products.currentPage} ? 'active'">
+            <button class="page-link" th:text="${pageNum + 1}" th:onclick="'loadPage(' + ${pageNum} + ')'"></button>
+        </li>
+        <li class="page-item" th:classappend="${products.currentPage + 1 == products.totalPages} ? 'disabled'">
+            <button class="page-link" aria-label="Next" th:onclick="'loadPage(' + (${products.currentPage + 1}) + ')'" th:disabled="${products.currentPage + 1 == products.totalPages}">
+                <span aria-hidden="true">&raquo;</span>
+            </button>
+        </li>
+    </ul>
 </div>
 </body>
 </html>

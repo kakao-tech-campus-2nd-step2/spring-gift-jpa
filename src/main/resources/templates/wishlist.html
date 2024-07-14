@@ -38,6 +38,21 @@
         </tr>
         </tbody>
     </table>
+    <ul class="pagination justify-content-center" id="pagination">
+        <li class="page-item" th:classappend="${wishProducts.currentPage == 0} ? 'disabled'">
+            <button class="page-link" aria-label="Previous" th:onclick="'loadPage(' + (${wishProducts.currentPage - 1}) + ')'" th:disabled="${wishProducts.currentPage == 0}">
+                <span aria-hidden="true">&laquo;</span>
+            </button>
+        </li>
+        <li class="page-item" th:each="pageNum : ${#numbers.sequence(0, wishProducts.totalPages - 1)}" th:classappend="${pageNum == wishProducts.currentPage} ? 'active'">
+            <button class="page-link" th:text="${pageNum + 1}" th:onclick="'loadPage(' + ${pageNum} + ')'"></button>
+        </li>
+        <li class="page-item" th:classappend="${wishProducts.currentPage + 1 == wishProducts.totalPages} ? 'disabled'">
+            <button class="page-link" aria-label="Next" th:onclick="'loadPage(' + (${wishProducts.currentPage + 1}) + ')'" th:disabled="${wishProducts.currentPage + 1 == wishProducts.totalPages}">
+                <span aria-hidden="true">&raquo;</span>
+            </button>
+        </li>
+    </ul>
 </div>
 </body>
 </html>

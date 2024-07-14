@@ -1,13 +1,15 @@
 package gift.service;
 
+import gift.dto.WishPageResponseDTO;
 import gift.dto.WishRequestDTO;
-import gift.dto.WishResponseDTO;
 import gift.model.Product;
 import gift.model.User;
 import gift.model.Wish;
 import gift.repository.ProductRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,15 +32,18 @@ public class WishService {
     public void addWishProduct(Long userId, WishRequestDTO wishRequestDTO) {
         User user = userRepository.findById(userId).orElse(null);
         Product product = productRepository.findById(wishRequestDTO.productId()).orElse(null);
-
         Wish wish = new Wish(user, product);
+
         wishRepository.save(wish);
     }
 
 
-    public WishResponseDTO getWishlist(Long userId) {
+    public WishPageResponseDTO getWishlist(Long userId, Pageable pageable) {
         List<Long> productsId = wishRepository.findProductIdsByUserId(userId);
-        return new WishResponseDTO(userId, productRepository.findAllById(productsId));
+        Page<Product> pages = productRepository.findAllById(productsId, pageable);
+        return new WishPageResponseDTO(pages.getContent(),
+                                       pages.getNumber(),
+                                       pages.getTotalPages());
     }
 
     @Transactional
