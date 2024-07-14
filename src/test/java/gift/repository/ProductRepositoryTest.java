@@ -88,15 +88,15 @@ class ProductRepositoryTest {
         Optional<Product> optionalProduct = productRepository.findById(product2.getId());
         Product expected = optionalProduct.get();
 
-        expected.changeProduct(new Product("커피2", 31240941,"https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"));
+        expected.changeProduct("커피2", 31240941,"https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
+        productRepository.flush();
 
         Optional<Product> actual = productRepository.findById(product2.getId());
 
-        assertThat(actual.get()).isEqualTo(expected);
+        assertThat(actual.get().getPrice()).isEqualTo(31240941);
 
     }
 
 
 
 }
-
