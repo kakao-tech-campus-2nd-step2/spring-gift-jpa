@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ public class WishListController {
         wishlistService.checkUserByMemberEmail(email);
         model.addAttribute("products", wishlistService.getAllProducts(pageable));
         model.addAttribute("wishlists", wishlistService.getAllWishlist(email, pageable));
+
         return "wish";
     }
 

@@ -28,6 +28,7 @@ public class WishlistService {
 
     public Page<Product> getAllWishlist(String email, Pageable pageable) {
         return wishlistRepository.getAllWishlist(email, pageable);
+
     }
 
     public Product getProductById(long id){
