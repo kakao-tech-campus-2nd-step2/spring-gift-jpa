@@ -1,11 +1,15 @@
 package gift.service.wish;
 
+import gift.domain.product.Product;
+import gift.domain.user.User;
 import gift.domain.wish.Wish;
-import gift.repository.product.ProductRepository;
-import gift.repository.wish.WishRepository;
 import gift.exception.product.ProductNotFoundException;
+import gift.exception.user.UserNotFoundException;
 import gift.exception.wish.WishCanNotModifyException;
 import gift.exception.wish.WishNotFoundException;
+import gift.repository.product.ProductRepository;
+import gift.repository.user.UserRepository;
+import gift.repository.wish.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +19,6 @@ import java.util.List;
 @Service
 @Transactional
 public class WishService {
-
     private final WishRepository wishRepository;
     private final ProductRepository productRepository;
 
@@ -41,12 +44,12 @@ public class WishService {
             throw new WishCanNotModifyException();
         }
 
-        wishRepository.save(new Wish(wishId, productId, userId, amount));
+        wish.setAmount(amount);
+        wishRepository.save(wish);
     }
 
     public List<Wish> getWishList(Long userId) {
-        List<Wish> wishes = wishRepository.findByUserId(userId);
-        return wishes;
+        return wishRepository.findByUserIdAndIsDeletedFalse(userId);
     }
 
     public Wish getWishDetail(Long wishId, Long userId) {
@@ -58,7 +61,7 @@ public class WishService {
         Wish wish = wishRepository.findByIdAndUserId(wishId, userId)
                 .orElseThrow(() -> new WishNotFoundException(wishId));
 
-        wish.delete();
+        wish.setIsDeleted(true);
         wishRepository.save(wish);
     }
 }

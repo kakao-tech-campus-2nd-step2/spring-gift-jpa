@@ -1,21 +1,30 @@
 package gift.domain.wish;
 
+import lombok.Data;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "wishes")
 public class Wish {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "product_id", nullable = false)
     private Long productId;
+
+    @Column(name = "user_id", nullable = false)
     private Long userId;
-    private Integer amount;
-    private Boolean isDeleted;
 
-    public Wish(Long id, Long productId, Long userId, Integer amount) {
-        this.id = id;
-        this.productId = productId;
-        this.userId = userId;
-        this.amount = amount;
-        this.isDeleted = false;
-    }
+    @Column(nullable = false)
+    private int amount;
 
-    public Wish(Long productId, Long userId, Integer amount) {
+    @Column(name = "is_deleted", nullable = false) // 이 부분을 추가하여 매핑 수정
+    private boolean isDeleted = false;
+
+    public Wish() {}
+
+    public Wish(Long productId, Long userId, int amount) {
         this.productId = productId;
         this.userId = userId;
         this.amount = amount;
@@ -34,19 +43,31 @@ public class Wish {
         return userId;
     }
 
-    public Integer getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public Boolean isDeleted() {
+    public boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public boolean isNew() {
-        return id == null;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void delete() {
-        this.isDeleted = true;
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

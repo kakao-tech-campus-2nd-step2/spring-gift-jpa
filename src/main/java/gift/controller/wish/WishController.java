@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/wishes")
 public class WishController {
-
     private final WishService wishService;
 
     @Autowired
@@ -24,7 +24,7 @@ public class WishController {
         this.wishService = wishService;
     }
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void saveWish(@RequestBody WishRequest wishRequest, @LoginMember User loginUser) {
         wishService.saveWish(wishRequest.getProductId(), loginUser.getId(), wishRequest.getAmount());
@@ -38,7 +38,7 @@ public class WishController {
         wishService.modifyWish(wishId, wishRequest.getProductId(), loginUser.getId(), wishRequest.getAmount());
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<WishResponse>> getWishList(@LoginMember User loginUser) {
         List<Wish> wishes = wishService.getWishList(loginUser.getId());
         List<WishResponse> responses = WishResponse.fromModelList(wishes);

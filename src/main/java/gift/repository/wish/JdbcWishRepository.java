@@ -1,5 +1,5 @@
 package gift.repository.wish;
-
+/*
 import gift.domain.wish.Wish;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -66,3 +66,6 @@ public class JdbcWishRepository implements WishRepository {
         jdbcTemplate.update(sql, wishId);
     }
 }
+
+
+ */
