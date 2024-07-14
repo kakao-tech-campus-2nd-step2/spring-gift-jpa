@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @Validated
 @RequestMapping("/members")
-public class UserController {
+public class MemberController {
 
     private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
     @Autowired
-    public UserController(MemberService memberService, JwtUtil jwtUtil) {
+    public MemberController(MemberService memberService, JwtUtil jwtUtil) {
         this.memberService = memberService;
         this.jwtUtil = jwtUtil;
     }
