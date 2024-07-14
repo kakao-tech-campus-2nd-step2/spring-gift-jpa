@@ -17,7 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class JpaTest {
+public class ContextLoadsRelationTest {
     @Autowired
     WishRepository wishRepository;
     @Autowired
