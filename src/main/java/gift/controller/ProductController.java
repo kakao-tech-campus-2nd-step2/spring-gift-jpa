@@ -48,7 +48,7 @@ public class ProductController {
     public ResponseEntity<ResponseDTO> addProduct(@RequestBody @Valid ProductDTO productDTO) {
         try {
             productService.addProduct(productDTO);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return responseError(e);
         }
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE),
@@ -60,7 +60,7 @@ public class ProductController {
     public ResponseEntity<ResponseDTO> deleteProduct(@PathVariable @Min(1) @NotNull Long id) {
         try {
             productService.deleteProduct(id);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return responseError(e);
         }
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE),
@@ -74,7 +74,7 @@ public class ProductController {
         try {
             productService.updateProduct(id, productDTO);
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return responseError(e);
         }
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE),

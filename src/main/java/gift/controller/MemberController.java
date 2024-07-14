@@ -44,7 +44,7 @@ public class MemberController {
         try {
             memberService.register(memberDTO);
             token = jwtUtil.generateToken(memberDTO);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             if(e instanceof EmailAlreadyHereException)
                 return responseError(e, HttpStatus.CONFLICT);
             return responseError(e);
@@ -63,7 +63,7 @@ public class MemberController {
         try {
             memberService.login(memberDTO);
             token = jwtUtil.generateToken(memberDTO);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return responseError(e, HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(new JwtDTO(token), HttpStatus.OK);

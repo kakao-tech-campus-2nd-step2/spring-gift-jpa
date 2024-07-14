@@ -45,8 +45,6 @@ public class WishListController {
         } catch (Exception e) {
             responseError(e);
         }
-
-
         return "getWishes";
     }
 

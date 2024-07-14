@@ -9,6 +9,7 @@ import gift.entity.Wish;
 import gift.exception.BadRequestExceptions.BadRequestException;
 import gift.exception.BadRequestExceptions.NoSuchProductIdException;
 import gift.exception.BadRequestExceptions.UserNotFoundException;
+import gift.exception.InternalServerExceptions.InternalServerException;
 import gift.repository.MemberRepository;
 import gift.repository.WishRepository;
 import gift.util.validator.databaseValidator.MemberDatabaseValidator;
@@ -42,57 +43,82 @@ public class WishListService {
     }
 
     @Transactional(readOnly = true)
-    public WishListDTO getWishList(MemberDTO memberDTO, Pageable pageable)
-            throws RuntimeException {
-        Member member = memberRepository.findByEmail(memberDTO.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("해당 이메일을 가지는 유저를 찾을 수 없습니다."));
-        Page<Wish> wishPage = wishRepository.findByMember(member, pageable);
-        return WishListDTO.convertToWishListDTO(wishPage);
+    public WishListDTO getWishList(MemberDTO memberDTO, Pageable pageable) throws RuntimeException {
+        try {
+            Member member = memberRepository.findByEmail(memberDTO.getEmail())
+                    .orElseThrow(() -> new UserNotFoundException("해당 이메일을 가지는 유저를 찾을 수 없습니다."));
+            Page<Wish> wishPage = wishRepository.findByMember(member, pageable);
+            return WishListDTO.convertToWishListDTO(wishPage);
+        } catch (BadRequestException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new InternalServerException(e.getMessage());
+        }
     }
+
 
     @Transactional
     public void addWishes(MemberDTO memberDTO, ProductDTO productDTO) {
-        Map<String, Object> validatedParameterMap = wishListFieldDatabaseValidator.validateProductParameter(memberDTO, productDTO);
-        Member member = (Member) validatedParameterMap.get("member");
-        Product product = (Product) validatedParameterMap.get("product");
+        try {
+            Map<String, Object> validatedParameterMap = wishListFieldDatabaseValidator.validateProductParameter(
+                    memberDTO, productDTO);
+            Member member = (Member) validatedParameterMap.get("member");
+            Product product = (Product) validatedParameterMap.get("product");
 
-        Optional<Wish> optionalWish = wishRepository.findByMemberAndProduct(member, product);
-        if (optionalWish.isEmpty()) {
-            Wish wish = new Wish(member, product, 1);
-            wishRepository.save(wish);
-            return;
+            Optional<Wish> optionalWish = wishRepository.findByMemberAndProduct(member, product);
+            if (optionalWish.isEmpty()) {
+                Wish wish = new Wish(member, product, 1);
+                wishRepository.save(wish);
+                return;
+            }
+            Wish existingWish = optionalWish.get();
+            existingWish.incrementQuantity();
+        } catch (BadRequestException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new InternalServerException(e.getMessage());
         }
-        Wish existingWish = optionalWish.get();
-        existingWish.incrementQuantity();
     }
 
     @Transactional
     public void removeWishListProduct(MemberDTO memberDTO, Long id)
             throws NoSuchProductIdException, EmptyResultDataAccessException {
         try {
-            Map<String, Object> validatedParameterMap = wishListFieldDatabaseValidator.validateProductParameter(memberDTO, id);
+            Map<String, Object> validatedParameterMap = wishListFieldDatabaseValidator.validateProductParameter(
+                    memberDTO, id);
             Member member = (Member) validatedParameterMap.get("member");
             Product product = (Product) validatedParameterMap.get("product");
             wishRepository.deleteByMemberAndProductId(member, product.getId());
         } catch (NoSuchProductIdException e) { //제품 목록에는 없는데 유저는 존재하는 경우
             wishRepository.deleteByMemberAndProductId(
                     memberDatabaseValidator.validateMember(memberDTO), id);
+        } catch(Exception e){
+            if(!(e instanceof BadRequestException)){
+                throw new InternalServerException(e.getMessage());
+            }
         }
     }
 
     @Transactional
     public void setWishListNumber(MemberDTO memberDTO, ProductDTO productDTO, Integer quantity)
             throws RuntimeException {
-        Map<String, Object> validatedParameterMap = wishListFieldDatabaseValidator.validateProductParameter(memberDTO, productDTO);
-        Member member = (Member) validatedParameterMap.get("member");
-        Product product = (Product) validatedParameterMap.get("product");
+        try {
+            Map<String, Object> validatedParameterMap = wishListFieldDatabaseValidator.validateProductParameter(
+                    memberDTO, productDTO);
+            Member member = (Member) validatedParameterMap.get("member");
+            Product product = (Product) validatedParameterMap.get("product");
 
-        Optional<Wish> optionalWish = wishRepository.findByMemberAndProduct(member, product);
-        if (optionalWish.isEmpty()) {
-            throw new BadRequestException("위시리스트에 그러한 품목을 찾을 수 없습니다.");
+            Optional<Wish> optionalWish = wishRepository.findByMemberAndProduct(member, product);
+            if (optionalWish.isEmpty()) {
+                throw new BadRequestException("위시리스트에 그러한 품목을 찾을 수 없습니다.");
+            }
+            Wish wish = optionalWish.get();
+            wish.changeQuantity(quantity);
+        } catch (BadRequestException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new InternalServerException(e.getMessage());
         }
-        Wish wish = optionalWish.get();
-        wish.changeQuantity(quantity);
     }
 
 }

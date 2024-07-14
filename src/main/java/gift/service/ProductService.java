@@ -26,7 +26,7 @@ public class ProductService {
     private final WishRepository wishRepository;
 
     @Autowired
-    public ProductService (ProductRepository productRepository, WishRepository wishRepository) {
+    public ProductService(ProductRepository productRepository, WishRepository wishRepository) {
         this.productRepository = productRepository;
         this.wishRepository = wishRepository;
     }
@@ -47,27 +47,33 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> getProductList(Pageable pageable) {
+    public Page<ProductDTO> getProductList(Pageable pageable) throws RuntimeException {
         Page<Product> productPage = productRepository.findAll(pageable);
-
         List<ProductDTO> productDTOList = productPage.getContent().stream().map(ProductDTO::convertToProductDTO).toList();
-
         return new PageImpl<>(productDTOList, productPage.getPageable(), productPage.getTotalElements());
     }
 
     @Transactional
     public void updateProduct(Long id, ProductDTO productDTO) throws RuntimeException {
-        if(!id.equals(productDTO.getId()))
-            throw new InvalidIdException("올바르지 않은 id입니다.");
+        try {
+            if (!id.equals(productDTO.getId())) {
+                throw new InvalidIdException("올바르지 않은 id입니다.");
+            }
 
-        Optional<Product> productInDb = productRepository.findById(id);
+            Optional<Product> productInDb = productRepository.findById(id);
 
-        if (productInDb.isEmpty())
-            throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
+            if (productInDb.isEmpty()) {
+                throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
+            }
 
-        Product product = ProductDTO.convertToProduct(productDTO);
-        Product productInDB = productInDb.get();
-        productInDB.changeProduct(product.getName(), product.getPrice(), product.getImageUrl());
+            Product product = ProductDTO.convertToProduct(productDTO);
+            Product productInDB = productInDb.get();
+            productInDB.changeProduct(product.getName(), product.getPrice(), product.getImageUrl());
+        } catch (Exception e) {
+            if (!(e instanceof BadRequestException)) {
+                throw new InternalServerException(e.getMessage());
+            }
+        }
     }
 
     @Transactional
