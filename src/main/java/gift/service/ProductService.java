@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -16,12 +17,10 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    @Transactional(readOnly = true)
     public List<Product> findAllProducts() {
         return productRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
     public Product findProductsById(Long id) {
         return productRepository.findById(id).orElse(null);
     }

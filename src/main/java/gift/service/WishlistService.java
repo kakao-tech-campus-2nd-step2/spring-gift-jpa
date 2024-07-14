@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class WishlistService {
 
     private final WishlistRepository wishlistRepository;
@@ -23,7 +24,6 @@ public class WishlistService {
         this.productService = productService;
     }
 
-    @Transactional(readOnly = true)
     public List<Product> getWishlist(String email) {
         Member member = memberService.findMemberByEmail(email);
         List<Wishlist> wishlistItems = wishlistRepository.findByMember(member);
