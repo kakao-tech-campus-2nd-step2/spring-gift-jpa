@@ -37,8 +37,8 @@ class WishRepositoryTest {
         memberRepository.deleteAll();
         wishRepository.deleteAll();
 
-        member = memberRepository.save(new Member("12345@12345.com", "1", "홍길동", "default_user", new ArrayList<>()));
-        member2 = memberRepository.save(new Member("22345@12345.com", "2", "라이언", "default_user", new ArrayList<>()));
+        member = memberRepository.save(new Member("12345@12345.com", "1", "홍길동", "default_user"));
+        member2 = memberRepository.save(new Member("22345@12345.com", "2", "라이언", "default_user"));
 
         product = productRepository.save(new Product("커피", 10000,
                 "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"));
