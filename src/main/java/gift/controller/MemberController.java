@@ -5,13 +5,16 @@ import gift.dto.MemberResponse;
 import gift.service.MemberService;
 import gift.util.JwtUtil;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 @RequestMapping("/members")
 public class MemberController {
 
@@ -24,27 +27,43 @@ public class MemberController {
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody MemberRequest memberRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body("Invalid data");
-        }
-        String token = memberService.register(memberRequest);
-        MemberResponse response = new MemberResponse(token);
-        return ResponseEntity.ok(response);
+    @GetMapping("/login")
+    public String loginForm(Model model) {
+        model.addAttribute("memberRequest", new MemberRequest());
+        return "login";
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody MemberRequest memberRequest, BindingResult bindingResult) {
+    public String login(@Valid @ModelAttribute MemberRequest memberRequest, BindingResult bindingResult, Model model, HttpSession session) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body("Invalid data");
+            return "login";
         }
         try {
             String token = memberService.authenticate(memberRequest);
-            MemberResponse response = new MemberResponse(token);
-            return ResponseEntity.ok(response);
+            session.setAttribute("token", token);
+            return "redirect:/wishes/items";
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(403).body("Forbidden");
+            return "redirect:/members/login?error";
+        }
+    }
+
+    @GetMapping("/register")
+    public String registerForm(Model model) {
+        model.addAttribute("memberRequest", new MemberRequest());
+        return "register";
+    }
+
+    @PostMapping("/register")
+    public String register(@Valid @ModelAttribute MemberRequest memberRequest, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "register";
+        }
+        try {
+            String token = memberService.register(memberRequest);
+            return "redirect:/members/login?registerSuccess";
+        } catch (IllegalArgumentException e) {
+            bindingResult.reject("error.register", e.getMessage());
+            return "register";
         }
     }
 

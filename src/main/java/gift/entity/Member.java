@@ -1,14 +1,12 @@
 package gift.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Member {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Member extends BaseEntity {
     private String email;
     private String password;
 
@@ -20,14 +18,6 @@ public class Member {
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getEmail() {

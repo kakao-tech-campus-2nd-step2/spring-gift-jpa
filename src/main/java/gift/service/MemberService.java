@@ -28,6 +28,10 @@ public class MemberService {
     }
 
     public String register(MemberRequest memberRequest) {
+        if (memberRepository.findByEmail(memberRequest.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already in use");
+        }
+
         String encodedPassword = passwordEncoder.encode(memberRequest.getPassword());
         Member member = new Member(memberRequest.getEmail(), encodedPassword);
         memberRepository.save(member);

@@ -6,7 +6,10 @@ import gift.entity.Wish;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,11 +40,9 @@ public class WishlistService {
         }
     }
 
-    public List<WishResponse> getWishesByMemberId(Long memberId) {
-        List<Wish> wishes = wishlistRepository.findByMemberId(memberId);
-        return wishes.stream()
-                .map(wish -> new WishResponse(wish.getId(), wish.getProduct().getId(), wish.getProduct().getName(), wish.getProductNumber()))
-                .collect(Collectors.toList());
+    public Page<WishResponse> getWishesByMemberId(Long memberId, PageRequest pageRequest) {
+        Page<Wish> wishes = wishlistRepository.findByMemberId(memberId, pageRequest);
+        return wishes.map(wish -> new WishResponse(wish.getId(), wish.getProduct().getId(), wish.getProduct().getName(), wish.getProductNumber()));
     }
 
     public void deleteItem(Long wishId) {

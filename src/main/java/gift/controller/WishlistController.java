@@ -7,13 +7,19 @@ import gift.entity.Wish;
 import gift.service.WishlistService;
 import gift.util.JwtUtil;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/wishes")
 public class WishlistController {
 
@@ -49,12 +55,29 @@ public class WishlistController {
     }
 
     @GetMapping("/items")
-    public ResponseEntity<List<WishResponse>> getItems(@RequestHeader("Authorization") String token) {
-        Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
+    public String getItems(HttpSession session,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam(defaultValue = "10") int size,
+                           @RequestParam(defaultValue = "id") String sortBy,
+                           @RequestParam(defaultValue = "asc") String direction,
+                           Model model) {
+        String token = (String) session.getAttribute("token");
+        if (token == null) {
+            return "redirect:/members/login";
+        }
+
+        Claims claims = jwtUtil.extractClaims(token);
         Long memberId = Long.parseLong(claims.getSubject());
 
-        List<WishResponse> wishes = wishlistService.getWishesByMemberId(memberId);
-        return ResponseEntity.ok(wishes);
+        Sort sort = direction.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        Page<WishResponse> wishPage = wishlistService.getWishesByMemberId(memberId, pageRequest);
+
+        model.addAttribute("wishPage", wishPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("direction", direction);
+        return "wishlist";
     }
 
     @GetMapping("/item-details/{productId}")

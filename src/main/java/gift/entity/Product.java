@@ -1,14 +1,12 @@
 package gift.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Product extends BaseEntity {
     private String name;
     private int price;
     private String imageUrl;
@@ -19,7 +17,7 @@ public class Product {
     public Product() {}
 
     public Product(Long id, String name, int price, String imageUrl) {
-        this.id = id;
+        this.setId(id);
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -29,14 +27,6 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

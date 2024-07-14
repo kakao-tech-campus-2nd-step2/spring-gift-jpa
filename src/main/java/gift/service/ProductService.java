@@ -6,7 +6,10 @@ import gift.dto.WishResponse;
 import gift.entity.Product;
 import gift.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +23,8 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> findAll() {
-        return productRepository.findAll().stream().map(this::convertToResponse).collect(Collectors.toList());
+    public Page<ProductResponse> findAll(PageRequest pageRequest) {
+        return productRepository.findAll(pageRequest).map(this::convertToResponse);
     }
 
     public ProductResponse findById(long id) {
