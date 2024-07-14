@@ -39,7 +39,7 @@ public class MemberService {
         return new SignupResponse(welcome);
     }
 
-    public LoginResponse loginMember(LoginRequest loginRequest) throws Exception {
+    public LoginResponse loginMember(LoginRequest loginRequest) {
         Optional<Member> member = memberRepository.findByEmail(loginRequest.getEmail());
         member.orElseThrow(
             () -> new RuntimeException("Login failed : Invalid email or password"));
@@ -65,9 +65,10 @@ public class MemberService {
 
     private String generateToken(Member member) {
         long now = System.currentTimeMillis();
-        return Jwts.builder().setSubject(member.getEmail()).setIssuedAt(new Date(now))
-            .setExpiration(new Date(now + 3600000)) // 1 hour validity
-            .signWith(key).compact();
+        return Jwts.builder().setSubject(member.getEmail())
+                             .setIssuedAt(new Date(now))
+                             .setExpiration(new Date(now + 3600000)) // 1 hour validity
+                             .signWith(key).compact();
     }
 
     public boolean validateToken(String token) {
@@ -80,7 +81,10 @@ public class MemberService {
     }
 
     public String extractEmailFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parser().setSigningKey(key)
+                                     .build()
+                                     .parseClaimsJws(token)
+                                     .getBody();
         return claims.getSubject();
     }
 }

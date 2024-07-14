@@ -26,12 +26,12 @@ public class LoginController {
     @PostMapping
     public ResponseEntity<LoginResponse> login(
             @RequestBody
-            @Valid LoginRequest loginRequest) {
+            @Valid LoginRequest loginRequest
+    ) {
         try {
             LoginResponse loginResponse = memberService.loginMember(loginRequest);
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }

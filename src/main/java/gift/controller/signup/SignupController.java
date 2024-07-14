@@ -26,7 +26,8 @@ public class SignupController {
     @PostMapping
     public ResponseEntity<SignupResponse> signup(
             @RequestBody
-            @Valid SignupRequest signupRequest) {
+            @Valid SignupRequest signupRequest
+    ) {
         SignupResponse signupResponse = memberService.registerMember(signupRequest);
         return new ResponseEntity<>(signupResponse, HttpStatus.CREATED);
     }
