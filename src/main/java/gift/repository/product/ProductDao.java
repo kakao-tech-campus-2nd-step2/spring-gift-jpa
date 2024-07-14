@@ -1,5 +1,6 @@
-package gift.model.product;
+package gift.repository.product;
 
+import gift.model.product.Product;
 import java.util.List;
 import java.util.Optional;
 

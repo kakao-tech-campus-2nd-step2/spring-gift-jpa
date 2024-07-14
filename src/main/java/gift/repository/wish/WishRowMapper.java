@@ -1,7 +1,8 @@
-package gift.model.wish;
+package gift.repository.wish;
 
 import gift.model.member.Member;
 import gift.model.product.Product;
+import gift.model.wish.Wish;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;

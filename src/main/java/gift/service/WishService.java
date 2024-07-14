@@ -6,9 +6,9 @@ import gift.global.dto.PageResponse;
 import gift.model.member.Member;
 import gift.model.product.Product;
 import gift.model.wish.Wish;
-import gift.repository.MemberJpaRepository;
-import gift.repository.ProductJpaRepository;
-import gift.repository.WishJpaRepository;
+import gift.repository.member.MemberRepository;
+import gift.repository.product.ProductJpaRepository;
+import gift.repository.wish.WishJpaRepository;
 import gift.global.validate.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,19 +19,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class WishService {
 
     private final WishJpaRepository wishJpaRepository;
-    private final MemberJpaRepository memberJpaRepository;
+    private final MemberRepository memberRepository;
     private final ProductJpaRepository productJpaRepository;
 
-    public WishService(WishJpaRepository wishJpaRepository, MemberJpaRepository memberJpaRepository,
+    public WishService(WishJpaRepository wishJpaRepository, MemberRepository memberRepository,
         ProductJpaRepository productJpaRepository) {
         this.wishJpaRepository = wishJpaRepository;
-        this.memberJpaRepository = memberJpaRepository;
+        this.memberRepository = memberRepository;
         this.productJpaRepository = productJpaRepository;
     }
 
     //@Transactional
     public void addWish(Long userId, WishRequest.Register request) {
-        Member member = memberJpaRepository.findById(userId)
+        Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
 
         Product product = productJpaRepository.findById(request.productId())
@@ -47,7 +47,7 @@ public class WishService {
 
     //@Transactional
     public void updateWish(Long userId, WishRequest.Update request) {
-        Member member = memberJpaRepository.findById(userId)
+        Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
 
         Product product = productJpaRepository.findById(request.productId())

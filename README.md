@@ -14,7 +14,7 @@
 ## 리팩토링 기능 목록
 
 - [x] createdAt, updatedAt 을 위한 baseEntity 제작
-- [ ] product에 대한 단위테스트
+- [x] product에 대한 단위테스트
 - [x] Role @Enumerated(EnumType.STRING) 붙이기
 - [ ] repository 확장성 있게 리팩토링
 - [ ] repository 테스트코드 작성

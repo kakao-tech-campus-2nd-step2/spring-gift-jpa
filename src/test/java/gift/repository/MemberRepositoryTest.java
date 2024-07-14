@@ -5,50 +5,54 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.model.member.Member;
 import gift.model.member.Role;
+import gift.repository.member.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class MemberJpaRepositoryTest {
+public class MemberRepositoryTest {
 
     @Autowired
-    private MemberJpaRepository memberJpaRepository;
+    private MemberRepository memberRepository;
 
     @Test
-    public void save() {
+    void save() {
         // given
         Member member = new Member(1L, "member1@asd.com", "asd", "asd", Role.USER);
         // when
-        memberJpaRepository.save(member);
+        memberRepository.save(member);
         // then
         assertAll(
-            () -> assertThat(memberJpaRepository.findById(1L).get().getEmail()).isEqualTo(
+            () -> assertThat(memberRepository.findById(1L).get().getEmail()).isEqualTo(
                 "member1@asd.com"),
-            () -> assertThat(memberJpaRepository.findById(1L).get().getPassword()).isEqualTo("asd"),
-            () -> assertThat(memberJpaRepository.findById(1L).get().getName()).isEqualTo("asd"),
-            () -> assertThat(memberJpaRepository.findById(1L).get().getRole()).isEqualTo(Role.USER)
+            () -> assertThat(memberRepository.findById(1L).get().getPassword()).isEqualTo(
+                "asd"),
+            () -> assertThat(memberRepository.findById(1L).get().getName()).isEqualTo(
+                "asd"),
+            () -> assertThat(memberRepository.findById(1L).get().getRole()).isEqualTo(
+                Role.USER)
         );
     }
 
     @Test
-    public void delete() {
+    void delete() {
         // given
         Member member = new Member(1L, "member1@asd.com", "asd", "asd", Role.USER);
-        memberJpaRepository.save(member);
+        memberRepository.save(member);
         // when
-        memberJpaRepository.deleteById(1L);
+        memberRepository.deleteById(1L);
         // then
-        assertThat(memberJpaRepository.findById(1L)).isEmpty();
+        assertThat(memberRepository.findById(1L)).isEmpty();
     }
 
     @Test
-    public void findByEmail() {
+    void getByEmail() {
         // given
         Member member = new Member(1L, "member1@asd.com", "asd", "asd", Role.USER);
-        memberJpaRepository.save(member);
+        memberRepository.save(member);
         // when
-        Member findMember = memberJpaRepository.findByEmail("member1@asd.com").get();
+        Member findMember = memberRepository.findByEmail("member1@asd.com").get();
         // then
         assertAll(
             () -> assertThat(findMember.getEmail()).isEqualTo("member1@asd.com"),

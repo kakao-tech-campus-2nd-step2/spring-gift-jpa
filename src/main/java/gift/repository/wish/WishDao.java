@@ -1,5 +1,6 @@
-package gift.model.wish;
+package gift.repository.wish;
 
+import gift.model.wish.Wish;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;

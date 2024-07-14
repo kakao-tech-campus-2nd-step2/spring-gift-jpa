@@ -2,7 +2,7 @@ package gift.controller;
 
 import gift.controller.product.ProductController;
 import gift.model.product.Product;
-import gift.model.product.ProductDao;
+import gift.repository.product.ProductDao;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -4,7 +4,7 @@ import gift.controller.product.dto.ProductRequest;
 import gift.controller.product.dto.ProductResponse;
 import gift.global.dto.PageResponse;
 import gift.model.product.Product;
-import gift.repository.ProductJpaRepository;
+import gift.repository.product.ProductJpaRepository;
 import gift.global.validate.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,11 +32,11 @@ public class ProductService {
         productJpaRepository.save(request.toEntity());
     }
 
+    @Transactional
     public void updateProduct(Long id, ProductRequest.Update request) {
         var product = productJpaRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
         product.update(request.name(), request.price(), request.imageUrl());
-        productJpaRepository.save(product);
     }
 
     //@Transactional

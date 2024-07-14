@@ -1,12 +1,15 @@
-package gift.model.member;
+package gift.repository.member;
 
+import gift.model.member.Member;
+import gift.model.member.Role;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
-public class MemberDao {
+@Repository
+public class MemberJdbcRepository implements MemberRepository {
 
     private static final String USER_INSERT = "INSERT INTO member (email, password, name, role) VALUES (?, ?, ?,?)";
     private static final String USER_SELECT_BY_ID = "SELECT id, email, password, name, role FROM member WHERE id = ?";
@@ -15,7 +18,7 @@ public class MemberDao {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Member> userRowMapper = new MemberRowMapper();
 
-    public MemberDao(JdbcTemplate jdbcTemplate) {
+    public MemberJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -24,6 +27,7 @@ public class MemberDao {
             Role.USER.toString());
     }
 
+    @Override
     public Optional<Member> findById(Long id) {
         try {
             Member member = jdbcTemplate.queryForObject(USER_SELECT_BY_ID,
@@ -34,6 +38,22 @@ public class MemberDao {
         }
     }
 
+    @Override
+    public void deleteById(Long id) {
+
+    }
+
+    @Override
+    public void save(Member member) {
+
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return false;
+    }
+
+    @Override
     public Optional<Member> findByEmail(String email) {
         try {
             Member member = jdbcTemplate.queryForObject(USER_SELECT_BY_EMAIL,
