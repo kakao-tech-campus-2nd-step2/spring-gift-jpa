@@ -1,9 +1,9 @@
 package gift.service;
 
+import gift.DTO.ProductResponse;
 import gift.domain.Product;
 import gift.DTO.ProductRequest;
 import gift.repository.ProductRepository;
-import java.awt.PageAttributes;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +22,45 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponse> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        List<ProductResponse> response = products.stream()
+                                        .map(p -> new ProductResponse(
+                                            p.getId(),
+                                            p.getName(),
+                                            p.getPrice(),
+                                            p.getImageUrl()
+                                        ))
+                                        .toList();
+        return response;
     }
 
-    public List<Product> getProductsByPage(Integer pageNumber, Integer pageSize) {
+    public List<ProductResponse> getProductsByPage(Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Product> page = productRepository.findAll(pageable);
-        return page.getContent();
+        Page<Product> productPage = productRepository.findAll(pageable);
+        List<ProductResponse> responses = productPage.stream()
+                                        .map(p -> new ProductResponse(
+                                            p.getId(),
+                                            p.getName(),
+                                            p.getPrice(),
+                                            p.getImageUrl()
+                                        ))
+                                        .toList();
+        return responses;
     }
 
-    public Product getProductById(Long id) {
-        Optional<Product> product = productRepository.findById(id);
-        product.orElseThrow(() -> new RuntimeException("No product with id " + id));
-        return product.get();
+    public ProductResponse getProductById(Long id) {
+        Optional<Product> productOptional = productRepository.findById(id);
+        productOptional.orElseThrow(() -> new RuntimeException("No product with id " + id));
+
+        Product product = productOptional.get();
+        ProductResponse response = new ProductResponse(
+                                            product.getId(),
+                                            product.getName(),
+                                            product.getPrice(),
+                                            product.getImageUrl()
+                                        );
+        return response;
     }
 
     public void addProduct(ProductRequest productRequest) {

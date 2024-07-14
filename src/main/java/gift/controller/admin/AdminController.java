@@ -1,6 +1,6 @@
 package gift.controller.admin;
 
-import gift.domain.Product;
+import gift.DTO.ProductResponse;
 import gift.DTO.ProductRequest;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
@@ -34,11 +34,11 @@ public class AdminController {
      * @return 모든 상품 목록
      */
     @GetMapping
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<List<ProductResponse>> getProducts(
         @RequestParam(defaultValue = "0") Integer page,
         @RequestParam(defaultValue = "2") Integer size
     ) {
-        List<Product> products = productService.getProductsByPage(page, size);
+        List<ProductResponse> products = productService.getProductsByPage(page, size);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -49,15 +49,13 @@ public class AdminController {
      * @return 조회된 상품 객체와 200 OK, 해당 id가 없으면 404 NOT FOUND
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Product product;
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
         try {
-            product = productService.getProductById(id);
+            ProductResponse product = productService.getProductById(id);
+            return new ResponseEntity<>(product, HttpStatus.OK);
         } catch(RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(product, HttpStatus.OK);
-
     }
 
     /**

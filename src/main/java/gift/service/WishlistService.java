@@ -1,11 +1,11 @@
 package gift.service;
 
+import gift.DTO.ProductResponse;
 import gift.domain.Product;
 import gift.domain.Member;
 import gift.domain.Wishlist;
 import gift.repository.WishlistRepository;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,8 +35,13 @@ public class WishlistService {
     }
 
     public void addWishlist(String email, Long productId) {
-        Product product = productService.getProductById(productId);
+        ProductResponse productResponse = productService.getProductById(productId);
         Member member = memberService.getMemberByEmail(email);
+        Product product = new Product(
+                        productResponse.getName(),
+                        productResponse.getPrice(),
+                        productResponse.getImageUrl()
+                    );
 
         Wishlist wish = new Wishlist(member, product);
         wishlistRepository.save(wish);
