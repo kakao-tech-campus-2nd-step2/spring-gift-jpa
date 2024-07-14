@@ -45,12 +45,12 @@
 
 <div>
   <a th:if="${products.number > 0}"
-     th:href="@{/admin/products(page=${products.number - 1}, size=${products.size}, sortBy=${sortBy})}">
+     th:href="@{/admin/products(pageNumber=${products.number - 1}, pageSize=${products.size}, sortBy=${sortBy})}">
     Previous
   </a>
 
   <a th:if="${products.number < products.totalPages - 1}"
-     th:href="@{/admin/products(page=${products.number + 1}, size=${products.size}, sortBy=${sortBy})}">
+     th:href="@{/admin/products(pageNumber=${products.number + 1}, pageSize=${products.size}, sortBy=${sortBy})}">
     Next
   </a>
 </div>
