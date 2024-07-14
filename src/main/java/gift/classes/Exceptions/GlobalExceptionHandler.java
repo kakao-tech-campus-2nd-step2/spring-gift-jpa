@@ -15,6 +15,11 @@ import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    // Wish 예외처리
+    @ExceptionHandler(WishException.class)
+    public ResponseEntity<String> handleWishException(WishException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<Object> handleAuthorizationHeaderNotFoundException(AuthException e) {

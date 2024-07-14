@@ -2,6 +2,7 @@ package gift.services;
 
 
 import gift.classes.Exceptions.ProductException;
+import gift.classes.Exceptions.WishException;
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
@@ -38,6 +39,10 @@ public class WishService {
     //    Wishlist 조회
     @Transactional
     public Page<WishDto> getWishListById(Long memberId, int page, int size) {
+        if (page < 0 || size <= 0) {
+            throw new WishException("Page must be non-negative and size must be greater than zero. ");
+        }
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Wish> wishList = wishRepository.findAllByMemberId(memberId, pageable);
 
