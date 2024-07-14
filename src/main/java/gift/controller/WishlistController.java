@@ -31,9 +31,13 @@ public class WishlistController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<WishList> addItem(@RequestHeader("Authorization") String token, @RequestParam Long productId) {
+    public ResponseEntity<?> addItem(@RequestHeader("Authorization") String token, @RequestParam Long productId) {
         Claims claims = jwtUtil.extractClaims(token.replace("Bearer ", ""));
         Long memberId = Long.parseLong(claims.getSubject());
+        boolean result = jwtUtil.isTokenValid(token.replace("Bearer ", ""), memberId);
+        if (!result) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is invalid!");
+        }
         WishList addedItem = wishlistService.addProduct(memberId, productId);
         return ResponseEntity.ok(addedItem);
     }
