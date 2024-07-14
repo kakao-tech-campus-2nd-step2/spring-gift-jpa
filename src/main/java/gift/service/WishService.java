@@ -7,9 +7,10 @@ import gift.model.member.Member;
 import gift.model.product.Product;
 import gift.model.wish.Wish;
 import gift.repository.member.MemberRepository;
-import gift.repository.product.ProductJpaRepository;
+import gift.repository.product.ProductRepository;
 import gift.repository.wish.WishJpaRepository;
 import gift.global.validate.NotFoundException;
+import gift.repository.wish.WishRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,15 +19,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class WishService {
 
-    private final WishJpaRepository wishJpaRepository;
+    private final WishRepository wishRepository;
     private final MemberRepository memberRepository;
-    private final ProductJpaRepository productJpaRepository;
+    private final ProductRepository productRepository;
 
-    public WishService(WishJpaRepository wishJpaRepository, MemberRepository memberRepository,
-        ProductJpaRepository productJpaRepository) {
-        this.wishJpaRepository = wishJpaRepository;
+    public WishService(WishJpaRepository wishRepository, MemberRepository memberRepository,
+        ProductRepository productRepository) {
+        this.wishRepository = wishRepository;
         this.memberRepository = memberRepository;
-        this.productJpaRepository = productJpaRepository;
+        this.productRepository = productRepository;
     }
 
     //@Transactional
@@ -34,15 +35,15 @@ public class WishService {
         Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
 
-        Product product = productJpaRepository.findById(request.productId())
+        Product product = productRepository.findById(request.productId())
             .orElseThrow(() -> new NotFoundException("Product not found"));
 
-        wishJpaRepository.findByMemberAndProduct(member, product)
+        wishRepository.findByMemberAndProduct(member, product)
             .ifPresent(wish -> {
                 throw new IllegalArgumentException("Wish already exists");
             });
 
-        wishJpaRepository.save(request.toEntity(member, product));
+        wishRepository.save(request.toEntity(member, product));
     }
 
     //@Transactional
@@ -50,10 +51,10 @@ public class WishService {
         Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
 
-        Product product = productJpaRepository.findById(request.productId())
+        Product product = productRepository.findById(request.productId())
             .orElseThrow(() -> new NotFoundException("Product not found"));
 
-        Wish wish = wishJpaRepository.findByMemberAndProduct(member, product)
+        Wish wish = wishRepository.findByMemberAndProduct(member, product)
             .orElseThrow(() -> new NotFoundException("Wish not found"));
 
         wish.updateCount(request.count());
@@ -61,11 +62,11 @@ public class WishService {
 
     //@Transactional
     public void deleteWish(Long memberId, Long wishId) {
-        Wish wish = wishJpaRepository.findById(wishId)
+        Wish wish = wishRepository.findById(wishId)
             .orElseThrow(() -> new NotFoundException("Wish not found"));
 
         if (wish.isOwner(memberId)) {
-            wishJpaRepository.deleteById(wishId);
+            wishRepository.deleteById(wishId);
             return;
         }
 
@@ -74,7 +75,7 @@ public class WishService {
 
     @Transactional(readOnly = true)
     public PageResponse<WishResponse.Info> getWishesPaging(Long memberId, Pageable pageable) {
-        Page<Wish> wishPage = wishJpaRepository.findAllByMemberByIdDesc(memberId, pageable);
+        Page<Wish> wishPage = wishRepository.findAllByMemberByIdDesc(memberId, pageable);
         var content = wishPage.getContent().stream()
             .map(WishResponse.Info::from)
             .toList();
