@@ -42,6 +42,16 @@ public class Wish {
         return id;
     }
 
+    public void setMember(Member member) {
+        // 기존에 이미 member가 존재한다면, 관계를 끊어줘야함.
+        if(this.member != null){
+            this.member.getWishList().remove(this);
+        }
+
+        this.member = member;
+        member.getWishList().add(this);
+    }
+
     public Member getMember() {
         return member;
     }

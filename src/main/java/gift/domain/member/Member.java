@@ -52,4 +52,13 @@ public class Member{
     public String getRole() {
         return role;
     }
+
+    public List<Wish> getWishList() {
+        return wishList;
+    }
+
+    public void addWish(Wish wish) {
+        wishList.add(wish);
+        wish.setMember(this);
+    }
 }
