@@ -1,5 +1,6 @@
 package gift.model.wish;
 
+import gift.dto.WishDto;
 import gift.model.member.Member;
 import gift.model.product.Product;
 import jakarta.persistence.*;
@@ -30,6 +31,12 @@ public class Wish {
         this.product = product;
         this.member = member;
         this.amount = amount;
+    }
+
+    public void updateWish(WishDto wishDto){
+        this.product = wishDto.getProduct();
+        this.member = wishDto.getMember();
+        this.amount = wishDto.getAmount();
     }
 
     public void setId(Long id) {
