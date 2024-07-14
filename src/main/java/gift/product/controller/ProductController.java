@@ -1,6 +1,5 @@
 package gift.product.controller;
 
-import gift.product.exception.ProductNotFoundException;
 import gift.product.model.Product;
 import gift.product.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -36,16 +35,13 @@ public class ProductController {
 
     @PostMapping("/update/{id}")
     public String updateProduct(@PathVariable("id") Long id, Product product) {
-        product.setId(id);
-        productService.updateProduct(product);
+        productService.updateProduct(id, product);
         return "redirect:/products";
     }
 
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable("id") Long id) {
-        if (!productService.deleteProduct(id)) {
-            throw new ProductNotFoundException(id);
-        }
+        productService.deleteProduct(id);
         return "redirect:/products";
     }
 }

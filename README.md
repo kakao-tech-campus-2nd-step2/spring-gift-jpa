@@ -1,19 +1,10 @@
-# [구현할 기능 목록] 1단계 - 엔티티 매핑
-### 1. spring data jpa 의존성 추가
-- [x] `implementation 'org.springframework.boot:spring-boot-starter-data-jpa'`
+# [구현할 기능 목록] 3단계 - 페이지네이션 
+- 상품과 위시 리스트 보기에 페이지네이션을 구현한다.
+- 대부분의 게시판은 모든 게시글을 한 번에 표시하지 않고 여러 페이지로 나누어 표시한다. 정렬 방법을 설정하여 보고 싶은 정보의 우선 순위를 정할 수도 있다.
+- 페이지네이션은 원하는 정렬 방법, 페이지 크기 및 페이지에 따라 정보를 전달하는 방법이다.
+### 1. `Pageable` 객체를 활용하여 페이지네이션을 구현
+- [ ] 
 
-### 2. 지금까지 작성한 JdbcTemplate 기반 코드를 JPA 기반 코드로 리팩토링
-- [x] Login/repository 리팩토링
-- [x] Login/model 리팩토링
-### 3. 테스트해보기
-- [x] E2E Test
-  - [x] 회원가입 테스트
-  - [x] 로그인 테스트
-- [x] @DataJpaTest
-  - [x] wishlist CRUD 테스트
+### 2. 테스트 및 리팩토링 
 
-- [x] 전체적인 리팩토링
-  - [x] 멤버 서비스 인터페이스 생성
-  - [x] 2주차 PR 리뷰 반영
-    - [x] 시크릿키 암호화
-  - [x] Deprecated API 최신형 API로 변경
+

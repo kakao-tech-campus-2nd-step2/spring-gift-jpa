@@ -1,6 +1,6 @@
 package gift.product.service;
 
-import gift.product.exception.ProductAlreadyExistsException;
+import gift.common.exception.ProductAlreadyExistsException;
 import gift.product.model.Product;
 import gift.product.repository.ProductRepository;
 import jakarta.validation.Valid;
@@ -27,30 +27,35 @@ public class ProductService {
         return productRepository.findById(id).orElse(null);
     }
 
-    public Product createProduct(@Valid Product product) {
+    public void createProduct(@Valid Product product) {
         checkForDuplicateProduct(product);
-        return productRepository.save(product);
+        productRepository.save(product);
     }
 
-    public Product updateProduct(@Valid Product product) {
+    public void updateProduct(Long id, @Valid Product product) {
         checkForDuplicateProduct(product);
-        return productRepository.update(product);
+
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product with id " + id + " not found"));
+        existingProduct.setId(id);
+        existingProduct.setName(product.getName());
+        existingProduct.setPrice(product.getPrice());
+        existingProduct.setImageUrl(product.getImageUrl());
+
+        productRepository.save(existingProduct);
     }
 
     @Transactional
-    public boolean deleteProduct(Long id) {
-        try {
-            productRepository.deleteById(id);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
+    public void deleteProduct(Long id) {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product with id " + id + " not found"));
+        productRepository.delete(existingProduct);
     }
 
     public void checkForDuplicateProduct(Product product) {
         List<Product> products = productRepository.findAll();
         for (Product p : products) {
-            if (p.equalProduct(product)) {
+            if (p.equals(product)) {
                 throw new ProductAlreadyExistsException(product.getName());
             }
         }

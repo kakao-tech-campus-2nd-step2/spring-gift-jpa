@@ -1,48 +1,60 @@
 package gift.product.model;
 
-import gift.product.validation.NoKaKao;
-import jakarta.validation.constraints.*;
-import java.util.Objects;
+import gift.wish.model.Wish;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "product")
 public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "커피 이름은 필수 입력 값입니다.")
-    @Size(max = 15, message = "상품 이름은 최대 15자까지 입력할 수 있습니다.")
-    @Pattern(
-            regexp = "^[a-zA-Z0-9 \\(\\)\\[\\]\\+\\-\\&\\/\\_]*$|^[a-zA-Z0-9가-힣 ]*$",
-            message = "상품 이름에는 특수 문자는 ( ), [ ], +, -, &, /, _ 만 사용할 수 있습니다."
-    )
-    @NoKaKao
+    @Column(nullable = false)
     private String name;
 
-    @NotNull(message = "커피 가격은 필수 입력 값입니다.")
-    @Min(value = 0, message = "가격은 0 이상의 정수만 입력할 수 있습니다.")
-    private Long price;
+    @Column(nullable = false)
+    private int price;
 
-    @NotNull(message = "온도 옵션은 필수 입력 값입니다.")
-    private String temperatureOption;
+    @Column(nullable = false)
+    private String imageUrl;
 
-    @NotNull(message = "컵 옵션은 필수 입력 값입니다.")
-    private String cupOption;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Wish> wishes = new ArrayList<>();
 
-    @NotNull(message = "사이즈 옵션은 필수 입력 값입니다.")
-    private String sizeOption;
-
-    @NotNull(message = "이미지 URL은 필수 입력 값입니다.")
-    @Size(max = 255, message = "이미지 URL은 최대 255자까지 입력할 수 있습니다.")
-    private String imageurl;
-
-    public boolean equalProduct(Product product) {
-        return Objects.equals(name, product.name) &&
-                Objects.equals(price, product.price) &&
-                Objects.equals(temperatureOption, product.temperatureOption) &&
-                Objects.equals(cupOption, product.cupOption) &&
-                Objects.equals(sizeOption, product.sizeOption) &&
-                Objects.equals(imageurl, product.imageurl);
+    // 활용 메서드들
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product comparingProduct)) return false;
+        return price == comparingProduct.price &&
+                name.equals(comparingProduct.name) &&
+                imageUrl.equals(comparingProduct.imageUrl);
+    }
+    public void addWish(Wish wish) {
+        this.wishes.add(wish);
+        wish.setProduct(this);
     }
 
-    // Getters and Setters
+    public void removeWish(Wish wish) {
+        wishes.remove(wish);
+        wish.setProduct(null);
+    }
+
+    // Constructors, Getters, and Setters
+    public Product() {}
+
+    public Product(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -59,43 +71,29 @@ public class Product {
         this.name = name;
     }
 
-    public Long getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
-    public String getTemperatureOption() {
-        return temperatureOption;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setTemperatureOption(String temperatureOption) {
-        this.temperatureOption = temperatureOption;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public String getCupOption() {
-        return cupOption;
+    public List<Wish> getWishes() {
+        return wishes;
     }
 
-    public void setCupOption(String cupOption) {
-        this.cupOption = cupOption;
+    public void setWishes(List<Wish> wishes) {
+        this.wishes = wishes;
     }
 
-    public String getSizeOption() {
-        return sizeOption;
-    }
 
-    public void setSizeOption(String sizeOption) {
-        this.sizeOption = sizeOption;
-    }
-
-    public String getImageurl() {
-        return imageurl;
-    }
-
-    public void setImageurl(String imageurl) {
-        this.imageurl = imageurl;
-    }
 }
