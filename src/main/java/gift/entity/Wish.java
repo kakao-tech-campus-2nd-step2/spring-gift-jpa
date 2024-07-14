@@ -1,13 +1,11 @@
 package gift.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Wish {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class Wish extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -24,14 +22,6 @@ public class Wish {
         this.member = member;
         this.product = product;
         this.productNumber = productNumber;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Member getMember() {
