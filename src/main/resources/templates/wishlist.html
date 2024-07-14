@@ -1,4 +1,3 @@
-<!-- wishlist.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -12,8 +11,12 @@
     <table class="table table-bordered">
         <thead class="thead-light">
         <tr>
-            <th>Name</th>
-            <th>Quantity</th>
+            <th>
+                <a th:href="@{/wishes/items(page=0, size=${wishPage.size}, sortBy='productName', direction=${direction == 'asc' ? 'desc' : 'asc'})}">Name</a>
+            </th>
+            <th>
+                <a th:href="@{/wishes/items(page=0, size=${wishPage.size}, sortBy='productNumber', direction=${direction == 'asc' ? 'desc' : 'asc'})}">Quantity</a>
+            </th>
         </tr>
         </thead>
         <tbody>
