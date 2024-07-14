@@ -28,7 +28,7 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<WishList> wishLists = new HashSet<>();
 
-    public Member() {}
+    protected Member() {}
 
     public Member(String email, String password) {
         this.email = email;
