@@ -4,6 +4,7 @@ import gift.dto.MemberRequestDTO;
 import gift.dto.MemberResponseDTO;
 import gift.model.*;
 import gift.repository.WishListRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,9 +23,9 @@ public class WishListService {
     }
 
     // 사용자의 위시 리스트를 조회하는 메서드
-    public List<WishList> getWishlist(MemberRequestDTO memberRequestDTO) {
+    public List<WishList> getWishlist(MemberRequestDTO memberRequestDTO, int page, int size) {
         Member member = memberService.findMemberEntityByEmail(memberRequestDTO.getEmail());
-        return wishListRepository.findByMember(member);
+        return wishListRepository.findByMember(member, PageRequest.of(page, size));
     }
 
     // 위시 리스트에 상품을 추가하는 메서드

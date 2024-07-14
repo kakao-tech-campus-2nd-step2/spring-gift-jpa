@@ -22,8 +22,8 @@ public class WishListController {
 
     // 사용자의 위시 리스트를 조회
     @GetMapping
-    public List<WishList> getWishlist(@LoginMember MemberRequestDTO memberRequestDTO) {
-        return wishListService.getWishlist(memberRequestDTO);
+    public List<WishList> getWishlist(@LoginMember MemberRequestDTO memberRequestDTO, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return wishListService.getWishlist(memberRequestDTO, page, size);
     }
 
     // 위시 리스트에 상품을 추가
