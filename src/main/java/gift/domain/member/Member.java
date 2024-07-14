@@ -1,10 +1,13 @@
 package gift.domain.member;
 
+import gift.domain.wish.Wish;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
@@ -22,15 +25,21 @@ public class Member{
     @ColumnDefault("'user'")
     private String role;
 
-    public Member(Long id, String email, String password, String role) {
-        this.id = id;
+    @OneToMany(mappedBy = "member")
+    private List<Wish> wishList;
+
+    public Member(String email, String password) {
         this.email = email;
         this.password = password;
-        this.role = role;
     }
 
-    public Member() {
+    protected Member() {
 
+    }
+
+    public void updateMember(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     public Long getId() {
@@ -47,5 +56,14 @@ public class Member{
 
     public String getRole() {
         return role;
+    }
+
+    public List<Wish> getWishList() {
+        return wishList;
+    }
+
+    public void addWish(Wish wish) {
+        wishList.add(wish);
+        wish.setMember(this);
     }
 }

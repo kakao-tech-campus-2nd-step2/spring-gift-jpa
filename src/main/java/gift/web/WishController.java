@@ -25,9 +25,15 @@ public class WishController {
         this.wishService = wishService;
     }
 
-    @GetMapping
+    @GetMapping("/admin")
     public ResponseEntity<List<WishDto>> getWishes(@AuthUser MemberDto memberDto) {
-        return new ResponseEntity<>(wishService.getWishes(memberDto.email()), HttpStatus.OK);
+        // todo : 관리자 권한 검증 로직 구현
+        return new ResponseEntity<>(wishService.getWishes(), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<WishDto>> getWishesByEmail(@AuthUser MemberDto memberDto) {
+        return new ResponseEntity<>(wishService.getWishesByEmail(memberDto.email()), HttpStatus.OK);
     }
 
     @PostMapping

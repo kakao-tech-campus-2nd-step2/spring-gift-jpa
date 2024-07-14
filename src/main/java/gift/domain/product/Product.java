@@ -1,10 +1,13 @@
 package gift.domain.product;
 
+import gift.domain.wish.Wish;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 
 @Entity(name="products")
 public class Product {
@@ -21,15 +24,24 @@ public class Product {
     @Column(nullable = false)
     private String imageUrl;
 
-    public Product(Long id, String name, Long price, String imageUrl) {
-        this.id = id;
+    @OneToMany(mappedBy = "product")
+    private List<Wish> wishList;
+
+    public Product(String name, Long price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product() {
+    protected Product() {
 
+    }
+
+    public void updateProduct(String name, Long price, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -46,5 +58,14 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public List<Wish> getWishList() {
+        return wishList;
+    }
+
+    public void addWish(Wish wish) {
+        wishList.add(wish);
+        wish.setProduct(this);
     }
 }
