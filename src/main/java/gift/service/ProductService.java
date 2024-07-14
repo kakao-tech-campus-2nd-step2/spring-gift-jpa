@@ -7,6 +7,8 @@ import gift.dto.responseDTO.ProductResponseDTO;
 import gift.repository.JpaProductRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,17 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductListResponseDTO getAllProducts() {
         List<ProductResponseDTO> productResponseDTOList = jpaProductRepository.findAll()
+            .stream()
+            .map(ProductResponseDTO::of)
+            .toList();
+
+        return new ProductListResponseDTO(productResponseDTOList);
+    }
+
+    @Transactional(readOnly = true)
+    public ProductListResponseDTO getAllProducts(int page) {
+        Pageable pageable = PageRequest.of(page, 8);
+        List<ProductResponseDTO> productResponseDTOList = jpaProductRepository.findAll(pageable)
             .stream()
             .map(ProductResponseDTO::of)
             .toList();
