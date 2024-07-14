@@ -1,29 +1,22 @@
 package gift.domain.product;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String name;
+    @NotNull
     private int price;
+    @NotNull
+    @Column(length = 15)
     private String imgUrl;
 
-    public Product() {
-    }
-
-    public Product(Long id, String name, int price, String imgUrl) {
-        checkName(name);
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imgUrl = imgUrl;
-    }
+    protected Product() {}
 
     public Product(String name, int price, String imgUrl) {
         checkName(name);
@@ -53,16 +46,6 @@ public class Product {
 
     public String getImgUrl() {
         return imgUrl;
-    }
-
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        checkName(name);
-        this.name = name;
     }
 
     private void checkName(String name) {

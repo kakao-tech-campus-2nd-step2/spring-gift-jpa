@@ -4,6 +4,7 @@ import gift.domain.wish.Wish;
 import gift.exception.CustomException;
 import gift.exception.ErrorCode;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +16,13 @@ public class Member {
     private Long id;
 
     @Column(unique = true)
+    @NotNull
     private String email;
+
+    @NotNull
     private String name;
+
+    @NotNull
     private String password;
     private int role;
 
@@ -30,15 +36,7 @@ public class Member {
         this.role = role;
     }
 
-    public Member(Long id, String email, String name, String password, int role) {
-        this.id = id;
-        this.email = email;
-        this.name = name;
-        this.password = password;
-        this.role = role;
-    }
-
-    public Member() {
+    protected Member() {
     }
 
     public Long getId() {
@@ -55,14 +53,6 @@ public class Member {
 
     public List<Wish> getWishList() {
         return wishList;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public boolean isMatch(String password) {
