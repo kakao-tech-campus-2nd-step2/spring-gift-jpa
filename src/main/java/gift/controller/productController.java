@@ -3,6 +3,8 @@ package gift.controller;
 import gift.dto.ProductDto;
 import gift.entity.Product;
 import gift.service.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,5 +63,10 @@ public class productController {
     @GetMapping("/{name}")
     public ProductDto.Response getOneByName(@PathVariable("name") String name) {
         return ProductDto.Response.fromEntity(productService.findProductByName(name));
+    }
+
+    @GetMapping("/products")
+    public Page<Product> getProducts(Pageable pageable) {
+        return productService.getProducts(pageable);
     }
 }

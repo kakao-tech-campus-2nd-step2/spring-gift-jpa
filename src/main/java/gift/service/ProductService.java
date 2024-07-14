@@ -5,6 +5,8 @@ import gift.repository.ProductRepositoryInterface;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -44,5 +46,9 @@ public class ProductService {
 
     public Product findProductByName(String name) {
         return productRepositoryInterface.findByName(name);
+    }
+
+    public Page<Product> getProducts(Pageable pageable) {
+        return productRepositoryInterface.findAll(pageable);
     }
 }
