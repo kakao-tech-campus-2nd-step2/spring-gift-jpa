@@ -53,6 +53,6 @@ public class ProductService {
     public void deleteProduct(Long id) {
         Product product = productReposiotory.findById(id)
             .orElseThrow(() -> new ProductNotFoundException("제품이 없슴다."));
-        productReposiotory.deleteById(id);
+        productReposiotory.delete(product);
     }
 }
