@@ -1,17 +1,19 @@
 package gift.model;
 
 
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Product {
@@ -32,7 +34,10 @@ public class Product {
     @NotBlank(message = "Image URL을 입력해주세요.")
     private String imageUrl;
 
-    public Product(){
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WishList> wishLists = new HashSet<>();
+
+    protected Product(){
 
     }
 

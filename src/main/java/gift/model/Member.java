@@ -1,11 +1,15 @@
 package gift.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Member {
@@ -21,7 +25,10 @@ public class Member {
     @NotBlank(message = "비밀번호는 공백이 될 수 없습니다.")
     private String password;
 
-    public Member() {}
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WishList> wishLists = new HashSet<>();
+
+    protected Member() {}
 
     public Member(String email, String password) {
         this.email = email;

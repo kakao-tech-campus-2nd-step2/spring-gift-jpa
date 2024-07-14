@@ -29,7 +29,6 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String token = webRequest.getHeader("Authorization");
         if (token == null || !token.startsWith("Bearer ")) {
-
             logger.error("Authorization 헤더가 존재하지 않거나 유효하지 않습니다.");
             throw new IllegalArgumentException("Authorization 헤더가 존재하지 않거나 유효하지 않습니다.");
         }

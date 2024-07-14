@@ -1,6 +1,8 @@
 package gift.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,13 +18,12 @@ public class WishList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
-
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     public WishList(Member member, Product product) {
@@ -30,33 +31,11 @@ public class WishList {
         this.product = product;
     }
 
-    public WishList() {
+    protected WishList() {
     }
 
     public Long getId() {
         return id;
-    }
-
-    public String getMemberEmail() {
-        return member != null ? member.getEmail() : null;
-    }
-
-    public void setMemberEmail(String memberEmail) {
-        if (this.member == null) {
-            this.member = new Member();
-        }
-        this.member.setEmail(memberEmail, this.member.getPassword());
-    }
-
-    public Long getProductId() {
-        return product != null ? product.getId() : null;
-    }
-
-    public void setProductId(Long productId) {
-        if (this.product == null) {
-            this.product = new Product();
-        }
-        this.product.setId(productId);
     }
 
     public Product getProduct() {
@@ -74,6 +53,7 @@ public class WishList {
     public void setMember(Member member) {
         this.member = member;
     }
+
 
     public void setProduct(Product product) {
         this.product = product;
