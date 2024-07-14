@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>상품 관리 페이지</title>
+    <title>Manage Products</title>
     <style>
         .product {
             border: 1px solid #ccc;
@@ -100,7 +100,8 @@
 
     document.getElementById('wishlistButton').addEventListener('click', function() {
         console.log("button click");
-        const token = localStorage.getItem('token');
+        const token = getCookie('token');
+
         console.log(token);
         fetch('/wishlist', {
             method: 'GET',
@@ -109,17 +110,28 @@
                 'Authorization': 'Bearer ' + token
             },
         })
-        .then(response => {
-            if (response.ok) {
-                location.href = '/wishlist';
-            } else {
-                throw new Error('Failed to retrieve wish list.');
-            }
+        .then(response => response.text())
+        .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
         })
         .catch(error => {
             alert(error.message);
         });
     });
+
+    function getCookie(name) {
+        const cookieString = document.cookie;
+        const cookies = cookieString.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return '';
+    }
 </script>
 </body>
 </html>
