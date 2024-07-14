@@ -2,6 +2,7 @@ package gift.controller.wishlist;
 
 import gift.domain.Product;
 import gift.service.MemberService;
+import gift.service.TokenService;
 import gift.service.WishlistService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +23,17 @@ public class WishlistController {
 
     private final MemberService memberService;
     private final WishlistService wishlistService;
+    private final TokenService tokenService;
 
     @Autowired
-    public WishlistController(MemberService memberService, WishlistService wishlistService) {
+    public WishlistController(
+        MemberService memberService,
+        WishlistService wishlistService,
+        TokenService tokenService
+    ) {
         this.memberService = memberService;
         this.wishlistService = wishlistService;
-    }
-
-    private String getTokenFromHeader(String header) {
-        return header.substring(7);
+        this.tokenService = tokenService;
     }
 
     @GetMapping
@@ -39,7 +42,7 @@ public class WishlistController {
         @RequestParam(defaultValue = "0") Integer page,
         @RequestParam(defaultValue = "2") Integer size
     ) {
-        String token = getTokenFromHeader(authorizationHeader); // "Bearer " 부분을 제거
+        String token = tokenService.getBearerTokenFromHeader(authorizationHeader);
         if (!memberService.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -54,7 +57,7 @@ public class WishlistController {
         @RequestHeader("Authorization") String authorizationHeader,
         @PathVariable Long productId
     ) {
-        String token = getTokenFromHeader(authorizationHeader); // "Bearer " 부분을 제거
+        String token = tokenService.getBearerTokenFromHeader(authorizationHeader);
         if (!memberService.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
@@ -69,7 +72,7 @@ public class WishlistController {
         @RequestHeader("Authorization") String authorizationHeader,
         @PathVariable Long productId
     ) {
-        String token = getTokenFromHeader(authorizationHeader); // "Bearer " 부분 제거
+        String token = tokenService.getBearerTokenFromHeader(authorizationHeader);
         if (!memberService.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
