@@ -17,9 +17,6 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    private User createUser(String name, String email, String password, String Role) {
-        return new User(name, email, password, Role);
-    }
     @DisplayName("회원 정보 저장 테스트")
     @Test
     void save() {
@@ -48,5 +45,8 @@ public class UserRepositoryTest {
         assertThat(findUser).isNotNull();
     }
 
+    private User createUser(String name, String email, String password, String Role) {
+        return new User(name, email, password, Role);
+    }
 
 }

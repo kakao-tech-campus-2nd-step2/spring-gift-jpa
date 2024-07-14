@@ -17,9 +17,6 @@ class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
-    private Product createProduct(String name, int price, String url) {
-        return new Product(name, price, url);
-    }
     @DisplayName("상품 정보 저장 테스트")
     @Test
     void save() {
@@ -61,5 +58,9 @@ class ProductRepositoryTest {
 
         // then
         assertThat(remainingProducts.size()).isEqualTo(0);
+    }
+
+    private Product createProduct(String name, int price, String url) {
+        return new Product(name, price, url);
     }
 }

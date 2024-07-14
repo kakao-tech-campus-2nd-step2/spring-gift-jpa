@@ -31,19 +31,6 @@ public class WishListRepositoryTest {
         this.userRepository = userRepository;
     }
 
-    private Product createProduct(String name, int price, String url) {
-        return new Product(name, price, url);
-    }
-
-    private User createUser(String name, String email, String password, String Role) {
-        return new User(name, email, password, Role);
-    }
-
-    private WishList createWish(User user, Product product, int quantity) {
-        return new WishList(user, product, quantity);
-    }
-
-
     @DisplayName("위시리스트 정보 저장 테스트")
     @Test
     void save() {
@@ -97,5 +84,17 @@ public class WishListRepositoryTest {
         List<WishList> savedWish = wishListRepository.findAll();
         // then
         assertThat(savedWish.size()).isEqualTo(0);
+    }
+
+    private Product createProduct(String name, int price, String url) {
+        return new Product(name, price, url);
+    }
+
+    private User createUser(String name, String email, String password, String Role) {
+        return new User(name, email, password, Role);
+    }
+
+    private WishList createWish(User user, Product product, int quantity) {
+        return new WishList(user, product, quantity);
     }
 }
