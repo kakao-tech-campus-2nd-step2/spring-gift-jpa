@@ -24,6 +24,14 @@ public class ProductDTO {
 
     public ProductDTO(){}
 
+    /**
+     * id로 상품 객체 전체를 조회할 때 사용되는 생성자
+     *
+     * @param id 상품 고유의 ID
+     * @param name 상품의 이름
+     * @param price 상품의 가격
+     * @param imageUrl 상품의 이미지 주소
+     */
     public ProductDTO(Long id, String name, int price, String imageUrl){
         this.id = id;
         this.name = name;
