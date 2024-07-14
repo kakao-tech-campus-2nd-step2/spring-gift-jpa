@@ -9,7 +9,6 @@ import gift.product.repository.AuthRepository;
 import gift.product.repository.WishRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,10 +56,12 @@ public class WishService {
     }
 
     private Member getMember(LoginMember loginMember) {
-        return authRepository.findById(loginMember.id()).orElseThrow(() -> new NoSuchElementException("회원 정보가 존재하지 않습니다."));
+        return authRepository.findById(loginMember.id())
+            .orElseThrow(() -> new NoSuchElementException("회원 정보가 존재하지 않습니다."));
     }
 
     private Wish getValidatedWish(Long id, LoginMember loginMember) {
-        return wishRepository.findByIdAndMemberId(id, loginMember.id()).orElseThrow(() -> new NoSuchElementException("해당 ID의 위시 항목이 위시리스트에 존재하지 않습니다."));
+        return wishRepository.findByIdAndMemberId(id, loginMember.id())
+            .orElseThrow(() -> new NoSuchElementException("해당 ID의 위시 항목이 위시리스트에 존재하지 않습니다."));
     }
 }

@@ -5,7 +5,6 @@ import gift.product.model.Product;
 import gift.product.repository.ProductRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +54,7 @@ public class ProductService {
     }
 
     private Product getValidatedProduct(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 ID의 상품이 존재하지 않습니다."));
+        return productRepository.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("해당 ID의 상품이 존재하지 않습니다."));
     }
 }

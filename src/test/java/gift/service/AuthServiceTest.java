@@ -1,13 +1,12 @@
 package gift.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import gift.product.dto.JwtResponse;
 import gift.product.dto.MemberDto;
 import gift.product.exception.LoginFailedException;
 import gift.product.service.AuthService;
-import java.util.NoSuchElementException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
