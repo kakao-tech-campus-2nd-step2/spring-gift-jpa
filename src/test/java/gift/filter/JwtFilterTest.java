@@ -1,67 +1,75 @@
 package gift.filter;
 
-import gift.model.User;
 import gift.util.UserUtility;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.io.IOException;
+
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 public class JwtFilterTest {
+    private String validToken = "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3QxQG5hdmVyLmNvbSJ9.-9C8Mmec3xwhwzcFer-S3MDbGXJcI0P2YQZFdHIdF_U";
 
-    @Autowired
-    private MockMvc mockMvc;
+    private JwtFilter jwtFilter;
+    private HttpServletRequest request;
+    private HttpServletResponse response;
+    private FilterChain filterChain;
 
     @Autowired
     private UserUtility userUtility;
-
     @Value("${spring.var.token-prefix}")
     private String tokenPrefix;
 
-    @Test
-    void testRequestWithValidToken() throws Exception {
-        String email = "test@naver.com";
-        String password = "test";
-        User user = new User(email, password);
-
-        String token = userUtility.makeAccessToken(user);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/wishlist")
-                        .header("Authorization", tokenPrefix + token))
-                .andExpect(status().isOk());
+    @BeforeEach
+    void setup() {
+        jwtFilter = new JwtFilter(tokenPrefix, userUtility);
+        request = mock(HttpServletRequest.class);
+        response = mock(HttpServletResponse.class);
+        filterChain = mock(FilterChain.class);
     }
 
     @Test
-    void testRequestWithInvalidToken() throws Exception {
-        String email = "test@naver.com";
-        String password = "test";
-        User user = new User(email, password);
+    void doFilterWithoutTokenTest() throws ServletException, IOException {
+        // given
+        when(request.getHeader("Authorization")).thenReturn(null);
 
-        String token = userUtility.makeAccessToken(user) + "abcde";
+        // when
+        jwtFilter.doFilter(request, response, filterChain);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/wishlist")
-                        .header("Authorization", tokenPrefix + token))
-                .andExpect(status().isUnauthorized());
+        // then
+        verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
 
     @Test
-    void testRequestWithEmptyToken() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/wishlist"))
-                .andExpect(status().isUnauthorized());
+    void doFilterWithValidTokenTest() throws ServletException, IOException {
+        // given
+        when(request.getHeader("Authorization")).thenReturn(tokenPrefix + validToken);
+
+        // when
+        jwtFilter.doFilter(request, response, filterChain);
+
+        // then
+        verify(filterChain).doFilter(request, response);
     }
 
     @Test
-    void testRequestToPermittedUrlWithoutPermisson() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/products"))
-                .andExpect(status().isOk());
+    void doFilterWithInvalidTokenTest() throws ServletException, IOException {
+        // given
+        when(request.getHeader("Authorization")).thenReturn(tokenPrefix + validToken + "invalid");
+
+        // when
+        jwtFilter.doFilter(request, response, filterChain);
+
+        // then
+        verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
 }
-
-

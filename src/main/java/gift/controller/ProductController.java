@@ -1,11 +1,11 @@
 package gift.controller;
 
-import gift.exception.ResourceNotFoundException;
-import gift.model.Product;
-import gift.model.ProductDTO;
-import gift.repository.ProductRepository;
+import gift.entity.Product;
+import gift.entity.ProductDTO;
+import gift.service.ProductService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,42 +15,41 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductRepository repository;
+    private final ProductService productService;
 
-    public ProductController(ProductRepository repository) {
-        this.repository = repository;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
+    // http://localhost:8080/api/products?page=1&size=3
     @GetMapping()
-    public List<Product> getAllProducts() {
-        return repository.findAll();
+    public List<Product> getAllProducts(Pageable pageable) {
+        Page<Product> products = productService.findAll(pageable);
+        return products.getContent();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable("id") Long id) {
-        Product result = repository.findById(id);
-        if (result == null) throw new ResourceNotFoundException("Product not found with id: " + id);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        Product product = productService.findById(id);
+        return ResponseEntity.ok().body(product);
     }
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<Product> postProduct(@RequestBody @Valid ProductDTO form) {
-        Product result = repository.save(form);
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        Product result = productService.save(new Product(form));
+        return ResponseEntity.ok().body(result);
     }
 
     @PutMapping(path = "/{id}", consumes = "application/json")
     public ResponseEntity<Product> putProduct(@RequestBody @Valid ProductDTO form,
                                               @PathVariable("id") Long id) {
-        Product result = repository.edit(id, form);
-        if (result == null) throw new ResourceNotFoundException("Unable to update product with id: " + id);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        Product result = productService.update(id, form);
+        return ResponseEntity.ok().body(result);
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id) {
-        boolean result = repository.delete(id);
-        if (result == false) throw new ResourceNotFoundException("Unable to delete product with id: " + id);
-        return ResponseEntity.status(HttpStatus.OK).body("Successfully deleted");
+        productService.delete(id);
+        return ResponseEntity.ok().body("deleted successfully");
     }
 }

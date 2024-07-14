@@ -1,13 +1,12 @@
 package gift.util;
 
-import gift.model.User;
+import gift.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -39,12 +38,6 @@ public class UserUtility {
     public Object accessTokenToObject(String accessToken) {
         Map<String, Object> obj = new HashMap<>();
         obj.put("accessToken", accessToken);
-        return obj;
-    }
-
-    public Object emailToObject(String email) {
-        Map<String, Object> obj = new HashMap<>();
-        obj.put("email", email);
         return obj;
     }
 

@@ -30,14 +30,14 @@ public class JwtFilter implements Filter {
 
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
             return;
         }
         if (authorizationHeader.startsWith(tokenPrefix)) {
             String token = authorizationHeader.substring(tokenPrefix.length());
             Claims claims = userUtility.tokenParser(token);
             if (claims == null) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                 return;
             }
             servletRequest.setAttribute("email", claims.get("email", String.class));

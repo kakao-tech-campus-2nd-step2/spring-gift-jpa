@@ -1,16 +1,10 @@
 package gift.repository;
 
-import gift.model.WishList;
-import gift.model.WishListDTO;
+import gift.entity.Wishlist;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface WishlistRepository {
-    boolean addWishlist(String email, WishListDTO wishlist);
-
-    boolean removeWishlist(String email, Long productId);
-
-    boolean updateWishlist(String email, WishListDTO wishlist);
-
-    List<WishList> getMyWishlists(String email);
+public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
+    Optional<Wishlist> findByEmail(String email);
 }

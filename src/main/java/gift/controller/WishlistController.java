@@ -1,10 +1,11 @@
 package gift.controller;
 
-import gift.model.WishList;
-import gift.model.WishListDTO;
-import gift.repository.WishlistRepository;
+import gift.entity.Product;
+import gift.entity.WishlistDTO;
+import gift.service.WishlistService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,39 +16,30 @@ import java.util.List;
 @RequestMapping("/api/wishlist")
 public class WishlistController {
 
-    private final WishlistRepository wishlistRepository;
+    private final WishlistService wishlistService;
 
-    public WishlistController(WishlistRepository wishlistRepository) {
-        this.wishlistRepository = wishlistRepository;
+    public WishlistController(WishlistService wishlistService) {
+        this.wishlistService = wishlistService;
     }
 
     @GetMapping()
-    public List<WishList> getWishlists(HttpServletRequest request) {
+    public List<Product> getWishlist(HttpServletRequest request,
+                                     Pageable pageable) {
         String email = (String) request.getAttribute("email");
-        return wishlistRepository.getMyWishlists(email);
+        return wishlistService.getWishlistProducts(email, pageable).getContent();
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<String> postWishlist(HttpServletRequest request, @RequestBody @Valid WishListDTO wishListDTO) {
+    public ResponseEntity<String> postWishlist(HttpServletRequest request, @RequestBody @Valid WishlistDTO form) {
         String email = (String) request.getAttribute("email");
-        boolean result = wishlistRepository.addWishlist(email, wishListDTO);
-        if (!result) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request");
+        wishlistService.addWishlistProduct(email, form);
         return ResponseEntity.status(HttpStatus.OK).body("Wishlist created");
     }
 
-    @PutMapping(consumes = "application/json")
-    public ResponseEntity<String> putWishlist(HttpServletRequest request, @RequestBody @Valid WishListDTO wishListDTO) {
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<String> deleteWishlist(@PathVariable("id") Long id, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
-        boolean result = wishlistRepository.updateWishlist(email, wishListDTO);
-        if (!result) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request");
-        return ResponseEntity.status(HttpStatus.OK).body("Wishlist updated");
-    }
-
-    @DeleteMapping()
-    public ResponseEntity<String> deleteWishlist(HttpServletRequest request, @RequestBody @Valid WishListDTO wishListDTO) {
-        String email = (String) request.getAttribute("email");
-        boolean result = wishlistRepository.removeWishlist(email, wishListDTO.getProductId());
-        if (!result) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad Request");
+        wishlistService.deleteWishlist(email, id);
         return ResponseEntity.status(HttpStatus.OK).body("Wishlist deleted");
     }
 }
