@@ -48,6 +48,17 @@ public class MemberService {
         return new MemberResponseDTO(member.getId(), member.getEmail());
     }
 
+    public MemberResponseDTO findByEmail(String email) {
+        Member member = memberRepository.findByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        return new MemberResponseDTO(member.getId(), member.getEmail());
+    }
+
+    public Member findMemberEntityByEmail(String email) {
+        return memberRepository.findByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+    }
+
     public String extractEmailFromToken(String token) {
         return JwtUtil.extractEmail(token);
     }
