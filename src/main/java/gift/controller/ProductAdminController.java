@@ -1,8 +1,12 @@
 package gift.controller;
 
+import gift.dto.PageRequestDto;
 import gift.dto.ProductRegisterRequestDto;
+import gift.dto.ProductResponseDto;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +25,12 @@ public class ProductAdminController {
     }
 
     @GetMapping
-    public String getAllProducts(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+    public String getPagedProducts(Model model, @Valid PageRequestDto pageRequestDto) {
+        Pageable pageable = pageRequestDto.toPageable();
+        Page<ProductResponseDto> productPage = productService.getPagedProducts(pageable);
+        model.addAttribute("products", productPage);
+        model.addAttribute("currentPage", pageRequestDto.getPageNumber());
+        model.addAttribute("sortBy", pageRequestDto.getSortBy());
         return "admin";
     }
 
@@ -43,7 +51,7 @@ public class ProductAdminController {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("ID는 null, 0, 음수는 불가입니다.");
         }
-        ProductRegisterRequestDto productDto = productService.getProductById(id);
+        ProductResponseDto productDto = productService.getProductById(id);
         model.addAttribute("product", productDto);
         model.addAttribute("productId", id);
         return "update-product";

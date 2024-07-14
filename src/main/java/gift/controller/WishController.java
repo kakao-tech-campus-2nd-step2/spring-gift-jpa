@@ -3,11 +3,13 @@ package gift.controller;
 import gift.annotation.LoginMember;
 import gift.domain.Member;
 import gift.domain.Wish;
+import gift.dto.PageRequestDto;
 import gift.dto.WishDto;
-import gift.repository.WishRepository;
+import gift.dto.WishResponseDto;
 import gift.service.WishService;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,18 +27,11 @@ public class WishController {
         this.wishService = wishService;
     }
 
-
     @GetMapping
-    public ResponseEntity<List<Wish>> getWishlist(@LoginMember Member member) {
-        List<Wish> wishItems = wishService.findByMemberId(member.getId());
-//        List<Product> products = new ArrayList<>();
-//        for (Wish wishItem : wishItems) {
-//            Product product = productDao.findById(wishItem.getProductId());
-//            if (product != null) {
-//                products.add(product);
-//            }
-//        }
-        return new ResponseEntity<>(wishItems, HttpStatus.OK);
+    public ResponseEntity<Page<WishResponseDto>> getWishlist(@LoginMember Member member, @Valid PageRequestDto pageRequestDto) {
+        Pageable pageable = pageRequestDto.toPageable();
+        Page<WishResponseDto> wishItems = wishService.findByMemberId(member.getId(), pageable);
+        return ResponseEntity.ok(wishItems);
     }
 
     @PostMapping("/add")

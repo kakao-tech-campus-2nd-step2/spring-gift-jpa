@@ -3,6 +3,7 @@ package gift.dto;
 import jakarta.validation.constraints.*;
 
 public class MemberDto {
+    private Long id;
     @NotEmpty(message = "이메일 입력은 필수 입니다.")
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "이메일 형식에 맞지 않습니다.")
     private String email;
@@ -14,9 +15,18 @@ public class MemberDto {
     public MemberDto() {
     }
 
-    public MemberDto(String email, String password) {
+    public MemberDto(Long id, String email, String password) {
+        this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getEmail() {
