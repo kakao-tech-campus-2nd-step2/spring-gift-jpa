@@ -20,12 +20,10 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @Email(message = "올바른 이메일 형식이 아닙니다.")
     @Column(nullable = false, unique = true)
     @Size(max = 255)
     private String email;
 
-    @NotBlank(message = "비밀번호를 입력해주세요.")
     @Size(max = 255)
     @Column(nullable = false)
     private String password;
