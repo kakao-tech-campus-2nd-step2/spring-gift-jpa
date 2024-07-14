@@ -1,4 +1,3 @@
-// WishlistService
 package gift.service;
 
 import gift.dto.WishResponse;

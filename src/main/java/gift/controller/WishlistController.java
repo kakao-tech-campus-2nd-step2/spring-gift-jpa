@@ -1,4 +1,3 @@
-// WishlistController
 package gift.controller;
 
 import gift.dto.WishResponse;
