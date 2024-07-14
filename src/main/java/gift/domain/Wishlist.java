@@ -12,8 +12,8 @@ import jakarta.persistence.UniqueConstraint;
 @Entity
 @Table(name = "wishlist", uniqueConstraints = {
     @UniqueConstraint(
-        name = "USER_PRODUCT_ID_UNIQUE",
-        columnNames = {"user_id", "product_id"}
+        name = "MEMBER_PRODUCT_ID_UNIQUE",
+        columnNames = {"member_id", "product_id"}
     )
 })
 public class Wishlist {
@@ -36,14 +36,6 @@ public class Wishlist {
     public Wishlist(Member member, Product product) {
         this.member = member;
         this.product = product;
-    }
-
-    public String getUserEmail() {
-        return member.getEmail();
-    }
-
-    public Long getProductId() {
-        return product.getId();
     }
 
     public Product getProduct() {

@@ -36,9 +36,10 @@ public class AdminController {
      */
     @GetMapping
     public ResponseEntity<List<Product>> getProducts(
-        @RequestParam(defaultValue = "0") Integer page
+        @RequestParam(defaultValue = "0") Integer page,
+        @RequestParam(defaultValue = "2") Integer size
     ) {
-        List<Product> products = productService.getProductsByPage(page);
+        List<Product> products = productService.getProductsByPage(page, size);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
