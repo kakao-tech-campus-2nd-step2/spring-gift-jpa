@@ -7,13 +7,16 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
-import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
@@ -39,12 +42,16 @@ public class ProductTest {
 
     @Test
     public void testGetAllProducts() {
-        when(productService.getAllProducts()).thenReturn(Collections.emptyList());
+    	Pageable pageable = PageRequest.of(0, 10);
+    	Page<Product> productPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+    	
+        when(productService.getAllProducts(pageable)).thenReturn(productPage);
 
-        ResponseEntity<List<Product>> response = productController.getAllProducts();
+        ResponseEntity<Page<Product>> response = productController.getAllProducts(pageable);
 
         assertEquals(200, response.getStatusCodeValue());
-        assertEquals(Collections.emptyList(), response.getBody());
+        assertEquals(productPage, response.getBody());
+        assertEquals(Collections.emptyList(), response.getBody().getContent());
     }
 
     @Test

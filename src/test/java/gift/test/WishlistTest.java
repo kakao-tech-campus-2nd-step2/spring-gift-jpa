@@ -12,6 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
@@ -46,8 +50,8 @@ public class WishlistTest {
 
         wishlist = new Wishlist(user, product);
 
-        when(wishlistService.getWishlist(any(String.class), any(BindingResult.class)))
-                .thenReturn(List.of(wishlist));
+        when(wishlistService.getWishlist(any(String.class), any(BindingResult.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(wishlist), PageRequest.of(0, 10), 1));
         doNothing().when(wishlistService).addWishlist(any(String.class), any(Wishlist.class), any(BindingResult.class));
         doNothing().when(wishlistService).removeWishlist(any(String.class), any(Wishlist.class), any(BindingResult.class));
         doNothing().when(wishlistService).updateWishlistQuantity(any(String.class), any(Wishlist.class), any(BindingResult.class));
@@ -55,10 +59,11 @@ public class WishlistTest {
 
     @Test
     public void testGetWishlist() {
-        ResponseEntity<List<Wishlist>> response = wishlistController.getWishlist("Bearer token", bindingResult);
+    	Pageable pageable = PageRequest.of(0, 10);
+        ResponseEntity<Page<Wishlist>> response = wishlistController.getWishlist("Bearer token", bindingResult, pageable);
         assertThat(response.getStatusCodeValue()).isEqualTo(200);
         assertThat(response.getBody()).hasSize(1);
-        assertThat(response.getBody().get(0).getProduct().getName()).isEqualTo(product.getName());
+        assertThat(response.getBody().getContent().get(0).getProduct().getName()).isEqualTo(product.getName());
     }
 
     @Test

@@ -8,6 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import gift.model.Product;
 import gift.model.User;
@@ -53,12 +56,20 @@ public class WishlistRepositoryTest {
 
     @Test
     void findByUserId() {
-    	Wishlist wishlist = new Wishlist(user, product);
-    	wishlist.setQuantity(2);
-    	wishlistRepository.save(wishlist);
+    	for(int i=1; i<=15; i++) {
+    		Product product = new Product("product"+1, 4500, "https://example.com/image.jpg");
+    		productRepository.save(product);
+    		Wishlist wishlist = new Wishlist(user, product);
+    		wishlist.setQuantity(i);
+    		wishlistRepository.save(wishlist);
+    	}
 
-    	List<Wishlist> WishlistItems = wishlistRepository.findByUserId(user.getId());
-    	assertThat(WishlistItems).hasSize(1);
-    	assertThat(WishlistItems.get(0).getProduct().getName()).isEqualTo(product.getName());
+    	Pageable pageable = PageRequest.of(0, 10);
+    	Page<Wishlist> wishlistItemsPage = wishlistRepository.findByUserId(user.getId(), pageable);
+    	
+    	assertThat(wishlistItemsPage.getContent()).hasSize(10);
+    	assertThat(wishlistItemsPage.getTotalElements()).isEqualTo(15);
+    	assertThat(wishlistItemsPage.getNumber()).isEqualTo(0);
+    	assertThat(wishlistItemsPage.getTotalElements()).isEqualTo(2);
     }
 }
