@@ -24,27 +24,33 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="product : ${products}">
-        <td th:text="${product.id}">1</td>
-        <td th:text="${product.name}">Name</td>
-        <td th:text="${product.price}">Price</td>
-        <td><img th:src="${product.imageUrl}" alt="Product Image" width="100"/></td>
+    <tr th:each="productDto : ${paging.content}">
+        <td th:text="${productDto.id}">1</td>
+        <td th:text="${productDto.name}">Name</td>
+        <td th:text="${productDto.price}">Price</td>
+        <td><img th:src="${productDto.imageUrl}" alt="Product Image" width="100"/></td>
         <td>
             <div style="display:inline">
-                <input type="hidden" name="productId" th:value="${product.id}"/>
-                <input type="hidden" name="productName" th:value="${product.name}"/>
+                <input type="hidden" name="productId" th:value="${productDto.id}"/>
+                <input type="hidden" name="productName" th:value="${productDto.name}"/>
                 <div>
                     <button type="button" onclick="changeQuantity(this, -1)">-</button>
                     <input type="number" name="count" value="1" min="1" style="width: 50px; text-align: center;"/>
                     <button type="button" onclick="changeQuantity(this, 1)">+</button>
                 </div>
                 <button type="button" onclick="addToWishlistWithParams(this)">위시리스트에 담기</button>
-                <input type="hidden" name="price" th:value="${product.price}"/>
+                <input type="hidden" name="price" th:value="${productDto.price}"/>
             </div>
         </td>
     </tr>
     </tbody>
 </table>
+
+<div>
+    <a th:if="${currentPage} > 0" th:href="@{/products(page=${currentPage - 1}, size=${paging.size})}">Previous</a>
+    <span th:text="${currentPage + 1}"></span>
+    <a th:if="${currentPage + 1 < totalPages}" th:href="@{/products(page=${currentPage + 1}, size=${paging.size})}">Next</a>
+</div>
 
 <script>
     function changeQuantity(button, delta) {
