@@ -94,7 +94,7 @@ class WishRepositoryTest {
         wishRepository.save(wish);
 
         assertThat(wishRepository.count()).isEqualTo(1);
-        wishRepository.deleteByMemberAndProduct_Id(member, product.getId());
+        wishRepository.deleteByMemberAndProductId(member, product.getId());
         assertThat(wishRepository.count()).isEqualTo(0);
     }
 

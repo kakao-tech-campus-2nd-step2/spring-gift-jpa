@@ -67,9 +67,9 @@ public class WishListService {
             Product product = (Product) validatedParameterMap.get("product");
 
             member.removeWish(product);
-            wishRepository.deleteByMemberAndProduct_Id(member, id);
+            wishRepository.deleteByMemberAndProductId(member, id);
         } catch (NoSuchProductIdException e) { //제품 목록에는 없는데 유저는 존재하는 경우
-            wishRepository.deleteByMemberAndProduct_Id(new Member(memberDTO), id);
+            wishRepository.deleteByMemberAndProductId(new Member(memberDTO), id);
         }
     }
 
