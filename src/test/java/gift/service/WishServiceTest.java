@@ -1,5 +1,6 @@
 package gift.service;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -9,6 +10,8 @@ import gift.product.model.Product;
 import gift.product.model.Wish;
 import gift.product.repository.ProductRepository;
 import gift.product.service.WishService;
+import java.util.NoSuchElementException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -22,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class WishServiceTest {
 
@@ -34,7 +38,7 @@ class WishServiceTest {
     @BeforeEach
     void 위시리스트_항목_추가() {
         for (int i = 1; i <= 9; i++) {
-            Product product = productRepository.save(new Product((long) i, "테스트" + i, 1000 + i, "테스트주소" + i));
+            Product product = productRepository.save(new Product("테스트" + i, 1000 + i, "테스트주소" + i));
             wishService.insertWish(new WishDto(product.getId()), new LoginMember(1L));
         }
     }
@@ -58,5 +62,31 @@ class WishServiceTest {
             assertThat(wishes.getContent().get(0).getProduct().getName()).isEqualTo(
                 "테스트" + (WISH_COUNT - SIZE));
         });
+    }
+
+    @Test
+    void 존재하지_않는_위시_항목_조회() {
+        LoginMember testMember = new LoginMember(1L);
+
+        assertThatThrownBy(() -> wishService.getWish(-1L, testMember)).isInstanceOf(
+            NoSuchElementException.class);
+    }
+
+    @Test
+    void 존재하지_않는_위시_항목_삭제() {
+        LoginMember testMember = new LoginMember(1L);
+
+        assertThatThrownBy(() -> wishService.deleteWish(-1L, testMember)).isInstanceOf(
+            NoSuchElementException.class);
+    }
+
+    @Test
+    void 존재하지_않는_회원_정보로_위시리스트_추가_시도() {
+        Long productId = productRepository.findAll().getFirst().getId();
+        WishDto testWishDto = new WishDto(productId);
+
+        assertThatThrownBy(
+            () -> wishService.insertWish(testWishDto, new LoginMember(-1L))).isInstanceOf(
+            NoSuchElementException.class);
     }
 }
