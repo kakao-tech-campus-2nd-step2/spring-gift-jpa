@@ -1,7 +1,7 @@
 package gift.exception.BadRequestExceptions;
 
 public class NoSuchProductIdException extends BadRequestException {
-    public NoSuchProductIdException(){
+    private NoSuchProductIdException(){
         super();
     }
     public NoSuchProductIdException(String message){
