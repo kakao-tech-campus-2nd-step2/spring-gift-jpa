@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface WishListJpaRepository extends JpaRepository<Wishlist, WishlistId> {
+public interface WishlistJpaRepository extends JpaRepository<Wishlist, WishlistId> {
 
     List<Wishlist> findByIdUserId(long userId);
 
