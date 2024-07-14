@@ -42,7 +42,7 @@ public class WishListController {
         try {
             WishListDTO wishListDTO = wishListService.getWishList(memberDTO, pageable);
             model.addAttribute("wishListDTO", wishListDTO);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseError(e);
         }
         return "getWishes";
@@ -53,7 +53,7 @@ public class WishListController {
             @LoginMember MemberDTO memberDTO) {
         try {
             wishListService.addWishes(memberDTO, productDTO);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseError(e);
         }
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE),
@@ -65,7 +65,7 @@ public class WishListController {
             @LoginMember MemberDTO memberDTO) {
         try {
             wishListService.removeWishListProduct(memberDTO, id);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseError(e);
         }
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE),
@@ -77,7 +77,7 @@ public class WishListController {
             @RequestBody @Valid ProductDTO productDTO) {
         try {
             wishListService.setWishListNumber(MemberDTO, productDTO, quantity);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             responseError(e);
         }
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE),
