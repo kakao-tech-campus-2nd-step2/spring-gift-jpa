@@ -14,8 +14,8 @@
     <button class="btn btn-info" onclick="searchProductById()">상품 조회</button>
   </div>
 
-  <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-    <p th:text="${errorMessage}"></p>
+  <div th:if="${message}" class="alert alert-success" role="alert">
+    <p th:text="${message}"></p>
   </div>
 
   <table class="table table-striped">
@@ -29,7 +29,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="product : ${products}">
+    <tr th:each="product : ${productPage.content}">
       <td th:text="${product.id}"></td>
       <td th:text="${product.name}"></td>
       <td th:text="${product.price}"></td>
@@ -45,6 +45,21 @@
     </tbody>
   </table>
 
+  <!-- Pagination -->
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li class="page-item" th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
+        <a class="page-link" th:href="@{/products(page=${productPage.number - 1}, size=${productPage.size})}">Previous</a>
+      </li>
+      <li class="page-item" th:each="i : ${#numbers.sequence(1, productPage.totalPages)}" th:classappend="${productPage.number + 1 == i} ? 'active' : ''">
+        <a class="page-link" th:href="@{/products(page=${i - 1}, size=${productPage.size})}" th:text="${i}">1</a>
+      </li>
+      <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
+        <a class="page-link" th:href="@{/products(page=${productPage.number + 1}, size=${productPage.size})}">Next</a>
+      </li>
+    </ul>
+  </nav>
+
   <!-- Product Modal -->
   <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -56,7 +71,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form th:action="@{/products}" th:object="${product}" method="post" id="productForm">
+          <form th:action="@{/products/add}" th:object="${product}" method="post" id="productForm">
             <input type="hidden" th:field="*{id}" />
             <div class="form-group">
               <label for="name">Name</label>
@@ -72,7 +87,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Save contents</button>
+              <button type="submit" class="btn btn-primary">Save</button>
             </div>
           </form>
         </div>
@@ -94,10 +109,11 @@
       return response.json();
     })
     .then(product => {
+      document.getElementById('id').value = product.id;
       document.getElementById('name').value = product.name;
       document.getElementById('price').value = product.price;
       document.getElementById('imageUrl').value = product.imageUrl;
-      document.getElementById('productForm').action = `/products/${id}`;
+      document.getElementById('productForm').action = `/products/update`;
       $('#productModal').modal('show');
     })
     .catch(error => {

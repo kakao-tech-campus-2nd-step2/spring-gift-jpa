@@ -7,10 +7,14 @@ import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -24,37 +28,54 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getProducts() {
-        List<Product> products = productService.getAllProducts();
-        return ResponseEntity.ok(products);
+    public String getProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productPage = productService.getAllProducts(pageable);
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("product", new Product());
+        return "product-list";
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Product> addProduct(@RequestBody @Valid Product product, RedirectAttributes redirectAttributes) {
-        Product addedProduct = productService.addProduct(product);
-        return ResponseEntity.ok(addedProduct);
+    public String addProduct(@Valid @ModelAttribute Product product, BindingResult result, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "product-list";
+        }
+
+        productService.addProduct(product);
+        redirectAttributes.addFlashAttribute("message", "Product added successfully!");
+        return "redirect:/products";
     }
 
-    //@PostMapping("/{id}")
-
-    public ResponseEntity<Product> updateProduct(@Valid @PathVariable Long id, @RequestBody Product product, RedirectAttributes redirectAttributes) {
-        productService.updateProduct(id, product);
-        return ResponseEntity.ok(product);
+    @PostMapping("/update")
+    public String updateProduct(@Valid @ModelAttribute Product product, BindingResult result, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "product-list";
+        }
+        productService.updateProduct(product.getId(), product);
+        redirectAttributes.addFlashAttribute("message", "Product updated successfully!");
+        return "redirect:/products";
     }
 
     @PostMapping("/delete/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable("id") Long id) {
+    public String deleteProduct(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         productService.deleteProduct(id);
-        return ResponseEntity.ok().body("delete complete!");
+        redirectAttributes.addFlashAttribute("message", "Product deleted successfully!");
+        return "redirect:/products";
     }
 
     @GetMapping("/view/{id}")
-    public ResponseEntity<Product> getProductDetails(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
+    public String getProductDetails(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
         Optional<Product> product = productService.getProductById(id);
-        model.addAttribute("product", product);
-        return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (product.isPresent()) {
+            model.addAttribute("product", product.get());
+            return "product-detail"; // product-details.html 뷰 반환
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Product not found");
+            return "redirect:/products";
+        }
 
-    }
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {

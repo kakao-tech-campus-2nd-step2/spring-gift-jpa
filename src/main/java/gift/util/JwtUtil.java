@@ -1,6 +1,8 @@
 package gift.util;
 
 import gift.model.Member;
+import gift.repository.MemberRepository;
+import gift.repository.WishlistRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -31,10 +33,11 @@ public class JwtUtil {
             .getPayload();
         return claims;
     }
-
-    public boolean isTokenValid(String token, Member member) {
+  
+    public boolean isTokenValid(String token, Long memberId) {
         Claims claims = extractClaims(token);
-        return claims.getSubject().equals(member.getId().toString()) && !isTokenExpired(token);
+        return claims.getSubject().equals(memberId.toString()) && !isTokenExpired(token);
+
     }
 
     public boolean isTokenExpired(String token) {

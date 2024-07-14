@@ -24,7 +24,7 @@ public class WishList {
     private Member member;
 
     @Column(name = "product_id", nullable = false)
-    @JsonProperty("product_id")
+    @JsonProperty("productId")
     private Long productId;
 
 
