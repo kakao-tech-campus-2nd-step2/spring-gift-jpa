@@ -1,4 +1,4 @@
-package gift.dto;
+package gift.dto.request;
 
 public class AuthRequest {
     private String email;
