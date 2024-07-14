@@ -52,6 +52,7 @@ public class WishlistService {
         }
 
         wishlistJpaRepository.delete(wishlistOptional);
+
     }
 
 }
