@@ -3,10 +3,12 @@ package gift.wishList;
 import gift.product.Product;
 import gift.product.ProductRepository;
 import gift.user.User;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class WishListService {
@@ -47,5 +49,16 @@ public class WishListService {
         wishList.getUser().removeWishList(wishList);
         wishList.getProduct().removeWishList(wishList);
         wishListRepository.deleteById(id);
+    }
+
+    public Page<WishListDTO> getWishListsPages(int pageNum, int size, User user, String sortBy, String sortDirection) {
+        Pageable pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Order.asc(sortBy)));
+        if (Objects.equals(sortDirection, "desc")) {
+            pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Order.desc(sortBy)));
+        }
+
+        Page<WishList> wishLists = wishListRepository.findByUser(user, pageable);
+        return wishLists.map(WishListDTO::new);
+
     }
 }

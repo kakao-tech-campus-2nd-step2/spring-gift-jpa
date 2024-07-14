@@ -4,6 +4,13 @@ import gift.annotation.LoginUser;
 import gift.product.Product;
 import gift.product.ProductRepository;
 import gift.user.User;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +57,17 @@ public class WishListController {
     public WishListDTO deleteWishes(@PathVariable long id) {
         wishListService.deleteByID(id);
         return null;
+    }
+
+    @GetMapping("/pages")
+    @Transactional
+    public ResponseEntity<Page<WishListDTO>> getWishListsPage(@LoginUser User user,
+                                                              @RequestParam(required = false, defaultValue = "0", value = "page") int page,
+                                                              @RequestParam(required = false, defaultValue = "10", value = "size") @Min(1) @Max(20) int size,
+                                                              @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortBy,
+                                                              @RequestParam(required = false, defaultValue = "asc", value = "sortDirection") String sortDirection) {
+
+        return ResponseEntity.ok(wishListService.getWishListsPages(page, size, user, sortBy, sortDirection));
     }
 
 }
