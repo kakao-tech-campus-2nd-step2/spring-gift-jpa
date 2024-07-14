@@ -15,8 +15,8 @@ public class MemberRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    private String email = "test@email.com";
-    private String password = "mypassword";
+    private final String email = "test@email.com";
+    private final String password = "mypassword";
 
     @BeforeEach
     void setUp() {
@@ -50,8 +50,8 @@ public class MemberRepositoryTest {
         var foundMember = memberRepository.findByEmail(email);
 
         // Then
+        assertThat(foundMember).isPresent();
         assertAll(
-            () -> assertTrue(foundMember.isPresent()),
             () -> assertThat(foundMember.get().getEmail()).isEqualTo(email),
             () -> assertThat(foundMember.get().getPassword()).isEqualTo(password)
         );
