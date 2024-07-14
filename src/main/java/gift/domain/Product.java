@@ -8,6 +8,7 @@ import jakarta.persistence.OneToMany;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 public class Product extends BaseEntity {
@@ -18,6 +19,7 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private Integer price;
 
+    @ColumnDefault("'https://gift-s3.s3.ap-northeast-2.amazonaws.com/default-image.png'")
     private URL imageUrl;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
