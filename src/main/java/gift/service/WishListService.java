@@ -3,6 +3,8 @@ package gift.service;
 import gift.dto.WishDto;
 import gift.model.wish.Wish;
 import gift.repository.WishRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +17,8 @@ public class WishListService {
         this.wishRepository = wishRepository;
     }
 
-    public List<Wish> getAllWishes() {
-        return wishRepository.findAll();
+    public Page<Wish> getAllWishes(Pageable pageable) {
+        return wishRepository.findAll(pageable);
     }
 
     public void insertWish(WishDto wishDto) {

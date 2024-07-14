@@ -4,8 +4,11 @@ import gift.dto.MemberDto;
 import gift.dto.WishDto;
 import gift.model.member.LoginMember;
 import gift.model.member.Member;
+import gift.model.product.Product;
 import gift.model.wish.Wish;
 import gift.service.WishListService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,9 +27,11 @@ public class WishListController {
     }
 
     @GetMapping
-    public String getAllWishes(@LoginMember MemberDto memberDto, Model model) {
-        List<Wish> wishes = wishListService.getAllWishes();
-        model.addAttribute("wishes",wishes);
+    public String getAllWishes(@LoginMember MemberDto memberDto,@RequestParam(defaultValue = "0") int page, Model model) {
+        Page<Wish> wishPage = wishListService.getAllWishes(PageRequest.of(page, 20));
+        model.addAttribute("wishes", wishPage.getContent());
+        model.addAttribute("totalPages", wishPage.getTotalPages());
+        model.addAttribute("currentPage", page);
         return "manageWishList";
     }
 

@@ -54,8 +54,8 @@ public class ProductService {
     }
 
     public Page<Product> selectAllProducts(Pageable pageable){
-            return productRepository.findAll(pageable);
-        }
+        return productRepository.findAll(pageable);
+    }
 
     public void DeleteProduct(Long id){
         productRepository.deleteById(id);
