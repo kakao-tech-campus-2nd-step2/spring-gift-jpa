@@ -6,9 +6,10 @@ import gift.repository.WishlistRepository;
 import gift.vo.Member;
 import gift.vo.Product;
 import gift.vo.Wish;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class WishlistService {
@@ -24,8 +25,9 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    public List<Wish> getWishProductList(Long memberId) {
-        return wishlistRepository.findByMemberId(memberId);
+    public Page<Wish> getWishProductList(Long memberId, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return wishlistRepository.findByMemberId(memberId, pageable);
     }
 
     public void addWishProduct(Long memberId, Long productId) {
