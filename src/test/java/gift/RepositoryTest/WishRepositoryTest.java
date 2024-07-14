@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DataJpaTest
 public class WishRepositoryTest {
@@ -52,10 +53,12 @@ public class WishRepositoryTest {
         Wish wish1 = wishRepository.save(new Wish(member, product1, 1));
         Wish wish2 = wishRepository.save(new Wish(member, product2, 2));
         List<ResponseWishDTO> actual = wishRepository.findWishListByMember(member);
-        assertThat(actual.get(0).getName()).isEqualTo("아메리카노");
-        assertThat(actual.get(0).getCount()).isEqualTo(1);
-        assertThat(actual.get(1).getName()).isEqualTo("카푸치노");
-        assertThat(actual.get(1).getCount()).isEqualTo(2);
+        assertAll(
+                ()->assertThat(actual.get(0).getName()).isEqualTo("아메리카노"),
+                ()->assertThat(actual.get(0).getCount()).isEqualTo(1),
+                ()->assertThat(actual.get(1).getName()).isEqualTo("카푸치노"),
+                ()->assertThat(actual.get(1).getCount()).isEqualTo(2)
+        );
     }
 
     @Test
@@ -63,9 +66,11 @@ public class WishRepositoryTest {
         Wish wish1 = wishRepository.save(new Wish(member, product1, 1));
         Wish wish2 = wishRepository.save(new Wish(member, product2, 2));
         Optional<Wish> actual = wishRepository.findByMemberAndProduct(member, product1);
-        assertThat(actual).isPresent();
-        assertThat(actual.get().getCount()).isEqualTo(1);
-        assertThat(actual.get().getId()).isEqualTo(wish1.getId());
+        assertAll(
+                ()->assertThat(actual).isPresent(),
+                ()->assertThat(actual.get().getCount()).isEqualTo(1),
+                ()->assertThat(actual.get().getId()).isEqualTo(wish1.getId())
+        );
     }
 
     @Test

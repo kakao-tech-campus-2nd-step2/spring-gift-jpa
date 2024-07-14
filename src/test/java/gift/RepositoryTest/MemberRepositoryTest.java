@@ -46,7 +46,6 @@ public class MemberRepositoryTest {
     void deleteTest() {
         Member member1 = memberRepository.save(new Member("woo6388@naver.com", "12345678"));
         Optional<Member> optionalMember = memberRepository.findByEmail(member1.getEmail());
-        assertThat(optionalMember).isPresent();
         memberRepository.deleteById(optionalMember.get().getId());
         var actual = memberRepository.findByEmail(member1.getEmail());
         assertThat(actual).isEmpty();
