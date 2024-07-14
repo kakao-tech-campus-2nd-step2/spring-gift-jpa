@@ -38,7 +38,7 @@ public class MemberController {
     }
 
     @PatchMapping("/api/password-change")
-    public ResponseEntity<String> updatePw(@TokenEmail String email, @RequestBody @Valid PwUpdateDTO pwUpdateDTO) {
+    public ResponseEntity<String> updatePassword(@TokenEmail String email, @RequestBody @Valid PwUpdateDTO pwUpdateDTO) {
         final boolean FORBIDDEN = true;
 
         if (FORBIDDEN) {
