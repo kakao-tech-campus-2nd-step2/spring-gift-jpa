@@ -15,7 +15,6 @@ public class WishlistDTO {
         this.productId = productId;
         this.amount = amount;
     }
-
     public Long getUserId() {
         return userId;
     }

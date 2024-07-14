@@ -65,7 +65,6 @@ public class WishlistItem {
     public void setAmount(long amount) {
         this.amount = amount;
     }
-
     @Override
     public String toString(){
         return "id: " + id
