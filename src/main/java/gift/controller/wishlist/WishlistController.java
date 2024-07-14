@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,14 +35,16 @@ public class WishlistController {
 
     @GetMapping
     public ResponseEntity<List<Product>> getWishlist(
-        @RequestHeader("Authorization") String authorizationHeader) {
-
+        @RequestHeader("Authorization") String authorizationHeader,
+        @RequestParam(defaultValue = "0") Integer page,
+        @RequestParam(defaultValue = "2") Integer size
+    ) {
         String token = getTokenFromHeader(authorizationHeader); // "Bearer " 부분을 제거
         if (!memberService.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         String email = memberService.extractEmailFromToken(token);
-        List<Product> wishlist = wishlistService.getWishlistByEmail(email);
+        List<Product> wishlist = wishlistService.getWishlistByEmail(email, page, size);
         return ResponseEntity.ok(wishlist);
     }
 

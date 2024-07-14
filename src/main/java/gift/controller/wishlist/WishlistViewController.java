@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/my/wishlist")
@@ -27,7 +28,10 @@ public class WishlistViewController {
     @GetMapping
     public String showWishlist(
         Model model,
-        @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        @RequestHeader(value = "Authorization", required = false) String authHeader,
+        @RequestParam(defaultValue = "0") Integer page,
+        @RequestParam(defaultValue = "2") Integer size
+    ) {
         if (authHeader == null) {
             return "login";
         }
@@ -42,8 +46,9 @@ public class WishlistViewController {
             model.addAttribute("error", "Fail to validate token");
             return "error";
         }
+
         String email = memberService.extractEmailFromToken(token);
-        List<Product> wishlist = wishlistService.getWishlistByEmail(email);
+        List<Product> wishlist = wishlistService.getWishlistByEmail(email, page, size);
         model.addAttribute("wishlist", wishlist);
         return "wishlist";
     }

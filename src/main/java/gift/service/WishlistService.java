@@ -7,6 +7,9 @@ import gift.repository.WishlistRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,10 +26,11 @@ public class WishlistService {
         memberService = us;
     }
 
-    public List<Product> getWishlistByEmail(String email) {
+    public List<Product> getWishlistByEmail(String email, Integer pageNumber, Integer pageSize) {
         // 1. 사용자 이메일을 기반으로 Wishlist 레파지토리에서 product를 가져온다
         // 2. 리스트에 들어있는 id들을 Product 레파지토리에서 검색하여 상품 목록 리턴
-        List<Wishlist> wishes = wishlistRepository.findByMember_Email(email);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Wishlist> wishes = wishlistRepository.findByMember_Email(email, pageable);
         return wishes.stream().map(wish -> wish.getProduct()).toList();
     }
 
