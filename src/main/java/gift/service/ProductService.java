@@ -4,11 +4,9 @@ import gift.model.product.Product;
 import gift.model.product.ProductRequest;
 import gift.model.product.ProductResponse;
 import gift.repository.product.ProductRepository;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
@@ -18,16 +16,13 @@ public class ProductService {
     }
 
 
-
     public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow();
         return ProductResponse.from(product);
     }
 
-    public List<ProductResponse> getAllProducts() {
-        return productRepository.findAll().stream()
-            .map(ProductResponse::from)
-            .collect(Collectors.toList());
+    public Page<ProductResponse> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable).map(ProductResponse::from);
     }
 
     public ProductResponse createProduct(ProductRequest productRequest) {

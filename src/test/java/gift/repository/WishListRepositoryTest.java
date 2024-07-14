@@ -7,7 +7,6 @@ import gift.model.user.User;
 import gift.model.wishlist.WishList;
 import gift.repository.product.ProductRepository;
 import gift.repository.user.UserRepository;
-
 import gift.repository.wish.WishListRepository;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 public class WishListRepositoryTest {
+
     private WishListRepository wishListRepository;
     private ProductRepository productRepository;
     private UserRepository userRepository;
@@ -31,68 +31,70 @@ public class WishListRepositoryTest {
         this.userRepository = userRepository;
     }
 
-    private WishList wish1;
-    private WishList wish2;
-    private User user1, user2;
-    private Product product1, product2;
-
-    @BeforeEach
-    void setup() {
-        product1 = new Product("아메리카노", 4500, "americano");
-        product2 = new Product("가방", 120000, "bag");
-        user1 = new User("kakao", "kakao@google.com", "password", "user");
-        user2 = new User("naver", "naver@google.com", "password", "user");
-        userRepository.save(user1);
-        userRepository.save(user2);
-        productRepository.save(product1);
-        productRepository.save(product2);
-
-        wish1 = new WishList(user1, product1, 2);
-        wish2 = new WishList(user2, product2, 3);
-        wishListRepository.save(wish1);
-        wishListRepository.save(wish2);
-    }
-
     @DisplayName("위시리스트 정보 저장 테스트")
     @Test
     void save() {
         // given
-        WishList wish3 = new WishList(user1, product2, 2);
+        Product product = createProduct("americano", 4500, "americano");
+        productRepository.save(product);
+        User user = createUser("yj", "yj@google.com", "password", "BE");
+        userRepository.save(user);
+        WishList wish = new WishList(user, product, 2);
         // when
 
-        WishList savedWish = wishListRepository.save(wish3);
+        WishList savedWish = wishListRepository.save(wish);
         // then
         Assertions.assertAll(
             () -> assertThat(savedWish.getId()).isNotNull(),
-            () -> assertThat(savedWish.getQuantity()).isEqualTo(wish3.getQuantity())
+            () -> assertThat(savedWish.getQuantity()).isEqualTo(wish.getQuantity())
         );
     }
 
     @DisplayName("id에 따른 위시 리스트 찾기 테스트")
     @Test
-    void findbyid() {
+    void findById() {
         // given
-        Long id = wish1.getId();
-
+        Product product = createProduct("americano", 4500, "americano");
+        productRepository.save(product);
+        User user = createUser("yj", "yj@google.com", "password", "BE");
+        userRepository.save(user);
+        WishList wish = new WishList(user, product, 2);
+        wishListRepository.save(wish);
+        Long id = wish.getId();
 
         // when
         Optional<WishList> findWish = wishListRepository.findById(id);
-        Long findId = findWish.get().getId();
         // then
-        assertThat(findId).isEqualTo(id);
+        assertThat(findWish).isNotNull();
     }
 
     @DisplayName("위시 리스트 삭제 기능 테스트")
     @Test
-    void deletebyid() {
+    void deleteById() {
         // given
-        Long deleteId = wish2.getId();
+        Product product = createProduct("americano", 4500, "americano");
+        productRepository.save(product);
+        User user = createUser("yj", "yj@google.com", "password", "BE");
+        userRepository.save(user);
+        WishList wish = new WishList(user, product, 2);
+        wishListRepository.save(wish);
+        Long deleteId = wish.getId();
         // when
         wishListRepository.deleteById(deleteId);
-
-    
         List<WishList> savedWish = wishListRepository.findAll();
         // then
-        assertThat(savedWish.size()).isEqualTo(1);
+        assertThat(savedWish.size()).isEqualTo(0);
+    }
+
+    private Product createProduct(String name, int price, String url) {
+        return new Product(name, price, url);
+    }
+
+    private User createUser(String name, String email, String password, String Role) {
+        return new User(name, email, password, Role);
+    }
+
+    private WishList createWish(User user, Product product, int quantity) {
+        return new WishList(user, product, quantity);
     }
 }

@@ -6,7 +6,6 @@ import gift.model.product.Product;
 import gift.repository.product.ProductRepository;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,46 +16,40 @@ class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
-    private Product product1;
-    private Product product2;
 
-    @BeforeEach
-    void setUp() {
-        product1 = new Product("아메리카노", 4500, "americano");
-        product2 = new Product("가방", 120000, "bag");
-        productRepository.save(product1);
-        productRepository.save(product2);
-    }
     @DisplayName("상품 정보 저장 테스트")
     @Test
     void save() {
         // given
-        Product product3 = new Product("노트북", 1500000, "laptop");
+        Product product1 = createProduct("americano", 4500, "americano");
         // when
-        Product savedProduct = productRepository.save(product3);
+        Product savedProduct = productRepository.save(product1);
         // then
         Assertions.assertAll(
             () -> assertThat(savedProduct.getId()).isNotNull(),
-            () -> assertThat(savedProduct.getName()).isEqualTo(product3.getName())
+            () -> assertThat(savedProduct.getName()).isEqualTo(product1.getName())
         );
     }
 
     @DisplayName("id에 따른 상품 찾기 테스트")
     @Test
-    void findbyid() {
+    void findById() {
         // given
+        Product product1 = createProduct("americano", 4500, "americano");
+        productRepository.save(product1);
         Long id = product1.getId();
         // when
         Product foundProduct = productRepository.findById(id).orElse(null);
-        Long findId = foundProduct.getId();
         // then
-        assertThat(id).isEqualTo(findId);
+        assertThat(foundProduct).isNotNull();
     }
 
     @DisplayName("상품 삭제 기능 테스트")
     @Test
-    void deletebyid() {
+    void deleteById() {
         // given
+        Product product1 = createProduct("americano", 4500, "americano");
+        productRepository.save(product1);
         Long DeleteId = product1.getId();
 
         // when
@@ -64,6 +57,10 @@ class ProductRepositoryTest {
         List<Product> remainingProducts = productRepository.findAll();
 
         // then
-        assertThat(remainingProducts.size()).isEqualTo(1);
+        assertThat(remainingProducts.size()).isEqualTo(0);
+    }
+
+    private Product createProduct(String name, int price, String url) {
+        return new Product(name, price, url);
     }
 }

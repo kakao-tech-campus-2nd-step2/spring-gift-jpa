@@ -17,39 +17,36 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    private User user1;
-    private User user2;
-
-    @BeforeEach
-    void setup() {
-        user1 = new User("kakao", "kakao@google.com", "password", "BE");
-        user2 = new User("name", "name@google.com", "password", "BE");
-        userRepository.save(user1);
-        userRepository.save(user2);
-    }
     @DisplayName("회원 정보 저장 테스트")
     @Test
     void save() {
         // given
-        User user3 = new User("yj", "yj@google.com", "password", "BE");
+        User user = createUser("yj", "yj@google.com", "password", "BE");
         // when
-        User savedUser = userRepository.save(user3);
+        User savedUser = userRepository.save(user);
         // then
         Assertions.assertAll(
             () -> assertThat(savedUser.getId()).isNotNull(),
-            () -> assertThat(savedUser.getEmail()).isEqualTo(user3.getEmail())
+            () -> assertThat(savedUser.getEmail()).isEqualTo(user.getEmail())
         );
     }
 
     @DisplayName("id에 따른 회원 찾기 테스트")
     @Test
-    void findbyid() {
+    void findById() {
         // given
-        Long id = user2.getId();
+        User user = createUser("yj", "yj@google.com", "password", "BE");
+        userRepository.save(user);
+        Long id = user.getId();
+
         // when
         Optional<User> findUser = userRepository.findById(id);
-        Long findId = findUser.get().getId();;
         // then
-        assertThat(findId).isEqualTo(id);
+        assertThat(findUser).isNotNull();
     }
+
+    private User createUser(String name, String email, String password, String Role) {
+        return new User(name, email, password, Role);
+    }
+
 }

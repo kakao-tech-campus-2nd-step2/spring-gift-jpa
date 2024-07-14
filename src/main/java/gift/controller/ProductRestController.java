@@ -6,6 +6,10 @@ import gift.model.product.ProductResponse;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -30,8 +35,13 @@ public class ProductRestController {
 
     // 모든 상품 조회
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts() {
-        List<ProductResponse> products = productService.getAllProducts();
+    public ResponseEntity<Page<ProductResponse>> getAllProducts(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size,
+        @RequestParam(defaultValue = "id,asc") String[] sort) {
+        Sort.Direction direction = Sort.Direction.fromString(sort[1]);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
+        Page<ProductResponse> products = productService.getAllProducts(pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

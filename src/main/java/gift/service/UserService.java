@@ -1,6 +1,5 @@
 package gift.service;
 
-
 import gift.model.user.User;
 import gift.repository.user.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
 
     public User registerUser(String name, String email, String password) {
         User user = new User(name, email, password, "ROLE_USER");
@@ -37,4 +35,3 @@ public class UserService {
         return user;
     }
 }
-

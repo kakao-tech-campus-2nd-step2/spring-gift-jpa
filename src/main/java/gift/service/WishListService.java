@@ -1,6 +1,5 @@
 package gift.service;
 
-
 import gift.model.product.Product;
 import gift.model.user.User;
 import gift.model.wishlist.WishList;
@@ -12,6 +11,8 @@ import gift.repository.wish.WishListRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,10 +29,10 @@ public class WishListService {
         this.userRepository = userRepository;
     }
 
-    public List<WishResponse> getWishListByUserId(Long userId) {
-        return wishListRepository.findAllByUserId(userId).stream()
-            .map(wishList -> WishResponse.from(wishList, wishList.getProduct()))
-            .collect(Collectors.toList());
+    public Page<WishResponse> getWishListByUserId(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId).orElseThrow();
+        return wishListRepository.findAllByUser(user, pageable)
+            .map(wishList -> WishResponse.from(wishList, wishList.getProduct()));
     }
 
     public WishResponse addWishList(Long userId, WishRequest wishRequest) {
@@ -53,4 +54,3 @@ public class WishListService {
         wishListRepository.deleteByUserIdAndAndProductId(userId, productId);
     }
 }
-
