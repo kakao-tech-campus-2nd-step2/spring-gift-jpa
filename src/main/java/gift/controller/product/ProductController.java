@@ -5,9 +5,11 @@ import gift.controller.product.dto.ProductResponse;
 import gift.global.auth.Authorization;
 import gift.global.dto.PageResponse;
 import gift.model.member.Role;
+import gift.model.product.SearchType;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -66,9 +69,11 @@ public class ProductController {
 
     @GetMapping("/products")
     public ResponseEntity<PageResponse<ProductResponse.Info>> getProductsPaging(
-        @PageableDefault(size = 5) Pageable pageable
+        @RequestParam(name = "SearchType", required = false, defaultValue = "ALL") SearchType searchType,
+        @RequestParam(name = "SearchValue", required = false, defaultValue = "") String searchValue,
+        @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        var response = productService.getProductsPaging(pageable);
+        var response = productService.getProductsPaging(searchType, searchValue, pageable);
         return ResponseEntity.ok().body(response);
     }
 

@@ -5,6 +5,7 @@ import gift.controller.product.dto.ProductResponse;
 import gift.global.dto.PageResponse;
 import gift.model.product.Product;
 import gift.global.validate.NotFoundException;
+import gift.model.product.SearchType;
 import gift.repository.product.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,9 +46,26 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ProductResponse.Info> getProductsPaging(Pageable pageable) {
-        Page<Product> productPage = productRepository.findAllByOrderByIdDesc(
-            pageable);
+    public PageResponse<ProductResponse.Info> getProductsPaging(
+        SearchType searchType,
+        String searchValue,
+        Pageable pageable
+    ) {
+        Page<Product> productPage;
+
+        System.out.println("searchType: " + searchType);
+        switch (searchType) {
+            case NAME:
+                productPage = productRepository.findByNameContaining(searchValue, pageable);
+                break;
+            case PRICE:
+                productPage = productRepository.findAllOrderByPrice(pageable);
+                break;
+            case ALL:
+            default:
+                productPage = productRepository.findAll(pageable);
+        }
+
         var content = productPage.getContent().stream()
             .map(ProductResponse.Info::from)
             .toList();
