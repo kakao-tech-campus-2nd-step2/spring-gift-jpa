@@ -18,3 +18,4 @@ INSERT INTO wish (member_email, product_id)
 VALUES ('user1@example.com', 2),
        ('user2@example.com', 1),
        ('user3@example.com', 3);
+

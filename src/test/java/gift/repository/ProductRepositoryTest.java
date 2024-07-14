@@ -3,10 +3,12 @@ package gift.repository;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import gift.entity.Product;
+
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
 
 @DataJpaTest
 public class ProductRepositoryTest {
@@ -71,4 +73,5 @@ public class ProductRepositoryTest {
 
     assertThat(foundProduct).isNotPresent();
   }
+
 }

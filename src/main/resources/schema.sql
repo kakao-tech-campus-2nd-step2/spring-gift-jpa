@@ -18,4 +18,5 @@ CREATE TABLE IF NOT EXISTS wish (
     FOREIGN KEY (product_id) REFERENCES product(id),
     FOREIGN KEY (member_email) REFERENCES member(email),
     UNIQUE (member_email, product_id)
+
 );

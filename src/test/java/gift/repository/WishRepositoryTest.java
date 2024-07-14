@@ -3,11 +3,13 @@ package gift.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.entity.Wish;
+
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
 
 @DataJpaTest
 public class WishRepositoryTest {
@@ -20,6 +22,7 @@ public class WishRepositoryTest {
     Wish wish = new Wish();
     wish.setMemberEmail("test@example.com");
     wish.setProductId(1L);
+
     wishRepository.save(wish);
 
     Optional<Wish> foundWish = wishRepository.findById(wish.getId());
@@ -43,6 +46,7 @@ public class WishRepositoryTest {
 
     List<Wish> wishes = wishRepository.findByMemberEmail("test@example.com");
 
+
     assertThat(wishes).isNotEmpty();
     assertThat(wishes.size()).isEqualTo(2);
   }
@@ -56,6 +60,7 @@ public class WishRepositoryTest {
 
     List<Wish> wishes = wishRepository.findByProductId(1L);
 
+
     assertThat(wishes).isNotEmpty();
     assertThat(wishes.size()).isEqualTo(1);
   }
@@ -65,6 +70,7 @@ public class WishRepositoryTest {
     Wish wish = new Wish();
     wish.setMemberEmail("delete@example.com");
     wish.setProductId(3L);
+
     wishRepository.save(wish);
 
     Long wishId = wish.getId();
@@ -74,4 +80,5 @@ public class WishRepositoryTest {
 
     assertThat(deletedWish).isNotPresent();
   }
+
 }
