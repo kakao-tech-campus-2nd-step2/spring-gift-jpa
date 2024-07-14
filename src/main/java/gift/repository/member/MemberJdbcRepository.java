@@ -44,8 +44,8 @@ public class MemberJdbcRepository implements MemberRepository {
     }
 
     @Override
-    public void save(Member member) {
-
+    public Member save(Member member) {
+        return null;
     }
 
     @Override
