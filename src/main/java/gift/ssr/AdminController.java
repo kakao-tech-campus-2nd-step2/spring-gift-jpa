@@ -78,7 +78,11 @@ public class AdminController {
         @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ProductResponse> products = productService.findAll(pageable);
-        model.addAttribute("products", products);
+        model.addAttribute("products", products.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", products.getTotalPages());
+        model.addAttribute("totalItems", products.getTotalElements());
+        model.addAttribute("pageSize", size);
         return "products";
     }
 
