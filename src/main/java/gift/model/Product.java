@@ -1,5 +1,6 @@
 package gift.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +30,7 @@ public class Product {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<Wishlist> wishlists;
 
     protected Product() {
