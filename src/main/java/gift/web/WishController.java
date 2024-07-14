@@ -25,8 +25,9 @@ public class WishController {
         this.wishService = wishService;
     }
 
-    @GetMapping
+    @GetMapping("/admin")
     public ResponseEntity<List<WishDto>> getWishes(@AuthUser MemberDto memberDto) {
+        // todo : 관리자 권한 검증 로직 구현
         return new ResponseEntity<>(wishService.getWishes(), HttpStatus.OK);
     }
 
