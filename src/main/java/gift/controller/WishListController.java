@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import gift.service.WishListService;
 import gift.dto.MemberDto;
 import gift.dto.WishListDto;
 import gift.dto.request.WishListRequest;
+import gift.dto.response.WishListPageResponse;
 import gift.util.JwtUtil;
 import jakarta.validation.Valid;
 
@@ -33,13 +36,15 @@ public class WishListController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<WishListDto>> getWishList(@RequestHeader("Authorization") String authorizationHeader, MemberDto memberDto, @RequestParam(defaultValue = "0") int page){
+    public ResponseEntity<List<WishListDto>> getWishList(@RequestHeader("Authorization") String authorizationHeader, MemberDto memberDto, 
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "size", defaultValue = "10")int size){
         if (!jwtUtil.validateToken(authorizationHeader, memberDto)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        Page<WishListDto> wishListPage = wishListService.findWishListById(jwtUtil.extractToken(authorizationHeader), page);
-        return new ResponseEntity<>(wishListPage, HttpStatus.OK);
+        WishListPageResponse wishListPageResponse = wishListService.findWishListById(jwtUtil.extractToken(authorizationHeader), page, size);
+        return new ResponseEntity<>(wishListPageResponse.getWishLists(), HttpStatus.OK);
     }
 
     @PostMapping

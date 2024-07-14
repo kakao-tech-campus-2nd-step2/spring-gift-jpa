@@ -12,7 +12,7 @@ import gift.entity.WishList;
 @Repository
 public interface WishListRepository  extends JpaRepository<WishList, Long>{
 
-    Page<WishList> findByMemberId(Pageable pageable, Long memberId);
+    Page<WishList> findByMemberIdOrderByProductIdDesc(Pageable pageable, Long memberId);
     List<WishList> findByMemberId(Long memberId);
     List<WishList> findByProductId(Long productId);
     Long findIdByMemberIdAndProductId(Long memberId, Long productId);

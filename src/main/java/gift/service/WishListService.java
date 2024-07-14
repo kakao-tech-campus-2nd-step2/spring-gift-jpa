@@ -1,6 +1,7 @@
 package gift.service;
 
 import gift.dto.WishListDto;
+import gift.dto.response.WishListPageResponse;
 import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.WishList;
@@ -38,14 +39,13 @@ public class WishListService {
     }
 
     @Transactional
-    public Page<WishListDto> findWishListById(String token, int page) {
+    public WishListPageResponse findWishListById(String token, int page, int size) {
 
         long memberId = (long)jwtUtil.extractAllClaims(token).get("id");
+        Pageable pageable = PageRequest.of(page, size);
 
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("product.id"));
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return wishListRepository.findByMemberId(pageable, memberId).map(WishListDto::fromEntity);
+        WishListPageResponse wishListPageResponse = new WishListPageResponse();
+        return wishListPageResponse.fromPage(wishListRepository.findByMemberIdOrderByProductIdDesc(pageable, memberId));
     }
 
     @Transactional
