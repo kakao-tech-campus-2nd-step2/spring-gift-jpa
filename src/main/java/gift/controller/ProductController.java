@@ -3,6 +3,8 @@ package gift.controller;
 import gift.dto.ProductDto;
 import gift.model.product.Product;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -47,9 +49,11 @@ public class ProductController {
     }
 
     @GetMapping
-    public String getProductList(Model model) {
-        List<Product> products = productService.selectAllProducts();
-        model.addAttribute("products", products);
+    public String getProductList(@RequestParam(defaultValue = "0") int page, Model model) {
+        Page<Product> productPage = productService.selectAllProducts(PageRequest.of(page, 20));
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("currentPage", page);
         return "productManage";
     }
 
