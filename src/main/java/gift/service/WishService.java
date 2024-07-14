@@ -46,7 +46,7 @@ public class WishService {
         wishRepository.save(request.toEntity(member, product));
     }
 
-    //@Transactional
+    @Transactional
     public void updateWish(Long userId, WishRequest.Update request) {
         Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
