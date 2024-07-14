@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Validated
 public interface ProductRepository extends JpaRepository<@Valid Product, Long> {
@@ -18,4 +20,6 @@ public interface ProductRepository extends JpaRepository<@Valid Product, Long> {
     @Transactional
     @Query("update Product p set p.amount = p.amount - :amount where p.id = :id")
     void purchaseProductById(@Param("id") long id, @Param("amount") int amount);
+
+    Page<Product> findAll(Pageable pageable);
 }
