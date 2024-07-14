@@ -21,13 +21,13 @@ public class Mapper {
 
     private final ProductService productService;
     private final MemberService memberService;
-    private final WishlistService wishListService;
+    private final WishlistService wishlistService;
 
     @Autowired
     public Mapper(@Lazy ProductService productService, @Lazy MemberService memberService, @Lazy WishlistService wishListService) {
         this.productService = productService;
         this.memberService = memberService;
-        this.wishListService = wishListService;
+        this.wishlistService = wishListService;
     }
 
 
