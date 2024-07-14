@@ -1,5 +1,6 @@
 package gift.service;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -7,6 +8,8 @@ import gift.product.dto.ClientProductDto;
 import gift.product.model.Product;
 import gift.product.service.ProductService;
 import java.util.List;
+import java.util.NoSuchElementException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -134,5 +137,11 @@ class ProductServiceTest {
 
         List<Product> productAll = productService.getProductAll();
         assertThat(productAll).hasSize(1);
+    }
+
+    @Test
+    void 존재하지_않는_상품_조회_테스트() {
+        assertThatThrownBy(() -> productService.getProduct(-1L)).isInstanceOf(
+            NoSuchElementException.class);
     }
 }
