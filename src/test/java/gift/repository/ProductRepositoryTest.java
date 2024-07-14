@@ -53,4 +53,20 @@ class ProductRepositoryTest {
         Optional<Product> deletedProduct = productRepository.findById(savedProduct.getId());
         assertThat(deletedProduct).isNotPresent();
     }
+
+    @Test
+    void updateProduct() {
+        Product savedProduct = productRepository.save(new Product("Original Name", 100, "http://example.com/original.jpg"));
+        savedProduct.setName("Updated Name");
+        savedProduct.setPrice(200);
+        savedProduct.setImageUrl("http://example.com/updated.jpg");
+
+        Product updatedProduct = productRepository.save(savedProduct);
+
+        assertAll(
+                () -> assertThat(updatedProduct.getName()).isEqualTo("Updated Name"),
+                () -> assertThat(updatedProduct.getPrice()).isEqualTo(200),
+                () -> assertThat(updatedProduct.getImageUrl()).isEqualTo("http://example.com/updated.jpg")
+        );
+    }
 }
