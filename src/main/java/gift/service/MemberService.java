@@ -40,28 +40,32 @@ public class MemberService {
     }
 
     public LoginResponse loginMember(LoginRequest loginRequest) throws Exception {
-        Optional<Member> user = memberRepository.findByEmail(loginRequest.getEmail()); // Email이 PK
-        user.orElseThrow(() -> new RuntimeException("Invalid email or password"));
-        Member registeredMember = user.get();
-        if (registeredMember.getPassword().equals(loginRequest.getPassword())) {
-            String token = generateToken(registeredMember);
-            return new LoginResponse(token);
-        }
-        throw new Exception("Invalid email or password");
+        Optional<Member> member = memberRepository.findByEmail(loginRequest.getEmail());
+        member.orElseThrow(
+            () -> new RuntimeException("Login failed : Invalid email or password"));
+        Member registeredMember = member.get();
+
+        validatePassword(registeredMember, loginRequest.getPassword());
+
+        String token = generateToken(registeredMember);
+        return new LoginResponse(token);
     }
 
     public Optional<Member> getMemberByEmail(String email) {
-       return memberRepository.findByEmail(email);
+        return memberRepository.findByEmail(email);
+    }
+
+    private void validatePassword(Member member, String password) {
+        if (!member.getPassword().equals(password)) {
+            throw new RuntimeException("Login failed : Invalid email or password");
+        }
     }
 
     private String generateToken(Member member) {
         long now = System.currentTimeMillis();
-        return Jwts.builder()
-            .setSubject(member.getEmail())
-            .setIssuedAt(new Date(now))
+        return Jwts.builder().setSubject(member.getEmail()).setIssuedAt(new Date(now))
             .setExpiration(new Date(now + 3600000)) // 1 hour validity
-            .signWith(key)
-            .compact();
+            .signWith(key).compact();
     }
 
     public boolean validateToken(String token) {

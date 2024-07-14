@@ -3,10 +3,10 @@ package gift.controller.signup;
 import gift.DTO.SignupRequest;
 import gift.DTO.SignupResponse;
 import gift.service.MemberService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +25,8 @@ public class SignupController {
 
     @PostMapping
     public ResponseEntity<SignupResponse> signup(
-        @RequestBody SignupRequest signupRequest,
-        Model model) {
+            @RequestBody
+            @Valid SignupRequest signupRequest) {
         SignupResponse signupResponse = memberService.registerMember(signupRequest);
         return new ResponseEntity<>(signupResponse, HttpStatus.CREATED);
     }

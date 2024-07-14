@@ -3,6 +3,7 @@ package gift.controller.login;
 import gift.DTO.LoginRequest;
 import gift.DTO.LoginResponse;
 import gift.service.MemberService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,9 @@ public class LoginController {
     }
 
     @PostMapping
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> login(
+            @RequestBody
+            @Valid LoginRequest loginRequest) {
         try {
             LoginResponse loginResponse = memberService.loginMember(loginRequest);
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
