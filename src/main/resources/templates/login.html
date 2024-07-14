@@ -1,10 +1,20 @@
-<!-- login.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('registerSuccess')) {
+                alert('회원가입되었습니다.');
+            }
+            if (urlParams.has('error')) {
+                alert('아이디 또는 비밀번호를 확인하세요.');
+            }
+        };
+    </script>
 </head>
 <body>
 <div class="container mt-5">
@@ -20,6 +30,9 @@
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
+    <div class="mt-3">
+        <a href="/members/register" class="btn btn-secondary">Register</a>
+    </div>
 </div>
 </body>
 </html>
