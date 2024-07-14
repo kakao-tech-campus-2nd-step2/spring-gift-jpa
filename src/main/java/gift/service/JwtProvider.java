@@ -1,5 +1,7 @@
 package gift.service;
 
+import gift.exception.ErrorCode;
+import gift.model.user.UserDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -8,8 +10,6 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import gift.exception.ErrorCode;
-import gift.model.user.UserDTO;
 
 
 @Component

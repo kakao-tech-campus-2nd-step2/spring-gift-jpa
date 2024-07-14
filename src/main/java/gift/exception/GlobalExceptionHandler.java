@@ -1,5 +1,6 @@
 package gift.exception;
 
+import gift.exception.CustomException.CustomException;
 import gift.exception.CustomException.EmailNotFoundException;
 import gift.exception.CustomException.PassWordMissMatchException;
 import io.jsonwebtoken.JwtException;
@@ -12,7 +13,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import gift.exception.CustomException.CustomException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
