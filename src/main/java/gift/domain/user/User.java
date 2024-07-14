@@ -26,7 +26,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<CartItem> cartItems = new ArrayList<>();
 
-    public User() {
+    protected User() {
     }
 
     public User(Long id, String email, String password) {

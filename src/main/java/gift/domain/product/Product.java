@@ -30,7 +30,7 @@ public class Product {
             proxyProduct.getImageUrl());
     }
 
-    public Product() {
+    protected Product() {
 
     }
 
