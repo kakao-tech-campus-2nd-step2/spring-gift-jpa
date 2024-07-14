@@ -32,7 +32,7 @@ public class WishlistController {
     }
 
 
-    @PostMapping("/{id}/save")
+    @PostMapping("/{id}")
     public ResponseEntity<List<WishlistItem>> createWishlist(@PathVariable("id") Long userId, @RequestBody List<WishlistItem> wishlistItems) {
         List<WishlistItem> savedItems = wishlistService.saveWishlistItemsWithUserId(userId, wishlistItems);
         return new ResponseEntity<>(savedItems, HttpStatus.CREATED);
