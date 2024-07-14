@@ -1,5 +1,7 @@
 package gift.DTO;
 
+import gift.domain.Product;
+
 public class ProductResponse {
 
     private Long id;
@@ -31,5 +33,12 @@ public class ProductResponse {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public void fromEntity(Product productEntity) {
+        this.id = productEntity.getId();
+        this.name = productEntity.getName();
+        this.price = productEntity.getPrice();
+        this.imageUrl = productEntity.getImageUrl();
     }
 }

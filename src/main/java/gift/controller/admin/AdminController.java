@@ -65,10 +65,10 @@ public class AdminController {
      * @return 같은 ID의 상품이 존재하지 않으면 201 Created, 아니면 400 Bad Request
      */
     @PostMapping
-    public ResponseEntity<ProductRequest> addProduct(
+    public ResponseEntity<ProductResponse> addProduct(
         @RequestBody @Valid ProductRequest productRequest) {
-        productService.addProduct(productRequest);
-        return new ResponseEntity<>(productRequest, HttpStatus.CREATED); // 201 Created
+        ProductResponse product = productService.addProduct(productRequest);
+        return new ResponseEntity<>(product, HttpStatus.CREATED); // 201 Created
     }
 
     /**
@@ -91,11 +91,11 @@ public class AdminController {
      * @return 상품 정보 수정에 성공하면 200 OK, 해당 id의 상품이 없으면 404 NOT FOUND
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ProductRequest> updateProduct(
+    public ResponseEntity<ProductResponse> updateProduct(
         @PathVariable Long id,
         @RequestBody @Valid ProductRequest updatedProduct
     ) {
-        productService.updateProduct(id, updatedProduct);
-        return new ResponseEntity<>(updatedProduct, HttpStatus.OK); // 200 OK
+        ProductResponse product = productService.updateProduct(id, updatedProduct);
+        return new ResponseEntity<>(product, HttpStatus.OK); // 200 OK
     }
 }

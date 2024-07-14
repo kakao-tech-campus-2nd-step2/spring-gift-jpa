@@ -50,10 +50,7 @@ public class ProductService {
     }
 
     public ProductResponse getProductById(Long id) {
-        Optional<Product> productOptional = productRepository.findById(id);
-        productOptional.orElseThrow(() -> new RuntimeException("No product with id " + id));
-
-        Product product = productOptional.get();
+        Product product = getProductByIdOrThrow(id);
         ProductResponse response = new ProductResponse(
                                             product.getId(),
                                             product.getName(),
@@ -63,7 +60,7 @@ public class ProductService {
         return response;
     }
 
-    public void addProduct(ProductRequest productRequest) {
+    public ProductResponse addProduct(ProductRequest productRequest) {
         productRepository.findByName(productRequest.getName())
                             .ifPresent(p -> {
                             throw new RuntimeException("Product name must be unique");
@@ -73,14 +70,22 @@ public class ProductService {
                                             productRequest.getPrice(),
                                             productRequest.getImageUrl());
         productRepository.save(productEntity);
+
+        ProductResponse response = new ProductResponse();
+        response.fromEntity(productEntity);
+        return response;
     }
 
-    public void updateProduct(Long id, ProductRequest updatedProduct) {
+    public ProductResponse updateProduct(Long id, ProductRequest updatedProduct) {
         Product product = getProductByIdOrThrow(id);
         product.setName(updatedProduct.getName());
         product.setPrice(updatedProduct.getPrice());
         product.setImageUrl(updatedProduct.getImageUrl());
         productRepository.save(product);
+
+        ProductResponse response = new ProductResponse();
+        response.fromEntity(product);
+        return response;
     }
 
     public void deleteProduct(Long id) {
