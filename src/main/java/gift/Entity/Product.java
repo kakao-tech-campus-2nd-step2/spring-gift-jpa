@@ -1,10 +1,10 @@
 package gift.Entity;
 
-import gift.Model.Product;
+import gift.Model.ProductDto;
 import jakarta.persistence.*;
 
 @Entity
-public class Products {
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long productId;
@@ -13,19 +13,15 @@ public class Products {
     private String imageUrl;
     private boolean isDeleted;
 
-    protected Products() {
+    protected Product() {
     }
 
-    protected Products(long productId, String name, int price, String imageUrl, boolean isDeleted) {
+    public Product(long productId, String name, int price, String imageUrl, boolean isDeleted) {
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.isDeleted = isDeleted;
-    }
-
-    public static Products createProducts(Product product) {
-        return new Products(product.getId(), product.getName(), product.getPrice(), product.getImageUrl(), product.isDeleted());
     }
 
     public long getId() {
