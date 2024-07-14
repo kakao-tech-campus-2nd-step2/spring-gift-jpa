@@ -2,6 +2,7 @@ package gift.authentication.filter;
 
 import gift.authentication.token.JwtResolver;
 import gift.authentication.token.Token;
+import gift.authentication.token.TokenContext;
 import gift.web.validation.exception.InvalidCredentialsException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -30,9 +31,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         String authorization = request.getHeader(AUTHORIZATION_HEADER);
         if(Objects.nonNull(authorization) && authorization.startsWith(BEARER)) {
             String token = authorization.substring(BEARER.length());
-            jwtResolver.resolve(Token.from(token));
+
+            Long memberId = jwtResolver.resolveId(Token.from(token)).orElseThrow(InvalidCredentialsException::new);
+            TokenContext.addCurrentMemberId(memberId);
 
             filterChain.doFilter(request, response);
+            TokenContext.clear();
             return;
         }
 
