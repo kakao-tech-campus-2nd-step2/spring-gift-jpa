@@ -5,18 +5,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.stereotype.Component;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
-@Component
-public class ProductMapDao implements ProductDao {
+@Repository
+public class ProductMapRepository implements ProductRepository {
 
     private final Map<Long, Product> database = new ConcurrentHashMap<>();
 
     @Override
-    public void insert(Product product) {
+    public Product save(Product product) {
         Product newProduct = Product.create(Long.valueOf(database.size() + 1), product.getName(),
             product.getPrice(), product.getImageUrl());
         database.put(newProduct.getId(), newProduct);
+        return newProduct;
+    }
+
+    @Override
+    public Page<Product> findAllByOrderByIdDesc(Pageable pageable) {
+        return null;
     }
 
     @Override
@@ -34,18 +42,8 @@ public class ProductMapDao implements ProductDao {
         database.remove(id);
     }
 
-    @Override
-    public void update(Product product) {
-        database.replace(product.getId(), product);
-    }
-
-    @Override
     public List<Product> findPaging(int page, int size) {
         return null;
     }
 
-    @Override
-    public Long count() {
-        return Long.valueOf(database.size());
-    }
 }

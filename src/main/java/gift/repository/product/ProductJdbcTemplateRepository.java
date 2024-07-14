@@ -5,13 +5,15 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
-@Primary
-public class ProductJdbcTemplateDao implements ProductDao {
+@Repository
+public class ProductJdbcTemplateRepository implements ProductRepository {
 
     private static final String SQL_INSERT = "INSERT INTO product(name, price, image_url) VALUES (?, ?, ?)";
     private static final String SQL_SELECT_BY_ID = "SELECT id, name, price, image_url FROM product WHERE id = ?";
@@ -25,15 +27,10 @@ public class ProductJdbcTemplateDao implements ProductDao {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Product> productRowMapper = new ProductRowMapper();
 
-    public ProductJdbcTemplateDao(DataSource dataSource) {
+    public ProductJdbcTemplateRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Override
-    public void insert(Product product) {
-        jdbcTemplate.update(SQL_INSERT, product.getName(), product.getPrice(),
-            product.getImageUrl());
-    }
 
     @Override
     public Optional<Product> findById(Long id) {
@@ -56,21 +53,20 @@ public class ProductJdbcTemplateDao implements ProductDao {
     public void deleteById(Long id) {
         jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
-
-    @Override
-    public void update(Product product) {
-        jdbcTemplate.update(SQL_UPDATE, product.getName(), product.getPrice(),
-            product.getImageUrl(), product.getId());
-    }
-
-    @Override
+    
     public List<Product> findPaging(int page, int size) {
         int offset = (page) * size;
         return jdbcTemplate.query(SQL_SELECT_PAGING, productRowMapper, size, offset);
     }
 
     @Override
-    public Long count() {
-        return jdbcTemplate.queryForObject(SQL_COUNT, Long.class);
+    public Product save(Product entity) {
+        return null;
     }
+
+    @Override
+    public Page<Product> findAllByOrderByIdDesc(Pageable pageable) {
+        return null;
+    }
+
 }
