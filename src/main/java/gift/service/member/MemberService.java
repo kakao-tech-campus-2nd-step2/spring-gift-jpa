@@ -6,7 +6,6 @@ import gift.mapper.MemberMapper;
 import gift.web.dto.MemberDto;
 import gift.web.exception.MemberNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 

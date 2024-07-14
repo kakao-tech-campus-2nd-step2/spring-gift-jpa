@@ -1,6 +1,5 @@
 package gift.web.dto;
 
-import gift.domain.product.Product;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;

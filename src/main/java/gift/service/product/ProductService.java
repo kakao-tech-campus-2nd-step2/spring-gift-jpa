@@ -6,7 +6,6 @@ import gift.mapper.ProductMapper;
 import gift.web.dto.ProductDto;
 import gift.web.exception.ProductNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 // Service단에서는 DTO를 Entity로 변환해서 Repository로 넘겨주고, Entity를 DTO로 변환해서 Controller에서 넘겨주면 되나?
 @Service
