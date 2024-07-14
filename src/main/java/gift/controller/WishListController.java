@@ -3,6 +3,8 @@ package gift.controller;
 import gift.domain.WishList;
 import gift.domain.WishListRequest;
 import gift.domain.WishListResponse;
+import gift.repository.MemberRepository;
+import gift.repository.MenuRepository;
 import gift.service.JwtService;
 import gift.service.MemberService;
 import gift.service.MenuService;
