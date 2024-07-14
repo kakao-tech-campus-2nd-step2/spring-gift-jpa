@@ -8,7 +8,6 @@ import gift.Model.Entity.MemberEntity;
 import gift.Model.Role;
 import gift.Repository.ProductRepository;
 import gift.Repository.MemberRepository;
-import gift.Token.JwtTokenProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,17 +22,13 @@ import java.util.Optional;
 public class ProductService {
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public ProductService(ProductRepository productRepository, MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider){
+    public ProductService(ProductRepository productRepository, MemberRepository memberRepository){
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public void add(String token, ProductDTO productDTO){
-        String email = jwtTokenProvider.getEmailFromToken(token);
-
+    public void add(String email, ProductDTO productDTO){
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
         if(memberOptional.isEmpty()) throw new AuthorizedException();
 
@@ -44,9 +39,7 @@ public class ProductService {
         productRepository.save(new ProductEntity(productDTO.name(), productDTO.price(), productDTO.imageUrl()));
     }
 
-    public void delete(String token, Long id){
-        String email = jwtTokenProvider.getEmailFromToken(token);
-
+    public void delete(String email, Long id){
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
         if(memberOptional.isEmpty()) throw new AuthorizedException();
 
@@ -57,9 +50,7 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public void edit(String token, Long id, ProductDTO productDTO){
-        String email = jwtTokenProvider.getEmailFromToken(token);
-
+    public void edit(String email, Long id, ProductDTO productDTO){
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
         if(memberOptional.isEmpty()) throw new AuthorizedException();
 
@@ -72,9 +63,7 @@ public class ProductService {
         productRepository.save(productEntity);
     }
 
-    public List<ProductDTO> getAll(String token){
-        String email = jwtTokenProvider.getEmailFromToken(token);
-
+    public List<ProductDTO> getAll(String email){
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
         if(memberOptional.isEmpty()) throw new AuthorizedException();
 
@@ -91,19 +80,19 @@ public class ProductService {
         return dtoList;
     }
 
-    public Page<ProductDTO> getPage(String token, int page){
-        List<ProductDTO> dtoList = getAll(token);
+    public Page<ProductDTO> getPage(String email, int page){
+        List<ProductDTO> dtoList = getAll(email);
         Pageable pageable = PageRequest.of(page, 10);
+
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), dtoList.size());
+
         List<ProductDTO> subList = dtoList.subList(start, end);
 
         return new PageImpl<>(subList, pageable, dtoList.size());
     }
 
-    public ProductDTO getById(String token, Long id){
-        String email = jwtTokenProvider.getEmailFromToken(token);
-
+    public ProductDTO getById(String email, Long id){
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
         if(memberOptional.isEmpty()) throw new AuthorizedException();
 
