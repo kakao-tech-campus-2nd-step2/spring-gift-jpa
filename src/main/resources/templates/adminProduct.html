@@ -56,20 +56,30 @@
     <!-- AJAX를 통해 데이터를 로드 -->
     </tbody>
 </table>
+<div>
+    <button id="prevPage">Previous</button>
+    <button id="nextPage">Next</button>
+</div>
 </body>
 <script>
-    $(document).ready(function() {
-        // 페이지 로드 시 AJAX를 통해 데이터 가져오기
+    var currentPage = 0;
+    var pageSize = 5;
+
+    function getProducts(page){
         $.ajax({
             url: '/api/products',
             method: 'GET',
-            dataType: 'json',
+            data : {
+                page : page,
+                size : pageSize
+            },
             success: function(data) {
+                var contents = data.content;
                 var tbody = $('#product-tbody');
                 tbody.empty(); // 초기화
 
                 // 데이터에 따라 테이블 행을 생성
-                data.forEach(function(product) {
+                contents.forEach(function(product) {
                     // 한 행의 내용
                     var row = `
                         <tr>
@@ -83,11 +93,30 @@
                         </tr>
                     `;
                     tbody.append(row);
+
+                    currentPage = data.number;
+
+                    $('#prevPage').prop('disabled', data.first);
+                    $('#nextPage').prop('disabled', data.last);
                 });
             },
             error: function(err) {
                 alert("error occur! [error code : " + err.status + "]");
             }
+        });
+    }
+
+    $(document).ready(function() {
+        getProducts(currentPage);
+
+        $('#prevPage').click(function() {
+            if (currentPage > 0) {
+                getProducts(currentPage - 1);
+            }
+        });
+
+        $('#nextPage').click(function() {
+            getProducts(currentPage + 1);
         });
 
         if(localStorage.getItem('token')){
@@ -100,7 +129,6 @@
 
     $("#post").click(function () {
         var product = {
-            id : 0,
             name : $("#name").val(),
             price : $("#price").val(),
             imageUrl : $("#image").val()
@@ -174,23 +202,6 @@
             }
         })
     })
-
-    function chooseFunction(id){
-        $.ajax({
-            type : "post",
-            url : "api/wishes/" +  id,
-            headers : {
-                Authorization: 'Bearer ' + localStorage.getItem("token"),
-            },
-            success : function(res){
-                alert("상품이 위시 리스트에 등록되었습니다");
-            },
-            error : function(err){
-                alert("상품 등록에 실패했습니다");
-            }
-        })
-        console.log(localStorage.getItem("token"));
-    }
 
     function logoutFunction(){
         localStorage.removeItem('token');

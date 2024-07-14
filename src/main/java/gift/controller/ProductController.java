@@ -5,12 +5,14 @@
  */
 package gift.controller;
 
+import gift.DTO.PageDTO;
 import gift.DTO.Product.ProductRequest;
 import gift.DTO.Product.ProductResponse;
 import gift.DTO.User.UserRequest;
 import gift.security.AuthenticateMember;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,8 +32,11 @@ public class ProductController {
      * GET 요청에 따라 Json 형식 배열을 반환
      */
     @GetMapping("/api/products")
-    public ResponseEntity<List<ProductResponse>> getProducts() {
-        List<ProductResponse> products = productService.readAllProduct();
+    public ResponseEntity<Page<ProductResponse>> getProducts(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size
+    ) {
+        Page<ProductResponse> products = productService.readAllProduct(page, size);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

@@ -5,6 +5,7 @@ import gift.DTO.Product.ProductResponse;
 import gift.domain.Product;
 import gift.repository.ProductRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,31 +23,27 @@ public class ProductService {
     /*
      * DB에 저장된 모든 Product 객체를 불러와 전달해주는 로직
      */
-    public List<ProductResponse> readAllProduct(){
-        List<ProductResponse> products = new ArrayList<>();
+    public Page<ProductResponse> readAllProduct(int page, int size){
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.asc("id"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
 
-        List<Product> all = productRepository.findAll();
-        for (Product product : all) {
-            products.add(new ProductResponse(
-                    product.getId(),
-                    product.getName(),
-                    product.getPrice(),
-                    product.getImageUrl()
-            ));
-        }
-        return products;
+        Page<Product> all = productRepository.findAll(pageable);
+
+        return all.map(this::convertProductToProductRes);
+    }
+    /*
+     * product -> productResponse로의 변환
+     */
+    private ProductResponse convertProductToProductRes(Product product){
+        return new ProductResponse(product);
     }
     /*
      * DB에 저장된 Product를 ID를 기준으로 찾아 반환
      */
     public ProductResponse readOneProduct(Long id){
         Product product = productRepository.findById(id).orElseThrow(NoSuchFieldError::new);
-        return new ProductResponse(
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl()
-        );
+        return new ProductResponse(product);
     }
     /*
      * 객체를 전달받아 DB에 저장

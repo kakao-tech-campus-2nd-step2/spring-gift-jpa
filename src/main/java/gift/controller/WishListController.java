@@ -10,6 +10,7 @@ import gift.security.AuthenticateMember;
 import gift.service.ProductService;
 import gift.service.UserService;
 import gift.service.WishListService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +21,10 @@ import java.util.List;
 public class WishListController {
     private final WishListService wishListService;
     private final ProductService ps;
-    private final UserService us;
 
-    public WishListController(WishListService wishListService, ProductService ps, UserService us){
+    public WishListController(WishListService wishListService, ProductService ps){
         this.wishListService = wishListService;
         this.ps = ps;
-        this.us = us;
     }
     /*
      * 위시리스트 내용 추가
@@ -51,8 +50,12 @@ public class WishListController {
      * 실패 시 : Exception Handler에서 처리
      */
     @GetMapping("api/wishes")
-    public ResponseEntity<List<WishProductResponse>> getWishList(@AuthenticateMember UserResponse user){
-        List<WishProductResponse> wishList = wishListService.loadWishList(user.getId());
+    public ResponseEntity<Page<WishProductResponse>> getWishList(
+            @AuthenticateMember UserResponse user,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size
+    ){
+        Page<WishProductResponse> wishList = wishListService.loadWishList(user.getId(), page, size);
 
         return new ResponseEntity<>(wishList, HttpStatus.OK);
     }

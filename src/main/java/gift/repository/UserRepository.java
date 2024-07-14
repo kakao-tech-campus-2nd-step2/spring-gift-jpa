@@ -1,6 +1,8 @@
 package gift.repository;
 
 import gift.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +17,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     /*
      * DB에 저장된 모든 User 정보를 가져와 반환
      */
-    List<User> findAll();
+    Page<User> findAll(Pageable pageable);
+    /*
+     * User 정보를 id를 기준으로 DB에서 찾아와 반환
+     */
+    Optional<User> findById(Long id);
     /*
      * User 정보를 id를 기준으로 DB에서 찾아와 반환
      */

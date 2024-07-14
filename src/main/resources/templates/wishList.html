@@ -11,8 +11,8 @@
 <table id="product-table">
     <thead>
     <tr>
-        <th scope="col">Id</th>
-        <th scope="col">ProductId</th>
+        <th scope="col">Uid</th>
+        <th scope="col">Pid</th>
         <th scope="col">Name</th>
         <th scope="col">Price</th>
         <th scope="col">Image</th>
@@ -20,27 +20,38 @@
         <th scope="col">Option</th>
     </tr>
     </thead>
-    <tbody id="product-tbody">
+    <tbody id="wishList-tbody">
     <!-- AJAX를 통해 데이터를 로드 -->
     </tbody>
 </table>
+<div>
+    <button id="prevPage">Previous</button>
+    <button id="nextPage">Next</button>
+</div>
 </body>
 <script>
-    $(document).ready(function() {
-        // 페이지 로드 시 AJAX를 통해 데이터 가져오기
+    var currentPage = 0;
+    var pageSize = 5;
+
+    function getWishList(page){
         $.ajax({
             url: '/api/wishes',
             method: 'GET',
             dataType: 'json',
             contentType: "application/json",
+            data : {
+                page : page,
+                size : pageSize
+            },
             headers : {
                 Authorization: 'Bearer ' + localStorage.getItem("token"),
             },
             success: function (data) {
-                var tbody = $('#product-tbody');
+                var contents = data.content;
+                var tbody = $('#wishList-tbody');
                 tbody.empty(); // 초기화
                 // 데이터에 따라 테이블 행을 생성
-                data.forEach(function(wishProduct) {
+                contents.forEach(function(wishProduct) {
                     // 한 행의 내용
                     var row = `
                         <tr>
@@ -56,12 +67,31 @@
                         </tr>
                     `;
                     tbody.append(row);
+
+                    currentPage = data.number;
+
+                    $('#prevPage').prop('disabled', data.first);
+                    $('#nextPage').prop('disabled', data.last);
                 });
             },
             error: function (err) {
                 alert("error occur! [error code : " + err.status + "]");
             }
         })
+    }
+    $(document).ready(function() {
+        // 페이지 로드 시 AJAX를 통해 데이터 가져오기
+        getWishList(currentPage);
+
+        $('#prevPage').click(function() {
+            if (currentPage > 0) {
+                getWishList(currentPage - 1);
+            }
+        });
+
+        $('#nextPage').click(function() {
+            getWishList(currentPage + 1);
+        });
     })
 
     function deleteFunction(id){

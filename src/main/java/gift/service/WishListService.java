@@ -13,6 +13,10 @@ import gift.repository.ProductRepository;
 import gift.repository.UserRepository;
 import gift.repository.WishListRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,39 +39,20 @@ public class WishListService {
     /*
      * 특정 유저의 위시리스트를 반환하는 로직
      */
-    public List<WishProductResponse> loadWishList(Long id){
-        List<WishProductResponse> list = new ArrayList<>();
+    public Page<WishProductResponse> loadWishList(Long id, int page, int size){
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.asc("id"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
 
-        List<WishProduct> wishes = wishListRepository.findByUserId(id);
-        for (WishProduct wishProduct : wishes) {
-            User userEntity = wishProduct.getUser();
-            Product productEntity = wishProduct.getProduct();
+        Page<WishProduct> wishes = wishListRepository.findByUserId(id, pageable);
 
-            UserResponse user = new UserResponse(
-                    userEntity.getId(),
-                    userEntity.getUserId(),
-                    userEntity.getEmail(),
-                    userEntity.getPassword()
-            );
-
-            ProductResponse product = new ProductResponse(
-                    productEntity.getId(),
-                    productEntity.getName(),
-                    productEntity.getPrice(),
-                    productEntity.getImageUrl()
-            );
-
-            WishProductResponse wishProductResponse = new WishProductResponse(
-                    wishProduct.getId(),
-                    user,
-                    product,
-                    wishProduct.getCount()
-            );
-
-            list.add(wishProductResponse);
-        }
-
-        return list;
+        return wishes.map(this::convertWishProductToWishProductRes);
+    }
+    /*
+     * WishProduct 엔티티 클래스를 WishProductResponse 클래스로 변환해주는 메서드
+     */
+    private WishProductResponse convertWishProductToWishProductRes(WishProduct wishProduct){
+        return new WishProductResponse(wishProduct);
     }
     /*
      * 특정 상품을 위시리스트에 추가하는 로직

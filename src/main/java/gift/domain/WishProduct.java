@@ -9,10 +9,16 @@ public class WishProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(
+            name = "user_id",
+            foreignKey = @ForeignKey(name = "fk_wish_product_id_ref_product_id"),
+            nullable = false)
     private User user;
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(
+            name = "product_id",
+            foreignKey = @ForeignKey(name = "fk_wish_user_id_ref_user_id"),
+            nullable = false)
     private Product product;
     @Column(nullable = false)
     int count;

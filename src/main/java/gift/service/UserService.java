@@ -2,9 +2,14 @@ package gift.service;
 
 import gift.DTO.User.UserRequest;
 import gift.DTO.User.UserResponse;
+import gift.domain.Product;
 import gift.domain.User;
 import gift.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,42 +25,34 @@ public class UserService {
     /*
      * 모든 User의 정보를 반환하는 로직
      */
-    public List<UserResponse> findAll(){
-        List<UserResponse> list = new ArrayList<>();
-        List<User> all = userRepository.findAll();
-        for (User user : all) {
-            list.add(new UserResponse(
-                    user.getId(),
-                    user.getUserId(),
-                    user.getEmail(),
-                    user.getPassword()
-            ));
-        }
-        return list;
+    public Page<UserResponse> findAll(int page, int size){
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.asc("id"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sorts));
+
+        Page<User> all = userRepository.findAll(pageable);
+
+        return all.map(this::convertUserToUserRes);
+    }
+    /*
+     * User 엔티티 클래스를 UserResponse DTO 클래스로 변경해주는 메서드
+     */
+    private UserResponse convertUserToUserRes(User user){
+        return new UserResponse(user);
     }
     /*
      * User의 정보를 userId를 기준으로 찾는 로직
      */
     public UserResponse loadOneUser(String userId){
         User user = userRepository.findByUserId(userId);
-        return new UserResponse(
-                user.getId(),
-                user.getUserId(),
-                user.getEmail(),
-                user.getPassword()
-        );
+        return new UserResponse(user);
     }
     /*
      * 위와 동일, 오버로딩
      */
     public UserResponse loadOneUser(Long id){
         User user = userRepository.findById(id).orElseThrow(NullPointerException::new);
-        return new UserResponse(
-                user.getId(),
-                user.getUserId(),
-                user.getEmail(),
-                user.getPassword()
-        );
+        return new UserResponse(user);
     }
     /*
      * User의 정보를 저장하는 로직
