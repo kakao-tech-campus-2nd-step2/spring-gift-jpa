@@ -29,86 +29,85 @@ public class ProductRepositoryTest {
     productRepository.deleteAll();
   }
 
+  private Product createAndSaveProduct(String name, int price, String imageUrl) {
+    Product product = new Product();
+    product.setName(name);
+    product.setPrice(price);
+    product.setImageUrl(imageUrl);
+    return productRepository.save(product);
+  }
+
   @Test
   public void testSaveAndFindProduct() {
-    Product product = new Product();
-    product.setName("딸기 아사이");
-    product.setPrice(5900);
-    product.setImageUrl("https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20231010111407_7fcb10e99eec4365af527f0bb3d27a0e.jpg");
+    // given
+    Product product = createAndSaveProduct("딸기 아사이", 5900, "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20231010111407_7fcb10e99eec4365af527f0bb3d27a0e.jpg");
 
-    productRepository.save(product);
-
+    // when
     Optional<Product> foundProduct = productRepository.findById(product.getId());
 
+    // then
+    assertThat(foundProduct).isPresent();
     foundProduct.ifPresent(p -> {
       assertThat(p.getName()).isEqualTo("딸기 아사이");
       assertThat(p.getPrice()).isEqualTo(5900);
       assertThat(p.getImageUrl()).isEqualTo("https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20231010111407_7fcb10e99eec4365af527f0bb3d27a0e.jpg");
     });
-
-    assertThat(foundProduct).isPresent();
   }
 
   @Test
   public void testUpdateProduct() {
-    Product product = new Product();
-    product.setName("딸기 아사이");
-    product.setPrice(5900);
-    product.setImageUrl("https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20231010111407_7fcb10e99eec4365af527f0bb3d27a0e.jpg");
+    // given
+    Product product = createAndSaveProduct("딸기 아사이", 5900, "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20231010111407_7fcb10e99eec4365af527f0bb3d27a0e.jpg");
 
-    productRepository.save(product);
-
+    // when
     product.setName("바나나 스무디");
     productRepository.save(product);
-
     Optional<Product> foundProduct = productRepository.findById(product.getId());
 
+    // then
+    assertThat(foundProduct).isPresent();
     foundProduct.ifPresent(p -> {
       assertThat(p.getName()).isEqualTo("바나나 스무디");
     });
-
-    assertThat(foundProduct).isPresent();
   }
 
   @Test
   public void testDeleteProduct() {
-    Product product = new Product();
-    product.setName("딸기 아사이");
-    product.setPrice(5900);
-    product.setImageUrl("https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20231010111407_7fcb10e99eec4365af527f0bb3d27a0e.jpg");
-
-    productRepository.save(product);
+    // given
+    Product product = createAndSaveProduct("딸기 아사이", 5900, "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20231010111407_7fcb10e99eec4365af527f0bb3d27a0e.jpg");
     Long productId = product.getId();
 
+    // when
     wishRepository.deleteAllByProductId(productId);
     productRepository.deleteById(productId);
-
     Optional<Product> foundProduct = productRepository.findById(productId);
 
+    // then
     assertThat(foundProduct).isNotPresent();
   }
 
   @Test
   public void testFindAllWithPagination() {
+    // given
     for (int i = 1; i <= 20; i++) {
-      Product product = new Product();
-      product.setName("Product " + i);
-      product.setPrice(1000 + i);
-      product.setImageUrl("http://example.com/image" + i + ".jpg");
-      productRepository.save(product);
+      createAndSaveProduct("Product " + i, 1000 + i, "http://example.com/image" + i + ".jpg");
     }
 
+    // when
     Pageable pageable = PageRequest.of(0, 10);
     Page<Product> productPage = productRepository.findAll(pageable);
 
+    // then
     assertThat(productPage.getContent()).isNotEmpty();
     assertThat(productPage.getContent().size()).isEqualTo(10);
     assertThat(productPage.getTotalElements()).isEqualTo(20);
     assertThat(productPage.getTotalPages()).isEqualTo(2);
 
+    // when
     Pageable secondPageable = PageRequest.of(1, 10);
     Page<Product> secondProductPage = productRepository.findAll(secondPageable);
 
+    // then
     assertThat(secondProductPage.getContent()).isNotEmpty();
     assertThat(secondProductPage.getContent().size()).isEqualTo(10);
     assertThat(secondProductPage.getTotalElements()).isEqualTo(20);
