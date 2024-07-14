@@ -52,8 +52,4 @@ public class ProductMapRepository implements ProductRepository {
         database.remove(id);
     }
 
-    public List<Product> findPaging(int page, int size) {
-        return null;
-    }
-
 }
