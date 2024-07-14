@@ -31,6 +31,13 @@ public class Member {
     protected Member() {
     }
 
+    public boolean comfirmPW(String password) {
+        if(this.password.equals(password)){
+            return true;
+        }
+        throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+    }
+
     public Long getId() {
         return id;
     }

@@ -35,7 +35,7 @@ public class MemberService {
         //1. 이메일 확인
         Member loginMember = comfirmEmail(member.getEmail());
         //2. 패스워드 확인
-        if(comfirmPW(loginMember.getPassword(), member.getPassword())){
+        if(loginMember.comfirmPW(member.getPassword())){
             //3. 토큰 발급
             return createJwtToken.createJwt(loginMember.getId(), loginMember.getEmail());
         }
@@ -48,13 +48,6 @@ public class MemberService {
         }
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("해당 멤버가 없습니다."));
-    }
-
-    private boolean comfirmPW(String memberPassword, String inputPassword){
-        if(memberPassword.equals(inputPassword)){
-            return true;
-        }
-        throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
     }
 
     // 토큰으로 멤버 id 가져옴
