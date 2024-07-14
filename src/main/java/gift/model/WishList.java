@@ -38,7 +38,6 @@ public class WishList {
         return id;
     }
 
-
     public Product getProduct() {
         return product;
     }
