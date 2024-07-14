@@ -8,13 +8,13 @@ import java.util.Objects;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "EMAIL", unique = true)
+    @Column(name = "email", columnDefinition = "varchar(255) not null unique")
     private String email;
 
-    @Column(name = "PASSWORD")
+    @Column(name = "PASSWORD", columnDefinition = "varchar(255) not null")
     private String password;
 
     public Member(Long id, String email, String password){
@@ -28,7 +28,14 @@ public class Member {
         this.password = password;
     }
 
-    public Member() {
+    protected Member() {
+    }
+
+    public boolean comfirmPW(String password) {
+        if(this.password.equals(password)){
+            return true;
+        }
+        throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
     }
 
     public Long getId() {

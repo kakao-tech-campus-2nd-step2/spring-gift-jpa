@@ -1,10 +1,13 @@
 package gift.service;
 
+import gift.dto.PageRequestDTO;
 import gift.model.Product;
 import gift.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -17,8 +20,11 @@ public class ProductService {
     }
 
     //전체 조회
-    public List<Product> getAllProducts(){
-        return productRepository.findAll();
+    public Page<Product> getAllProducts(PageRequestDTO pageRequestDTO){
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(),
+                pageRequestDTO.getSize(), pageRequestDTO.getSort());
+
+        return productRepository.findAll(pageable);
     }
 
     //하나 조회
@@ -45,5 +51,21 @@ public class ProductService {
                 newProduct.getPrice(),
                 newProduct.getImageUrl());
         productRepository.save(updatedProduct);
+    }
+
+    public int getPreviousPage(Page<Product> productPage) {
+        if (productPage.hasPrevious()) {
+            Pageable previousPageable = productPage.previousPageable();
+            return previousPageable.getPageNumber();
+        }
+        return -1;
+    }
+
+    public int getNextPage(Page<Product> productPage) {
+        if (productPage.hasNext()) {
+            Pageable nextPageable = productPage.nextPageable();
+            return nextPageable.getPageNumber();
+        }
+        return -1;
     }
 }

@@ -1,7 +1,9 @@
 package gift.controller;
 
+import gift.dto.PageRequestDTO;
 import gift.service.ProductService;
 import gift.model.Product;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +18,23 @@ public class ProductController {
     }
 
     @GetMapping
-    public String getAllProducts(Model model) {
-        model.addAttribute("productList", productService.getAllProducts());
+    public String getAllProducts(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "id") String sortBy,
+                                 @RequestParam(defaultValue = "asc") String sortOrder, Model model) {
+        PageRequestDTO pageRequestDTO = new PageRequestDTO(page, sortBy, sortOrder);
+        Page<Product> productPage = productService.getAllProducts(pageRequestDTO);
+
+        model.addAttribute("productList", productPage.getContent());
+
+        int previousPage = productService.getPreviousPage(productPage);
+        model.addAttribute("previousPage", previousPage);
+
+        int nextPage = productService.getNextPage(productPage);
+        model.addAttribute("nextPage", nextPage);
+
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortOrder", sortOrder);
+
         return "index";
     }
 

@@ -1,9 +1,5 @@
 package gift.model;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
 import javax.naming.AuthenticationException;
 
 public class BearerToken {
@@ -24,11 +20,5 @@ public class BearerToken {
 
     public String getToken() {
         return token;
-    }
-
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(AuthenticationException.class)
-    public String handleAuthenticationException(AuthenticationException e) {
-        return e.getMessage();
     }
 }

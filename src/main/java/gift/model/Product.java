@@ -8,16 +8,16 @@ import java.util.Objects;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private long id;
 
-    @Column(name = "NAME")
+    @Column(name = "name", columnDefinition = "varchar(15) not null")
     private String name;
 
-    @Column(name = "PRICE")
+    @Column(name = "price", columnDefinition = "integer not null")
     private Integer price;
 
-    @Column(name = "IMAGE_URL")
+    @Column(name = "image_url", columnDefinition = "varchar(255) not null")
     private String imageUrl;
 
     public Product(long id, String name, int price, String imageUrl) {
@@ -46,7 +46,7 @@ public class Product {
         return this;
     }
 
-    public Product() {
+    protected Product() {
     }
 
     public String getImageUrl() {
