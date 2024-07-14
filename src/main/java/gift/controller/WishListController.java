@@ -41,7 +41,6 @@ public class WishListController {
     public String getWishes(Model model, @LoginMember MemberDTO memberDTO, Pageable pageable) {
         try {
             WishListDTO wishListDTO = wishListService.getWishList(memberDTO, pageable);
-            System.out.println("wishListDTO = " + wishListDTO);
             model.addAttribute("wishListDTO", wishListDTO);
         } catch (Exception e) {
             responseError(e);

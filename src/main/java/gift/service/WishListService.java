@@ -11,7 +11,6 @@ import gift.exception.BadRequestExceptions.NoSuchProductIdException;
 import gift.exception.BadRequestExceptions.UserNotFoundException;
 import gift.repository.MemberRepository;
 import gift.repository.WishRepository;
-import gift.util.converter.MemberConverter;
 import gift.util.converter.WishListConverter;
 import gift.util.validator.databaseValidator.MemberDatabaseValidator;
 import gift.util.validator.databaseValidator.WishListFieldDatabaseValidator;
