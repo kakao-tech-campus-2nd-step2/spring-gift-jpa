@@ -23,7 +23,7 @@ public class ProductService {
 
   public Page<ProductDto> findAll(Pageable pageable) {
     try {
-      return productRepository.findAll(pageable).map(this::convertToDto);
+      return productRepository.findAll(pageable).map(Product::toDto);
     } catch (Exception e) {
       throw new RuntimeException("모든 상품을 조회하는 중에 오류가 발생했습니다.", e);
     }
@@ -31,7 +31,7 @@ public class ProductService {
 
   public Optional<ProductDto> getProductById(long id) {
     try {
-      return productRepository.findById(id).map(this::convertToDto);
+      return productRepository.findById(id).map(Product::toDto);
     } catch (Exception e) {
       throw new RuntimeException("ID가 " + id + "인 상품을 조회하는 중에 오류가 발생했습니다.", e);
     }
@@ -40,10 +40,10 @@ public class ProductService {
   @Transactional
   public ProductDto addProduct(ProductDto productDto) {
     try {
-      Product product = convertToEntity(productDto);
+      Product product = Product.fromDto(productDto);
       validateProduct(product);
       Product savedProduct = productRepository.save(product);
-      return convertToDto(savedProduct);
+      return savedProduct.toDto();
     } catch (Exception e) {
       throw new RuntimeException("상품을 추가하는 중에 오류가 발생했습니다.", e);
     }
@@ -54,11 +54,11 @@ public class ProductService {
     try {
       Product existingProduct = productRepository.findById(id)
           .orElseThrow(() -> new RuntimeException("ID가 " + id + "인 상품이 존재하지 않습니다."));
-      Product updatedProduct = convertToEntity(productDto);
+      Product updatedProduct = Product.fromDto(productDto);
       updatedProduct.setId(existingProduct.getId());
       validateProduct(updatedProduct);
       Product savedProduct = productRepository.save(updatedProduct);
-      return convertToDto(savedProduct);
+      return savedProduct.toDto();
     } catch (Exception e) {
       throw new RuntimeException("상품을 업데이트하는 중에 오류가 발생했습니다.", e);
     }
@@ -82,23 +82,5 @@ public class ProductService {
     if (product.getImageUrl() == null || product.getImageUrl().trim().isEmpty()) {
       throw new IllegalArgumentException("상품 이미지 URL은 비어 있을 수 없습니다.");
     }
-  }
-
-  private Product convertToEntity(ProductDto productDto) {
-    Product product = new Product();
-    product.setId(productDto.getId());
-    product.setName(productDto.getName());
-    product.setPrice(productDto.getPrice());
-    product.setImageUrl(productDto.getImageUrl());
-    return product;
-  }
-
-  private ProductDto convertToDto(Product product) {
-    return new ProductDto(
-        product.getId(),
-        product.getName(),
-        product.getPrice(),
-        product.getImageUrl()
-    );
   }
 }

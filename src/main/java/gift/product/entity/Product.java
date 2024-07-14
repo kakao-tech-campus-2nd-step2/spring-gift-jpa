@@ -1,4 +1,5 @@
 package gift.product.entity;
+import gift.product.dto.ProductDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +36,23 @@ public class Product {
   @Column(name = "image_url", nullable = false)
   private String imageUrl;
 
+  public static Product fromDto(ProductDto productDto) {
+    Product product = new Product();
+    product.setId(productDto.getId());
+    product.setName(productDto.getName());
+    product.setPrice(productDto.getPrice());
+    product.setImageUrl(productDto.getImageUrl());
+    return product;
+  }
+
+  public ProductDto toDto() {
+    return new ProductDto(
+        this.getId(),
+        this.getName(),
+        this.getPrice(),
+        this.getImageUrl()
+    );
+  }
 
   public Long getId() {
     return id;

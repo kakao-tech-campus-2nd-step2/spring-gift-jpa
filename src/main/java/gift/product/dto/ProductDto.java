@@ -1,5 +1,6 @@
 package gift.product.dto;
 
+import gift.product.entity.Product;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -33,6 +34,24 @@ public class ProductDto {
 
   public ProductDto() {
 
+  }
+
+  public static ProductDto fromEntity(Product product) {
+    return new ProductDto(
+        product.getId(),
+        product.getName(),
+        product.getPrice(),
+        product.getImageUrl()
+    );
+  }
+
+  public Product toEntity() {
+    Product product = new Product();
+    product.setId(this.id);
+    product.setName(this.name);
+    product.setPrice(this.price);
+    product.setImageUrl(this.imageUrl);
+    return product;
   }
 
 
