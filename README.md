@@ -22,4 +22,8 @@
   - [x] Member 와 Wishlist 연관 관계 매핑
 # step3
 - [x] pagination 구현
-- [ ] pagination Test 작성
+- [x] pagination Test 작성
+# 피드백
+- [ ] Product에 대한 단위 테스트
+- [ ] 외부에서 사용하지 않는 Entity 기본 생성자 protected로 변경
+- [ ] @kakao의 유효성 검사
