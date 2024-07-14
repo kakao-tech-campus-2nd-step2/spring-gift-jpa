@@ -2,13 +2,14 @@ CREATE TABLE IF NOT EXISTS product (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL CHECK (TRIM(name) <> ''),
     price INT CHECK (price >= 0),
-    imageUrl VARCHAR(255) NOT NULL CHECK (TRIM(imageUrl) <> '')
+    image_url VARCHAR(255) NOT NULL CHECK (TRIM(image_url) <> '')
     );
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS wish (

@@ -3,6 +3,7 @@ package gift.product.service;
 import gift.product.dto.ProductDto;
 import gift.product.entity.Product;
 import gift.product.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class ProductService {
     }
   }
 
+  @Transactional
   public ProductDto addProduct(ProductDto productDto) {
     try {
       Product product = convertToEntity(productDto);
@@ -47,6 +49,7 @@ public class ProductService {
     }
   }
 
+  @Transactional
   public ProductDto updateProduct(long id, ProductDto productDto) {
     try {
       Product existingProduct = productRepository.findById(id)

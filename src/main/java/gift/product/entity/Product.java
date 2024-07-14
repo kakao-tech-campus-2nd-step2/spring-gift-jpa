@@ -32,7 +32,7 @@ public class Product {
   private int price;
 
   @NotBlank(message = "이미지 URL을 입력해야 합니다.")
-  @Column(name = "imageUrl", nullable = false)
+  @Column(name = "image_url", nullable = false)
   private String imageUrl;
 
 

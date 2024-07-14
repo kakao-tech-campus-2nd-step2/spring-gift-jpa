@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import gift.product.entity.Product;
 import gift.product.repository.ProductRepository;
+import gift.wish.repository.WishRepository;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -17,6 +19,15 @@ public class ProductRepositoryTest {
 
   @Autowired
   private ProductRepository productRepository;
+
+  @Autowired
+  private WishRepository wishRepository;
+
+  @BeforeEach
+  public void setUp() {
+    wishRepository.deleteAll();
+    productRepository.deleteAll();
+  }
 
   @Test
   public void testSaveAndFindProduct() {
@@ -69,6 +80,7 @@ public class ProductRepositoryTest {
     productRepository.save(product);
     Long productId = product.getId();
 
+    wishRepository.deleteAllByProductId(productId);
     productRepository.deleteById(productId);
 
     Optional<Product> foundProduct = productRepository.findById(productId);
