@@ -34,7 +34,7 @@ public class Product {
         return this.imageUrl;
     }
 
-    public Product(){
+    protected Product(){
     }
     public Product(Long id, String name, int price, String imageUrl){
         this.id = id;
