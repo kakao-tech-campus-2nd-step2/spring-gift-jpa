@@ -1,13 +1,15 @@
 package gift.service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.Optional;
 
 import gift.dto.ProductDto;
+import gift.dto.response.ProductPageResponse;
 import gift.entity.Product;
 import gift.entity.WishList;
 import gift.exception.CustomException;
@@ -28,11 +30,11 @@ public class ProductService{
     }
 
     @Transactional
-    public List<ProductDto> findAll() {
-        List<Product> productList = productRepository.findAll();
-        return productList.stream()
-        .map(ProductDto::fromEntity)
-        .collect(Collectors.toList());
+    public ProductPageResponse getPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        ProductPageResponse productPageResponse = new ProductPageResponse();
+        productPageResponse.fromPage(productRepository.findByOrderByNameDesc(pageable));
+        return productPageResponse;
     }
 
     @Transactional

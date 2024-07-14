@@ -1,15 +1,15 @@
 package gift.controller;
 
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import gift.dto.ProductDto;
+import gift.dto.response.ProductPageResponse;
 import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
@@ -28,9 +28,9 @@ public class ProductController {
     }
 
     @GetMapping()
-    public String getProducts(Model model) {
-        List<ProductDto> productList = productService.findAll();
-        model.addAttribute("products", productList);
+    public String getProducts(Model model, @RequestParam(value = "page", defaultValue = "0")int page, @RequestParam(value = "size", defaultValue = "10") int size) {
+        ProductPageResponse paging = productService.getPage(page, size);
+        model.addAttribute("paging", paging);
         return "admin_page";
     }
 
