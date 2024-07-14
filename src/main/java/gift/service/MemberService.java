@@ -27,7 +27,7 @@ public class MemberService {
     @Transactional
     public void register(MemberDTO memberDTO) throws RuntimeException {
         try {
-            Member member = MemberDTO.convertToMember(memberDTO);
+            Member member = memberDTO.convertToMember();
             memberRepository.save(member);
         } catch (Exception e) {
             if (e instanceof DataIntegrityViolationException) {

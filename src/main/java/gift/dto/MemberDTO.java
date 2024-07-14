@@ -48,8 +48,8 @@ public class MemberDTO {
         return role;
     }
 
-    public static Member convertToMember(MemberDTO memberDTO) {
-        return new Member(memberDTO.getEmail(), memberDTO.getPassword(), memberDTO.getName(), memberDTO.getRole());
+    public Member convertToMember() {
+        return new Member(this.email, this.password, this.name, this.role);
     }
 
     public static MemberDTO convertToMemberDTO(Member member) {

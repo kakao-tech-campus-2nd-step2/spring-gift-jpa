@@ -78,7 +78,7 @@ public final class ProductDTO {
         return new ProductDTO(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
-    public static Product convertToProduct(ProductDTO productDTO){
-        return new Product(productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
+    public Product convertToProduct(){
+        return new Product(this.name, this.price, this.imageUrl);
     }
 }

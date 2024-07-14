@@ -34,7 +34,7 @@ public class ProductService {
     @Transactional
     public void addProduct(ProductDTO productDTO) throws RuntimeException {
         try {
-            Product product = ProductDTO.convertToProduct(productDTO);
+            Product product = productDTO.convertToProduct();
             productRepository.save(product);
         } catch (Exception e) {
             if (e instanceof DataIntegrityViolationException) {
@@ -66,7 +66,7 @@ public class ProductService {
                 throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
             }
 
-            Product product = ProductDTO.convertToProduct(productDTO);
+            Product product = productDTO.convertToProduct();
             Product productInDB = productInDb.get();
             productInDB.changeProduct(product.getName(), product.getPrice(), product.getImageUrl());
         } catch (Exception e) {
