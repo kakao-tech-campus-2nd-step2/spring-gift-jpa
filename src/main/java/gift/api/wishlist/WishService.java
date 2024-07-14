@@ -6,7 +6,13 @@ import gift.api.product.Product;
 import gift.api.product.ProductRepository;
 import gift.global.exception.NoSuchIdException;
 import jakarta.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,10 +29,13 @@ public class WishService {
         this.wishRepository = wishRepository;
     }
 
-    public List<Wish> getItems(Long memberId) {
+    public List<Wish> getItems(Long memberId, int page, int size, String criterion, String direction) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new NoSuchIdException("member"));
-        return wishRepository.findByMemberId(member);
+        Pageable pageRequest = PageRequest.of(page, size,
+            Sort.by(Direction.fromOptionalString(direction).orElse(Direction.ASC), "product."+criterion));
+        Page<Wish> allWishes = wishRepository.findAllByMember(member, pageRequest);
+        return allWishes.hasContent() ? allWishes.getContent() : Collections.emptyList();
     }
 
     public void add(Long memberId, WishRequest wishRequest) {

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,8 +24,11 @@ public class WishController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Wish>> getItems(@LoginMember Long memberId) {
-        return ResponseEntity.ok().body(wishService.getItems(memberId));
+    public ResponseEntity<List<Wish>> getItems(@LoginMember Long memberId, @RequestParam int page,
+        @RequestParam int size, @RequestParam String criterion, @RequestParam String direction) {
+
+        return ResponseEntity.ok()
+            .body(wishService.getItems(memberId, page, size, criterion, direction));
     }
 
     @PostMapping()

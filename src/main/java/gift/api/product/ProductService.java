@@ -2,7 +2,13 @@ package gift.api.product;
 
 import gift.global.exception.NoSuchIdException;
 import jakarta.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,8 +20,11 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getProducts() {
-        return productRepository.findAll();
+    public List<Product> getProducts(int page, int size, String criterion, String direction) {
+        Pageable pageRequest = PageRequest.of(page, size,
+            Sort.by(Direction.fromOptionalString(direction).orElse(Direction.ASC), criterion));
+        Page<Product> allProducts = productRepository.findAll(pageRequest);
+        return allProducts.hasContent() ? allProducts.getContent() : Collections.emptyList();
     }
 
     public Long add(ProductRequest productRequest) {
