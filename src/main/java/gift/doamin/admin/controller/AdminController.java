@@ -1,7 +1,7 @@
 package gift.doamin.admin.controller;
 
 import gift.doamin.product.entity.Product;
-import gift.doamin.product.repository.ProductRepository;
+import gift.doamin.product.repository.JpaProductRepository;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,9 +10,10 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 public class AdminController {
-    ProductRepository productRepository;
 
-    public AdminController(ProductRepository productRepository) {
+    JpaProductRepository productRepository;
+
+    public AdminController(JpaProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

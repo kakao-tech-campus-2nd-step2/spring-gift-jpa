@@ -129,14 +129,14 @@ deleteProductButtons.forEach(button => {
 const masterCheckbox = document.querySelector('.master_checkbox');
 const checkboxes = document.querySelectorAll('.product_checkbox');
 
-masterCheckbox.addEventListener('change', function() {
+masterCheckbox.addEventListener('change', function () {
   checkboxes.forEach(checkbox => {
     checkbox.checked = masterCheckbox.checked;
   });
 });
 
 checkboxes.forEach(checkbox => {
-  checkbox.addEventListener('change', function() {
+  checkbox.addEventListener('change', function () {
     // 모든 체크박스가 체크되었는지 확인
     const allChecked = Array.from(checkboxes).every(cb => cb.checked);
     // 모든 체크박스가 체크되지 않았는지 확인
@@ -155,7 +155,6 @@ checkboxes.forEach(checkbox => {
   });
 });
 
-
 const deleteSelectedProductsButton = document.querySelector(
     '.delete_selected_products_bnt');
 deleteSelectedProductsButton.addEventListener('click', function () {
@@ -169,7 +168,8 @@ deleteSelectedProductsButton.addEventListener('click', function () {
   })
 
   // 확인 경고창 띄우고
-  const isConfirmed = confirm(selectedProductsIds.length + "개의 상품을 정말로 삭제하시겠습니까?");
+  const isConfirmed = confirm(
+      selectedProductsIds.length + "개의 상품을 정말로 삭제하시겠습니까?");
   // 확인 누르면 선택된 상품 전체 삭제
   if (isConfirmed) {
     selectedProductsIds.forEach(id => {

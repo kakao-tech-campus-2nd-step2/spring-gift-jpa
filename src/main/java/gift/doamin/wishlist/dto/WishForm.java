@@ -3,7 +3,7 @@ package gift.doamin.wishlist.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
-public class WishListForm {
+public class WishForm {
 
     @NotNull
     private Long productId;
@@ -16,5 +16,9 @@ public class WishListForm {
 
     public Integer getQuantity() {
         return quantity;
+    }
+
+    public boolean isZeroQuantity() {
+        return quantity == null || quantity.equals(0);
     }
 }
