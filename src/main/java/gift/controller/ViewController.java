@@ -36,4 +36,9 @@ public class ViewController {
     public String login(Model model) {
         return "login";
     }
+
+    @GetMapping("/wish")
+    public String wishlist(Model model) {
+        return "wishlist";
+    }
 }
