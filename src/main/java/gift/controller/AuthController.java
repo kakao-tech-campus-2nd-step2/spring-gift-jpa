@@ -29,7 +29,7 @@ public class AuthController {
 	
 	@PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@Valid @RequestBody User user, BindingResult bindingResult){
-		Map<String, String> response = authService.loginUser(user, bindingResult);
-        return ResponseEntity.ok(response);
+		Map<String, String> loginResponse = authService.loginUser(user, bindingResult);
+        return ResponseEntity.ok(loginResponse);
     }
 }

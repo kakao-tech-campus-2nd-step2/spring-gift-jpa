@@ -30,6 +30,11 @@ public class Wishlist {
 	@Min(value = 0, message = "음수를 입력할 수 없습니다.")
 	private int quantity;
 	
+	public Wishlist(User user, Product product) {
+		this.user = user;
+		this.product = product;
+	}
+	
 	public Long getId() {
 		return id;
 	}

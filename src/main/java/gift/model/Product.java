@@ -1,6 +1,5 @@
 package gift.model;
 
-import java.beans.ConstructorProperties;
 import gift.exception.InvalidProductException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,9 +34,7 @@ public class Product {
 	
 	public Product() {}
 	
-	@ConstructorProperties({"id", "name", "price", "imageUrl"})
-	public Product(Long id, String name, int price, String imageUrl) {
-		this.id = id;
+	public Product(String name, int price, String imageUrl) {
 		this.setName(name);
 		this.price = price;
 		this.imageUrl = imageUrl;

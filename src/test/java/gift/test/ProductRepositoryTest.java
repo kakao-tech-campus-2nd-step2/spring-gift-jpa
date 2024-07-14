@@ -17,10 +17,7 @@ public class ProductRepositoryTest {
 
     @Test
     void save() {
-        Product expected = new Product();
-        expected.setName("아이스 아메리카노 T");
-        expected.setPrice(4500);
-        expected.setImageUrl("https://example.com/image.jpg");
+    	Product expected = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
         Product actual = productRepository.save(expected);
         assertThat(actual.getId()).isNotNull();
         assertThat(actual.getName()).isEqualTo(expected.getName());
@@ -28,10 +25,7 @@ public class ProductRepositoryTest {
 
     @Test
     void findById() {
-        Product expected = new Product();
-        expected.setName("아이스 아메리카노 T");
-        expected.setPrice(4500);
-        expected.setImageUrl("https://example.com/image.jpg");
+    	Product expected = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
         productRepository.save(expected);
         Product actual = productRepository.findById(expected.getId()).orElse(null);
         assertThat(actual).isNotNull();
