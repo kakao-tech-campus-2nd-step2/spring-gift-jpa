@@ -17,6 +17,6 @@ CREATE Table wishlist
     id           BIGINT AUTO_INCREMENT PRIMARY KEY,
     product_id   BIGINT,
     member_email VARCHAR(255),
-    FOREIGN KEY (product_id) REFERENCES product (id),
-    FOREIGN KEY (member_email) REFERENCES member (email)
+    FOREIGN KEY (product_id) REFERENCES product (id) ON DELETE CASCADE,
+    FOREIGN KEY (member_email) REFERENCES member (email) ON DELETE CASCADE
 )

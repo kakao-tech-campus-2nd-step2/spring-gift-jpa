@@ -1,24 +1,23 @@
-let productAPIUrl = window.location.origin + '/api/products';
+let wishlistAPIUrl = window.location.origin + '/wishes';
+const authToken = localStorage.getItem("Authorization")
 
 export function addProduct() {
-  const product = {
-    name: document.getElementById('productName').value,
-    price: document.getElementById('productPrice').value,
-    imageUrl: document.getElementById('productImageUrl').value,
-  };
-
-  fetch(`${productAPIUrl}`, {
+  let id = document.getElementById("productId").value
+  fetch(`${wishlistAPIUrl}/` + document.getElementById("productId").value, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      "Authorization": authToken
     },
-    body: JSON.stringify(product),
   }).then(response => responseResult(response));
 }
 
 export function deleteProduct(id) {
-  fetch(`${productAPIUrl}/${id}`, {
+  fetch(`${wishlistAPIUrl}/${id}`, {
     method: 'DELETE',
+    headers: {
+      "Authorization": authToken
+    }
   }).then((response) => {
     if (response.status === 200) {
       location.reload();
@@ -27,22 +26,6 @@ export function deleteProduct(id) {
 }
 
 window.deleteProduct = deleteProduct;
-
-export function editProduct(id) {
-  const product = {
-    name: document.getElementById('productName').value,
-    price: document.getElementById('productPrice').value,
-    imageUrl: document.getElementById('productImageUrl').value,
-  };
-
-  fetch(`${productAPIUrl}/${id}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(product),
-  }).then(response => responseResult(response));
-}
 
 function responseResult(response) {
   if (response.status === 200) {

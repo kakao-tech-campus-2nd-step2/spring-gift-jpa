@@ -1,9 +1,4 @@
-import {
-  addProduct,
-  deleteProduct,
-  editProduct,
-  pagination
-} from './productAPI.js';
+import {addProduct, deleteProduct, pagination} from './wishlistAPI.js';
 
 const modal = document.getElementById('productModal');
 const closeButton = document.getElementsByClassName('close')[0];
@@ -11,7 +6,12 @@ const mainCheckbox = document.querySelector('table th input[type="checkbox"]');
 const checkboxes = document.querySelectorAll('table td input[type="checkbox"]');
 
 export function addProductbtnOnClick() {
-  modal.getElementsByTagName('h1')[0].innerText = 'Add a new product';
+  let forms = modal.getElementsByClassName("form-label-input")
+  forms[0].remove()
+  forms[0].remove()
+  forms[0].innerHTML = "<div class='form-label-input'> <label for='productId'>Id:</label><input type='number' id='productId' name='productId'/>"
+
+  modal.getElementsByTagName('h1')[0].innerText = 'Add a new wishlist';
   modal.getElementsByTagName('button')[0].onclick = addProduct.bind(
       null,
   );
@@ -22,18 +22,7 @@ export function addProductbtnOnClick() {
 
 window.addProductbtnOnClick = addProductbtnOnClick;
 
-export function editProductbtnOnClick(id) {
-  modal.getElementsByTagName('h1')[0].innerText = 'Edit product';
-  modal.getElementsByTagName('button')[0].onclick = editProduct.bind(
-      null,
-      id,
-  );
-  modal.style.display = 'flex';
-  document.getElementById('product-name-error-message').style.display =
-      'none';
-}
-
-window.editProductbtnOnClick = editProductbtnOnClick;
+window.editProductbtnOnClick = null;
 
 closeButton.onclick = function () {
   modal.modal.style.display = 'none';

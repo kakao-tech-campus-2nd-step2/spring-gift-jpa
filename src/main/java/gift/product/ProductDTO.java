@@ -18,4 +18,11 @@ public record ProductDTO(
     int price,
     String imageUrl) {
 
+    public Product toEntity() {
+        return new Product(-1, name, price, imageUrl);
+    }
+
+    public Product toEntity(long id) {
+        return new Product(id, name, price, imageUrl);
+    }
 }

@@ -48,18 +48,6 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public static Product fromProductIdWithoutBody(long id) {
-        return new Product(id, null, -1, null);
-    }
-
-    public static Product fromProductDTO(ProductDTO productDTO) {
-        return new Product(-1, productDTO.name(), productDTO.price(), productDTO.imageUrl());
-    }
-
-    public static Product fromProductIdAndProductDTO(long id, ProductDTO productDTO) {
-        return new Product(id, productDTO.name(), productDTO.price(), productDTO.imageUrl());
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Product product) {

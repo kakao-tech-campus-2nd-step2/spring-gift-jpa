@@ -8,7 +8,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css"
   />
-  <link rel="stylesheet" th:href="@{../adminPage.css}"/>
+  <link rel="stylesheet" th:href="@{../basicPage.css}"/>
   <link rel="stylesheet" th:href="@{../modal.css}"/>
 
   <!-- edit icon & delete icon -->
@@ -16,7 +16,7 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
   />
-  <script type="module" th:src="@{../adminPage.js}" defer></script>
+  <script type="module" th:src="${jsSrc}" defer></script>
 </head>
 <body>
 <!-- MODAL -->
@@ -62,17 +62,17 @@
 <div class="main-container">
   <!-- HEADER -->
   <div class="header">
-    <text>Manage Products</text>
+    <text th:text="${headerText}"></text>
     <div>
       <button
           class="header-delete"
-          th:onclick="'deleteCheckedProductsOnClick(' + ${page} + ')'"
+          th:onclick="'deleteCheckedProductsOnClick()'"
       >
         Delete
       </button>
       <button
           class="header-add"
-          th:onclick="'addProductbtnOnClick(' + ${page} + ')'"
+          th:onclick="'addProductbtnOnClick()'"
       >
         Add new Product
       </button>
@@ -81,14 +81,38 @@
 
   <!-- CONTENT -->
   <div class="content">
+    <div class="page-size-selector-container">
+      Page Size :
+      <select id="page-size" onchange="pageSizeSelected()">
+        <option value=5 th:selected="${products.getSize()} == 5">5</option>
+        <option value=10 th:selected="${products.getSize()} == 10">10</option>
+        <option value=20 th:selected="${products.getSize()} == 20">20</option>
+      </select>
+    </div>
     <table>
       <tr>
         <th>
           <input type="checkbox" th:onclick="mainCheckboxOnClick()"/>
         </th>
-        <th>ID</th>
+        <th>
+          ID
+          <button
+              id="page-sort-by-id"
+              th:data-sort-order="${products.getSort().getOrderFor('id')}"
+              onclick=idColumnPageSort()>
+            O
+          </button>
+        </th>
         <th>Product Name</th>
-        <th>Price</th>
+        <th>
+          Price
+          <button
+              id="page-sort-by-price"
+              th:data-sort-order="${products.getSort().getOrderFor('price')}"
+              onclick=priceColumnPageSort()
+          >O
+          </button>
+        </th>
         <th>ImageUrl</th>
         <th>Action</th>
       </tr>
@@ -125,12 +149,12 @@
         Showing n out of m entries
       </div>
       <div class="content-index">
-        <button th:onclick="'pagination(' + ${} + ')'">Previous</button>
-        <div th:each="pageList : ${pageList}">
+        <button>Previous</button>
+        <div th:each="pageList : ${pageLists}">
           <button
               th:text="${pageList}"
               th:classappend="${pageList == page} ? 'selected-page' : ''"
-              th:onclick="'pagination(' + ${pageList} + ')'"
+              th:onclick="'pagination(' + ${pageList} + ', ' + ${null} + ', '+ ${null} + ')'"
           />
         </div>
         <button>Next</button>

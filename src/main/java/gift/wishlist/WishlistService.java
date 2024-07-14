@@ -8,7 +8,10 @@ import gift.member.Member;
 import gift.product.Product;
 import gift.product.ProductRepository;
 import gift.token.MemberTokenDTO;
+import jakarta.persistence.EntityManager;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,56 +19,54 @@ public class WishlistService {
 
     private final WishlistRepository wishlistRepository;
     private final ProductRepository productRepository;
+    private final EntityManager entityManager;
 
     public WishlistService(
         WishlistRepository wishlistRepository,
-        ProductRepository productRepository
+        ProductRepository productRepository,
+        EntityManager entityManager
     ) {
         this.wishlistRepository = wishlistRepository;
         this.productRepository = productRepository;
+        this.entityManager = entityManager;
+    }
+
+    public Page<Product> getAllWishlists(MemberTokenDTO memberTokenDTO, Pageable pageable) {
+        return wishlistRepository
+            .findAllByMemberEmail(memberTokenDTO.getEmail(), pageable)
+            .map(Wishlist::getProduct);
     }
 
     public List<Product> getAllWishlists(MemberTokenDTO memberTokenDTO) {
-        return wishlistRepository
-            .findAllByMember(Member.fromMemberTokenDTOWithoutBody(memberTokenDTO))
+        return wishlistRepository.findAllByMemberEmail(memberTokenDTO.getEmail())
             .stream()
             .map(Wishlist::getProduct)
             .toList();
     }
 
     public void addWishlist(MemberTokenDTO memberTokenDTO, long productId) {
-        if (!productRepository.existsById(productId)) {
-            throw new IllegalArgumentException(PRODUCT_NOT_FOUND);
-        }
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException(PRODUCT_NOT_FOUND));
 
-        if (isWishlistExists(memberTokenDTO, productId)) {
-            throw new IllegalArgumentException(WISHLIST_ALREADY_EXISTS);
-        }
+        wishlistRepository.findByMemberEmailAndProductId(memberTokenDTO.getEmail(), productId)
+            .ifPresent(
+                e -> {
+                    throw new IllegalArgumentException(WISHLIST_ALREADY_EXISTS);
+                }
+            );
 
         wishlistRepository.save(
             new Wishlist(
-                Product.fromProductIdWithoutBody(productId),
-                Member.fromMemberTokenDTOWithoutBody(memberTokenDTO)
+                product,
+                entityManager.getReference(Member.class, memberTokenDTO.getEmail())
             )
         );
     }
 
-    private boolean isWishlistExists(MemberTokenDTO memberTokenDTO, long productId) {
-        return wishlistRepository.existsByMemberAndProduct(
-            Member.fromMemberTokenDTOWithoutBody(memberTokenDTO),
-            Product.fromProductIdWithoutBody(productId)
-        );
-    }
-
     public void deleteWishlist(MemberTokenDTO memberTokenDTO, long productId) {
-        Wishlist findWishlist = wishlistRepository.findByMemberAndProduct(
-            Member.fromMemberTokenDTOWithoutBody(memberTokenDTO),
-            Product.fromProductIdWithoutBody(productId)
-        );
-
-        if (findWishlist == null) {
-            throw new IllegalArgumentException(WISHLIST_NOT_FOUND);
-        }
+        Wishlist findWishlist = wishlistRepository.findByMemberEmailAndProductId(
+            memberTokenDTO.getEmail(), productId
+        ).orElseThrow(() -> new IllegalArgumentException(WISHLIST_NOT_FOUND));
 
         wishlistRepository.delete(findWishlist);
     }
