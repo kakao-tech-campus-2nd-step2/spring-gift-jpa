@@ -15,3 +15,14 @@
     - ProductRepository, UserRepository, WishlistRepository
 - Repository에 대한 Test 코드 작성
   - ProductRepositoryTest, UserRepositoryTest, WishlistRepository
+---
+## 2단계 - 연관 관계 매핑
+- @ManyToOne 사용
+  - Wishlist
+- @OneToMany 사용
+  - Member
+  - Product
+  - CASCADE 사용
+- WishlistRepository 수정
+- WishlistService 수정
+- Test 코드 수정
