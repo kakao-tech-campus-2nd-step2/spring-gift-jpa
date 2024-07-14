@@ -36,21 +36,22 @@ public class ProductService {
         try {
             Product product = productDTO.convertToProduct();
             productRepository.save(product);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("잘못된 제품 값을 입력했습니다. 입력 칸 옆의 설명을 다시 확인해주세요");
+        } catch (BadRequestException e) {
+            throw e;
         } catch (Exception e) {
-            if (e instanceof DataIntegrityViolationException) {
-                throw new BadRequestException("잘못된 제품 값을 입력했습니다. 입력 칸 옆의 설명을 다시 확인해주세요");
-            }
-            if (!(e instanceof BadRequestException)) {
-                throw new InternalServerException(e.getMessage());
-            }
+            throw new InternalServerException(e.getMessage());
         }
     }
 
     @Transactional(readOnly = true)
     public Page<ProductDTO> getProductList(Pageable pageable) throws RuntimeException {
         Page<Product> productPage = productRepository.findAll(pageable);
-        List<ProductDTO> productDTOList = productPage.getContent().stream().map(ProductDTO::convertToProductDTO).toList();
-        return new PageImpl<>(productDTOList, productPage.getPageable(), productPage.getTotalElements());
+        List<ProductDTO> productDTOList = productPage.getContent().stream()
+                .map(ProductDTO::convertToProductDTO).toList();
+        return new PageImpl<>(productDTOList, productPage.getPageable(),
+                productPage.getTotalElements());
     }
 
     @Transactional
@@ -69,25 +70,23 @@ public class ProductService {
             Product product = productDTO.convertToProduct();
             Product productInDB = productInDb.get();
             productInDB.changeProduct(product.getName(), product.getPrice(), product.getImageUrl());
+        } catch (BadRequestException e) {
+            throw e;
         } catch (Exception e) {
-            if (!(e instanceof BadRequestException)) {
-                throw new InternalServerException(e.getMessage());
-            }
+            throw new InternalServerException(e.getMessage());
         }
     }
+
 
     @Transactional
     public void deleteProduct(Long id) throws RuntimeException {
         try {
             wishRepository.deleteByProductId(id); // 외래키 제약조건
             productRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
         } catch (Exception e) {
-            if (e instanceof EmptyResultDataAccessException) {
-                throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
-            }
             throw new InternalServerException(e.getMessage());
         }
     }
 }
-
-

@@ -90,18 +90,16 @@ public class WishListService {
             Product product = (Product) validatedParameterMap.get("product");
             wishRepository.deleteByMemberAndProductId(member, product.getId());
         } catch (NoSuchProductIdException e) { //제품 목록에는 없는데 유저는 존재하는 경우
-            wishRepository.deleteByMemberAndProductId(
-                    memberDatabaseValidator.validateMember(memberDTO), id);
-        } catch(Exception e){
-            if(!(e instanceof BadRequestException)){
-                throw new InternalServerException(e.getMessage());
-            }
+            wishRepository.deleteByMemberAndProductId(memberDatabaseValidator.validateMember(memberDTO), id);
+        } catch(BadRequestException e) {
+            throw e;
+        } catch (Exception e){
+            throw new InternalServerException(e.getMessage());
         }
     }
 
     @Transactional
-    public void setWishListNumber(MemberDTO memberDTO, ProductDTO productDTO, Integer quantity)
-            throws RuntimeException {
+    public void setWishListNumber(MemberDTO memberDTO, ProductDTO productDTO, Integer quantity) throws RuntimeException {
         try {
             Map<String, Object> validatedParameterMap = wishListFieldDatabaseValidator.validateProductParameter(
                     memberDTO, productDTO);

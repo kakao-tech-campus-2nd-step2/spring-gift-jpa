@@ -29,15 +29,17 @@ public class MemberService {
         try {
             Member member = memberDTO.convertToMember();
             memberRepository.save(member);
-        } catch (Exception e) {
-            if (e instanceof DataIntegrityViolationException) {
-                throw new EmailAlreadyHereException("이미 있는 이메일입니다.");
-            }
-            if (!(e instanceof BadRequestException)) {
-                throw new InternalServerException(e.getMessage());
-
-            }
+        } catch (DataIntegrityViolationException e) {
+            throw new EmailAlreadyHereException("이미 있는 이메일입니다.");
         }
+
+        catch (BadRequestException e) {
+            throw e;
+        }
+        catch  (Exception e) {
+            throw new InternalServerException(e.getMessage());
+        }
+
 
     }
 
@@ -53,13 +55,11 @@ public class MemberService {
                     memberDTO.getPassword()) > 1) {
                 throw new DuplicatedUserException(memberDTO.getEmail() + "is Duplicated in DB");
             }
+        } catch (BadRequestException e) {
+            throw e;
         } catch (Exception e) {
-            if (!(e instanceof BadRequestException)) {
-                throw new InternalServerException(e.getMessage());
-            }
+            throw new InternalServerException(e.getMessage());
         }
-
-
     }
 
     @Transactional(readOnly = true)
