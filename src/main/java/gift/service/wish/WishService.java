@@ -35,7 +35,7 @@ public class WishService {
             .toList();
     }
 
-    public List<WishDto> getWishesByMember(String email) {
+    public List<WishDto> getWishesByEmail(String email) {
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(() -> new MemberNotFoundException("멤버가 엄슴다"));
 

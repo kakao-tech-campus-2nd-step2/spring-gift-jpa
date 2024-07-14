@@ -27,7 +27,12 @@ public class WishController {
 
     @GetMapping
     public ResponseEntity<List<WishDto>> getWishes(@AuthUser MemberDto memberDto) {
-        return new ResponseEntity<>(wishService.getWishes(memberDto.email()), HttpStatus.OK);
+        return new ResponseEntity<>(wishService.getWishes(), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<WishDto>> getWishesByEmail(@AuthUser MemberDto memberDto) {
+        return new ResponseEntity<>(wishService.getWishesByEmail(memberDto.email()), HttpStatus.OK);
     }
 
     @PostMapping
