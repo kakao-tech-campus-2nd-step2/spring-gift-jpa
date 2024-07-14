@@ -28,6 +28,7 @@ public class WishDto {
 
     public Member getMember(){
         return member;
+
     }
 
     public int getAmount(){

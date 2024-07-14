@@ -40,6 +40,7 @@ public class MemberService {
         Optional<Member> registeredMember = memberRepository.findByEmail(member.getEmail());
         if (registeredMember.isPresent() && member.isPasswordEqual(registeredMember.get().getPassword())) {
             String token = jwtTokenProvider.generateToken(member);
+
             return new LoginResultDto(token, true);
         }
         return new LoginResultDto(null, false);

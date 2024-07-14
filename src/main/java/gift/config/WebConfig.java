@@ -16,11 +16,12 @@ public class WebConfig implements WebMvcConfigurer {
 
     public WebConfig(MemberService memberService, JwtTokenProvider jwtTokenProvider, LoginMemberArgumentResolver loginMemberArgumentResolver) {
         this.memberService = memberService;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.jwtTokenProvider = jwtTokenProvider; 
         this.loginMemberArgumentResolver = loginMemberArgumentResolver;
     }
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+      
         resolvers.add(new LoginMemberArgumentResolver(memberService, jwtTokenProvider));
     }
 }

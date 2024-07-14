@@ -60,6 +60,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
         String email = jwtTokenProvider.getEmailFromToken(token);
         Optional<Member> member = memberService.findByEmail(email);
+      
         return member.orElseThrow(() -> new IllegalStateException("Authenticated member not found in the database."));
     }
 }
