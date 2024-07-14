@@ -29,9 +29,7 @@ class WishRepositoryTest {
 
     @Autowired
     private GiftRepository giftRepository;
-
-    @Autowired
-    private EntityManager entityManager;
+    
 
     private User user;
     private Gift gift;
