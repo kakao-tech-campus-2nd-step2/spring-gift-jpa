@@ -26,7 +26,7 @@ public class Wish {
 
     private Long quantity;
 
-    public Wish() {
+    protected Wish() {
     }
 
     public Wish(Member member, Product product, Long quantity){

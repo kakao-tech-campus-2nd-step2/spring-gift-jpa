@@ -1,6 +1,7 @@
 package gift.wishes;
 
 public class WishRequest {
+
     private Long productId;
     private Long quantity;
 

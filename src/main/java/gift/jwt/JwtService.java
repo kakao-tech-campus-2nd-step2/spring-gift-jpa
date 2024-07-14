@@ -28,7 +28,7 @@ public class JwtService {
     public String extractToken(HttpServletRequest httpServletRequest){
         return httpServletRequest.getHeader("Authorization");
     }
-  
+
     public Claims extractClaims(String token){
         return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
     }

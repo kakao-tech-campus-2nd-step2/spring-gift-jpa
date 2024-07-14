@@ -31,7 +31,7 @@ public class Member {
         return password;
     }
 
-    public Member() {
+    protected Member() {
     }
 
     public Member(Long id, String username, String email, String password) {

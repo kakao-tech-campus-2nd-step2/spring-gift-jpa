@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/wish")
@@ -44,5 +45,10 @@ public class WishController {
     public ResponseEntity<?> deleteWish(@RequestBody Long id, @Login UserDTO userDTO){
         wishService.deleteWish(id, userDTO.getUserId());
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<?> getWishListPage(@Login UserDTO userDTO, @RequestParam(value="page", defaultValue="0")int page){
+        return ResponseEntity.ok(wishService.getWishPage(userDTO.getUserId(), page));
     }
 }
