@@ -1,6 +1,5 @@
 package gift.service;
 
-import gift.dto.WishListDto;
 import gift.dto.response.WishListPageResponse;
 import gift.entity.Member;
 import gift.entity.Product;
@@ -12,16 +11,12 @@ import gift.repository.WishListRepository;
 import gift.util.JwtUtil;
 import jakarta.transaction.Transactional;
 
-import java.util.ArrayList;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 public class WishListService {
