@@ -37,3 +37,27 @@ create table wish
 ### 기능 구현 사항
 - product, member, wishlist JdbcTemplate -> JPA 리팩토링
 - 각 Repository에 대한 테스트 코드 작성
+
+## Step2 - 연관 관계 매핑
+### 기능 요구 사항
+지금까지 작성한 JdbcTemplate 기반 코드를 JPA로 리팩터링하고 실제 도메인 모델을 어떻게 구성하고 객체와 테이블을 어떻게 매핑해야 하는지 알아본다.
+- 객체의 참조와 테이블의 외래 키를 매핑해서 객체에서는 참조를 사용하고 테이블에서는 외래 키를 사용할 수 있도록 한다.
+- 아래의 DDL을 보고 유추한다.
+```
+alter table if exists wish
+    add constraint fk_wish_member_id_ref_member_id
+    foreign key (member_id)
+    references member
+
+alter table if exists wish
+    add constraint fk_wish_product_id_ref_product_id
+    foreign key (product_id)
+    references product
+```
+
+## Step3 - 페이지네이션
+### 기능 요구 사항
+상품과 위시 리스트 보기에 페이지네이션을 구현한다.
+
+- 대부분의 게시판은 모든 게시글을 한 번에 표시하지 않고 여러 페이지로 나누어 표시한다. 정렬 방법을 설정하여 보고 싶은 정보의 우선 순위를 정할 수도 있다.
+- 페이지네이션은 원하는 정렬 방법, 페이지 크기 및 페이지에 따라 정보를 전달하는 방법이다.

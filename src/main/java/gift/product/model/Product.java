@@ -7,41 +7,37 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "product")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @NotBlank(message = "상품의 이름은 필수 항목입니다.")
-    @Size(max = 15, message = "상품의 이름은 최대 15자까지 입력할 수 있습니다.")
     private String name;
 
     @Column(nullable = false)
-    @Min(value = 0, message = "상품의 가격은 0보다 크거나 같아야 합니다.")
     private int price;
 
     @Column(nullable = false)
     private String imgUrl;
 
-    public Product() {}
-
-    public Product(String name, int price, String imgUrl) {
-        this.name=name;
-        this.price=price;
-        this.imgUrl=imgUrl;
+    public Product() {
     }
 
-    public long getId() {
+    public Product(String name, int price, String imgUrl) {
+        this.name = name;
+        this.price = price;
+        this.imgUrl = imgUrl;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -70,11 +66,6 @@ public class Product {
     }
 
     public static Product from(ProductRequest request) {
-        Product product = new Product();
-        product.setId(request.getId());
-        product.setName(request.getName());
-        product.setPrice(request.getPrice());
-        product.setImgUrl(request.getImgUrl());
-        return product;
+        return new Product(request.getName(), request.getPrice(), request.getImgUrl());
     }
 }
