@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: spring-gift
+  h2:
+    console:
+      enable: true
+  datasource:
+    username: sa
+    url: jdbc:h2:mem:test
+  sql:
+    init:
+      mode: always
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    ddl-auto: create
+    defer-datasource-initialization: true
