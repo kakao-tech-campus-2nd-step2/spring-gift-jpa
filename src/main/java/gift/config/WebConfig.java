@@ -32,14 +32,4 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/wish/**", "/mywish");
     }
 
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(PageRequestArgumentResolver());
-    }
-
-    @Bean
-    public PageRequestArgumentResolver PageRequestArgumentResolver() {
-        return new PageRequestArgumentResolver();
-    }
-
 }

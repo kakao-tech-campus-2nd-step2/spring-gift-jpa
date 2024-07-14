@@ -1,6 +1,7 @@
 package gift.controller;
 
 
+import gift.dto.PagingRequest;
 import gift.dto.PagingResponse;
 import gift.model.gift.GiftRequest;
 import gift.model.gift.GiftResponse;
@@ -25,10 +26,8 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String adminHome(Model model,
-                            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                            @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
-        PagingResponse<GiftResponse> giftlist = giftService.getAllGifts(page, size);
+    public String adminHome(Model model, @ModelAttribute PagingRequest pagingRequest) {
+        PagingResponse<GiftResponse> giftlist = giftService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
         model.addAttribute("giftlist", giftlist);
         return "admin";
     }

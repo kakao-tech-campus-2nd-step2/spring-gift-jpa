@@ -34,7 +34,7 @@ public class GiftController {
     }
 
     @GetMapping
-    public ResponseEntity<PagingResponse<GiftResponse>> getAllGift(PagingRequest pagingRequest) {
+    public ResponseEntity<PagingResponse<GiftResponse>> getAllGift(@ModelAttribute PagingRequest pagingRequest) {
         PagingResponse<GiftResponse> response = giftService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
         return ResponseEntity.ok(response);
     }

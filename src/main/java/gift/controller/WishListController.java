@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.dto.PagingRequest;
 import gift.dto.PagingResponse;
 import gift.model.gift.GiftResponse;
 import gift.model.user.User;
@@ -73,15 +74,14 @@ public class WishListController {
 
     @GetMapping("/mywish")
     public ResponseEntity<PagingResponse<WishResponse>> getUserGifts(@RequestAttribute("user") User user,
-                                                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                                     @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
+                                                                     @ModelAttribute PagingRequest pagingRequest) {
         if (user != null) {
-            PagingResponse<Wish> userWishes = wishService.getGiftsForUser(user.getId(), page, size);
+            PagingResponse<Wish> userWishes = wishService.getGiftsForUser(user.getId(), pagingRequest.getPage(), pagingRequest.getSize());
             List<WishResponse> wishResponses =
                     userWishes.getContent()
                             .stream()
                             .map(wish -> new WishResponse(wish.getGift().getId(), wish.getGift().getName(), wish.getGift().getPrice(), wish.getQuantity())).collect(Collectors.toList());
-            PagingResponse<WishResponse> pagingResponse = new PagingResponse<>(page, wishResponses, size, userWishes.getTotalElements(), userWishes.getTotalPages());
+            PagingResponse<WishResponse> pagingResponse = new PagingResponse<>(pagingRequest.getPage(), wishResponses, pagingRequest.getSize(), userWishes.getTotalElements(), userWishes.getTotalPages());
             return ResponseEntity.ok(pagingResponse);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
