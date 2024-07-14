@@ -1,12 +1,15 @@
 package gift;
 
-import gift.Entity.Users;
+import gift.Entity.Product;
+import gift.Entity.Member;
 import gift.Entity.Wishlist;
-import gift.Model.User;
-import gift.Model.WishListItem;
-import gift.Repository.UsersJpaRepository;
-import gift.Repository.WishListJpaRepository;
-import jakarta.transaction.Transactional;
+import gift.Mapper.Mapper;
+import gift.Model.MemberDto;
+import gift.Model.ProductDto;
+import gift.Model.WishlistDto;
+import gift.Repository.ProductJpaRepository;
+import gift.Repository.MemberJpaRepository;
+import gift.Repository.WishlistJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +22,25 @@ import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class WishListRepositoryTest {
+public class WishlistRepositoryTest {
 
     @Autowired
-    private WishListJpaRepository wishListJpaRepository;
-
+    private WishlistJpaRepository wishListJpaRepository;
     @Autowired
-    private UsersJpaRepository usersJpaRepository;
+    private MemberJpaRepository memberJpaRepository;
+    @Autowired
+    private ProductJpaRepository productJpaRepository;
+    @Autowired
+    private Mapper mapper;
 
     @Test
     public void testGetWishlist() {
-        User user1 = new User(1L, "1234@naver.com", "1234", "1234", false);
-        Users users1 = Users.createUsers(user1);
-        Users savedUser = usersJpaRepository.save(users1);
+        MemberDto memberDto1 = new MemberDto(1L, "1234@naver.com", "1234", "1234", false);
+        Member member1 = mapper.memberDtoToEntity(memberDto1);
+        Member savedMember = memberJpaRepository.save(member1);
 
-        WishListItem wishlistItem = new WishListItem(1L, 1L, 1, 0, "test", 1000);
-        Wishlist wishlist = Wishlist.createWishlist(wishlistItem);
+        WishlistDto wishlistDto = new WishlistDto(1L, 1L, 1, 0, "test", 1000);
+        Wishlist wishlist = mapper.wishlistDtoToEntity(wishlistDto);
         Wishlist savedwishlist = wishListJpaRepository.save(wishlist);
 
         assertThat(savedwishlist.getUserId()).isEqualTo(wishlist.getUserId());
@@ -46,8 +52,8 @@ public class WishListRepositoryTest {
 
     @Test
     public void testAddWishlistItem() {
-        WishListItem wishlistItem = new WishListItem(1L, 1L, 1, 0, "test", 1000);
-        Wishlist wishlist = Wishlist.createWishlist(wishlistItem);
+        WishlistDto wishlistDto = new WishlistDto(1L, 1L, 1, 0, "test", 1000);
+        Wishlist wishlist = mapper.wishlistDtoToEntity(wishlistDto);
         Wishlist savedwishlist = wishListJpaRepository.save(wishlist);
 
         assertThat(savedwishlist.getUserId()).isEqualTo(wishlist.getUserId());
@@ -60,8 +66,15 @@ public class WishListRepositoryTest {
     @Test
     @DisplayName("delete가 정상적으로 이루어지는지")
     public void testRemoveWishlistItem() {
-        WishListItem wishlistItem = new WishListItem(1L, 1L, 5, 0, "test", 1000);
-        Wishlist wishlist = Wishlist.createWishlist(wishlistItem);
+        ProductDto productDto1 = new ProductDto(1L, "productDto1", 1000, "http://localhost:8080/image1.jpg", false);
+        Product product = mapper.productDtoToEntity(productDto1);
+        productJpaRepository.save(product);
+
+        MemberDto memberDto1 = new MemberDto(1L, "1234@naver.com", "1234", "1234", false);
+        memberJpaRepository.save(mapper.memberDtoToEntity(memberDto1));
+
+        WishlistDto wishlistDto = new WishlistDto(1L, 1L, 5, 0, "test", 1000);
+        Wishlist wishlist = mapper.wishlistDtoToEntity(wishlistDto);
         Wishlist savedwishlist = wishListJpaRepository.save(wishlist);
 
         wishListJpaRepository.delete(savedwishlist);
@@ -75,13 +88,20 @@ public class WishListRepositoryTest {
     @Test
     @DisplayName("Update가 정상적으로 이루어지는지")
     public void testUpdateWishlistItem() {
-        WishListItem wishlistItem = new WishListItem(1L, 1L, 5, 0, "test", 5000);
-        Wishlist wishlist = Wishlist.createWishlist(wishlistItem);
+        ProductDto productDto1 = new ProductDto(1L, "productDto1", 1000, "http://localhost:8080/image1.jpg", false);
+        Product product = mapper.productDtoToEntity(productDto1);
+        productJpaRepository.save(product);
+
+        MemberDto memberDto1 = new MemberDto(1L, "1234@naver.com", "1234", "1234", false);
+        memberJpaRepository.save(mapper.memberDtoToEntity(memberDto1));
+
+        WishlistDto wishlistDto = new WishlistDto(1L, 1L, 5, 0, "test", 5000);
+        Wishlist wishlist = mapper.wishlistDtoToEntity(wishlistDto);
         wishListJpaRepository.save(wishlist);
 
         //수량을 5개에서 3개로 변경
-        WishListItem updateItem = new WishListItem(1L, 1L, 3, 0, "test", 3000);
-        Wishlist updateWishlist = Wishlist.createWishlist(updateItem);
+        WishlistDto updateItem = new WishlistDto(1L, 1L, 3, 0, "test", 3000);
+        Wishlist updateWishlist = mapper.wishlistDtoToEntity(updateItem);
 
         wishListJpaRepository.save(updateWishlist);
 
