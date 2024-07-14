@@ -11,13 +11,13 @@
 - 인가 처리
 - 로그인 관련 유효성 검사
 
-## step3 구현한 기능 목록
+## 리팩토링 기능 목록
 
-- wish 스키마 제작
-- wish 생성 API
-- wish 조회 API
-- wish 삭제 API
-- wish 수정 API
-- wish 관련 유효성 검사
-- wish 관련 인가 처리
-- wish 관련 예외 처리
+- createdAt, updatedAt 을 위한 baseEntity 제작
+- product에 대한 단위테스트
+- Role @Enumerated(EnumType.STRING) 붙이기
+- repository 확장성 있게 리팩토링
+- repository 테스트코드 작성
+- 페이징 옵션 enum 생성
+- n+1 문제 해결
+- controller와 service 분리를 위한 중간 계층 제작
