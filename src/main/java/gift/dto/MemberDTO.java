@@ -1,10 +1,14 @@
 package gift.dto;
 
+import gift.entity.Member;
+import gift.entity.Product;
 import gift.entity.Wish;
+import gift.exception.BadRequestExceptions.BadRequestException;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 public class MemberDTO {
 
@@ -43,46 +47,24 @@ public class MemberDTO {
     }
 
     public String getEmail() { return email; }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getName() {
         return name;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getRole() {
         return role;
     }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public List<Wish> getWishList() { return wishList; }
 
-    public void setWishList(List<Wish> wishList) { this.wishList = wishList; }
-
-    @Override
-    public String toString() {
-        return "MemberDTO{" +
-                "email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", role='" + role + '\'' +
-                '}';
+    public static Member convertToMember(MemberDTO memberDTO) {
+        return new Member(memberDTO.getEmail(), memberDTO.getPassword(), memberDTO.getName(), memberDTO.getRole(), memberDTO.getWishList());
     }
+
+    public static MemberDTO convertToMemberDTO(Member member) {
+        return new MemberDTO(member.getEmail(), member.getPassword(), member.getName(),
+                member.getRole(), member.getWishList());
+    }
+
 }
