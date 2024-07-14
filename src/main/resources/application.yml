@@ -1,15 +1,6 @@
 spring:
-  config:
-    import: application-secret.yml
   application:
     name: spring-gift
-  datasource:
-    driver-class-name: org.h2.Driver
-
-  sql:
-    init:
-      mode: always
-      data-locations: classpath:sql/data.sql
 
   jpa:
     hibernate:
@@ -17,18 +8,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    defer-datasource-initialization: true #Hibernate 초기화 후 data.sql 실행
-
-  h2:
-    console:
-      enabled: true
-
-jwt:
-  expiration: 3600000 #1시간
 
 logging:
   level:
-    gift.authentication: debug
     org:
       hibernate:
         SQL: debug
