@@ -3,6 +3,10 @@ package gift.service;
 import gift.entity.Product;
 import gift.domain.ProductDTO;
 import gift.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +22,19 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Page<Product> getAllProduct(int page, int size) {
+        Pageable pageRequest = createPageRequestUsing(page, size);
+
+        int start = (int) pageRequest.getOffset();
+        int end = start + pageRequest.getPageSize();
+        if (page > 0) { start += 1; }
+
+        List<Product> pageContent = productRepository.findByProductIdBetween(start, end);
+        return new PageImpl<>(pageContent, pageRequest, pageContent.size());
+    }
+
+    private Pageable createPageRequestUsing(int page, int size) {
+        return PageRequest.of(page, size);
     }
 
     public Product getProductById(int id) {

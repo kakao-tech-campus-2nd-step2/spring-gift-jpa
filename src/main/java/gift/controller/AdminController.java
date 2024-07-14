@@ -18,8 +18,16 @@ public class AdminController {
     }
 
     @GetMapping
-    public String getProduct(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+    public String getFrontProduct(Model model) {
+        model.addAttribute("products", productService.getAllProduct(0, 10).getContent());
+        return "admin";
+    }
+
+    @GetMapping("/page")
+    public String getProduct(Model model,
+                             @ModelAttribute("page") int currentPage,
+                             @ModelAttribute("size") int pageSize) {
+        model.addAttribute("products", productService.getAllProduct(currentPage, pageSize).getContent());
         return "admin";
     }
 

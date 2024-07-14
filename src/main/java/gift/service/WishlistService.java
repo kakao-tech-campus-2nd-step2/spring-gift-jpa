@@ -4,6 +4,10 @@ import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.entity.Wishlist;
 import gift.repository.WishlistRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,17 +26,25 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    public List<Wishlist> getAllWishlist(String token) {
+    public Page<Wishlist> getAllWishlist(String token, int page, int size) {
+        Pageable pageRequest = createPageRequestUsing(page, size);
         var member_id = memberRepository.searchIdByToken(token);
-        try {
-            return wishlistRepository.findByMember_id(member_id);
-        } catch(Exception e) {
-            return null;
-        }
+
+        int start = (int) pageRequest.getOffset();
+        int end = start + pageRequest.getPageSize();
+        if (page > 0) { start += 1; }
+
+        List<Wishlist> pageContent = wishlistRepository.findByIdAndIdAndMember_id(start, end, member_id);
+        return new PageImpl<>(pageContent, pageRequest, pageContent.size());
+    }
+
+    private Pageable createPageRequestUsing(int page, int size) {
+        return PageRequest.of(page, size);
     }
   
     public void deleteItem(String token, int product_id) {
         var member_id = memberRepository.searchIdByToken(token);
+
         if(isItem(member_id, product_id)) {
             wishlistRepository.deleteByMember_idAndMember_id(member_id, product_id);
         }
@@ -41,16 +53,16 @@ public class WishlistService {
         }
     }
 
-    public void changeNum(String token, int product_id, int num) {
+    public void changeNum(String token, int product_id, int count) {
         var member_id = memberRepository.searchIdByToken(token);
         var member = memberRepository.findById(member_id);
         var product = productRepository.findById(product_id);
 
         try {
-            if (num == 0) {
+            if (count == 0) {
                 wishlistRepository.deleteByMember_idAndMember_id(member_id, product_id);
             } else {
-                var wishlist = new Wishlist(member, product, num);
+                var wishlist = new Wishlist(member, product, count);
                 wishlistRepository.save(wishlist);
             }
         }
@@ -66,7 +78,7 @@ public class WishlistService {
 
         try {
             if (isItem(member_id, product_id)) {
-                var num = wishlistRepository.searchNumOfProductByMember_idAndProduct_id(member_id, product_id);
+                var num = wishlistRepository.searchCount_productByMember_idAndProduct_id(member_id, product_id);
                 var wishlist = new Wishlist(member, product, num+1);
                 wishlistRepository.save(wishlist);
             } else {
@@ -80,6 +92,6 @@ public class WishlistService {
     }
 
     public boolean isItem(int member_id, int product_id) {
-        return wishlistRepository.searchNumOfProductByMember_idAndProduct_id(member_id, product_id) > 0;
+        return wishlistRepository.searchCount_productByMember_idAndProduct_id(member_id, product_id) > 0;
     }
 }

@@ -1,12 +1,13 @@
 package gift.controller;
 
+import gift.entity.Product;
 import gift.entity.Wishlist;
 import gift.service.WishlistService;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/wishlist")
@@ -17,8 +18,14 @@ public class WishlistController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Wishlist>> getAllWishlist(@RequestHeader("Authorization") String token) {
-        return ResponseEntity.ok(wishlistService.getAllWishlist(token));
+    public ResponseEntity<Page<Wishlist>> getAllWishlist(@RequestHeader("Authorization") String token, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Page<Wishlist> wishlistPage = wishlistService.getAllWishlist(token, page, size);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Page-Number", String.valueOf(wishlistPage.getNumber()));
+        headers.add("X-Page-Size", String.valueOf(wishlistPage.getSize()));
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(wishlistPage);
     }
 
     @PostMapping

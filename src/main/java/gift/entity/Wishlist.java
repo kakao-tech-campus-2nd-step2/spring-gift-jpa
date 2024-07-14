@@ -3,7 +3,7 @@ package gift.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Wishlist")
+@Table(name = "Wishlist", uniqueConstraints = { @UniqueConstraint(columnNames = { "member_id", "product_id" })})
 public class Wishlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,14 +17,14 @@ public class Wishlist {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(name = "numOfProduct", nullable = false)
-    private int numOfProduct;
+    @Column(name = "count_product", nullable = false)
+    private int countProduct;
 
     protected Wishlist() {}
 
-    public Wishlist(Member member, Product product, int numOfProduct) {
+    public Wishlist(Member member, Product product, int countProduct) {
         this.member = member;
         this.product = product;
-        this.numOfProduct = numOfProduct;
+        this.countProduct = countProduct;
     }
 }

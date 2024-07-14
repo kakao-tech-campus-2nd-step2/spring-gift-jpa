@@ -32,17 +32,12 @@ public class MemberService {
     }
 
     public String login(String str) {
+        var email = decodeToEmail(str);
+        var password = decodeToPassword(str);
         try {
-            var email = decodeToEmail(str);
-            var password = decodeToPassword(str);
-            var token = getToken(email, password);
-
-            if (memberRepository.existsByToken(token)) {
-                return token;
-            }
-            else throw new IllegalArgumentException("No such email or password"); }
-        catch (Exception e) {
-            throw new IllegalArgumentException("Invalid email or password : " + "(Email " + decodeToEmail(str) + "), (Password " +  decodeToPassword(str) + ")");
+            return authenticate(email, password);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid email or password : " + "(Email " + email + "), (Password " + password + ")", e);
         }
     }
 
@@ -52,6 +47,14 @@ public class MemberService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    private String authenticate(String email, String password) {
+        var token = getToken(email, password);
+        if (!isValidToken(token)) {
+            throw new IllegalArgumentException("No such email or password");
+        }
+        return token;
     }
 
     private String getToken(String email, String password){
