@@ -10,12 +10,12 @@ import java.util.*;
 
 @Service
 public class WishService {
-    private final WishRepository WishRepository;
+    private final WishRepository wishRepository;
     private final ProductRepository productRepository;
 
 
-    public WishService(WishRepository WishRepository, ProductRepository productRepository) {
-        this.WishRepository = WishRepository;
+    public WishService(WishRepository wishRepository, ProductRepository productRepository) {
+        this.wishRepository = wishRepository;
         this.productRepository = productRepository;
     }
 
@@ -25,18 +25,18 @@ public class WishService {
         Product product = productRepository.findById(requestWishDTO.getProductId())
                 .orElseThrow(()->new NoSuchElementException("매칭되는 물건이 없습니다."));
         Wish wish = new Wish(member, product, requestWishDTO.getCount());
-        WishRepository.save(wish);
+        wishRepository.save(wish);
     }
 
     public List<ResponseWishDTO> getWish(Member member) {
-        return WishRepository.findWishListByMember(member);
+        return wishRepository.findWishListByMember(member);
     }
 
     @Transactional
     public List<ResponseWishDTO> editWish(Member member, RequestWishDTO requestWishDTO) {
         Product product = productRepository.findById(requestWishDTO.getProductId())
                 .orElseThrow(() -> new NoSuchElementException("매칭되는 물건이 없습니다."));
-        Wish wish = WishRepository.findByMemberAndProduct(member, product)
+        Wish wish = wishRepository.findByMemberAndProduct(member, product)
                 .orElseThrow(() -> new NoSuchElementException("매칭되는 wish가 없습니다"));
         wish.setCount(requestWishDTO.getCount());
         return getWish(member);
@@ -46,9 +46,9 @@ public class WishService {
     public List<ResponseWishDTO> deleteWish(Member member, RequestWishDTO requestWishDTO) {
         Product product = productRepository.findById(requestWishDTO.getProductId())
                 .orElseThrow(() -> new NoSuchElementException("매칭되는 물건이 없습니다."));
-        Wish wish = WishRepository.findByMemberAndProduct(member, product)
+        Wish wish = wishRepository.findByMemberAndProduct(member, product)
                 .orElseThrow(() -> new NoSuchElementException("매칭되는 wish가 없습니다"));
-        WishRepository.deleteById(wish.getId());
+        wishRepository.deleteById(wish.getId());
         return getWish(member);
     }
 }
