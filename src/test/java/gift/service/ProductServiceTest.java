@@ -44,7 +44,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void 상품_추가_테스트() {
+    void 상품_추가() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
         Product product = productService.insertProduct(productDTO);
 
@@ -56,7 +56,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void 상품_조회_테스트() {
+    void 상품_조회() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
         Product insertedProduct = productService.insertProduct(productDTO);
 
@@ -71,7 +71,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void 상품_전체_조회_테스트() {
+    void 상품_전체_조회() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
         productService.insertProduct(productDTO);
 
@@ -85,7 +85,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void 상품_전체_조회_페이지_테스트() {
+    void 상품_전체_조회_페이지() {
         int PRODUCT_COUNT = 9;
         int PAGE = 1;
         int SIZE = 4;
@@ -110,7 +110,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void 상품_수정_테스트() {
+    void 상품_수정() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
         Product product = productService.insertProduct(productDTO);
 
@@ -126,7 +126,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void 상품_삭제_테스트() {
+    void 상품_삭제() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
         productService.insertProduct(productDTO);
 
@@ -140,7 +140,7 @@ class ProductServiceTest {
     }
 
     @Test
-    void 존재하지_않는_상품_조회_테스트() {
+    void 존재하지_않는_상품_조회() {
         assertThatThrownBy(() -> productService.getProduct(-1L)).isInstanceOf(
             NoSuchElementException.class);
     }

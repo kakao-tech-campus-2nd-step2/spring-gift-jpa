@@ -30,7 +30,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void 회원가입_및_로그인_테스트() {
+    void 회원가입_및_로그인() {
         authService.register(memberDto);
         JwtResponse jwtResponse = authService.login(memberDto);
 
@@ -38,7 +38,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void 회원가입_중복_테스트() {
+    void 회원가입_중복() {
         MemberDto testAcount = new MemberDto("test@test.com", "test");
         authService.register(testAcount);
 
@@ -47,7 +47,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void 존재하지_않는_회원_로그인_테스트() {
+    void 존재하지_않는_회원_로그인() {
         MemberDto testAcount = new MemberDto("test@test.com", "test");
 
         assertThatThrownBy(() -> authService.login(testAcount)).isInstanceOf(
