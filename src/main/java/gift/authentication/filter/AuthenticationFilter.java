@@ -27,13 +27,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
-        //검증이 필요없는 요청
-        if (ignorePaths.contains(request.getRequestURI())) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        //검증이 필요한 요청
         String authorization = request.getHeader(AUTHORIZATION_HEADER);
         if(Objects.nonNull(authorization) && authorization.startsWith(BEARER)) {
             String token = authorization.substring(BEARER.length());
@@ -44,5 +37,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         }
 
         throw new InvalidCredentialsException();
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return ignorePaths.contains(request.getRequestURI());
     }
 }
