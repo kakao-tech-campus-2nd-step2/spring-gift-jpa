@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import gift.model.member.Member;
 import gift.model.member.Role;
 import gift.repository.member.MemberRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -17,6 +18,7 @@ public class MemberRepositoryTest {
     private MemberRepository memberRepository;
 
     @Test
+    @DisplayName("회원 저장")
     void save() {
         // given
         Member member = new Member(1L, "member1@asd.com", "asd", "asd", Role.USER);
@@ -36,6 +38,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("회원 삭제")
     void delete() {
         // given
         Member member = new Member(1L, "member1@asd.com", "asd", "asd", Role.USER);
@@ -47,6 +50,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
+    @DisplayName("회원 이메일 조회")
     void getByEmail() {
         // given
         Member member = new Member(1L, "member1@asd.com", "asd", "asd", Role.USER);
@@ -60,4 +64,5 @@ public class MemberRepositoryTest {
             () -> assertThat(findMember.getName()).isEqualTo("asd")
         );
     }
+
 }
