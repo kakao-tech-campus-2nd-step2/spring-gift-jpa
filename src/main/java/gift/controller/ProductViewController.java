@@ -1,9 +1,13 @@
 package gift.controller;
 
+import gift.config.PageConfig;
 import gift.dto.product.ProductResponse;
 import gift.entity.Product;
 import gift.service.ProductService;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,10 +25,18 @@ public class ProductViewController {
     }
 
     @GetMapping
-    public String products(Model model) {
-        List<ProductResponse> products = productService.getAllProducts();
+    public String getAllProducts(
+        @PageableDefault(
+            size = PageConfig.PAGE_PER_COUNT,
+            sort = PageConfig.SORT_STANDARD,
+            direction = Direction.DESC
+        ) Pageable pageable,
+        Model model
+    ) {
+        Page<ProductResponse> products = productService.getAllProducts(pageable);
 
-        model.addAttribute("products", products);
+        model.addAttribute("productPage", products);
+        model.addAttribute("maxPage", 10);
         return "product_list";
     }
 

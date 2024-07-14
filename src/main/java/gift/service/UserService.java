@@ -11,6 +11,7 @@ import gift.repository.UserRepository;
 import gift.util.auth.JwtUtil;
 import gift.util.mapper.UserMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -23,6 +24,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public UserResponse registerUser(UserRegisterRequest request) {
         userRepository.findByEmail(request.email())
             .ifPresent(user -> {
@@ -34,6 +36,7 @@ public class UserService {
             registeredUser.getEmail()));
     }
 
+    @Transactional(readOnly = true)
     public UserResponse loginUser(UserLoginRequest userRequest) {
         User user = userRepository.findByEmailAndPassword(userRequest.email(),
                 userRequest.password())
@@ -44,11 +47,13 @@ public class UserService {
         return UserMapper.toResponse(token);
     }
 
+    @Transactional(readOnly = true)
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
             .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
+    @Transactional
     public Long getUserIdByToken(String token) {
         Long userId = jwtUtil.extractUserId(token);
         if (userId == null || !userRepository.existsById(userId)) {

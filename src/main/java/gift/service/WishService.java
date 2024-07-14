@@ -10,7 +10,10 @@ import gift.exception.wish.WishNotFoundException;
 import gift.repository.WishRepository;
 import gift.util.mapper.WishMapper;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishService {
@@ -26,18 +29,18 @@ public class WishService {
         this.userService = userService;
     }
 
-    public List<WishResponse> getWishes(Long userId) {
-        List<Wish> wishes = wishRepository.findByUserId(userId);
+    @Transactional(readOnly = true)
+    public Page<WishResponse> getWishes(Long userId, Pageable pageable) {
+        Page<Wish> wishes = wishRepository.findByUserId(userId, pageable);
 
         if (wishes == null || wishes.isEmpty()) {
             throw new WishNotFoundException("위시리스트가 존재하지 않습니다.");
         }
 
-        return wishes.stream()
-            .map(WishMapper::toResponse)
-            .toList();
+        return wishes.map(WishMapper::toResponse);
     }
 
+    @Transactional
     public Long addWish(Long userId, AddWishRequest request) {
         Product product = productService.getProductById(request.productId());
         User user = userService.getUserById(userId);
@@ -52,34 +55,29 @@ public class WishService {
         return savedWish.getId();
     }
 
+    @Transactional
     public void updateWishes(List<UpdateWishRequest> requests) {
         for (UpdateWishRequest request : requests) {
-            Wish wish = getWish(request.id());
-            wish.changeQuantity(request.quantity());
-            updateWish(wish);
+            updateWish(request);
         }
     }
 
-    private void updateWish(Wish wish) {
+    @Transactional
+    public void deleteWish(Long id) {
+        wishRepository.deleteById(id);
+    }
+
+    @Transactional
+    protected void updateWish(UpdateWishRequest request) {
+        Wish wish = getWish(request.id());
+        wish.changeQuantity(request.quantity());
         if (wish.isQuantityZero()) {
-            deleteWish(wish);
-            return;
-        }
-
-        wishRepository.save(wish);
-    }
-
-    public void deleteWishes(List<UpdateWishRequest> requests) {
-        for (UpdateWishRequest request : requests) {
-            deleteWish(getWish(request.id()));
+            wishRepository.delete(wish);
         }
     }
 
-    private void deleteWish(Wish wish) {
-        wishRepository.delete(wish);
-    }
-
-    private Wish getWish(Long id) {
+    @Transactional(readOnly = true)
+    protected Wish getWish(Long id) {
         return wishRepository.findById(id)
             .orElseThrow(() -> new WishNotFoundException("위시리스트를 찾을 수 없습니다."));
     }

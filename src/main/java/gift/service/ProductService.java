@@ -7,8 +7,10 @@ import gift.entity.Product;
 import gift.exception.product.ProductNotFoundException;
 import gift.repository.ProductRepository;
 import gift.util.mapper.ProductMapper;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -19,33 +21,36 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-            .map(ProductMapper::toResponse)
-            .toList();
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getAllProducts(Pageable pageable) {
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.map(ProductMapper::toResponse);
     }
 
+    @Transactional(readOnly = true)
     public Product getProductById(Long id) {
         return productRepository.findById(id)
             .orElseThrow(() -> new ProductNotFoundException("해당 ID의 상품을 찾을 수 없습니다."));
     }
 
+    @Transactional
     public Long addProduct(AddProductRequest request) {
         return productRepository.save(ProductMapper.toProduct(request)).getId();
     }
 
+    @Transactional
     public void updateProduct(Long id, UpdateProductRequest request) {
         Product product = getProductById(id);
         ProductMapper.updateProduct(product, request);
-        productRepository.save(product);
     }
 
+    @Transactional
     public void deleteProduct(Long id) {
         checkProductExist(id);
         productRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public void checkProductExist(Long id) {
         if (!productRepository.existsById(id)) {
             throw new ProductNotFoundException("해당 ID의 상품을 찾을 수 없습니다.");
