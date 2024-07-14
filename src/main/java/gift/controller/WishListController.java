@@ -2,12 +2,11 @@ package gift.controller;
 
 import static gift.util.ResponseEntityUtil.responseError;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import gift.annotation.LoginMember;
 import gift.constants.ResponseMsgConstants;
+import gift.dto.MemberDTO;
 import gift.dto.ProductDTO;
 import gift.dto.ResponseDTO;
-import gift.dto.UserDTO;
 import gift.dto.WishListDTO;
 import gift.service.WishListService;
 import jakarta.validation.Valid;
@@ -38,11 +37,11 @@ public class WishListController {
     }
 
     @GetMapping("")
-    public String getWishes(Model model, @LoginMember UserDTO userDTO) {
+    public String getWishes(Model model, @LoginMember MemberDTO memberDTO) {
         try {
-            WishListDTO wishListDTO = wishListService.getWishList(userDTO);
-            model.addAttribute("wishList", wishListDTO);
-        } catch (RuntimeException e) {
+            WishListDTO wishListDTO = wishListService.getWishList(memberDTO);
+            model.addAttribute("wishListDTO", wishListDTO);
+        } catch (Exception e) {
             responseError(e);
         }
         return "getWishes";
@@ -50,10 +49,10 @@ public class WishListController {
 
     @PostMapping("")
     public ResponseEntity<ResponseDTO> addWishes(@RequestBody @Valid ProductDTO productDTO,
-            @LoginMember UserDTO userDTO) {
+            @LoginMember MemberDTO memberDTO) {
         try {
-            wishListService.addWishListProduct(userDTO, productDTO);
-        } catch (RuntimeException e) {
+            wishListService.addWishes(memberDTO, productDTO);
+        } catch (Exception e) {
             responseError(e);
         }
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE),
@@ -61,13 +60,11 @@ public class WishListController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDTO> deleteWishes(@PathVariable @Min(1) @NotNull Integer id,
-            @LoginMember UserDTO userDTO) {
+    public ResponseEntity<ResponseDTO> deleteWishes(@PathVariable @Min(1) @NotNull Long id,
+            @LoginMember MemberDTO memberDTO) {
         try {
-            wishListService.removeWishListProduct(userDTO, id);
-        } catch (RuntimeException e) {
-            responseError(e);
-        } catch (JsonProcessingException e) {
+            wishListService.removeWishListProduct(memberDTO, id);
+        } catch (Exception e) {
             responseError(e);
         }
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE),
@@ -75,11 +72,12 @@ public class WishListController {
     }
 
     @PutMapping("/{quantity}")
-    public ResponseEntity<ResponseDTO> setWishes(@PathVariable @Min(0) @NotNull Integer quantity, @LoginMember UserDTO userDTO,
+    public ResponseEntity<ResponseDTO> setWishes(@PathVariable @Min(0) @NotNull Integer quantity,
+            @LoginMember MemberDTO MemberDTO,
             @RequestBody @Valid ProductDTO productDTO) {
         try {
-            wishListService.setWishListNumber(userDTO, productDTO, quantity);
-        } catch (RuntimeException e) {
+            wishListService.setWishListNumber(MemberDTO, productDTO, quantity);
+        } catch (Exception e) {
             responseError(e);
         }
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE),

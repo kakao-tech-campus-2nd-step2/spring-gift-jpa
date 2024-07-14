@@ -1,108 +1,106 @@
 package gift.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import gift.dao.ProductDao;
-import gift.dao.UserDao;
+import gift.dto.MemberDTO;
 import gift.dto.ProductDTO;
-import gift.dto.UserDTO;
 import gift.dto.WishListDTO;
+import gift.entity.Member;
 import gift.entity.Product;
-import gift.entity.User;
-import gift.entity.WishList;
+import gift.entity.Wish;
 import gift.exception.BadRequestExceptions.BadRequestException;
 import gift.exception.BadRequestExceptions.NoSuchProductIdException;
-import gift.exception.InternalServerExceptions.InternalServerException;
+import gift.exception.BadRequestExceptions.UserNotFoundException;
+import gift.repository.MemberRepository;
+import gift.repository.WishRepository;
+import gift.util.converter.MemberConverter;
+import gift.util.converter.WishListConverter;
+import gift.util.validator.databaseValidator.MemberDatabaseValidator;
+import gift.util.validator.databaseValidator.ProductDatabaseValidator;
+import gift.util.validator.databaseValidator.WishListFieldDatabaseValidator;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishListService {
 
-    private final UserDao userDao;
-    private final ProductDao productDao;
-    private final ParameterValidator parameterValidator;
+    private final MemberRepository memberRepository;
+    private final WishRepository wishRepository;
+    private final WishListFieldDatabaseValidator wishListFieldDatabaseValidator;
+    private final MemberDatabaseValidator memberDatabaseValidator;
 
     @Autowired
-    public WishListService(UserDao userDao, ProductDao productDao,
-            ParameterValidator parameterValidator) {
-        this.userDao = userDao;
-        this.productDao = productDao;
-        this.parameterValidator = parameterValidator;
+    public WishListService(MemberRepository memberRepository,
+            WishRepository wishRepository,
+            WishListFieldDatabaseValidator wishListFieldDatabaseValidator,
+            MemberDatabaseValidator memberDatabaseValidator) {
+        this.memberRepository = memberRepository;
+        this.wishRepository = wishRepository;
+        this.wishListFieldDatabaseValidator = wishListFieldDatabaseValidator;
+        this.memberDatabaseValidator = memberDatabaseValidator;
     }
 
-    public WishListDTO getWishList(UserDTO userDTO)
-            throws InternalServerException {
+    @Transactional(readOnly = true)
+    public WishListDTO getWishList(MemberDTO memberDTO)
+            throws RuntimeException {
+
+        Optional<Member> optionalMember =
+                memberRepository.findByEmail(MemberConverter.convertToMember(memberDTO).getEmail());
+
+        if (optionalMember.isEmpty()) {
+            throw new UserNotFoundException(memberDTO.getEmail() + "을(를) 가지는 유저를 찾을 수 없습니다.");
+        }
+        Member member = optionalMember.get();
+        return WishListConverter.convertToWishListDTO(member.getWishList());
+    }
+
+    @Transactional
+    public void addWishes(MemberDTO memberDTO, ProductDTO productDTO) {
+        Map<String, Object> validatedParameterMap = wishListFieldDatabaseValidator.validateProductParameter(memberDTO,
+                productDTO);
+        Member member = (Member) validatedParameterMap.get("member");
+        Product product = (Product) validatedParameterMap.get("product");
+
+        Optional<Wish> optionalWish = wishRepository.findByMemberAndProduct(member, product);
+        if (optionalWish.isEmpty()) {
+            Wish wish = new Wish(member, product, 1);
+            wishRepository.save(wish);
+            return;
+        }
+        Wish existingWish = optionalWish.get();
+        existingWish.incrementQuantity();
+    }
+
+    @Transactional
+    public void removeWishListProduct(MemberDTO memberDTO, Long id)
+            throws NoSuchProductIdException, EmptyResultDataAccessException {
         try {
-            WishList wishList = getWishListInDb(new User(userDTO));
-            return wishList.convertToDTO();
-        } catch (JsonProcessingException e) {
-            throw new InternalServerException("예상치 못한 오류입니다. 관리자에게 연락 주시기 바랍니다.");
+            Map<String, Object> validatedParameterMap = wishListFieldDatabaseValidator.validateProductParameter(
+                    memberDTO, id);
+            Member member = (Member) validatedParameterMap.get("member");
+            Product product = (Product) validatedParameterMap.get("product");
+            wishRepository.deleteByMemberAndProductId(member, product.getId());
+        } catch (NoSuchProductIdException e) { //제품 목록에는 없는데 유저는 존재하는 경우
+            wishRepository.deleteByMemberAndProductId(memberDatabaseValidator.validateMember(memberDTO), id);
         }
     }
 
-    public void addWishListProduct(UserDTO userDTO, ProductDTO productDTO)
-            throws InternalServerException {
-        User user = new User(userDTO);
-        Product product = new Product(productDTO);
-        try {
-            WishList wishList = getWishListInDb(user, product);
-            wishList.addProduct(product);
-            userDao.saveWishList(user, wishList);
-        } catch (JsonProcessingException e) {
-            throw new InternalServerException("예상치 못한 오류입니다. 관리자에게 연락 주시기 바랍니다.");
+    @Transactional
+    public void setWishListNumber(MemberDTO memberDTO, ProductDTO productDTO, Integer quantity)
+            throws RuntimeException {
+        Map<String, Object> validatedParameterMap = wishListFieldDatabaseValidator.validateProductParameter(memberDTO,
+                productDTO);
+        Member member = (Member) validatedParameterMap.get("member");
+        Product product = (Product) validatedParameterMap.get("product");
+        Optional<Wish> optionalWish = wishRepository.findByMemberAndProduct(member, product);
+
+        if (optionalWish.isEmpty()) {
+            throw new BadRequestException("위시리스트에 그러한 품목을 찾을 수 없습니다.");
         }
-
+        Wish wish = optionalWish.get();
+        wish.changeQuantity(quantity);
     }
 
-    public void removeWishListProduct(UserDTO userDTO, Integer id)
-            throws InternalServerException, JsonProcessingException {
-        User user = new User(userDTO);
-        try {
-            Product product = productDao.selectOneProduct(id);
-            WishList wishList = getWishListInDb(user);
-            if (!wishList.removeProduct(product)) {
-                throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
-            }
-            userDao.saveWishList(user, wishList);
-        } catch (InternalServerException e) {
-            throw new InternalServerException("예상치 못한 오류입니다. 관리자에게 연락 주시기 바랍니다.");
-        } catch(EmptyResultDataAccessException e){ //제품 목록에는 없는데 위시리스트에 있는 경우
-            WishList wishList = getWishListInDb(user);
-            if(!wishList.removeProduct(id))
-                throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
-        }
-    }
-
-    public void setWishListNumber(UserDTO userDTO, ProductDTO productDTO, Integer quantity)
-            throws InternalServerException {
-        User user = new User(userDTO);
-        Product product = new Product(productDTO);
-        try {
-            WishList wishList = getWishListInDb(user, product);
-            wishList.setNumbers(product, quantity);
-            userDao.saveWishList(user, wishList);
-        } catch (JsonProcessingException e) {
-            throw new InternalServerException("예상치 못한 오류입니다. 관리자에게 연락 주시기 바랍니다.");
-        }
-    }
-
-    private WishList getWishListInDb(User user)
-            throws JsonProcessingException, BadRequestException {
-        Map<String, Object> userAndWishLists = userDao.getWishLists(user.getEmail());
-        if(userAndWishLists == null)
-            return new WishList();
-        parameterValidator.validateParameter(userAndWishLists, user);
-        return (WishList) userAndWishLists.get("wishList");
-    }
-
-    private WishList getWishListInDb(User user, Product product)
-            throws JsonProcessingException, BadRequestException {
-        Map<String, Object> userAndWishLists = userDao.getWishLists(user.getEmail());
-        if(userAndWishLists == null)
-            return new WishList();
-        parameterValidator.validateParameter(userAndWishLists, user, product);
-        return (WishList) userAndWishLists.get("wishList");
-    }
 }

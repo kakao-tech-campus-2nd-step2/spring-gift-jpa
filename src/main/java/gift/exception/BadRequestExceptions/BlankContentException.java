@@ -2,7 +2,7 @@ package gift.exception.BadRequestExceptions;
 
 public class BlankContentException extends BadRequestException {
 
-    public BlankContentException() {
+    private BlankContentException() {
         super();
     }
 

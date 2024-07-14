@@ -1,47 +1,82 @@
 package gift.service;
 
-import gift.entity.Product;
-import gift.exception.BadRequestExceptions.NoSuchProductIdException;
-import gift.dao.ProductDao;
 import gift.dto.ProductDTO;
+import gift.entity.Product;
+import gift.exception.BadRequestExceptions.BadRequestException;
+import gift.exception.BadRequestExceptions.NoSuchProductIdException;
+import gift.exception.InternalServerExceptions.InternalServerException;
+import gift.repository.ProductRepository;
+import gift.repository.WishRepository;
+import gift.util.converter.ProductConverter;
+import gift.util.validator.databaseValidator.ProductDatabaseValidator;
+import gift.util.validator.entityValidator.ProductValidator;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
-    private final ProductDao productDao;
-    private final ParameterValidator parameterValidator;
+
+    private final ProductDatabaseValidator productDatabaseValidator;
+    private final ProductRepository productRepository;
+    private final WishRepository wishRepository;
 
     @Autowired
-    public ProductService(ProductDao productDao, ParameterValidator parameterValidator) {
-        this.productDao = productDao;
-        this.parameterValidator = parameterValidator;
+    public ProductService(ProductDatabaseValidator productDatabaseValidator,
+            ProductRepository productRepository, WishRepository wishRepository) {
+        this.productRepository = productRepository;
+        this.productDatabaseValidator = productDatabaseValidator;
+        this.wishRepository = wishRepository;
     }
 
+    @Transactional
     public void addProduct(ProductDTO productDTO) throws RuntimeException {
         try {
-            productDao.insertProduct(new Product(productDTO));
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e.getMessage());
+            ProductValidator.validateProduct(productDTO);
+            Product product = ProductConverter.convertToProduct(productDTO);
+            productRepository.save(product);
+        } catch (Exception e) {
+            if (e instanceof DataIntegrityViolationException) {
+                throw new BadRequestException("잘못된 제품 값을 입력했습니다. 입력 칸 옆의 설명을 다시 확인해주세요");
+            }
+            if (!(e instanceof BadRequestException)) {
+                throw new InternalServerException(e.getMessage());
+            }
         }
     }
 
+    @Transactional(readOnly = true)
     public List<ProductDTO> getProductList() {
-        return ProductConverter.convertToProductDTO(productDao.selectProduct());
+        return ProductConverter.convertToProductDTO(productRepository.findAll());
     }
 
-    public void updateProduct(Integer id, ProductDTO productDTO) throws RuntimeException {
-        parameterValidator.validateParameter(id, productDTO);
-        Product product = new Product(productDTO);
+    @Transactional
+    public void updateProduct(Long id, ProductDTO productDTO) throws RuntimeException {
+        productDatabaseValidator.validateProductParameter(id, productDTO);
+        ProductValidator.validateProduct(productDTO);
+        Optional<Product> productInDb = productRepository.findById(id);
 
-        if (productDao.updateProduct(product) == 0) {
+        if (productInDb.isEmpty()) {
             throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
         }
+        Product productInDB = productInDb.get();
+        productInDB.changeProduct(productDTO.name(), productDTO.price(), productDTO.imageUrl());
     }
 
-    public void deleteProduct(Integer id) throws RuntimeException {
-        if(productDao.deleteProduct(id) == 0)
-            throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
+    @Transactional
+    public void deleteProduct(Long id) throws RuntimeException {
+        try {
+            wishRepository.deleteByProductId(id); // 외래키 제약조건
+            productRepository.deleteById(id);
+        } catch (Exception e) {
+            if (e instanceof EmptyResultDataAccessException) {
+                throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
+            }
+            throw new InternalServerException(e.getMessage());
+        }
     }
 }

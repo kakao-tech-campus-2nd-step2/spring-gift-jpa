@@ -41,14 +41,14 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:each="product : ${wishList.products}">
-    <td th:text="${product.id}" id="productId" class = "productId">1</td>
-    <td th:text="${product.name}" id="productName" class="productName">Product Name</td>
-    <td th:text="${product.price}" id="productPrice" class="productPrice">1000</td>
+  <tr th:each="wish : ${wishListDTO.wishList()}">
+    <td th:text="${wish.product().getId()}" id="productId" class = "productId">1</td>
+    <td th:text="${wish.product().getName()}" id="productName" class="productName">Product Name</td>
+    <td th:text="${wish.product().getPrice()}" id="productPrice" class="productPrice">1000</td>
     <td id="productImage" class="productImage">
-      <img th:src="${product.imageUrl}" alt="Image" style="width:100px;height:auto;">
+      <img th:src="${wish.product().getImageUrl()}" alt="Image" style="width:100px;height:auto;">
     </td>
-    <td th:text="${product.quantity}" id="productQuantity" class="productQuantity"></td>
+    <td th:text="${wish.quantity()}" id="productQuantity" class="productQuantity"></td>
     <td>
       <img th:src="@{/image/edit.png}" id ="productEdit" class="productEdit" alt="edit" style="width:100px;height: auto"  onclick="editQuantity(this)">
     </td>

@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 
 public record ProductDTO(
-        Integer id,
+        Long id,
 
         @NotBlank(message = "상품 이름을 입력해주세요.")
         @Length(min = 1, max = 15, message = "제품명 길이는 1~15자만 가능합니다.")
@@ -25,10 +25,7 @@ public record ProductDTO(
 
         @NotBlank(message = "이미지 URL을 입력해주세요.")
         @URL(message = "URL 형식이 아닙니다.")
-        String imageUrl,
-
-
-        Integer quantity
+        String imageUrl
 ) {
 
 }

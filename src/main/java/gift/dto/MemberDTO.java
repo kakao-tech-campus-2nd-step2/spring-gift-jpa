@@ -1,33 +1,45 @@
-package gift.entity;
+package gift.dto;
 
-import gift.dto.UserDTO;
+import gift.entity.Wish;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
-public class User {
+public class MemberDTO {
+
 
     @Email(message = "올바른 이메일 형식이 아닙니다.")
     private String email;
+
     @NotBlank(message = "비밀번호를 입력해주세요.")
     private String password;
+
     private String name;
+
     private String role;
 
-    public User() {}
+    private List<Wish> wishList;
 
-    public User(String email, String password, String name, String role) {
+    public MemberDTO() {
+        this.name = "default_user";
+        this.role = "USER";
+    }
+
+    public MemberDTO(String email, String password) {
+        this(email, password, "default_user", "USER", new ArrayList<>());
+    }
+
+    public MemberDTO(String email, String password, String name) {
+        this(email, password, name, "USER", new ArrayList<>());
+    }
+
+    public MemberDTO(String email, String password, String name, String role, List<Wish> wishList) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
-    }
-
-    public User(UserDTO userDTO) {
-        this.email = userDTO.getEmail();
-        this.password = userDTO.getPassword();
-        this.name = userDTO.getName();
-        this.role = userDTO.getRole();
+        this.wishList = wishList;
     }
 
     public String getEmail() {
@@ -62,25 +74,17 @@ public class User {
         this.role = role;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(email, user.email) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(name, user.name) &&
-                Objects.equals(role, user.role);
+    public List<Wish> getWishList() {
+        return wishList;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(email, password, name, role);
+    public void setWishList(List<Wish> wishList) {
+        this.wishList = wishList;
     }
 
     @Override
     public String toString() {
-        return "User{" +
+        return "MemberDTO{" +
                 "email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
