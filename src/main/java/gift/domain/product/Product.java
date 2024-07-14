@@ -28,8 +28,7 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<Wish> wishList;
 
-    public Product(Long id, String name, Long price, String imageUrl) {
-        this.id = id;
+    public Product(String name, Long price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -53,5 +52,14 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public List<Wish> getWishList() {
+        return wishList;
+    }
+
+    public void addWish(Wish wish) {
+        wishList.add(wish);
+        wish.setProduct(this);
     }
 }

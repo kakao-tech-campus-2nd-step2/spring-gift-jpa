@@ -52,6 +52,15 @@ public class Wish {
         member.getWishList().add(this);
     }
 
+    public void setProduct(Product product) {
+        if(this.product != null){
+            this.product.getWishList().remove(this);
+        }
+
+        this.product = product;
+        product.getWishList().add(this);
+    }
+
     public Member getMember() {
         return member;
     }
