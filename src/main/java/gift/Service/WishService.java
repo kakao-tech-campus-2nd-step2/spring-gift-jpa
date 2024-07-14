@@ -3,6 +3,7 @@ package gift.Service;
 import gift.Exception.AuthorizedException;
 import gift.Exception.ProductNotFoundException;
 import gift.Model.*;
+import gift.Model.DTO.ProductDTO;
 import gift.Model.Entity.MemberEntity;
 import gift.Model.Entity.ProductEntity;
 import gift.Model.Entity.WishEntity;
@@ -10,6 +11,10 @@ import gift.Repository.ProductRepository;
 import gift.Repository.MemberRepository;
 import gift.Repository.WishRepository;
 import gift.Token.JwtTokenProvider;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,17 +26,14 @@ public class WishService {
     private final WishRepository wishRepository;
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
-    private final JwtTokenProvider jwtTokenProvider;
 
-    public WishService(WishRepository wishRepository, MemberRepository memberRepository, ProductRepository productRepository, JwtTokenProvider jwtTokenProvider){
+    public WishService(WishRepository wishRepository, MemberRepository memberRepository, ProductRepository productRepository){
         this.wishRepository = wishRepository;
         this.memberRepository = memberRepository;
         this.productRepository = productRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public void add(String token, String name){
-        String email = jwtTokenProvider.getEmailFromToken(token);
+    public void add(String email, String name){
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
         Optional<ProductEntity> productOptional = productRepository.findByName(name);
         if(memberOptional.isEmpty()) {
@@ -50,8 +52,7 @@ public class WishService {
         wishRepository.save(new WishEntity(memberEntity, productEntity));
     }
 
-    public void delete(String token, String name){
-        String email = jwtTokenProvider.getEmailFromToken(token);
+    public void delete(String email, String name){
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
         Optional<ProductEntity> productOptional = productRepository.findByName(name);
 
@@ -72,8 +73,7 @@ public class WishService {
         wishRepository.delete(wishRepository.findByMemberIdAndProductId(memberEntity.getId(), productEntity.getId()));
     }
 
-    public List<String> viewAll(String token){
-        String email = jwtTokenProvider.getEmailFromToken(token);
+    public List<String> getAll(String email){
         Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
 
         if(memberOptional.isEmpty()) {
@@ -93,5 +93,17 @@ public class WishService {
         }
 
         return productNames;
+    }
+
+    public Page<String> getPage(String email, int page){
+        List<String> dtoList = getAll(email);
+        Pageable pageable = PageRequest.of(page, 10);
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), dtoList.size());
+
+        List<String> subList = dtoList.subList(start, end);
+
+        return new PageImpl<>(subList, pageable, dtoList.size());
     }
 }

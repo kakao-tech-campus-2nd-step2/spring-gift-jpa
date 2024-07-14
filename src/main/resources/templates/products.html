@@ -39,5 +39,17 @@
     </tr>
     </tbody>
 </table>
+<div th:if="${products.totalPages > 1}" class="pagination-container">
+    <button th:disabled="${!products.hasPrevious}"
+            th:onclick="|window.location.href='/admin/products?page=${products.number-1}'|">이전</button>
+    <span th:each="page : ${#numbers.sequence(0, products.totalPages-1)}"
+          th:if="${page >= products.number-2 and page <= products.number+2}">
+        <button th:classappend="${page == products.number} ? 'active'"
+                th:onclick="|window.location.href='/admin/products?page=${page}'|"
+                th:text="${page + 1}">1</button>
+    </span>
+    <button th:disabled="${!products.hasNext}"
+            th:onclick="|window.location.href='/admin/products?page=${products.number+1}'|">다음</button>
+</div>
 </body>
 </html>
