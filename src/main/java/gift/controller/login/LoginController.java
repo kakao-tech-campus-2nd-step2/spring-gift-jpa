@@ -25,8 +25,7 @@ public class LoginController {
     @PostMapping
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         try {
-            String token = userService.loginUser(loginRequest);
-            LoginResponse loginResponse = new LoginResponse(token);
+            LoginResponse loginResponse = userService.loginUser(loginRequest);
             return new ResponseEntity<>(loginResponse, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());

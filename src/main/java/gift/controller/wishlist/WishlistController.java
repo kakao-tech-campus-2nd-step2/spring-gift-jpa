@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,15 +23,20 @@ public class WishlistController {
     private final WishlistService wishlistService;
 
     @Autowired
-    public WishlistController(UserService us, WishlistService ws) {
-        userService = us;
-        wishlistService = ws;
+    public WishlistController(UserService userService, WishlistService wishlistService) {
+        this.userService = userService;
+        this.wishlistService = wishlistService;
+    }
+
+    private String getTokenFromHeader(String header) {
+        return header.substring(7);
     }
 
     @GetMapping
     public ResponseEntity<List<Product>> getWishlist(
         @RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.substring(7); // "Bearer " 부분을 제거
+
+        String token = getTokenFromHeader(authorizationHeader); // "Bearer " 부분을 제거
         if (!userService.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -41,10 +45,10 @@ public class WishlistController {
         return ResponseEntity.ok(wishlist);
     }
 
-    @PostMapping
+    @PostMapping("/{productId}")
     public ResponseEntity<String> addToWishlist(
-        @RequestHeader("Authorization") String authorizationHeader, @RequestBody Long productId) {
-        String token = authorizationHeader.substring(7); // "Bearer " 부분을 제거
+        @RequestHeader("Authorization") String authorizationHeader, @PathVariable Long productId) {
+        String token = getTokenFromHeader(authorizationHeader); // "Bearer " 부분을 제거
         if (!userService.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
@@ -56,7 +60,7 @@ public class WishlistController {
     @DeleteMapping("/{productId}")
     public ResponseEntity<String> removeFromWishlist(
         @RequestHeader("Authorization") String authorizationHeader, @PathVariable Long productId) {
-        String token = authorizationHeader.substring(7); // "Bearer " 부분 제거
+        String token = getTokenFromHeader(authorizationHeader); // "Bearer " 부분 제거
         if (!userService.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }

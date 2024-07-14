@@ -1,7 +1,9 @@
 package gift.controller.admin;
 
 import gift.DTO.Product;
+import gift.DTO.ProductRequest;
 import gift.service.ProductService;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
@@ -57,12 +59,9 @@ public class AdminController {
      * @return 같은 ID의 상품이 존재하지 않으면 201 Created, 아니면 400 Bad Request
      */
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        if (isProductExists(product.getId())) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400 Bad Request
-        }
-        productService.addProduct(product);
-        return new ResponseEntity<>(product, HttpStatus.CREATED); // 201 Created
+    public ResponseEntity<ProductRequest> addProduct(@RequestBody @Valid ProductRequest productRequest) {
+        productService.addProduct(productRequest);
+        return new ResponseEntity<>(productRequest, HttpStatus.CREATED); // 201 Created
     }
 
     /**
@@ -73,9 +72,6 @@ public class AdminController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        if (!isProductExists(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -88,16 +84,9 @@ public class AdminController {
      * @return 상품 정보 수정에 성공하면 200 OK, 해당 id의 상품이 없으면 404 NOT FOUND
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id,
-        @RequestBody Product updatedProduct) {
-        if (!isProductExists(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404 Not Found
-        }
-        productService.updateProduct(updatedProduct);
+    public ResponseEntity<ProductRequest> updateProduct(@PathVariable Long id,
+        @RequestBody @Valid ProductRequest updatedProduct) {
+        productService.updateProduct(id, updatedProduct);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK); // 200 OK
-    }
-
-    private boolean isProductExists(Long id) {
-        return productService.getProductById(id).isPresent();
     }
 }

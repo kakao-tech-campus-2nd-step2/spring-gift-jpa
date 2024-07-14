@@ -1,7 +1,9 @@
 package gift.service;
 
 import gift.DTO.LoginRequest;
+import gift.DTO.LoginResponse;
 import gift.DTO.SignupRequest;
+import gift.DTO.SignupResponse;
 import gift.DTO.User;
 import gift.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -26,20 +28,26 @@ public class UserService {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    public String registerUser(SignupRequest signupRequest) {
+    public SignupResponse registerUser(SignupRequest signupRequest) {
+        userRepository.findByEmail(signupRequest.getEmail()).ifPresent(p -> {
+            throw new RuntimeException("Email already exists");
+        });
         User user = new User(signupRequest.getEmail(), signupRequest.getPassword());
-        userRepository.addUser(user);
-        return "Welcome, " + user.getEmail() + "!";
+        userRepository.save(user);
+
+        String welcome = "Welcome, " + user.getEmail() + "!";
+        return new SignupResponse(welcome);
     }
 
-    public String loginUser(LoginRequest loginRequest) throws Exception {
-        Optional<User> user = userRepository.findUserByEmail(loginRequest.getEmail()); // Email이 PK
-        if (user.isPresent() &&
-            user.get().getPassword().equals(loginRequest.getPassword())) {
-            return generateToken(user.get());
-        } else {
-            throw new Exception("Invalid email or password");
+    public LoginResponse loginUser(LoginRequest loginRequest) throws Exception {
+        Optional<User> user = userRepository.findByEmail(loginRequest.getEmail()); // Email이 PK
+        user.orElseThrow(() -> new RuntimeException("Invalid email or password"));
+        User registeredUser = user.get();
+        if (registeredUser.getPassword().equals(loginRequest.getPassword())) {
+            String token = generateToken(registeredUser);
+            return new LoginResponse(token);
         }
+        throw new Exception("Invalid email or password");
     }
 
     private String generateToken(User user) {

@@ -1,6 +1,7 @@
 package gift.controller.admin;
 
 import gift.DTO.Product;
+import gift.DTO.ProductRequest;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -44,7 +45,7 @@ public class AdminViewController {
     @GetMapping("/form")
     public String showProductForm(@RequestParam(required = false) Long id, Model model) {
         if (id == null) {
-            model.addAttribute("product", new Product(0L, "", 0, ""));
+            model.addAttribute("product", new ProductRequest("", 0, ""));
             model.addAttribute("isEditing", false);
             return "productForm"; // 폼 템플릿 파일
         }
