@@ -8,6 +8,9 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +32,16 @@ public class ProductController {
             .map(ProductResponse::from)
             .collect(Collectors.toList());
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<Page<ProductResponse>> getPagedProducts(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> productsPage = productService.findAll(pageable);
+        Page<ProductResponse> responsePage = productsPage.map(ProductResponse::from);
+        return ResponseEntity.ok(responsePage);
     }
 
     @GetMapping("/{id}")
