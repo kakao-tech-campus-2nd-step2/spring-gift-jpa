@@ -5,52 +5,43 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import java.util.UUID;
 
 @Entity
 public class Wish {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID wishId;
+
+    @ManyToOne
+    @JoinColumn(name = "memberId", nullable = false)
+    private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "productId", nullable = false)
+    private Product product;
 
     @Column(nullable = false)
-    private String email;
+    private Long count;
 
-    @Column(nullable = false)
-    Long productId;
+    public Wish() {
+    }
 
-    @Column(nullable = false)
-    Long count;
-
-    public Wish() {}
-
-    public Wish(String email, Long productId, Long count) {
-        this.email = email;
-        this.productId = productId;
+    public Wish(Member member, Product product, Long count) {
+        this.member = member;
+        this.product = product;
         this.count = count;
     }
 
-    public String getEmail() {
-        return email;
+    public Member getMember() {
+        return member;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public Product getProduct() {
+        return product;
     }
 
     public Long getCount() {

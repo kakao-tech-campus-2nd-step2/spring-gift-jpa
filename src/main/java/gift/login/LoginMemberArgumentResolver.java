@@ -2,9 +2,12 @@ package gift.login;
 
 import static gift.login.JwtUtil.verifyToken;
 
+import gift.controller.GlobalMapper;
 import gift.controller.auth.Token;
+import gift.exception.UnauthenticatedException;
 import gift.service.MemberService;
 import io.jsonwebtoken.Claims;
+import java.util.UUID;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -25,15 +28,25 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String authHeader = webRequest.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new IllegalArgumentException("No JWT token found in request headers");
+        if (authHeader == null) {
+            throw new UnauthenticatedException("Authorization Header is empty");
+        }
+        if (!authHeader.startsWith("Bearer ")) {
+            throw new UnauthenticatedException(
+                "Authorization Header does not start with 'Bearer '");
         }
         Token token = new Token(authHeader.substring(7));
-        Claims claims = verifyToken(token);
-
+        Claims claims;
+        try {
+            claims = verifyToken(token);
+        } catch (Exception e) {
+            throw new UnauthenticatedException(
+                "UnauthenticatedException occurred while verifying the token");
+        }
         String email = claims.getSubject();
-        return memberService.findByEmail(email);
+        return GlobalMapper.toLoginResponse(memberService.findByEmail(email));
     }
 }

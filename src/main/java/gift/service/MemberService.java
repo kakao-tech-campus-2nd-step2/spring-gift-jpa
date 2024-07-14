@@ -1,12 +1,16 @@
 package gift.service;
 
-import gift.controller.member.MemberDto;
+import gift.controller.GlobalMapper;
+import gift.controller.auth.LoginResponse;
 import gift.controller.member.MemberRequest;
+import gift.controller.member.MemberResponse;
+import gift.controller.auth.LoginRequest;
 import gift.domain.Member;
 import gift.exception.MemberAlreadyExistsException;
 import gift.exception.MemberNotExistsException;
 import gift.repository.MemberRepository;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,32 +21,38 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    public List<MemberDto> findAll() {
+    public List<MemberResponse> findAll() {
         return memberRepository.findAll().stream()
-            .map(MemberDto::of)
+            .map(GlobalMapper::toMemberResponse)
             .toList();
     }
 
-    public MemberDto findByEmail(String email) {
-        Member member =  memberRepository.findByEmail(email)
+    public MemberResponse findById(UUID id) {
+        Member member =  memberRepository.findById(id)
         .orElseThrow(MemberNotExistsException::new);
-        return MemberDto.of(member);
+        return GlobalMapper.toMemberResponse(member);
     }
 
-    public MemberDto save(MemberRequest member) {
+    public MemberResponse findByEmail(String email) {
+        Member member = memberRepository.findByEmail(email)
+            .orElseThrow(MemberNotExistsException::new);
+        return GlobalMapper.toMemberResponse(member);
+    }
+
+    public MemberResponse save(LoginRequest member) {
         memberRepository.findByEmail(member.email()).ifPresent(p -> {
             throw new MemberAlreadyExistsException();
         });
-        return MemberDto.of(memberRepository.save(MemberRequest.toMember(member)));
+        return GlobalMapper.toMemberResponse(memberRepository.save(GlobalMapper.toMember(member)));
     }
 
-    public MemberDto update(Long id, String password) {
-        Member foundMember = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
-        foundMember.setPassword(password);
-        return MemberDto.of(memberRepository.save(foundMember));
+    public MemberResponse update(UUID id, MemberRequest member) {
+        Member target = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
+        target.setMember(member);
+        return GlobalMapper.toMemberResponse(memberRepository.save(target));
     }
 
-    public void deleteById(long id) {
+    public void delete(UUID id) {
         memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
         memberRepository.deleteById(id);
     }

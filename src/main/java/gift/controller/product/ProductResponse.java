@@ -1,9 +1,7 @@
 package gift.controller.product;
 
-import gift.domain.Product;
+import java.util.UUID;
 
-public record ProductResponse(Long id, String name, Long price, String imageUrl) {
-    public static ProductResponse of(Product product) {
-        return new ProductResponse(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-    }
+public record ProductResponse(UUID id, String name, Long price, String imageUrl) {
+
 }

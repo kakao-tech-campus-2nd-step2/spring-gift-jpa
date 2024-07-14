@@ -1,17 +1,20 @@
 package gift.service;
 
+import gift.controller.GlobalMapper;
+import gift.controller.product.ProductRequest;
+import gift.controller.product.ProductResponse;
 import gift.domain.Product;
 import gift.exception.ProductAlreadyExistsException;
 import gift.exception.ProductNotExistsException;
 import gift.repository.ProductRepository;
-import gift.controller.product.ProductResponse;
-import gift.controller.product.ProductRequest;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
+
     private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
@@ -19,33 +22,33 @@ public class ProductService {
     }
 
     public List<ProductResponse> findAll() {
-        return productRepository.findAll().stream()
-            .map(ProductResponse::of)
-            .toList();
+        return productRepository.findAll().stream().map(GlobalMapper::toProductResponse).toList();
     }
 
-    public ProductResponse find(Long id) {
-        Optional<Product> product =  productRepository.findById(id);
-        product.orElseThrow(ProductNotExistsException::new);
-        return ProductResponse.of(product.get());
+    public ProductResponse find(UUID id) {
+        Product target = productRepository.findById(id).orElseThrow(ProductNotExistsException::new);
+        return GlobalMapper.toProductResponse(target);
     }
 
     public ProductResponse save(ProductRequest product) {
-        productRepository.findByNameAndPriceAndImageUrl(product.name(), product.price(), product.imageUrl()).ifPresent(p -> {
+        productRepository.findByNameAndPriceAndImageUrl(product.name(), product.price(),
+            product.imageUrl()).ifPresent(p -> {
             throw new ProductAlreadyExistsException();
         });
-        return ProductResponse.of(productRepository.save(ProductRequest.toProduct(product)));
+        return GlobalMapper.toProductResponse(
+            productRepository.save(GlobalMapper.toProduct(product)));
     }
 
-    public ProductResponse update(Long id, ProductRequest product) {
-        Product foundProduct = productRepository.findById(id).orElseThrow(ProductNotExistsException::new);
+    public ProductResponse update(UUID id, ProductRequest product) {
+        Product foundProduct = productRepository.findById(id)
+            .orElseThrow(ProductNotExistsException::new);
         foundProduct.setName(product.name());
         foundProduct.setPrice(product.price());
         foundProduct.setImageUrl(product.imageUrl());
-        return ProductResponse.of(productRepository.save(foundProduct));
+        return GlobalMapper.toProductResponse(productRepository.save(foundProduct));
     }
 
-    public void delete(Long id) {
+    public void delete(UUID id) {
         productRepository.findById(id).orElseThrow(ProductNotExistsException::new);
         productRepository.deleteById(id);
     }
