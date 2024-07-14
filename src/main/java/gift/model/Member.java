@@ -61,16 +61,53 @@ public class Member {
     }
 
     public void validate() {
-        if (name == null || name.trim().isEmpty()) {
+        validateNullName();
+        validateEmptyName();
+        validateNullEmail();
+        validateEmptyEmail();
+        validateInvalidEmail();
+        validateNullPassword();
+        validateEmptyPassword();
+    }
+
+    private void validateNullName() {
+        if (name == null) {
             throw new IllegalArgumentException("이름을 입력하세요.");
         }
-        if (email == null || email.trim().isEmpty()) {
+    }
+
+    private void validateEmptyName() {
+        if (name.trim().isEmpty()) {
+            throw new IllegalArgumentException("이름을 입력하세요.");
+        }
+    }
+
+    private void validateNullEmail() {
+        if (email == null) {
             throw new IllegalArgumentException("이메일을 입력하세요.");
         }
+    }
+
+    private void validateEmptyEmail() {
+        if (email.trim().isEmpty()) {
+            throw new IllegalArgumentException("이메일을 입력하세요.");
+        }
+    }
+
+    private void validateInvalidEmail() {
         if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
             throw new IllegalArgumentException("유효한 이메일을 입력하세요.");
         }
-        if (password == null || password.trim().isEmpty()) {
+    }
+
+    private void validateNullPassword() {
+        if (password == null) {
+            throw new IllegalArgumentException("비밀 번호를 입력하세요.");
+        }
+    }
+
+    private void validateEmptyPassword() {
+        if (password.trim().isEmpty()) {
             throw new IllegalArgumentException("비밀 번호를 입력하세요.");
         }
     }
