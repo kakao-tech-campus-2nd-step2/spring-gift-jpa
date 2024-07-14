@@ -5,13 +5,4 @@ import gift.domain.wish.Wish;
 public record WishDto(
     Long productId,
     Long count
-    ) {
-
-    public static WishDto from(Wish wish) {
-        return new WishDto(wish.getProductId(), wish.getCount());
-    }
-
-    public static Wish toEntity(WishDto dto, String email) {
-        return new Wish(null, email, dto.productId(), dto.count());
-    }
-}
+    ) { }
