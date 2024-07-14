@@ -1,11 +1,10 @@
 package gift.serverSideRendering.controller;
 
+import gift.domain.dto.request.ProductRequest;
+import gift.domain.dto.response.ProductResponse;
 import gift.domain.service.ProductService;
-import gift.domain.dto.ProductRequestDto;
-import gift.domain.dto.ProductResponseDto;
 import jakarta.validation.Valid;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,41 +20,40 @@ public class ServerRenderProductController {
 
     private final ProductService service;
 
-    @Autowired
     public ServerRenderProductController(ProductService service) {
         this.service = service;
     }
 
     @GetMapping
     public String showProducts(Model model) {
-        List<ProductResponseDto> products = service.getAllProducts();
+        List<ProductResponse> products = service.getAllProducts();
         model.addAttribute("products", products);
         return "products";
     }
 
     @GetMapping("/add")
     public String showAddProductForm(Model model) {
-        model.addAttribute("productRequestDto", new ProductRequestDto("", 0L, ""));
+        model.addAttribute("productRequestDto", new ProductRequest("", 0, ""));
         return "addProduct";
     }
 
     @PostMapping("/add")
-    public String addProduct(@Valid @ModelAttribute ProductRequestDto requestDto, Model model) {
+    public String addProduct(@Valid @ModelAttribute ProductRequest requestDto, Model model) {
         service.addProduct(requestDto);
         return "redirect:/products";
     }
 
     @GetMapping("/update/{id}")
     public String showUpdateProductForm(@PathVariable("id") Long id, Model model) {
-        ProductResponseDto product = service.getProductById(id);
-        ProductRequestDto dto = new ProductRequestDto(product.name(), product.price(), product.imageUrl());
+        ProductResponse product = ProductResponse.of(service.getProductById(id));
+        ProductRequest dto = new ProductRequest(product.name(), product.price(), product.imageUrl());
         model.addAttribute("productRequestDto", dto);
         model.addAttribute("productId", id);
         return "updateProduct";
     }
 
     @PutMapping("/update/{id}")
-    public String updateProduct(@PathVariable("id") Long id, @Valid @ModelAttribute ProductRequestDto requestDto) {
+    public String updateProduct(@PathVariable("id") Long id, @Valid @ModelAttribute ProductRequest requestDto) {
         service.updateProductById(id, requestDto);
         return "redirect:/products";
     }

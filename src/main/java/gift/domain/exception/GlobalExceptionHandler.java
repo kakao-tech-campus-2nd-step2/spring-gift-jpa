@@ -1,7 +1,6 @@
 package gift.domain.exception;
 
-import gift.global.response.ErrorResponse;
-import java.util.Map;
+import gift.global.apiResponse.ErrorApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -16,65 +15,65 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         FieldError error = e.getBindingResult().getFieldError();
         assert error != null;
-        return ErrorResponse.of(error.getField() + ": " + error.getDefaultMessage(), HttpStatus.BAD_REQUEST);
+        return ErrorApiResponse.of(error.getField() + ": " + error.getDefaultMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleProductNotFoundException(ProductNotFoundException e) {
-        return ErrorResponse.notFound(e);
+    public ResponseEntity<ErrorApiResponse> handleProductNotFoundException(ProductNotFoundException e) {
+        return ErrorApiResponse.notFound(e);
     }
 
     @ExceptionHandler(ProductAlreadyExistsException.class)
-    public ResponseEntity<Map<String, Object>> handleProductAlreadyExistsException(ProductAlreadyExistsException e) {
-        return ErrorResponse.conflict(e);
+    public ResponseEntity<ErrorApiResponse> handleProductAlreadyExistsException(ProductAlreadyExistsException e) {
+        return ErrorApiResponse.conflict(e);
     }
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<Map<String, Object>> handleUUserAlreadyExistsException(UserAlreadyExistsException e) {
-        return ErrorResponse.conflict(e);
+    @ExceptionHandler(MemberAlreadyExistsException.class)
+    public ResponseEntity<ErrorApiResponse> handleUUserAlreadyExistsException(MemberAlreadyExistsException e) {
+        return ErrorApiResponse.conflict(e);
     }
 
-    @ExceptionHandler(UserIncorrectLoginInfoException.class)
-    public ResponseEntity<Map<String, Object>> handleUUserAlreadyExistsException(UserIncorrectLoginInfoException e) {
-        return ErrorResponse.of(e, HttpStatus.FORBIDDEN);
+    @ExceptionHandler(MemberIncorrectLoginInfoException.class)
+    public ResponseEntity<ErrorApiResponse> handleUUserAlreadyExistsException(MemberIncorrectLoginInfoException e) {
+        return ErrorApiResponse.of(e, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(UserNotAdminException.class)
-    public ResponseEntity<Map<String, Object>> handleExpiredJwtException(UserNotAdminException e) {
-        return ErrorResponse.of(e, HttpStatus.FORBIDDEN);
+    @ExceptionHandler(MemberNotAdminException.class)
+    public ResponseEntity<ErrorApiResponse> handleExpiredJwtException(MemberNotAdminException e) {
+        return ErrorApiResponse.of(e, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleUserNotFoundException(UserNotFoundException e) {
-        return ErrorResponse.notFound(e);
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<ErrorApiResponse> handleUserNotFoundException(MemberNotFoundException e) {
+        return ErrorApiResponse.notFound(e);
     }
 
     @ExceptionHandler(TokenNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleExpiredJwtException(TokenNotFoundException e) {
-        return ErrorResponse.of(e, HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<ErrorApiResponse> handleExpiredJwtException(TokenNotFoundException e) {
+        return ErrorApiResponse.of(e, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<Map<String, Object>> handleTokenExpiredException(TokenExpiredException e) {
-        return ErrorResponse.of(e, HttpStatus.FORBIDDEN);
+    public ResponseEntity<ErrorApiResponse> handleTokenExpiredException(TokenExpiredException e) {
+        return ErrorApiResponse.of(e, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(TokenStringInvalidException.class)
-    public ResponseEntity<Map<String, Object>> handleTokenStringInvalidException(TokenStringInvalidException e) {
-        return ErrorResponse.of(e, HttpStatus.FORBIDDEN);
+    public ResponseEntity<ErrorApiResponse> handleTokenStringInvalidException(TokenStringInvalidException e) {
+        return ErrorApiResponse.of(e, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(TokenUnexpectedErrorException.class)
-    public ResponseEntity<Map<String, Object>> handleTokenUnexpectedErrorException(TokenUnexpectedErrorException e) {
-        return ErrorResponse.of(e, HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<ErrorApiResponse> handleTokenUnexpectedErrorException(TokenUnexpectedErrorException e) {
+        return ErrorApiResponse.of(e, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(ProductNotIncludedInWishlistException.class)
-    public ResponseEntity<Map<String, Object>> handleProductNotIncludedInWishlistException(
+    public ResponseEntity<ErrorApiResponse> handleProductNotIncludedInWishlistException(
         ProductNotIncludedInWishlistException e) {
-        return ErrorResponse.notFound(e);
+        return ErrorApiResponse.notFound(e);
     }
 }
