@@ -26,32 +26,32 @@ public class ProductRestController {
 
     @PostMapping("/products")
     @ResponseBody
-    public void addProduct(@RequestHeader("Bearer") String token, @RequestBody ProductDTO productDTO, BindingResult bindingResult){
+    public void addProduct(@RequestAttribute("Email") String email, @RequestBody ProductDTO productDTO, BindingResult bindingResult){
         if(!bindingResult.hasErrors())
-            productService.add(token, productDTO);
+            productService.add(email, productDTO);
 
     }
 
     @DeleteMapping("/products/{id}")
     @ResponseBody
-    public void deleteProduct(@RequestHeader("Bearer") String token, @PathVariable Long id){
-        productService.delete(token, id);
+    public void deleteProduct(@RequestAttribute("Email") String email, @PathVariable Long id){
+        productService.delete(email, id);
     }
 
     @PutMapping("/products/{id}")
     @ResponseBody
-    public void updateProduct(@RequestHeader("Bearer") String token, @PathVariable Long id, @RequestBody ProductDTO productDTO, BindingResult bindingResult){
+    public void updateProduct(@RequestAttribute("Email") String email, @PathVariable Long id, @RequestBody ProductDTO productDTO, BindingResult bindingResult){
         if(!bindingResult.hasErrors())
-            productService.edit(token, id, productDTO);
+            productService.edit(email, id, productDTO);
     }
 
     @GetMapping("/products")
-    public List<ProductDTO> viewAllProducts(@RequestHeader("Bearer") String token){
-        return productService.getAll(token);
+    public List<ProductDTO> viewAllProducts(@RequestAttribute("Email") String email){
+        return productService.getAll(email);
     }
 
     @GetMapping("/products/{id}")
-    public ProductDTO viewProduct(@RequestHeader("Bearer") String token, @PathVariable Long id){
-        return productService.getById(token, id);
+    public ProductDTO viewProduct(@RequestAttribute("Email") String email, @PathVariable Long id){
+        return productService.getById(email, id);
     }
 }
