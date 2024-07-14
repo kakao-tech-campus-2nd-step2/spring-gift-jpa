@@ -4,6 +4,7 @@ import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
 import gift.dto.WishDto;
+import gift.dto.WishResponseDto;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
@@ -40,8 +41,17 @@ public class WishService {
         return wishRepository.findByMember(member);
     }
 
-    public Page<Wish> findPagedWishesByMemberId(Long id, Pageable pageable) {
+    public Page<WishResponseDto> findByMemberId(Long id, Pageable pageable) {
         Member member = memberRepository.findById(id).orElseThrow();
-        return wishRepository.findByMember(member, pageable);
+        Page<Wish> wishPage= wishRepository.findByMember(member, pageable);
+        return wishPage.map(this::convertToDto);
+    }
+
+    private WishResponseDto convertToDto(Wish wish) {
+        return new WishResponseDto(
+            wish.getId(),
+            wish.getMember().getEmail(),
+            wish.getProduct().getName(),
+            wish.getProduct().getPrice());
     }
 }
