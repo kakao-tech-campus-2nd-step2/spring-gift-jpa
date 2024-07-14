@@ -7,6 +7,10 @@ import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,10 +27,23 @@ public class ProductWebController {
     }
 
     @GetMapping("/list")
-    public String getAllProducts(Model model) {
-        List<ProductDTO> products = productService.getAllProducts();
-        model.addAttribute("products", products);
-        return "productList"; // product list view의 이름을 반환
+    public String getAllProducts(Model model,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "3") int size,
+        @RequestParam(defaultValue = "id") String sort,
+        @RequestParam(defaultValue = "asc") String direction) {
+
+        Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sort);
+        Pageable pageable = PageRequest.of(page, size, sortOrder);
+        Page<ProductDTO> productPage = productService.getProducts(pageable);
+
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("sort", sort);
+        model.addAttribute("direction", direction);
+
+        return "productList";
     }
 
     @GetMapping("/detail/{id}")
@@ -78,7 +95,6 @@ public class ProductWebController {
     // 규칙 3가지
     private void validateProductName(String name) {
         if (name.length() > 20) {
-
             throw new InvalidProductNameException(ErrorCode.INVALID_NAME_LENGTH);
         }
         if (!Pattern.matches("[a-zA-Z0-9가-힣()\\[\\]+\\-&/_ ]*", name)) {

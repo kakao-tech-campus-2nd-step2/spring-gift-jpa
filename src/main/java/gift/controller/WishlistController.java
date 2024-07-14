@@ -5,6 +5,10 @@ import gift.service.WishlistService;
 import java.security.Principal;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +30,26 @@ public class WishlistController {
     }
 
     @GetMapping
-    public String getWishlist(Principal principal, Model model) {
+    public String getWishlist(Principal principal, Model model,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "3") int size,
+        @RequestParam(defaultValue = "productName") String sort,
+        @RequestParam(defaultValue = "asc") String direction) {
+
         String username = principal.getName();
-        List<WishlistDTO> wishlist = wishlistService.getWishlistByUser(username);
-        model.addAttribute("wishlist", wishlist);
+        Sort sortOrder = Sort.by(Sort.Direction.fromString(direction), sort);
+        Pageable pageable = PageRequest.of(page, size, sortOrder);
+        Page<WishlistDTO> wishlistPage = wishlistService.getWishlistByUser1(username, pageable);
+
+        model.addAttribute("wishlistPage", wishlistPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+        model.addAttribute("sort", sort);
+        model.addAttribute("direction", direction);
+
         return "wishlist";
     }
+
 
     @PostMapping("/add")
     @ResponseBody
