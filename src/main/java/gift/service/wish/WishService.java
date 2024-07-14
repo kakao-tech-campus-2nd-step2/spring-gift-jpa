@@ -68,7 +68,7 @@ public class WishService {
 
         wish.updateWish(wishDto.count());
 
-        return wishMapper.toDto(wishRepository.save(wish));
+        return wishMapper.toDto(wish);
     }
 
     public void deleteWish(String email, Long productId) {

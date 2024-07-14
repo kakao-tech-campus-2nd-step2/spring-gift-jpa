@@ -47,7 +47,7 @@ public class ProductService {
             productDto.imageUrl()
         );
 
-        return productMapper.toDto(productReposiotory.save(product));
+        return productMapper.toDto(product);
     }
 
     public void deleteProduct(Long id) {
