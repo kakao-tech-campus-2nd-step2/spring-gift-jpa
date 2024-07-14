@@ -9,5 +9,4 @@ import org.springframework.stereotype.Repository;
 public interface WishRepository extends JpaRepository<Wish, Long> {
     List<Wish> findByMember_Id(Long memberId);
     Optional<Wish> findByMember_IdAndProduct_Id(Long memberId, Long productId);
-    void deleteByMember_IdAndProduct_Id(Long memberId, Long productId);
 }
