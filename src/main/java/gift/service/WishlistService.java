@@ -1,9 +1,8 @@
 package gift.service;
 
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -29,9 +28,9 @@ public class WishlistService {
 	@Autowired
 	private AuthService authService;
 	
-	public List<Wishlist> getWishlist(String token, BindingResult bindingResult) {
+	public Page<Wishlist> getWishlist(String token, BindingResult bindingResult, Pageable pageable) {
         User user = getUserFormToekn(token, bindingResult);
-        return wishlistRepository.findByUserId(user.getId());
+        return wishlistRepository.findByUserId(user.getId(), pageable);
     }
 	
 	public void addWishlist(String token, Wishlist wishlist, BindingResult bindingResult) {
