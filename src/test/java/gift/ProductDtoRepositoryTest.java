@@ -4,10 +4,14 @@ import gift.Entity.Product;
 import gift.Mapper.Mapper;
 import gift.Model.ProductDto;
 import gift.Repository.ProductJpaRepository;
+import gift.Service.MemberService;
+import gift.Service.ProductService;
+import gift.Service.WishlistService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
@@ -21,8 +25,18 @@ public class ProductDtoRepositoryTest {
     @Autowired
     private ProductJpaRepository productJpaRepository;
 
-    @Autowired
     private Mapper mapper;
+
+    @BeforeEach
+    void setUp() {
+        // 필요한 서비스의 목 객체 생성
+        ProductService productService = Mockito.mock(ProductService.class);
+        MemberService memberService = Mockito.mock(MemberService.class);
+        WishlistService wishListService = Mockito.mock(WishlistService.class);
+
+        // Mapper 인스턴스 수동 생성 및 주입
+        mapper = new Mapper(productService, memberService, wishListService);
+    }
 
     @Test
     public void testGetAllProducts() {
