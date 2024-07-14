@@ -2,6 +2,8 @@ package gift.utils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +24,7 @@ public class MemberDummyDataProvider {
     }
 
     private void doRun(int quantity) {
-        String sql = "insert into member (name, email, password) values (?, ?, ?)";
+        String sql = "insert into member (name, email, password, created_at, modified_at) values (?, ?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(quantity));
     }
 
@@ -33,6 +35,8 @@ public class MemberDummyDataProvider {
                 ps.setString(1, "member" + i);
                 ps.setString(2, "member" + i + "@gmail.com");
                 ps.setString(3, "member" + i + "0");
+                ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+                ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
             }
 
             @Override
@@ -41,6 +45,4 @@ public class MemberDummyDataProvider {
             }
         };
     }
-
-//    public
 }

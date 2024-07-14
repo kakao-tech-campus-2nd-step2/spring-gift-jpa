@@ -2,6 +2,8 @@ package gift.utils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,7 +26,7 @@ public class WishProductDummyDataProvider {
     }
 
     private void doRun(int quantity) {
-        String sql = "insert into wish_product (member_id, product_id, quantity) values (?, ?, ?)";
+        String sql = "insert into wish_product (member_id, product_id, quantity, created_at, created_by, modified_at, modified_by) values (?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(quantity));
     }
 
@@ -35,6 +37,10 @@ public class WishProductDummyDataProvider {
                 ps.setLong(1, TARGET_MEMBER_ID);
                 ps.setLong(2, i + 1);
                 ps.setInt(3, i + 1);
+                ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+                ps.setLong(5, TARGET_MEMBER_ID);
+                ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
+                ps.setLong(7, TARGET_MEMBER_ID);
             }
 
             @Override
