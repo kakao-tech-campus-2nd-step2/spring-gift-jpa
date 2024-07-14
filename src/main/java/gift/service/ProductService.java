@@ -35,8 +35,8 @@ public class ProductService {
 
     public void updateProduct(Long id, @Valid Product product) {
         if (productRepository.existsById(id)) {
-            product.setId(id); // Ensure the product ID is set
-            productRepository.save(product); // save() will perform an update if the entity already exists
+            product.setId(id);
+            productRepository.save(product);
         }
     }
 
