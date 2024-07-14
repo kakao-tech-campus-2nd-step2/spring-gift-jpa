@@ -1,10 +1,13 @@
 package gift.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import gift.product.dto.JwtResponse;
 import gift.product.dto.MemberDto;
+import gift.product.exception.LoginFailedException;
 import gift.product.service.AuthService;
+import java.util.NoSuchElementException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -32,5 +35,22 @@ class AuthServiceTest {
         JwtResponse jwtResponse = authService.login(memberDto);
 
         assertThat(jwtResponse.token()).isNotEmpty();
+    }
+
+    @Test
+    void 회원가입_중복_테스트() {
+        MemberDto testAcount = new MemberDto("test@test.com", "test");
+        authService.register(testAcount);
+
+        assertThatThrownBy(() -> authService.register(testAcount)).isInstanceOf(
+            IllegalArgumentException.class);
+    }
+
+    @Test
+    void 존재하지_않는_회원_로그인_테스트() {
+        MemberDto testAcount = new MemberDto("test@test.com", "test");
+
+        assertThatThrownBy(() -> authService.login(testAcount)).isInstanceOf(
+            LoginFailedException.class);
     }
 }
