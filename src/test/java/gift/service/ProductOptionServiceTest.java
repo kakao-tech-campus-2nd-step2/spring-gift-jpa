@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -58,7 +59,7 @@ class ProductOptionServiceTest {
         optionService.addOption(normalOptionDto);
         optionService.addOption(size255gbOptionDto);
         //then
-        Assertions.assertThat(optionService.getOptions(product.id()).size()).isEqualTo(2);
+        Assertions.assertThat(optionService.getOptions(product.id(), PageRequest.of(0, 10)).size()).isEqualTo(2);
     }
 
     @Test
@@ -82,10 +83,10 @@ class ProductOptionServiceTest {
         //given
         var productOptionRequest = new ProductOptionRequest(product.id(), "기본", 0);
         var savedOption = optionService.addOption(productOptionRequest);
-        Assertions.assertThat(optionService.getOptions(product.id()).size()).isEqualTo(1);
+        Assertions.assertThat(optionService.getOptions(product.id(), PageRequest.of(0, 10)).size()).isEqualTo(1);
         //when
         optionService.deleteOption(savedOption.id());
         //then
-        Assertions.assertThat(optionService.getOptions(product.id()).size()).isEqualTo(0);
+        Assertions.assertThat(optionService.getOptions(product.id(), PageRequest.of(0, 10)).size()).isEqualTo(0);
     }
 }

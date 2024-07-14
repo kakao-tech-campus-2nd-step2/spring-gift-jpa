@@ -11,6 +11,7 @@ import gift.model.WishProduct;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishProductRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,8 +53,8 @@ public class WishProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishProductResponse> getWishProducts(Long memberId) {
-        return wishProductRepository.findAllByMemberId(memberId)
+    public List<WishProductResponse> getWishProducts(Long memberId, Pageable pageable) {
+        return wishProductRepository.findAllByMemberId(memberId, pageable)
                 .stream()
                 .map(this::getWishProductResponseFromWishProduct)
                 .toList();

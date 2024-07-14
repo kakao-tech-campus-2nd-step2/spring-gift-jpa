@@ -15,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -63,11 +64,11 @@ class WishProductServiceTest {
     void addProduct1ToManager() {
         //given
         var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
-        Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(0);
+        Assertions.assertThat(wishProductService.getWishProducts(managerId, PageRequest.of(0, 10)).size()).isEqualTo(0);
         //when
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
         //then
-        Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(1);
+        Assertions.assertThat(wishProductService.getWishProducts(managerId, PageRequest.of(0, 10)).size()).isEqualTo(1);
 
         wishProductService.deleteWishProduct(wishProduct.id());
     }
@@ -78,11 +79,11 @@ class WishProductServiceTest {
         //given
         var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
-        Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(1);
+        Assertions.assertThat(wishProductService.getWishProducts(managerId, PageRequest.of(0, 10)).size()).isEqualTo(1);
         //when
         wishProductService.deleteWishProduct(wishProduct.id());
         //then
-        Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(0);
+        Assertions.assertThat(wishProductService.getWishProducts(managerId, PageRequest.of(0, 10)).size()).isEqualTo(0);
     }
 
     @Test
@@ -91,12 +92,12 @@ class WishProductServiceTest {
         //given
         var wishProductAddRequest = new WishProductAddRequest(product1Id, 5);
         var wishProduct = wishProductService.addWishProduct(wishProductAddRequest, managerId);
-        Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(1);
+        Assertions.assertThat(wishProductService.getWishProducts(managerId, PageRequest.of(0, 10)).size()).isEqualTo(1);
         var wishProductUpdateRequest = new WishProductUpdateRequest(0);
         //when
         wishProductService.updateWishProduct(wishProduct.id(), wishProductUpdateRequest);
         //then
-        Assertions.assertThat(wishProductService.getWishProducts(managerId).size()).isEqualTo(0);
+        Assertions.assertThat(wishProductService.getWishProducts(managerId, PageRequest.of(0, 10)).size()).isEqualTo(0);
     }
 
     @Test
@@ -108,7 +109,7 @@ class WishProductServiceTest {
         var managerWishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, managerId);
         var managerWishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, managerId);
         //when
-        var memberWishProducts = wishProductService.getWishProducts(memberId);
+        var memberWishProducts = wishProductService.getWishProducts(memberId, PageRequest.of(0, 10));
         //then
         Assertions.assertThat(memberWishProducts.size()).isEqualTo(0);
 
@@ -135,10 +136,27 @@ class WishProductServiceTest {
         //when
         var wishProduct = wishProductService.addWishProduct(wishProduct1AddRequest, memberId);
         //then
-        var wishProducts = wishProductService.getWishProducts(memberId);
+        var wishProducts = wishProductService.getWishProducts(memberId, PageRequest.of(0, 10));
         Assertions.assertThat(wishProducts.size()).isEqualTo(1);
         Assertions.assertThat(wishProducts.get(0).count()).isEqualTo(10);
 
         wishProductService.deleteWishProduct(wishProduct.id());
+    }
+
+    @Test
+    @DisplayName("2개의 상품이 추가된 상황에서 size 가 1인 페이지로 조회하면 결과의 길이는 1이다.")
+    void getProductsWishPageSize1() {
+        //given
+        var wishProduct1AddRequest = new WishProductAddRequest(product1Id, 5);
+        var wishProduct1 = wishProductService.addWishProduct(wishProduct1AddRequest, memberId);
+        var wishProduct2AddRequest = new WishProductAddRequest(product2Id, 5);
+        var wishProduct2 = wishProductService.addWishProduct(wishProduct2AddRequest, memberId);
+        //when
+        var wishProducts = wishProductService.getWishProducts(memberId, PageRequest.of(0, 1));
+        //then
+        Assertions.assertThat(wishProducts.size()).isEqualTo(1);
+
+        wishProductService.deleteWishProduct(wishProduct1.id());
+        wishProductService.deleteWishProduct(wishProduct2.id());
     }
 }

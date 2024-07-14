@@ -9,6 +9,7 @@ import gift.model.Product;
 import gift.repository.ProductOptionRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishProductRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,8 +47,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getProducts() {
-        return productRepository.findAll()
+    public List<ProductResponse> getProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
                 .stream()
                 .map(this::getProductResponseFromProduct)
                 .toList();

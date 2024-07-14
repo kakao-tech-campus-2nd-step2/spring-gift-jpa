@@ -7,6 +7,7 @@ import gift.exception.NotFoundElementException;
 import gift.model.ProductOption;
 import gift.repository.ProductOptionRepository;
 import gift.repository.ProductRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,8 +44,8 @@ public class ProductOptionService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductOptionResponse> getOptions(Long productId) {
-        return productOptionRepository.findAllByProductId(productId)
+    public List<ProductOptionResponse> getOptions(Long productId, Pageable pageable) {
+        return productOptionRepository.findAllByProductId(productId, pageable)
                 .stream()
                 .map(this::getProductOptionResponseFromProductOption)
                 .toList();
