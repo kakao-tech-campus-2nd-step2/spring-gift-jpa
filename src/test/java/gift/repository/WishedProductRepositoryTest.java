@@ -13,6 +13,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 public class WishedProductRepositoryTest {
@@ -61,9 +63,11 @@ public class WishedProductRepositoryTest {
         // given
         WishedProduct savedWishedProduct = wishedProductRepository.save(wishedProduct);
         List<WishedProduct> expected = new ArrayList<>(List.of(savedWishedProduct));
+        Pageable pageable = PageRequest.of(0, 5);
 
         // when
-        List<WishedProduct> actual = wishedProductRepository.findByMember(member);
+        List<WishedProduct> actual = wishedProductRepository.findByMember(member, pageable)
+            .stream().toList();
 
         // then
         assertThat(actual).isEqualTo(expected);

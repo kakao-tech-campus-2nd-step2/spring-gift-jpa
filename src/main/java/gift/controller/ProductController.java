@@ -4,8 +4,8 @@ import gift.dto.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,8 +30,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<ProductDTO>> getProducts() {
-        return ResponseEntity.ok().body(productService.getProducts());
+    public ResponseEntity<Page<ProductDTO>> getProducts(@RequestParam(value = "page", defaultValue = "0") int page) {
+        return ResponseEntity.ok().body(productService.getProducts(page));
     }
 
     @GetMapping("/{id}")
@@ -51,6 +52,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ProductDTO> deleteProduct(@PathVariable("id") long id) {
+        System.out.println("controller: " + id);
         return ResponseEntity.ok().body(productService.deleteProduct(id));
     }
 }

@@ -5,8 +5,8 @@ import gift.dto.MemberDTO;
 import gift.dto.WishedProductDTO;
 import gift.service.WishedProductService;
 import jakarta.validation.Valid;
-import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,8 +30,11 @@ public class WishedProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<WishedProductDTO>> getWishedProducts(@LoginMember MemberDTO memberDTO) {
-        return ResponseEntity.ok().body(wishedProductService.getWishedProducts(memberDTO));
+    public ResponseEntity<Page<WishedProductDTO>> getWishedProducts(
+        @LoginMember MemberDTO memberDTO,
+        @RequestParam(value = "page", defaultValue = "0") int page
+    ) {
+        return ResponseEntity.ok().body(wishedProductService.getWishedProducts(memberDTO, page));
     }
 
     @PostMapping
