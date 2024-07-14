@@ -2,6 +2,7 @@ package gift.service.member;
 
 import gift.domain.member.Member;
 import gift.domain.member.MemberRepository;
+import gift.mapper.MemberMapper;
 import gift.web.dto.MemberDto;
 import gift.web.exception.MemberNotFoundException;
 import java.util.List;
@@ -11,35 +12,39 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
-    private final MemberRepository memberRepository;
 
-    public MemberService(MemberRepository memberRepository) {
+    private final MemberRepository memberRepository;
+    private final MemberMapper memberMapper;
+
+    public MemberService(MemberRepository memberRepository, MemberMapper memberMapper) {
         this.memberRepository = memberRepository;
+        this.memberMapper = memberMapper;
     }
 
     public List<MemberDto> getMembers() {
         return memberRepository.findAll()
             .stream()
-            .map(MemberDto::from)
+            .map(memberMapper::toDto)
             .toList();
     }
 
     public MemberDto getMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
-            .map(MemberDto::from)
+            .map(memberMapper::toDto)
             .orElseThrow(() -> new MemberNotFoundException("멤버가 엄슴다"));
     }
 
     public void createMember(MemberDto memberDto) {
-        memberRepository.save(MemberDto.toEntity(memberDto));
+        memberRepository.save(memberMapper.toEntity(memberDto));
     }
 
     public MemberDto updateMember(String email, MemberDto memberDto) {
-        memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmail(email)
             .orElseThrow(() -> new MemberNotFoundException("멤버가 없슴다."));
-        Member newMember = MemberDto.toEntity(memberDto);
-        memberRepository.save(newMember);
-        return MemberDto.from(newMember);
+
+        member.updateMember(memberDto.email(), memberDto.password());
+
+        return memberMapper.toDto(memberRepository.save(member));
     }
 
     public void deleteMember(String email) {
