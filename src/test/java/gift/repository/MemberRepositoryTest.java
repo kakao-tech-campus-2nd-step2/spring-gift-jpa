@@ -16,31 +16,18 @@ class MemberRepositoryTest {
     private MemberRepository memberRepository;
 
     private Member member;
-    private Member nullNameMember;
-    private Member emptyNameMember;
-    private Member nullEmailMember;
-    private Member emptyEmailMember;
-    private Member invalidEmailMember;
-    private Member nullPasswordMember;
-    private Member emptyPasswordMember;
+    private Member savedMember;
 
     @BeforeEach
     public void setUp() {
         member = new Member(1L, "kbm", "kbm@kbm.com", "mbk", "user");
-        nullNameMember = new Member(1L, null, "kbm@kbm.com", "mbk", "user");
-        emptyNameMember = new Member(1L, "", "kbm@kbm.com", "mbk", "user");
-        nullEmailMember = new Member(1L, "kbm", null, "mbk", "user");
-        emptyEmailMember = new Member(1L, "kbm", "", "mbk", "user");
-        invalidEmailMember = new Member(1L, "kbm", "kbm", "mbk", "user");
-        nullPasswordMember = new Member(1L, "kbm", "kbm@kbm.com", null, "user");
-        emptyPasswordMember = new Member(1L, "kbm", "kbm@kbm.com", "", "user");
+        savedMember = memberRepository.save(member);
     }
 
 
     @Test
     void testSave() {
         member.validate();
-        Member savedMember = memberRepository.save(member);
         assertAll(
             () -> assertThat(savedMember.getId()).isNotNull(),
             () -> assertThat(savedMember.getName()).isEqualTo(member.getName()),
@@ -53,7 +40,6 @@ class MemberRepositoryTest {
     @Test
     void testFindByEmail() {
         member.validate();
-        Member savedMember = memberRepository.save(member);
         Member foundMember = memberRepository.findByEmail(member.getEmail());
         assertAll(
             () -> assertThat(foundMember).isNotNull(),
@@ -64,6 +50,7 @@ class MemberRepositoryTest {
     @Test
     void testSaveWithNullName() {
         try {
+            Member nullNameMember = new Member(1L, null, "kbm@kbm.com", "mbk", "user");
             nullNameMember.validate();
             memberRepository.save(nullNameMember);
         } catch (IllegalArgumentException e) {
@@ -74,6 +61,7 @@ class MemberRepositoryTest {
     @Test
     void testSaveWithEmptyName() {
         try {
+            Member emptyNameMember = new Member(1L, "", "kbm@kbm.com", "mbk", "user");
             emptyNameMember.validate();
             memberRepository.save(emptyNameMember);
         } catch (IllegalArgumentException e) {
@@ -84,6 +72,7 @@ class MemberRepositoryTest {
     @Test
     void testSaveWithNullEmail() {
         try {
+            Member nullEmailMember = new Member(1L, "kbm", null, "mbk", "user");
             nullEmailMember.validate();
             memberRepository.save(nullEmailMember);
         } catch (IllegalArgumentException e) {
@@ -94,6 +83,7 @@ class MemberRepositoryTest {
     @Test
     void testSaveWithEmptyEmail() {
         try {
+            Member emptyEmailMember = new Member(1L, "kbm", "", "mbk", "user");
             emptyEmailMember.validate();
             memberRepository.save(emptyEmailMember);
         } catch (IllegalArgumentException e) {
@@ -104,6 +94,7 @@ class MemberRepositoryTest {
     @Test
     void testSaveWithInvalidName() {
         try {
+            Member invalidEmailMember = new Member(1L, "kbm", "kbm", "mbk", "user");
             invalidEmailMember.validate();
             memberRepository.save(invalidEmailMember);
         } catch (IllegalArgumentException e) {
@@ -114,6 +105,7 @@ class MemberRepositoryTest {
     @Test
     void testSaveWithNullPassword() {
         try {
+            Member nullPasswordMember = new Member(1L, "kbm", "kbm@kbm.com", null, "user");
             nullPasswordMember.validate();
             memberRepository.save(nullPasswordMember);
         } catch (IllegalArgumentException e) {
@@ -124,6 +116,7 @@ class MemberRepositoryTest {
     @Test
     void testSaveWithEmptyPassword() {
         try {
+            Member emptyPasswordMember = new Member(1L, "kbm", "kbm@kbm.com", "", "user");
             emptyPasswordMember.validate();
             memberRepository.save(emptyPasswordMember);
         } catch (IllegalArgumentException e) {
