@@ -20,13 +20,13 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
     private NameValidator nameValidator;
     private final ProductService productService;
-    private String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJBRE1JTiJ9.M5YfW43tAR9_HEvIj-1Wgvkc9b_Cg23TZgDRNBoPqdU";
+    private String email = "admin";
 
     public AdminController(ProductService productService){
         this.productService = productService;
         //페이지네이션 테스트용 데이터 추가
         for(int i = 1; i <= 100; i++){
-            productService.add(token, new ProductDTO(0L, "test"+i, 1000, "https://i.namu.wiki/i/OgK0X2DAdO0K6vIBGUDvE8fR2jP0dmTu3z6mAM0JVGw310C7H3c9DmsQ_SyBc-s835u5kwHxVpe0HutSHIqo7Q.webp"));
+            productService.add(email, new ProductDTO(0L, "test"+i, 1000, "https://i.namu.wiki/i/OgK0X2DAdO0K6vIBGUDvE8fR2jP0dmTu3z6mAM0JVGw310C7H3c9DmsQ_SyBc-s835u5kwHxVpe0HutSHIqo7Q.webp"));
         }
     }
 
@@ -40,7 +40,7 @@ public class AdminController {
 
     @GetMapping
     public String getAllProducts(@RequestParam(value = "page", defaultValue = "0") int page, Model model){
-        Page<ProductDTO> products = productService.getPage(token, page);
+        Page<ProductDTO> products = productService.getPage(email, page);
         model.addAttribute("products", products);
         return "products";
     }
@@ -56,13 +56,13 @@ public class AdminController {
         if(bindingResult.hasErrors()) {
             return "add";
         }
-        productService.add(token, productDTO);
+        productService.add(email, productDTO);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/edit/{id}")
     public String updateProductForm(@PathVariable("id") Long id, Model model){
-        ProductDTO productDTO = productService.getById(token, id);
+        ProductDTO productDTO = productService.getById(email, id);
 
         model.addAttribute("product", productDTO);
         return "edit";
@@ -73,13 +73,13 @@ public class AdminController {
         if(bindingResult.hasErrors()) {
             return "edit";
         }
-        productService.edit(token, id, productDTO);
+        productService.edit(email, id, productDTO);
         return "redirect:/admin/products";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") Long id){
-        productService.delete(token, id);
+        productService.delete(email, id);
         return "redirect:/admin/products";
     }
 }

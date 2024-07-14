@@ -3,6 +3,7 @@ package gift.Controller;
 import gift.Model.DTO.ProductDTO;
 import gift.Model.DTO.WishDTO;
 import gift.Service.WishService;
+import gift.Token.JwtTokenProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,18 +17,18 @@ import java.util.List;
 @RequestMapping("/admin/wishlist")
 public class WishlistController {
     private final WishService wishService;
-    private String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJBRE1JTiJ9.M5YfW43tAR9_HEvIj-1Wgvkc9b_Cg23TZgDRNBoPqdU";
+    private String email = "admin";
 
     public WishlistController(WishService wishService){
         this.wishService = wishService;
         for(int i = 0; i < 100; i++){
-            wishService.add(token, "appeach");
+            wishService.add(email, "appeach");
         }
     }
 
     @GetMapping
     public String getAllWishlist(@RequestParam(value = "page", defaultValue = "0") int page, Model model){
-        Page<String> wishlists = wishService.getPage(token, page);
+        Page<String> wishlists = wishService.getPage(email, page);
         model.addAttribute("wishlists", wishlists);
         return "wishlist";
     }
