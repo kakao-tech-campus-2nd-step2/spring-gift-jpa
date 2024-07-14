@@ -39,6 +39,9 @@ public class ProductEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    public ProductEntity() {
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -55,17 +58,12 @@ public class ProductEntity {
         this.updatedAt = updatedAt;
     }
 
-
     public List<WishListEntity> getWishListEntities() {
         return wishListEntities;
     }
 
     public void setWishListEntities(List<WishListEntity> wishListEntities) {
         this.wishListEntities = wishListEntities;
-    }
-
-
-    public ProductEntity() {
     }
 
     public Long getId() {

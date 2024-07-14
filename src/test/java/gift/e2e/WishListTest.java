@@ -155,11 +155,13 @@ public class WishListTest {
 
         ResponseEntity<List<ProductDTO>> response = TestUtils.sendRequest(
             restTemplate,
-            baseUrl + "/api/wishlist?page=" + page + "&size=" + size + "&criteria=" + criteria + "&direction=" + direction,
+            baseUrl + "/api/wishlist?page=" + page + "&size=" + size + "&criteria=" + criteria
+                + "&direction=" + direction,
             HttpMethod.GET,
             null,
             authToken,
-            new ParameterizedTypeReference<>() {}
+            new ParameterizedTypeReference<>() {
+            }
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);

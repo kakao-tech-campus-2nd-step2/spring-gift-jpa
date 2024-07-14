@@ -66,12 +66,13 @@ public class WishListService {
     /**
      * 주어진 사용자 ID와 페이징 정보를 기반으로 사용자의 위시리스트를 가져옵니다.
      *
-     * @param userId    사용자 ID
-     * @param pageable  페이징 정보
+     * @param userId   사용자 ID
+     * @param pageable 페이징 정보
      * @return 사용자 위시리스트의 ProductDTO 목록
      */
     public List<ProductDTO> getWishListsByUserId(Long userId, Pageable pageable) {
-        List<WishListEntity> wishListEntities = wishListRepository.findAllByMemberEntityId(userId, pageable);
+        List<WishListEntity> wishListEntities = wishListRepository.findAllByMemberEntityId(userId,
+            pageable);
         return wishListEntities.stream()
             .map(wishListMapper::toWishListDTO)
             .map(WishListDTO::productDTO)

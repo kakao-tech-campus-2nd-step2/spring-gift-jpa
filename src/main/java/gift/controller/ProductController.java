@@ -59,10 +59,10 @@ public class ProductController {
     /**
      * 사용자 ID를 통해 사용자의 상품 목록을 가져옵니다.
      *
-     * @param page       페이지 번호, 기본값은 0
-     * @param size       페이지 크기, 기본값은 10
-     * @param criteria   정렬 기준, 기본값은 createdAt
-     * @param direction  정렬 방향, 기본값은 desc
+     * @param page      페이지 번호, 기본값은 0
+     * @param size      페이지 크기, 기본값은 10
+     * @param criteria  정렬 기준, 기본값은 createdAt
+     * @param direction 정렬 방향, 기본값은 desc
      * @return ProductDTO 목록을 포함한 ResponseEntity
      */
     @GetMapping
@@ -71,7 +71,8 @@ public class ProductController {
         @RequestParam(required = false, defaultValue = "10", value = "size") int size,
         @RequestParam(required = false, defaultValue = "createdAt", value = "criteria") String criteria,
         @RequestParam(required = false, defaultValue = "desc", value = "direction") String direction) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(direction.toUpperCase()), criteria));
+        Pageable pageable = PageRequest.of(page, size,
+            Sort.by(Sort.Direction.valueOf(direction.toUpperCase()), criteria));
         List<ProductDTO> productIds = productService.getAllProducts(pageable);
         return ResponseEntity.ok(productIds);
     }
