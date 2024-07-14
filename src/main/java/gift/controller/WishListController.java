@@ -44,14 +44,14 @@ public class WishListController {
     @PostMapping
     public ResponseEntity<WishResponse> addProductToWishList(@RequestBody WishRequest wishRequest, @LoginMember
     LoginUserDTO member) {
-        wishListService.addWishList(member.getId(), wishRequest);
-        return ResponseEntity.ok().build();
+        WishResponse addedWish = wishListService.addWishList(member.getId(), wishRequest);
+        return ResponseEntity.ok(addedWish);
     }
 
     @PostMapping("{id}")
     public ResponseEntity<WishResponse> updateQuantityToWishList(@PathVariable("id") Long wishId, Long userId, int quantity) {
-        wishListService.updateProductQuantity(wishId, userId, quantity);
-        return ResponseEntity.ok().build();
+        WishResponse updatedWish = wishListService.updateProductQuantity(wishId, userId, quantity);
+        return ResponseEntity.ok(updatedWish);
     }
 
     @DeleteMapping("/{id}")
