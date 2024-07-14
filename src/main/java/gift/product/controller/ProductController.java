@@ -2,7 +2,6 @@ package gift.product.controller;
 
 import gift.product.model.dto.CreateProductAdminRequest;
 import gift.product.model.dto.CreateProductRequest;
-import gift.product.model.dto.Product;
 import gift.product.model.dto.ProductResponse;
 import gift.product.model.dto.UpdateProductRequest;
 import gift.product.service.ProductService;
@@ -10,6 +9,10 @@ import gift.user.model.dto.AppUser;
 import gift.user.resolver.LoginUser;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,18 +33,22 @@ public class ProductController {
         this.productService = productService;
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> findProductById(@PathVariable Long id) {
-        final Product product = productService.findProduct(id);
-        ProductResponse response = new ProductResponse(product.getId(), product.getName(), product.getPrice(),
-                product.getImageUrl());
+        final ProductResponse response = productService.findProductWithWishCount(id);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<Page<ProductResponse>> findAllProductPage(
+            @PageableDefault(size = 10, sort = "wishCount", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ProductResponse> response = productService.findAllProductWithWishCountPageable(pageable);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> findAllProduct() {
-        final List<ProductResponse> response = productService.findAllProduct();
+        final List<ProductResponse> response = productService.findAllProductWithWishCount();
         return ResponseEntity.ok().body(response);
     }
 

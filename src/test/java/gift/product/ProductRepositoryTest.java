@@ -2,37 +2,48 @@ package gift.product;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gift.product.model.ProductRepository;
 import gift.product.model.dto.Product;
+import gift.user.model.UserRepository;
 import gift.user.model.dto.AppUser;
 import gift.user.model.dto.Role;
+import gift.wishlist.model.WishListRepository;
+import gift.wishlist.model.dto.Wish;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.Tuple;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ActiveProfiles;
 
 @DataJpaTest
-@ActiveProfiles("test")
-@EntityScan(basePackages = "gift.product.model")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private WishListRepository wishListRepository;
     private AppUser appUser;
     private Product product;
+    private Wish wish;
 
     @BeforeEach
     public void setUp() {
         appUser = new AppUser("aabb@kakao.com", "1234", Role.USER, "aaaa");
         product = new Product("Test", 1000, "url", appUser);
+        wish = new Wish(appUser, product, 5);
+        appUser = userRepository.save(appUser);
+        product = productRepository.save(product);
+        wishListRepository.save(wish);
+
     }
 
     @Test
@@ -43,17 +54,39 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    public void testFindAllByIsActiveTrue() {
-        List<Product> products = productRepository.findAllByIsActiveTrue();
-        assertTrue(products.stream().allMatch(Product::isActive));
-    }
-
-    @Test
     public void testSaveAndDelete() {
         Product savedProduct = productRepository.save(product);
 
         productRepository.delete(savedProduct);
         Optional<Product> result = productRepository.findById(savedProduct.getId());
         assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void testFindProductWithWishCount() {
+        Optional<Tuple> optionalResult = productRepository.findProductByIdWithWishCount(product.getId());
+
+        optionalResult.isPresent();
+        Tuple result = optionalResult.get();
+
+        Product foundProduct = result.get("product", Product.class);
+        Long wishCount = result.get("wishCount", Long.class);
+
+        assertEquals(product.getName(), foundProduct.getName());
+        assertEquals(1L, wishCount);
+    }
+
+    @Test
+    public void testFindAllActiveProductsWithWishCount() {
+        List<Tuple> results = productRepository.findAllActiveProductsWithWishCount();
+        assertFalse(results.isEmpty());
+
+        for (Tuple result : results) {
+            Product foundProduct = result.get("product", Product.class);
+            Long wishCount = result.get("wishCount", Long.class);
+
+            assertTrue(foundProduct.isActive());
+            assertNotNull(wishCount);
+        }
     }
 }

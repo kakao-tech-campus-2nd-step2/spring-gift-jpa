@@ -1,5 +1,6 @@
 package gift.user.model.dto;
 
+import gift.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,7 +13,7 @@ import security.SHA256Util;
 
 @Entity
 @Table(name = "app_user")
-public class AppUser {
+public class AppUser extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,7 +24,7 @@ public class AppUser {
     @Column(nullable = false, length = 100)
     private String password;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
     private Boolean isActive = true;
 
     @Enumerated(EnumType.STRING)

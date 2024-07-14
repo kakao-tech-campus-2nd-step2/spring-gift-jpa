@@ -1,6 +1,7 @@
 package gift.product.model.dto;
 
 
+import gift.BaseTimeEntity;
 import gift.user.model.dto.AppUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "product")
-public class Product {
+public class Product extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,7 +33,7 @@ public class Product {
     @JoinColumn(name = "user_id", nullable = false)
     private AppUser seller;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
     private boolean isActive = true; // 선물의 활성화 상태
 
     public Product(String name, int price, String imageUrl, AppUser seller) {

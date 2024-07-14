@@ -1,5 +1,6 @@
 package gift.wishlist.model.dto;
 
+import gift.BaseTimeEntity;
 import gift.product.model.dto.Product;
 import gift.user.model.dto.AppUser;
 import jakarta.persistence.Column;
@@ -14,7 +15,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "wish")
-public class Wish {
+public class Wish extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +32,7 @@ public class Wish {
     @Column(nullable = false)
     private int quantity;
 
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
     private boolean isActive = true;
 
     public Wish() {

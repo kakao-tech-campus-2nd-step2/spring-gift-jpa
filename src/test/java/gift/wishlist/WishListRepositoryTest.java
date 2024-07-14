@@ -48,7 +48,7 @@ public class WishListRepositoryTest {
     public void testFindWishesByUserId() {
         System.out.println("appUser = " + appUser.getId());
         // 테스트 시작
-        List<Wish> results = wishListRepository.findWishesByUserIdAndIsActiveTrue(appUser.getId());
+        List<Wish> results = wishListRepository.findWishesByAppUserIdAndIsActiveTrue(appUser.getId());
 
         assertThat(results).isNotEmpty();
         assertThat(results.get(0).getProduct().getId()).isEqualTo(product.getId());

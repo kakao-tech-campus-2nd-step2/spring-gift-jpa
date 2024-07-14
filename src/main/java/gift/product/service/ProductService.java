@@ -9,8 +9,12 @@ import gift.user.exception.ForbiddenException;
 import gift.user.model.dto.AppUser;
 import gift.user.model.dto.Role;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.Tuple;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,11 +33,29 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> findAllProduct() {
-        return productRepository.findAllByIsActiveTrue().stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getPrice(),
-                        product.getImageUrl()))
+    public ProductResponse findProductWithWishCount(Long id) {
+        Optional<Tuple> result = productRepository.findProductByIdWithWishCount(id);
+        return result.map(
+                        tuple -> new ProductResponse(tuple.get("product", Product.class), tuple.get("wishCount", Long.class)))
+                .orElseThrow(() -> new EntityNotFoundException("Product"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> findAllProductWithWishCount() {
+        List<Tuple> results = productRepository.findAllActiveProductsWithWishCount();
+        return results.stream()
+                .map(tuple -> new ProductResponse(tuple.get("product", Product.class),
+                        tuple.get("wishCount", Long.class)))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> findAllProductWithWishCountPageable(Pageable pageable) {
+        Page<Tuple> results = productRepository.findAllActiveProductsWithWishCountPageable(pageable);
+        return results.map(tuple -> new ProductResponse(
+                tuple.get("product", Product.class),
+                tuple.get("wishCount", Long.class))
+        );
     }
 
     @Transactional

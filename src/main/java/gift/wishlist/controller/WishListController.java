@@ -7,6 +7,10 @@ import gift.wishlist.model.dto.AddWishRequest;
 import gift.wishlist.model.dto.WishListResponse;
 import gift.wishlist.service.WishListService;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,6 +45,14 @@ public class WishListController {
                                                                       @PathVariable("userId") Long userId) {
         userService.verifyAdminAccess(loginAppUser);
         final List<WishListResponse> responses = wishListService.getWishList(userId);
+        return ResponseEntity.ok().body(responses);
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<Page<WishListResponse>> getWishListForUser(@LoginUser AppUser loginAppUser,
+                                                                     @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC)
+                                                                     Pageable pageable) {
+        Page<WishListResponse> responses = wishListService.getWishList(loginAppUser.getId(), pageable);
         return ResponseEntity.ok().body(responses);
     }
 

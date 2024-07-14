@@ -11,6 +11,8 @@ import gift.wishlist.model.dto.WishListResponse;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +31,7 @@ public class WishListService {
 
     @Transactional(readOnly = true)
     public List<WishListResponse> getWishList(Long userId) {
-        List<Wish> wishes = wishListRepository.findWishesByUserIdAndIsActiveTrue(userId);
+        List<Wish> wishes = wishListRepository.findWishesByAppUserIdAndIsActiveTrue(userId);
         if (wishes.isEmpty()) {
             throw new EntityNotFoundException("WishList");
         }
@@ -44,6 +46,18 @@ public class WishListService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public Page<WishListResponse> getWishList(Long userId, Pageable pageable) {
+        Page<Wish> wishes = wishListRepository.findWishesByAppUserIdAndIsActiveTrue(userId, pageable);
+        return wishes.map(w -> new WishListResponse(
+                w.getId(),
+                w.getProduct().getId(),
+                w.getProduct().getName(),
+                w.getProduct().getPrice(),
+                w.getProduct().getImageUrl(),
+                w.getQuantity()));
+    }
+
     @Transactional
     public void addWish(Long userId, AddWishRequest addWishRequest) {
         AppUser appUser = userService.findUser(userId);
@@ -54,7 +68,7 @@ public class WishListService {
 
     @Transactional
     public void updateWishQuantity(Long userId, Long wishId, int quantity) {
-        Wish wish = wishListRepository.findByIdAndUserIdAndIsActiveTrue(wishId, userId)
+        Wish wish = wishListRepository.findByIdAndAppUserIdAndIsActiveTrue(wishId, userId)
                 .orElseThrow(() -> new EntityNotFoundException("Wish"));
         wish.setQuantity(quantity);
         wishListRepository.save(wish);
@@ -62,7 +76,7 @@ public class WishListService {
 
     @Transactional
     public void deleteWish(Long userId, Long wishId) {
-        Wish wish = wishListRepository.findByIdAndUserIdAndIsActiveTrue(wishId, userId)
+        Wish wish = wishListRepository.findByIdAndAppUserIdAndIsActiveTrue(wishId, userId)
                 .orElseThrow(() -> new EntityNotFoundException("Wish"));
         wish.setActive(false);
         wishListRepository.save(wish);
