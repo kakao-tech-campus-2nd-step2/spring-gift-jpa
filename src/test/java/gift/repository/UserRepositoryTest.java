@@ -23,7 +23,9 @@ public class UserRepositoryTest {
     @DisplayName("회원가입")
     void register() {
         User user = new User(null, "yso8296", "yso8296@gmail.com");
+
         User actual = userRepository.save(user);
+
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
             () -> assertThat(actual.getPassword()).isEqualTo("yso8296"),

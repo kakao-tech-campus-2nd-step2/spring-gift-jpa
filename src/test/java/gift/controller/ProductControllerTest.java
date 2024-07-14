@@ -43,10 +43,11 @@ public class ProductControllerTest {
         var requestEntity = new RequestEntity<>(productRequest, headers, HttpMethod.POST, URI.create(url));
 
         var actual = restTemplate.exchange(requestEntity, String.class);
+
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
-    public HttpHeaders getToken() throws JsonProcessingException {
+    public HttpHeaders getToken() {
         var url = "http://localhost:" + port + registerUrl;
         var userRequest = new UserRequest("yso8296", "yso8296@gmail.com");
         var requestEntity = new RequestEntity<>(userRequest, HttpMethod.POST, URI.create(url));
@@ -54,10 +55,12 @@ public class ProductControllerTest {
 
         url = "http://localhost:" + port + loginUrl;
         requestEntity = new RequestEntity<>(userRequest, HttpMethod.POST, URI.create(url));
+
         var actual = restTemplate.exchange(requestEntity, String.class);
         var token = actual.getBody();
         var headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
+
         return headers;
     }
 }

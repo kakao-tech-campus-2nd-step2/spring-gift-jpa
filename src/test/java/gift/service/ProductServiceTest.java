@@ -57,7 +57,9 @@ public class ProductServiceTest {
         ProductRequest productRequest2 = new ProductRequest("product2", 2000, "image2.jpg");
         productService.register(productRequest1);
         productService.register(productRequest2);
+
         PageResponse<ProductResponse> products = productService.findAllProduct(1, 10);
+
         assertThat(products.size()).isEqualTo(2);
     }
 
@@ -68,7 +70,9 @@ public class ProductServiceTest {
         productService.register(productRequest);
         ProductRequest updateRequest = new ProductRequest("update1", 2000, "update1.jpg");
         ProductResponse response = productService.register(productRequest);
+
         ProductResponse product = productService.updateProduct(response.id(), updateRequest);
+
         assertAll(
             () -> assertThat(product.name()).isEqualTo("update1"),
             () -> assertThat(product.price()).isEqualTo(2000),
@@ -83,8 +87,10 @@ public class ProductServiceTest {
         ProductRequest productRequest2 = new ProductRequest("product2", 2000, "image2.jpg");
         productService.register(productRequest1);
         productService.register(productRequest2);
+
         productService.deleteProduct(1L);
         PageResponse<ProductResponse> products = productService.findAllProduct(1, 10);
+
         assertThat(products.size()).isEqualTo(1);
     }
 }

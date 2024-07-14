@@ -40,7 +40,9 @@ public class WishRepositoryTest {
         userRepository.save(user);
         productRepository.save(product);
         Wish wish = new Wish(null, user, product, 3);
+
         Wish actual = wishRepository.save(wish);
+
         assertAll(
             () -> assertThat(actual.getId()).isNotNull(),
             () -> assertThat(actual.getProduct()).isEqualTo(wish.getProduct()),
@@ -59,7 +61,9 @@ public class WishRepositoryTest {
         productRepository.save(product);
         Wish wish = new Wish(null, user, product, 3);
         wishRepository.save(wish);
+
         Page<Wish> wishes = wishRepository.findByUserId(user.getId(), pageRequest);
+
         assertThat(wishes).isNotNull();
     }
 
@@ -72,8 +76,10 @@ public class WishRepositoryTest {
         productRepository.save(product);
         Wish wish = new Wish(null, user, product, 3);
         wishRepository.save(wish);
+
         wishRepository.deleteByProductIdAndUserId(product.getId(), user.getId());
         Optional<Wish> wishes = wishRepository.findByProductIdAndUserId(product.getId(), user.getId());
+
         assertThat(wishes).isEmpty();
     }
 }

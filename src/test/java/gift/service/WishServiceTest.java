@@ -34,9 +34,11 @@ public class WishServiceTest {
         ProductRequest productRequest = new ProductRequest("product1", 1000, "image1.jpg");
         UserResponse user = userService.register(userRequest);
         ProductResponse product = productService.register(productRequest);
+
         wishService.addWistList(user.id(), new WishRequest(product.id(), 3));
         PageResponse<WishResponse> wishes = wishService.findAllWish(user.id(), 1, 10);
         WishResponse actual = wishes.responses().get(0);
+
         assertAll(
             () -> assertThat(actual.wishId()).isNotNull(),
             () -> assertThat(actual.productId()).isNotNull(),
@@ -55,6 +57,7 @@ public class WishServiceTest {
         UserResponse user = userService.register(userRequest);
         ProductResponse product = productService.register(productRequest);
         wishService.addWistList(user.id(), new WishRequest(product.id(), 3));
+
         PageResponse<WishResponse> wishes = wishService.findAllWish(user.id(), 1, 10);
 
         assertThat(wishes).isNotNull();
@@ -68,8 +71,10 @@ public class WishServiceTest {
         UserResponse user = userService.register(userRequest);
         ProductResponse product = productService.register(productRequest);
         wishService.addWistList(user.id(), new WishRequest(product.id(), 3));
+
         wishService.deleteWishList(user.id(), product.id());
         PageResponse<WishResponse> wishes = wishService.findAllWish(user.id(), 1, 10);
+
         assertThat(wishes.responses()).isEmpty();
     }
 }
