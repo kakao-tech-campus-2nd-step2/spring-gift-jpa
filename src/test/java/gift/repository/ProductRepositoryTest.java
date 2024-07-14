@@ -18,12 +18,33 @@ class ProductRepositoryTest {
 
     private Product product1;
     private Product product2;
-    private Product invalidProduct;
+    private Product nullNameProduct;
+    private Product emptyNameProduct;
+    private Product lengthNameProduct;
+    private Product invalidNameProduct;
+    private Product kakaoNameProduct;
+    private Product nullPriceProduct;
+    private Product emptyPriceProduct;
+    private Product invalidPriceProduct;
+    private Product nullImageUrlProduct;
+    private Product emptyImageUrlProduct;
+    private Product invalidImageUrlProduct;
 
     @BeforeEach
     public void setUp() {
         product1 = new Product(1L, "상품", "100", "https://kakao");
         product2 = new Product(2L, "상품2", "200", "https://kakao2");
+        nullNameProduct = new Product(1L, null,"100", "https://kakao");
+        emptyNameProduct = new Product(1L, "", "200", "https://kakao");
+        lengthNameProduct = new Product(1L, "aaaa aaaa aaaa a", "200", "https://kakao");
+        invalidNameProduct = new Product(1L, ".", "100", "https://kakao");
+        kakaoNameProduct = new Product(1L, "카카오", "100", "https://kakao");
+        nullPriceProduct = new Product(1L, "상품",null, "https://kakao");
+        emptyPriceProduct = new Product(1L, "상품", "", "https://kakao");
+        invalidPriceProduct = new Product(1L, "상품", "abcde", "https://kakao");
+        nullImageUrlProduct = new Product(1L, "상품", "100", null);
+        emptyImageUrlProduct = new Product(1L, "상품", "100", "");
+        invalidImageUrlProduct = new Product(1L, "상품", "100", "kbm");
     }
 
     @Test
@@ -74,9 +95,18 @@ class ProductRepositoryTest {
     @Test
     void testSaveWithNullName() {
         try {
-            invalidProduct = new Product(1L, null, "100", "https://kakao");
-            invalidProduct.validate();
-            productRepository.save(invalidProduct);
+            nullNameProduct.validate();
+            productRepository.save(nullNameProduct);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        }
+    }
+
+    @Test
+    void testSaveWithEmptyName() {
+        try {
+            emptyNameProduct.validate();
+            productRepository.save(emptyNameProduct);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
@@ -85,20 +115,18 @@ class ProductRepositoryTest {
     @Test
     void testSaveWithLengthName() {
         try {
-            invalidProduct = new Product(1L, "aaaaaaaaa aaaa aa", "100", "https://kakao");
-            invalidProduct.validate();
-            productRepository.save(invalidProduct);
+            lengthNameProduct.validate();
+            productRepository.save(lengthNameProduct);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
-    void testSaveWithSpecial() {
+    void testSaveWithInvalidName() {
         try {
-            invalidProduct = new Product(1L, ".@", "100", "https://kakao");
-            invalidProduct.validate();
-            productRepository.save(invalidProduct);
+            invalidNameProduct.validate();
+            productRepository.save(invalidNameProduct);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
@@ -107,31 +135,40 @@ class ProductRepositoryTest {
     @Test
     void testSaveWithKaKaoName() {
         try {
-            invalidProduct = new Product(1L, "카카오상품", "100", "https://kakao");
-            invalidProduct.validate();
-            productRepository.save(invalidProduct);
+            kakaoNameProduct.validate();
+            productRepository.save(kakaoNameProduct);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
+
 
     @Test
     void testSaveWithNullPrice() {
         try {
-            invalidProduct = new Product(1L, "상품", null, "https://kakao");
-            invalidProduct.validate();
-            productRepository.save(invalidProduct);
+            nullPriceProduct.validate();
+            productRepository.save(nullPriceProduct);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
     }
 
     @Test
+    void testSaveWithEmptyPrice() {
+        try {
+            emptyPriceProduct.validate();
+            productRepository.save(emptyPriceProduct);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        }
+    }
+
+
+    @Test
     void testSaveWithInvalidPrice() {
         try {
-            invalidProduct = new Product(1L, "상품", "가격", "https://kakao");
-            invalidProduct.validate();
-            productRepository.save(invalidProduct);
+            invalidPriceProduct.validate();
+            productRepository.save(invalidPriceProduct);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
@@ -140,9 +177,18 @@ class ProductRepositoryTest {
     @Test
     void testSaveWithNullImageUrl() {
         try {
-            invalidProduct = new Product(1L, "상품", "100", null);
-            invalidProduct.validate();
-            productRepository.save(invalidProduct);
+            nullImageUrlProduct.validate();
+            productRepository.save(nullImageUrlProduct);
+        } catch (IllegalArgumentException e) {
+            assertThat(e).isInstanceOf(IllegalArgumentException.class);
+        }
+    }
+
+    @Test
+    void testSaveWithEmptyImageUrl() {
+        try {
+            emptyImageUrlProduct.validate();
+            productRepository.save(emptyImageUrlProduct);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
@@ -151,9 +197,8 @@ class ProductRepositoryTest {
     @Test
     void testSaveWithInvalidImageUrl() {
         try {
-            Product invalidProduct = new Product(1L, "상품", "100", "kakao");
-            invalidProduct.validate();
-            productRepository.save(invalidProduct);
+            invalidImageUrlProduct.validate();
+            productRepository.save(invalidImageUrlProduct);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }
