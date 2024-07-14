@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WishDao {
+public class WishJdbcRepository {
 
     private static final String SQL_INSERT = "INSERT INTO wish (member_id, product_id, count) VALUES (?, ?, ?)";
     private static final String SQL_DELETE_BY_ID = "DELETE FROM wish WHERE id = ?";
@@ -20,7 +20,7 @@ public class WishDao {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Wish> wishRowMapper = new WishRowMapper();
 
-    public WishDao(JdbcTemplate jdbcTemplate) {
+    public WishJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

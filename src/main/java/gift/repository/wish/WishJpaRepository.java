@@ -12,12 +12,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface WishJpaRepository extends JpaRepository<Wish, Long> {
+public interface WishJpaRepository extends JpaRepository<Wish, Long>, WishRepository {
 
+    @Override
     Optional<Wish> findByMemberAndProduct(Member member, Product product);
 
     List<Wish> findByMemberId(Long memberId);
 
+    @Override
     @Query("SELECT w FROM Wish w JOIN FETCH w.member JOIN FETCH w.product WHERE w.member.id = :memberId ORDER BY w.id DESC")
     Page<Wish> findAllByMemberByIdDesc(Long memberId, Pageable pageable);
 }
