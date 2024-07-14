@@ -3,6 +3,7 @@ package gift.service;
 import gift.dto.ProductResponseDto;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
+import gift.dto.WishPageResponseDto;
 import gift.entity.User;
 import gift.entity.Product;
 import gift.entity.Wish;
@@ -11,6 +12,8 @@ import gift.exception.ErrorCode;
 import gift.mapper.ProductMapper;
 import gift.mapper.WishMapper;
 import gift.repository.WishRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,9 +41,9 @@ public class WishService {
         return WishMapper.toWishResponseDto(createdWish, ProductMapper.toProductResponseDTO(product));
     }
 
-    public List<WishResponseDto> getWishesByUserId(Long userId) {
+    public WishPageResponseDto getWishesByUserId(Long userId, Pageable pageable) {
         User user = userService.getUserEntityById(userId);
-        List<Wish> wishes = wishRepository.findByUser(user);
+        Page<Wish> wishes = wishRepository.findByUser(user, pageable);
         List<Long> productIds = wishes.stream()
                 .map(wish -> wish.getProduct().getId())
                 .collect(Collectors.toList());
@@ -49,12 +52,12 @@ public class WishService {
         Map<Long, ProductResponseDto> productMap = products.stream()
                 .collect(Collectors.toMap(ProductResponseDto::getId, product -> product));
 
-        return wishes.stream()
-                .map(wish -> {
-                    ProductResponseDto product = productMap.get(wish.getProduct().getId());
-                    return WishMapper.toWishResponseDto(wish, product);
-                })
-                .collect(Collectors.toList());
+        Page<WishResponseDto> wishResponseDtos = wishes.map(wish -> {
+            ProductResponseDto product = productMap.get(wish.getProduct().getId());
+            return WishMapper.toWishResponseDto(wish, product);
+        });
+
+        return WishPageResponseDto.fromPage(wishResponseDtos);
     }
 
     public void deleteWish(Long wishId) {

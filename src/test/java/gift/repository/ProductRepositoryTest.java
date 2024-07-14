@@ -17,7 +17,7 @@ public class ProductRepositoryTest {
     private ProductRepository productRepository;
 
     @Test
-    public void 상품_저장_조회() {
+    public void 상품_저장_후_조회_성공() {
         Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
         productRepository.save(product);
 
@@ -27,7 +27,7 @@ public class ProductRepositoryTest {
     }
 
     @Test
-    public void 상품_삭제() {
+    public void 상품_삭제_성공() {
         Product product = new Product(new ProductName("오둥이 입니다만"), 29800, "https://example.com/product1.jpg");
         productRepository.save(product);
 

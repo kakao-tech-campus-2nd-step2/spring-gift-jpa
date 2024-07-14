@@ -15,5 +15,10 @@
 ## step2 - 엔티티 모델링
 
 1. 엔티티 연관 관계 설정
-   - [ ] `Wish` 엔티티가 `User`, `Product` 참조하도록 함
-   - [ ] `user_id`, `product_id`를 FK로 가지도록 설정
+   - [x] `Wish` 엔티티가 `User`, `Product` 참조하도록 함
+   - [x] `user_id`, `product_id`를 FK로 가지도록 설정
+
+## step3 - 페이지네이션
+   - [ ] `Product` 에 대해 페이지네이션 구현
+   - [ ] `Wish` 에 대해 페이지네이션 구현
+   

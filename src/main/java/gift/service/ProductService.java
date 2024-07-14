@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.ProductPageResponseDto;
 import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
 import gift.entity.Product;
@@ -8,6 +9,9 @@ import gift.exception.BusinessException;
 import gift.exception.ErrorCode;
 import gift.mapper.ProductMapper;
 import gift.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,11 +40,10 @@ public class ProductService {
         return ProductMapper.toProductResponseDTO(existingProduct);
     }
 
-    public List<ProductResponseDto> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-                .map(ProductMapper::toProductResponseDTO)
-                .collect(Collectors.toList());
+    public ProductPageResponseDto getAllProducts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductResponseDto> productDTOs = productRepository.findAll(pageable).map(ProductMapper::toProductResponseDTO);
+        return ProductPageResponseDto.fromPage(productDTOs);
     }
 
     public ProductResponseDto getProductById(Long id) {

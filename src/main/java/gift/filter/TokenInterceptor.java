@@ -1,6 +1,7 @@
 package gift.filter;
 
 import gift.exception.BusinessException;
+import gift.exception.ErrorCode;
 import gift.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +23,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), ErrorCode.UNAUTHORIZED_REQUEST.getMessage());
             return false;
         }
 
@@ -31,7 +32,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         try {
             tokenService.validateToken(token);
         } catch (BusinessException e) {
-            response.setStatus(e.getErrorCode().getStatus().value());
+            response.sendError(e.getErrorCode().getStatus().value(), e.getMessage());
             return false;
         }
 

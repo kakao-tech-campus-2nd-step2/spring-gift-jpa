@@ -1,13 +1,12 @@
 package gift.controller;
 
+import gift.dto.ProductPageResponseDto;
 import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
 import gift.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/products")
@@ -19,9 +18,14 @@ public class ProductViewController {
     }
 
     @GetMapping
-    public String getAllProducts(Model model) {
-        List<ProductResponseDto> products = productService.getAllProducts();
-        model.addAttribute("products", products);
+    public String getAllProducts(Model model,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size) {
+        ProductPageResponseDto productPage = productService.getAllProducts(page, size);
+
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
         return "products";
     }
 
@@ -39,15 +43,9 @@ public class ProductViewController {
 
     @GetMapping("/edit/{id}")
     public String showEditProductForm(@PathVariable Long id, Model model) {
-        ProductResponseDto product = productService.getAllProducts().stream()
-                .filter(p -> p.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-        if (product != null) {
-            model.addAttribute("product", product);
-            return "product_edit_form";
-        }
-        return "redirect:/products";
+        ProductResponseDto product = productService.getProductById(id);
+        model.addAttribute("product", product);
+        return "product_edit_form";
     }
 
     @PostMapping("/edit/{id}")

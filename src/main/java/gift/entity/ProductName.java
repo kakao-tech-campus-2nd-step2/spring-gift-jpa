@@ -22,7 +22,7 @@ public class ProductName {
     @NotNull(message = NULL_NAME_ERROR_MESSAGE)
     @Size(max = MAX_NAME_LENGTH, message = MAX_LENGTH_ERROR_MESSAGE)
     @Pattern(regexp = NAME_PATTERN, message = PATTERN_ERROR_MESSAGE)
-    @Column(name = "name", nullable = false, length = 15)
+    @Column(name = "name", nullable = false, length = 15, columnDefinition = "VARCHAR(255) NOT NULL COMMENT 'Product Name'")
     private String value;
 
     protected ProductName() {

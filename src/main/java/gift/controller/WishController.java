@@ -1,15 +1,17 @@
 package gift.controller;
 
+import gift.annotation.LoginMember;
 import gift.dto.WishRequestDto;
 import gift.dto.WishResponseDto;
+import gift.dto.WishPageResponseDto;
+import gift.entity.User;
 import gift.service.WishService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/wishes")
@@ -23,15 +25,15 @@ public class WishController {
 
     @PostMapping
     @Operation(summary = "위시리스트 추가", description = "위시리스트에 새로운 상품을 추가합니다.")
-    public ResponseEntity<WishResponseDto> addWish(@RequestHeader("userId") Long userId, @RequestBody WishRequestDto wishRequestDto) {
-        WishResponseDto createdWish = wishService.addWish(userId, wishRequestDto);
+    public ResponseEntity<WishResponseDto> addWish(@LoginMember User loginUser, @RequestBody WishRequestDto wishRequestDto) {
+        WishResponseDto createdWish = wishService.addWish(loginUser.getId(), wishRequestDto);
         return new ResponseEntity<>(createdWish, HttpStatus.CREATED);
     }
 
     @GetMapping
     @Operation(summary = "위시리스트 조회", description = "사용자의 모든 위시리스트 항목을 조회합니다.")
-    public ResponseEntity<List<WishResponseDto>> getWishesByUserId(@RequestHeader("userId") Long userId) {
-        List<WishResponseDto> wishList = wishService.getWishesByUserId(userId);
+    public ResponseEntity<WishPageResponseDto> getWishesByUserId(@LoginMember User loginUser, Pageable pageable) {
+        WishPageResponseDto wishList = wishService.getWishesByUserId(loginUser.getId(), pageable);
         return new ResponseEntity<>(wishList, HttpStatus.OK);
     }
 
