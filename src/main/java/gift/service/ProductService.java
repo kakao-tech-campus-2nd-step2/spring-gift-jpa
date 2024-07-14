@@ -3,9 +3,13 @@ package gift.service;
 import gift.domain.Product;
 import gift.DTO.ProductRequest;
 import gift.repository.ProductRepository;
+import java.awt.PageAttributes;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,8 +26,10 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public List<Product> getAllProductsByIds(List<Long> productIds) {
-        return productRepository.findByIdIn(productIds);
+    public List<Product> getProductsByPage(Integer pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, 2);
+        Page<Product> page = productRepository.findAll(pageable);
+        return page.getContent();
     }
 
     public Optional<Product> getProductById(Long id) {
@@ -31,8 +37,9 @@ public class ProductService {
     }
 
     public void addProduct(ProductRequest productRequest) {
-        productRepository.findByName(productRequest.getName()).ifPresent(p -> {
-            throw new RuntimeException("Product name must be unique");
+        productRepository.findByName(productRequest.getName())
+                            .ifPresent(p -> {
+                            throw new RuntimeException("Product name must be unique");
         });
 
         Product productEntity = new Product(productRequest.getName(),
@@ -58,4 +65,5 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(() ->
             new RuntimeException("Product not found with id: " + id));
     }
+
 }

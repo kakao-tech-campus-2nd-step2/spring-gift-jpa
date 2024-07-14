@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,8 +35,10 @@ public class AdminController {
      * @return 모든 상품 목록
      */
     @GetMapping
-    public ResponseEntity<List<Product>> getProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<List<Product>> getProducts(
+        @RequestParam(defaultValue = "0") Integer page
+    ) {
+        List<Product> products = productService.getProductsByPage(page);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -55,7 +58,7 @@ public class AdminController {
     /**
      * 새로운 상품 추가
      *
-     * @param product 추가할 상품
+     * @param productRequest 추가할 상품
      * @return 같은 ID의 상품이 존재하지 않으면 201 Created, 아니면 400 Bad Request
      */
     @PostMapping
