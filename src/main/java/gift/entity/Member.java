@@ -1,5 +1,6 @@
 package gift.entity;
 
+import gift.dto.MemberDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,9 +10,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 @Entity
 public class Member {
+    private final Pattern EMAIL_PATTERN = Pattern.compile(
+            "^[A-Za-z0-9+_.-]+@(.+)$"
+    );
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,6 +47,7 @@ public class Member {
     }
 
     public Member(String email, String password, String name, String role, List<Wish> wishList) {
+        validate(email, password);
         this.email = email;
         this.password = password;
         this.name = name;
@@ -86,4 +93,22 @@ public class Member {
     public int hashCode() {
         return Objects.hash(email, password, name, role);
     }
+
+    public void validate(String email, String password) {
+        validateEmail(email);
+        validatePassword(password);
+    }
+
+    private void validateEmail(String email) {
+        if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
+            throw new IllegalArgumentException("올바른 이메일 형식이 아닙니다.");
+        }
+    }
+
+    private void validatePassword(String password) {
+        if (password == null || password.isBlank()) {
+            throw new IllegalArgumentException("비밀번호를 입력해주세요.");
+        }
+    }
+
 }

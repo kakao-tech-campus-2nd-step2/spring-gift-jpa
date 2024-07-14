@@ -20,17 +20,9 @@ public class ProductDatabaseValidator {
         this.productRepository = productRepository;
     }
 
-    public void validateProductParameter(Long id, ProductDTO productDTO) throws BadRequestException {
-        if (!Objects.equals(productDTO.id(), id)) {
-            throw new InvalidIdException("올바르지 않은 id입니다.");
-        }
-    }
-
     Product validateProduct(ProductDTO productDTO) {
         Optional<Product> optionalProduct =
-                productRepository.findByIdAndNameAndPriceAndImageUrl(productDTO.id(),
-                        productDTO.name(),
-                        productDTO.price(), productDTO.imageUrl());
+                productRepository.findByIdAndNameAndPriceAndImageUrl(productDTO.getId(), productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());
         if (optionalProduct.isEmpty()) {
             throw new BadRequestException("그러한 제품은 없습니다.");
         }

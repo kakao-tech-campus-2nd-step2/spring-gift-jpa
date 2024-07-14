@@ -8,8 +8,6 @@ import gift.exception.BadRequestExceptions.UserNotFoundException;
 import gift.exception.InternalServerExceptions.DuplicatedUserException;
 import gift.exception.InternalServerExceptions.InternalServerException;
 import gift.repository.MemberRepository;
-import gift.util.converter.MemberConverter;
-import gift.util.validator.entityValidator.MemberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -28,8 +26,7 @@ public class MemberService {
     @Transactional
     public void register(MemberDTO memberDTO) throws RuntimeException {
         try {
-            MemberValidator.validate(memberDTO);
-            Member member = MemberConverter.convertToMember(memberDTO);
+            Member member = MemberDTO.convertToMember(memberDTO);
             memberRepository.save(member);
         } catch (Exception e) {
             if (e instanceof DataIntegrityViolationException) {
@@ -55,7 +52,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public MemberDTO getMember(String email) throws RuntimeException {
         if (memberRepository.countByEmail(email) == 1) {
-            return MemberConverter.convertToMemberDTO(memberRepository.findByEmail(email).get());
+            return MemberDTO.convertToMemberDTO(memberRepository.findByEmail(email).get());
         }
 
         if (memberRepository.countByEmail(email) > 1) {

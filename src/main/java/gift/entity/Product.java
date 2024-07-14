@@ -1,5 +1,8 @@
 package gift.entity;
 
+import gift.dto.ProductDTO;
+import gift.exception.BadRequestExceptions.BadRequestException;
+import gift.exception.BadRequestExceptions.BlankContentException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,10 +11,18 @@ import jakarta.persistence.Id;
 
 import jakarta.validation.constraints.Size;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 
 @Entity
 public class Product {
+
+    private final Pattern NAME_PATTERN = Pattern.compile(
+            "[a-zA-Z0-9ㄱ-ㅎ가-힣()\\[\\]+\\-&/_ ]+"
+    );
+    private final Pattern NAME_EXCLUDE_PATTERN = Pattern.compile(
+            "^((?!카카오).)*$"
+    );
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +44,7 @@ public class Product {
     }
 
     public Product(String name, Integer price, String imageUrl) {
+        validateProduct(name, price, imageUrl);
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -55,6 +67,42 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    private void validateProduct(String name, Integer price, String imageUrl) {
+        validateName(name);
+        validatePrice(price);
+        validateImageUrl(imageUrl);
+    }
+
+    private void validateName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new BlankContentException("상품 이름을 입력해주세요.");
+        }
+        if (name.length() > 15) {
+            throw new BadRequestException("제품명 길이는 1~15자만 가능합니다.");
+        }
+        if (!NAME_PATTERN.matcher(name).matches()) {
+            throw new BadRequestException("( ), [ ], +, -, &, /, _을 제외한 특수문자는 입력할 수 없습니다.");
+        }
+        if (!NAME_EXCLUDE_PATTERN.matcher(name).matches()) {
+            throw new BadRequestException("카카오가 포함된 문구는 담당 MD와 협의한 후에 사용해주시기 바랍니다.");
+        }
+    }
+
+    private void validatePrice(Integer price) {
+        if (price == null) {
+            throw new BlankContentException("가격을 입력해주세요.");
+        }
+        if (price < 0) {
+            throw new BadRequestException("가격은 0 이상, 2147483647 이하이여야 합니다.");
+        }
+    }
+
+    private void validateImageUrl(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) {
+            throw new BlankContentException("이미지 URL을 입력해주세요.");
+        }
     }
 
     @Override

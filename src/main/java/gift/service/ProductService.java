@@ -1,20 +1,22 @@
 package gift.service;
 
 import gift.dto.ProductDTO;
+import gift.dto.WishDTO;
 import gift.entity.Product;
 import gift.exception.BadRequestExceptions.BadRequestException;
+import gift.exception.BadRequestExceptions.InvalidIdException;
 import gift.exception.BadRequestExceptions.NoSuchProductIdException;
 import gift.exception.InternalServerExceptions.InternalServerException;
 import gift.repository.ProductRepository;
 import gift.repository.WishRepository;
-import gift.util.converter.ProductConverter;
 import gift.util.validator.databaseValidator.ProductDatabaseValidator;
-import gift.util.validator.entityValidator.ProductValidator;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,23 +24,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductService {
 
-    private final ProductDatabaseValidator productDatabaseValidator;
     private final ProductRepository productRepository;
     private final WishRepository wishRepository;
 
     @Autowired
-    public ProductService(ProductDatabaseValidator productDatabaseValidator,
-            ProductRepository productRepository, WishRepository wishRepository) {
+    public ProductService (ProductRepository productRepository, WishRepository wishRepository) {
         this.productRepository = productRepository;
-        this.productDatabaseValidator = productDatabaseValidator;
         this.wishRepository = wishRepository;
     }
 
     @Transactional
     public void addProduct(ProductDTO productDTO) throws RuntimeException {
         try {
-            ProductValidator.validateProduct(productDTO);
-            Product product = ProductConverter.convertToProduct(productDTO);
+            Product product = ProductDTO.convertToProduct(productDTO);
             productRepository.save(product);
         } catch (Exception e) {
             if (e instanceof DataIntegrityViolationException) {
@@ -52,20 +50,26 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductDTO> getProductList(Pageable pageable) {
-        return ProductConverter.convertToProductDTO(productRepository.findAll(pageable));
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        List<ProductDTO> productDTOList = productPage.getContent().stream().map(ProductDTO::convertToProductDTO).toList();
+
+        return new PageImpl<>(productDTOList, productPage.getPageable(), productPage.getTotalElements());
     }
 
     @Transactional
     public void updateProduct(Long id, ProductDTO productDTO) throws RuntimeException {
-        productDatabaseValidator.validateProductParameter(id, productDTO);
-        ProductValidator.validateProduct(productDTO);
+        if(!id.equals(productDTO.getId()))
+            throw new InvalidIdException("올바르지 않은 id입니다.");
+
         Optional<Product> productInDb = productRepository.findById(id);
 
-        if (productInDb.isEmpty()) {
+        if (productInDb.isEmpty())
             throw new NoSuchProductIdException("id가 %d인 상품은 존재하지 않습니다.".formatted(id));
-        }
+
+        Product product = ProductDTO.convertToProduct(productDTO);
         Product productInDB = productInDb.get();
-        productInDB.changeProduct(productDTO.name(), productDTO.price(), productDTO.imageUrl());
+        productInDB.changeProduct(product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     @Transactional
