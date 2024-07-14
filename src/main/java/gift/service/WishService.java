@@ -10,6 +10,9 @@ import gift.repository.UserRepositoryInterface;
 import gift.repository.WishRepositoryInterface;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 @Service
@@ -78,5 +81,9 @@ public class WishService {
         String userId = userInfo[1];
 
         return Long.parseLong(userId);
+    }
+
+    public Page<Wish> getWishes(Pageable pageable) {
+        return wishRepositoryInterface.findAll(pageable);
     }
 }
