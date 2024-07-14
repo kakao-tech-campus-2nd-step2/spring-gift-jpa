@@ -21,5 +21,5 @@
   - [x] Product 와 Wishlist 연관 관계 매핑
   - [x] Member 와 Wishlist 연관 관계 매핑
 # step3
-- [ ] pagination 구현
+- [x] pagination 구현
 - [ ] pagination Test 작성
