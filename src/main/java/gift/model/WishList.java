@@ -54,7 +54,6 @@ public class WishList {
         this.member = member;
     }
 
-
     public void setProduct(Product product) {
         this.product = product;
     }

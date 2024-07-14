@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,8 @@ public class ProductController {
 
     // 모든 상품 조회
     @GetMapping
-    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
-        List<ProductResponseDTO> products = productService.getAllProducts();
+    public ResponseEntity<Page<ProductResponseDTO>> getAllProducts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Page<ProductResponseDTO> products = productService.getAllProducts(page, size);
         return ResponseEntity.ok(products);
     }
     // 특정 ID의 상품 조회
@@ -38,8 +39,8 @@ public class ProductController {
 
     // 새로운 상품 생성
     @PostMapping
-    public ResponseEntity<List<ProductResponseDTO>> createProduct(@Valid @RequestBody ProductRequestDTO productRequest) {
-        List<ProductResponseDTO> products = productService.createProduct(productRequest);
+    public ResponseEntity<Page<ProductResponseDTO>> createProduct(@Valid @RequestBody ProductRequestDTO productRequest, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Page<ProductResponseDTO> products = productService.createProduct(productRequest, page, size);
         return ResponseEntity.status(201).body(products);
     }
 

@@ -6,6 +6,8 @@ import gift.model.Product;
 import gift.repository.ProductRepository;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,13 +19,9 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<ProductResponseDTO> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        List<ProductResponseDTO> productResponseDTOs = new ArrayList<>();
-        for (Product product : products) {
-            productResponseDTOs.add(new ProductResponseDTO(product));
-        }
-        return productResponseDTOs;
+    public Page<ProductResponseDTO> getAllProducts(int page, int size) {
+        Page<Product> products = productRepository.findAll(PageRequest.of(page, size));
+        return products.map(ProductResponseDTO::new);
     }
 
     public Optional<ProductResponseDTO> getProductById(Long id) {
@@ -36,13 +34,10 @@ public class ProductService {
             .orElseThrow(() -> new IllegalArgumentException("상품 정보를 찾을 수 없습니다."));
     }
 
-    public List<ProductResponseDTO> createProduct(ProductRequestDTO productRequest) {
-        Product product = new Product();
-        product.setName(productRequest.getName());
-        product.setImageUrl(productRequest.getImageUrl());
-        product.setPrice(productRequest.getPrice());
+    public Page<ProductResponseDTO> createProduct(ProductRequestDTO productRequest, int page, int size) {
+        Product product = new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
         productRepository.save(product);
-        return getAllProducts();
+        return getAllProducts(page, size);
     }
 
     public Optional<ProductResponseDTO> updateProduct(Long id, ProductRequestDTO productRequest) {
