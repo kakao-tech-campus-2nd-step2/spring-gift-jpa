@@ -6,6 +6,7 @@ import gift.exception.DuplicatedEmailException;
 import gift.exception.InvalidPasswordException;
 import gift.exception.NoSuchFieldException;
 import gift.repository.MemberRepository;
+import gift.security.hash.Hasher;
 import gift.security.jwt.TokenProvider;
 import gift.util.pagenation.PageInfoDTO;
 import gift.util.pagenation.PageableGenerator;
@@ -36,13 +37,9 @@ public class MemberService {
         )).toList();
     }
 
-    public static String hashPassword(String plainPw) {
-        return BCrypt.hashpw(plainPw, BCrypt.gensalt());
-    }
-
     public TokenResponseDTO signUp(MemberRequestDTO memberRequestDTO) {
         String email = memberRequestDTO.email();
-        String encryptedPW = hashPassword(memberRequestDTO.password());
+        String encryptedPW = Hasher.hashPassword(memberRequestDTO.password());
 
         memberRepository.findByEmail(email).ifPresent((member) -> {
             throw new DuplicatedEmailException("Email already exists");
@@ -82,7 +79,7 @@ public class MemberService {
     }
 
     public void updatePw(long id, PwUpdateDTO pwUpdateDTO) {
-        String encryptedPW = hashPassword(pwUpdateDTO.password());
+        String encryptedPW = Hasher.hashPassword(pwUpdateDTO.password());
 
         Member member = memberRepository.findById(id).get();
         member.setPassword(encryptedPW);
@@ -91,7 +88,7 @@ public class MemberService {
     }
 
     public void updatePw(String email, PwUpdateDTO pwUpdateDTO) {
-        String encryptedPW = hashPassword(pwUpdateDTO.password());
+        String encryptedPW = Hasher.hashPassword(pwUpdateDTO.password());
 
         Member member = memberRepository.findByEmail(email).orElseThrow(NoSuchFieldException::new);
         member.setPassword(encryptedPW);
