@@ -5,6 +5,9 @@ import gift.dto.request.WishlistNameRequest;
 import gift.service.WishlistService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +34,10 @@ public class WishlistController {
     }
 
     @GetMapping("/member/{memberId}")
-    public List<WishlistItem> getWishlist(@PathVariable Long memberId) {
-        return wishlistService.getWishlistByMemberId(memberId);
+    public String getWishlist(@PathVariable Long memberId, Model model, Pageable pageable) {
+        Page<WishlistItem> wishlist = wishlistService.getWishlistByMemberId(memberId, pageable);
+        model.addAttribute("wishlist", wishlist);
+        model.addAttribute("memberId", memberId);
+        return "wishlist-list";
     }
 }
