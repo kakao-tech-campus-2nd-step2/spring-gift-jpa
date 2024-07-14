@@ -1,4 +1,4 @@
-package gift.DTO;
+package gift.dto;
 
 import org.springframework.data.domain.Sort;
 

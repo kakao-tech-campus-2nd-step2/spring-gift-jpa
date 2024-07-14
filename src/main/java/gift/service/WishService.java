@@ -1,10 +1,10 @@
 package gift.service;
 
-import gift.DTO.PageRequestDTO;
+import gift.dto.PageRequestDTO;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
-import gift.DTO.WishDTO;
+import gift.dto.WishDTO;
 import gift.repository.WishRepository;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;

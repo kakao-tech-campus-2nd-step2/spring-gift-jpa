@@ -1,7 +1,7 @@
 package gift.controller;
 
-import gift.DTO.PageRequestDTO;
-import gift.DTO.WishDTO;
+import gift.dto.PageRequestDTO;
+import gift.dto.WishDTO;
 import gift.model.Member;
 import gift.service.WishService;
 import jakarta.servlet.http.HttpServletRequest;

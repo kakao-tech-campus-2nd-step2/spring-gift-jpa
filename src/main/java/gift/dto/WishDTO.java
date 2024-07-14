@@ -1,4 +1,4 @@
-package gift.DTO;
+package gift.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import gift.model.Wish;

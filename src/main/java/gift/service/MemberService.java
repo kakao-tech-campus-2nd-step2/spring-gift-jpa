@@ -1,7 +1,7 @@
 package gift.service;
 
 import gift.model.CreateJwtToken;
-import gift.DTO.LogInMemberDTO;
+import gift.dto.LogInMemberDTO;
 import gift.model.Member;
 import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;

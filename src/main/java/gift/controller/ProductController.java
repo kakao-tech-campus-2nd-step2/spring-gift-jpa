@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.DTO.PageRequestDTO;
+import gift.dto.PageRequestDTO;
 import gift.service.ProductService;
 import gift.model.Product;
 import org.springframework.data.domain.Page;
