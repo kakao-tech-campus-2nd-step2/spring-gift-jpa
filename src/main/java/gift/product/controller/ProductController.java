@@ -6,8 +6,10 @@ import gift.global.response.SimpleResultResponseDto;
 import gift.global.utils.ResponseHelper;
 import gift.product.domain.Product;
 import gift.product.dto.ProductRequestDto;
+import gift.product.dto.ProductResponseListDto;
 import gift.product.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +24,16 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("")
+    // 차후에 삭제 예정
+    @GetMapping("/all")
     public ResponseEntity<ResultResponseDto<List<Product>>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
+        return ResponseHelper.createResponse(ResultCode.GET_ALL_PRODUCTS_SUCCESS, products);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<ResultResponseDto<ProductResponseListDto>> getProductsByPage(@RequestParam(name = "page") int page) {
+        ProductResponseListDto products = productService.getProductsByPage(page);
         return ResponseHelper.createResponse(ResultCode.GET_ALL_PRODUCTS_SUCCESS, products);
     }
 

@@ -4,6 +4,8 @@ import gift.product.domain.ImageUrl;
 import gift.product.domain.ProductName;
 import gift.wish.domain.ProductCount;
 import gift.wish.domain.Wish;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;

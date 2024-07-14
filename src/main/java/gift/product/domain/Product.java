@@ -1,9 +1,12 @@
 package gift.product.domain;
 
 import gift.product.dto.ProductRequestDto;
+import gift.wish.domain.Wish;
 import jakarta.persistence.*;
 import org.hibernate.Hibernate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,6 +21,9 @@ public class Product {
     private ProductPrice price;
     @Embedded
     private ImageUrl imageUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    List<Wish> wishes = new ArrayList<>();
 
     // JDBC 에서 엔티티 클래스를 인스턴스화할 때 반드시 기본 생성자와 파라미터 생성자가 필요하다
     public Product() {

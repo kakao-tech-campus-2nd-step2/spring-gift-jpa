@@ -1,15 +1,16 @@
 package gift.wish.service;
 
 import gift.member.domain.Member;
-import gift.member.exception.MemberNotFoundException;
 import gift.member.service.MemberService;
 import gift.product.domain.Product;
 import gift.product.service.ProductService;
 import gift.wish.domain.Wish;
 import gift.wish.dto.WishResponseDto;
+import gift.wish.dto.WishResponseListDto;
 import gift.wish.dto.WishServiceDto;
 import gift.wish.exception.WishNotFoundException;
 import gift.wish.repository.WishRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class WishService {
     private final WishRepository wishRepository;
     private final MemberService memberService;
     private final ProductService productService;
+    private static final int WISH_SIZE = 10;
 
     public WishService(WishRepository wishRepository, MemberService memberService, ProductService productService) {
         this.wishRepository = wishRepository;
@@ -29,6 +31,11 @@ public class WishService {
     public List<WishResponseDto> getAllWishesByMember(Member member) {
         return WishResponseDto.wishListToWishResponseList(
                 wishRepository.findAllByMemberId(member.getId()));
+    }
+
+    public WishResponseListDto getWishesByMemberAndPage(Member member, int page) {
+        return WishResponseListDto.wishPageToWishResponseListDto(
+                wishRepository.findAllByMemberId(member.getId(), PageRequest.of(page, WISH_SIZE)));
     }
 
     public WishResponseDto getWishById(Long id) {

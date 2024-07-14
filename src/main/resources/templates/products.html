@@ -34,6 +34,12 @@
         <tbody id="productTableBody">
         </tbody>
     </table>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination" id="pagination">
+        </ul>
+    </nav>
 </div>
 
 <!-- Product Modal -->
@@ -74,23 +80,19 @@
 
 <script>
     $(document).ready(function () {
-        // API 엔드포인트 기본 URL
         const apiBaseUrl = '/api/products';
+        let currentPage = 0;
 
-        // 제품 목록을 서버에서 가져와서 테이블에 표시하는 함수
-        function loadProducts() {
-            $.get(apiBaseUrl, function (response) {
-                // 테이블 본문을 비우기
+        function loadProducts(page) {
+            $.get(apiBaseUrl + '?page=' + page, function (response) {
                 $('#productTableBody').empty();
-
-                // products 데이터로 테이블 행 생성
-                response.data.forEach(product => {
+                response.data.products.forEach(product => {
                     $('#productTableBody').append(`
                         <tr data-id="${product.id}">
                             <td><input type="checkbox" class="productCheckbox"></td>
-                            <td>${product.name}</td>
-                            <td>${product.price}</td>
-                            <td>${product.imageUrl}</td>
+                            <td>${product.name.value}</td>
+                            <td>${product.price.value}</td>
+                            <td>${product.imageUrl.value}</td>
                             <td>
                                 <button class="btn btn-warning btn-sm editProduct">✏️</button>
                                 <button class="btn btn-danger btn-sm deleteProduct">🗑️</button>
@@ -98,10 +100,27 @@
                         </tr>
                     `);
                 });
+
+                $('#pagination').empty();
+                for (let i = 0; i < response.data.page; i++) {
+                    $('#pagination').append(`
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#">${i + 1}</a>
+                        </li>
+                    `);
+                }
             });
         }
 
-        // "Add New Product" 버튼 클릭 시 모달을 열고 폼 초기화
+        $('#pagination').on('click', '.page-link', function (e) {
+            e.preventDefault();
+            const page = $(this).text() - 1;
+            if (page !== currentPage) {
+                currentPage = page;
+                loadProducts(currentPage);
+            }
+        });
+
         $('#addProduct').click(function () {
             $('#productModalLabel').text('Add New Product');
             $('#productForm')[0].reset();
@@ -109,16 +128,14 @@
             $('#productModal').modal('show');
         });
 
-        // "Save changes" 버튼 클릭 시 폼 데이터를 서버로 전송하여 저장
         $('#saveProduct').click(function () {
             const productData = {
-                name: $('#productName').val(),
-                price: $('#productPrice').val(),
-                imageUrl: $('#productImageUrl').val()
+                name: { value: $('#productName').val() },
+                price: { value: $('#productPrice').val() },
+                imageUrl: { value: $('#productImageUrl').val() }
             };
             const productId = $('#productId').val();
 
-            // POST 요청으로 Setting
             const ajaxOptions = {
                 url: apiBaseUrl,
                 type: 'POST',
@@ -126,7 +143,7 @@
                 data: JSON.stringify(productData),
                 success: function () {
                     $('#productModal').modal('hide');
-                    loadProducts();
+                    loadProducts(currentPage);
                 },
                 error: function (xhr) {
                     if (xhr.status >= 400 && xhr.status < 500) {
@@ -135,8 +152,6 @@
                 }
             };
 
-            // 만약 productId 값이 할당되어 있으면, 해당 데이터 수정 요청이다
-            // 때문에, PUT 으로 요청을 바꾼다
             if (productId) {
                 ajaxOptions.url = apiBaseUrl + '/' + productId;
                 ajaxOptions.type = 'PUT';
@@ -145,35 +160,29 @@
             $.ajax(ajaxOptions);
         });
 
-        // "Edit" 버튼 클릭 시 해당 제품 데이터를 가져와 모달에 표시
         $(document).on('click', '.editProduct', function () {
-            // $(this)는 jQuery 선택자로, 현재 이벤트가 발생한 요소를 선택
-            // .closest('tr')는 선택된 요소(this)부터 시작하여 가장 가까운 tr (테이블 행) 요소를 찾는다
-            // .data('id')는 선택된 요소의 data-id 속성 값을 가져온다
             const productId = $(this).closest('tr').data('id');
             $.get(apiBaseUrl + '/' + productId, function (response) {
                 $('#productModalLabel').text('Edit Product');
                 $('#productId').val(response.data.id);
-                $('#productName').val(response.data.name);
-                $('#productPrice').val(response.data.price);
-                $('#productImageUrl').val(response.data.imageUrl);
+                $('#productName').val(response.data.name.value);
+                $('#productPrice').val(response.data.price.value);
+                $('#productImageUrl').val(response.data.imageUrl.value);
                 $('#productModal').modal('show');
             });
         });
 
-        // "Delete" 버튼 클릭 시 해당 제품 삭제
         $(document).on('click', '.deleteProduct', function () {
             const productId = $(this).closest('tr').data('id');
             $.ajax({
                 url: apiBaseUrl + '/' + productId,
                 type: 'DELETE',
                 success: function () {
-                    loadProducts();
+                    loadProducts(currentPage);
                 }
             });
         });
 
-        // 선택된 모든 제품 일괄 삭제
         $('#deleteSelected').click(function () {
             $('.productCheckbox:checked').each(function () {
                 const productId = $(this).closest('tr').data('id');
@@ -181,18 +190,16 @@
                     url: apiBaseUrl + '/' + productId,
                     type: 'DELETE',
                     success: function () {
-                        loadProducts();
+                        loadProducts(currentPage);
                     }
                 });
             });
         });
 
-        // "Select All" 체크박스 클릭 시 모든 제품 체크박스를 선택 또는 해제
         $('#selectAll').click(function () {
             $('.productCheckbox').prop('checked', this.checked);
         });
 
-        // 제품 ID로 검색
         $('#searchProduct').click(function () {
             const productId = $('#searchProductId').val();
             if (productId) {
@@ -200,16 +207,15 @@
                     url: apiBaseUrl + '/' + productId,
                     type: 'GET',
                     success: function (response) {
-                        // 검색 결과를 테이블 본문에 표시
                         const $productTableBody = $('#productTableBody');
                         $productTableBody.empty();
                         const product = response.data;
                         $productTableBody.append(`
                             <tr data-id="${product.id}">
                                 <td><input type="checkbox" class="productCheckbox"></td>
-                                <td>${product.name}</td>
-                                <td>${product.price}</td>
-                                <td>${product.imageUrl}</td>
+                                <td>${product.name.value}</td>
+                                <td>${product.price.value}</td>
+                                <td>${product.imageUrl.value}</td>
                                 <td>
                                     <button class="btn btn-warning btn-sm editProduct">✏️</button>
                                     <button class="btn btn-danger btn-sm deleteProduct">🗑️</button>
@@ -217,26 +223,20 @@
                             </tr>
                         `);
                     },
-                    // 'xhr'은 XMLHttpRequest 객체로 요청에 대한 상세 정보를 저장한다
-                    //
                     error: function (xhr) {
-                        // response 에 json 값이 있는 지 확인하고, error code를 확인한다
                         if (xhr.responseJSON && xhr.responseJSON.code === 'EP001') {
                             alert(xhr.responseJSON.message);
-                            return
+                            return;
                         }
                         alert('An error occurred while fetching the product.');
                     }
                 });
-            }
-            if (!productId) {
-                // 검색 필드가 비어 있을 때 전체 제품 목록을 로드
-                loadProducts();
+            } else {
+                loadProducts(currentPage);
             }
         });
 
-        // 페이지 로드 시 제품 목록을 불러오기
-        loadProducts();
+        loadProducts(currentPage);
     });
 </script>
 </body>

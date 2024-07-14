@@ -14,6 +14,8 @@
         <thead class="thead-dark">
         <tr>
             <th>Product Id</th>
+            <th>Product Name</th>
+            <th>Image URL</th>
             <th>Product Count</th>
             <th>Actions</th>
         </tr>
@@ -21,6 +23,12 @@
         <tbody id="wishTableBody">
         </tbody>
     </table>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination" id="pagination">
+        </ul>
+    </nav>
 </div>
 
 <!-- Wish Modal -->
@@ -57,28 +65,35 @@
 <script>
     $(document).ready(function () {
         const apiBaseUrl = '/api/wishes';
+        let currentPage = 0;
 
         function getCookie(name) {
-            let matches = document.cookie.match(new RegExp(
-                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-            ));
-            return matches ? decodeURIComponent(matches[1]) : undefined;
+            const cookieArr = document.cookie.split(";");
+            for (let i = 0; i < cookieArr.length; i++) {
+                const cookiePair = cookieArr[i].split("=");
+                if (name === cookiePair[0].trim()) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            return undefined;
         }
 
-        function loadWishes() {
+        function loadWishes(page) {
             $.ajax({
-                url: apiBaseUrl,
+                url: apiBaseUrl + '?page=' + page,
                 type: 'GET',
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader('Authorization', getCookie('accessToken'));
                 },
                 success: function (response) {
                     $('#wishTableBody').empty();
-                    response.data.forEach(wish => {
+                    response.data.wishResponseDtos.forEach(wish => {
                         $('#wishTableBody').append(`
                             <tr data-id="${wish.id}">
                                 <td>${wish.productId}</td>
-                                <td>${wish.productCount}</td>
+                                <td>${wish.productName.value}</td>
+                                <td>${wish.imageUrl.value}</td>
+                                <td>${wish.productCount.value}</td>
                                 <td>
                                     <button class="btn btn-warning btn-sm editWish">✏️</button>
                                     <button class="btn btn-danger btn-sm deleteWish">🗑️</button>
@@ -86,12 +101,30 @@
                             </tr>
                         `);
                     });
+
+                    $('#pagination').empty();
+                    for (let i = 0; i < response.data.pageCount; i++) {
+                        $('#pagination').append(`
+                            <li class="page-item ${i === currentPage ? 'active' : ''}">
+                                <a class="page-link" href="#">${i + 1}</a>
+                            </li>
+                        `);
+                    }
                 },
                 error: function (xhr) {
                     alert("Failed to load wishes: " + xhr.responseJSON.message);
                 }
             });
         }
+
+        $('#pagination').on('click', '.page-link', function (e) {
+            e.preventDefault();
+            const page = $(this).text() - 1;
+            if (page !== currentPage) {
+                currentPage = page;
+                loadWishes(currentPage);
+            }
+        });
 
         $('#addWish').click(function () {
             $('#wishModalLabel').text('Add New Wish');
@@ -103,7 +136,7 @@
         $('#saveWish').click(function () {
             const wishData = {
                 productId: $('#productId').val(),
-                productCount: $('#productCount').val()
+                productCount: { value: $('#productCount').val() }
             };
             const wishId = $('#wishId').val();
 
@@ -117,7 +150,7 @@
                 },
                 success: function () {
                     $('#wishModal').modal('hide');
-                    loadWishes();
+                    loadWishes(currentPage);
                 },
                 error: function (xhr) {
                     alert("Failed to save wish: " + xhr.responseJSON.message);
@@ -144,7 +177,7 @@
                     $('#wishModalLabel').text('Edit Wish');
                     $('#wishId').val(response.data.id);
                     $('#productId').val(response.data.productId);
-                    $('#productCount').val(response.data.productCount);
+                    $('#productCount').val(response.data.productCount.value);
                     $('#wishModal').modal('show');
                 },
                 error: function (xhr) {
@@ -162,7 +195,7 @@
                     xhr.setRequestHeader('Authorization', getCookie('accessToken'));
                 },
                 success: function () {
-                    loadWishes();
+                    loadWishes(currentPage);
                 },
                 error: function (xhr) {
                     alert("Failed to delete wish: " + xhr.responseJSON.message);
@@ -170,7 +203,7 @@
             });
         });
 
-        loadWishes();
+        loadWishes(currentPage);
     });
 </script>
 </body>
