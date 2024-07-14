@@ -2,7 +2,6 @@ package gift.RepositoryTest;
 
 import gift.Model.Member;
 import gift.Model.Product;
-import gift.Model.ResponseWishDTO;
 import gift.Model.Wish;
 import gift.Repository.MemberRepository;
 import gift.Repository.ProductRepository;
@@ -11,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +29,9 @@ public class WishRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
 
+    @Autowired
+    TestEntityManager testEntityManager;
+
     private Member member;
     private Product product1;
     private Product product2;
@@ -38,6 +41,8 @@ public class WishRepositoryTest {
         product1 = productRepository.save(new Product("아메리카노", 4000, "아메리카노url"));
         product2 = productRepository.save(new Product("카푸치노", 4500, "카푸치노url"));
         member = memberRepository.save(new Member("woo6388@naver.com", "12345678"));
+        testEntityManager.flush();
+        testEntityManager.clear();
     }
 
     @Test
