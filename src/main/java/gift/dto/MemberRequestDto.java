@@ -14,7 +14,7 @@ public class MemberRequestDto {
     }
 
     public Member toEntity(){
-        return new Member(this.getEmail(), this.getPassword());
+        return new Member(this.getId(), this.getEmail(), this.getPassword());
     }
     public Long getId() { return id; }
 

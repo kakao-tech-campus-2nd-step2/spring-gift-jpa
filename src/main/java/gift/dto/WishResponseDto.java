@@ -5,12 +5,12 @@ import gift.domain.Wish;
 
 public class WishResponseDto {
     private Long id;
-    private Product product;
+    private ProductResponseDto productResponseDto;
     private int quantity;
 
-    public WishResponseDto(Long id, Product product, int quantity) {
+    public WishResponseDto(Long id, ProductResponseDto productResponseDto, int quantity) {
         this.id = id;
-        this.product = product;
+        this.productResponseDto = productResponseDto;
         this.quantity = quantity;
     }
 
@@ -22,12 +22,12 @@ public class WishResponseDto {
         this.id = id;
     }
 
-    public Product getProduct() {
-        return product;
+    public ProductResponseDto getProductResponseDto() {
+        return productResponseDto;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProductResponseDto(ProductResponseDto productResponseDto) {
+        this.productResponseDto = productResponseDto;
     }
 
     public int getQuantity() {
@@ -39,6 +39,6 @@ public class WishResponseDto {
     }
 
     public static WishResponseDto from(final Wish wish){
-        return new WishResponseDto(wish.getId(), wish.getProduct(), wish.getQuantity());
+        return new WishResponseDto(wish.getId(), ProductResponseDto.from(wish.getProduct()), wish.getQuantity());
     }
 }

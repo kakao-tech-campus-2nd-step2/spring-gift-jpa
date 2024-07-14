@@ -4,9 +4,11 @@ import gift.constants.Messages;
 import gift.domain.Product;
 import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
+import gift.dto.WishResponseDto;
 import gift.exception.ProductNotFoundException;
 import gift.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,14 @@ public class ProductService {
     public ProductResponseDto findById(Long id){
          Product product = findProductByIdOrThrow(id);
          return ProductResponseDto.from(product);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponseDto> getPagedProducts(Pageable pageable){
+        return productRepository.findAll(pageable)
+                .stream()
+                .map(ProductResponseDto::from)
+                .toList();
     }
 
     @Transactional(readOnly = true)
