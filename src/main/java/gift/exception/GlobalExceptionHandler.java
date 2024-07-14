@@ -30,6 +30,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
+    @ExceptionHandler(InvalidPageRequestException.class)
+    public ResponseEntity<String> handleInvalidPageRequest(InvalidPageRequestException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
     @ExceptionHandler(DuplicatedEmailException.class)
     public ResponseEntity<String> handleDuplicatedEmail(DuplicatedEmailException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

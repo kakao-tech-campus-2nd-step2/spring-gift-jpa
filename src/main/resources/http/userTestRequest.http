@@ -1,6 +1,6 @@
 ### GET request to example server
-GET http://localhost:8080/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+GET http://localhost:8080/api/users?size=3&page=1&sort=email&asc=false
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwOTUzOTYyLCJleHAiOjE3MjA5NTc1NjJ9.FlVbq_8569AReekypxF3JuMCOXaAL_NMBAVzRyjzkZ4
 
 ### signup request
 POST http://localhost:8080/signup
@@ -13,11 +13,11 @@ Content-Type: application/json
 
 ### account deletion request
 DELETE http://localhost:8080/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwOTUzOTYyLCJleHAiOjE3MjA5NTc1NjJ9.FlVbq_8569AReekypxF3JuMCOXaAL_NMBAVzRyjzkZ4
 
 ### password change request
 PATCH http://localhost:8080/api/password-change
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwOTUzOTYyLCJleHAiOjE3MjA5NTc1NjJ9.FlVbq_8569AReekypxF3JuMCOXaAL_NMBAVzRyjzkZ4
 Content-Type: application/json
 
 {
@@ -43,31 +43,35 @@ Content-Type: application/json
 }
 
 ### wish get request
-GET http://localhost:8080/api/wishes
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+GET http://localhost:8080/api/wishes?size=15&sort=member&page=0
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwOTUzOTYyLCJleHAiOjE3MjA5NTc1NjJ9.FlVbq_8569AReekypxF3JuMCOXaAL_NMBAVzRyjzkZ4
 
 
 ### wish post request
 POST http://localhost:8080/api/wishes
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwOTUzOTYyLCJleHAiOjE3MjA5NTc1NjJ9.FlVbq_8569AReekypxF3JuMCOXaAL_NMBAVzRyjzkZ4
 Content-Type: application/json
 
 {
-  "userId": 5,
+  "userId": 1,
   "productId": 1
 }
 
 ### wish delete request
 DELETE http://localhost:8080/api/wishes/2
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwOTUzOTYyLCJleHAiOjE3MjA5NTc1NjJ9.FlVbq_8569AReekypxF3JuMCOXaAL_NMBAVzRyjzkZ4
 
 ### product post request
 POST http://localhost:8080/api/products
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwNzEwNjM1LCJleHAiOjE3MjA3MTQyMzV9.bqmYpCd8m_Cu5ke5K__ncIAETENYuzbZh62bd-QdXSE
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwOTUzOTYyLCJleHAiOjE3MjA5NTc1NjJ9.FlVbq_8569AReekypxF3JuMCOXaAL_NMBAVzRyjzkZ4
 Content-Type: application/json
 
 {
   "name": "dddd",
   "price": 2200,
-  "imageUrl": "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
+  "imageUrl": "https://letsenhance.io/static/7f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
 }
+
+### product get
+GET http://localhost:8080/api/products?size=3&page=0&sort=iD
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlbWFpbGxsQGVtYWlsLmNvbSIsImlzcyI6ImV4YW1wbGUuY29tIiwiaWF0IjoxNzIwOTUzOTYyLCJleHAiOjE3MjA5NTc1NjJ9.FlVbq_8569AReekypxF3JuMCOXaAL_NMBAVzRyjzkZ4

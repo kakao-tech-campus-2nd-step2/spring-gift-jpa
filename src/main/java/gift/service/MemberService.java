@@ -4,10 +4,14 @@ import gift.dto.member.*;
 import gift.entity.Member;
 import gift.exception.DuplicatedEmailException;
 import gift.exception.InvalidPasswordException;
-import gift.exception.NoSuchMemberException;
+import gift.exception.NoSuchFieldException;
 import gift.repository.MemberRepository;
+import gift.security.hash.Hasher;
 import gift.security.jwt.TokenProvider;
+import gift.util.pagenation.PageInfoDTO;
+import gift.util.pagenation.PageableGenerator;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,21 +27,19 @@ public class MemberService {
         this.tokenProvider = tokenProvider;
     }
 
-    public List<MemberResponseDTO> getAllUsers() {
+    public List<MemberResponseDTO> getAllUsers(PageInfoDTO pageInfoDTO) {
+        Pageable pageable = PageableGenerator.generatePageable(pageInfoDTO);
 
-        return memberRepository.findAll().stream().map((member) -> new MemberResponseDTO(
+        return memberRepository.findAll(pageable)
+                .stream().map((member) -> new MemberResponseDTO(
                 member.getId(),
                 member.getEmail()
         )).toList();
     }
 
-    public static String hashPassword(String plainPw) {
-        return BCrypt.hashpw(plainPw, BCrypt.gensalt());
-    }
-
     public TokenResponseDTO signUp(MemberRequestDTO memberRequestDTO) {
         String email = memberRequestDTO.email();
-        String encryptedPW = hashPassword(memberRequestDTO.password());
+        String encryptedPW = Hasher.hashPassword(memberRequestDTO.password());
 
         memberRepository.findByEmail(email).ifPresent((member) -> {
             throw new DuplicatedEmailException("Email already exists");
@@ -52,7 +54,7 @@ public class MemberService {
 
     public TokenResponseDTO login(MemberRequestDTO memberRequestDTO) throws InvalidPasswordException {
         Member member = memberRepository.findByEmail(memberRequestDTO.email())
-                .orElseThrow(NoSuchMemberException::new);
+                .orElseThrow(NoSuchFieldException::new);
 
         String encodedOriginalPw = member.getPassword();
 
@@ -71,13 +73,13 @@ public class MemberService {
 
     public void deleteUser(String email) {
         Member member = memberRepository.findByEmail(email)
-                        .orElseThrow(NoSuchMemberException::new);
+                        .orElseThrow(NoSuchFieldException::new);
 
         memberRepository.delete(member);
     }
 
     public void updatePw(long id, PwUpdateDTO pwUpdateDTO) {
-        String encryptedPW = hashPassword(pwUpdateDTO.password());
+        String encryptedPW = Hasher.hashPassword(pwUpdateDTO.password());
 
         Member member = memberRepository.findById(id).get();
         member.setPassword(encryptedPW);
@@ -86,9 +88,9 @@ public class MemberService {
     }
 
     public void updatePw(String email, PwUpdateDTO pwUpdateDTO) {
-        String encryptedPW = hashPassword(pwUpdateDTO.password());
+        String encryptedPW = Hasher.hashPassword(pwUpdateDTO.password());
 
-        Member member = memberRepository.findByEmail(email).orElseThrow(NoSuchMemberException::new);
+        Member member = memberRepository.findByEmail(email).orElseThrow(NoSuchFieldException::new);
         member.setPassword(encryptedPW);
 
         memberRepository.save(member);

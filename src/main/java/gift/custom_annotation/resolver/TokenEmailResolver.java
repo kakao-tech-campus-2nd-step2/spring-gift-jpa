@@ -1,6 +1,6 @@
-package gift.resolver;
+package gift.custom_annotation.resolver;
 
-import gift.annotation.TokenEmail;
+import gift.custom_annotation.annotation.TokenEmail;
 import gift.security.jwt.TokenExtractor;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;

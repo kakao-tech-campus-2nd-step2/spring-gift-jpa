@@ -1,6 +1,7 @@
 package gift.config;
 
-import gift.resolver.TokenEmailResolver;
+import gift.custom_annotation.resolver.PageInfoResolver;
+import gift.custom_annotation.resolver.TokenEmailResolver;
 import gift.security.authfilter.AuthenticationFilter;
 import gift.security.jwt.TokenExtractor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -33,5 +34,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(new TokenEmailResolver(tokenExtractor));
+        argumentResolvers.add(new PageInfoResolver());
     }
 }

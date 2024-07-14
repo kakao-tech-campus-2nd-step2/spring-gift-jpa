@@ -1,6 +1,9 @@
 package gift.controller.member;
 
-import gift.annotation.TokenEmail;
+import gift.custom_annotation.annotation.PageInfo;
+import gift.custom_annotation.annotation.TokenEmail;
+import gift.entity.Member;
+import gift.util.pagenation.PageInfoDTO;
 import gift.dto.member.PwUpdateDTO;
 import gift.dto.member.MemberResponseDTO;
 import gift.exception.ForbiddenRequestException;
@@ -20,10 +23,12 @@ public class MemberController {
     }
 
     @GetMapping("/api/users")
-    public ResponseEntity<List<MemberResponseDTO>> getUsers() {
-        return ResponseEntity.ok(memberService.getAllUsers());
+    public ResponseEntity<List<MemberResponseDTO>> getUsers(
+            @PageInfo(entityClass = Member.class)
+            PageInfoDTO pageInfoDTO
+    ) {
+        return ResponseEntity.ok(memberService.getAllUsers(pageInfoDTO));
     }
-
 
 
     @DeleteMapping("/api/users")
@@ -33,7 +38,7 @@ public class MemberController {
     }
 
     @PatchMapping("/api/password-change")
-    public ResponseEntity<String> updatePw(@TokenEmail String email, @RequestBody @Valid PwUpdateDTO pwUpdateDTO) {
+    public ResponseEntity<String> updatePassword(@TokenEmail String email, @RequestBody @Valid PwUpdateDTO pwUpdateDTO) {
         final boolean FORBIDDEN = true;
 
         if (FORBIDDEN) {

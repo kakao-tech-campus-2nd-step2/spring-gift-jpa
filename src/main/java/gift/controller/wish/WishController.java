@@ -1,9 +1,12 @@
 package gift.controller.wish;
 
-import gift.annotation.TokenEmail;
+import gift.custom_annotation.annotation.PageInfo;
+import gift.custom_annotation.annotation.TokenEmail;
 import gift.dto.wish.WishRequestDTO;
 import gift.dto.wish.WishResponseDTO;
+import gift.entity.Wish;
 import gift.service.WishService;
+import gift.util.pagenation.PageInfoDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -20,8 +23,14 @@ public class WishController {
     }
 
     @GetMapping("/api/wishes")
-    public ResponseEntity<List<WishResponseDTO>> getWishes(@TokenEmail String email) {
-        return ResponseEntity.ok(wishService.getWishes(email));
+    public ResponseEntity<List<WishResponseDTO>> getWishes(
+            @TokenEmail
+            String email,
+
+            @PageInfo(entityClass = Wish.class)
+            PageInfoDTO pageInfoDTO
+            ) {
+        return ResponseEntity.ok(wishService.getWishes(email, pageInfoDTO));
     }
 
     @PostMapping("/api/wishes")
