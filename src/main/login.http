@@ -43,11 +43,14 @@ productId: 77
 POST /wishlist/add HTTP/1.1
 Authorization: Bearer POST /wishlist/add HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJhZG1pbjhAZW1haWwuY29tIiwiaWF0IjoxNzIwODg3NTA5LCJleHAiOjE3MjA4ODk5MDl9.VIuXdi9ZFQqsk9Pqnrg_07tdq1jibnmJq2slfllvvos
+
 content-type: application/json
 host: localhost:8080
 
 {
+
   "productId": 78
+
 }
 ####
 POST /wishlist/add HTTP/1.1

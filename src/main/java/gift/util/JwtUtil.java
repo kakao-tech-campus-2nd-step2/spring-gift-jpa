@@ -33,10 +33,11 @@ public class JwtUtil {
             .getPayload();
         return claims;
     }
-
+  
     public boolean isTokenValid(String token, Long memberId) {
         Claims claims = extractClaims(token);
         return claims.getSubject().equals(memberId.toString()) && !isTokenExpired(token);
+
     }
 
     public boolean isTokenExpired(String token) {

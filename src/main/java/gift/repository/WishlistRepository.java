@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface WishlistRepository extends JpaRepository<WishList, Long> {
     Page<WishList> findByMember(Member member, Pageable pageable);
+    List<WishList> findByMember(Member member);
 
-    //void deleteById(Long productId);
 }

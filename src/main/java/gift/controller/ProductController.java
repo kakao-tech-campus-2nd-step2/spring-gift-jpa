@@ -35,13 +35,7 @@ public class ProductController {
         model.addAttribute("product", new Product());
         return "product-list";
     }
-/*
-    @GetMapping("/add")
-    public String showAddProductForm(Model model) {
-        model.addAttribute("product", new Product()); // 새로운 Product 객체 추가
-        return "product-list";
-    }
-*/
+
     @PostMapping("/add")
     public String addProduct(@Valid @ModelAttribute Product product, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
@@ -80,7 +74,8 @@ public class ProductController {
             redirectAttributes.addFlashAttribute("errorMessage", "Product not found");
             return "redirect:/products";
         }
-    }
+
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+
 @DataJpaTest
 class WishlistRepositoryTest {
     @Autowired
@@ -44,7 +45,6 @@ class WishlistRepositoryTest {
         Member member = new Member("example100@example.com","password");
         memberRepository.save(member);
         WishList expected = new WishList(member, 100L);
-
         WishList actual = wishlistRepository.save(expected);
         Pageable pageable = PageRequest.of(0, 5);
         Page<WishList> products = wishlistRepository.findByMember(member, pageable);

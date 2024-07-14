@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
 @Controller
 @RequestMapping("/wishlist")
 public class WishlistController {
@@ -38,9 +39,7 @@ public class WishlistController {
         if (!result) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is invalid!");
         }
-        WishList addedItem = wishlistService.addProduct(memberId, productId);
-        return ResponseEntity.ok(addedItem);
-    }
+ 
 
     @GetMapping("/items")
     public String getItems(@RequestHeader("Authorization") String token, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size, Model model) {
@@ -56,5 +55,9 @@ public class WishlistController {
         wishlistService.deleteById(productId);
         redirectAttributes.addFlashAttribute("message", "Product successfully deleted!");
         return "redirect:/wishlist/items";
+      
+ 
+
+
     }
 }
