@@ -38,7 +38,7 @@ public class WishService {
 
 
     public PageResponse<WishResponse> findAllWish(Long userId, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("id").descending());
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Wish> wishList = wishRepository.findByUserId(userId, pageRequest);
 
         List<WishResponse> wishResponses = wishList.getContent().stream()

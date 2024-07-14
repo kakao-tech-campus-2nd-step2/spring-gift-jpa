@@ -13,7 +13,7 @@ public record PageResponse<E>(
     public static <E, T> PageResponse<E> from(List<E> response, Page<T> page) {
         return new PageResponse<>(
             response,
-            page.getNumber() + 1,
+            page.getNumber(),
             page.getSize(),
             page.getTotalPages()
         );

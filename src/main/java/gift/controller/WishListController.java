@@ -32,7 +32,7 @@ public class WishListController {
     @GetMapping("")
     public ResponseEntity<PageResponse<WishResponse>> getAllWishList(
         @LoginUser LoginUserRequest user,
-        @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+        @RequestParam(value = "page", required = false, defaultValue = "0") int page,
         @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
         PageResponse responses = wishService.findAllWish(user.id(), page, size);

@@ -38,7 +38,7 @@ public class ProductService {
     }
 
     public PageResponse<ProductResponse> findAllProduct(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("id").descending());
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
         Page<Product> productList = productRepository.findAll(pageRequest);
         List<ProductResponse> productResponses = productList.getContent().stream().map(ProductResponse::from)
             .toList();
