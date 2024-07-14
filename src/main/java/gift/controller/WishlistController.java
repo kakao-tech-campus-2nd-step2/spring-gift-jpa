@@ -1,16 +1,14 @@
 package gift.controller;
 
+import gift.dto.WishlistDTO;
 import gift.model.Product;
 import gift.model.User;
-import gift.dto.WishlistDTO;
 import gift.security.LoginMember;
-import gift.service.ProductService;
 import gift.service.WishlistService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,11 +16,9 @@ import java.util.List;
 public class WishlistController {
 
     private final WishlistService wishlistService;
-    private final ProductService productService;
 
-    public WishlistController(WishlistService wishlistService, ProductService productService) {
+    public WishlistController(WishlistService wishlistService) {
         this.wishlistService = wishlistService;
-        this.productService = productService;
     }
 
     @PostMapping("/{productId}")
@@ -35,10 +31,7 @@ public class WishlistController {
     @GetMapping
     public ResponseEntity<List<Product>> getWishlist(@LoginMember User user) {
         List<WishlistDTO> wishlist = wishlistService.loadWishlist(user.getEmail());
-        List<Product> products = new ArrayList<>();
-        for (WishlistDTO wishlistItem : wishlist) {
-            products.add(productService.getProductById(wishlistItem.getProductId()));
-        }
+        List<Product> products = wishlistService.getProductsFromWishlist(wishlist);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

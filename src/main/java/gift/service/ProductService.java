@@ -5,6 +5,7 @@ import gift.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -20,20 +21,30 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findById(id);
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isEmpty()) {
+            throw new IllegalArgumentException("Invalid product Id:" + id);
+        }
+        return product.get();
     }
 
     public Product saveProduct(Product product) {
-        validateProductName(product.name());
+        validateProductName(product.getName());
         return productRepository.save(product);
     }
 
     public void updateProduct(Product product) {
-        validateProductName(product.name());
-        productRepository.update(product);
+        validateProductName(product.getName());
+        if (!productRepository.existsById(product.getId())) {
+            throw new IllegalArgumentException("Invalid product Id:" + product.getId());
+        }
+        productRepository.save(product);
     }
 
     public void deleteProduct(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new IllegalArgumentException("Invalid product Id:" + id);
+        }
         productRepository.deleteById(id);
     }
 

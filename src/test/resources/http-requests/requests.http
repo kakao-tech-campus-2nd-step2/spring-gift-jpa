@@ -10,7 +10,7 @@ POST {{baseUrl}}/api/products
 Content-Type: application/json
 
 {
-  "name": "Valid Product",
+  "name": "Product2",
   "price": 100,
   "imageUrl": "http://example.com/image.jpg"
 }
@@ -60,9 +60,13 @@ Content-Type: application/json
 }
 
 ### 위시리스트에 상품 추가
-POST {{baseUrl}}/api/wishlist/1
+POST {{baseUrl}}/api/wishlist/2
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+{
+  "userId": "seolbin@example.com"
+}
 
 ### 위시리스트 조회
 GET {{baseUrl}}/api/wishlist
