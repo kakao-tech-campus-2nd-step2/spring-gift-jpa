@@ -25,7 +25,7 @@ public class WishListTest {
 
     private static final String TEST_EMAIL = "test@example.com";
     private static final String TEST_PASSWORD = "password123";
-    private static final int PRODUCT_COUNT = 3;
+    private static final int PRODUCT_COUNT = 11;
 
     @LocalServerPort
     private int port;
@@ -96,7 +96,7 @@ public class WishListTest {
                 HttpMethod.POST,
                 null,
                 authToken,
-                new ParameterizedTypeReference<List<ProductDTO>>() {
+                new ParameterizedTypeReference<ProductDTO>() {
                 },
                 "productId=" + product.id()
             );
@@ -108,18 +108,18 @@ public class WishListTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void addProductToWishlist() {
         for (ProductDTO product : productList) {
-            ResponseEntity<List<ProductDTO>> response = TestUtils.sendRequest(
+            ResponseEntity<ProductDTO> response = TestUtils.sendRequest(
                 restTemplate,
                 baseUrl + "/api/wishlist",
                 HttpMethod.POST,
                 null,
                 authToken,
-                new ParameterizedTypeReference<List<ProductDTO>>() {
+                new ParameterizedTypeReference<>() {
                 },
                 "productId=" + product.id()
             );
             assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-            assertThat(response.getBody()).contains(product);
+            assertThat(response.getBody()).isEqualTo(product);
         }
     }
 
@@ -131,7 +131,7 @@ public class WishListTest {
 
         ResponseEntity<List<ProductDTO>> response = TestUtils.sendRequest(
             restTemplate,
-            baseUrl + "/api/wishlist",
+            baseUrl + "/api/wishlist/all",
             HttpMethod.GET,
             null,
             authToken,
@@ -143,9 +143,35 @@ public class WishListTest {
     }
 
     @Test
+    @DisplayName("위시리스트를 페이징하여 조회하는 테스트")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
+    void getWishlistWithPagination() {
+        addAllProductsToWishlist();
+
+        int page = 0;
+        int size = 10;
+        String criteria = "createdAt";
+        String direction = "desc";
+
+        ResponseEntity<List<ProductDTO>> response = TestUtils.sendRequest(
+            restTemplate,
+            baseUrl + "/api/wishlist?page=" + page + "&size=" + size + "&criteria=" + criteria + "&direction=" + direction,
+            HttpMethod.GET,
+            null,
+            authToken,
+            new ParameterizedTypeReference<>() {}
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody().size()).isEqualTo(size);
+    }
+
+    @Test
     @DisplayName("위시리스트에서 상품을 삭제하는 테스트")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     void deleteProductFromWishlist() {
+        addAllProductsToWishlist();
         ProductDTO productToDelete = productList.get(1);
 
         ResponseEntity<Void> deleteResponse = TestUtils.sendRequest(
@@ -160,7 +186,7 @@ public class WishListTest {
 
         ResponseEntity<List<ProductDTO>> getResponse = TestUtils.sendRequest(
             restTemplate,
-            baseUrl + "/api/wishlist",
+            baseUrl + "/api/wishlist/all",
             HttpMethod.GET,
             null,
             authToken,
@@ -178,7 +204,7 @@ public class WishListTest {
 
         ResponseEntity<Void> deleteResponse = TestUtils.sendRequest(
             restTemplate,
-            baseUrl + "/api/wishlist",
+            baseUrl + "/api/wishlist/all",
             HttpMethod.DELETE,
             null,
             authToken,
@@ -188,7 +214,7 @@ public class WishListTest {
 
         ResponseEntity<List<ProductDTO>> getResponse = TestUtils.sendRequest(
             restTemplate,
-            baseUrl + "/api/wishlist",
+            baseUrl + "/api/wishlist/all",
             HttpMethod.GET,
             null,
             authToken,
