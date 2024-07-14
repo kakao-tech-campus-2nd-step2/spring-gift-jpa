@@ -1,8 +1,7 @@
 # spring-gift-jpa
 
 
-# Step1
-# Step2
+# Step1 & Step2
 1. 사용자 관리 JPA 수정
     - [ ] 사용자 등록
     - [ ] 사용자 조회
