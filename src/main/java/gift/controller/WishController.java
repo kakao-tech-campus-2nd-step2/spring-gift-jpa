@@ -46,7 +46,7 @@ public class WishController {
 
 //    Wishlist 조회
     @GetMapping
-    public ResponseEntity<WishListRequestStateDTO> getWishlistById(@LoginMember MemberDto memberDto, @RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<WishListRequestStateDTO> getWishlistById(@LoginMember MemberDto memberDto, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Page<WishDto> wishes = wishService.getWishListById(memberDto.getId(), page, size);
         return ResponseEntity.ok().body(new WishListRequestStateDTO(
             RequestStatus.success,
