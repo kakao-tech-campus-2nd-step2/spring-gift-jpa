@@ -3,8 +3,8 @@ package gift.service;
 import gift.dto.MemberDTO;
 import gift.model.Member;
 import gift.repository.MemberRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
@@ -23,6 +23,7 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    @Transactional(readOnly = true)
     public Member findMemberByEmail(String email) {
         return memberRepository.findByEmail(email);
     }

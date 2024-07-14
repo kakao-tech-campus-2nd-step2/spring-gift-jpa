@@ -3,11 +3,11 @@ package gift.service;
 import gift.model.Product;
 import gift.model.Wishlist;
 import gift.repository.WishlistRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishlistService {
@@ -20,6 +20,7 @@ public class WishlistService {
         this.productService = productService;
     }
 
+    @Transactional(readOnly = true)
     public List<Product> getWishlist(String email) {
         List<Wishlist> wishlistItems = wishlistRepository.findByMemberEmail(email);
         return wishlistItems.stream()
