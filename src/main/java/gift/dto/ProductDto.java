@@ -108,14 +108,23 @@ public class ProductDto {
     }
 
     public static class Response {
-        private Long id;
         private final String name;
         private final String url;
         private final Long price;
+        private Long id;
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+        public Response(Long id, String name, Long price, String url) {
+            this.id = id;
+            this.name = name;
+            this.price = price;
+            this.url = url;
+        }
+
+        public Response(String name, Long price, String url) {
+            this.name = name;
+            this.price = price;
+            this.url = url;
+        }
 
         public static Response fromEntity(Product product) {
             return new Response(product.getName(), product.getPrice(), product.getUrl());
