@@ -80,7 +80,7 @@ public class CartItemService {
             .map(product -> {
                 return Product.createProductFromProxy(product);
             })
-            .collect(Collectors.toList());
+            .toList();
 
         // 새 Page 객체 생성
         return PageableExecutionUtils.getPage(products, pageRequest,
