@@ -27,7 +27,7 @@ public class Wish {
     @Column(nullable = false)
     private Long count;
 
-    public Wish() {
+    protected Wish() {
 
     }
 
