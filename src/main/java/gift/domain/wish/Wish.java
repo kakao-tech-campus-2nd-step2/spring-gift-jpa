@@ -37,6 +37,10 @@ public class Wish {
         this.count = count;
     }
 
+    public void updateWish(Long count) {
+        this.count = count;
+    }
+
     public Long getId() {
         return id;
     }
