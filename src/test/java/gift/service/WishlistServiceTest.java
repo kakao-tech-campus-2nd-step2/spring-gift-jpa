@@ -3,7 +3,7 @@ package gift.service;
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.WishlistItem;
-import gift.dto.request.WishlistNameRequest;
+import gift.dto.request.WishlistRequest;
 import gift.exception.MemberNotFoundException;
 import gift.repository.member.MemberSpringDataJpaRepository;
 import gift.repository.product.ProductSpringDataJpaRepository;
@@ -22,7 +22,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,7 +64,7 @@ public class WishlistServiceTest {
         when(tokenService.getMemberIdFromToken(validToken)).thenReturn(MEMBER_ID.toString());
         when(memberRepository.findById(MEMBER_ID)).thenReturn(Optional.of(member));
 
-        WishlistNameRequest request = new WishlistNameRequest(MEMBER_ID, PRODUCT_ID);
+        WishlistRequest request = new WishlistRequest(PRODUCT_ID);
         WishlistItem wishlistItem = new WishlistItem(member, product);
 
         when(wishlistRepository.save(any(WishlistItem.class))).thenReturn(wishlistItem);

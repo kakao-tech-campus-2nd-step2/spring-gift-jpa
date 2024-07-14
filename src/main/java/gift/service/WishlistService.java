@@ -3,7 +3,7 @@ package gift.service;
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.WishlistItem;
-import gift.dto.request.WishlistNameRequest;
+import gift.dto.request.WishlistRequest;
 import gift.exception.MemberNotFoundException;
 import gift.repository.member.MemberSpringDataJpaRepository;
 import gift.repository.product.ProductSpringDataJpaRepository;
@@ -31,10 +31,10 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    public void addItemToWishlist(WishlistNameRequest wishlistNameRequest, String token) {
+    public void addItemToWishlist(WishlistRequest wishlistRequest, String token) {
         Long memberId = Long.valueOf(tokenService.getMemberIdFromToken(token));
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
-        Product product = productRepository.findById(wishlistNameRequest.getProductId()).orElseThrow(() -> new MemberNotFoundException("존재하지 않는 상품입니다."));
+        Product product = productRepository.findById(wishlistRequest.getProductId()).orElseThrow(() -> new MemberNotFoundException("존재하지 않는 상품입니다."));
 
         WishlistItem item = new WishlistItem(member, product);
         wishlistRepository.save(item);
@@ -53,6 +53,10 @@ public class WishlistService {
         }
 
         wishlistRepository.deleteByMemberIdAndProductId(member.getId(), productId);
+    }
+
+    public List<WishlistItem> getWishlistByMemberId(Long memberId) {
+        return wishlistRepository.findByMemberId(memberId);
     }
 
     public Page<WishlistItem> getWishlistByMemberId(Long memberId, Pageable pageable) {

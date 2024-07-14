@@ -11,8 +11,6 @@ public class MemberRequest {
     @NotBlank(message = "비밀번호는 필수 항목입니다.")
     private String password;
 
-    public MemberRequest() {}
-
     public MemberRequest(String email, String password) {
         this.email = email;
         this.password = password;
