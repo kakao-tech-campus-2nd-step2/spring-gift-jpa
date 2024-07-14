@@ -1,6 +1,6 @@
 package gift.config;
 
-import gift.model.User;
+import gift.model.user.User;
 import gift.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

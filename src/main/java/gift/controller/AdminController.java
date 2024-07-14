@@ -1,15 +1,15 @@
 package gift.controller;
 
 
-import gift.model.GiftRequest;
-import gift.model.GiftResponse;
+import gift.dto.PagingRequest;
+import gift.dto.PagingResponse;
+import gift.model.gift.GiftRequest;
+import gift.model.gift.GiftResponse;
 import gift.service.GiftService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
 
 @Controller
 public class AdminController {
@@ -26,8 +26,8 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String adminHome(Model model) {
-        Collection<GiftResponse> giftlist = giftService.getAllGifts();
+    public String adminHome(Model model, @ModelAttribute PagingRequest pagingRequest) {
+        PagingResponse<GiftResponse> giftlist = giftService.getAllGifts(pagingRequest.getPage(), pagingRequest.getSize());
         model.addAttribute("giftlist", giftlist);
         return "admin";
     }

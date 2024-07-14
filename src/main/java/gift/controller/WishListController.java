@@ -1,6 +1,11 @@
 package gift.controller;
 
-import gift.model.*;
+import gift.dto.PagingRequest;
+import gift.dto.PagingResponse;
+import gift.model.gift.GiftResponse;
+import gift.model.user.User;
+import gift.model.wish.Wish;
+import gift.model.wish.WishResponse;
 import gift.service.GiftService;
 import gift.service.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +30,11 @@ public class WishListController {
     }
 
     @GetMapping("/wish")
-    public ResponseEntity<?> getGiftList(@RequestAttribute("user") User user) {
+    public ResponseEntity<?> getGiftList(@RequestAttribute("user") User user,
+                                         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                         @RequestParam(value = "size", required = false, defaultValue = "5") int size) {
         if (user != null) {
-            List<GiftResponse> gifts = giftService.getAllGifts();
+            PagingResponse<GiftResponse> gifts = giftService.getAllGifts(page, size);
             return ResponseEntity.ok(gifts);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
@@ -44,6 +51,17 @@ public class WishListController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
     }
 
+    @PutMapping("/wish/{giftId}")
+    public ResponseEntity<String> updateGiftQuantity(@RequestAttribute("user") User user,
+                                                     @PathVariable Long giftId,
+                                                     @RequestParam(name = "quantity") int quantity) {
+        if (user != null) {
+            wishService.updateWishQuantity(user.getId(), giftId, quantity);
+            return ResponseEntity.ok("카트에서 상품수량이 변경되었습니다.");
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+    }
+
     @DeleteMapping("/wish/{giftId}")
     public ResponseEntity<String> removeGiftFromCart(@RequestAttribute("user") User user,
                                                      @PathVariable Long giftId) {
@@ -55,11 +73,17 @@ public class WishListController {
     }
 
     @GetMapping("/mywish")
-    public ResponseEntity<List<WishResponse>> getUserGifts(@RequestAttribute("user") User user) {
+    public ResponseEntity<PagingResponse<WishResponse>> getUserGifts(@RequestAttribute("user") User user,
+                                                                     @ModelAttribute PagingRequest pagingRequest) {
         if (user != null) {
-            List<WishResponse> wishResponses = wishService.getGiftsForUser(user.getId()).stream().map(wish -> new WishResponse(wish.getGift().getId(), wish.getGift().getName(), wish.getGift().getPrice(), wish.getQuantity())).collect(Collectors.toList());
-            return ResponseEntity.ok(wishResponses);
+            PagingResponse<Wish> userWishes = wishService.getGiftsForUser(user.getId(), pagingRequest.getPage(), pagingRequest.getSize());
+            List<WishResponse> wishResponses =
+                    userWishes.getContent()
+                            .stream()
+                            .map(wish -> new WishResponse(wish.getGift().getId(), wish.getGift().getName(), wish.getGift().getPrice(), wish.getQuantity())).collect(Collectors.toList());
+            PagingResponse<WishResponse> pagingResponse = new PagingResponse<>(pagingRequest.getPage(), wishResponses, pagingRequest.getSize(), userWishes.getTotalElements(), userWishes.getTotalPages());
+            return ResponseEntity.ok(pagingResponse);
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.emptyList());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }

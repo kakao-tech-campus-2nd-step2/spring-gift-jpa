@@ -1,12 +1,12 @@
 package gift.service;
 
 
-import gift.model.Gift;
-import gift.model.GiftRequest;
-import gift.model.GiftResponse;
+import gift.dto.PagingResponse;
+import gift.model.gift.*;
 import gift.repository.GiftRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +23,13 @@ public class GiftService {
         this.giftRepository = giftRepository;
     }
 
-    public List<GiftResponse> getAllGifts() {
-        List<Gift> gifts = giftRepository.findAll();
-        return gifts.stream()
+    public PagingResponse<GiftResponse> getAllGifts(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("id").ascending());
+        Page<Gift> gifts = giftRepository.findAll(pageRequest);
+        List<GiftResponse> giftResponses = gifts.stream()
                 .map(GiftResponse::from)
                 .collect(Collectors.toList());
+        return new PagingResponse<>(page, giftResponses, size, gifts.getTotalElements(), gifts.getTotalPages());
     }
 
     public GiftResponse getGift(Long id) {
@@ -49,6 +51,7 @@ public class GiftService {
         gift.modify(giftReq.getName(), giftReq.getPrice(), giftReq.getImageUrl());
         giftRepository.save(gift);
     }
+
 
     public void deleteGift(Long id) {
         giftRepository.deleteById(id);

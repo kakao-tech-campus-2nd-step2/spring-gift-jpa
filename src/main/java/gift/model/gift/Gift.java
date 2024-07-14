@@ -1,8 +1,10 @@
-package gift.model;
+package gift.model.gift;
 
+import gift.model.wish.Wish;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +19,11 @@ public class Gift {
     @NotNull
     private int price;
     @NotNull
+    @Column(name = "imageurl")
     private String imageUrl;
+
+    @OneToMany(mappedBy = "gift", cascade = CascadeType.REMOVE)
+    protected List<Wish> wishes = new ArrayList<>();
 
     public Gift() {
     }

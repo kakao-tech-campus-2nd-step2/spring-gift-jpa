@@ -1,9 +1,7 @@
 package gift.util;
 
-import gift.model.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import gift.model.user.User;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,13 +13,13 @@ public class JwtUtil {
     @Value("${jwt.secretKey}")
     private String secretKey;
 
-    public String getUserEmail(String token)
-    {
+    public String getUserEmail(String token) {
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
         String email = claims.getSubject();
         return email;
     }
-    public boolean checkValidateToken(String token){
+
+    public boolean checkValidateToken(String token) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
