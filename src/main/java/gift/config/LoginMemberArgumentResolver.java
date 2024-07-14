@@ -47,3 +47,4 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         return memberRequestDTO;
     }
 }
+

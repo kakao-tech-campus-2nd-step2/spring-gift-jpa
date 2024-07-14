@@ -38,7 +38,6 @@ public class WishList {
         return id;
     }
 
-
     public Product getProduct() {
         return product;
     }
@@ -54,6 +53,7 @@ public class WishList {
     public void setMember(Member member) {
         this.member = member;
     }
+
 
     public void setProduct(Product product) {
         this.product = product;
