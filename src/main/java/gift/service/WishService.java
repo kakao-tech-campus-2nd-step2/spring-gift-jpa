@@ -5,6 +5,7 @@ import gift.domain.member.MemberRepository;
 import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
 import gift.domain.wish.Wish;
+import gift.domain.wish.WishRepository;
 import gift.dto.WishAddRequestDto;
 import gift.dto.WishResponseDto;
 import gift.exception.CustomException;
@@ -18,51 +19,75 @@ import java.util.List;
 public class WishService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
+    private final WishRepository wishRepository;
 
-    public WishService(MemberRepository memberRepository, ProductRepository productRepository) {
+    public WishService(MemberRepository memberRepository, ProductRepository productRepository, WishRepository wishRepository) {
         this.memberRepository = memberRepository;
         this.productRepository = productRepository;
+        this.wishRepository = wishRepository;
     }
 
     @Transactional
     public void addWish(Long memberId, WishAddRequestDto request) {
-        Product product = getProduct(request.getProductId());
+        //기존에 존재하는 wish면 quantity 업데이트
         Member member = getMember(memberId);
-        Wish wish = member.getWishList().stream().filter(w -> w.getProduct().equals(product))
-                .findFirst()
-                .map(w -> {
-                    w.setQuantity(w.getQuantity() + request.getQuantity());
-                    return w;
-                })
-                .orElseGet(() -> new Wish(getMember(memberId), getProduct(request.getProductId()), request.getQuantity()));
-
-        member.addWish(wish);
+        wishRepository.findByMemberIdAndProductId(memberId, request.getProductId())
+                .ifPresentOrElse(
+                        wish -> wish.addQuantity(request.getQuantity()),
+                        () -> {
+                            Wish newWish = new Wish(member,getProduct(request.getProductId()), request.getQuantity());
+                            wishRepository.save(newWish);
+                        }
+                );
     }
 
     public List<WishResponseDto> getAllWishes(Long id) {
-        Member member = getMember(id);
-        return member.getWishList().stream().map(WishResponseDto::new).toList();
+        List<Wish> wishList = wishRepository.findAllByMemberId(id);
+        return wishList.stream().map(WishResponseDto::new).toList();
+    }
+
+    public void updateWish(Long memberId, Long wishId, int quantity) {
+        checkMemberValidation(memberId);
+        Wish wish = getWish(wishId);
+        if (quantity == 0) {
+            wishRepository.delete(wish);
+            return;
+        }
+        wish.updateQuantity(quantity);
+        wishRepository.save(wish);
     }
 
     @Transactional
     public void deleteWish(Long memberId, Long productId) {
-        Member member = getMember(memberId);
+        checkMemberValidation(memberId);
         checkProductValidation(productId);
-        member.deleteWish(productId);
+        wishRepository.deleteByMemberIdAndProductId(memberId,productId);
     }
 
     private void checkProductValidation(Long productId) {
-        productRepository.findById(productId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PRODUCT));
+        if (!productRepository.existsById(productId)) {
+            throw new CustomException(ErrorCode.INVALID_PRODUCT);
+        }
+    }
+
+    private void checkMemberValidation(Long memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new CustomException(ErrorCode.INVALID_MEMBER);
+        }
     }
 
     private Member getMember(Long id) {
         return memberRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MEMBER));
     }
 
     private Product getProduct(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PRODUCT));
+    }
+
+    private Wish getWish(Long id) {
+        return wishRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_WISH));
     }
 }

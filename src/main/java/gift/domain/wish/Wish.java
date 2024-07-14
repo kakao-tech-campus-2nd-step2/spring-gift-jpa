@@ -9,18 +9,18 @@ import jakarta.validation.constraints.NotNull;
 public class Wish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-    private Integer quantity;
+    private int quantity;
 
     public Wish(Member member, Product product, Integer quantity) {
         this.member = member;
@@ -28,8 +28,7 @@ public class Wish {
         this.quantity = quantity;
     }
 
-    protected Wish() {
-    }
+    protected Wish() {}
 
     public Long getId() {
         return id;
@@ -43,11 +42,15 @@ public class Wish {
         return product;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void updateQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public void addQuantity(int quantity) {
+        this.quantity = this.quantity + quantity;
     }
 }

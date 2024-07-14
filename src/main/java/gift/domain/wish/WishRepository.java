@@ -8,9 +8,9 @@ import java.util.Optional;
 
 @Repository
 public interface WishRepository extends JpaRepository<Wish, Long> {
-    List<Wish> findAllByMemberId(Long memberId);
-
-    Optional<Wish> findDistinctByMemberIdAndProductId(Long memberId, Long productId);
-
     void deleteByMemberIdAndProductId(Long memberId, Long productId);
+
+    Optional<Wish> findByMemberIdAndProductId(Long memberId, Long productId);
+
+    List<Wish> findAllByMemberId(Long id);
 }

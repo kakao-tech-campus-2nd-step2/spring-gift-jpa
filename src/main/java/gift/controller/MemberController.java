@@ -3,11 +3,11 @@ package gift.controller;
 import gift.authentication.LoginMember;
 import gift.authentication.UserDetails;
 import gift.dto.*;
+import gift.service.MemberService;
 import gift.service.WishService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import gift.service.MemberService;
 
 import java.util.List;
 
@@ -44,6 +44,15 @@ public class MemberController {
     @GetMapping("/wishes")
     public ResponseEntity<List<WishResponseDto>> getMemberWishList(@LoginMember UserDetails userDetails) {
         return ResponseEntity.ok(wishService.getAllWishes(userDetails.id()));
+    }
+
+    @PutMapping("/wishes/{id}")
+    public ResponseEntity<ApiResponse> updateWish(
+            @LoginMember UserDetails userDetails,
+            @PathVariable("id") Long id,
+            @RequestBody WishUpdateRequestDto requestDto) {
+        wishService.updateWish(userDetails.id(),id,requestDto.quantity());
+        return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, "수량이 성공적으로 수정되었습니다."));
     }
 
     @DeleteMapping("/wishes/{id}")
