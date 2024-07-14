@@ -1,4 +1,3 @@
-// MemberController
 package gift.controller;
 
 import gift.dto.MemberRequest;
@@ -44,19 +43,28 @@ public class MemberController {
             session.setAttribute("token", token);
             return "redirect:/wishes/items";
         } catch (IllegalArgumentException e) {
-            bindingResult.reject("error.login", "Invalid email or password");
-            return "login";
+            return "redirect:/members/login?error";
         }
     }
 
+    @GetMapping("/register")
+    public String registerForm(Model model) {
+        model.addAttribute("memberRequest", new MemberRequest());
+        return "register";
+    }
+
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody MemberRequest memberRequest, BindingResult bindingResult) {
+    public String register(@Valid @ModelAttribute MemberRequest memberRequest, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body("Invalid data");
+            return "register";
         }
-        String token = memberService.register(memberRequest);
-        MemberResponse response = new MemberResponse(token);
-        return ResponseEntity.ok(response);
+        try {
+            String token = memberService.register(memberRequest);
+            return "redirect:/members/login?registerSuccess";
+        } catch (IllegalArgumentException e) {
+            bindingResult.reject("error.register", e.getMessage());
+            return "register";
+        }
     }
 
     @GetMapping("/validate-token")
