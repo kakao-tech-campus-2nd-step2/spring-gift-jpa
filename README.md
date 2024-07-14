@@ -20,3 +20,6 @@
 - [x] 객체의 참조와 테이블의 외래 키를 매핑해서 객체에서는 참조를 사용하고 테이블에서는 외래 키를 사용할 수 있도록 한다.
   - [x] Product 와 Wishlist 연관 관계 매핑
   - [x] Member 와 Wishlist 연관 관계 매핑
+# step3
+- [ ] pagination 구현
+- [ ] pagination Test 작성
