@@ -27,7 +27,7 @@ public class Wish {
     @Column(nullable = false)
     private Integer quantity;
 
-    public Wish() {
+    protected Wish() {
     }
 
     public Wish(Member member, Product product, Integer quantity) {
@@ -44,30 +44,17 @@ public class Wish {
         return product;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
     public Member getMember() {
         return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
     }
 
     public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
+    public void incrementQuantity() { this.quantity++; }
 
-    public void incrementQuantity() {
-        this.quantity++;
-    }
-
+    public void changeQuantity(Integer quantity) { this.quantity = quantity; }
 
     @Override
     public boolean equals(Object o) {
