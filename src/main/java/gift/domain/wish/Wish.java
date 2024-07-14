@@ -31,8 +31,7 @@ public class Wish {
 
     }
 
-    public Wish(Member member, Product product, Long productId, Long count) {
-        this.id = id;
+    public Wish(Member member, Product product, Long count) {
         this.member = member;
         this.product = product;
         this.count = count;
