@@ -16,14 +16,19 @@ public class MemberRepositoryTest {
     MemberRepository memberRepository;
 
     @Test
-    void saveAndFindByEmailTest() {
+    void saveTest() {
         Member member = new Member("woo6388@naver.com", "12345678");
         assertThat(member.getId()).isNull();
         var actual = memberRepository.save(member);
         assertThat(actual.getId()).isNotNull();
+    }
 
-        Optional<Member> actual2 = memberRepository.findByEmail(member.getEmail());
-        assertThat(actual2.get().getEmail()).isEqualTo("woo6388@naver.com");
+    @Test
+    void FindByEmailTest(){
+        Member member = new Member("woo6388@naver.com", "12345678");
+        memberRepository.save(member);
+        Optional<Member> actual = memberRepository.findByEmail(member.getEmail());
+        assertThat(actual.get().getEmail()).isEqualTo("woo6388@naver.com");
     }
 
     @Test

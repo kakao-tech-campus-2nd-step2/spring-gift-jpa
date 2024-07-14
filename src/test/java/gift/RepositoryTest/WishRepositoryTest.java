@@ -72,7 +72,6 @@ public class WishRepositoryTest {
     void updateTest() {
         Wish wish1 = wishRepository.save(new Wish(member, product1, 1));
         Optional<Wish> optionalWish = wishRepository.findById(wish1.getId());
-        assertThat(optionalWish).isPresent();
         Wish wish = optionalWish.get();
         wish.setCount(5);
 
@@ -84,7 +83,6 @@ public class WishRepositoryTest {
     void deleteTest() {
         Wish wish1 = wishRepository.save(new Wish(member, product1, 1));
         Optional<Wish> optionalWish = wishRepository.findById(wish1.getId());
-        assertThat(optionalWish).isPresent();
         wishRepository.deleteById(optionalWish.get().getId());
         Optional<Wish> actual = wishRepository.findById(optionalWish.get().getId());
         assertThat(actual).isEmpty();

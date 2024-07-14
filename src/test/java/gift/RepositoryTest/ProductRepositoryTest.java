@@ -46,7 +46,6 @@ public class ProductRepositoryTest {
     void deleteTest(){
         Product product1 = productRepository.save(new Product("아메리카노", 4000, "아메리카노url"));
         Optional<Product> optionalProduct = productRepository.findById(product1.getId());
-        assertThat(optionalProduct).isPresent();
         productRepository.deleteById(optionalProduct.get().getId());
         Optional<Product> actual  = productRepository.findById(optionalProduct.get().getId());
         assertThat(actual).isEmpty();
