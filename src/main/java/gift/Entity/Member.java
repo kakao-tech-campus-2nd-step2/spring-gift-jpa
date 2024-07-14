@@ -1,10 +1,10 @@
 package gift.Entity;
 
-import gift.Model.User;
+import gift.Model.MemberDto;
 import jakarta.persistence.*;
 
 @Entity
-public class Users {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,19 +14,15 @@ public class Users {
     private String password;
     private boolean isAdmin;
 
-    protected Users() {
+    protected Member() {
     }
 
-    protected Users(long userId, String email, String name, String password, boolean isAdmin) {
+    public Member(long userId, String email, String name, String password, boolean isAdmin) {
         this.userId = userId;
         this.email = email;
         this.name = name;
         this.password = password;
         this.isAdmin = isAdmin;
-    }
-
-    public static Users createUsers(User user) {
-        return new Users(user.getId(), user.getEmail(), user.getName(), user.getPassword(), user.isAdmin());
     }
 
     // Getters and setters

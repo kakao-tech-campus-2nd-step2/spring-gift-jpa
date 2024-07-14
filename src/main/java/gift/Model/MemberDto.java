@@ -1,17 +1,17 @@
 package gift.Model;
 
-public class User {
+public class MemberDto {
     private long id;
     private String email;
     private String name;
     private String password;
     private boolean isAdmin;
 
-    public User() {
+    public MemberDto() {
       
     }
 
-    public User(long id, String email, String password, String name, boolean isAdmin) {
+    public MemberDto(long id, String email, String password, String name, boolean isAdmin) {
         this.id = id;
         this.email = email;
         this.password = password;
