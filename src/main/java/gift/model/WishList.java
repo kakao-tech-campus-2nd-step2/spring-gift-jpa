@@ -1,13 +1,33 @@
 package gift.model;
 
-public class WishList {
-    private Long id;
-    private String userEmail;
-    private Long productId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
-    public WishList(String userEmail, Long productId) {
-        this.userEmail = userEmail;
-        this.productId = productId;
+@Entity
+@Table(name = "wish_list")
+public class WishList {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    public WishList(Member member, Product product) {
+        this.member = member;
+        this.product = product;
     }
 
     public WishList() {
@@ -17,19 +37,45 @@ public class WishList {
         return id;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public String getMemberEmail() {
+        return member != null ? member.getEmail() : null;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+    public void setMemberEmail(String memberEmail) {
+        if (this.member == null) {
+            this.member = new Member();
+        }
+        this.member.setEmail(memberEmail, this.member.getPassword());
     }
 
     public Long getProductId() {
-        return productId;
+        return product != null ? product.getId() : null;
     }
 
     public void setProductId(Long productId) {
-        this.productId = productId;
+        if (this.product == null) {
+            this.product = new Product();
+        }
+        this.product.setId(productId);
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }
