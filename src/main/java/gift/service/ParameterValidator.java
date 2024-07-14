@@ -5,7 +5,6 @@ import gift.dto.ProductDTO;
 import gift.entity.Member;
 import gift.entity.Product;
 import gift.exception.BadRequestExceptions.BadRequestException;
-import gift.exception.BadRequestExceptions.DataCorruptionException;
 import gift.exception.BadRequestExceptions.InvalidIdException;
 import gift.exception.BadRequestExceptions.NoSuchProductIdException;
 import gift.exception.BadRequestExceptions.UserNotFoundException;
