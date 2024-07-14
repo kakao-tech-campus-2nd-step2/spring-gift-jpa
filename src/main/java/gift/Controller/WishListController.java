@@ -32,7 +32,6 @@ public class WishListController {
         wishlistService.checkUserByMemberEmail(email);
         model.addAttribute("products", wishlistService.getAllProducts(pageable));
         model.addAttribute("wishlists", wishlistService.getAllWishlist(email, pageable));
-        //model.addAttribute("wishlists", wishlistService.getAllWishlist("1234@google.com", pageable));
         return "wish";
     }
 
@@ -54,11 +53,8 @@ public class WishListController {
     @PostMapping("/api/wish/delete/{id}")
     public String deleteWish(@PathVariable(value = "id") Long id, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
-        System.out.println("delete: " + email);
         wishlistService.checkUserByMemberEmail(email);
-        System.out.println("check: "+"email: "+email+"id: " + id);
         Long wishlistId = wishlistService.getWishlistId(email,id);
-        System.out.println("ID: "+wishlistId);
         wishlistService.deleteWishlist(email, id,wishlistId);
         return "redirect:/api/wish";
     }
