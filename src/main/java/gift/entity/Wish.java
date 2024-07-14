@@ -1,6 +1,5 @@
 package gift.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,10 +14,6 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    @Column(name = "product_id", nullable = false, insertable = false, updatable = false)
-    private Long productId;
-    @Column(name = "user_id", nullable = false, insertable = false, updatable = false)
-    private Long userId;
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
@@ -30,15 +25,9 @@ public class Wish {
     public Wish() {
     }
 
-    public Wish(Long id, Long productId, Long userId) {
-        this.id = id;
-        this.productId = productId;
-        this.userId = userId;
-    }
-
-    public Wish(Long productId, Long userId) {
-        this.productId = productId;
-        this.userId = userId;
+    public Wish(Product product, User user) {
+        this.product = product;
+        this.user = user;
     }
 
     public Long getId() {
@@ -46,13 +35,12 @@ public class Wish {
     }
 
     public Long getProductId() {
-        return productId;
+        return product.getId();
     }
 
     public Long getUserId() {
-        return userId;
+        return user.getId();
     }
-
 
     public Product getProduct() {
         return product;
