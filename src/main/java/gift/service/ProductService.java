@@ -52,8 +52,6 @@ public class ProductService {
         Pageable pageable
     ) {
         Page<Product> productPage;
-
-        System.out.println("searchType: " + searchType);
         switch (searchType) {
             case NAME:
                 productPage = productRepository.findByNameContaining(searchValue, pageable);
