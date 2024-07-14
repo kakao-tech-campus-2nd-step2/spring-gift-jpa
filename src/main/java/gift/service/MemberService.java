@@ -19,11 +19,13 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final TokenService tokenService;
     private final Key key;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository, TokenService tokenService) {
         this.memberRepository = memberRepository;
+        this.tokenService = tokenService;
         String secretKey = "s3cr3tK3yF0rJWTt0k3nG3n3r@ti0n12345678"; // 256 bits
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
@@ -47,7 +49,7 @@ public class MemberService {
 
         validatePassword(registeredMember, loginRequest.getPassword());
 
-        String token = generateToken(registeredMember);
+        String token = tokenService.generateToken(registeredMember);
         return new LoginResponse(token);
     }
 
@@ -63,28 +65,5 @@ public class MemberService {
         }
     }
 
-    private String generateToken(Member member) {
-        long now = System.currentTimeMillis();
-        return Jwts.builder().setSubject(member.getEmail())
-                             .setIssuedAt(new Date(now))
-                             .setExpiration(new Date(now + 3600000)) // 1 hour validity
-                             .signWith(key).compact();
-    }
 
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public String extractEmailFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey(key)
-                                     .build()
-                                     .parseClaimsJws(token)
-                                     .getBody();
-        return claims.getSubject();
-    }
 }

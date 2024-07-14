@@ -2,6 +2,7 @@ package gift.controller.wishlist;
 
 import gift.domain.Product;
 import gift.service.MemberService;
+import gift.service.TokenService;
 import gift.service.WishlistService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/my/wishlist")
 public class WishlistViewController {
 
-    private final MemberService memberService;
     private final WishlistService wishlistService;
+    private final TokenService tokenService;
 
     @Autowired
-    public WishlistViewController(MemberService memberService, WishlistService wishlistService) {
-        this.memberService = memberService;
+    public WishlistViewController(
+        WishlistService wishlistService,
+        TokenService tokenService
+    ) {
         this.wishlistService = wishlistService;
+        this.tokenService = tokenService;
     }
 
     @GetMapping
@@ -42,12 +46,12 @@ public class WishlistViewController {
         }
 
         String token = authHeader.substring(7); // "Bearer " 제거
-        if (!memberService.validateToken(token)) {
+        if (!tokenService.validateToken(token)) {
             model.addAttribute("error", "Fail to validate token");
             return "error";
         }
 
-        String email = memberService.extractEmailFromToken(token);
+        String email = tokenService.extractEmailFromToken(token);
         List<Product> wishlist = wishlistService.getWishlistByEmail(email, page, size);
         model.addAttribute("wishlist", wishlist);
         return "wishlist";
