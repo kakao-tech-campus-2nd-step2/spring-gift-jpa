@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import java.beans.ConstructorProperties;
 
 @Entity
 @Table(name = "member")
@@ -24,17 +25,19 @@ public class Member {
     @Column(name = "password", nullable = false)
     private String password;
 
-    public Member(){
+    protected Member(){
+
     }
 
-    public Member(String email, String password) {
+    @ConstructorProperties({"id","email","password"})
+    public Member(Long id, String email, String password) {
+        this.id = id;
         this.email = email;
         this.password = password;
     }
 
     public Long getId() {
         return id;
-
     }
 
     public String getEmail() {
@@ -45,16 +48,5 @@ public class Member {
         return password;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
 }

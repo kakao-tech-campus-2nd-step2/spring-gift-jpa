@@ -1,11 +1,16 @@
 package gift.Model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.beans.ConstructorProperties;
 
 
 @Entity
@@ -15,53 +20,42 @@ public class Wishlist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    @Column(name = "price", nullable = false)
-    private int price;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    @Column(name = "imageUrl", nullable = false)
-    private String imageUrl;
+    protected Wishlist(){
 
-    public Wishlist() {
     }
-
-    public Wishlist(String name, int price, String imageUrl) {
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
+    @ConstructorProperties({"id","member","product"})
+    public Wishlist(Long id, Member member, Product product) {
+        this.id = id;
+        this.member = member;
+        this.product = product;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public Member getMember() {
+        return member;
     }
 
-    public int getPrice() {
-        return price;
+    public Product getProduct() {
+        return product;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 }

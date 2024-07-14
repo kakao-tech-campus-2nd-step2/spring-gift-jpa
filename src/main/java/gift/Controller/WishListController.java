@@ -1,14 +1,15 @@
 package gift.Controller;
 
 
+import gift.Model.Member;
 import gift.Model.Product;
 
 import gift.Model.Wishlist;
-
 import gift.Service.WishlistService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,9 @@ public class WishListController {
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
         model.addAttribute("products", wishlistService.getAllProducts());
-        model.addAttribute("wishlists", wishlistService.getAllWishlist());
+        model.addAttribute("wishlists", wishlistService.getAllWishlist(email));
+        //model.addAttribute("wishlists", wishlistService.getAllWishlist("1234@google.com")); //테스트
+
         return "wish";
     }
 
@@ -42,10 +45,9 @@ public class WishListController {
     public String editWishForm(@PathVariable(value = "id") Long id, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
+        Member member = wishlistService.getMemberByEmail(email);
         Product product = wishlistService.getProductById(id);
-        Wishlist wishlist = new Wishlist(product.getName(), product.getPrice(), product.getImageUrl());
-        wishlistService.addWishlist(wishlist);
-
+        wishlistService.addWishlist(member.getId(), product.getId());
         return "redirect:/api/wish";
     }
 
@@ -53,7 +55,8 @@ public class WishListController {
     public String deleteWish(@PathVariable(value = "id") Long id, HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
-        wishlistService.deleteWishlist(id);
+        Long wishlistId = wishlistService.getWishlistId(email,id);
+        wishlistService.deleteWishlist(email, id,wishlistId);
         return "redirect:/api/wish";
     }
 }
