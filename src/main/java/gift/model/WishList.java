@@ -31,34 +31,13 @@ public class WishList {
         this.product = product;
     }
 
-    public WishList() {
+    protected WishList() {
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getMemberEmail() {
-        return member != null ? member.getEmail() : null;
-    }
-
-    public void setMemberEmail(String memberEmail) {
-        if (this.member == null) {
-            this.member = new Member();
-        }
-        this.member.setEmail(memberEmail, this.member.getPassword());
-    }
-
-    public Long getProductId() {
-        return product != null ? product.getId() : null;
-    }
-
-    public void setProductId(Long productId) {
-        if (this.product == null) {
-            this.product = new Product();
-        }
-        this.product.setId(productId);
-    }
 
     public Product getProduct() {
         return product;
