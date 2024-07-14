@@ -8,6 +8,7 @@ import java.util.Map;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +38,7 @@ public class ApiMemberController {
             throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
         }
 
-        return memberService.signUp(memberDTO);
+        return new ResponseEntity<>(memberService.signUp(memberDTO), HttpStatus.OK);
     }
 
     @PostMapping("/login")
@@ -51,6 +52,6 @@ public class ApiMemberController {
             throw new ValidationException(bindingResult.getFieldError().getDefaultMessage());
         }
 
-        return memberService.login(memberDTO);
+        return new ResponseEntity<>(memberService.login(memberDTO), HttpStatus.OK);
     }
 }

@@ -2,15 +2,12 @@ package gift.product.service;
 
 import gift.product.dto.MemberDTO;
 import gift.product.repository.MemberRepository;
-import gift.product.exception.LoginFailedException;
 import gift.product.model.Member;
 import gift.product.util.JwtUtil;
 import gift.product.validation.MemberValidation;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +20,19 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil, MemberValidation memberValidation, PasswordEncoder passwordEncoder) {
+    public MemberService(
+            MemberRepository memberRepository,
+            JwtUtil jwtUtil,
+            MemberValidation memberValidation,
+            PasswordEncoder passwordEncoder
+    ) {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
         this.memberValidation = memberValidation;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity<Map<String, String>> signUp(MemberDTO memberDTO) {
+    public Map<String, String> signUp(MemberDTO memberDTO) {
         System.out.println("[MemberService] signUp()");
         memberValidation.signUpValidation(memberDTO.getEmail());
 
@@ -38,15 +40,15 @@ public class MemberService {
         memberRepository.save(member);
 
         String token = jwtUtil.generateToken(member.getEmail());
-        return new ResponseEntity<>(responseToken(token), HttpStatus.OK);
+        return responseToken(token);
     }
 
-    public ResponseEntity<Map<String, String>> login(MemberDTO memberDTO) {
+    public Map<String, String> login(MemberDTO memberDTO) {
         memberValidation.loginValidation(memberDTO);
 
         Member member = convertDTOToMember(memberDTO);
         String token = jwtUtil.generateToken(member.getEmail());
-        return new ResponseEntity<>(responseToken(token), HttpStatus.OK);
+        return responseToken(token);
     }
 
     public Map<String, String> responseToken(String token) {
