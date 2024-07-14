@@ -1,15 +1,13 @@
 package gift.product.service;
 
+import gift.product.dto.MemberDTO;
 import gift.product.repository.MemberRepository;
-import gift.product.exception.LoginFailedException;
 import gift.product.model.Member;
 import gift.product.util.JwtUtil;
 import gift.product.validation.MemberValidation;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,32 +20,47 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil, MemberValidation memberValidation, PasswordEncoder passwordEncoder) {
+    public MemberService(
+            MemberRepository memberRepository,
+            JwtUtil jwtUtil,
+            MemberValidation memberValidation,
+            PasswordEncoder passwordEncoder
+    ) {
         this.memberRepository = memberRepository;
         this.jwtUtil = jwtUtil;
         this.memberValidation = memberValidation;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity<Map<String, String>> signUp(Member member) {
-        memberValidation.signUpValidation(member);
-        memberRepository.save(new Member(member.getEmail(), passwordEncoder.encode(member.getPassword())));
-        return new ResponseEntity<>(responseToken(jwtUtil.generateToken(member.getEmail())), HttpStatus.OK);
+    public Map<String, String> signUp(MemberDTO memberDTO) {
+        System.out.println("[MemberService] signUp()");
+        memberValidation.signUpValidation(memberDTO.getEmail());
+
+        Member member = convertDTOToMember(memberDTO);
+        memberRepository.save(member);
+
+        String token = jwtUtil.generateToken(member.getEmail());
+        return responseToken(token);
     }
 
-    public ResponseEntity<Map<String, String>> login(Member member) {
-        Member findMember = memberValidation.loginValidation(member.getEmail());
+    public Map<String, String> login(MemberDTO memberDTO) {
+        memberValidation.loginValidation(memberDTO);
 
-        if(!passwordEncoder.matches(member.getPassword(), findMember.getPassword()))
-            throw new LoginFailedException("비밀번호가 틀립니다.");
-
-        memberValidation.login(member.getEmail());
-        return new ResponseEntity<>(responseToken(memberValidation.getToken(member.getEmail())), HttpStatus.OK);
+        Member member = convertDTOToMember(memberDTO);
+        String token = jwtUtil.generateToken(member.getEmail());
+        return responseToken(token);
     }
 
     public Map<String, String> responseToken(String token) {
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
         return response;
+    }
+
+    public Member convertDTOToMember(MemberDTO memberDTO) {
+        return new Member(
+                memberDTO.getEmail(),
+                passwordEncoder.encode(memberDTO.getPassword())
+        );
     }
 }

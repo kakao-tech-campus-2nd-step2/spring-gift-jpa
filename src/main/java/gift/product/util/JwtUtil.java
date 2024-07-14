@@ -2,7 +2,6 @@ package gift.product.util;
 
 import gift.product.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -22,6 +21,7 @@ public class JwtUtil {
 
     // 토큰 생성
     public String generateToken(String email) {
+        System.out.println("[JwtUtil] generateToken()");
         long expirationTimeMillis = 3600000;
         Date issuedAt = new Date();
         Date expiration = new Date(issuedAt.getTime() + expirationTimeMillis);
@@ -36,10 +36,14 @@ public class JwtUtil {
 
     // 토큰의 서명 및 유효성 검증
     public boolean isValidToken(String token) {
-        System.out.println("[CertifyUtil] isValidToken()");
+        System.out.println("[JwtUtil] isValidToken()");
         try {
-            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
-            String subject = claimsJws.getBody().getSubject();
+            Jwts.parser()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
             return true;
         } catch (SignatureException e) {
             System.out.println("Invalid JWT signature: " + e.getMessage());
@@ -55,7 +59,7 @@ public class JwtUtil {
 
     // 토큰에서 클레임 추출
     public Claims extractClaims(String token) {
-        System.out.println("[CertifyUtil] extractClaims()");
+        System.out.println("[JwtUtil] extractClaims()");
         return Jwts.parser()
             .setSigningKey(key)
             .build()
@@ -65,7 +69,7 @@ public class JwtUtil {
 
     // HTTP 헤더 인증정보 확인하여 올바른 형식이면 토큰 반환
     public String checkAuthorization(String authorizationHeader) {
-        System.out.println("[CertifyUtil] checkAuthorization()");
+        System.out.println("[JwtUtil] checkAuthorization()");
 
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))
             throw new UnauthorizedException("인증에 필요한 정보가 HTTP 헤더에 존재하지 않습니다.");
@@ -79,6 +83,7 @@ public class JwtUtil {
 
     // 토큰을 이용해 이메일 추출
     public String getEmailByToken(String token) {
+        System.out.println("[JwtUtil] getEmailByToken()");
         return extractClaims(token).getSubject();
     }
 }

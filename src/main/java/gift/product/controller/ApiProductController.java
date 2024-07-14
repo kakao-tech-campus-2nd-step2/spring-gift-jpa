@@ -1,63 +1,53 @@
 package gift.product.controller;
 
-import gift.product.model.Product;
+import gift.product.dto.ProductDTO;
 import gift.product.service.ProductService;
-import gift.product.validation.ProductValidation;
 import jakarta.validation.Valid;
-import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
 public class ApiProductController {
 
     private final ProductService productService;
-    private final ProductValidation productValidation;
 
     @Autowired
-    public ApiProductController(ProductService productService, ProductValidation productValidation) {
+    public ApiProductController(ProductService productService) {
         this.productService = productService;
-        this.productValidation = productValidation;
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Product>> showProductList() {
+    public Page<ProductDTO> showProductList(Pageable pageable) {
         System.out.println("[ProductController] showProductList()");
-        List<Product> productList = new ArrayList<>(productService.getAllProducts());
-        return ResponseEntity.ok(productList);
+        return productService.getAllProducts(pageable);
     }
 
     @PostMapping()
-    public ResponseEntity<String> registerProduct(@Valid @RequestBody Product product) {
+    public ResponseEntity<String> registerProduct(@Valid @RequestBody ProductDTO productDTO) {
         System.out.println("[ProductController] registerProduct()");
-        return productService.registerProduct(product);
+        return productService.registerProduct(productDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
+    public ResponseEntity<String> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO productDTO) {
         System.out.println("[ProductController] updateProduct()");
-        return productService.updateProduct(id, new Product(product.getName(),product.getPrice(), product.getImageUrl()));
+        return productService.updateProduct(id, productDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         System.out.println("[ProductController] deleteProduct()");
-        if (productService.existsById(id)) {
-            productService.deleteProduct(id);
-            return ResponseEntity.ok("Product deleted successfully");
-        }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Product>> searchProduct(@RequestParam("keyword") String keyword) {
+    public Page<ProductDTO> searchProduct(@RequestParam("keyword") String keyword, Pageable pageable) {
         System.out.println("[ProductController] searchProduct()");
-        List<Product> searchResults = new ArrayList<>(productService.searchProducts(keyword));
-        return ResponseEntity.ok(searchResults);
+        return productService.searchProducts(keyword, pageable);
     }
 }

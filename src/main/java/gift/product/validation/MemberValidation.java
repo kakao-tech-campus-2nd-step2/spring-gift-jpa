@@ -1,58 +1,36 @@
 package gift.product.validation;
 
+import gift.product.dto.MemberDTO;
 import gift.product.repository.MemberRepository;
 import gift.product.exception.DuplicateException;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.Member;
-import gift.product.util.JwtUtil;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class MemberValidation {
-    private final ConcurrentHashMap<String, String> tokenMap = new ConcurrentHashMap<>();
 
     private final MemberRepository memberRepository;
-    private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public MemberValidation(MemberRepository memberRepository, JwtUtil jwtUtil) {
+    public MemberValidation(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
-        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    public void signUpValidation(Member member) {
-        if(memberRepository.findByEmail(member.getEmail()).isPresent())
+    public void signUpValidation(String email) {
+        if(memberRepository.findByEmail(email) != null)
             throw new DuplicateException("이미 가입된 이메일입니다.");
     }
 
-    public Member loginValidation(String email) {
-        Optional<Member> member = memberRepository.findByEmail(email);
-        if(member.isEmpty())
-            throw new LoginFailedException("잘못된 이메일 입니다.");
-        return member.get();
-    }
-
-    public boolean isNull(String str) {
-        return str == null;
-    }
-
-    public void login(String email) {
-        tokenMap.put(email, jwtUtil.generateToken(email));
-    }
-
-    public void logout(String email) {
-        tokenMap.remove(email);
-    }
-
-    public boolean stillLogin(String email) {
-        return tokenMap.get(email) != null;
-    }
-
-    public String getToken(String email) {
-        return tokenMap.get(email);
+    public void loginValidation(MemberDTO memberDTO) {
+        Member member = memberRepository.findByEmail(memberDTO.getEmail());
+        if(member == null)
+            throw new LoginFailedException("이메일을 잘못 입력하였습니다.");
+        if(!passwordEncoder.matches(memberDTO.getPassword(), member.getPassword()))
+            throw new LoginFailedException("비밀번호가 틀립니다.");
     }
 }
