@@ -4,6 +4,7 @@ import gift.custom_annotation.annotation.PageInfo;
 import gift.custom_annotation.annotation.TokenEmail;
 import gift.dto.wish.WishRequestDTO;
 import gift.dto.wish.WishResponseDTO;
+import gift.entity.Wish;
 import gift.service.WishService;
 import gift.util.pagenation.PageInfoDTO;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class WishController {
             @TokenEmail
             String email,
 
-            @PageInfo
+            @PageInfo(entityClass = Wish.class)
             PageInfoDTO pageInfoDTO
             ) {
         return ResponseEntity.ok(wishService.getWishes(email, pageInfoDTO));

@@ -6,7 +6,7 @@ import gift.entity.Wish;
 import gift.dto.wish.WishRequestDTO;
 import gift.dto.wish.WishResponseDTO;
 import gift.exception.ForbiddenRequestException;
-import gift.exception.NoSuchMemberException;
+import gift.exception.NoSuchFieldException;
 import gift.exception.NoSuchProductException;
 import gift.exception.NoSuchWishException;
 import gift.repository.MemberRepository;
@@ -35,7 +35,7 @@ public class WishService {
         Pageable pageable = PageableGenerator.generatePageable(pageInfoDTO);
 
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(NoSuchMemberException::new);
+                .orElseThrow(NoSuchFieldException::new);
 
         return wishRepository.findAllByMember(member, pageable)
                 .stream()
@@ -45,7 +45,7 @@ public class WishService {
 
     public WishResponseDTO addWish(String email, WishRequestDTO wishRequestDTO) {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(NoSuchMemberException::new);
+                .orElseThrow(NoSuchFieldException::new);
 
         Product product = productRepository.findById(wishRequestDTO.productId())
                 .orElseThrow(NoSuchProductException::new);
@@ -77,7 +77,7 @@ public class WishService {
 
     private boolean isOwner(String email, long wishId) {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(NoSuchMemberException::new);
+                .orElseThrow(NoSuchFieldException::new);
 
         Member wishOwner = wishRepository.findById(wishId)
                 .orElseThrow(NoSuchProductException::new)

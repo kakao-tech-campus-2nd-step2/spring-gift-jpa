@@ -4,7 +4,7 @@ import gift.dto.member.*;
 import gift.entity.Member;
 import gift.exception.DuplicatedEmailException;
 import gift.exception.InvalidPasswordException;
-import gift.exception.NoSuchMemberException;
+import gift.exception.NoSuchFieldException;
 import gift.repository.MemberRepository;
 import gift.security.jwt.TokenProvider;
 import gift.util.pagenation.PageInfoDTO;
@@ -57,7 +57,7 @@ public class MemberService {
 
     public TokenResponseDTO login(MemberRequestDTO memberRequestDTO) throws InvalidPasswordException {
         Member member = memberRepository.findByEmail(memberRequestDTO.email())
-                .orElseThrow(NoSuchMemberException::new);
+                .orElseThrow(NoSuchFieldException::new);
 
         String encodedOriginalPw = member.getPassword();
 
@@ -76,7 +76,7 @@ public class MemberService {
 
     public void deleteUser(String email) {
         Member member = memberRepository.findByEmail(email)
-                        .orElseThrow(NoSuchMemberException::new);
+                        .orElseThrow(NoSuchFieldException::new);
 
         memberRepository.delete(member);
     }
@@ -93,7 +93,7 @@ public class MemberService {
     public void updatePw(String email, PwUpdateDTO pwUpdateDTO) {
         String encryptedPW = hashPassword(pwUpdateDTO.password());
 
-        Member member = memberRepository.findByEmail(email).orElseThrow(NoSuchMemberException::new);
+        Member member = memberRepository.findByEmail(email).orElseThrow(NoSuchFieldException::new);
         member.setPassword(encryptedPW);
 
         memberRepository.save(member);

@@ -2,6 +2,7 @@ package gift.controller.member;
 
 import gift.custom_annotation.annotation.PageInfo;
 import gift.custom_annotation.annotation.TokenEmail;
+import gift.entity.Member;
 import gift.util.pagenation.PageInfoDTO;
 import gift.dto.member.PwUpdateDTO;
 import gift.dto.member.MemberResponseDTO;
@@ -23,7 +24,7 @@ public class MemberController {
 
     @GetMapping("/api/users")
     public ResponseEntity<List<MemberResponseDTO>> getUsers(
-            @PageInfo
+            @PageInfo(entityClass = Member.class)
             PageInfoDTO pageInfoDTO
     ) {
         return ResponseEntity.ok(memberService.getAllUsers(pageInfoDTO));

@@ -4,6 +4,7 @@ import gift.custom_annotation.annotation.PageInfo;
 import gift.dto.product.ProductPatchDTO;
 import gift.dto.product.ProductResponseDTO;
 import gift.dto.product.ProductRequestDTO;
+import gift.entity.Product;
 import gift.repository.ProductRepository;
 import gift.util.pagenation.PageInfoDTO;
 import jakarta.validation.Valid;
@@ -24,7 +25,7 @@ public class ProductController {
 
     @GetMapping("/api/products")
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts(
-            @PageInfo
+            @PageInfo(entityClass = Product.class)
             PageInfoDTO pageInfoDTO
     ) {
         return ResponseEntity.ok(productService.getAllProducts(pageInfoDTO));

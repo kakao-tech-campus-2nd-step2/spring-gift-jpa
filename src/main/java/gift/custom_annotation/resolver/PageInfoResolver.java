@@ -9,6 +9,10 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+
 public class PageInfoResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -23,9 +27,11 @@ public class PageInfoResolver implements HandlerMethodArgumentResolver {
             pageInfoDTO = new PageInfoDTO(
                     extractPageNum(webRequest),
                     extractPageSize(webRequest),
-                    extractSortType(webRequest),
+                    extractSortType(webRequest, parameter),
                     extractSortOrder(webRequest)
             );
+        } catch (NoSuchFieldException e) {
+            throw new InvalidPageRequestException(e.getMessage());
         } catch (Exception e) {
             throw new InvalidPageRequestException();
         }
@@ -63,15 +69,28 @@ public class PageInfoResolver implements HandlerMethodArgumentResolver {
         return Boolean.parseBoolean(ascParam);
     }
 
-    private String extractSortType(NativeWebRequest webRequest) {
+    private String extractSortType(NativeWebRequest webRequest, MethodParameter parameter) throws NoSuchFieldException {
         String sortParam = webRequest.getParameter("sort");
 
         if (sortParam == null) {
             return "id";
         }
 
-        //Todo sortType이 들어온 enum중에 존재하는지 확인
+        Class<?> entityClass = parameter.getParameterAnnotation(PageInfo.class).entityClass();
+        List<String> fields = getFieldNames(entityClass);
+
+        if (!fields.contains(sortParam)) {
+            throw new NoSuchFieldException("No such field corresponding to this sort type : " + sortParam);
+        }
 
         return sortParam;
+    }
+
+    private List<String> getFieldNames(Class<?> clazz) {
+        Field[] fields = clazz.getDeclaredFields();
+
+        return Arrays.stream(fields)
+                .map((field) -> field.getName())
+                .toList();
     }
 }
