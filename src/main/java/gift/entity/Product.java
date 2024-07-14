@@ -27,6 +27,20 @@ public class Product {
     @Column(nullable = false)
     String imageUrl;
 
+
+    @OneToMany(mappedBy = "product")
+    List<Option> options = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product")
+    List <WishList> wishlists = new ArrayList<>();
+
+    public void addOptions(Option option){
+        options.add(option);
+    }
+    public void addWishlist(WishList wishlist){
+        wishlists.add(wishlist);
+    }
+
     public int getId() {
         return id;
     }

@@ -6,19 +6,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "user_tb")
+@Table(name="user_tb")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(unique = true, nullable = false)
+    @Column(unique=true, nullable=false)
+
     private String email;
     @Column(nullable = false)
     private String password;
 
 
+    @OneToMany(mappedBy = "user")
+    List<WishList> wishlist = new ArrayList<>();
+
     public User() {
     }
+
+    public void addWishlist(WishList wishlist){
+        this.wishlist.add(wishlist);
+    }
+
 
     public int getId() {
         return id;

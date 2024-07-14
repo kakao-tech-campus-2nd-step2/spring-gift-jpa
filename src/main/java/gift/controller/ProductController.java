@@ -1,9 +1,17 @@
 package gift.controller;
 
-import gift.dto.ProductDTO;
+
+import gift.dto.product.SaveProductDTO;
+import gift.dto.product.ShowProductDTO;
 import gift.entity.Product;
 import gift.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +26,16 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @GetMapping("/api/products")
-    public String getProducts() {
-        String jsonProducts = productService.getJsonAllProducts();
-        return jsonProducts;
+
+    public Page<ShowProductDTO> getProducts(@RequestParam(value = "page", defaultValue = "0") int pageNum) {
+        Pageable pageable = PageRequest.of(pageNum, 2, Sort.by(Sort.Direction.ASC, "id"));
+        return productService.getAllProducts(pageable);
+
     }
 
     @PostMapping("/api/products")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addProduct(@RequestBody ProductDTO.SaveDTO product) {
+    public void addProduct(@RequestBody SaveProductDTO product) {
         productService.saveProduct(product);
 
     }
@@ -47,7 +57,7 @@ public class ProductController {
     @ResponseBody
     @GetMapping("/api/product/{id}")
     public String getProduct(@PathVariable int Id) {
-        String product = productService.getProductById(Id);
+        String product = productService.getProductByID(Id);
         return product;
     }
 }
