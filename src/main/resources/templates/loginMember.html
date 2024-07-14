@@ -38,7 +38,7 @@
                 throw new Error("login failed");
             })
             .then(data => {
-                localStorage.setItem('token', data.token);
+                document.cookie = `token=${data.token}; path=/`;
                 window.location.href = "/api/products";
             })
             .catch(error => {
