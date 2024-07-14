@@ -9,7 +9,9 @@ import gift.exception.ProductNotExistsException;
 import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,8 +23,11 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductResponse> findAll() {
-        return productRepository.findAll().stream().map(GlobalMapper::toProductResponse).toList();
+    public Page<ProductResponse> findAll(Pageable pageable) {
+        Page<Product> productPage = productRepository.findAll(pageable);
+        List<ProductResponse> productResponses = productPage.stream()
+            .map(GlobalMapper::toProductResponse).toList();
+        return new PageImpl<>(productResponses, pageable, productPage.getTotalElements());
     }
 
     public ProductResponse find(UUID id) {
