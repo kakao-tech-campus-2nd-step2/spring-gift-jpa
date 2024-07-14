@@ -1,37 +1,11 @@
 package gift.repository;
 
-import gift.model.Product;
-import gift.model.WishList;
+import gift.entity.WishListEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
-@Repository
-public class WishListRepository {
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
-    public List<Long> readWishList(Long userId) {
-        String sql = "SELECT product_id FROM wishlist WHERE user_id = ?";
-        return jdbcTemplate.queryForList(sql, Long.class, userId);
-    }
-
-
-    public void addProductToWishList(Long userId, Long productId) {
-        String sql = "INSERT INTO wishlist (product_id, user_id) VALUES (?, ?)";
-        jdbcTemplate.update(sql, productId, userId);
-    }
-
-    public void removeWishList(Long userId) {
-        String sql = "DELETE FROM wishlist WHERE user_id = ?";
-        jdbcTemplate.update(sql, userId);
-    }
-
-    public void removeProductFromWishList(Long userId, Long productId) {
-        String sql = "DELETE FROM wishlist WHERE user_id = ? AND product_id = ?";
-        jdbcTemplate.update(sql, userId, productId);
-    }
-
+public interface WishListRepository extends JpaRepository<WishListEntity, Long> {
+    Optional<WishListEntity> findByUserEntity_IdAndProductEntity_Id(Long userId, Long productId);
+    List<WishListEntity> findByUserEntity_Id(Long userId);
 }

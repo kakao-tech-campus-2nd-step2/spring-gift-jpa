@@ -46,7 +46,7 @@
 </head>
 <body>
 <h1>상품 추가</h1>
-<form action="/admin/products/add" th:object="${product}" method="post">
+<form action="/admin/products/add" th:object="${productDTO}" method="post">
   Name: <input type="text" th:field="*{name}" th:classappend="${#fields.hasErrors('name')} ? 'error' : ''"><br>
   <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error"></div>
 

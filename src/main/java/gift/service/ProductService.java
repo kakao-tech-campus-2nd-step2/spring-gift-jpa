@@ -1,11 +1,14 @@
 package gift.service;
 
-import gift.model.Product;
+import gift.entity.ProductEntity;
+import gift.domain.ProductDTO;
 import gift.repository.ProductRepository;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
@@ -18,42 +21,81 @@ public class ProductService {
         ERROR
     }
 
+    private ProductDTO toProductDTO(ProductEntity productEntity) {
+        return new ProductDTO(
+            productEntity.getId(),
+            productEntity.getName(),
+            productEntity.getPrice(),
+            productEntity.getImageUrl()
+        );
+    }
 
-    public List<Product> getAllProducts() {
-        return productRepository.getAllProducts(); // 모든 상품을 조회
+    private ProductEntity toProductEntity(ProductDTO productDTO) {
+        return new ProductEntity(
+            productDTO.getId(),
+            productDTO.getName(),
+            productDTO.getPrice(),
+            productDTO.getImageUrl()
+        );
+    }
+
+    public List<ProductDTO> getAllProducts() {
+        List<ProductEntity> response = productRepository.findAll();
+        return response.stream()
+            .map(this::toProductDTO)
+            .collect(Collectors.toList());
     }
 
     // Read(단일 상품) - getProduct()
-    public Product getProduct(Long id) {
-        return productRepository.getProduct(id);
+    public Optional<ProductDTO> getProduct(Long id) {
+        return productRepository.findById(id)
+            .map(this::toProductDTO);
     }
 
     // Create(생성) - addProduct()
-    public ProductServiceStatus createProduct(Product product) {
-        productRepository.addProduct(product);
-        return ProductServiceStatus.SUCCESS;
+    @Transactional
+    public ProductServiceStatus createProduct(ProductDTO productDTO) {
+        try {
+            ProductEntity productEntity = toProductEntity(productDTO);
+            productRepository.save(productEntity);
+            return ProductServiceStatus.SUCCESS;
+        } catch (Exception e) {
+            return ProductServiceStatus.ERROR;
+        }
     }
 
     // Update(수정) - updateProduct()
-    public ProductServiceStatus editProduct(Long id, Product product) {
-        Product existingProduct = productRepository.getProduct(id);
-        if (existingProduct != null) {
-            productRepository.updateProduct(id, product);
+    @Transactional
+    public ProductServiceStatus editProduct(Long id, ProductDTO productDTO) {
+        try {
+            Optional<ProductEntity> existingProductEntityOptional = productRepository.findById(id);
+            if (!existingProductEntityOptional.isPresent()) {
+                return ProductServiceStatus.NOT_FOUND;
+            }
+            ProductEntity existingProductEntity = existingProductEntityOptional.get();
+            ProductEntity updatedProductEntity = new ProductEntity(
+                existingProductEntity.getId(),
+                productDTO.getName(),
+                productDTO.getPrice(),
+                productDTO.getImageUrl()
+            );
+            productRepository.save(updatedProductEntity);
             return ProductServiceStatus.SUCCESS;
+        } catch (Exception e) {
+            return ProductServiceStatus.ERROR;
         }
-        return ProductServiceStatus.NOT_FOUND;
     }
 
+    @Transactional
     public ProductServiceStatus deleteProduct(Long id) {
         try {
-            if (productRepository.getProduct(id) != null) {
-                productRepository.removeProduct(id);
-                return ProductServiceStatus.SUCCESS; // 성공적으로 삭제되었음을 나타내는 메시지
+            if (productRepository.existsById(id)) {
+                productRepository.deleteById(id);
+                return ProductServiceStatus.SUCCESS;
             }
             return ProductServiceStatus.NOT_FOUND;
         } catch (Exception e) {
-            return ProductServiceStatus.ERROR; // 에러 발생 시 메시지
+            return ProductServiceStatus.ERROR;
         }
     }
-
 }

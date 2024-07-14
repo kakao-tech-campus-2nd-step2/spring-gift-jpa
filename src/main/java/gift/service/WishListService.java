@@ -1,29 +1,73 @@
 package gift.service;
 
+import gift.domain.ProductDTO;
+import gift.entity.MemberEntity;
+import gift.entity.ProductEntity;
+import gift.entity.WishListEntity;
+import gift.domain.WishListDTO;
 import gift.repository.WishListRepository;
-import java.util.List;
+import java.util.Optional;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 public class WishListService {
+    private final WishListRepository wishListRepository;
+    private final ProductRepository productRepository;
+    private final MemberRepository memberRepository;
+
     @Autowired
-    private WishListRepository wishListRepository;
-
-    public List<Long> readWishList(Long userId) {
-        return  wishListRepository.readWishList(userId);
+    public WishListService(WishListRepository wishListRepository,
+        WishListRepository wishListRepository1, ProductRepository productRepository, MemberRepository memberRepository) {
+        this.wishListRepository = wishListRepository1;
+        this.productRepository = productRepository;
+        this.memberRepository = memberRepository;
     }
 
-    public void addProductToWishList(Long userId, Long productId) {
-        wishListRepository.addProductToWishList(userId, productId);
+    private WishListDTO toWishListDTO(WishListEntity wishListEntity) {
+        return new WishListDTO(wishListEntity.getProductEntity().getId(), wishListEntity.getUserEntity().getId());
     }
 
+    private WishListEntity dtoToEntity(Long userId, ProductDTO product) throws Exception {
+        MemberEntity memberEntity = memberRepository.findById(userId)
+            .orElseThrow(() -> new Exception("유저가 존재하지 않습니다."));
+
+        ProductEntity productEntity = productRepository.findById(product.getId())
+            .orElseThrow(() -> new Exception("상품이 존재하지 않습니다."));
+
+        return new WishListEntity(productEntity, memberEntity);
+    }
+
+
+    public List<WishListDTO> readWishList(Long userId) {
+        List<WishListEntity> wishListEntities = wishListRepository.findByUserEntity_Id(userId);
+        return wishListEntities.stream()
+            .map(this::toWishListDTO)
+            .collect(Collectors.toList());
+
+    }
+
+    @Transactional
+    public void addProductToWishList(Long userId, ProductDTO product) throws Exception {
+        wishListRepository.save(dtoToEntity(userId, product));
+    }
+
+    @Transactional
     public void removeWishList(Long userId) {
-        wishListRepository.removeWishList(userId);
+        List<WishListEntity> wishListEntities = wishListRepository.findByUserEntity_Id(userId);
+        wishListRepository.deleteAll(wishListEntities);
     }
 
+    @Transactional
     public void removeProductFromWishList(Long userId, Long productId) {
-        wishListRepository.removeProductFromWishList(userId, productId);
+        Optional<WishListEntity> wishListEntityOpt = wishListRepository.findByUserEntity_IdAndProductEntity_Id(userId, productId);
+        wishListEntityOpt.ifPresent(wishListRepository::delete);
     }
 
 }
