@@ -1,6 +1,6 @@
 package gift.repository;
 
-import gift.dto.Product;
+import gift.entity.Product;
 import java.sql.Types;
 import java.util.List;
 import java.util.Optional;

@@ -2,22 +2,17 @@ package gift.dto;
 
 import gift.constants.ErrorMessage;
 import gift.constants.RegularExpression;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import gift.entity.Product;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-@Entity
-public class Product {
+public class ProductDto {
 
-    @Id
     @NotNull
-    long id;
+    private final long id;
 
-    @Column(name = "name", nullable = false)
     @NotBlank(message = ErrorMessage.PRODUCT_NAME_VALID_NOT_BLANK_MSG)
     @Size(min = 1, max = 15, message = ErrorMessage.PRODUCT_NAME_VALID_SIZE_MSG)
     @Pattern(
@@ -26,23 +21,25 @@ public class Product {
     @Pattern(
         regexp = RegularExpression.PRODUCT_NAME_FIND_KAKAO_REGEX,
         message = ErrorMessage.PRODUCT_NAME_VALID_KAKAO_MSG)
-    String name;
+    private final String name;
 
-    @Column(name = "price")
     @NotNull
-    long price;
+    private final long price;
 
-    @Column(name = "imageurl")
-    String imageUrl;
+    private final String imageUrl;
 
-    public Product() {
-    }
-
-    public Product(long id, String name, long price, String imageUrl) {
+    public ProductDto(long id, String name, long price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public ProductDto(Product p) {
+        id = p.getId();
+        name = p.getName();
+        price = p.getPrice();
+        imageUrl = p.getImageUrl();
     }
 
     public long getId() {

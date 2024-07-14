@@ -1,7 +1,8 @@
 package gift.service;
 
 import gift.constants.ErrorMessage;
-import gift.dto.Product;
+import gift.dto.ProductDto;
+import gift.entity.Product;
 import gift.repository.ProductJpaDao;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -21,12 +22,12 @@ public class ProductService {
      *
      * @param product
      */
-    public void addProduct(Product product) {
+    public void addProduct(ProductDto product) {
         productJpaDao.findById(product.getId())
             .ifPresent(v -> {
                 throw new IllegalArgumentException(ErrorMessage.ID_ALREADY_EXISTS_MSG);
             });
-        productJpaDao.save(product);
+        productJpaDao.save(new Product(product));
     }
 
     /**
@@ -34,10 +35,10 @@ public class ProductService {
      *
      * @param product
      */
-    public void editProduct(Product product) {
+    public void editProduct(ProductDto product) {
         productJpaDao.findById(product.getId())
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.PRODUCT_NOT_EXISTS_MSG));
-        productJpaDao.save(product);
+        productJpaDao.save(new Product(product));
     }
 
     /**
@@ -56,8 +57,8 @@ public class ProductService {
      *
      * @return 상품 List
      */
-    public List<Product> getAllProducts() {
-        return productJpaDao.findAll();
+    public List<ProductDto> getAllProducts() {
+        return productJpaDao.findAll().stream().map(ProductDto::new).toList();
     }
 
     /**
@@ -66,8 +67,9 @@ public class ProductService {
      * @param id
      * @return Product 객체
      */
-    public Product getProduct(Long id) {
-        return productJpaDao.findById(id)
+    public ProductDto getProduct(Long id) {
+        Product product = productJpaDao.findById(id)
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.PRODUCT_NOT_EXISTS_MSG));
+        return new ProductDto(product);
     }
 }
