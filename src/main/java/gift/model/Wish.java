@@ -1,5 +1,6 @@
 package gift.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -11,10 +12,12 @@ public class Wish {
     @Column(name = "id")
     private long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(name = "member_id"), nullable = false)
     private Member member;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", foreignKey = @ForeignKey(name = "product_id"), nullable = false)
     private Product product;
@@ -37,11 +40,11 @@ public class Wish {
         return id;
     }
 
-    public Member getMemberId() {
+    public Member getMember() {
         return member;
     }
 
-    public Product getProductId() {
+    public Product getProduct() {
         return product;
     }
 

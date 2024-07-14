@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.model.WishDTO;
+import gift.DTO.WishDTO;
 import gift.service.WishService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +20,8 @@ public class WishController {
     //멤버 id로 해당 멤버의 위시리스트 가져옴
     @GetMapping("/getAllWishlist")
     public List<WishDTO> getWishlistController(HttpServletRequest request, @RequestParam(defaultValue = "0") int page,
-                                               @RequestParam(defaultValue = "id") String sortBy,
-                                               @RequestParam(defaultValue = "asc") String sortOrder) throws AuthenticationException {
+                                            @RequestParam(defaultValue = "id") String sortBy,
+                                            @RequestParam(defaultValue = "asc") String sortOrder) throws AuthenticationException {
         return wishService.getWishlist(request, page, sortBy, sortOrder);
     }
 

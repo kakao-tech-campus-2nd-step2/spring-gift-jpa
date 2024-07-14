@@ -3,18 +3,14 @@ package gift.service;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
-import gift.model.WishDTO;
+import gift.DTO.WishDTO;
 import gift.repository.WishRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import javax.naming.AuthenticationException;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,10 +31,11 @@ public class WishService {
         Sort sort = getSort(sortBy, sortOrder);
         Pageable pageable = PageRequest.of(page, 10, sort);
         Page<Wish> pageWishlist = wishRepository.findByMember_Id(memberId, pageable);
-        List<Wish> wishlist= pageWishlist.getContent();
+        List<Wish> wishlist = pageWishlist.getContent();
+
         List<WishDTO> list = wishlist.stream()
                 .map(WishDTO::getWishDTO)
-                .toList();
+                .collect(Collectors.toList());
 
         return list;
     }
