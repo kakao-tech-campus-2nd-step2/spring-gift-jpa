@@ -5,9 +5,10 @@ import gift.model.item.ItemForm;
 import gift.service.ItemService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,8 +31,8 @@ public class ItemController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<ItemDTO>> getItemList(Model model) {
-        List<ItemDTO> list = itemService.getList();
+    public ResponseEntity<Page<ItemDTO>> getItemList(@PageableDefault(size = 5) Pageable pageable) {
+        Page<ItemDTO> list = itemService.getList(pageable);
         return ResponseEntity.ok(list);
     }
 

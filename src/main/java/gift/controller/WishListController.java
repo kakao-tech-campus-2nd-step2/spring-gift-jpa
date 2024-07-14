@@ -2,7 +2,9 @@ package gift.controller;
 
 import gift.model.wishList.WishListResponse;
 import gift.service.WishListService;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +23,9 @@ public class WishListController {
     }
 
     @GetMapping("/wishes")
-    public List<WishListResponse> getWishList(@RequestAttribute("userId") Long userId) {
-        return wishListService.getWishList(userId);
+    public Page<WishListResponse> getWishList(@RequestAttribute("userId") Long userId,
+        @PageableDefault(size = 5) Pageable pageable) {
+        return wishListService.getWishList(userId, pageable);
     }
 
     @PostMapping("/wishes/{id}")
