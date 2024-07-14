@@ -1,14 +1,11 @@
 package gift.entity;
 
-import gift.dto.MemberDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Size;
-import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -40,19 +37,15 @@ public class Member {
     @Column(nullable = false)
     private String role;
 
-    @OneToMany(mappedBy = "member")
-    private List<Wish> wishList;
-
     protected Member() {
     }
 
-    public Member(String email, String password, String name, String role, List<Wish> wishList) {
+    public Member(String email, String password, String name, String role) {
         validate(email, password);
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
-        this.wishList = wishList;
     }
 
     public String getEmail() {
@@ -66,9 +59,6 @@ public class Member {
     }
     public String getRole() {
         return role;
-    }
-    public List<Wish> getWishList() {
-        return wishList;
     }
     public Long getId() {
         return id;
