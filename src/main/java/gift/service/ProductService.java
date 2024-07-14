@@ -1,9 +1,11 @@
 package gift.service;
 
 import gift.exception.InvalidProductException;
+import gift.exception.InvalidUserException;
 import gift.model.Product;
 import gift.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
@@ -42,7 +44,10 @@ public class ProductService {
     
     private void validateBindingResult(BindingResult bindingResult) {
     	if(bindingResult.hasErrors()) {
-    		throw new InvalidProductException(bindingResult.getFieldError().getDefaultMessage());
+    		String errorMessage = bindingResult
+					.getFieldError()
+					.getDefaultMessage();
+			throw new InvalidUserException(errorMessage, HttpStatus.BAD_REQUEST);
     	}
     }
     
