@@ -18,7 +18,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="item : ${wishlist}">
+    <tr th:each="item : ${paging.content}">
         <td th:text="${item.productId}"></td>
         <td th:text="${item.productName}"></td>
         <td th:text="${item.count}"></td>
@@ -36,6 +36,13 @@
     </tr>
     </tbody>
 </table>
+
+<div>
+    <a th:if="${currentPage} > 0" th:href="@{/wishlist(page=${currentPage - 1}, size=${paging.size})}">Previous</a>
+    <span th:text="${currentPage + 1}"></span>
+    <a th:if="${currentPage + 1 < totalPages}" th:href="@{/wishlist(page=${currentPage + 1}, size=${paging.size})}">Next</a>
+</div>
+
 <script>
     function removeFromWishlist(form) {
         var productName = form.querySelector('input[name="productName"]').value;
