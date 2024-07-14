@@ -1,5 +1,6 @@
 package gift.controller;
 
+import gift.domain.Menu;
 import gift.domain.MenuRequest;
 import gift.domain.MenuResponse;
 import gift.service.MenuService;
@@ -39,7 +40,7 @@ public class MenuRestController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> update(
+    public ResponseEntity<MenuResponse> update(
             @PathVariable("id") Long id,
             @Valid @ModelAttribute MenuRequest request
     ) {
@@ -47,7 +48,7 @@ public class MenuRestController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Object> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<String> delete(@PathVariable("id") Long id) {
         menuService.delete(id);
         return ResponseEntity.ok().body("successfully deleted");
     }

@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.controller.WishListController;
 import gift.domain.WishList;
 import gift.domain.WishListRequest;
 import gift.domain.WishListResponse;
@@ -18,14 +19,14 @@ public class WishListService {
     }
 
     public void save(WishListRequest wishListRequest) {
-        WishList wishList = WishList.MapWishListRequestToWishList(wishListRequest);
+        WishList wishList = WishListController.MapWishListRequestToWishList(wishListRequest);
         wishListRepository.save(wishList);
     }
 
     public List<WishListResponse> findById(String jwtId) {
         List<WishList> wishLists =  wishListRepository.findByMemberId(jwtId);
         return wishLists.stream()
-                .map(WishList::MapWishListToWishListResponse)
+                .map(WishListController::MapWishListToWishListResponse)
                 .collect(Collectors.toList());
     }
 

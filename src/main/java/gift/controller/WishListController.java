@@ -1,10 +1,13 @@
 package gift.controller;
 
+import gift.domain.WishList;
 import gift.domain.WishListRequest;
 import gift.domain.WishListResponse;
 import gift.repository.MemberRepository;
 import gift.repository.MenuRepository;
 import gift.service.JwtService;
+import gift.service.MemberService;
+import gift.service.MenuService;
 import gift.service.WishListService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +20,14 @@ import java.util.List;
 public class WishListController {
     private final WishListService wishListService;
     private final JwtService jwtService;
-    private final MenuRepository menuRepository;
-    private final MemberRepository memberRepository;
+    private final MenuService menuService;
+    private final MemberService memberService;
 
-    public WishListController(WishListService wishListService, JwtService jwtService, MenuRepository menuRepository, MemberRepository memberRepository){
+    public WishListController(WishListService wishListService, JwtService jwtService, MenuService menuService, MemberService memberService){
         this.wishListService = wishListService;
         this.jwtService = jwtService;
-        this.menuRepository = menuRepository;
-        this.memberRepository = memberRepository;
+        this.menuService = menuService;
+        this.memberService = memberService;
     }
 
     @PostMapping("/save")
@@ -34,8 +37,9 @@ public class WishListController {
     ) {
         String jwtId = jwtService.getMemberId();
         WishListRequest wishListRequest = new WishListRequest(
-                memberRepository.findById(jwtId).get(),
-                menuRepository.findById(menuId).get());
+                memberService.findById(jwtId),
+                menuService.findById(menuId)
+        );
         wishListService.save(wishListRequest);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization",token.replace("Bearer ",""));
@@ -57,4 +61,14 @@ public class WishListController {
         wishListService.delete(id);
         return ResponseEntity.ok().body("성공적으로 삭제되었습니다.");
     }
+
+    public static WishList MapWishListRequestToWishList(WishListRequest wishListRequest){
+        return new WishList(wishListRequest.member(),wishListRequest.menu());
+    }
+
+    public static WishListResponse MapWishListToWishListResponse(WishList wishList){
+        return new WishListResponse(wishList.getId(), wishList.getMenu());
+    }
+
+
 }

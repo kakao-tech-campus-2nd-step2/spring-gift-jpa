@@ -62,14 +62,6 @@ public class Menu {
         this.imageUrl = menu.imageUrl;
     }
 
-    public static Menu MapMenuRequestToMenu(MenuRequest menuRequest){
-        return new Menu(menuRequest.name(),menuRequest.price(), menuRequest.imageUrl());
-    }
-
-    public static MenuResponse MapMenuToMenuResponse(Menu menu){
-        return new MenuResponse(menu.getId(),menu.getName(),menu.getPrice(),menu.getImageUrl());
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

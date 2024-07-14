@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.domain.Member;
 import gift.domain.MemberRequest;
+import gift.domain.Menu;
 import gift.domain.WishList;
 import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class MemberService {
@@ -21,10 +23,9 @@ public class MemberService {
         this.jwtService = jwtService;
     }
 
-    public String join(MemberRequest memberRequest) {
+    public void join(MemberRequest memberRequest) {
         if(!memberRepository.existsById(memberRequest.id())){
             memberRepository.save(new Member(memberRequest.id(),memberRequest.password(),new LinkedList<WishList>()));
-            return jwtService.createJWT(memberRequest.id());
         }
         throw new NoSuchElementException("이미 존재하는 회원입니다.");
     }
@@ -39,5 +40,10 @@ public class MemberService {
             String jwt = jwtService.createJWT(memberRequest.id());
             return jwt;
         }
+    }
+
+    public Member findById(String Id) {
+        return memberRepository.findById(Id)
+                .orElseThrow(() -> new NoSuchElementException("해당하는 회원 정보가 없습니다."));
     }
 }

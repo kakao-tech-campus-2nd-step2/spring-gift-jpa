@@ -29,17 +29,12 @@ public class WishList {
         this.menu = menu;
     }
 
+    public Menu getMenu() {
+        return menu;
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public static WishList MapWishListRequestToWishList(WishListRequest wishListRequest){
-        return new WishList(wishListRequest.member(),wishListRequest.menu());
-    }
-
-    public static WishListResponse MapWishListToWishListResponse(WishList wishList){
-        return new WishListResponse(wishList.id, wishList.menu);
     }
 
     @Override
