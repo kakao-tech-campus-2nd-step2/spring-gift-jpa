@@ -6,6 +6,7 @@ import gift.mapper.ProductMapper;
 import gift.model.product.ProductRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -74,4 +75,8 @@ public class ProductService {
         return productMapper.toProductDTO(productEntity);
     }
 
+    public List<ProductDTO> getAllProducts(Pageable pageable) {
+        var productEntities = productRepository.findAll(pageable).toList();
+        return productEntities.stream().map(productMapper::toProductDTO).toList();
+    }
 }
