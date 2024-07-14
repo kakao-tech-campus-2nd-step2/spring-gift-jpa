@@ -9,6 +9,8 @@ import gift.repository.member.MemberSpringDataJpaRepository;
 import gift.repository.product.ProductSpringDataJpaRepository;
 import gift.repository.wishlist.WishlistSpringDataJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,7 +55,9 @@ public class WishlistService {
         wishlistRepository.deleteByMemberIdAndProductId(member.getId(), productId);
     }
 
-    public List<WishlistItem> getWishlistByMemberId(Long memberId) {
-        return wishlistRepository.findByMemberId(memberId);
+    public Page<WishlistItem> getWishlistByMemberId(Long memberId, Pageable pageable) {
+        return wishlistRepository.findByMemberId(memberId, pageable);
     }
+
+
 }
