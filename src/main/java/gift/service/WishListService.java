@@ -6,6 +6,7 @@ import gift.repository.WishRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class WishListService {
     private final WishRepository wishRepository;
@@ -27,9 +28,9 @@ public class WishListService {
         wishRepository.deleteById(productId);
     }
 
-    public void updateWish(Long id,WishDto wishDto){
-        Wish wish = new Wish(wishDto.getProduct(),wishDto.getMember(),wishDto.getAmount());
-        wish.setId(id);
+    public void updateWish(Long id, WishDto wishDto){
+        Wish wish = wishRepository.findById(id).get();
+        wish.updateWish(wishDto);
         wishRepository.save(wish);
     }
 }

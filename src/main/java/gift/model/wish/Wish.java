@@ -39,16 +39,12 @@ public class Wish {
         this.amount = wishDto.getAmount();
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Product getProduct(){
+        return product;
     }
 
-    public Long getProductId(){
-        return product.getId();
-    }
-
-    public Long getMemberId(){
-        return member.getId();
+    public Member getMember(){
+        return member;
     }
 
     public int getAmount(){
