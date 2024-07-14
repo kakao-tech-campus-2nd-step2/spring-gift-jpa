@@ -18,7 +18,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="product : ${products}">
+    <tr th:each="product : ${products.content}">
         <td th:text="${product.id}"></td>
         <td th:text="${product.name}"></td>
         <td th:text="${product.price}"></td>
@@ -30,5 +30,31 @@
     </tr>
     </tbody>
 </table>
+
+<div>
+    <span th:text="'Page ' + ${products.number + 1} + ' of ' + ${products.totalPages}"></span>
+</div>
+
+<div>
+    <ul>
+        <li th:if="${products.hasPrevious()}">
+            <a th:href="@{/api/products(page=${products.number - 1}, size=${products.size})}">Previous</a>
+        </li>
+        <li th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
+            th:classappend="${products.number == i} ? 'active'">
+            <a th:href="@{/api/products(page=${i}, size=${products.size})}" th:text="${i + 1}">1</a>
+        </li>
+        <li th:if="${products.hasNext()}">
+            <a th:href="@{/api/products(page=${products.number + 1}, size=${products.size})}">Next</a>
+        </li>
+    </ul>
+</div>
+
+<style>
+    .active {
+        font-weight: bold;
+    }
+</style>
+
 </body>
 </html>
