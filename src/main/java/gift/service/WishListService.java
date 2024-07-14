@@ -6,11 +6,13 @@ import gift.model.Member;
 import gift.model.Product;
 import gift.model.WishList;
 import gift.model.WishListDTO;
+import gift.model.WishListPageDTO;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import gift.repository.WishListRepository;
 import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,60 +30,57 @@ public class WishListService {
     }
 
     public WishListDTO createWishList(WishListDTO wishListDTO) {
-        Product product = productRepository.findByName(wishListDTO.productName())
+        Product product = productRepository.findById(wishListDTO.productId())
             .orElseThrow(() -> new RepositoryException(ErrorCode.PRODUCT_NOT_FOUND,
-                wishListDTO.productName()));
+                wishListDTO.productId()));
         Member member = memberRepository.findById(wishListDTO.memberId())
-            .orElseThrow(() -> new RepositoryException(ErrorCode.MEMBER_NOT_FOUND,
+            .orElseThrow(() -> new RepositoryException(ErrorCode.MEMBER_ID_NOT_FOUND,
                 wishListDTO.memberId()));
-        WishList wishList = new WishList(wishListDTO.email(), member,
+        WishList wishList = new WishList(member,
             product, wishListDTO.quantity());
         return convertToDTO(wishListRepository.save(wishList));
     }
 
-    public List<WishListDTO> getAllWishList() {
-        List<WishList> wishlists = wishListRepository.findAll();
-        return wishlists.stream()
+    public WishListPageDTO getWishListByMemberId(long memberId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<WishListDTO> wishListPage = wishListRepository.findWishListByMemberId(memberId,
+                pageable)
             .map(this::convertToDTO)
-            .collect(Collectors.toList());
-    }
+            .stream()
+            .toList();
 
-    public List<WishListDTO> getWishListByMemberId(long memberId) {
-        List<WishList> wishlists = wishListRepository.findWishListByMemberId(memberId);
-        return wishlists.stream()
-            .map(this::convertToDTO)
-            .collect(Collectors.toList());
+        return new WishListPageDTO(page, size, wishListPage.size(), wishListPage);
     }
 
     public WishListDTO updateWishListQuantity(WishListDTO wishListDTO) {
-        WishList currentWishList = wishListRepository.findByMemberIdAndProductName(
+        WishList currentWishList = wishListRepository.findByMemberIdAndProductId(
                 wishListDTO.memberId(),
-                wishListDTO.productName())
+                wishListDTO.productId())
             .orElseThrow(() -> new RepositoryException(
-                ErrorCode.WISHLIST_NOT_FOUND, wishListDTO.memberId(), wishListDTO.productName()));
+                ErrorCode.WISHLIST_NOT_FOUND, wishListDTO.memberId(), wishListDTO.productId()));
 
-        Product product = productRepository.findByName(wishListDTO.productName()).
+        Product product = productRepository.findById(wishListDTO.productId()).
             orElseThrow(() -> new RepositoryException(ErrorCode.PRODUCT_NOT_FOUND,
-                wishListDTO.productName()));
+                wishListDTO.productId()));
         Member member = memberRepository.findById(wishListDTO.memberId())
-            .orElseThrow(() -> new RepositoryException(ErrorCode.MEMBER_NOT_FOUND,
+            .orElseThrow(() -> new RepositoryException(ErrorCode.MEMBER_ID_NOT_FOUND,
                 wishListDTO.memberId()));
-        WishList newWishList = new WishList(currentWishList.getId(), currentWishList.getEmail(),
-            member, product, wishListDTO.quantity());
+        WishList newWishList = new WishList(currentWishList.getId(), member, product,
+            wishListDTO.quantity());
         return convertToDTO(wishListRepository.save(newWishList));
     }
 
-    public void deleteWishList(long memberId, String productName) {
-        WishList wishList = wishListRepository.findByMemberIdAndProductName(memberId, productName)
-            .orElseThrow(() -> new RepositoryException(ErrorCode.WISHLIST_NOT_FOUND,
-                memberId, productName));
+    public void deleteWishList(long memberId, long productId) {
+        WishList wishList = wishListRepository.findByMemberIdAndProductId(memberId, productId)
+            .orElseThrow(
+                () -> new RepositoryException(ErrorCode.WISHLIST_NOT_FOUND, memberId, productId));
         wishListRepository.deleteById(wishList.getId());
     }
 
     private WishListDTO convertToDTO(WishList wishList) {
         long memberId = wishList.getMember().getId();
-        String productName = wishList.getProduct().getName();
-        return new WishListDTO(wishList.getEmail(), memberId, productName,
-            wishList.getQuantity());
+        long productId = wishList.getProduct().getId();
+        return new WishListDTO(memberId, productId, wishList.getQuantity());
     }
+
 }

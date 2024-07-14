@@ -16,13 +16,11 @@ public class WishList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "email", nullable = false)
-    private String email;
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
     @ManyToOne
-    @JoinColumn(name = "product_name", nullable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
     @Column(name = "quantity", nullable = false)
     private long quantity;
@@ -30,16 +28,14 @@ public class WishList {
     protected WishList() {
     }
 
-    public WishList(String email, Member member, Product product, long quantity) {
-        this.email = email;
+    public WishList(Member member, Product product, long quantity) {
         this.member = member;
         this.product = product;
         this.quantity = quantity;
     }
 
-    public WishList(long id, String email, Member member, Product product, long quantity) {
+    public WishList(long id, Member member, Product product, long quantity) {
         this.id = id;
-        this.email = email;
         this.member = member;
         this.product = product;
         this.quantity = quantity;
@@ -51,14 +47,6 @@ public class WishList {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Product getProduct() {

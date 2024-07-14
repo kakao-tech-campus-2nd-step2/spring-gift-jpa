@@ -4,9 +4,12 @@ import gift.exception.ErrorCode;
 import gift.exception.RepositoryException;
 import gift.model.Product;
 import gift.model.ProductDTO;
+import gift.model.ProductPageDTO;
 import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +27,17 @@ public class ProductService {
         return convertToDTO(productRepository.save(product));
     }
 
-    public List<ProductDTO> getAllProduct() {
+    public ProductPageDTO getAllProduct(int pageNum, int size) {
+        Pageable pageable = PageRequest.of(pageNum, size);
+        List<ProductDTO> productPage = productRepository.findAll(pageable)
+            .map(this::convertToDTO)
+            .stream()
+            .toList();
+
+        return new ProductPageDTO(pageNum, size, productPage.size(), productPage);
+    }
+
+    public List<ProductDTO> getAllProductByList() {
         List<Product> products = productRepository.findAll();
         return products.stream()
             .map(this::convertToDTO)
