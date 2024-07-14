@@ -31,7 +31,7 @@ public class Member {
     private String role;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Wishlist> wishlistList;
+    private List<Wishlist> wishlists;
 
     protected Member() {
     }
