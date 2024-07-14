@@ -35,12 +35,10 @@ public class AdminProductController {
     public String addProduct(@Valid @ModelAttribute ProductRequestDTO productRequestDTO,
                              @RequestPart MultipartFile imageFile) throws IOException {
 
-        // Image storage and URL encoding
         String imagePath = ImageStorageUtil.saveImage(imageFile);
         String imageUrl = ImageStorageUtil.encodeImagePathToBase64(imagePath);
 
-        // Create and save the product
-        Product product = new Product(null, productRequestDTO.getName(), productRequestDTO.getPrice(),
+        Product product = new Product(productRequestDTO.getName(), productRequestDTO.getPrice(),
                 productRequestDTO.getDescription(), imageUrl);
         productService.addProduct(product);
 

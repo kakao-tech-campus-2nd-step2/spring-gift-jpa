@@ -46,7 +46,7 @@ public class ProductController {
     // 상품 추가
     @PostMapping
     public ResponseEntity<Product> addProduct(@RequestBody @Valid ProductRequestDTO productRequestDTO) {
-        Product product = new Product(null, productRequestDTO.getName(), productRequestDTO.getPrice(),
+        Product product = new Product(productRequestDTO.getName(), productRequestDTO.getPrice(),
                 productRequestDTO.getDescription(), productRequestDTO.getImageUrl());  // 이미지 URL은 초기에는 null
         productService.addProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
