@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+
 @Entity
 @Table(name = "product")
 public class Product {
@@ -21,6 +22,9 @@ public class Product {
     private String url;
     @Column(nullable = false)
     private Long price;
+
+    @OneToMany(mappedBy="product")
+    private List<Wish> wishes;
 
     public Product() {
     }
