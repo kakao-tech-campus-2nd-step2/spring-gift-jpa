@@ -4,6 +4,10 @@ import gift.Model.*;
 import gift.Repository.ProductRepository;
 import gift.Repository.WishRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,6 +33,13 @@ public class WishService {
         wishRepository.save(wish);
     }
 
+    public Page<Wish> getWishList(Member member, int page, int pageSize, String sortField, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(page, pageSize, sort);
+        Page<Wish> wishListPage= wishRepository.findByMember(member,pageable);
+        return wishListPage;
+    }
+
     public List<ResponseWishDTO> getWish(Member member) {
         List<Wish> wishList = wishRepository.findWishListByMember(member);
         ListIterator<Wish> iterator = wishList.listIterator();
@@ -39,6 +50,11 @@ public class WishService {
         }
 
         return responseWishDTOList;
+    }
+
+    public Wish findWishByMemberAndProduct(Member member, Product product){
+        Optional<Wish> wish= wishRepository.findByMemberAndProduct(member, product);
+        return wish.orElseThrow(()->new NoSuchElementException("매칭되는 wish가 없습니다"));
     }
 
     @Transactional
@@ -60,4 +76,5 @@ public class WishService {
         wishRepository.deleteById(wish.getId());
         return getWish(member);
     }
+
 }
