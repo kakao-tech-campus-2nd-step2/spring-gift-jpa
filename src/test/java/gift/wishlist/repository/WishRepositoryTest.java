@@ -15,6 +15,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @DataJpaTest
 class WishRepositoryTest {
@@ -51,6 +55,9 @@ class WishRepositoryTest {
     void testFindByMemberIdAndProductId() {
         Wish wish = new Wish(member, product);
         wishRepository.save(wish);
+
+        em.flush();
+        em.clear();
 
         List<Wish> wishList = wishRepository.findByMemberIdAndProductId(member.getId(), product.getId());
         assertThat(wishList).hasSize(1);
@@ -112,6 +119,7 @@ class WishRepositoryTest {
         wishRepository.deleteById(saveWish.getId());
 
         em.flush();
+        em.clear();
 
         Optional<Wish> wishList = wishRepository.findById(saveWish.getId());
         assertThat(wishList).isEmpty();
@@ -147,5 +155,31 @@ class WishRepositoryTest {
         assertThat(fetchedWish).isPresent();
         assertThat(fetchedWish.get().getProduct().getName()).isEqualTo("newProduct");
         assertThat(fetchedWish.get().getProduct().getPrice()).isEqualTo(6000);
+    }
+
+    @Test
+    void testFindByMemberIdWithPagination() {
+        Wish wish = new Wish(member, product);
+        wishRepository.save(wish);
+
+        for (int i = 1; i < 21; i++) {
+            Product newProduct = new Product("product" + i, 5000 + i, "http://example.com/image" + i + ".jpg");
+            newProduct = productRepository.save(newProduct);
+            Wish wish2 = new Wish(member, newProduct);
+            wishRepository.save(wish2);
+        }
+
+        em.flush();
+        em.clear();
+
+        Pageable pageable = PageRequest.of(0, 5, Sort.by("id").ascending());
+
+        Page<Wish> wishPage = wishRepository.findByMemberId(member.getId(), pageable);
+
+        assertThat(wishPage).isNotNull();
+        assertThat(wishPage.getContent()).hasSize(5);
+        assertThat(wishPage.getTotalPages()).isEqualTo(5);
+        assertThat(wishPage.getTotalElements()).isEqualTo(21);
+        assertThat(wishPage.getContent().get(0).getMember().getId()).isEqualTo(member.getId());
     }
 }
