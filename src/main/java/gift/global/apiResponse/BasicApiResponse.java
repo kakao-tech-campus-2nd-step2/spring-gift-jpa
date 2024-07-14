@@ -1,5 +1,6 @@
 package gift.global.apiResponse;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import org.springframework.http.HttpStatusCode;
 
@@ -11,7 +12,10 @@ public class BasicApiResponse {
     private final LocalDateTime timestamp;
     private final Integer status;
 
-    public BasicApiResponse(LocalDateTime timestamp, Integer status) {
+    public BasicApiResponse(
+        @JsonProperty(value = "timestamp", required = true) LocalDateTime timestamp,
+        @JsonProperty(value = "status", required = true) Integer status
+    ) {
         this.timestamp = timestamp;
         this.status = status;
     }

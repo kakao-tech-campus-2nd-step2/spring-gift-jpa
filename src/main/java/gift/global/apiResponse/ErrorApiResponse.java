@@ -1,5 +1,6 @@
 package gift.global.apiResponse;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,10 @@ public class ErrorApiResponse extends BasicApiResponse {
 
     private final String message;
 
-    public ErrorApiResponse(HttpStatusCode statusCode, String message) {
+    public ErrorApiResponse(
+        @JsonProperty(value = "status", required = true) HttpStatusCode statusCode,
+        @JsonProperty(value = "message", required = true) String message
+    ) {
         super(statusCode);
         this.message = message;
     }
