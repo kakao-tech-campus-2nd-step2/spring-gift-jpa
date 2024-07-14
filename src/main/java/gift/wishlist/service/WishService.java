@@ -9,6 +9,8 @@ import gift.wishlist.repository.WishRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,6 +37,11 @@ public class WishService {
         return wishes.stream()
             .map(wish -> new WishResponse(wish.getId(), wish.getProduct()))
             .collect(Collectors.toList());
+    }
+
+    public Page<WishResponse> getWishes(Member member, Pageable pageable) {
+        Page<Wish> wishesPage = wishRepository.findByMemberId(member.getId(), pageable);
+        return wishesPage.map(wish -> new WishResponse(wish.getId(), wish.getProduct()));
     }
 
     public void deleteWishByProductId(Member member, Long productId) {
