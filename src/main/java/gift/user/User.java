@@ -17,7 +17,7 @@ public class User {
     @Column(nullable = false)
     private String password;
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<WishList> wishes = new ArrayList<>();;
+    private List<WishList> wishes = new ArrayList<>();
 
     public User() {
     }
@@ -45,14 +45,16 @@ public class User {
         return password;
     }
 
-    public List<WishList> getWishes(){return wishes;}
+    public List<WishList> getWishes() {
+        return wishes;
+    }
 
-    public void addWishList(WishList wishList){
+    public void addWishList(WishList wishList) {
         this.wishes.add(wishList);
         wishList.setUser(this);
     }
 
-    public void removeWishList(WishList wishList){
+    public void removeWishList(WishList wishList) {
         wishes.remove(wishList);
         wishList.setUser(null);
     }

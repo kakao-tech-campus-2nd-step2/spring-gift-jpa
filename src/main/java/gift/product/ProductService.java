@@ -2,6 +2,12 @@ package gift.product;
 
 import java.util.List;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -15,10 +21,14 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductDTO> getAllProducts() {
-        return productRepository.findAll().stream()
+    public Page<ProductDTO> getAllProducts(int page, int size, String sortBy, Direction direction) {
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageRequest = PageRequest.of(page, size, sort);
+        Page<Product> productPage = productRepository.findAll(pageRequest);
+        List<ProductDTO> products = productPage.stream()
             .map(ProductDTO::fromProduct)
             .toList();
+        return new PageImpl<>(products, pageRequest, productPage.getTotalElements());
     }
 
     public ProductDTO getProductById(long id) throws NotFoundException {
@@ -40,7 +50,8 @@ public class ProductService {
     public void updateProduct(ProductDTO productDTO) throws NotFoundException {
         Product product = productRepository.findById(productDTO.getId())
             .orElseThrow(NotFoundException::new);
-        if (productRepository.existsByName(productDTO.getName())) {
+        if (productRepository.existsByName(productDTO.getName())
+            && product.getId() != productDTO.getId()) {
             throw new IllegalArgumentException("존재하는 이름입니다.");
         }
         product.update(productDTO.getName(), productDTO.getPrice(), productDTO.getImageUrl());

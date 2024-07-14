@@ -44,7 +44,7 @@ public class WishList {
     }
 
     public void setUser(User user) {
-        this.user=user;
+        this.user = user;
     }
 
     public Product getProduct() {
@@ -52,7 +52,7 @@ public class WishList {
     }
 
     public void setProduct(Product product) {
-        this.product=product;
+        this.product = product;
     }
 
     public int getNum() {

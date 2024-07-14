@@ -1,7 +1,6 @@
 package gift.user;
 
-import gift.auth.JwtUtil;
-import jakarta.transaction.Transactional;
+import gift.util.JwtUtil;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
@@ -23,8 +22,7 @@ public class UserService {
         return UserDTO.fromUser(userRepository.findById(id).orElseThrow(NotFoundException::new));
     }
 
-    @Transactional
-    public boolean register(UserDTO user){
+    public void register(UserDTO user){
         String password = user.password();
         String email = user.email();
         if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
@@ -33,7 +31,6 @@ public class UserService {
         if (!registerUser(user)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하는 이메일입니다.");
         }
-        return true;
     }
 
     public String login(UserDTO user){
