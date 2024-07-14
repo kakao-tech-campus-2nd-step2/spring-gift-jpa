@@ -29,6 +29,7 @@ class WishlistRepositoryTest {
 
     private Member savedMember;
     private Product savedProduct;
+    private Wishlist savedWishlist;
 
     @BeforeEach
     public void setUp() {
@@ -36,15 +37,12 @@ class WishlistRepositoryTest {
         savedMember = memberRepository.save(member);
         Product product = new Product(1L, "상품", "100", "https://kakao");
         savedProduct = productRepository.save(product);
+        savedWishlist = new Wishlist(1L, savedMember.getEmail(), savedProduct.getId());
     }
 
     @Test
     public void testSaveWishlist() {
-
-        Wishlist wishlist = new Wishlist(1L, savedMember.getEmail(), savedProduct.getId());
-
-        Wishlist saved = wishlistRepository.save(wishlist);
-
+        Wishlist saved = wishlistRepository.save(savedWishlist);
         assertAll(
             () -> assertThat(saved.getId()).isNotNull(),
             () -> assertThat(saved.getMemberEmail()).isEqualTo("kbm@kbm"),
@@ -54,8 +52,7 @@ class WishlistRepositoryTest {
 
     @Test
     public void testFindByMemberEmail() {
-        Wishlist wishlist = new Wishlist(1L, savedMember.getEmail(), savedProduct.getId());
-        wishlistRepository.save(wishlist);
+        wishlistRepository.save(savedWishlist);
         List<Wishlist> found = wishlistRepository.findByMemberEmail(savedMember.getEmail());
         assertAll(
             () -> assertThat(found.size()).isEqualTo(1),
@@ -65,8 +62,7 @@ class WishlistRepositoryTest {
 
     @Test
     void testDeleteByMemberEmailAndProductId() {
-        Wishlist wishlist = new Wishlist(1L, savedMember.getEmail(), savedProduct.getId());
-        wishlistRepository.save(wishlist);
+        wishlistRepository.save(savedWishlist);
         wishlistRepository.deleteByMemberEmailAndProductId(savedMember.getEmail(),
             savedProduct.getId());
         List<Wishlist> result = wishlistRepository.findByMemberEmail(savedMember.getEmail());
