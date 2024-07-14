@@ -16,6 +16,9 @@ public interface ProductRepository {
 
     Product save(Product entity);
 
-    Page<Product> findAllByOrderByIdDesc(Pageable pageable);
+    Page<Product> findAll(Pageable pageable);
 
+    Page<Product> findAllOrderByPrice(Pageable pageable);
+
+    Page<Product> findByNameContaining(String name, Pageable pageable);
 }
