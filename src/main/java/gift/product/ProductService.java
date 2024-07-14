@@ -4,9 +4,11 @@ import jakarta.validation.Valid;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 
 @Service
+@Validated
 public class ProductService {
     private final ProductRepository productRepository;
 

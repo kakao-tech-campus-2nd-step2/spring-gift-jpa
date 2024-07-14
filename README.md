@@ -26,4 +26,4 @@
 # 피드백
 - [x] Product에 대한 단위 테스트
 - [x] 외부에서 사용하지 않는 Entity 기본 생성자 protected로 변경
-- [ ] @kakao의 유효성 검사
+- [x] @kakao의 유효성 검사
