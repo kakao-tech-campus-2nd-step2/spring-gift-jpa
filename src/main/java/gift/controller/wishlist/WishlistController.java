@@ -43,6 +43,7 @@ public class WishlistController {
         if (!memberService.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
         String email = memberService.extractEmailFromToken(token);
         List<Product> wishlist = wishlistService.getWishlistByEmail(email, page, size);
         return ResponseEntity.ok(wishlist);
@@ -50,24 +51,30 @@ public class WishlistController {
 
     @PostMapping("/{productId}")
     public ResponseEntity<String> addToWishlist(
-        @RequestHeader("Authorization") String authorizationHeader, @PathVariable Long productId) {
+        @RequestHeader("Authorization") String authorizationHeader,
+        @PathVariable Long productId
+    ) {
         String token = getTokenFromHeader(authorizationHeader); // "Bearer " 부분을 제거
         if (!memberService.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
         String email = memberService.extractEmailFromToken(token);
+
         wishlistService.addWishlist(email, productId);
         return ResponseEntity.ok("Product added to wishlist");
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<String> removeFromWishlist(
-        @RequestHeader("Authorization") String authorizationHeader, @PathVariable Long productId) {
+        @RequestHeader("Authorization") String authorizationHeader,
+        @PathVariable Long productId
+    ) {
         String token = getTokenFromHeader(authorizationHeader); // "Bearer " 부분 제거
         if (!memberService.validateToken(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
         String email = memberService.extractEmailFromToken(token);
+
         wishlistService.removeWishlist(email, productId);
         return ResponseEntity.ok("Product removed from wishlist");
     }

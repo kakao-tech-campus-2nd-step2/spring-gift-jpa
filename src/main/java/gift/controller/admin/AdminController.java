@@ -66,7 +66,8 @@ public class AdminController {
      */
     @PostMapping
     public ResponseEntity<ProductResponse> addProduct(
-        @RequestBody @Valid ProductRequest productRequest) {
+        @RequestBody @Valid ProductRequest productRequest
+    ) {
         ProductResponse product = productService.addProduct(productRequest);
         return new ResponseEntity<>(product, HttpStatus.CREATED); // 201 Created
     }
