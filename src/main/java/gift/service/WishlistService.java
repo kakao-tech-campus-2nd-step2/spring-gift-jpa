@@ -7,7 +7,6 @@ import gift.repository.WishlistRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -17,7 +16,8 @@ public class WishlistService {
     private final MemberService memberService;
     private final ProductService productService;
 
-    public WishlistService(WishlistRepository wishlistRepository, MemberService memberService, ProductService productService) {
+    public WishlistService(WishlistRepository wishlistRepository, MemberService memberService,
+        ProductService productService) {
         this.wishlistRepository = wishlistRepository;
         this.memberService = memberService;
         this.productService = productService;
