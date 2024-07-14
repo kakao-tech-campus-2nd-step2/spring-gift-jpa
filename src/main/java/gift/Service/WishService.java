@@ -21,6 +21,7 @@ public class WishService {
 
 
 
+    @Transactional
     public void addWish(Member member, RequestWishDTO requestWishDTO) {
         Product product = productRepository.findById(requestWishDTO.getProductId())
                 .orElseThrow(()->new NoSuchElementException("매칭되는 물건이 없습니다."));

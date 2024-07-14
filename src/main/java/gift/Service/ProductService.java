@@ -24,6 +24,7 @@ public class ProductService {
         return list;
     }
 
+    @Transactional
     public void addProduct(RequestProduct requestProduct) {
         Product product = new Product(requestProduct.name(), requestProduct.price(), requestProduct.imageUrl());
         productRepository.save(product);
@@ -42,6 +43,7 @@ public class ProductService {
         product.setImageUrl(requestProduct.imageUrl());
     }
 
+    @Transactional
     public void deleteProduct(long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("매칭되는 product가 없습니다"));
         productRepository.deleteById(product.getId());
