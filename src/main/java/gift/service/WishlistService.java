@@ -61,10 +61,13 @@ public class WishlistService {
         }
         return new ArrayList<>(userWishlistMap.values());
     }
+<<<<<<< HEAD
 
 =======
     public List<WishlistItem> saveWishlistItems(List<WishlistItem> wishlistItems) {
         return wishlistRepository.saveAll(wishlistItems);
     }
 >>>>>>> 0efc70c (경북대 BE_김동윤 3주차 과제 (0, 1, 2단계) (#66))
+=======
+>>>>>>> 389ddd10b29ca52b35afd37068ac02ab8772a9cc
 }
