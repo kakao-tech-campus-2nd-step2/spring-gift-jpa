@@ -2,6 +2,7 @@ package gift.service;
 
 import gift.dto.ProductRegisterRequestDto;
 import gift.domain.Product;
+import gift.dto.ProductResponseDto;
 import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -21,11 +22,10 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public ProductRegisterRequestDto getProductById(long id) {
+    public ProductResponseDto getProductById(long id) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new NoSuchElementException("해당 id의 상품 없음: " + id));;
-        return new ProductRegisterRequestDto(product.getName(), product.getPrice(),
-            product.getImageUrl());
+        return new ProductResponseDto(product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     public Long addProduct(ProductRegisterRequestDto productDto){
@@ -49,12 +49,17 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public Page<Product> getPagedProducts(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public Page<ProductResponseDto> getPagedProducts(Pageable pageable) {
+        Page<Product> productPage = productRepository.findAll(pageable);
+        return productPage.map(this::convertToDto);
     }
 
-    // dto로 변경하면 필요한 거
-//    private ProductRegisterRequestDto convertToDto(Product product) {
-//        return new ProductRegisterRequestDto(product.getName(), product.getPrice(), product.getImageUrl());
-//    }
+    private ProductResponseDto convertToDto(Product product) {
+        return new ProductResponseDto(
+            product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl()
+        );
+    }
 }
