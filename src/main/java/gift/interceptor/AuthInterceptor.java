@@ -1,13 +1,13 @@
 package gift.interceptor;
 
+import gift.exception.ErrorCode;
+import gift.service.JwtProvider;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import gift.exception.ErrorCode;
-import gift.service.JwtProvider;
 
 @Component
 public class AuthInterceptor implements HandlerInterceptor {

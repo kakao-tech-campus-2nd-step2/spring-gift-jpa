@@ -1,9 +1,9 @@
 package gift.config;
 
+import gift.interceptor.AuthInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import gift.interceptor.AuthInterceptor;
 
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
