@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class Product {
+public class ProductDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -17,11 +17,11 @@ public class Product {
     private String imageUrl;
     private boolean isDeleted;
 
-    public Product() {
+    public ProductDto() {
 
     }
 
-    public Product(long id, String name, int price, String imageUrl, boolean isDeleted) {
+    public ProductDto(long id, String name, int price, String imageUrl, boolean isDeleted) {
         this.id = id;
         this.name = name;
         this.price = price;
