@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +34,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductListResponseDTO getAllProducts(int page) {
-        Pageable pageable = PageRequest.of(page, 8);
+    public ProductListResponseDTO getAllProducts(int page, String criteria) {
+        Pageable pageable = PageRequest.of(page, 8, Sort.by(criteria));
         List<ProductResponseDTO> productResponseDTOList = jpaProductRepository.findAll(pageable)
             .stream()
             .map(ProductResponseDTO::of)

@@ -44,8 +44,9 @@ public class ProductController {
 
     @GetMapping("/products/page")
     public ResponseEntity<SuccessBody<ProductListResponseDTO>> getAllProductPages(
-        @RequestParam(value = "page", defaultValue = "0") int page) {
-        ProductListResponseDTO productListResponseDTO = productService.getAllProducts(page);
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "criteria", defaultValue = "id") String criteria) {
+        ProductListResponseDTO productListResponseDTO = productService.getAllProducts(page, criteria);
         return ApiResponseGenerator.success(HttpStatus.OK, "모든 상품을 조회했습니다.",
             productListResponseDTO);
     }

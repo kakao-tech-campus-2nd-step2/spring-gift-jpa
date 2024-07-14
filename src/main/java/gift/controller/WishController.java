@@ -40,8 +40,9 @@ public class WishController {
 
     @GetMapping("/page")
     public ResponseEntity<SuccessBody<WishListResponseDTO>> getAllWishPages(@LoginUser User user,
-        @RequestParam(value = "page", defaultValue = "0") int page) {
-        WishListResponseDTO wishListResponseDTO = wishService.getAllWishes(user.getId(), page);
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "criteria", defaultValue = "id") String criteria) {
+        WishListResponseDTO wishListResponseDTO = wishService.getAllWishes(user.getId(), page, criteria);
         return ApiResponseGenerator.success(HttpStatus.OK, "위시리스트를 조회했습니다.", wishListResponseDTO);
     }
 
