@@ -6,12 +6,13 @@ import gift.entity.Product;
 import gift.entity.User;
 import gift.entity.Wish;
 import jakarta.persistence.EntityManager;
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 class WishRepositoryTest {
@@ -20,64 +21,41 @@ class WishRepositoryTest {
     private WishRepository wishRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
     private EntityManager entityManager;
 
-    private User user;
-    private Product product1;
-    private Product product2;
-
-    @BeforeEach
-    void setUp() {
-        user = new User("user@test.com", "password");
-        userRepository.save(user);
-
-        product1 = new Product("Product 1", 10000, "image1.jpg");
-        product2 = new Product("Product 2", 2000, "image2.jpg");
-        productRepository.save(product1);
-        productRepository.save(product2);
-    }
-
     @Test
-    @DisplayName("유저 아이디 기반 위시리스트 반환 테스트")
+    @DisplayName("유저 아이디 기반 위시리스트 반환 테스트 및 페이지 사이즈 테스트")
     void findByUserId() {
-        Wish wish1 = new Wish(user, product1, 10);
-        Wish wish2 = new Wish(user, product2, 15);
-        wishRepository.save(wish1);
-        wishRepository.save(wish2);
-        List<Wish> wishes = wishRepository.findByUserId(user.getId());
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Wish> page = wishRepository.findByUserId(1L, pageable);
 
-        assertThat(wishes).hasSize(2);
-        assertThat(wishes.getFirst().getProduct().getName()).isEqualTo(
-            wish1.getProduct().getName());
+        assertThat(page.getTotalElements()).isEqualTo(30);
+        assertThat(page.getTotalPages()).isEqualTo(3);
+        assertThat(page.getContent().size()).isEqualTo(10);
+
+        assertThat(page.getContent().get(0).getProduct().getName()).isEqualTo("Product 1");
     }
+
 
     @Test
     @DisplayName("유저 아이디와 위시 아이디 기반 위시 객체 반환 테스트")
     void findByUserIdAndId() {
-        Wish wish = new Wish(user, product1, 10);
-        Wish actual = wishRepository.save(wish);
-        Wish expected = wishRepository.findByUserIdAndId(user.getId(), actual.getId()).orElse(null);
+        Wish expectedWish = wishRepository.findById(1L).orElseThrow();
+        Wish actualWish = wishRepository.findByUserIdAndId(1L, 1L).orElse(null);
 
-        assertThat(actual.getId()).isEqualTo(expected.getId());
-        assertThat(actual.getProduct().getId()).isEqualTo(expected.getProduct().getId());
+        assertThat(expectedWish.getId()).isEqualTo(actualWish.getId());
+        assertThat(expectedWish.getProduct().getId()).isEqualTo(actualWish.getProduct().getId());
     }
 
     @Test
     @DisplayName("updateWishNumber JPQL 테스트")
     void updateWishNumber() {
-        Wish wish = new Wish(user, product1, 10);
-        Wish savedWish = wishRepository.save(wish);
-        wishRepository.updateWishNumber(user.getId(), savedWish.getId(), 30);
+        Wish wish = wishRepository.findById(1L).orElseThrow();
+        wishRepository.updateWishNumber(1L, wish.getId(), 30);
         entityManager.flush();
         entityManager.clear();
 
-        Wish updatedWish = wishRepository.findByUserIdAndId(user.getId(), savedWish.getId()).orElse(null);
+        Wish updatedWish = wishRepository.findByUserIdAndId(1L, wish.getId()).orElse(null);
 
         assertThat(updatedWish.getNumber()).isEqualTo(30);
     }

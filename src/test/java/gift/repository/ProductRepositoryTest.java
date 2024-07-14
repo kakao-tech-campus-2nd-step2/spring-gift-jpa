@@ -9,6 +9,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 class ProductRepositoryTest {
@@ -29,13 +32,11 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("DB에 저장된 ID를 기반으로 저장된 객체를 불러오는지 테스트")
     void findByIdTest() {
-        Product expected = new Product("gift", 1000, "image.jpg");
-        Product product = productRepository.save(expected);
-        Long id = product.getId();
+        Long id = 1L; // data.sql에 정의된 첫 번째 제품의 ID
         Product actual = productRepository.findById(id).orElse(null);
 
         assertThat(actual).isNotNull();
-        assertThat(actual.getName()).isEqualTo(expected.getName());
+        assertThat(actual.getName()).isEqualTo("Product 1");
     }
 
     @Test
@@ -46,5 +47,18 @@ class ProductRepositoryTest {
         assertThatThrownBy(() -> {
             productRepository.save(product);
         }).isInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
+    @DisplayName("페이지네이션 테스트")
+    void paginationTest() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Product> page = productRepository.findAll(pageable);
+
+        assertThat(page.getTotalElements()).isEqualTo(30);
+        assertThat(page.getTotalPages()).isEqualTo(3);
+        assertThat(page.getContent().size()).isEqualTo(10);
+
+        assertThat(page.getContent().get(0).getName()).isEqualTo("Product 1");
     }
 }

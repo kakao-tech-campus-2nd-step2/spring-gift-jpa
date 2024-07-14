@@ -1,31 +1,39 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>상품 관리자 페이지</title>
+  <title>상품 리스트 페이지</title>
   <link rel="stylesheet" type="text/css" href="/css/styles.css">
 </head>
 <body>
-  <h1>상품 관리자 페이지</h1>
-  <table th:border="1">
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Price</th>
-      <th>Image</th>
-      <th>Actions</th>
-    </tr>
-    <tr th:each="product : ${products}">
-      <td th:text="${product.id}">1</td>
-      <td th:text="${product.name}">product name</td>
-      <td th:text="${product.price}">1</td>
-      <td><img th:src="${product.img}" alt="Image" style="width: 100px; height: 100px;"></td>
-      <td>
-        <a th:href="@{/admin/products/edit/{id}(id = ${product.id})}">수정</a>
-        <a th:href="@{/admin/products/delete/{id}(id = ${product.id})}">삭제</a>
-      </td>
-    </tr>
-  </table>
-  <br/>
-  <a href="/admin/products/add">상품 추가하기</a>
+<h1>상품 리스트 페이지</h1>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Image</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${productPage.content}">
+    <td th:text="${product.id}">ID</td>
+    <td th:text="${product.name}">Name</td>
+    <td th:text="${product.price}">Price</td>
+    <td th:text="${product.img}">Image</td>
+    <td>
+      <a th:href="@{'/admin/products/edit/' + ${product.id}}">수정</a>
+      <a th:href="@{'/admin/products/delete/' + ${product.id}}">삭제</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div>
+  <a th:if="${productPage.hasPrevious()}"
+     th:href="@{'/admin/products?page=' + (${productPage.number} - 1) + '&size=' + ${productPage.size} + '&sortBy=' + ${sortBy} }">이전</a>
+  <a th:if="${productPage.hasNext()}"
+     th:href="@{'/admin/products?page=' + (${productPage.number} + 1) + '&size=' + ${productPage.size} + '&sortBy=' + ${sortBy} }">다음</a>
+</div>
 </body>
 </html>
