@@ -1,11 +1,12 @@
 package gift.controller;
 
+import gift.annotation.LoginMember;
 import gift.domain.TokenAuth;
 import gift.domain.WishlistItem;
 import gift.dto.request.WishlistRequest;
-import gift.service.TokenService;
+
 import gift.service.WishlistService;
-import jakarta.servlet.http.HttpServletRequest;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,49 +20,38 @@ public class WishlistController {
 
     private final WishlistService wishlistService;
 
-    private final TokenService tokenService;
-
     @Autowired
-    public WishlistController(WishlistService wishlistService, TokenService tokenService) {
+    public WishlistController(WishlistService wishlistService) {
         this.wishlistService = wishlistService;
-        this.tokenService = tokenService;
     }
 
     @GetMapping("/new")
-    public String newWishlistItemForm(Model model, HttpServletRequest httpServletRequest) {
-        TokenAuth token = getAuthVO(httpServletRequest);
-        Long memberId = token.getMember().getId();
+    public String newWishlistItemForm(Model model, @LoginMember TokenAuth tokenAuth) {
+        Long memberId = tokenAuth.getMember().getId();
         model.addAttribute("wishlistItem", new WishlistRequest());
         model.addAttribute("memberId", memberId);
         return "wishlist-add-form";
     }
 
     @PostMapping
-    public String addToWishlist(@Valid @RequestBody WishlistRequest request, HttpServletRequest httpServletRequest) {
-        TokenAuth token = getAuthVO(httpServletRequest);
-        wishlistService.addItemToWishlist(request, token.getToken());
+    public String addToWishlist(@Valid @ModelAttribute WishlistRequest request, @LoginMember TokenAuth tokenAuth) {
+        wishlistService.addItemToWishlist(request, tokenAuth.getToken());
         return "redirect:/wishlist";
     }
 
     @DeleteMapping("/delete/{productId}")
-    public String deleteItemFromWishlist(@PathVariable Long productId, HttpServletRequest httpServletRequest) {
-        TokenAuth token = getAuthVO(httpServletRequest);
-        wishlistService.deleteItemFromWishlist(productId, token.getToken());
+    public String deleteItemFromWishlist(@PathVariable Long productId, @LoginMember TokenAuth tokenAuth) {
+        wishlistService.deleteItemFromWishlist(productId, tokenAuth.getToken());
         return "redirect:/wishlist";
     }
 
     @GetMapping()
-    public String getWishlistForCurrentUser(Model model, Pageable pageable, HttpServletRequest httpServletRequest) {
-        TokenAuth token = getAuthVO(httpServletRequest);
-        Long memberId = token.getMember().getId();
+    public String getWishlistForCurrentUser(Model model, Pageable pageable, @LoginMember TokenAuth tokenAuth) {
+        Long memberId = tokenAuth.getMember().getId();
         Page<WishlistItem> wishlist = wishlistService.getWishlistByMemberId(memberId, pageable);
         model.addAttribute("wishlist", wishlist);
         model.addAttribute("memberId", memberId);
         return "wishlist-list";
     }
 
-    public TokenAuth getAuthVO(HttpServletRequest httpServletRequest) {
-        String key = httpServletRequest.getHeader("Authorization").substring(7);
-        return tokenService.findToken(key);
-    }
 }
