@@ -52,11 +52,11 @@ public class WishRepositoryTest {
     void findByMemberTest() {
         Wish wish1 = wishRepository.save(new Wish(member, product1, 1));
         Wish wish2 = wishRepository.save(new Wish(member, product2, 2));
-        List<ResponseWishDTO> actual = wishRepository.findWishListByMember(member);
+        List<Wish> actual = wishRepository.findWishListByMember(member);
         assertAll(
-                ()->assertThat(actual.get(0).getName()).isEqualTo("아메리카노"),
+                ()->assertThat(actual.get(0).getProduct().getName()).isEqualTo("아메리카노"),
                 ()->assertThat(actual.get(0).getCount()).isEqualTo(1),
-                ()->assertThat(actual.get(1).getName()).isEqualTo("카푸치노"),
+                ()->assertThat(actual.get(1).getProduct().getName()).isEqualTo("카푸치노"),
                 ()->assertThat(actual.get(1).getCount()).isEqualTo(2)
         );
     }

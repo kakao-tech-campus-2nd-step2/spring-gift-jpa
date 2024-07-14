@@ -29,7 +29,15 @@ public class WishService {
     }
 
     public List<ResponseWishDTO> getWish(Member member) {
-        return wishRepository.findWishListByMember(member);
+        List<Wish> wishList = wishRepository.findWishListByMember(member);
+        ListIterator<Wish> iterator = wishList.listIterator();
+        List<ResponseWishDTO> responseWishDTOList = new ArrayList<>();
+        while(iterator.hasNext()){
+            Wish wish = iterator.next();
+            responseWishDTOList.add(new ResponseWishDTO(wish.getProduct().getName(), wish.getCount()));
+        }
+
+        return responseWishDTOList;
     }
 
     @Transactional
