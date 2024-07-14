@@ -9,7 +9,7 @@
 AngularJS Git Commit Message Conventions을 참고해 커밋 메시지를 작성한다.
 ## 🚀 1단계 - 엔티티 매핑
 ### 구현할 기능
-- [X] Domain 모델 Entity로 매팡
+- [X] Domain 모델 Entity로 g팡
 - [X] Repository 계층 JPA로 리팩터링
 
 ## 🚀 2단계 - 연관 관계 매핑
