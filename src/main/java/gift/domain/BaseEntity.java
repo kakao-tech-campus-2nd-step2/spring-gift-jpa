@@ -1,39 +1,28 @@
 package gift.domain;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @MappedSuperclass
-public abstract class BaseEntity {
+@EntityListeners(AuditingEntityListener.class)
+public abstract class BaseEntity extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @CreatedBy
+    @Column(nullable = false, updatable = false)
+    private Long createdBy;
+
+    @LastModifiedBy
+    @Column(nullable = false)
+    private Long modifiedBy;
 
     protected BaseEntity() {
     }
 
-    abstract static class Builder<T extends Builder<T>> {
-
-        Long id;
-
-        public T id(Long id) {
-            this.id = id;
-            return self();
-        }
-
-        abstract BaseEntity build();
-
-        protected abstract T self();
-    }
-
     protected BaseEntity(Builder<?> builder) {
-        id = builder.id;
-    }
-
-    public Long getId() {
-        return id;
+        super(builder);
     }
 }
