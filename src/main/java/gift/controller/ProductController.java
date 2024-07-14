@@ -37,14 +37,14 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public String getProducts(Model model, Pageable pageable) {
         Page<ProductDTO> productPage = productService.getProductList(pageable);
         model.addAttribute("productPage", productPage);
         return "getProducts";
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<ResponseDTO> addProduct(@RequestBody @Valid ProductDTO productDTO) {
         try {
             productService.addProduct(productDTO);

@@ -37,7 +37,7 @@ public class WishListController {
         this.wishListService = wishListService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public String getWishes(Model model, @LoginMember MemberDTO memberDTO, Pageable pageable) {
         try {
             WishListDTO wishListDTO = wishListService.getWishList(memberDTO, pageable);
@@ -48,7 +48,7 @@ public class WishListController {
         return "getWishes";
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<ResponseDTO> addWishes(@RequestBody @Valid ProductDTO productDTO,
             @LoginMember MemberDTO memberDTO) {
         try {
