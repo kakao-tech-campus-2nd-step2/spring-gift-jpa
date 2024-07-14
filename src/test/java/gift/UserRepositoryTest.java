@@ -3,6 +3,7 @@ package gift;
 import gift.Entity.Users;
 import gift.Model.User;
 import gift.Repository.UsersJpaRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -74,8 +75,5 @@ public class UserRepositoryTest {
         Users users1 = Users.createUsers(user1);
         usersJpaRepository.save(users1);
     }
-
-
-
 
 }

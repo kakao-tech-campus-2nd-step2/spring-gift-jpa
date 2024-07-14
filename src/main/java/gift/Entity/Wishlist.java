@@ -8,6 +8,16 @@ public class Wishlist {
 
     @EmbeddedId
     private WishlistId id;
+  
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @MapsId("userId")
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    private Users users;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @MapsId("productId")
+    @JoinColumn(name = "productId", referencedColumnName = "productId")
+    private Products products;
     private String productName;
     private int count;
     private int price;
@@ -15,15 +25,32 @@ public class Wishlist {
     protected Wishlist() {
     }
 
-    protected Wishlist(WishlistId id, String productName, int count, int price) {
+    protected Wishlist(WishlistId id, Users users, Products products, String productName, int count, int price) {
         this.id = id;
+        this.users = users;
+        this.products = products;
         this.productName = productName;
         this.count = count;
         this.price = price;
     }
 
     public static Wishlist createWishlist(WishListItem wishListItem) {
-        return new Wishlist(WishlistId.createWishlistId(wishListItem.getUserId(), wishListItem.getProductId()), wishListItem.getProductName(), wishListItem.getCount(), wishListItem.getPrice());
+        Users users = new Users();
+        users.setId(wishListItem.getUserId());
+        Products products = new Products();
+        products.setId(wishListItem.getProductId());
+
+        WishlistId id = new WishlistId(users.getId(), products.getId());
+        return new Wishlist(id, users, products, wishListItem.getProductName(), wishListItem.getCount(), wishListItem.getPrice());
+
+    }
+
+    public WishlistId getId() {
+        return id;
+    }
+
+    public void setId(WishlistId id) {
+        this.id = id;
     }
 
     public long getUserId() {

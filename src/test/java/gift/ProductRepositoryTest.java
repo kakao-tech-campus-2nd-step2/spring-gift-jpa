@@ -3,6 +3,7 @@ package gift;
 import gift.Entity.Products;
 import gift.Model.Product;
 import gift.Repository.ProductJpaRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -12,6 +13,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
+@Transactional
 public class ProductRepositoryTest {
 
     @Autowired
@@ -52,8 +54,6 @@ public class ProductRepositoryTest {
         productJpaRepository.save(products);
 
         assertThat(productJpaRepository.findById(products.getId())).contains(products);
-
-
 
     }
 
