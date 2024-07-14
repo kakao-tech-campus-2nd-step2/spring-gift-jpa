@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.ArrayList;
 
 import gift.dto.ProductDto;
+import gift.dto.response.ProductPageResponse;
 import gift.entity.Product;
 import gift.entity.WishList;
 import gift.exception.CustomException;
@@ -32,11 +33,11 @@ public class ProductService{
     }
 
     @Transactional
-    public Page<ProductDto> getPage(int page) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("name"));
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
-        return productRepository.findAll(pageable).map(ProductDto::fromEntity);
+    public ProductPageResponse getPage(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        ProductPageResponse productPageResponse = new ProductPageResponse();
+        productPageResponse.fromPage(productRepository.findByOrderByNameDesc(pageable));
+        return productPageResponse;
     }
 
     @Transactional

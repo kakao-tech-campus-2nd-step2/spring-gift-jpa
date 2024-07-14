@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import gift.dto.ProductDto;
+import gift.dto.response.ProductPageResponse;
 import gift.entity.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
@@ -28,8 +29,8 @@ public class ProductController {
     }
 
     @GetMapping()
-    public String getProducts(Model model, @RequestParam(value = "page", defaultValue = "0")int page) {
-        Page<ProductDto> paging = productService.getPage(page);
+    public String getProducts(Model model, @RequestParam(value = "page", defaultValue = "0")int page, @RequestParam(value = "size", defaultValue = "10") int size) {
+        ProductPageResponse paging = productService.getPage(page, size);
         model.addAttribute("paging", paging);
         return "admin_page";
     }
