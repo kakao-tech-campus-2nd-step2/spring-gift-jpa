@@ -51,8 +51,10 @@ public class MemberService {
         return new LoginResponse(token);
     }
 
-    public Optional<Member> getMemberByEmail(String email) {
-        return memberRepository.findByEmail(email);
+    public Member getMemberByEmail(String email) {
+        Optional<Member> member = memberRepository.findByEmail(email);
+        member.orElseThrow(() -> new RuntimeException("Invalid Email"));
+        return member.get();
     }
 
     private void validatePassword(Member member, String password) {

@@ -32,8 +32,10 @@ public class ProductService {
         return page.getContent();
     }
 
-    public Optional<Product> getProductById(Long id) {
-        return productRepository.findById(id);
+    public Product getProductById(Long id) {
+        Optional<Product> product = productRepository.findById(id);
+        product.orElseThrow(() -> new RuntimeException("No product with id " + id));
+        return product.get();
     }
 
     public void addProduct(ProductRequest productRequest) {

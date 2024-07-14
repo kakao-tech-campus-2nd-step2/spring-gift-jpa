@@ -5,7 +5,6 @@ import gift.DTO.ProductRequest;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -51,9 +50,14 @@ public class AdminController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Optional<Product> product = productService.getProductById(id);
-        return product.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-            .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Product product;
+        try {
+            product = productService.getProductById(id);
+        } catch(RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(product, HttpStatus.OK);
+
     }
 
     /**
@@ -63,7 +67,8 @@ public class AdminController {
      * @return 같은 ID의 상품이 존재하지 않으면 201 Created, 아니면 400 Bad Request
      */
     @PostMapping
-    public ResponseEntity<ProductRequest> addProduct(@RequestBody @Valid ProductRequest productRequest) {
+    public ResponseEntity<ProductRequest> addProduct(
+        @RequestBody @Valid ProductRequest productRequest) {
         productService.addProduct(productRequest);
         return new ResponseEntity<>(productRequest, HttpStatus.CREATED); // 201 Created
     }
@@ -88,8 +93,10 @@ public class AdminController {
      * @return 상품 정보 수정에 성공하면 200 OK, 해당 id의 상품이 없으면 404 NOT FOUND
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ProductRequest> updateProduct(@PathVariable Long id,
-        @RequestBody @Valid ProductRequest updatedProduct) {
+    public ResponseEntity<ProductRequest> updateProduct(
+        @PathVariable Long id,
+        @RequestBody @Valid ProductRequest updatedProduct
+    ) {
         productService.updateProduct(id, updatedProduct);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK); // 200 OK
     }

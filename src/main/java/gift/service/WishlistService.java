@@ -35,13 +35,10 @@ public class WishlistService {
     }
 
     public void addWishlist(String email, Long productId) {
-        Optional<Product> product = productService.getProductById(productId);
-        product.orElseThrow(() -> new RuntimeException("Invalid Product ID"));
-        // 사용자 이메일과 제품 ID를 사용하여 위시리스트에 추가
+        Product product = productService.getProductById(productId);
+        Member member = memberService.getMemberByEmail(email);
 
-        Optional<Member> user = memberService.getMemberByEmail(email);
-        user.orElseThrow(() -> new RuntimeException("Invalid Email"));
-        Wishlist wish = new Wishlist(user.get(), product.get());
+        Wishlist wish = new Wishlist(member, product);
         wishlistRepository.save(wish);
     }
 
