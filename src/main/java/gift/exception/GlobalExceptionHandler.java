@@ -1,4 +1,4 @@
-package gift.exceptionhandler;
+package gift.exception;
 
 import gift.dto.ErrorResponse;
 import io.jsonwebtoken.JwtException;
