@@ -1,6 +1,8 @@
 package gift.Entity;
 
-import gift.Model.WishListItem;
+import gift.Model.MemberDto;
+import gift.Model.ProductDto;
+import gift.Model.WishlistDto;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,16 +10,17 @@ public class Wishlist {
 
     @EmbeddedId
     private WishlistId id;
-  
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @MapsId("userId")
     @JoinColumn(name = "userId", referencedColumnName = "userId")
-    private Users users;
+    private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @MapsId("productId")
     @JoinColumn(name = "productId", referencedColumnName = "productId")
-    private Products products;
+    private Product product;
+
     private String productName;
     private int count;
     private int price;
@@ -25,24 +28,13 @@ public class Wishlist {
     protected Wishlist() {
     }
 
-    protected Wishlist(WishlistId id, Users users, Products products, String productName, int count, int price) {
+    public Wishlist(WishlistId id, Member member, Product product, String productName, int count, int price) {
         this.id = id;
-        this.users = users;
-        this.products = products;
+        this.member = member;
+        this.product = product;
         this.productName = productName;
         this.count = count;
         this.price = price;
-    }
-
-    public static Wishlist createWishlist(WishListItem wishListItem) {
-        Users users = new Users();
-        users.setId(wishListItem.getUserId());
-        Products products = new Products();
-        products.setId(wishListItem.getProductId());
-
-        WishlistId id = new WishlistId(users.getId(), products.getId());
-        return new Wishlist(id, users, products, wishListItem.getProductName(), wishListItem.getCount(), wishListItem.getPrice());
-
     }
 
     public WishlistId getId() {

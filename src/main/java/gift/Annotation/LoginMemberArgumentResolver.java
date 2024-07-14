@@ -1,7 +1,7 @@
 package gift.Annotation;
 
-import gift.Entity.Users;
-import gift.Service.UserService;
+import gift.Model.MemberDto;
+import gift.Service.MemberService;
 import gift.Utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
@@ -14,22 +14,20 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import java.util.Optional;
-
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
-    private final UserService userService;
+    private final MemberService memberService;
     private final JwtUtil jwtUtil;
 
     @Autowired
-    public LoginMemberArgumentResolver(UserService userService, JwtUtil jwtUtil) {
-        this.userService = userService;
+    public LoginMemberArgumentResolver(MemberService memberService, JwtUtil jwtUtil) {
+        this.memberService = memberService;
         this.jwtUtil = jwtUtil;
     }
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return methodParameter.getParameterType().equals(Users.class);
+        return methodParameter.getParameterType().equals(MemberDto.class);
     }
 
     @Override
@@ -52,13 +50,12 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         }
 
         Claims claims = jwtUtil.decodeToken(token); //decode
-        String userEmail = claims.getSubject(); // subject를 email로 설정했기 때문에 userEmail로 사용
-        Optional<Users> users = userService.findByEmail(userEmail); //null이라면 인증된 것이 아닐 것이고 null이 아니라면 인증된 것
-
-        if (!users.isPresent()) {
-            throw new IllegalArgumentException("User not found with email: " + userEmail);
+        String memberEmail = claims.getSubject(); // subject를 email로 설정했기 때문에 userEmail로 사용
+        MemberDto memberDto = memberService.findByEmail(memberEmail); //null이라면 인증된 것이 아닐 것이고 null이 아니라면 인증된 것
+        if (memberDto == null) {
+            throw new IllegalArgumentException("User not found");
         }
-        return users.get();
+        return memberDto;
 
     }
 }

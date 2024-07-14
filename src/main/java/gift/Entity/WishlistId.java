@@ -17,10 +17,6 @@ public class WishlistId implements Serializable {
         this.productId = productId;
     }
 
-    public static WishlistId createWishlistId(long userId, long productId) {
-        return new WishlistId(userId, productId);
-    }
-
     public long getUserId() {
         return userId;
     }
