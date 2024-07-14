@@ -12,43 +12,39 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WishService {
+
     private final WishRepository wishRepository;
     private final ProductService productService;
     private final MemberService memberService;
 
-    public WishService(WishRepository wishRepository, ProductService productService, MemberService memberService){
+    public WishService(WishRepository wishRepository, ProductService productService,
+        MemberService memberService) {
         this.wishRepository = wishRepository;
         this.productService = productService;
         this.memberService = memberService;
     }
 
-    public List<Wish> findByMemberId(Long memberId){
+    public List<Wish> findByMemberId(Long memberId) {
         return wishRepository.findByMemberId(memberId);
     }
 
-    public Page<Wish> getAllWishPage(Long memberId){
-        Pageable pageable = PageRequest.of(0,10);
-        Page<Wish> allWishPage = wishRepository.findByMemberId(memberId,pageable);
-        return allWishPage;
-    }
-
-    public Page<Wish> getWishPage(Long memberId, int page){
-        Pageable pageable = PageRequest.of(page,10);
-        Page<Wish> allWishPage = wishRepository.findByMemberId(memberId,pageable);
+    public Page<Wish> getWishPage(Long memberId, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Wish> allWishPage = wishRepository.findByMemberId(memberId, pageable);
 
         return allWishPage;
     }
 
-    public void createWish(Long memberId, Long productId, Long quantity){
+    public void createWish(Long memberId, Long productId, Long quantity) {
         Member findMember = memberService.findById(memberId);
         Product findProduct = productService.findById(productId);
 
-        wishRepository.save(new Wish(findMember,findProduct,quantity));
+        wishRepository.save(new Wish(findMember, findProduct, quantity));
     }
 
-    public void updateQuantity(Long id, Long memberId, Long quantity){
-        if(quantity == 0){
-            deleteWish(id,memberId);
+    public void updateQuantity(Long id, Long memberId, Long quantity) {
+        if (quantity == 0) {
+            deleteWish(id, memberId);
             return;
         }
         Member member = memberService.findById(memberId);
@@ -56,8 +52,8 @@ public class WishService {
         wish.updateQuantity(quantity);
     }
 
-    public void deleteWish(Long id, Long memberId){
+    public void deleteWish(Long id, Long memberId) {
         Member member = memberService.findById(memberId);
-        wishRepository.deleteByIdAndMember(id,member);
+        wishRepository.deleteByIdAndMember(id, member);
     }
 }

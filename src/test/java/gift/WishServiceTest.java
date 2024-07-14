@@ -35,7 +35,7 @@ public class WishServiceTest {
             wishService.createWish(newMember.getId(), newProduct.getId(), 1L);
         }
 
-        Page<Wish> wishPage = wishService.getAllWishPage(newMember.getId());
+        Page<Wish> wishPage = wishService.getWishPage(newMember.getId(), 0);
         assertAll(
             () -> assertThat(wishPage.getTotalPages()).isEqualTo(10),
             () -> assertThat(wishPage.getTotalElements()).isEqualTo(100),
