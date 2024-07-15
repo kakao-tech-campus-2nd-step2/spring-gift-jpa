@@ -37,4 +37,5 @@
   - AdminController
   - ProductController
   - WishlistController
+- Test 코드 수정
 - HTML 수정
