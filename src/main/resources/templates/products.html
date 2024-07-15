@@ -78,7 +78,7 @@
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:each="pageNumber : ${pageNumbers}">
                     <a class="page-link"
-                       th:href="@{/api/products(page=${pageNumber - 1}, size=5)}"
+                       th:href="@{/api/products(page=${pageNumber - 1})}"
                        th:text="${pageNumber}"
                        th:classappend="${pageNumber == products.number + 1} ? active"></a>
                 </li>

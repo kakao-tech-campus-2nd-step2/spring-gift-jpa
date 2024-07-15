@@ -1,4 +1,4 @@
-const productListPage = '/api/products?size=5';
+const productListPage = '/api/products';
 
 function addOne() {
      event.preventDefault();
