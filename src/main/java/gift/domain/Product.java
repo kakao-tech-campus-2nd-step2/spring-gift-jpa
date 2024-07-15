@@ -1,6 +1,5 @@
 package gift.domain;
 
-import gift.web.dto.request.product.UpdateProductRequest;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -71,10 +70,10 @@ public class Product extends BaseEntity {
         imageUrl = builder.imageUrl;
     }
 
-    public Product update(UpdateProductRequest request) {
-        this.name = request.getName();
-        this.price = request.getPrice();
-        this.imageUrl = request.getImageUrl();
+    public Product update(Product product) {
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.imageUrl = product.getImageUrl();
         return this;
     }
 
