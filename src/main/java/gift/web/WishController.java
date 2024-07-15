@@ -5,6 +5,7 @@ import gift.web.dto.MemberDto;
 import gift.web.dto.WishDto;
 import gift.web.jwt.AuthUser;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,8 +33,8 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishDto>> getWishesByEmail(@AuthUser MemberDto memberDto) {
-        return new ResponseEntity<>(wishService.getWishesByEmail(memberDto.email()), HttpStatus.OK);
+    public ResponseEntity<List<WishDto>> getWishesByEmail(@AuthUser MemberDto memberDto, Pageable pageable) {
+        return new ResponseEntity<>(wishService.getWishesByEmail(memberDto.email(), pageable), HttpStatus.OK);
     }
 
     @PostMapping
