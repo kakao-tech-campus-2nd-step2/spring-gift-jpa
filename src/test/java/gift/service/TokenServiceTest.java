@@ -69,12 +69,9 @@ public class TokenServiceTest {
 //        member.setId(MEMBER_ID);
 //        String token = tokenService.saveToken(member);
 //
-//        when(tokenRepository.findByToken(token)).thenReturn(Optional.of(new TokenAuth(token, new Member(EMAIL, "password"))));
-//
 //        String memberId = tokenService.getMemberIdFromToken(token);
 //
 //        assertEquals(MEMBER_ID.toString(), memberId);
-//        verify(tokenRepository, times(1)).findByToken(token);
 //    }
 
 }

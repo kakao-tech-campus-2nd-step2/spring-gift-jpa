@@ -50,7 +50,7 @@ public class TokenService {
 //
 //    public Claims parseToken(String token) {
 //        JwtParser parser = Jwts.parserBuilder()
-//                .setSigningKey(secretKey)
+//                .setSigningKey(getSecretKey())
 //                .build();
 //        return parser.parseClaimsJws(token).getBody();
 //    }
