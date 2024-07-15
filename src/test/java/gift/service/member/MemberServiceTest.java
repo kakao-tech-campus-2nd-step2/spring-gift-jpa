@@ -71,5 +71,12 @@ class MemberServiceTest {
         System.out.println("-----------N + 1 문제 테스트------------");
         List<Wish> everyWishes = wishRepository.findAll();
         assertFalse(everyWishes.isEmpty());
+        System.out.println("-----------N + 1 문제 테스트22222-----------");
+        List<Product> everyProducts = productReposiotory.findAll();
+        assertFalse(everyProducts.isEmpty());
+        System.out.println("-----------N + 1 문제 테스트33333-----------");
+        List<Member> everyMembers = memberRepository.findAll();
+        assertFalse(everyMembers.isEmpty());
+
     }
 }
