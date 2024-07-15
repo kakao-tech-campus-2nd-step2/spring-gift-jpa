@@ -1,50 +1,68 @@
 package gift.service;
 
+
+import gift.database.JpaMemberRepository;
+import gift.database.JpaProductRepository;
 import gift.database.JpaWishRepository;
 import gift.dto.WishListDTO;
+import gift.exceptionAdvisor.MemberNoSuchException;
+import gift.model.Member;
+import gift.model.Product;
+import gift.model.Wish;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public class WishListServiceImpl implements WishListService {
 
-    //TODO : 연관관계 작성 이후 구현 예정
-    private JpaWishRepository jdbcWishListRepository;
+    private final JpaMemberRepository jpaMemberRepository;
+    private final JpaWishRepository jpaWishRepository;
+    private final JpaProductRepository jpaProductRepository;
 
-    public WishListServiceImpl(JpaWishRepository jdbcWishListRepository) {
-        this.jdbcWishListRepository = jdbcWishListRepository;
+    public WishListServiceImpl(JpaMemberRepository jpaMemberRepository,
+        JpaWishRepository jpaWishRepository, JpaProductRepository jpaProductRepository) {
+        this.jpaMemberRepository = jpaMemberRepository;
+        this.jpaWishRepository = jpaWishRepository;
+        this.jpaProductRepository = jpaProductRepository;
+
     }
 
     @Override
     public void addProduct(long memberId, long productId) {
 
-        //WishList wishList = new WishList(null, memberId, new HashMap<>());
-        //wishList.updateProduct(productId, 1);
-        //jdbcWishListRepository.insertWishList(wishList);
+        Member member = jpaMemberRepository.findById(memberId).orElseThrow(MemberNoSuchException::new);
+        Product product = jpaProductRepository.findById(productId).orElseThrow();
+        member.addProduct(product);
     }
 
     @Override
     public void deleteProduct(long memberId, long productId) {
 
-        //jdbcWishListRepository.deleteWishList(memberId, productId);
+        Member member = jpaMemberRepository.findById(memberId).orElseThrow(MemberNoSuchException::new);
+        Product product = jpaProductRepository.findById(productId).orElseThrow();
+        member.delProduct(product);
+
 
     }
 
     @Override
     public void updateProduct(long memberId, long productId, int productValue) {
-        //WishList wishList = jdbcWishListRepository.findByMemeberId(memberId);
-        //wishList.updateProduct(productId, productValue);
-        //jdbcWishListRepository.updateWishList(wishList);
+        Wish wish = jpaWishRepository.findByMemberIdAndProductId(memberId,productId).orElseThrow();
+        wish.setValue(productValue);
+
 
     }
 
     @Override
-    public List<WishListDTO> getWishList(long memberId) {
-        //WishList wishList = jdbcWishListRepository.findByMemeberId(memberId);
-        //var products = wishList.getWishList();
-        //return products.keySet().stream()
-        //    .map(key -> new WishListDTO(wishList.getMemberId(), key, products.get(key))).toList();
-        return null;
+    public WishListDTO getWishList(long memberId) {
+       Member member = jpaMemberRepository.findById(memberId).orElseThrow();
+       Map<String,Integer> wishList = member.getWishList().stream().collect(Collectors.toMap(Wish::getProductName,Wish::getProductCount));
+       return new WishListDTO(member.getId(),wishList);
 
     }
+
 }

@@ -3,6 +3,7 @@ package gift.controller;
 import gift.ArgumentResolver.LoginMember;
 import gift.dto.MemberDTO;
 import gift.dto.WishListDTO;
+
 import gift.service.WishListService;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,29 +25,34 @@ public class WishListController {
     }
 
     @GetMapping
-    public List<WishListDTO> getWishList(@LoginMember MemberDTO memberDTO) {
+    public WishListDTO getWishList(@LoginMember MemberDTO memberDTO) {
+
         return wishListService.getWishList(memberDTO.getId());
     }
 
     //상품 추가
     @PostMapping
     public void addWishList(@LoginMember MemberDTO memberDTO,
-        @RequestBody WishListDTO wishListDTO) {
-        //wishListDTO.setMemberId(memberDTO.getId());
-        wishListService.addProduct(wishListDTO.getMemberId(), wishListDTO.getProductId());
+        @RequestBody WishListRequest wishListRequest) {
+        wishListService.addProduct(memberDTO.getId(), wishListRequest.getProductId());
+
     }
 
     //상품 삭제
     @DeleteMapping
-    public void deleteWishList(@RequestBody WishListDTO wishListDTO) {
-        wishListService.deleteProduct(wishListDTO.getMemberId(), wishListDTO.getProductId());
+
+    public void deleteWishList(@LoginMember MemberDTO memberDTO,@RequestBody WishListRequest wishListRequest) {
+        wishListService.deleteProduct(memberDTO.getId(), wishListRequest.getProductId());
+
     }
 
     //상품 수정
     @PutMapping
-    public void updateWishList(@RequestBody WishListDTO wishListDTO) {
-        wishListService.updateProduct(wishListDTO.getMemberId(), wishListDTO.getProductId(),
-            wishListDTO.getProductValue());
+
+    public void updateWishList(@LoginMember MemberDTO memberDTO,@RequestBody WishListRequest wishListRequest) {
+        wishListService.updateProduct(memberDTO.getId(), wishListRequest.getProductId(),
+            wishListRequest.getProductCount());
+
     }
 
 

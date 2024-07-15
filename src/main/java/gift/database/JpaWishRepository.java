@@ -22,4 +22,8 @@ public interface JpaWishRepository extends JpaRepository<Wish, Long> {
     @Override
     void delete(Wish entity);
 
+
+    Optional<Wish> findByMemberIdAndProductId(Long memberId, Long productId);
+
+
 }

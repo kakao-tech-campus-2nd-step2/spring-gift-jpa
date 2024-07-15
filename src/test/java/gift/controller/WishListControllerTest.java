@@ -2,7 +2,10 @@ package gift.controller;
 
 import gift.dto.LoginMemberToken;
 import gift.dto.MemberDTO;
+
+import gift.dto.ProductDTO;
 import gift.dto.WishListDTO;
+import gift.dto.WishListRequest;
 import java.util.HashMap;
 import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,13 +32,19 @@ class WishListControllerTest {
     @DisplayName("위시 리스트 아이템 추가")
     void addWishList() {
         //given
+
+        //회원가입 and 로그인
         String email = "abec";
         String password = "abecdddd";
         LoginMemberToken loginMemberToken = registerAndLogin(email, password);
+
+        //상품 추가
+        webClient.post("api/products",new ProductDTO(null,"test",123,"abc"));
+
         webClient.moreAction().post().uri("api/wishlist")
             .header("Authorization", loginMemberToken.getToken())
             .accept(MediaType.APPLICATION_JSON)
-            .body(BodyInserters.fromValue(new WishListDTO(0L, 123L, 1)))
+            .body(BodyInserters.fromValue(new WishListRequest(0L,1)))
             .exchange().expectStatus().isOk();
     }
 

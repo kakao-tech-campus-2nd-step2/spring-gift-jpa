@@ -33,6 +33,7 @@ public class MemberServiceImpl implements MemberService {
         }
         Member member = new Member(null, memberDTO.getEmail(), memberDTO.getPassword(), memberDTO.getRole());
         jpaMemberRepository.save(member);
+
     }
 
     @Override
@@ -58,6 +59,7 @@ public class MemberServiceImpl implements MemberService {
 
         Member member = jpaMemberRepository.findById(id).orElseThrow(()->
             new MemberServiceException("잘못된 로그인 시도입니다",HttpStatus.FORBIDDEN));
+
         return new MemberDTO(member.getEmail(), member.getPassword(), member.getRole());
     }
 
@@ -68,13 +70,13 @@ public class MemberServiceImpl implements MemberService {
             jpaMemberRepository.findByEmail(email).orElseThrow(NoSuchElementException::new);
             return true;
         } catch (NoSuchElementException e) {
+
             return false;
         }
     }
 
     private Member findByEmail(String email) {
         try {
-
             return jpaMemberRepository.findByEmail(email).orElseThrow();
         } catch (NoSuchElementException e) {
             throw new MemberServiceException("잘못된 로그인 시도입니다.", HttpStatus.FORBIDDEN);

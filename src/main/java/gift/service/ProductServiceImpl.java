@@ -29,15 +29,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void create(ProductDTO dto) {
         checkKakao(dto.getName());
-
         Product product = new Product(null,dto.getName(), dto.getPrice(), dto.getImageUrl());
         jpaProductRepository.save(product);
+
     }
 
 
     @Override
     public void updateName(long id, String name) {
-
         var prod = getProduct(id);
         prod.setName(name);
     }
@@ -66,7 +65,6 @@ public class ProductServiceImpl implements ProductService {
                 HttpStatus.BAD_REQUEST);
         }
     }
-
     private Product getProduct(long id) {
         var prod = jpaProductRepository.findById(id).orElseThrow(()->new ProductServiceException("상품이 존재하지 않습니다",HttpStatus.BAD_REQUEST));
         checkKakao(prod.getName());
