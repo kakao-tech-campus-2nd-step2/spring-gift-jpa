@@ -22,16 +22,18 @@ public class MemberService {
     }
 
     public String register(@Valid MemberDto memberDto) {
+        validateNewMember(memberDto);
+        String token = JwtUtility.generateToken(memberDto.getEmail());
+        Member member = new Member(memberDto.getEmail(), memberDto.getPassword(), token);
+        memberRepository.save(member);
+        return token;
+    }
+
+    private void validateNewMember(MemberDto memberDto) {
         memberRepository.findByEmail(memberDto.getEmail())
                 .ifPresent(existingMember -> {
                     throw new DuplicateKeyException("이미 존재하는 이메일입니다.");
                 });
-        Member member = new Member(memberDto.getEmail(), memberDto.getPassword());
-        Member savedMember = memberRepository.save(member);
-        String token = JwtUtility.generateToken(savedMember.getEmail());
-        Member updatedMember = new Member(savedMember, token);
-        memberRepository.save(updatedMember);
-        return token;
     }
 
     public String login(MemberDto memberDto) {
