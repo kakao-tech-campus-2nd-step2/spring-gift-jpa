@@ -46,12 +46,9 @@ public class WishListService {
         return new WishListEntity(productEntity, memberEntity);
     }
 
-
-    public List<WishListDTO> readWishList(Long userId, Pageable pageable) {
+    public Page<WishListDTO> readWishList(Long userId, Pageable pageable) {
         Page<WishListEntity> wishListEntities = wishListRepository.findByUserEntity_Id(userId, pageable);
-        return wishListEntities.stream()
-            .map(this::toWishListDTO)
-            .collect(Collectors.toList());
+        return wishListEntities.map(this::toWishListDTO);
     }
 
     @Transactional

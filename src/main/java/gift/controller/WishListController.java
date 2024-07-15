@@ -5,6 +5,7 @@ import gift.domain.WishListDTO;
 import gift.service.WishListService;
 import gift.service.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -32,15 +33,16 @@ public class WishListController {
 
     // 전체 위시리스트 조회
     @GetMapping
-    public ResponseEntity<List<WishListDTO>> getWishList(
+    public ResponseEntity<Page<WishListDTO>> getWishList(
         @RequestHeader("Authorization") String token,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size) {
         Long userId = getUserId(token);
         Pageable pageable = PageRequest.of(page, size);
-        List<WishListDTO> wishList = wishListService.readWishList(userId, pageable);
+        Page<WishListDTO> wishList = wishListService.readWishList(userId, pageable);
         return ResponseEntity.ok(wishList);
     }
+
 
     // 위시리스트 추가
     @PostMapping("/add/{productId}")
