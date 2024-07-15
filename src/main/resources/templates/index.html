@@ -11,6 +11,8 @@
   <h1>Products List</h1>
   <button class="btn btn-primary" data-toggle="modal" data-target="#addProductModal">Add Product</button>
   <button class="btn btn-danger ml-2" onclick="showDeleteSelectedModal()">Delete Selected</button>
+  <button type="button" id="loginButton" class="btn btn-success ml-2" onclick="location.href='/users/login'">Login</button>
+  <button type="button" id="logoutButton" class="btn btn-success ml-2" onclick="logout()" style="display: none;">Logout</button>
   <table class="table">
     <thead>
     <tr>
@@ -308,6 +310,27 @@
     return cookieValue;
   }
 
+  // 페이지가 로드될 때 실행
+  document.addEventListener('DOMContentLoaded', function() {
+    // jwt 쿠키 확인
+    const jwtCookie = getCookie('jwt');
+    if (jwtCookie) {
+      document.getElementById('loginButton').style.display = 'none';
+      document.getElementById('logoutButton').style.display = 'block';
+    } else {
+      document.getElementById('loginButton').style.display = 'block';
+      document.getElementById('logoutButton').style.display = 'none';
+    }
+  });
+
+  // 로그아웃
+  function logout() {
+    var cookieName = 'jwt'
+    document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    alert("로그아웃 되었습니다.")
+    // 리다이렉트
+    window.location.href = "/";
+  }
 </script>
 </body>
 </html>
