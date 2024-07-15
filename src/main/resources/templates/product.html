@@ -1,4 +1,3 @@
-<!-- http://localhost:8080/admin/products -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -53,6 +52,24 @@
             max-width: 100px;
             height: auto;
         }
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination a {
+            margin: 0 5px;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        .pagination a.active {
+            background-color: #4CAF50;
+            color: white;
+            border: 1px solid #4CAF50;
+        }
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
     </style>
 </head>
 <body>
@@ -88,7 +105,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="product : ${products}">
+    <tr th:each="product : ${productsPage.content}">
         <td th:text="${product.id}">1</td>
         <td th:text="${product.name}">Sample Product</td>
         <td th:text="${product.price}">100</td>
@@ -119,6 +136,14 @@
     </tr>
     </tbody>
 </table>
+
+<div class="pagination">
+    <a th:href="@{/admin/products(page=0, size=${productsPage.size})}" th:if="${productsPage.number > 0}">First</a>
+    <a th:href="@{/admin/products(page=${productsPage.number - 1}, size=${productsPage.size})}" th:if="${productsPage.hasPrevious()}">Previous</a>
+    <span th:text="${productsPage.number + 1} + ' / ' + ${productsPage.totalPages}"></span>
+    <a th:href="@{/admin/products(page=${productsPage.number + 1}, size=${productsPage.size})}" th:if="${productsPage.hasNext()}">Next</a>
+    <a th:href="@{/admin/products(page=${productsPage.totalPages - 1}, size=${productsPage.size})}" th:if="${productsPage.number < productsPage.totalPages - 1}">Last</a>
+</div>
+
 </body>
 </html>
-
