@@ -1,8 +1,9 @@
 package gift.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,13 +19,14 @@ public class AdminController {
     private ProductService productService;
 
     @GetMapping
-    public String adminPage(Model model) {
-        List<Product> productList = productService.getAllProducts();
+    public String adminPage(Model model,
+    		@PageableDefault(sort="name") Pageable pageable) {
+        Page<Product> productList = productService.getAllProducts(pageable);
         model.addAttribute("products", productList);
         return "admin";
     }
 
-    @GetMapping
+    @GetMapping("/new")
     public String addProductForm(Model model) {
         model.addAttribute("product", new Product("", 0, ""));
         return "product-form";

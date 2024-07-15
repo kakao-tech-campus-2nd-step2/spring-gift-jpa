@@ -65,7 +65,10 @@ public class AuthService {
 	
 	private void validateBindingResult(BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
-			throw new InvalidUserException(bindingResult.getFieldError().getDefaultMessage(), HttpStatus.BAD_REQUEST);
+			String errorMessage = bindingResult
+					.getFieldError()
+					.getDefaultMessage();
+			throw new InvalidUserException(errorMessage, HttpStatus.BAD_REQUEST);
 		}
 	}
 	
