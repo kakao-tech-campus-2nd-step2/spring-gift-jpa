@@ -11,6 +11,8 @@ import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,12 +47,11 @@ public class WishListService {
     }
 
 
-    public List<WishListDTO> readWishList(Long userId) {
-        List<WishListEntity> wishListEntities = wishListRepository.findByUserEntity_Id(userId);
+    public List<WishListDTO> readWishList(Long userId, Pageable pageable) {
+        Page<WishListEntity> wishListEntities = wishListRepository.findByUserEntity_Id(userId, pageable);
         return wishListEntities.stream()
             .map(this::toWishListDTO)
             .collect(Collectors.toList());
-
     }
 
     @Transactional
@@ -60,7 +61,7 @@ public class WishListService {
 
     @Transactional
     public void removeWishList(Long userId) {
-        List<WishListEntity> wishListEntities = wishListRepository.findByUserEntity_Id(userId);
+        List<WishListEntity> wishListEntities = wishListRepository.findByUserEntity_Id(userId,Pageable.unpaged()).getContent();
         wishListRepository.deleteAll(wishListEntities);
     }
 
