@@ -1,5 +1,7 @@
-package gift.model.member;
+package gift.repository.member;
 
+import gift.model.member.Member;
+import gift.model.member.Role;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;

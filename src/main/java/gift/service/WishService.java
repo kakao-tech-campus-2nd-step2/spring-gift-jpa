@@ -2,69 +2,71 @@ package gift.service;
 
 import gift.controller.wish.dto.WishRequest;
 import gift.controller.wish.dto.WishResponse;
+import gift.global.dto.PageResponse;
 import gift.model.member.Member;
 import gift.model.product.Product;
 import gift.model.wish.Wish;
-import gift.repository.MemberJpaRepository;
-import gift.repository.ProductJpaRepository;
-import gift.repository.WishJpaRepository;
+import gift.repository.member.MemberRepository;
+import gift.repository.product.ProductRepository;
+import gift.repository.wish.WishJpaRepository;
 import gift.global.validate.NotFoundException;
-import java.util.List;
-import java.util.stream.Collectors;
+import gift.repository.wish.WishRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishService {
 
-    private final WishJpaRepository wishJpaRepository;
-    private final MemberJpaRepository memberJpaRepository;
-    private final ProductJpaRepository productJpaRepository;
+    private final WishRepository wishRepository;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
-    public WishService(WishJpaRepository wishJpaRepository, MemberJpaRepository memberJpaRepository,
-        ProductJpaRepository productJpaRepository) {
-        this.wishJpaRepository = wishJpaRepository;
-        this.memberJpaRepository = memberJpaRepository;
-        this.productJpaRepository = productJpaRepository;
+    public WishService(WishJpaRepository wishRepository, MemberRepository memberRepository,
+        ProductRepository productRepository) {
+        this.wishRepository = wishRepository;
+        this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
     }
 
-    @Transactional
+    //@Transactional
     public void addWish(Long userId, WishRequest.Register request) {
-        Member member = memberJpaRepository.findById(userId)
+        Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
 
-        Product product = productJpaRepository.findById(request.productId())
+        Product product = productRepository.findById(request.productId())
             .orElseThrow(() -> new NotFoundException("Product not found"));
 
-        wishJpaRepository.findByMemberAndProduct(member, product)
+        wishRepository.findByMemberAndProduct(member, product)
             .ifPresent(wish -> {
                 throw new IllegalArgumentException("Wish already exists");
             });
 
-        wishJpaRepository.save(request.toEntity(member, product));
+        wishRepository.save(request.toEntity(member, product));
     }
 
     @Transactional
     public void updateWish(Long userId, WishRequest.Update request) {
-        Member member = memberJpaRepository.findById(userId)
+        Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new NotFoundException("Member not found"));
 
-        Product product = productJpaRepository.findById(request.productId())
+        Product product = productRepository.findById(request.productId())
             .orElseThrow(() -> new NotFoundException("Product not found"));
 
-        Wish wish = wishJpaRepository.findByMemberAndProduct(member, product)
+        Wish wish = wishRepository.findByMemberAndProduct(member, product)
             .orElseThrow(() -> new NotFoundException("Wish not found"));
 
         wish.updateCount(request.count());
     }
 
-    @Transactional
+    //@Transactional
     public void deleteWish(Long memberId, Long wishId) {
-        Wish wish = wishJpaRepository.findById(wishId)
+        Wish wish = wishRepository.findById(wishId)
             .orElseThrow(() -> new NotFoundException("Wish not found"));
 
         if (wish.isOwner(memberId)) {
-            wishJpaRepository.deleteById(wishId);
+            wishRepository.deleteById(wishId);
             return;
         }
 
@@ -72,11 +74,9 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishResponse.Info> getWishes(Long memberId) {
-        var response = wishJpaRepository.findByMemberId(memberId)
-            .stream()
-            .map(WishResponse.Info::from)
-            .collect(Collectors.toList());
-        return response;
+    public PageResponse<WishResponse.Info> getWishesPaging(Long memberId, Pageable pageable) {
+        Page<Wish> wishPage = wishRepository.findAllByMemberByIdDesc(memberId, pageable);
+
+        return PageResponse.from(wishPage, WishResponse.Info::from);
     }
 }

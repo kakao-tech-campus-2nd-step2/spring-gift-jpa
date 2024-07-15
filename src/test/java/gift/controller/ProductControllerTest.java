@@ -2,7 +2,7 @@ package gift.controller;
 
 import gift.controller.product.ProductController;
 import gift.model.product.Product;
-import gift.model.product.ProductDao;
+import gift.repository.product.ProductRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductControllerTest {
 
     @Mock
-    private ProductDao productDao;
+    private ProductRepository productRepository;
 
     @InjectMocks
     private ProductController productController;
@@ -44,7 +44,7 @@ class ProductControllerTest {
             Product.create(2L, "Product2", 200, "http://image2.com")
         );
         // when: productDao.findAll() 메서드가 호출될 때 products를 반환하도록 설정합니다.
-        when(productDao.findAll()).thenReturn(products);
+        when(productRepository.findAll()).thenReturn(products);
 
         // then: GET /products 요청을 보내고 반환된 데이터를 검증합니다.
         mockMvc.perform(get("/products"))
@@ -57,14 +57,14 @@ class ProductControllerTest {
             .andExpect(jsonPath("$[1].imageUrl").value("http://image2.com"));
 
         // productDao.findAll() 메서드가 한 번 호출되었는지 검증합니다.
-        verify(productDao, times(1)).findAll();
+        verify(productRepository, times(1)).findAll();
     }
 
 
     @Test
     void testGetProduct() throws Exception {
         var product = Product.create(1L, "Product1", 100, "http://image1.com");
-        when(productDao.findById(anyLong())).thenReturn(Optional.of(product));
+        when(productRepository.findById(anyLong())).thenReturn(Optional.of(product));
 
         mockMvc.perform(get("/products/{id}", 1L))
             .andExpect(status().isOk())
@@ -72,7 +72,7 @@ class ProductControllerTest {
             .andExpect(jsonPath("$.price").value(100))
             .andExpect(jsonPath("$.imageUrl").value("http://image1.com"));
 
-        verify(productDao, times(1)).findById(anyLong());
+        verify(productRepository, times(1)).findById(anyLong());
     }
 
 }

@@ -4,34 +4,34 @@ import gift.controller.member.dto.MemberRequest;
 import gift.controller.member.dto.MemberResponse;
 import gift.global.auth.jwt.JwtProvider;
 import gift.model.member.Member;
-import gift.repository.MemberJpaRepository;
 import gift.global.validate.InvalidAuthRequestException;
 import gift.global.validate.NotFoundException;
+import gift.repository.member.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
 
-    private final MemberJpaRepository memberJpaRepository;
+    private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
 
-    public MemberService(MemberJpaRepository memberJpaRepository, JwtProvider jwtProvider) {
-        this.memberJpaRepository = memberJpaRepository;
+    public MemberService(MemberRepository memberRepository, JwtProvider jwtProvider) {
+        this.memberRepository = memberRepository;
         this.jwtProvider = jwtProvider;
     }
 
     //@Transactional
     public void register(MemberRequest.Register request) {
-        if (memberJpaRepository.existsByEmail(request.email())) {
+        if (memberRepository.existsByEmail(request.email())) {
             throw new InvalidAuthRequestException("User already exists.");
         }
-        memberJpaRepository.save(request.toEntity());
+        memberRepository.save(request.toEntity());
     }
 
-    //@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public String login(MemberRequest.Login request) {
-        Member member = memberJpaRepository.findByEmail(request.email())
+        Member member = memberRepository.findByEmail(request.email())
             .orElseThrow(() -> new NotFoundException("User not found."));
 
         if (!member.verifyPassword(request.password())) {
@@ -40,9 +40,9 @@ public class MemberService {
         return jwtProvider.createToken(member.getId(), member.getRole());
     }
 
-    //@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public MemberResponse.Info getUser(Long memberId) {
-        var member = memberJpaRepository.findById(memberId)
+        var member = memberRepository.findById(memberId)
             .orElseThrow(() -> new NotFoundException("User not found."));
         return MemberResponse.Info.from(member);
     }

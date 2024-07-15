@@ -24,7 +24,13 @@ spring:
         show_sql: true
     defer-datasource-initialization: true
 
-
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
 
 jwt:
   secret: secret!!secret!!secret!!secret!!

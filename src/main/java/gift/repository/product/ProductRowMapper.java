@@ -1,5 +1,6 @@
-package gift.model.product;
+package gift.repository.product;
 
+import gift.model.product.Product;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;

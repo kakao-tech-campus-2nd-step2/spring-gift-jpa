@@ -1,5 +1,6 @@
 package gift.model.wish;
 
+import gift.model.BaseTimeEntity;
 import gift.model.member.Member;
 import gift.model.product.Product;
 import jakarta.persistence.Entity;
@@ -12,7 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class Wish {
+public class Wish extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

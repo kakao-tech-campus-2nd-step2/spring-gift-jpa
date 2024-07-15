@@ -4,54 +4,61 @@ import gift.controller.product.dto.ProductRequest;
 import gift.controller.product.dto.ProductResponse;
 import gift.global.dto.PageResponse;
 import gift.model.product.Product;
-import gift.repository.ProductJpaRepository;
 import gift.global.validate.NotFoundException;
+import gift.model.product.SearchType;
+import gift.repository.product.ProductRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProductService {
 
-    private final ProductJpaRepository productJpaRepository;
+    private final ProductRepository productRepository;
 
-    public ProductService(ProductJpaRepository productJpaRepository) {
-        this.productJpaRepository = productJpaRepository;
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
-    //@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public ProductResponse.Info getProduct(Long id) {
-        var product = productJpaRepository.findById(id)
+        var product = productRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
         return ProductResponse.Info.from(product);
     }
 
     //@Transactional
     public void createProduct(ProductRequest.Register request) {
-        productJpaRepository.save(request.toEntity());
+        productRepository.save(request.toEntity());
     }
 
     @Transactional
     public void updateProduct(Long id, ProductRequest.Update request) {
-        var product = productJpaRepository.findById(id)
+        var product = productRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Product not found"));
         product.update(request.name(), request.price(), request.imageUrl());
-        productJpaRepository.save(product);
     }
 
     //@Transactional
     public void deleteProduct(Long id) {
-        productJpaRepository.deleteById(id);
+        productRepository.deleteById(id);
     }
 
-    //@Transactional(readOnly = true)
-    public PageResponse<ProductResponse.Info> getProductsPaging(int page, int size) {
-        Page<Product> productPage = productJpaRepository.findAllByOrderByIdDesc(
-            PageRequest.of(page, size));
-        var content = productPage.getContent().stream()
-            .map(ProductResponse.Info::from)
-            .toList();
-        return PageResponse.from(content, productPage);
+    @Transactional(readOnly = true)
+    public PageResponse<ProductResponse.Info> getProductsPaging(
+        SearchType searchType,
+        String searchValue,
+        Pageable pageable
+    ) {
+
+        Page<Product> productPage = switch (searchType) {
+            case NAME -> productRepository.findByNameContaining(searchValue, pageable);
+            case PRICE -> productRepository.findAllOrderByPrice(pageable);
+            default -> productRepository.findAll(pageable);
+        };
+
+        return PageResponse.from(productPage, ProductResponse.Info::from);
     }
 }
+
