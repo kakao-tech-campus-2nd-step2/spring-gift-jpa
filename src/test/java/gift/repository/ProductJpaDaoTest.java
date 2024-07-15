@@ -25,7 +25,7 @@ class ProductJpaDaoTest {
     }
 
     @Test
-    @DisplayName("ID로 상품 조회 테스트")
+    @DisplayName("이름으로 상품 조회 테스트")
     void findById() {
         Product product1 = productJpaDao.save(new Product("coffee", 4500L, "https"));
         Product product2 = productJpaDao.findByName("coffee").get();
@@ -49,7 +49,6 @@ class ProductJpaDaoTest {
         ProductDto product2 = new ProductDto(null, "Tea", 7500L, "https");
         productJpaDao.save(product1);
         product1.updateProduct(product2);
-//        productJpaDao.save(product2);
 
         assertThat(productJpaDao.findByName("Tea").get().getPrice()).isEqualTo(7500L);
     }
