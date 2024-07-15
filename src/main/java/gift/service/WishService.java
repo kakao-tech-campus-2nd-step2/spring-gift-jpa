@@ -38,12 +38,6 @@ public class WishService {
 
         Page<Wish> wishPage = wishRepository.findByUserEmail(email, pageable);
 
-        // 존재하지 않는 페이지를 요청한 경우 처리
-        if (page > wishPage.getTotalPages() - 1 && page != 0) {
-            pageable = PageRequest.of(wishPage.getTotalPages() - 1, PAGE_SIZE, sort);
-            wishPage = wishRepository.findByUserEmail(email, pageable);
-        }
-
         return wishPage.map(this::convertToWishResponseDto);
     }
 

@@ -40,12 +40,6 @@ public class ProductService {
 
         Page<Product> productPage = productRepository.findAllProducts(pageable);
 
-        // 존재하지 않는 페이지를 요청한 경우 처리
-        if (page > productPage.getTotalPages() - 1 && page != 0) {
-            pageable = PageRequest.of(productPage.getTotalPages() - 1, PAGE_SIZE, sort);
-            productPage = productRepository.findAllProducts(pageable);
-        }
-
         return productPage.map(this::convertToResponseDto);
     }
 
