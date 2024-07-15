@@ -10,6 +10,8 @@ import gift.Service.WishlistService;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,12 +28,11 @@ public class WishListController {
     }
 
     @GetMapping("/api/wishlist")
-    public String getWish(HttpServletRequest request,Model model) {
+    public String getWish(HttpServletRequest request,Model model, Pageable pageable) {
         String email = (String) request.getAttribute("email");
         wishlistService.checkUserByMemberEmail(email);
-        model.addAttribute("products", wishlistService.getAllProducts());
-        model.addAttribute("wishlists", wishlistService.getAllWishlist(email));
-        //model.addAttribute("wishlists", wishlistService.getAllWishlist("1234@google.com")); //테스트
+        model.addAttribute("products", wishlistService.getAllProducts(pageable));
+        model.addAttribute("wishlists", wishlistService.getAllWishlist(email, pageable));
 
         return "wish";
     }

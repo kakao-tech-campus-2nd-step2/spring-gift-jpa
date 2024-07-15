@@ -10,6 +10,8 @@ import gift.Repository.WishlistRepository;
 import java.util.List;
 
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,15 +26,17 @@ public class WishlistService {
         this.memberRepository = memberRepository;
     }
 
-    public List<Product> getAllWishlist(String email) {
-        return wishlistRepository.findAllProductInWishlistByEmail(email);
+    public Page<Product> getAllWishlist(String email, Pageable pageable) {
+        return wishlistRepository.getAllWishlist(email, pageable);
+
     }
+
     public Product getProductById(long id){
         return productRepository.findProductById(id);
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
     public void addWishlist(Long memberId, Long productId){
         wishlistRepository.addProductInWishlist(memberId, productId);
