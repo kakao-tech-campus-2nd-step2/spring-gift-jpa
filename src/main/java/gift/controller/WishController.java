@@ -5,6 +5,8 @@ import gift.model.Member;
 import gift.service.WishService;
 import gift.util.LoginMember;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +25,8 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishDTO>> getAllWishes(@LoginMember Member member) {
-        List<WishDTO> wishes = wishService.getWishesByMemberId(member.getId());
+    public ResponseEntity<Page<WishDTO>> getAllWishes(@LoginMember Member member, Pageable pageable) {
+        Page<WishDTO> wishes = wishService.getWishesByMemberId(member.getId(), pageable);
         return ResponseEntity.ok(wishes);
     }
 
