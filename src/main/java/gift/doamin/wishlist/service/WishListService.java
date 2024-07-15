@@ -20,17 +20,14 @@ import org.springframework.stereotype.Service;
 public class WishListService {
 
     private final JpaWishListRepository wishListRepository;
-    private final JpaUserRepository jpaUserRepository;
+    private final JpaUserRepository UserRepository;
     private final JpaProductRepository productRepository;
-    private final JpaProductRepository jpaProductRepository;
 
     public WishListService(JpaWishListRepository wishListRepository,
-        JpaUserRepository jpaUserRepository, JpaProductRepository productRepository,
-        JpaProductRepository jpaProductRepository) {
+        JpaUserRepository UserRepository, JpaProductRepository productRepository) {
         this.wishListRepository = wishListRepository;
-        this.jpaUserRepository = jpaUserRepository;
+        this.UserRepository = UserRepository;
         this.productRepository = productRepository;
-        this.jpaProductRepository = jpaProductRepository;
     }
 
     public void create(Long userId, WishForm wishForm) {
@@ -43,7 +40,7 @@ public class WishListService {
             throw new InvalidWishFormException("위시리스트에 상품 0개를 넣을수는 없습니다");
         }
 
-        User user = jpaUserRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        User user = UserRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         Product product = productRepository.findById(productId).orElseThrow(
             ProductNotFoundException::new);
 
