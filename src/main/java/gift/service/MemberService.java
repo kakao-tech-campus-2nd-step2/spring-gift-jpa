@@ -1,5 +1,6 @@
 package gift.service;
 
+import gift.dto.MemberDTO;
 import gift.exception.InvalidLoginException;
 import gift.exception.EmailAlreadyExistsException;
 import gift.model.Member;
@@ -25,14 +26,15 @@ public class MemberService {
     }
 
     @Transactional
-    public Member register(String email, String rawPassword) {
-        Optional<Member> existingMember = memberRepository.findByEmail(email);
+    public MemberDTO register(MemberDTO memberDTO) {
+        Optional<Member> existingMember = memberRepository.findByEmail(memberDTO.getEmail());
         if (existingMember.isPresent()) {
             throw new EmailAlreadyExistsException("Email is already registered");
         }
 
-        Member newMember = Member.createWithEncodedPassword(null, email, rawPassword);
-        return memberRepository.save(newMember);
+        Member newMember = Member.createWithEncodedPassword(null, memberDTO.getEmail(), memberDTO.getPassword());
+        Member savedMember = memberRepository.save(newMember);
+        return convertToDTO(savedMember);
     }
 
     public String login(String email, String password) {
@@ -48,5 +50,13 @@ public class MemberService {
 
     public Optional<Member> findByEmail(String email) {
         return memberRepository.findByEmail(email);
+    }
+
+    private MemberDTO convertToDTO(Member member) {
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setId(member.getId());
+        memberDTO.setEmail(member.getEmail());
+        memberDTO.setPassword(member.getPassword());
+        return memberDTO;
     }
 }

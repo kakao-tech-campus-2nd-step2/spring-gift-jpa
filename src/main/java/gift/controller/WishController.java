@@ -1,6 +1,6 @@
 package gift.controller;
 
-import gift.model.Wish;
+import gift.dto.WishDTO;
 import gift.model.Member;
 import gift.service.WishService;
 import gift.util.LoginMember;
@@ -23,14 +23,14 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Wish>> getAllWishes(@LoginMember Member member) {
-        List<Wish> wishes = wishService.getWishesByMemberId(member.getId());
+    public ResponseEntity<List<WishDTO>> getAllWishes(@LoginMember Member member) {
+        List<WishDTO> wishes = wishService.getWishesByMemberId(member.getId());
         return ResponseEntity.ok(wishes);
     }
 
     @PostMapping
-    public ResponseEntity<Wish> addWish(@LoginMember Member member, @RequestBody Long productId) {
-        Wish savedWish = wishService.addWish(member, productId);
+    public ResponseEntity<WishDTO> addWish(@LoginMember Member member, @RequestBody Long productId) {
+        WishDTO savedWish = wishService.addWish(member, productId);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedWish);
     }
 

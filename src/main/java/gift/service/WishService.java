@@ -1,42 +1,55 @@
 package gift.service;
 
+import gift.dto.ProductDTO;
+import gift.dto.WishDTO;
 import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wish;
 import gift.repository.WishRepository;
-import gift.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WishService {
 
     private final WishRepository wishRepository;
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
     @Autowired
-    public WishService(WishRepository wishRepository, ProductRepository productRepository) {
+    public WishService(WishRepository wishRepository, ProductService productService) {
         this.wishRepository = wishRepository;
-        this.productRepository = productRepository;
+        this.productService = productService;
     }
 
-    public List<Wish> getWishesByMemberId(Long memberId) {
-        return wishRepository.findByMemberId(memberId);
+    public List<WishDTO> getWishesByMemberId(Long memberId) {
+        return wishRepository.findByMemberId(memberId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public Wish addWish(Member member, Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid product ID: " + productId));
+    public WishDTO addWish(Member member, Long productId) {
+        ProductDTO productDTO = productService.getProductById(productId);
+        Product product = productService.convertToEntity(productDTO);
         Wish wish = new Wish(member, product);
-        return wishRepository.save(wish);
+        Wish savedWish = wishRepository.save(wish);
+        return convertToDTO(savedWish);
     }
 
     @Transactional
     public void deleteWish(Long memberId, Long productId) {
         wishRepository.deleteByMemberIdAndProductId(memberId, productId);
+    }
+
+    private WishDTO convertToDTO(Wish wish) {
+        WishDTO wishDTO = new WishDTO();
+        wishDTO.setId(wish.getId());
+        wishDTO.setMemberId(wish.getMember().getId());
+        wishDTO.setProductId(wish.getProduct().getId());
+        return wishDTO;
     }
 }
