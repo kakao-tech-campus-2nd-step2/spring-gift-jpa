@@ -3,6 +3,7 @@ package gift.web;
 import gift.service.product.ProductService;
 import gift.web.dto.ProductDto;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,8 +23,8 @@ public class AdminController {
     }
 
     @GetMapping
-    public String getProducts(Model model) {
-        model.addAttribute("products", productService.getProducts());
+    public String getProducts(Model model, Pageable pageable) {
+        model.addAttribute("products", productService.getProducts(pageable));
         return "products";
     }
 
