@@ -28,7 +28,8 @@ public class Wish {
         this.quantity = quantity;
     }
 
-    protected Wish() {}
+    protected Wish() {
+    }
 
     public Long getId() {
         return id;

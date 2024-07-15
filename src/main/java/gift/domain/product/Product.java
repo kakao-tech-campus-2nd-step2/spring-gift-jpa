@@ -16,7 +16,8 @@ public class Product {
     @Column(length = 15)
     private String imgUrl;
 
-    protected Product() {}
+    protected Product() {
+    }
 
     public Product(String name, int price, String imgUrl) {
         checkName(name);
