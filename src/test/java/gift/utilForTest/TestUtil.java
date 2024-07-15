@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Component
 public class TestUtil {
@@ -27,8 +28,13 @@ public class TestUtil {
         this.memberRepository = memberRepository;
     }
 
-    public URI getUri(Integer port, String path) {
-        return URI.create(String.format("http://localhost:%d%s", port, path));
+    public URI getUri(Integer port, String path, Object... pathVariables) {
+        return UriComponentsBuilder.newInstance()
+            .scheme("http")
+            .host("localhost")
+            .port(port)
+            .path(path)
+            .build(pathVariables);
     }
 
     public HttpHeaders getAuthorizedHeader(TestRestTemplate restTemplate, Integer port) {
