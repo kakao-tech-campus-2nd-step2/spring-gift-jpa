@@ -342,13 +342,13 @@ create table wish
         "id": 8146027,
         "name": "아이스 카페 아메리카노 T",
         "price": 4500,
-        "imageUrl": "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"
+        "image-url": "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"
       },
       {
         "id": 1,
         "name": "name",
         "price": 2000,
-        "imageUrl": "url"
+        "image-url": "url"
       },
       {},
       {}
@@ -376,7 +376,7 @@ create table wish
 {
   "name": "Product name",
   "price": 10000,
-  "ImageUrl": "http://~"
+  "image-url": "http://~"
 }
 ```
 
@@ -406,7 +406,7 @@ create table wish
       "id": 23,
       "name": "Product name",
       "price": 10000,
-      "ImageUrl": "http://~"
+      "image-url": "image.png"
     }
   }
   ```
@@ -462,7 +462,7 @@ create table wish
 {
   "name": "Product name",
   "price": 10000,
-  "ImageUrl": "http://~"
+  "image-url": "http://~"
 }
 ```
 
@@ -993,17 +993,17 @@ Authorization: Bearer your-token-string
     "status": 200,
     "wishlist": [
        { 
-          "productId": 1,
-          "productName": "아이스 카페 아메리카노 T",
-          "productPrice": 4500,
-          "productImageUrl": "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
+          "product-id": 1,
+          "product-name": "아이스 카페 아메리카노 T",
+          "product-price": 4500,
+          "product-image-url": "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg",
           "quantity": 5 
        },
        { 
-          "productId": 3,
-          "productName": "오예스 12개입 360g",
-          "productPrice": 3700,
-          "productImageUrl": "https://img.danawa.com/prod_img/500000/965/117/img/10117965_1.jpg?shrink=330:*&_v=20191210171250",
+          "product-id": 3,
+          "product-name": "오예스 12개입 360g",
+          "product-price": 3700,
+          "product-image-url": "https://img.danawa.com/prod_img/500000/965/117/img/10117965_1.jpg?shrink=330:*&_v=20191210171250",
           "quantity": 2
        }, {}, {}   
     ]
@@ -1029,7 +1029,7 @@ Authorization: Bearer your-token-string
 
 ```json
 {
-  "productId": 5,
+  "product-id": 5,
   "quantity": 2
 }
 ```
@@ -1047,7 +1047,7 @@ Authorization: Bearer your-token-string
       "status": 200,
       "result": {
         "action": "create",
-        "currentQuantity": 2
+        "current-quantity": 2
       }
     }
     ```
@@ -1060,7 +1060,7 @@ Authorization: Bearer your-token-string
       "status": 200,
       "result": {
         "action": "add",
-        "currentQuantity": 5
+        "current-quantity": 5
       }
     }
     ```
@@ -1074,11 +1074,11 @@ Authorization: Bearer your-token-string
       "status": 200,
       "result": {
         "action": "delete",
-        "productId": 3,
-        "productName": "오예스 12개입 360g",
-        "productPrice": 3700,
-        "productImageUrl": "https://img.danawa.com/prod_img/500000/965/117/img/10117965_1.jpg?shrink=330:*&_v=20191210171250",
-        "currentQuantity": 0
+        "product-id": 3,
+        "product-name": "오예스 12개입 360g",
+        "product-price": 3700,
+        "product-image-url": "https://img.danawa.com/prod_img/500000/965/117/img/10117965_1.jpg?shrink=330:*&_v=20191210171250",
+        "current-quantity": 0
       }
     }
     ```
@@ -1105,7 +1105,7 @@ Authorization: Bearer your-token-string
 <details>
 <summary><span style="font-size:1.3em;font-weight:bold">위시리스트 (수량)수정 API</span></summary>
 
-#### 위시리스트 추가 API/Request
+#### 위시리스트 (수량)수정 API/Request
 
 | Method | URL         | Path param | Path variable | Body |
 |--------|-------------|------------|---------------|------|
@@ -1115,7 +1115,7 @@ Authorization: Bearer your-token-string
 
 ```json
 {
-  "productId": 5,
+  "product-id": 5,
   "quantity": 2
 }
 ```
@@ -1131,10 +1131,10 @@ Authorization: Bearer your-token-string
     "timestamp": "2024-01-01T00:00:00.0000000",
     "status": 200,
     "result": { 
-      "productId": 3,
-      "productName": "오예스 12개입 360g",
-      "productPrice": 3700,
-      "productImageUrl": "https://img.danawa.com/prod_img/500000/965/117/img/10117965_1.jpg?shrink=330:*&_v=20191210171250",
+      "product-id": 3,
+      "product-name": "오예스 12개입 360g",
+      "product-price": 3700,
+      "product-image-url": "https://img.danawa.com/prod_img/500000/965/117/img/10117965_1.jpg?shrink=330:*&_v=20191210171250",
       "quantity": 2
     }
   }
@@ -1187,7 +1187,7 @@ Authorization: Bearer your-token-string
 
 ```json
 {
-  "productId": 5
+  "product-id": 5
 }
 ```
 
