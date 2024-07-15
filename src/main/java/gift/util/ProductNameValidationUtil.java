@@ -17,11 +17,11 @@ public class ProductNameValidationUtil {
             throw new CustomException(KAKAO_CONTAIN_ERROR);
     }
 
-    private static boolean containsSpecialCharacters(String productName){
+    private static boolean containsSpecialCharacters(String productName) {
         return !productName.isEmpty() & SPECIAL_CHAR_PATTERN.matcher(productName).find();
     }
 
-    private static boolean containsKAKAO(String productName){
+    private static boolean containsKAKAO(String productName) {
         return !productName.isEmpty() & productName.contains("카카오");
     }
 }
