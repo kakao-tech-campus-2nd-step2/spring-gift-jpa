@@ -1,20 +1,16 @@
 package gift.service.wish;
 
-import gift.domain.product.Product;
-import gift.domain.user.User;
 import gift.domain.wish.Wish;
 import gift.exception.product.ProductNotFoundException;
-import gift.exception.user.UserNotFoundException;
 import gift.exception.wish.WishCanNotModifyException;
 import gift.exception.wish.WishNotFoundException;
 import gift.repository.product.ProductRepository;
-import gift.repository.user.UserRepository;
 import gift.repository.wish.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -48,8 +44,8 @@ public class WishService {
         wishRepository.save(wish);
     }
 
-    public List<Wish> getWishList(Long userId) {
-        return wishRepository.findByUserIdAndIsDeletedFalse(userId);
+    public Page<Wish> getWishList(Long userId, Pageable pageable) {
+        return wishRepository.findByUserIdAndIsDeletedFalse(userId, pageable);
     }
 
     public Wish getWishDetail(Long wishId, Long userId) {
