@@ -1,9 +1,9 @@
 package gift.web.controller.api;
 
 import gift.authentication.annotation.LoginMember;
-import gift.web.dto.MemberDetails;
 import gift.service.ProductService;
 import gift.service.WishProductService;
+import gift.web.dto.MemberDetails;
 import gift.web.dto.request.product.CreateProductRequest;
 import gift.web.dto.request.product.UpdateProductRequest;
 import gift.web.dto.request.wishproduct.CreateWishProductRequest;
@@ -14,6 +14,8 @@ import gift.web.dto.response.wishproduct.CreateWishProductResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -53,8 +55,8 @@ public class ProductApiController {
     }
 
     @GetMapping
-    public ResponseEntity<ReadAllProductsResponse> readAllProducts() {
-        ReadAllProductsResponse response = productService.readAllProducts();
+    public ResponseEntity<ReadAllProductsResponse> readAllProducts(@PageableDefault Pageable pageable) {
+        ReadAllProductsResponse response = productService.readAllProducts(pageable);
         return ResponseEntity.ok(response);
     }
 
