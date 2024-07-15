@@ -2,7 +2,7 @@ package gift.constants;
 
 public class ErrorMessage {
 
-    public static final String ID_ALREADY_EXISTS_MSG = "이미 존재하는 ID 입니다.";
+    public static final String PRODUCT_ALREADY_EXISTS_MSG = "이미 존재하는 상품입니다.";
     public static final String PRODUCT_NOT_EXISTS_MSG = "존재하지 않는 상품입니다.";
     public static final String ERROR_FIELD_NOT_EXISTS_MSG = "에러 필드가 존재하지 않습니다.";
 

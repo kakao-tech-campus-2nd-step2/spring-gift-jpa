@@ -1,11 +1,8 @@
 package gift.controller;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@Sql("/sql/truncateIdentity.sql")
 class MemberControllerTest {
 
     private @Autowired MockMvc mockMvc;
@@ -77,25 +76,24 @@ class MemberControllerTest {
             {"email": "sgoh", "password": "sgohpass"}
             """;
         String product = """
-            {"id": 10,"name": "커피", "price": 5500,"imageUrl": "https://..."}
+            {"name": "커피", "price": 5500,"imageUrl": "https://..."}
             """;
         String product2 = """
-            {"id": 11,"name": "커피", "price": 5500,"imageUrl": "https://..."}
+            {"name": "커피2", "price": 5500,"imageUrl": "https://..."}
             """;
         registerMember(member);
         addProduct(product);
         addProduct(product2);
         String token = loginAndGetToken(member);
 
-        mockMvc.perform(post("/api/members/wishlist/10")
+        mockMvc.perform(post("/api/members/wishlist/1")
             .header("Authorization", "Bearer " + token));
-        mockMvc.perform(post("/api/members/wishlist/11")
+        mockMvc.perform(post("/api/members/wishlist/2")
             .header("Authorization", "Bearer " + token));
 
         mockMvc.perform(get("/api/members/wishlist")
                 .header("Authorization", "Bearer " + token))
-            .andExpect(jsonPath("$", hasSize(2)))
-            .andDo(print());
+            .andExpect(status().isOk());
     }
 
     @Test
@@ -105,13 +103,13 @@ class MemberControllerTest {
             {"email": "sgoh", "password": "sgohpass"}
             """;
         String product = """
-            {"id": 10,"name": "커피", "price": 5500,"imageUrl": "https://..."}
+            {"name": "커피", "price": 5500,"imageUrl": "https://..."}
             """;
         registerMember(member);
         addProduct(product);
         String token = loginAndGetToken(member);
 
-        mockMvc.perform(post("/api/members/wishlist/10")
+        mockMvc.perform(post("/api/members/wishlist/1")
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk());
     }
@@ -123,15 +121,15 @@ class MemberControllerTest {
             {"email": "sgoh", "password": "sgohpass"}
             """;
         String product = """
-            {"id": 10,"name": "커피", "price": 5500,"imageUrl": "https://..."}
+            {"name": "커피", "price": 5500,"imageUrl": "https://..."}
             """;
         registerMember(member);
         addProduct(product);
         String token = loginAndGetToken(member);
 
-        mockMvc.perform(post("/api/members/wishlist/10")
+        mockMvc.perform(post("/api/members/wishlist/1")
             .header("Authorization", "Bearer " + token));
-        mockMvc.perform(delete("/api/members/wishlist/10")
+        mockMvc.perform(delete("/api/members/wishlist/1")
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk());
     }

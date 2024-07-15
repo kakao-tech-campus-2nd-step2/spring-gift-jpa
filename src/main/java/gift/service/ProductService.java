@@ -4,8 +4,10 @@ import gift.constants.ErrorMessage;
 import gift.dto.ProductDto;
 import gift.entity.Product;
 import gift.repository.ProductJpaDao;
-import java.util.List;
+import jakarta.transaction.Transactional;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,9 +25,9 @@ public class ProductService {
      * @param product
      */
     public void addProduct(ProductDto product) {
-        productJpaDao.findById(product.getId())
+        productJpaDao.findByName(product.getName())
             .ifPresent(v -> {
-                throw new IllegalArgumentException(ErrorMessage.ID_ALREADY_EXISTS_MSG);
+                throw new IllegalArgumentException(ErrorMessage.PRODUCT_ALREADY_EXISTS_MSG);
             });
         productJpaDao.save(new Product(product));
     }
@@ -35,10 +37,11 @@ public class ProductService {
      *
      * @param product
      */
+    @Transactional
     public void editProduct(ProductDto product) {
-        productJpaDao.findById(product.getId())
+        Product targetProduct = productJpaDao.findById(product.getId())
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.PRODUCT_NOT_EXISTS_MSG));
-        productJpaDao.save(new Product(product));
+        targetProduct.updateProduct(product);
     }
 
     /**
@@ -57,8 +60,8 @@ public class ProductService {
      *
      * @return 상품 List
      */
-    public List<ProductDto> getAllProducts() {
-        return productJpaDao.findAll().stream().map(ProductDto::new).toList();
+    public Page<ProductDto> getAllProducts(Pageable pageable) {
+        return productJpaDao.findAll(pageable).map(ProductDto::new);
     }
 
     /**

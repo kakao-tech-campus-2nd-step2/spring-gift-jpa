@@ -2,7 +2,6 @@ package gift.service;
 
 import gift.constants.ErrorMessage;
 import gift.dto.ProductDto;
-import gift.dto.WishlistRequest;
 import gift.entity.Member;
 import gift.entity.Product;
 import gift.entity.Wishlist;
@@ -10,8 +9,9 @@ import gift.jwt.JwtUtil;
 import gift.repository.MemberJpaDao;
 import gift.repository.ProductJpaDao;
 import gift.repository.WishlistJpaDao;
-import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -62,52 +62,46 @@ public class MemberService {
     /**
      * 회원의 위시 리스트 조회
      *
-     * @param email
-     * @return
+     * @param email, pageable
+     * @return Page
      */
-    public List<ProductDto> getAllWishlist(String email) {
-        Member member = memberJpaDao.findByEmail(email)
-            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.MEMBER_NOT_EXISTS_MSG));
-        return member.getWishlist().stream().map(o -> new ProductDto(o.getProduct())).toList();
+    public Page<ProductDto> getAllWishlist(String email, Pageable pageable) {
+        return wishlistJpaDao.findAllByMember_Email(email, pageable)
+            .map(o -> new ProductDto(o.getProduct()));
     }
 
     /**
      * 위시 리스트에 상품 추가
      *
-     * @param wish
+     * @param email, productId
      */
-    public void addWishlist(WishlistRequest wish) {
-        wishlistJpaDao.findByMember_EmailAndProduct_Id(wish.getEmail(), wish.getProductId())
+    public void addWishlist(String email, Long productId) {
+        Member member = memberJpaDao.findByEmail(email)
+            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.MEMBER_NOT_EXISTS_MSG));
+        Product product = productJpaDao.findById(productId)
+            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.PRODUCT_NOT_EXISTS_MSG));
+
+        wishlistJpaDao.findByMember_EmailAndProduct_Id(email, productId)
             .ifPresent(v -> {
                 throw new IllegalArgumentException(ErrorMessage.WISHLIST_ALREADY_EXISTS_MSG);
             });
 
-        Wishlist wishlist = convertWishlistRequestToWishlist(wish);
-        wishlist.getMember().getWishlist().add(wishlist);
-        wishlist.getProduct().getWishlist().add(wishlist);
+        Wishlist wishlist = new Wishlist(member, product);
+        member.getWishlist().add(wishlist);
+        product.getWishlist().add(wishlist);
+
         wishlistJpaDao.save(wishlist);
     }
 
     /**
      * 위시 리스트에서 상품 삭제
      *
-     * @param wish
+     * @param email, productId
      */
-    public void deleteWishlist(WishlistRequest wish) {
-        wishlistJpaDao.findByMember_EmailAndProduct_Id(wish.getEmail(), wish.getProductId())
+    public void deleteWishlist(String email, Long productId) {
+        wishlistJpaDao.findByMember_EmailAndProduct_Id(email, productId)
             .orElseThrow(() -> new NoSuchElementException(ErrorMessage.WISHLIST_NOT_EXISTS_MSG));
 
-        wishlistJpaDao.deleteByMember_EmailAndProduct_Id(wish.getEmail(), wish.getProductId());
-    }
-
-    /**
-     * WishlistRequest를 Wishlist Entity로 변환
-     */
-    private Wishlist convertWishlistRequestToWishlist(WishlistRequest wish) {
-        Member member = memberJpaDao.findByEmail(wish.getEmail())
-            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.MEMBER_NOT_EXISTS_MSG));
-        Product product = productJpaDao.findById(wish.getProductId())
-            .orElseThrow(() -> new NoSuchElementException(ErrorMessage.PRODUCT_NOT_EXISTS_MSG));
-        return new Wishlist(member, product);
+        wishlistJpaDao.deleteByMember_EmailAndProduct_Id(email, productId);
     }
 }

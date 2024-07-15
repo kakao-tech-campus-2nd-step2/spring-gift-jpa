@@ -11,8 +11,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
+@Sql("/sql/truncateIdentity.sql")
 class WishlistJpaDaoTest {
 
     @Autowired
@@ -25,7 +27,7 @@ class WishlistJpaDaoTest {
 
     Wishlist generateWishlist() {
         Member member = new Member("sgoh", "pass");
-        Product product = new Product(1L, "coffee", 4500L, "http");
+        Product product = new Product("coffee", 4500L, "http");
         Wishlist wishlist = new Wishlist(member, product);
 
         member.getWishlist().add(wishlist);

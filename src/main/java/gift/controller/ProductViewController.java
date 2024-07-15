@@ -1,6 +1,12 @@
 package gift.controller;
 
+import gift.dto.ProductDto;
 import gift.service.ProductService;
+import java.util.List;
+import java.util.stream.IntStream;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +29,15 @@ public class ProductViewController {
      * @return products.html
      */
     @GetMapping()
-    public String getAllProducts(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+    public String getAllProducts(Model model, @PageableDefault(size = 5) Pageable pageable) {
+        Page<ProductDto> products = productService.getAllProducts(pageable);
+
+        int totalPages = products.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages).boxed().toList();
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        model.addAttribute("products", products);
         return "products";
     }
 
