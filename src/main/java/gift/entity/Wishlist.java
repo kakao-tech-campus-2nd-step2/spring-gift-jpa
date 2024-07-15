@@ -1,4 +1,4 @@
-package gift.model;
+package gift.entity;
 
 import jakarta.persistence.*;
 

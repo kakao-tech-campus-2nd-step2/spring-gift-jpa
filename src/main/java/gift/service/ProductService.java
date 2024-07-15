@@ -1,9 +1,13 @@
 package gift.service;
 
 
-import gift.model.Product;
+import gift.dto.ProductDto;
+import gift.entity.Product;
+import gift.exception.ProductNotFoundException;
 import gift.repository.ProductRepository;
+
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,22 +22,26 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+        var product = productRepository.findById(id)
+                .orElseThrow(() -> ProductNotFoundException.of(id));
+        return product;
     }
 
-    public void addProduct(Product product) {
+    public void addProduct(ProductDto productDto) {
+        Product product = new Product(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
         productRepository.save(product);
     }
 
-    public void updateProduct(Long id, Product product) {
-        if (productRepository.existsById(id)) {
-            product.setId(id);
-            productRepository.save(product);
-        }
+    public void updateProduct(Long id, ProductDto productDto) {
+        var product = productRepository.findById(id)
+                .orElseThrow(() -> ProductNotFoundException.of(id));
+        product.edit(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+
     }
 
     public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
-
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> ProductNotFoundException.of(id));
+        productRepository.delete(product);
     }
 }

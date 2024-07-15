@@ -24,8 +24,8 @@ public class WebConfig {
         FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(jwtTokenFilter);
 
-        registrationBean.addUrlPatterns("/kk/*");
-
+        registrationBean.addUrlPatterns("/api/admin/products/edit/*");
+        registrationBean.addUrlPatterns("/api/admin/products/delete/*");
         return registrationBean;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 @Component
@@ -43,7 +44,7 @@ public class JwtTokenFilter implements Filter {
     private String resolveToken(HttpServletRequest request) {
 
         String bearerToken = request.getHeader("Authorization");
-        System.out.println("at resolveToken mathod : "+bearerToken);
+        System.out.println("at resolveToken mathod : " + bearerToken);
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

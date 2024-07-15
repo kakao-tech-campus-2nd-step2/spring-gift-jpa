@@ -1,6 +1,7 @@
 package gift.controller;
 
-import gift.model.Member;
+import gift.dto.MemberDto;
+import gift.entity.Member;
 import gift.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute Member member, HttpServletResponse response) {
-        String token = memberService.registerMember(member);
+    public String register(@ModelAttribute("member") MemberDto memberDto, HttpServletResponse response) {
+        String token = memberService.registerMember(memberDto);
         response.setHeader("Authorization", "Bearer " + token);
         return "redirect:/members/login";
     }

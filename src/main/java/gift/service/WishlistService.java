@@ -1,10 +1,12 @@
 package gift.service;
 
-import gift.model.Product;
-import gift.model.Wishlist;
+import gift.entity.Product;
+import gift.entity.Wishlist;
 import gift.repository.WishlistRepository;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
