@@ -65,7 +65,10 @@
                 <th>Price</th>
                 <th>Image</th>
                 <th>Seller</th>
-                <th></th>
+                <th>
+                    페이지당 항목 수<b></b><input type="number" id="sizeInput" value="10" min="1" style="width: 60px;">
+
+                </th>
             </tr>
             </thead>
             <tbody id="productList"></tbody>
@@ -115,6 +118,12 @@
 <script>
     $(document).ready(function () {
         let currentPage = 0;
+        let currentSize = $('#sizeInput').val();
+
+        $('#sizeInput').on('change', function () {
+            currentSize = $(this).val();
+            loadProducts(currentPage);
+        });
 
         // 상품 등록하기
         $('#registerButton').on('click', function (e) {
@@ -156,7 +165,7 @@
                             '<td>' + searchProduct.name + '</td>' +
                             '<td>' + searchProduct.price + '</td>' +
                             '<td>' + searchProduct.imageUrl + '</td>' +
-                            '<td>' + searchProduct.seller+ '</td>' +
+                            '<td>' + searchProduct.seller + '</td>' +
                             '</tr>';
                     } else {
                         html += '<tr><td colspan="4">상품을 찾을 수 없습니다.</td></tr>';
@@ -174,11 +183,12 @@
             $("#price").val("");
             $("#imageUrl").val("");
         }
+
         // 상품 리스트 로드하기
         function loadProducts(pageNum) {
             $.ajax({
                 type: 'GET',
-                url: '/spring-gift/productpage/' + pageNum,
+                url: '/spring-gift/products?page=' + pageNum + '&size=' + currentSize,
                 success: function (response) {
                     var products = response.content;
                     var totalPages = response.totalPages;
@@ -194,7 +204,7 @@
                             '<td>' +
                             '<div style="display: flex; justify-content: center; gap: 10px;">' +
                             '<button class="btn btn-warning btn-sm edit-button" data-id="' + product.id + '" data-name="' + product.name + '" data-price="' + product.price + '" data-imageurl="' + product.imageUrl + '" style="width: 100px;">수정하기</button>' +
-                            '<button class="btn btn-danger btn-sm delete-button" data-id="' + product.id + '" style="width: 100px;">삭제하기</button>'+
+                            '<button class="btn btn-danger btn-sm delete-button" data-id="' + product.id + '" style="width: 100px;">삭제하기</button>' +
                             '</div>' +
                             '</td>' +
                             '</tr>';
@@ -207,6 +217,7 @@
                 }
             });
         }
+
         function setupPagination(totalPages, currentPage) {
 
             let paginationHtml = '';

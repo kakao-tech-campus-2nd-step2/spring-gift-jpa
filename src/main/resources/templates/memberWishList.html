@@ -30,7 +30,9 @@
                 <th>Price</th>
                 <th>Image</th>
                 <th>Seller</th>
-                <th></th>
+                <th>
+                    페이지당 항목 수<b></b><input type="number" id="sizeInput" value="10" min="1" style="width: 60px;">
+                </th>
             </tr>
             </thead>
             <tbody id=wishProductList></tbody>
@@ -46,12 +48,17 @@
 <script>
     $(document).ready(function () {
         let currentPage = 0;
+        let currentSize = $('#sizeInput').val();
 
+        $('#sizeInput').on('change', function () {
+            currentSize = $(this).val();
+            loadProducts(currentPage);
+        });
         // 상품 리스트 로드하기
         function loadProducts(pageNum) {
             $.ajax({
                 type: 'GET',
-                url: '/spring-gift/wishlistpage/'+pageNum,
+                url: '/spring-gift/wishlists?page=' + pageNum + '&size=' + currentSize,
                 success: function (response) {
                     var wishProducts = response.content;
                     var totalPages = response.totalPages;

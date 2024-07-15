@@ -3,6 +3,7 @@ package gift.main.controller;
 import gift.main.dto.ProductResponce;
 import gift.main.service.ProductService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,14 +21,8 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<?> getProducts() {
-        List<ProductResponce> products = productService.getProducts();
-        return ResponseEntity.ok(products);
-    }
-
-    @GetMapping("/productpage/{pageNum}")
-    public ResponseEntity<?> getProductPage(@PathVariable(name = "pageNum") Optional<Integer> pageNum,@PathVariable(name = "productNum") Optional<Integer> productNum) {
-        Page<ProductResponce> productPage = productService.getProductPage(pageNum.orElse(0),productNum.orElse(10));
+    public ResponseEntity<?> getProductPage(Pageable pageable) {
+        Page<ProductResponce> productPage = productService.getProductPage(pageable);
         return ResponseEntity.ok(productPage);
     }
 }

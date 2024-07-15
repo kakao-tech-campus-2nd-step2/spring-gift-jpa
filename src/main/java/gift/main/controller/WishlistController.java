@@ -6,6 +6,7 @@ import gift.main.dto.WishProductResponce;
 import gift.main.service.ProductService;
 import gift.main.service.WishProductService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -32,20 +33,8 @@ public class WishlistController {
     }
 
     @GetMapping("/wishlists")
-    public ResponseEntity<?> getWishProduct(@SessionUser UserVo sessionUser) {
-        List<WishProductResponce> wishProducts = wishProductService.getWishProducts(sessionUser.getId());
-        return ResponseEntity.ok(wishProducts);
-    }
-
-    @GetMapping("/wishlistpage/{pageNum}/{productNum}")
-    public ResponseEntity<?> getWishProductPage(
-            @SessionUser UserVo sessionUser,
-            @PathVariable(name = "pageNum") Optional<Integer> pageNum,
-            @PathVariable(name = "productNum") Optional<Integer> productNum) {
-        Page<WishProductResponce> wishProductPage = wishProductService.getWishProductPage(
-                sessionUser.getId(),
-                pageNum.orElse(0),
-                productNum.orElse(10));
+    public ResponseEntity<?> getWishProductPage(@SessionUser UserVo sessionUserVo, Pageable pageable) {
+        Page<WishProductResponce> wishProductPage = wishProductService.getWishProductPage(sessionUserVo,pageable);
         return ResponseEntity.ok(wishProductPage);
     }
 

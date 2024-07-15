@@ -11,18 +11,15 @@
 </head>
 <body>
 <br>
-<br>
 <div class="container p-3 my-3 bg-dark text-white">
     <h1>판매 물건 페이지</h1>
     <p>환영합니다!🖐️🖐️</p>
 </div>
-<br><br>
-
+<br>
 <div class="container">
     <div class="container">
         <h2>판매 리스트 확인</h2>
         <p>판매 상품을 확인하고 마음에 드는 상품을 위시리스트에 담을 수 있습니다.</p>
-
         <a type="button" class="btn btn-info " href="/spring-gift/wishlist">장바구니 가기</a>
     </div>
     <div class="container">
@@ -34,13 +31,15 @@
                 <th>Price</th>
                 <th>Image</th>
                 <th>Seller</th>
-                <th></th>
+                <th>
+                    페이지당 항목 수<b></b><input type="number" id="sizeInput" value="10" min="1" style="width: 60px;">
+
+                </th>
             </tr>
             </thead>
             <tbody id="productList"></tbody>
         </table>
     </div>
-
     <div class="container">
         <ul class="pagination justify-content-center" id="pagination"></ul>
     </div>
@@ -49,12 +48,17 @@
 <script>
     $(document).ready(function () {
         let currentPage = 0;
+        let currentSize = $('#sizeInput').val();
 
-        // 상품 리스트 로드하기
+        $('#sizeInput').on('change', function () {
+            currentSize = $(this).val();
+            loadProducts(currentPage);
+        });
+
         function loadProducts(pageNum) {
             $.ajax({
                 type: 'GET',
-                url: '/spring-gift/productpage/' + pageNum,
+                url: '/spring-gift/products?page=' + pageNum + '&size=' + currentSize,
                 success: function (response) {
                     var products = response.content;
                     var totalPages = response.totalPages;
@@ -65,13 +69,9 @@
                             '<td>' + product.id + '</td>' +
                             '<td>' + product.name + '</td>' +
                             '<td>' + product.price + '</td>' +
-                            '<td>' + product.imag + '</td>' +
+                            '<td>' + product.image + '</td>' +
                             '<td>' + product.seller + '</td>' +
-                            '<td>' +
-                            '<div style="display: flex; justify-content: center; gap: 10px;">' +
-                            '<button class="btn btn-primary btn-sm add-button" data-id="' + product.id + '" style="width: 100px;">장바구니 담기</button>' +
-                            '</div>' +
-                            '</td>' +
+                            '<td><button class="btn btn-primary btn-sm add-button" data-id="' + product.id + '">장바구니 담기</button></td>' +
                             '</tr>';
                     });
                     $('#productList').html(html);
@@ -83,18 +83,11 @@
             });
         }
 
-        // 페이지네이션 설정
         function setupPagination(totalPages, currentPage) {
-
             let paginationHtml = '';
-
-            // 처음 버튼
             paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="0">처음</a></li>';
-
-            // 중간 페이지 버튼들
             const startPage = Math.max(0, currentPage - 2);
             const endPage = Math.min(totalPages - 1, currentPage + 2);
-
             for (let i = startPage; i <= endPage; i++) {
                 if (i === currentPage) {
                     paginationHtml += '<li class="page-item active"><a class="page-link" href="javascript:void(0);" data-page="' + i + '">' + i + '</a></li>';
@@ -102,14 +95,10 @@
                     paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="' + i + '">' + i + '</a></li>';
                 }
             }
-
-            // 마지막 버튼
             paginationHtml += '<li class="page-item"><a class="page-link" href="javascript:void(0);" data-page="' + (totalPages - 1) + '">마지막</a></li>';
-
             $('#pagination').html(paginationHtml);
         }
 
-        // 페이지 링크 클릭 이벤트 처리
         $(document).on('click', '.page-link', function () {
             const pageNum = $(this).data('page');
             if (pageNum !== undefined && pageNum !== currentPage) {
@@ -134,7 +123,6 @@
             });
         });
 
-        // 초기 로드
         loadProducts(currentPage);
     });
 </script>
