@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS product (
     imageUrl VARCHAR(255) NOT NULL CHECK (TRIM(imageUrl) <> '')
     );
 
-CREATE TABLE users (
+CREATE TABLE member (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
@@ -13,9 +13,10 @@ CREATE TABLE users (
 
 CREATE TABLE IF NOT EXISTS wish (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id BIGINT NOT NULL,
+    member_email VARCHAR(255) NOT NULL,
     product_id BIGINT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (product_id) REFERENCES product(id),
-    UNIQUE (user_id, product_id)
+    FOREIGN KEY (member_email) REFERENCES member(email),
+    UNIQUE (member_email, product_id)
+
 );
