@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import gift.service.MemberService;
 import gift.util.JwtUtil;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
