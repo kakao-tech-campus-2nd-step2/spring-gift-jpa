@@ -42,7 +42,6 @@ public class WishController {
         return ResponseEntity.ok(wishes);
     }
 
-
     @PostMapping
     public ResponseEntity<String> addWish(@RequestBody @Valid WishDTO wishDTO, @LoginMember Member member) {
         Product product = productService.getProductById(wishDTO.getProductId());
