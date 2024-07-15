@@ -31,7 +31,7 @@ public class MemberService {
             .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
   }
 
-  public Optional<Member> findById(Long id) {
-    return memberRepository.findById(id);
+  public Optional<Member> findById(Long memberId) {
+    return memberRepository.findById(memberId);
   }
 }

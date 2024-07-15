@@ -10,6 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -60,7 +63,9 @@ public class WishlistRepositoryTest {
 
     wishlistRepository.save(wishlist);
 
-    List<Wishlist> wishlists = wishlistRepository.findByMemberId(member.getId());
+    Pageable pageable = PageRequest.of(0, 10);
+    Page<Wishlist> wishlistsPage = wishlistRepository.findByMemberId(member.getId(), pageable);
+    List<Wishlist> wishlists = wishlistsPage.getContent();
 
     assertThat(wishlists).hasSize(1);
     Wishlist foundWishlist = wishlists.get(0);
@@ -72,6 +77,25 @@ public class WishlistRepositoryTest {
     );
   }
 
+  @Test
+  void findByMemberIdWithPagination() {
+    for (int i = 1; i <= 5; i++) {
+      Product newProduct = createAndSaveProduct("Product " + i, 100 + i, "http://example.com/product-" + i);
+      Wishlist wishlist = new Wishlist();
+      wishlist.setMember(member);
+      wishlist.setProduct(newProduct);
+      wishlistRepository.save(wishlist);
+    }
+
+    Pageable pageable = PageRequest.of(0, 3);
+    Page<Wishlist> wishlistPage = wishlistRepository.findByMemberId(member.getId(), pageable);
+
+    assertThat(wishlistPage.getContent()).hasSize(3);
+    assertThat(wishlistPage.getTotalElements()).isEqualTo(5);
+    assertThat(wishlistPage.getTotalPages()).isEqualTo(2);
+    assertThat(wishlistPage.getNumber()).isEqualTo(0);
+    assertThat(wishlistPage.getSize()).isEqualTo(3);
+  }
   private Member createAndSaveMember(String email, String password) {
     Member member = new Member();
     member.setEmail(email);

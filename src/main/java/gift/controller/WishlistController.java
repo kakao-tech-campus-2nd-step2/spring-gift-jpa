@@ -2,12 +2,14 @@ package gift.controller;
 
 import gift.annotation.LoginMember;
 import gift.model.Wishlist;
+import gift.model.Product;
 import gift.service.WishlistService;
 import gift.model.Member;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/wishlist")
@@ -20,15 +22,16 @@ public class WishlistController {
   }
 
   @GetMapping
-  public ResponseEntity<List<Wishlist>> getWishlist(@LoginMember Member member) {
-    List<Wishlist> wishlist = wishlistService.getWishlist(member.getId());
+  public ResponseEntity<Page<Wishlist>> getWishlist(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "10") int size,
+                                                    @LoginMember Member member) {
+    Page<Wishlist> wishlist = wishlistService.getWishlist(member.getId(), page, size);
     return ResponseEntity.ok(wishlist);
   }
 
   @PostMapping
-  public ResponseEntity<Wishlist> addWishlistItem(@RequestBody Wishlist wishlist, @LoginMember Member member) {
-    wishlist.setMember(member);
-    Wishlist savedWishlist = wishlistService.addWishlistItem(wishlist);
+  public ResponseEntity<Wishlist> addWishlistItem(@RequestBody Map<String, Object> body, @LoginMember Member member) {
+    Wishlist savedWishlist = wishlistService.addWishlistItem(member, body);
     return ResponseEntity.ok(savedWishlist);
   }
 
