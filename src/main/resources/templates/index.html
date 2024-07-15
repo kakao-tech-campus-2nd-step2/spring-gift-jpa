@@ -12,7 +12,7 @@
         <a href="/members/login" class="btn btn-primary mr-2">로그인</a>
         <a href="/members/register" class="btn btn-secondary">회원가입</a>
     </div>
-    <a href="/products/new" class="btn btn-success">상품 추가</a>
+    <a href="/products/new" class="btn btn-success mb-3">상품 추가</a>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -23,7 +23,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="product : ${products}">
+        <tr th:each="product : ${productPage.content}">
             <td th:text="${product.name}"></td>
             <td th:text="${product.price}"></td>
             <td><img th:src="${product.imageUrl}" width="100"></td>
@@ -34,6 +34,20 @@
         </tr>
         </tbody>
     </table>
+    <div class="d-flex justify-content-center">
+        <ul class="pagination">
+            <li th:classappend="${productPage.hasPrevious()} ? 'page-item' : 'page-item disabled'">
+                <a th:href="@{/products(page=${productPage.number - 1}, size=${productPage.size})}" class="page-link">Previous</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
+                th:classappend="${i == productPage.number} ? 'page-item active' : 'page-item'">
+                <a th:href="@{/products(page=${i}, size=${productPage.size})}" class="page-link" th:text="${i + 1}">1</a>
+            </li>
+            <li th:classappend="${productPage.hasNext()} ? 'page-item' : 'page-item disabled'">
+                <a th:href="@{/products(page=${productPage.number + 1}, size=${productPage.size})}" class="page-link">Next</a>
+            </li>
+        </ul>
+    </div>
 </div>
 </body>
 </html>
