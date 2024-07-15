@@ -28,7 +28,7 @@ public class AdminController {
         return "list"; // list.html 파일 보여주기
     }
 
-    @GetMapping("/products/view/{id}")
+    @GetMapping("/products/view/{product_id}")
     public String viewProduct(@PathVariable Long id, Model model) {
         ProductDto product = productService.findById(id);
         model.addAttribute("product", product);
@@ -50,7 +50,7 @@ public class AdminController {
         return "redirect:/admin/products/list";
     }
 
-    @GetMapping("/products/edit/{id}")
+    @GetMapping("/products/edit/{product_id}")
     public String showEditProductForm(@PathVariable Long id, Model model) {
         ProductDto product = productService.findById(id); // productService를 사용하여 id로 상품 찾기
 
@@ -59,7 +59,7 @@ public class AdminController {
         return "edit"; // 렌더링할 뷰의 이름 반환
     }
 
-    @PostMapping("/products/edit/{id}")
+    @PostMapping("/products/edit/{product_id}")
     public String editProduct(@PathVariable Long id, @Valid @ModelAttribute("productDto") ProductDto productDto, BindingResult result) {
         if (result.hasErrors()) {
             return "edit"; // 에러가 있으면 다시 edit.html 보여주기

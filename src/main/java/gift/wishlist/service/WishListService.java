@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class WishListService {
 
     @Autowired
-    private WishListRepository wishListRepository;
+    private static WishListRepository wishListRepository;
 
     // id로 위시리스트 찾기
     public WishList findByUserId(Long userId) {
@@ -18,12 +18,12 @@ public class WishListService {
     }
 
     // 위시리스트에 상품 추가
-    public void addProductToWishList(Long userId, Product product) {
+    public static void addProductToWishList(Long userId, Product product) {
         wishListRepository.addProductToWishList(userId, product);
     }
 
     // 위시리스트에 상품 삭제
-    public void removeProductFromWishList(Long userId, Long productId) {
-        WishListRepository.removeProductFromWishList(userId, productId);
+    public static void removeProductFromWishList(Long member_id, Long product_id) {
+        WishListRepository.removeProductFromWishList(member_id, product_id);
     }
 }

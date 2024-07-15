@@ -7,14 +7,18 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long product_id;
 
-    public String name;
+    private String name;
     private int price;
-    public String imgUrl;
+    private String imgUrl;
 
     // JPA에서 필요로 하는 기본 생성자
-    public Product() {
+    protected Product() {
+    }
+
+    public Product(String name) {
+        this.name = name;
     }
 
     public Product(String name, int price, String imgUrl) {
@@ -23,9 +27,9 @@ public class Product {
         this.imgUrl = imgUrl;
     }
 
-    // 필드 접근 방식으로 값 반환
-    public Long id() {
-        return id;
+    // getter 메서드
+    public Long product_id() {
+        return product_id;
     }
 
     public String name() {
@@ -40,7 +44,10 @@ public class Product {
         return imgUrl;
     }
 
-    public void update(Long id, String name, int price, String s) {
-
+    // 업데이트 메서드
+    public void update(String name, int price, String imgUrl) {
+        this.name = name;
+        this.price = price;
+        this.imgUrl = imgUrl;
     }
 }

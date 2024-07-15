@@ -6,13 +6,13 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 public class WishList {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String wishlist_id;
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
@@ -26,55 +26,42 @@ public class WishList {
     )
     private List<Product> products = new ArrayList<>();
 
-    // JPA에서 필요로 하는 기본 생성자
-    public WishList() {
+    // 기본 생성자 (JPA에서 필요로 함)
+    protected WishList() {
+        this.wishlist_id = UUID.randomUUID().toString();
     }
 
+    // 생성자
     public WishList(Member member, Product product) {
-        // products = product; // 이런 식으로 하나의 Product 객체를 List<Product> 타입에 할당하려고 할 때 오류 발생
-        products = new ArrayList<>(); // List를 초기화하고 요소를 추가해야 함
-        products.add(product); // Product 객체 추가
+        this();
+        this.member = member;
+        this.products.add(product);
     }
 
-    // hashCode 및 equals 메서드 (optional, 테스트를 위한 비교에 사용)
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        WishList wishList = (WishList) o;
-        return id != null && id.equals(wishList.id);
+    public WishList(Member member, List<Product> products) {
+        this();
+        this.member = member;
+        this.products.addAll(products);
     }
 
-    @Override
-    public int hashCode() {
-        return 31;
+    // getter 메서드
+    public String wishlist_id() {
+        return wishlist_id;
     }
 
-    // 위시리스트의 ID 반환
-    public Long getId() {
-        return id;
-    }
-
-    // 회원 반환 메서드
-    public Member getMember() {
+    public Member member() {
         return member;
     }
 
-    // 회원 설정 메서드
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    // 불변의 제품 리스트 반환 메서드
-    public List<Product> getProducts() {
+    public List<Product> products() {
         return products;
     }
 
-    // Products 리스트를 조작하는 메서드
     public void addProduct(Product product) {
         products.add(product);
     }
 
     public void removeProduct(Product product) {
         products.remove(product);
-    }}
+    }
+}

@@ -26,7 +26,7 @@ public class ProductService {
         String sql = "SELECT * FROM products";
         return jdbcTemplate.query(sql, (rs, rowNum) ->
                 new ProductDto(
-                        rs.getLong("id"),
+                        rs.getLong("product_id"),
                         rs.getString("name"),
                         rs.getInt("price"),
                         rs.getString("imgUrl")
@@ -34,10 +34,10 @@ public class ProductService {
     }
 
     public ProductDto findById(Long id) {
-        String sql = "SELECT * FROM products WHERE id = ?";
+        String sql = "SELECT * FROM products WHERE product_id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, (rs, rowNum) ->
                 new ProductDto(
-                        rs.getLong("id"),
+                        rs.getLong("product_id"),
                         rs.getString("name"),
                         rs.getInt("price"),
                         rs.getString("imgUrl")
@@ -45,12 +45,12 @@ public class ProductService {
     }
 
     public void update(Long id, ProductDto productDto) {
-        String sql = "UPDATE products SET name = ?, price = ?, imgUrl = ? WHERE id = ?";
+        String sql = "UPDATE products SET name = ?, price = ?, imgUrl = ? WHERE product_id = ?";
         jdbcTemplate.update(sql, productDto.name(), productDto.price(), productDto.imgUrl(), id);
     }
 
-    public void deleteById(Long id) {
-        String sql = "DELETE FROM products WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+    public void deleteById(Long product_id) {
+        String sql = "DELETE FROM products WHERE product_id = ?";
+        jdbcTemplate.update(sql, product_id);
     }
 }

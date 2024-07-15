@@ -16,19 +16,17 @@ public class ProductController {
         this.productService = productService;
     }
 
-    // 상품 추가, 수정의 메소드의 ProductDto 파라미터에 적용된 객체 필드가 유효한지 검증
-
     @PostMapping("/add")
     public void addProduct(@Valid @RequestBody ProductDto productDto) {
         productService.save(productDto);
     }
 
-    @PutMapping("/edit/{id}")
+    @PutMapping("/edit/{product_id}")
     public void editProduct(@PathVariable Long id, @Valid @RequestBody ProductDto productDto) {
         productService.update(id, productDto);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{product_id}")
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
     }
