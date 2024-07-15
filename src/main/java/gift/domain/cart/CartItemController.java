@@ -3,50 +3,27 @@ package gift.domain.cart;
 import gift.domain.product.Product;
 import gift.domain.user.dto.UserInfo;
 import gift.global.resolver.LoginInfo;
-import gift.global.response.ResponseMaker;
-import gift.global.response.ResultResponseDto;
-import gift.global.response.SimpleResultResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/api/users")
+@Controller
+@RequestMapping("/users/cart")
 public class CartItemController {
 
     private final CartItemService cartItemService;
 
-    public CartItemController(CartItemService cartItemService, JdbcTemplate jdbcTemplate) {
+    public CartItemController(CartItemService cartItemService) {
         this.cartItemService = cartItemService;
     }
 
-
-    /**
-     * 장바구니에 상품 담기
-     */
-    @PostMapping("/cart/{id}")
-    public ResponseEntity<SimpleResultResponseDto> addCartItem(
-        @PathVariable("id") Long productId, @LoginInfo UserInfo userInfo) {
-
-        int currentCount = cartItemService.addCartItem(userInfo.getId(), productId);
-
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "상품이 장바구니에 추가되었습니다. 총 개수: " + currentCount);
-    }
-
-    /**
-     * 장바구니 조회 - 페이징(매개변수별)
-     */
-    @GetMapping(path = "/cart")
-    public ResponseEntity<ResultResponseDto<Page<Product>>> getProductsInCartByUserIdAndPageAndSort(
+    @GetMapping
+    public String cartPage(
+        Model model,
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "sort", defaultValue = "id_asc") String sort,
         @LoginInfo UserInfo userInfo) {
@@ -60,19 +37,8 @@ public class CartItemController {
             sortObj
         );
 
-        return ResponseMaker.createResponse(HttpStatus.OK, "장바구니 조회에 성공했습니다.", products);
-    }
-
-    /**
-     * 장바구니 상품 삭제
-     */
-    @DeleteMapping("/cart/{id}")
-    public ResponseEntity<SimpleResultResponseDto> deleteCartItem(
-        @PathVariable("id") Long productId, @LoginInfo UserInfo userInfo) {
-
-        cartItemService.deleteCartItem(userInfo.getId(), productId);
-
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "장바구니에서 상품이 삭제되었습니다.");
+        model.addAttribute("products", products);
+        return "cart";
     }
 
     private Sort getSortObject(String sort) {
@@ -90,3 +56,4 @@ public class CartItemController {
         }
     }
 }
+
