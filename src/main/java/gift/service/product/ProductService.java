@@ -6,6 +6,8 @@ import gift.mapper.ProductMapper;
 import gift.web.dto.ProductDto;
 import gift.web.exception.ProductNotFoundException;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 // Service단에서는 DTO를 Entity로 변환해서 Repository로 넘겨주고, Entity를 DTO로 변환해서 Controller에서 넘겨주면 되나?
 @Service
@@ -18,11 +20,9 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public List<ProductDto> getProducts() {
-        return productReposiotory.findAll()
-            .stream()
-            .map(productMapper::toDto)
-            .toList();
+    public Page<ProductDto> getProducts(Pageable pageable) {
+        return productReposiotory.findAll(pageable)
+            .map(productMapper::toDto);
     }
 
     public ProductDto getProductById(Long id) {

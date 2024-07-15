@@ -4,6 +4,8 @@ import gift.service.product.ProductService;
 import gift.web.dto.ProductDto;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,8 +28,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getProducts() {
-        return new ResponseEntity<>(productService.getProducts(), HttpStatus.OK);
+    public ResponseEntity<Page<ProductDto>> getProducts(Pageable pageable) {
+        return new ResponseEntity<>(productService.getProducts(pageable), HttpStatus.OK);
     }
 
     // products/{상품번호}의 GetMapping

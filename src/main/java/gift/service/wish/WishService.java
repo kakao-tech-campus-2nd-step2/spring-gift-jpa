@@ -12,6 +12,8 @@ import gift.web.exception.MemberNotFoundException;
 import gift.web.exception.ProductNotFoundException;
 import gift.web.exception.WishProductNotFoundException;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,21 +30,17 @@ public class WishService {
         this.productReposiotory = productReposiotory;
     }
 
-    public List<WishDto> getWishes() {
-        return wishRepository.findAll()
-            .stream()
-            .map(wishMapper::toDto)
-            .toList();
+    public Page<WishDto> getWishes(Pageable pageable) {
+        return wishRepository.findAll(pageable)
+            .map(wishMapper::toDto);
     }
 
-    public List<WishDto> getWishesByEmail(String email) {
+    public Page<WishDto> getWishesByEmail(String email, Pageable pageable) {
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(() -> new MemberNotFoundException("멤버가 엄슴다"));
 
-        return wishRepository.findByMember_Id(member.getId())
-            .stream()
-            .map(wishMapper::toDto)
-            .toList();
+        return wishRepository.findAllByMember_Id(member.getId(), pageable)
+            .map(wishMapper::toDto);
     }
 
     public WishDto createWish(String email, WishDto wishDto) {
