@@ -21,13 +21,7 @@ public class Wishlist {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public Wishlist() {}
-
-    public Wishlist(Long id, Member member, Product product) {
-        this.id = id;
-        this.member = member;
-        this.product = product;
-    }
+    protected Wishlist() {}
 
     public Wishlist(Member member, Product product) {
         this.member = member;
@@ -40,10 +34,6 @@ public class Wishlist {
 
     public Member getMember() {
         return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
     }
 
     public Product getProduct() {

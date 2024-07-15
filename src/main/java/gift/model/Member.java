@@ -20,14 +20,7 @@ public class Member {
     @Column
     private String activeToken;
 
-    public Member() {}
-
-    public Member(Long id, String email, String password, String activeToken) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.activeToken = activeToken;
-    }
+    protected Member() {}
 
     public Member(Member member, String activeToken) {
         this.id = member.id;
