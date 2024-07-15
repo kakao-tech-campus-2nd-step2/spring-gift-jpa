@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +31,19 @@ public class ProductService {
             product.getPrice(),
             product.getImageUrl()
         )).toList();
+
+        return productDtos;
+    }
+
+    //Page 반환, 모든 제품 조회
+    public Page<ProductDto> getAllProducts(Pageable pageable){
+        Page<Product> products = productRepository.findAll(pageable);
+        Page<ProductDto> productDtos = products.map(product -> new ProductDto(
+            product.getId(),
+            product.getName(),
+            product.getPrice(),
+            product.getImageUrl()
+        ));
 
         return productDtos;
     }

@@ -16,7 +16,7 @@
 <h2>상품 관리</h2>
 <a href="/add">상품추가</a>
 
-<hr />
+<hr/>
 <table>
   <thead>
   <tr>
@@ -45,5 +45,11 @@
   </tr>
   </tbody>
 </table>
+
+<th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+  <a th:if="${page != nowPage}" th:href="@{/(page = ${page -1})}" th:text="${page}"></a>
+  <strong th:if="${page == nowPage}" th:text="${page}" style="color : red"></strong>
+</th:block>
+
 </body>
 </html>

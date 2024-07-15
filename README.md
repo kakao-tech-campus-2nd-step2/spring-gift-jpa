@@ -34,3 +34,16 @@
 ### 2. Test 추가
 - already existing wish Test
 
+<hr>
+
+## step3 페이지네이션
+### 1. Product 페이지네이션 구현
+- PageController에 페이지네이션 구현 
+- ProductService에 page 반환 getAllProducts() 추가
+- index.html에 페이지네이션 구현
+
+### 2. Wish 페이지네이션 구현
+- WishController에 페이지네이션 구현
+- WishService에 페이지네이션 구현
+- WishRepository findAllByMemberId()에 pageable 추가
+- WishRepositoryTest 수정
