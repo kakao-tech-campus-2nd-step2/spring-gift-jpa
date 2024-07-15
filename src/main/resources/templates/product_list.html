@@ -135,7 +135,8 @@
 <div>
   <ul>
     <li th:each="pageNum : ${#numbers.sequence(0, products.totalPages - 1)}">
-      <a th:if="${pageNum != products.number}" th:href="@{/admin/products(page=${pageNum})}" th:text="${pageNum + 1}">1</a>
+      <a th:if="${pageNum != products.number}" th:href="@{/admin/products(page=${pageNum})}"
+         th:text="${pageNum + 1}">1</a>
       <span th:if="${pageNum == products.number}" th:text="${pageNum + 1}">1</span>
     </li>
   </ul>
