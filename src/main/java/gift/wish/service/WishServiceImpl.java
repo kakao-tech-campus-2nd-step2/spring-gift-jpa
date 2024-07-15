@@ -7,6 +7,7 @@ import gift.wish.model.WishDTO;
 import gift.member.repository.MemberRepository;
 import gift.product.repository.ProductRepository;
 import gift.wish.repository.WishRepository;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,5 +70,24 @@ public class WishServiceImpl implements WishService {
         Wish wish = wishRepository.findById(wishId)
                 .orElseThrow(() -> new IllegalArgumentException("Wishlist not found for id: " + wishId));
         wishRepository.delete(wish);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<WishDTO> getWishlistByPage(int page, int size, String sortBy, String direction) {
+        Pageable pageable = PageRequest.of(page, size); // Pageable 객체 생성
+        Page<Wish> wishPage; // Page<Wish> 타입의 객체를 생성
+
+        if (direction.equalsIgnoreCase("asc")) {
+            wishPage = wishRepository.findAllByOrderByProductPriceAsc(pageable); // asc
+        }
+        wishPage = wishRepository.findAllByOrderByProductPriceDesc(pageable); // desc
+
+
+        List<WishDTO> wishDTO = wishPage.stream()
+                .map(wish -> new WishDTO(wish.getId(), wish.getProduct().getId(), wish.getProduct().getName(), wish.getProduct().getPrice(), wish.getProduct().getImageUrl()))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(wishDTO, pageable, wishPage.getTotalElements());
     }
 }

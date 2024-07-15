@@ -39,7 +39,6 @@ public class WishCRUDTest {
 
     private Member testMember;
     private Product testProduct;
-    private Wish testWish;
 
     @BeforeEach
     public void setUp() {
