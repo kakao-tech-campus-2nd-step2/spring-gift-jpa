@@ -3,10 +3,11 @@ package gift.service;
 import gift.repository.ProductRepository;
 import gift.vo.Product;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-
-import java.util.List;
 
 @Service
 @Validated
@@ -18,8 +19,14 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    /**
+     * 페이지네이션 적용된 모든 상품 가져오는 메소드
+     * @return Page<Product></Product>
+     */
+    public Page<Product> getAllProducts(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        System.out.println("service: pageNumber"+ pageNumber);
+        return productRepository.findAll(pageable);
     }
 
     public Product getProductById(Long id) {

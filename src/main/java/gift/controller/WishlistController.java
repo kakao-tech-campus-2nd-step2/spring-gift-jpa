@@ -3,10 +3,13 @@ package gift.controller;
 import gift.service.JwtUtil;
 import gift.service.WishlistService;
 import gift.vo.Wish;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static gift.service.JwtUtil.getBearerToken;
 
@@ -22,11 +25,21 @@ public class WishlistController {
     }
 
     @GetMapping("/wishlist")
-    public List<Wish> getWishProductList(@RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<Map<String, Object>> getWishProductList(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "5") int pageSize) {
         String token = getBearerToken(authorizationHeader);
-
         Long memberId = jwtUtil.getMemberIdFromToken(token);
-        return service.getWishProductList(memberId);
+
+        Page<Wish> allWishlistsPaged = service.getWishProductList(memberId, pageNumber, pageSize);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", allWishlistsPaged.getContent());
+        response.put("totalPages", allWishlistsPaged.getTotalPages());
+        response.put("currentPageNumber", allWishlistsPaged.getNumber());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/wishlist/{productId}")
