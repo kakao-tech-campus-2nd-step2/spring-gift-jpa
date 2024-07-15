@@ -15,14 +15,18 @@ public class WishResponse {
         response.setAmount(wish.getAmount());
         return response;
     }
-
+/*
     public static List<WishResponse> fromModelList(List<Wish> wishes) {
         return wishes.stream()
                 .map(WishResponse::fromModel)
                 .collect(Collectors.toList());
     }
 
-    // Getters and setters
+ */
+
+    public static List<WishResponse> fromModelList(List<Wish> wishes) {
+        return wishes.stream().map(WishResponse::fromModel).collect(Collectors.toList());
+    }
 
     public Long getId() {
         return id;

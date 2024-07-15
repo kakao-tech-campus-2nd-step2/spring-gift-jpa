@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 
@@ -39,9 +40,9 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<WishResponse>> getWishList(@LoginMember User loginUser) {
-        List<Wish> wishes = wishService.getWishList(loginUser.getId());
-        List<WishResponse> responses = WishResponse.fromModelList(wishes);
+    public ResponseEntity<Page<WishResponse>> getWishList(@LoginMember User loginUser, Pageable pageable) {
+        Page<Wish> wishes = wishService.getWishList(loginUser.getId(), pageable);
+        Page<WishResponse> responses = wishes.map(WishResponse::fromModel);
         return ResponseEntity.ok().body(responses);
     }
 
