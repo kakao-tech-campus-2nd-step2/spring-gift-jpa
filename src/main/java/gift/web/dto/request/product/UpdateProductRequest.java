@@ -1,5 +1,6 @@
 package gift.web.dto.request.product;
 
+import gift.domain.Product;
 import gift.web.validation.constraints.RequiredKakaoApproval;
 import gift.web.validation.constraints.SpecialCharacter;
 import jakarta.validation.constraints.NotBlank;
@@ -22,6 +23,14 @@ public class UpdateProductRequest {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public Product toEntity() {
+        return new Product.Builder()
+            .name(name)
+            .price(price)
+            .imageUrl(imageUrl)
+            .build();
     }
 
     public String getName() {
