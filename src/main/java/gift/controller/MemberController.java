@@ -28,18 +28,22 @@ public class MemberController {
     public ResponseEntity<Map<String, String>> register(@RequestBody MemberRequest memberRequest) {
         Member member = memberService.register(memberRequest);
         String token = tokenService.saveToken(member);
-        Map<String, String> response = new HashMap<>();
-        response.put("token", token);
-        return ResponseEntity.ok(response);
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("token", token);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + token)
+                .body(responseBody);
     }
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody MemberRequest memberRequest) {
         Member member = memberService.authenticate(memberRequest);
         String token = tokenService.saveToken(member);
-        Map<String, String> response = new HashMap<>();
-        response.put("token", token);
-        return ResponseEntity.ok(response);
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("token", token);
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + token)
+                .body(responseBody);
     }
 
 }

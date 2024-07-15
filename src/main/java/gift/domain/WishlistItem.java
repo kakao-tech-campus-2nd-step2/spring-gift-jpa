@@ -10,19 +10,14 @@ public class WishlistItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "member", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne
-    @JoinColumn(name = "product", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public WishlistItem(Long id, Member member, Product product) {
-        this.id = id;
-        this.member = member;
-        this.product = product;
-    }
 
     public WishlistItem(Member member, Product product) {
         this.member = member;
@@ -30,14 +25,6 @@ public class WishlistItem {
     }
 
     public WishlistItem() { }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Member getMember() {
         return member;

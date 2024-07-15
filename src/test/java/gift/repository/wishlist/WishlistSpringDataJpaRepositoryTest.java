@@ -5,6 +5,8 @@ import gift.domain.Product;
 import gift.domain.WishlistItem;
 import gift.repository.member.MemberSpringDataJpaRepository;
 import gift.repository.product.ProductSpringDataJpaRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -37,12 +39,12 @@ public class WishlistSpringDataJpaRepositoryTest {
         Product product = new Product("Product 1", 100, "test-url");
         productRepository.save(product);
 
-        WishlistItem item = new WishlistItem(member.getId(), product.getId());
+        WishlistItem item = new WishlistItem(member, product);
         wishlistRepository.save(item);
 
         List<WishlistItem> items = wishlistRepository.findByMemberId(member.getId());
         assertThat(items).isNotEmpty();
-        assertThat(items.getFirst().getProductId()).isEqualTo(product.getId());
+        assertThat(items.get(0).getProduct().getId()).isEqualTo(product.getId());
     }
 
     @Test
@@ -53,10 +55,11 @@ public class WishlistSpringDataJpaRepositoryTest {
         Product product = new Product("Product 2", 200, "test2-url");
         productRepository.save(product);
 
-        WishlistItem item = new WishlistItem(member.getId(), product.getId());
+        WishlistItem item = new WishlistItem(member, product);
         wishlistRepository.save(item);
 
         wishlistRepository.delete(item);
+
 
         List<WishlistItem> items = wishlistRepository.findByMemberId(member.getId());
         assertThat(items).isEmpty();
@@ -73,8 +76,8 @@ public class WishlistSpringDataJpaRepositoryTest {
         Product product2 = new Product("Product 4", 400, "test4-url");
         productRepository.save(product2);
 
-        WishlistItem item1 = new WishlistItem(member.getId(), product1.getId());
-        WishlistItem item2 = new WishlistItem(member.getId(), product2.getId());
+        WishlistItem item1 = new WishlistItem(member, product1);
+        WishlistItem item2 = new WishlistItem(member, product2);
         wishlistRepository.save(item1);
         wishlistRepository.save(item2);
 

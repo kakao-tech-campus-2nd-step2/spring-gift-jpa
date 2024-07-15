@@ -29,12 +29,12 @@ public class TokenSpringDataJpaRepositoryTest {
         Member member = new Member("test@example.com", "password");
         memberRepository.save(member);
 
-        TokenAuth token = new TokenAuth("test-token", "test@example.com");
+        TokenAuth token = new TokenAuth("test-token", member);
         tokenRepository.save(token);
 
         Optional<TokenAuth> foundToken = tokenRepository.findByToken("test-token");
         assertThat(foundToken).isPresent();
-        assertThat(foundToken.get().getEmail()).isEqualTo("test@example.com");
+        assertThat(foundToken.get().getMember().getEmail()).isEqualTo("test@example.com");
     }
 
     @Test
@@ -42,12 +42,13 @@ public class TokenSpringDataJpaRepositoryTest {
         Member member = new Member("test2@example.com", "password");
         memberRepository.save(member);
 
-        TokenAuth token = new TokenAuth("test-token-2", "test2@example.com");
+        TokenAuth token = new TokenAuth("test-token-2", member);
+        tokenRepository.save(token);
         tokenRepository.save(token);
 
         Optional<TokenAuth> foundToken = tokenRepository.findByToken("test-token-2");
         assertThat(foundToken).isPresent();
-        assertThat(foundToken.get().getEmail()).isEqualTo("test2@example.com");
+        assertThat(foundToken.get().getMember().getEmail()).isEqualTo("test2@example.com");
     }
 
     @Test
@@ -55,7 +56,7 @@ public class TokenSpringDataJpaRepositoryTest {
         Member member = new Member("test3@example.com", "password");
         memberRepository.save(member);
 
-        TokenAuth token = new TokenAuth("test-token-3", "test3@example.com");
+        TokenAuth token = new TokenAuth("test-token-3", member);
         tokenRepository.save(token);
 
         tokenRepository.delete(token);

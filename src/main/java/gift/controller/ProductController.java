@@ -5,6 +5,10 @@ import gift.dto.request.ProductRequest;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +26,9 @@ public class ProductController {
     }
 
     @GetMapping("/api/products")
-    public String getProducts(Model model){
-        model.addAttribute("products", productService.findProducts());
+    public String getProducts(Model model, Pageable pageable) {
+        Page<Product> products = productService.getProducts(pageable);
+        model.addAttribute("products", products);
         return "product-list";
     }
 

@@ -22,7 +22,7 @@ public class Product {
     @Column(nullable = false, name = "image_url")
     private String imageUrl;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WishlistItem> wishlistItems;
 
     public Product() { }
@@ -36,6 +36,10 @@ public class Product {
 
     public long getId() {
         return id;
+    }
+
+    public void setId(Long productId) {
+        this.id = productId;
     }
 
     public String getName() {
@@ -70,4 +74,5 @@ public class Product {
     public static Product RequestToEntity(ProductRequest productRequest) {
         return new Product(productRequest.getName(), productRequest.getPrice(), productRequest.getImageUrl());
     }
+
 }
