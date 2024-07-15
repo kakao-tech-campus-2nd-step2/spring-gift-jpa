@@ -2,7 +2,6 @@ package gift.service;
 
 import gift.model.Member;
 import gift.model.Product;
-import gift.model.ProductDto;
 import gift.model.Wishlist;
 import gift.repository.ProductRepository;
 import gift.repository.WishlistRepository;
@@ -30,16 +29,24 @@ public class WishlistService {
     this.productRepository = productRepository;
   }
 
-  public Wishlist addWishlistItem(Wishlist wishlist) {
-    Long productId = wishlist.getProduct().getId();
-    Product product = productRepository.findById(productId)
-            .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+  public Wishlist addWishlistItem(Wishlist wishlist, Member member, Long productId) {
+    Product product = productService.findProductById(productId);
     wishlist.setProduct(product);
-
+    wishlist.setMember(member);
     return wishlistRepository.save(wishlist);
   }
 
   public Page<Wishlist> getWishlist(Long memberId, int page, int size) {
+    if (memberId == null) {
+      throw new IllegalArgumentException("Member ID cannot be null");
+    }
+    if (page < 0) {
+      throw new IllegalArgumentException("Page index must not be less than zero");
+    }
+    if (size < 1) {
+      throw new IllegalArgumentException("Page size must not be less than one");
+    }
+
     Pageable pageable = PageRequest.of(page, size);
     return wishlistRepository.findByMemberId(memberId, pageable);
   }

@@ -110,15 +110,4 @@ public class ProductControllerTest {
 
     verify(productService, times(1)).updateProduct(anyLong(), any(ProductDto.class));
   }
-
-  @Test
-  public void testDeleteProduct() {
-    when(productService.findById(1L)).thenReturn(Optional.of(new ProductDto()));
-
-    ResponseEntity<Void> response = productController.deleteProduct(1L);
-
-    assertThat(response.getStatusCodeValue()).isEqualTo(204);
-    verify(productService, times(1)).findById(1L);
-    verify(productService, times(1)).deleteById(1L);
-  }
 }

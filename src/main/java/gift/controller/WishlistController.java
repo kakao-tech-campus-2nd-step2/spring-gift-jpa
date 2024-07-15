@@ -28,9 +28,8 @@ public class WishlistController {
   }
 
   @PostMapping
-  public ResponseEntity<Wishlist> addWishlistItem(@RequestBody Wishlist wishlist, @LoginMember Member member) {
-    wishlist.setMember(member);
-    Wishlist savedWishlist = wishlistService.addWishlistItem(wishlist);
+  public ResponseEntity<Wishlist> addWishlistItem(@RequestBody Wishlist wishlist, @RequestParam Long productId, @LoginMember Member member) {
+    Wishlist savedWishlist = wishlistService.addWishlistItem(wishlist, member, productId);
     return ResponseEntity.ok(savedWishlist);
   }
 

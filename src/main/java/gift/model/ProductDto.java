@@ -1,7 +1,5 @@
 package gift.model;
 
-import gift.exception.KakaoValidationException;
-import gift.exception.StringValidationException;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -20,15 +18,11 @@ public class ProductDto {
   @NotBlank
   private String imageUrl;
 
-  public ProductDto() {
-  }
-
   public ProductDto(Long id, String name, int price, String imageUrl) {
     this.id = id;
     this.name = name;
     this.price = price;
     this.imageUrl = imageUrl;
-    validate();
   }
 
   public Long getId() {
@@ -43,19 +37,23 @@ public class ProductDto {
     return name;
   }
 
+  public void setName(String name) {
+    this.name = name;
+  }
+
   public int getPrice() {
     return price;
+  }
+
+  public void setPrice(int price) {
+    this.price = price;
   }
 
   public String getImageUrl() {
     return imageUrl;
   }
 
-  public void validate() {
-    if (name.contains("카카오")) {
-      throw new KakaoValidationException("상품 이름에 '카카오'를 포함하려면 담당 MD와 협의가 필요합니다.");
-    } else if (!name.matches("^[\\p{L}\\p{N}\\s\\(\\)\\[\\]\\+\\-\\&\\/]*$")) {
-      throw new StringValidationException("허용되지 않은 특수기호는 사용할 수 없습니다. 허용된 특수기호:( ), [ ], +, -, &, /, _");
-    }
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
   }
 }

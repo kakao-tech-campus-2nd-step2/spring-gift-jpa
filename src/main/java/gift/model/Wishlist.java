@@ -8,6 +8,7 @@ public class Wishlist {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  private Long productId;
 
   @ManyToOne
   @JoinColumn(name = "member_id", nullable = false)
@@ -16,6 +17,14 @@ public class Wishlist {
   @ManyToOne
   @JoinColumn(name = "product_id", nullable = false)
   private Product product;
+
+  public Long getProductId() {
+    return productId;
+  }
+
+  public void setProductId(Long productId) {
+    this.productId = productId;
+  }
 
   public Long getId() {
     return id;
