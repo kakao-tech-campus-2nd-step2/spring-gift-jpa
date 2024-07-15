@@ -44,18 +44,6 @@ public class CartItemController {
     }
 
     /**
-     * 장바구니 조회 - 페이징 X
-     */
-    @GetMapping("/cart")
-    public ResponseEntity<ResultResponseDto<List<Product>>> getProductsInCartByUserId(
-        @LoginInfo UserInfo userInfo) {
-
-        List<Product> products = cartItemService.getProductsInCartByUserId(userInfo.getId());
-
-        return ResponseMaker.createResponse(HttpStatus.OK, "장바구니 조회에 성공했습니다.", products);
-    }
-
-    /**
      * 장바구니 조회 - 페이징(매개변수별)
      */
     @GetMapping(path = "/cart", params = "page")

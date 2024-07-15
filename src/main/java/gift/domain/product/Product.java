@@ -26,7 +26,7 @@ public class Product {
     private int price;
     private String imageUrl;
 
-    @OneToMany(mappedBy = "product_id", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
     private List<CartItem> cartItems;
 
     public static Product createProductFromProxy(Product proxyProduct) {

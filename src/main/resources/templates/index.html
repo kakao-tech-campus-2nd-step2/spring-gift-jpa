@@ -22,7 +22,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="product : ${products}">
+    <tr th:each="product : ${products.content}">
       <td>
         <input type="checkbox" th:id="${product.id}" th:value="${product.id}">
       </td>

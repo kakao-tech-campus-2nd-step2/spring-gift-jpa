@@ -50,20 +50,6 @@ public class CartItemService {
     }
 
     /**
-     * 장바구니 상품 조회 - 페이징 X
-     */
-    public List<Product> getProductsInCartByUserId(Long userId) {
-        List<CartItem> cartItems = cartItemRepository.findAllByUserId(userId);
-        return cartItems.stream()
-            .map(cartItem -> {
-                Product product = Product.createProductFromProxy(cartItem.getProduct());
-                return product;
-            })
-            .collect(Collectors.toList());
-    }
-
-
-    /**
      * 장바구니 상품 조회 - 페이징(매개변수별)
      */
     public Page<Product> getProductsInCartByUserIdAndPageAndSort(Long userId, int page, int size,
