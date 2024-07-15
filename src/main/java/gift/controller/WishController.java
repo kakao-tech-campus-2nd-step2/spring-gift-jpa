@@ -1,11 +1,14 @@
 package gift.controller;
 
-import gift.anotation.LoginMember;
-import gift.domain.Member;
 import gift.domain.Wish;
 import gift.dto.WishDTO;
 import gift.service.WishService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
-
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,11 +27,9 @@ public class WishController {
 
     private final WishService wishService;
 
-    @Autowired
     public WishController(WishService wishService) {
         this.wishService = wishService;
     }
-
     @PostMapping
     @ResponseBody
     public void addWish(@RequestBody WishDTO wishDTO) {
@@ -37,16 +37,26 @@ public class WishController {
     }
 
     @GetMapping
-    public List<WishDTO> getWishes(@RequestParam Long memberId) {
-        return wishService.getWishes(memberId).stream()
+    public ResponseEntity<List<WishDTO>> getWishes(@RequestParam Long memberId,
+                                                   @RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "10") int size,
+                                                   @RequestParam(defaultValue = "id,asc") String[] sort) {
+        Sort.Direction direction = Sort.Direction.fromString(sort[1]);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
+        Page<Wish> wishPage = wishService.getWishes(memberId, pageable);
+
+        List<WishDTO> wishDTOList = wishPage.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+
+        return new ResponseEntity<>(wishDTOList, HttpStatus.OK);
     }
 
     @DeleteMapping("/remove")
     @ResponseBody
-    public void removeWish(@RequestBody WishDTO wishDTO) {
+    public ResponseEntity<Void> removeWish(@RequestBody WishDTO wishDTO) {
         wishService.removeWish(wishDTO.getMemberId(), wishDTO.getProductName());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     private WishDTO convertToDto(Wish wish) {

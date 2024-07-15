@@ -3,16 +3,18 @@ package gift.service;
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
-import gift.dto.WishDTO;
 import gift.repository.WishRepository;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class WishService {
+
     private final WishRepository wishRepository;
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
@@ -23,6 +25,12 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
+    public Page<Wish> getWishes(Long memberId, Pageable pageable) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+        return wishRepository.findByMember(member, pageable);
+    }
+
     public void addWish(Long memberId, String productName) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
@@ -30,17 +38,9 @@ public class WishService {
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
         if (!wishRepository.existsByMemberAndProduct(member, product)) {
-            Wish wish = new Wish();
-            wish.setMember(member);
-            wish.setProduct(product);
+            Wish wish = new Wish(member, product);
             wishRepository.save(wish);
         }
-    }
-
-    public List<Wish> getWishes(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
-        return wishRepository.findByMember(member);
     }
 
     public void removeWish(Long memberId, String productName) {

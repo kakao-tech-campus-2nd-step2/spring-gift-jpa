@@ -10,11 +10,7 @@ import jakarta.persistence.GenerationType;
 
 @Entity
 @Table(name = "products")
-public class Product {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Product extends BaseEntity {
 
     @Column(nullable = false, length = 15)
     private String name;
@@ -25,35 +21,58 @@ public class Product {
     @Column(nullable = false, name = "image_url")
     private String imageUrl;
 
-    public Long getId() {
-        return id;
+    public Product() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Product(String name, int price, String imageUrl) {
+        super();
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getPrice() {
         return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public static class Builder {
+        private Long id;
+        private String name;
+        private int price;
+        private String imageUrl;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder price(int price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder imageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+            return this;
+        }
+
+        public Product build() {
+            Product product = new Product(name, price, imageUrl);
+            product.id = this.id;
+            return product;
+        }
     }
 }

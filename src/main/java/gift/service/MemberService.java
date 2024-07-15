@@ -49,8 +49,4 @@ public class MemberService {
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);
     }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
 }
