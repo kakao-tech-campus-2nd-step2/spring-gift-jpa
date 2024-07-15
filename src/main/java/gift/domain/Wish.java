@@ -26,6 +26,14 @@ public class Wish {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    public Wish() {
+    }
+
+    public Wish(Member member, Product product) {
+        this.member = member;
+        this.product = product;
+    }
+
     public Long getId() {
         return id;
     }

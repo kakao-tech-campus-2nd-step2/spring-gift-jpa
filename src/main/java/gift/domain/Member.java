@@ -30,6 +30,14 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Wish> wishes = new HashSet<>();
 
+    public Member() {
+    }
+
+    public Member(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
     public Long getId() {
         return id;
     }

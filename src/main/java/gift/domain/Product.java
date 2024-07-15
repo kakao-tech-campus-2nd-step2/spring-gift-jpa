@@ -25,6 +25,15 @@ public class Product {
     @Column(nullable = false, name = "image_url")
     private String imageUrl;
 
+    public Product() {
+    }
+
+    public Product(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
     public Long getId() {
         return id;
     }
