@@ -32,7 +32,7 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public Page<WishResponseDto> getWishesByUserEmail(String email, int page, WishSortBy sortBy) {
+    public Page<WishResponseDto> getWishes(String email, int page, WishSortBy sortBy) {
         Sort sort = sortBy.getSort();
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
