@@ -12,8 +12,10 @@ import gift.doamin.wishlist.entity.Wish;
 import gift.doamin.wishlist.exception.InvalidWishFormException;
 import gift.doamin.wishlist.exception.WishListNotFoundException;
 import gift.doamin.wishlist.repository.JpaWishListRepository;
-import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,10 +49,11 @@ public class WishListService {
         wishListRepository.save(new Wish(user, product, wishForm.getQuantity()));
     }
 
-    public List<WishParam> read(Long userId) {
-        return wishListRepository.findAllByUserId(userId)
-            .stream().map(WishParam::new)
-            .toList();
+    public Page<WishParam> getPage(Long userId, int pageNum) {
+
+        Pageable pageable = PageRequest.of(pageNum, 5);
+
+        return wishListRepository.findAllByUserId(userId, pageable).map(WishParam::new);
     }
 
     public void update(Long userId, WishForm wishForm) {
