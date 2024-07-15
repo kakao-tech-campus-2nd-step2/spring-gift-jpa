@@ -1,51 +1,22 @@
 # Gradle
 .gradle/
 build/
-HELP.md
-
 # Ignore Gradle wrapper jar file
 gradle/wrapper/gradle-wrapper.jar
-
+# Ignore Gradle project-specific cache directory
+.gradle/
 # Ignore IDE directories
 .idea/
-*.iws
 *.iml
 *.ipr
-
+*.iws
 # Ignore Eclipse project files
 .project
 .classpath
 .settings/
 .metadata/
-
 # Ignore temporary files
 *.tmp
 *.log
 *.bak
 *.swp
-
-# Ignore output directories
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
-
-# Specific includes
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-# STS (Spring Tool Suite) specific files
-.apt_generated
-.factorypath
-.springBeans
-.sts4-cache
-bin/
-
-# NetBeans specific files
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
