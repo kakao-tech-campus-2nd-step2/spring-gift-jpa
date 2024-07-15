@@ -26,11 +26,7 @@ public class ProductController {
     }
 
     @GetMapping("/api/products")
-    public String getProducts(Model model,
-                              @RequestParam(defaultValue = "0") int pageNo,
-                              @RequestParam(defaultValue = "10") int pageSize,
-                              @RequestParam(defaultValue = "name") String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+    public String getProducts(Model model, Pageable pageable) {
         Page<Product> products = productService.getProducts(pageable);
         model.addAttribute("products", products);
         return "product-list";
