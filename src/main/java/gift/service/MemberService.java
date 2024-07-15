@@ -56,4 +56,9 @@ public class MemberService {
     public boolean isTokenBlacklisted(String token) {
         return tokenBlacklist.contains(token);
     }
+
+    public Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 이메일입니다."));
+    }
 }

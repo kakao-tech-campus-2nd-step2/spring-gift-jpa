@@ -24,15 +24,14 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    public Page<Wishlist> getWishlist(String email, Pageable pageable) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
-        return wishlistRepository.findByMemberId(member.getId(), pageable);
+    public Page<Wishlist> getWishlist(Long memberId, Pageable pageable) {
+        return wishlistRepository.findByMemberId(memberId, pageable);
     }
 
-    public void addProductToWishlist(String email, Long productId) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+
+    public void addProductToWishlist(Long memberId, Long productId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
         Wishlist wishlist = new Wishlist(member, product);
@@ -40,9 +39,9 @@ public class WishlistService {
     }
 
     @Transactional
-    public void removeProductFromWishlist(String email, Long productId) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
-        wishlistRepository.deleteByMemberIdAndProductId(member.getId(), productId);
+    public void removeProductFromWishlist(Long memberId, Long productId) {
+        memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        wishlistRepository.deleteByMemberIdAndProductId(memberId, productId);
     }
 }

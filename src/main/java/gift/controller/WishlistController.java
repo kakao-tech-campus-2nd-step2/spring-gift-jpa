@@ -1,15 +1,13 @@
 package gift.controller;
 
+import gift.model.CurrentMember;
+import gift.model.Member;
 import gift.model.Wishlist;
-import gift.service.MemberService;
 import gift.service.WishlistService;
-import gift.util.JwtUtility;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,36 +22,28 @@ import java.net.URI;
 @RequestMapping("/api/wishlist")
 public class WishlistController {
     private final WishlistService wishlistService;
-    private final MemberService memberService;
 
-    public WishlistController(WishlistService wishlistService, MemberService memberService) {
+    public WishlistController(WishlistService wishlistService) {
         this.wishlistService = wishlistService;
-        this.memberService = memberService;
     }
 
     @GetMapping
     public ResponseEntity<Page<Wishlist>> getWishlist(
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
-            @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC, page = 0, size = 10) Pageable pageable) {
-        String email = JwtUtility.extractEmail(authHeader, memberService);
-        Page<Wishlist> wishlistPage = wishlistService.getWishlist(email, pageable);
+            @CurrentMember Member member,
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<Wishlist> wishlistPage = wishlistService.getWishlist(member.getId(), pageable);
         return ResponseEntity.ok(wishlistPage);
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<Void> addProductToWishlist(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
-                                                     @PathVariable Long productId) {
-        String email = JwtUtility.extractEmail(authHeader, memberService);
-        wishlistService.addProductToWishlist(email, productId);
-        URI location = URI.create("/api/wishlist/" + productId);
-        return ResponseEntity.created(location).build();
+    public ResponseEntity<Void> addProductToWishlist(@CurrentMember Member member, @PathVariable Long productId) {
+        wishlistService.addProductToWishlist(member.getId(), productId);
+        return ResponseEntity.created(URI.create("/api/wishlist/" + productId)).build();
     }
 
     @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> removeProductFromWishlist(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
-                                                          @PathVariable Long productId) {
-        String email = JwtUtility.extractEmail(authHeader, memberService);
-        wishlistService.removeProductFromWishlist(email, productId);
+    public ResponseEntity<Void> removeProductFromWishlist(@CurrentMember Member member, @PathVariable Long productId) {
+        wishlistService.removeProductFromWishlist(member.getId(), productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
