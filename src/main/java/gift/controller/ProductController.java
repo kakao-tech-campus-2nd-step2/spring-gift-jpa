@@ -1,7 +1,8 @@
 package gift.controller;
 
+import gift.dto.ProductDto;
 import gift.service.ProductService;
-import gift.model.Product;
+import gift.entity.Product;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,20 +29,20 @@ public class ProductController {
 
     @GetMapping("/add")
     public String showAddProductForm(Model model) {
-        model.addAttribute("product", new Product());
+        model.addAttribute("product", new ProductDto());
         return "add-product";
     }
 
     @PostMapping("/add")
-    public String addProduct(@Valid @ModelAttribute Product product, BindingResult result, Model model) {
+    public String addProduct(@Valid @ModelAttribute("product") ProductDto productDto, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "add-product";
         }
-        if (product.getName().contains("카카오")) {
+        if (productDto.getName().contains("카카오")) {
             result.rejectValue("name", "error.product", "상품 이름에 '카카오'가 포함되어 있습니다. 담당 MD와 협의하십시오.");
             return "add-product";
         }
-        productService.addProduct(product);
+        productService.addProduct(productDto);
         return "redirect:/view/admin/products";
     }
 
@@ -56,15 +57,15 @@ public class ProductController {
     }
 
     @PostMapping("/edit/{id}")
-    public String updateProduct(@PathVariable Long id, @ModelAttribute @Valid Product product, BindingResult result, Model model) {
+    public String updateProduct(@PathVariable Long id, @Valid @ModelAttribute("product") ProductDto productDto, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "edit-product";
         }
-        if (product.getName().contains("카카오")) {
+        if (productDto.getName().contains("카카오")) {
             result.rejectValue("name", "error.product", "상품 이름에 '카카오'가 포함되어 있습니다. 담당 MD와 협의하십시오.");
             return "edit-product";
         }
-        productService.updateProduct(id, product);
+        productService.updateProduct(id, productDto);
         return "redirect:/view/admin/products";
     }
 
