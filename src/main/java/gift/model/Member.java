@@ -42,6 +42,7 @@ public class Member {
         this.email = email;
         this.password = password;
         this.role = role;
+        validate();
     }
 
     public Long getId() {
@@ -64,7 +65,7 @@ public class Member {
         return role;
     }
 
-    public void validate() {
+    private void validate() {
         validateName();
         validateEmail();
         validatePassword();

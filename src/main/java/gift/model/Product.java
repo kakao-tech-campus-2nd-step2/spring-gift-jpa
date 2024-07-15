@@ -38,6 +38,7 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        validate();
     }
 
     public Long getId() {
@@ -56,7 +57,7 @@ public class Product {
         return imageUrl;
     }
 
-    public void validate() {
+    private void validate() {
         validateName();
         validatePrice();
         validateImageUrl();
