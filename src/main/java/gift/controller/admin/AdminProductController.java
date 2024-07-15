@@ -12,7 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.validation.Valid;
 import java.io.IOException;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Controller
 @RequestMapping("/admin/products")
@@ -25,9 +26,9 @@ public class AdminProductController {
 
 
     @GetMapping
-    public String getAllProducts(Model model) {
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
+    public String getAllProducts(Model model, Pageable pageable) {
+        Page<Product> productsPage = productService.getAllProducts(pageable);
+        model.addAttribute("productsPage", productsPage);
         return "product";
     }
 
@@ -35,12 +36,10 @@ public class AdminProductController {
     public String addProduct(@Valid @ModelAttribute ProductRequestDTO productRequestDTO,
                              @RequestPart MultipartFile imageFile) throws IOException {
 
-        // Image storage and URL encoding
         String imagePath = ImageStorageUtil.saveImage(imageFile);
         String imageUrl = ImageStorageUtil.encodeImagePathToBase64(imagePath);
 
-        // Create and save the product
-        Product product = new Product(null, productRequestDTO.getName(), productRequestDTO.getPrice(),
+        Product product = new Product(productRequestDTO.getName(), productRequestDTO.getPrice(),
                 productRequestDTO.getDescription(), imageUrl);
         productService.addProduct(product);
 

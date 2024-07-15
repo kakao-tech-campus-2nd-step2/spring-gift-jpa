@@ -1,19 +1,23 @@
 package gift.controller.wish;
 
 import gift.domain.user.User;
+import gift.domain.wish.Wish;
+import gift.domain.wish.WishRequest;
+import gift.domain.wish.WishResponse;
 import gift.service.wish.WishService;
 import gift.validation.LoginMember;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/wishes")
 public class WishController {
-
     private final WishService wishService;
 
     @Autowired
@@ -21,30 +25,37 @@ public class WishController {
         this.wishService = wishService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<String>> getWishlist(@LoginMember User user) {
-        if (user != null) {
-            List<String> wishlist = wishService.getWishlistByUser(user);
-            return ResponseEntity.ok(wishlist);
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 사용자 정보를 주입받지 못한 경우 401 반환
-    }
-
     @PostMapping
-    public ResponseEntity<?> addToWishlist(@RequestBody String product, @LoginMember User user) {
-        if (user != null) {
-            wishService.addToWishlist(user, product);
-            return ResponseEntity.status(HttpStatus.CREATED).build(); // 성공적으로 추가된 경우 201 반환
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 사용자 정보를 주입받지 못한 경우 401 반환
+    @ResponseStatus(HttpStatus.CREATED)
+    public void saveWish(@RequestBody WishRequest wishRequest, @LoginMember User loginUser) {
+        wishService.saveWish(wishRequest.getProductId(), loginUser.getId(), wishRequest.getAmount());
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> removeFromWishlist(@RequestBody String product, @LoginMember User user) {
-        if (user != null) {
-            wishService.removeFromWishlist(user, product);
-            return ResponseEntity.ok().build(); // 성공적으로 삭제된 경우 200 반환
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 사용자 정보를 주입받지 못한 경우 401 반환
+    @PutMapping("/{wishId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void modifyWish(@PathVariable("wishId") Long wishId,
+                           @RequestBody WishRequest wishRequest,
+                           @LoginMember User loginUser) {
+        wishService.modifyWish(wishId, wishRequest.getProductId(), loginUser.getId(), wishRequest.getAmount());
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<WishResponse>> getWishList(@LoginMember User loginUser, Pageable pageable) {
+        Page<Wish> wishes = wishService.getWishList(loginUser.getId(), pageable);
+        Page<WishResponse> responses = wishes.map(WishResponse::fromModel);
+        return ResponseEntity.ok().body(responses);
+    }
+
+    @GetMapping("/{wishId}")
+    public ResponseEntity<WishResponse> getWishDetail(@PathVariable("wishId") Long wishId,
+                                                      @LoginMember User loginUser) {
+        Wish wish = wishService.getWishDetail(wishId, loginUser.getId());
+        return ResponseEntity.ok().body(WishResponse.fromModel(wish));
+    }
+
+    @DeleteMapping("/{wishId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteWish(@PathVariable("wishId") Long wishId, @LoginMember User loginUser) {
+        wishService.deleteWish(wishId, loginUser.getId());
     }
 }

@@ -1,5 +1,5 @@
 package gift.repository.product;
-
+/*
 import gift.domain.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -64,3 +64,6 @@ public class JdbcProductRepository implements ProductRepository {
         jdbcTemplate.update(DELETE_PRODUCT, id);
     }
 }
+
+
+ */
