@@ -21,23 +21,13 @@ public class Member {
     @Column(nullable = false, columnDefinition = "BINARY(16)")
     private String password;
 
-    // 일대일로 수정
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WishList> wishLists = new ArrayList<>();
     private WishList wishList;
 
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
-    }
-
-    public void addWishList(String name, String wishlist_id) {
-        Product product = new Product(name); // Product 객체 생성
-        WishList wishList = new WishList(this, product);
-        wishList.addProduct(wishList);
-    }
-
-    public List<WishList> getWishLists() {
-        return new ArrayList<>(Collections.singleton(wishList));
     }
 
     public Long getMemberId() {

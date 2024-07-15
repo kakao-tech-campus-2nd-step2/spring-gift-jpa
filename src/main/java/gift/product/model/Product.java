@@ -1,6 +1,10 @@
 package gift.product.model;
 
+import gift.wishlist.model.WishList;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -17,6 +21,9 @@ public class Product {
 
     @Column(nullable = true)
     private String imgUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<WishList> wishLists = new ArrayList<>();
 
     // JPA에서 필요로 하는 기본 생성자
     protected Product() {

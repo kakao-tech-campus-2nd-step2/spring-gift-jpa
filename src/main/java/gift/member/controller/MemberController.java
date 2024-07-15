@@ -28,17 +28,17 @@ public class MemberController {
     }
 
     @PutMapping("/{product_id}/email")
-    public Member updateEmail(@PathVariable Long id, @RequestParam String newEmail) {
-        return memberService.updateEmail(id, newEmail);
+    public Member updateEmail(@PathVariable Long member_id, @RequestParam String newEmail) {
+        return memberService.updateEmail(member_id, newEmail);
     }
 
     @PutMapping("/{product_id}/password")
-    public Member updatePassword(@PathVariable Long id, @RequestParam String newPassword) {
-        return memberService.updatePassword(id, newPassword);
+    public Member updatePassword(@PathVariable Long member_id, @RequestParam String newPassword) {
+        return memberService.updatePassword(member_id, newPassword);
     }
 
     @DeleteMapping("/{member_id}")
-    public void deleteMember(@PathVariable Long id) {
-        memberService.deleteMember(id);
+    public void deleteMember(@PathVariable Long member_id) {
+        memberService.deleteMember(member_id);
     }
 }

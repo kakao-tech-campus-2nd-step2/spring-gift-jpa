@@ -4,65 +4,44 @@ import gift.member.model.Member;
 import gift.product.model.Product;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 @Entity
-public class WishList extends Product {
+public class WishList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wishlist_seq")
     @SequenceGenerator(name = "wishlist_seq", sequenceName = "wishlist_sequence", allocationSize = 1)
-    private Long wishListId;
+    private Long wishlist_id;
+
+    /** fetch = FetchType.LAZY를 사용하여 WishList가 로드될 때 Member와 Product는 즉시 로드되지 않음.
+     Member나 Product에 접근할 때 데이터베이스에서 해당 데이터를 로드함. **/
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToMany
-    @JoinTable(
-            name = "wishlist_products",
-            joinColumns = @JoinColumn(name = "wishlist_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> products = new ArrayList<>();
-    private String wishlist_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
     protected WishList() {
+        // JPA requires a no-arg constructor
     }
 
     // 생성자
     public WishList(Member member, Product product) {
-        this();
         this.member = member;
-        this.products.add(product);
+        this.product = product;
     }
 
-    public WishList(Member member, List<Product> products) {
-        this();
-        this.member = member;
-        this.products.addAll(products);
-    }
-
-    // getter 메서드
-    public String wishlist_id() {
+    public Long getWishlistId() {
         return wishlist_id;
     }
 
-    public Member member() {
+    public Member getMember() {
         return member;
     }
 
-    public List<Product> products() {
-        return products;
-    }
-
-    public void addProduct(WishList product) {
-        products.add(product);
-    }
-
-    public void removeProduct(Product product) {
-        products.remove(product);
+    public Product getProduct() {
+        return product;
     }
 }
