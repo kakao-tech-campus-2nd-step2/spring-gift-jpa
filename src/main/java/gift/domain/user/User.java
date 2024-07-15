@@ -2,6 +2,7 @@ package gift.domain.user;
 
 import gift.domain.cart.CartItem;
 
+import gift.domain.cart.CartItemService;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,9 +25,6 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<CartItem> cartItems = new ArrayList<>();
 
     protected User() {
     }
@@ -62,4 +60,5 @@ public class User {
                ", password='" + password + '\'' +
                '}';
     }
+
 }
