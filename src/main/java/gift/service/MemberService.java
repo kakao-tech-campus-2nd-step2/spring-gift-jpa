@@ -1,13 +1,14 @@
 package gift.service;
 
 import gift.dto.MemberDto;
-import gift.util.JwtUtility;
-import gift.util.TokenBlacklist;
 import gift.model.Member;
 import gift.repository.MemberRepository;
+import gift.util.JwtUtility;
+import gift.util.TokenBlacklist;
 import jakarta.validation.Valid;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+
 import java.util.NoSuchElementException;
 
 @Service

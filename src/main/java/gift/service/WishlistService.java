@@ -1,11 +1,11 @@
 package gift.service;
 
-import gift.repository.WishlistRepository;
-import gift.repository.MemberRepository;
-import gift.repository.ProductRepository;
-import gift.model.Wishlist;
 import gift.model.Member;
 import gift.model.Product;
+import gift.model.Wishlist;
+import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
+import gift.repository.WishlistRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +27,6 @@ public class WishlistService {
     public Page<Wishlist> getWishlist(Long memberId, Pageable pageable) {
         return wishlistRepository.findByMemberId(memberId, pageable);
     }
-
 
     public void addProductToWishlist(Long memberId, Long productId) {
         Member member = memberRepository.findById(memberId)
