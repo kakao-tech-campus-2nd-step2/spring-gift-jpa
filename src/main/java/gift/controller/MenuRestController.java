@@ -4,6 +4,7 @@ import gift.domain.MenuRequest;
 import gift.domain.MenuResponse;
 import gift.service.MenuService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -34,12 +35,14 @@ public class MenuRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MenuResponse>> read() {
-        return ResponseEntity.ok().body(menuService.findall());
+    public ResponseEntity<List<MenuResponse>> read(
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok().body(menuService.findall(pageable));
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> update(
+    public ResponseEntity<MenuResponse> update(
             @PathVariable("id") Long id,
             @Valid @ModelAttribute MenuRequest request
     ) {

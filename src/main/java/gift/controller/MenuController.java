@@ -5,6 +5,7 @@ import gift.domain.MenuRequest;
 import gift.domain.MenuResponse;
 import gift.service.MenuService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,32 +25,29 @@ public class MenuController {
 
     public String returnView(
             String errorMsg,
-            Model model) {
+            Model model,
+            Pageable pageable) {
         if (errorMsg != null) {
             model.addAttribute("errors", errorMsg);
-            model.addAttribute("menus", menuService.findall());
+            model.addAttribute("menus", menuService.findall(pageable));
             return "Menu";
         }
-        model.addAttribute("menus", menuService.findall());
+        model.addAttribute("menus", menuService.findall(pageable));
         return "redirect:/menu";
     }
 
     @PostMapping
     public void save(
             @ModelAttribute @Valid MenuRequest request,
-            BindingResult result,
-            Model model
+            Model model,
+            Pageable pageable
     ) {
-        if (result.hasErrors()) {
-            returnView(result.getFieldError().getDefaultMessage(), model);
-            return;
-        }
-        returnView(null, model);
+        returnView(null, model,pageable);
     }
 
     @GetMapping
-    public String read(Model model) {
-        List<MenuResponse> menus = menuService.findall();
+    public String read(Model model, Pageable pageable) {
+        List<MenuResponse> menus = menuService.findall(pageable);
         model.addAttribute("menus", menus);
         return "Menu";
     }
@@ -59,6 +57,14 @@ public class MenuController {
         Menu menu = menuService.findById(id);
         model.addAttribute("menu", menu);
         return "update_menu";
+    }
+
+    public static Menu MapMenuRequestToMenu(MenuRequest menuRequest) {
+        return new Menu(menuRequest.name(), menuRequest.price(), menuRequest.imageUrl());
+    }
+
+    public static MenuResponse MapMenuToMenuResponse(Menu menu) {
+        return new MenuResponse(menu.getId(), menu.getName(), menu.getPrice(), menu.getImageUrl());
     }
 
 }

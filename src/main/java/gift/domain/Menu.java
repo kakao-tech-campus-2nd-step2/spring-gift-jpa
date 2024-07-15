@@ -2,6 +2,8 @@ package gift.domain;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 public class Menu {
     @Id
@@ -60,12 +62,17 @@ public class Menu {
         this.imageUrl = menu.imageUrl;
     }
 
-    public static Menu MapMenuRequestToMenu(MenuRequest menuRequest){
-        return new Menu(menuRequest.name(),menuRequest.price(), menuRequest.imageUrl());
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Menu menu = (Menu) o;
+        return Objects.equals(id, menu.id);
     }
 
-    public static MenuResponse MapMenuToMenuResponse(Menu menu){
-        return new MenuResponse(menu.getId(),menu.getName(),menu.getPrice(),menu.getImageUrl());
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
 }

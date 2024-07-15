@@ -2,6 +2,8 @@ package gift.domain;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 public class WishList {
     @Id
@@ -27,17 +29,25 @@ public class WishList {
         this.menu = menu;
     }
 
+    public Menu getMenu() {
+        return menu;
+    }
 
     public Long getId() {
         return id;
     }
 
-    public static WishList MapWishListRequestToWishList(WishListRequest wishListRequest){
-        return new WishList(wishListRequest.member(),wishListRequest.menu());
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WishList wishList = (WishList) o;
+        return Objects.equals(id, wishList.id);
     }
 
-    public static WishListResponse MapWishListToWishListResponse(WishList wishList){
-        return new WishListResponse(wishList.id, wishList.menu);
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
 }

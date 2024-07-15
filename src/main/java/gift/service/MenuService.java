@@ -1,9 +1,12 @@
 package gift.service;
 
+import gift.controller.MenuController;
 import gift.domain.Menu;
 import gift.domain.MenuRequest;
 import gift.domain.MenuResponse;
 import gift.repository.MenuRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,14 +22,16 @@ public class MenuService {
     }
 
     public MenuResponse save(MenuRequest request) {
-        Menu menu = Menu.MapMenuRequestToMenu(request);
-        return Menu.MapMenuToMenuResponse(menuRepository.save(menu));
+        Menu menu = MenuController.MapMenuRequestToMenu(request);
+        return MenuController.MapMenuToMenuResponse(menuRepository.save(menu));
     }
 
-    public List<MenuResponse> findall() {
-        List<Menu> menus = menuRepository.findAll();
+    public List<MenuResponse> findall(
+            Pageable pageable
+    ) {
+        Page<Menu> menus = menuRepository.findAll(pageable);
         return menus.stream()
-                .map(Menu::MapMenuToMenuResponse)
+                .map(MenuController::MapMenuToMenuResponse)
                 .collect(Collectors.toList());
     }
 
@@ -40,7 +45,7 @@ public class MenuService {
         Menu menu =  menuRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("메뉴 정보가 없습니다."));
         menu.update(new Menu(id,menuRequest));
-        return Menu.MapMenuToMenuResponse(menuRepository.save(menu));
+        return MenuController.MapMenuToMenuResponse(menuRepository.save(menu));
     }
 
     public void delete(Long id) {
