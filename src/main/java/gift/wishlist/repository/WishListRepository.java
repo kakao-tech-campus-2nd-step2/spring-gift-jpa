@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface WishListRepository extends JpaRepository<WishList, String> {
     WishList findByMemberId(Long member_id);
@@ -24,4 +26,6 @@ public interface WishListRepository extends JpaRepository<WishList, String> {
     @Query("update WishList w set w.products = remove(w.products, :product_id) where w.member.member_id = :member_id")
     static void removeProductFromWishList(@Param("member_id") Long member_id, @Param("product_id") Long product_id) {
     }
+
+    Optional<WishList> findByMemberIdAndProductId(Long membeId, Long producId);
 }
