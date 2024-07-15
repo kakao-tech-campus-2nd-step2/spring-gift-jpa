@@ -5,7 +5,6 @@ import gift.global.jwt.JwtProvider;
 import gift.global.jwt.JwtValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,6 +19,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         this.jwtProvider = jwtProvider;
         this.jwtValidator = jwtValidator;
     }
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
         Object handler) throws Exception {

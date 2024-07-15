@@ -18,8 +18,10 @@ public class DataLoader {
     private final JpaProductRepository jpaProductRepository;
     private final JpaUserRepository jpaUserRepository;
     private final JpaCartItemRepository jpaCartItemRepository;
+
     @Autowired
-    public DataLoader(JpaProductRepository jpaProductRepository, JpaUserRepository jpaUserRepository, JpaCartItemRepository jpaCartItemRepository) {
+    public DataLoader(JpaProductRepository jpaProductRepository,
+        JpaUserRepository jpaUserRepository, JpaCartItemRepository jpaCartItemRepository) {
         this.jpaProductRepository = jpaProductRepository;
         this.jpaUserRepository = jpaUserRepository;
         this.jpaCartItemRepository = jpaCartItemRepository;
@@ -34,6 +36,15 @@ public class DataLoader {
         jpaProductRepository.save(americano);
         jpaProductRepository.save(cafuchino);
         jpaProductRepository.save(malcha);
+        // dummy Product data
+        for (int i = 0; i < 100; i++) {
+            Product dummyProduct = new Product(
+                "더미 제품 " + (i + 1),
+                1000 + (i * 10),
+                "https://example.com/dummy" + (i + 1) + ".jpg"
+            );
+            jpaProductRepository.save(dummyProduct);
+        }
 
         // User
         User minji = new User("minji@example.com", "password1");

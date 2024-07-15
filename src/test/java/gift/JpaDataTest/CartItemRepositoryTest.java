@@ -1,6 +1,7 @@
 package gift.JpaDataTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 import gift.domain.cart.CartItem;
 import gift.domain.cart.JpaCartItemRepository;
@@ -15,6 +16,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +48,7 @@ public class CartItemRepositoryTest {
         this.user = savedUser;
 
         Product product1 = new Product("아이스 아메리카노 T", 4500, "https://example.com/image.jpg");
-        Product product2 = new Product("아이스 카페모카 M", 4700, "https://example.com/image.jpg");
+        Product product2 = new Product("아이스 카페모카 M", 6300, "https://example.com/image.jpg");
         Product savedProduct1 = productRepository.save(product1);
         Product savedProduct2 = productRepository.save(product2);
         this.product1 = savedProduct1;
@@ -119,10 +124,34 @@ public class CartItemRepositoryTest {
     void testEntityRetrievalByIdVsByName() {
         // given
         CartItem savedCartItem = cartItemRepository.saveAndFlush(new CartItem(user, product1));
+
         // when - id(식별자) 조회 -> 영속성 컨텍스트에서 찾을 수 있음, 기타 필드로 조회 -> db 에 쿼리 날려야 함
         cartItemRepository.findById(savedCartItem.getId());
         CartItem cartItem = cartItemRepository.findByUserIdAndProductId(user.getId(),
             product1.getId()).orElseThrow();
+    }
+
+    @Test
+    @Description("정상 페이징 확인")
+    void testPagingSuccess() {
+        // given
+        CartItem savedCartItem1 = cartItemRepository.saveAndFlush(new CartItem(user, product1));
+        CartItem savedCartItem2 = cartItemRepository.saveAndFlush(new CartItem(user, product2));
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Direction.DESC, "id"));
+        clear();
+
+        // when
+        Page<CartItem> cartItems = cartItemRepository.findAllByUserId(user.getId(), pageRequest);
+
+        // then
+        assertAll(
+            () -> assertThat(cartItems.getTotalElements()).isEqualTo(2), // 전체 CartItem 개수
+            () -> assertThat(cartItems.getTotalPages()).isEqualTo(1), // 전체 페이지 개수
+            () -> assertThat(cartItems.getNumber()).isEqualTo(pageRequest.getPageNumber()), // 현재 페이지 번호
+            () -> assertThat(cartItems.getSize()).isEqualTo(pageRequest.getPageSize()), // 페이지당 보여지는 Product 개수
+            () -> assertThat(cartItems.getContent().get(0)).isEqualTo(savedCartItem2),
+            () -> assertThat(cartItems.getContent().get(1)).isEqualTo(savedCartItem1)
+        );
     }
 
     private void clear() {

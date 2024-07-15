@@ -6,8 +6,10 @@ import jakarta.validation.Validator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -44,11 +46,11 @@ public class ProductService {
     }
 
     /**
-     * 전체 싱픔 목록 조회
+     * 전체 싱픔 목록 조회 - 페이징(매개변수별)
      */
-    public List<Product> getProducts() {
-        List<Product> products = productRepository.findAll();
-        System.out.println("products = " + products);
+    public Page<Product> getProductsByPageAndSort(int page, int size, Sort sort) {
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        Page<Product> products = productRepository.findAll(pageRequest);
 
         return products;
     }

@@ -2,7 +2,6 @@ package gift.global.annotation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import jdk.jfr.Description;
 
 /**
  * NotContainsValue 어노테이션을 위한 유효성 검사기

@@ -1,11 +1,15 @@
 package gift.domain.product;
 
+import gift.domain.cart.CartItem;
 import gift.global.annotation.NotContainsValue;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -22,11 +26,26 @@ public class Product {
     private int price;
     private String imageUrl;
 
-    public Product() {
+    public static Product createProductFromProxy(Product proxyProduct) {
+        return new Product(
+            proxyProduct.getId(),
+            proxyProduct.getName(),
+            proxyProduct.getPrice(),
+            proxyProduct.getImageUrl());
+    }
+
+    protected Product() {
 
     }
 
     public Product(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    public Product(Long id, String name, int price, String imageUrl) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
@@ -60,8 +79,12 @@ public class Product {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Product product = (Product) o;
         return id == product.id &&
                price == product.price &&
@@ -80,6 +103,12 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    public void proxyInitialize(String name, int price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -91,4 +120,5 @@ public class Product {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
 }

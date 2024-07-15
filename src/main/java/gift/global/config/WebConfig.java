@@ -21,6 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
         this.jwtAuthorizationArgumentResolver = jwtAuthorizationArgumentResolver;
         this.jwtInterceptor = jwtInterceptor;
     }
+
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(jwtAuthorizationArgumentResolver);
@@ -29,6 +30,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
-            .addPathPatterns("/api/users/cart");
+            .addPathPatterns("/api/users/cart/**") // RestController
+            .addPathPatterns("/users/cart/**"); // Controller
     }
 }

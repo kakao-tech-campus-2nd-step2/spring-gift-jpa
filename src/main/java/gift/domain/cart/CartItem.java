@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.Objects;
 
 @Entity
 public class CartItem {
@@ -25,7 +26,9 @@ public class CartItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public CartItem() {
+    private int count = 1;
+
+    protected CartItem() {
     }
 
     public CartItem(User user, Product product) {
@@ -57,6 +60,10 @@ public class CartItem {
         this.product = product;
     }
 
+    public int getCount() {
+        return count;
+    }
+
     @Override
     public String toString() {
         return "CartItem{" +
@@ -64,5 +71,33 @@ public class CartItem {
                ", user=" + user +
                ", product=" + product +
                '}';
+    }
+
+    public void addOneMore() {
+        this.count += 1;
+    }
+
+    public void updateCount(int count) {
+        this.count = count;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        CartItem cartItem = (CartItem) o;
+        return count == cartItem.count &&
+               Objects.equals(id, cartItem.id) &&
+               Objects.equals(user, cartItem.user) &&
+               Objects.equals(product, cartItem.product);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, user, product, count);
     }
 }
