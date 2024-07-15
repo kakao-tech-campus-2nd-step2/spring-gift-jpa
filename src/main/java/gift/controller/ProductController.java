@@ -5,10 +5,9 @@ import gift.dto.request.AddProductRequest;
 import gift.dto.request.UpdateProductRequest;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -20,8 +19,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<Page<Product>> getAllProducts(@RequestParam(value = "page", required = false, defaultValue = "0") int page) {
+        Page<Product> products = productService.getAllProducts(page);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{productId}")

@@ -4,9 +4,10 @@ import gift.domain.Product;
 import gift.dto.request.AddProductRequest;
 import gift.dto.request.UpdateProductRequest;
 import gift.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import static gift.constant.Message.*;
 
@@ -23,9 +24,9 @@ public class ProductService {
         return productRepository.findProductById(productId).orElse(null);
     }
 
-    public List<Product> getAllProducts() {
-        System.out.println(productRepository.findAll());
-        return productRepository.findAll();
+    public Page<Product> getAllProducts(int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        return productRepository.findAll(pageable);
     }
 
     public String addProduct(AddProductRequest requestProduct) {
