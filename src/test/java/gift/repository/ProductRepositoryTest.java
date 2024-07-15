@@ -9,6 +9,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 class ProductRepositoryTest {
@@ -19,6 +22,7 @@ class ProductRepositoryTest {
     private Product product1;
     private Product product2;
     private Product savedProduct;
+    private Pageable pageable = PageRequest.of(0, 10);
 
     @BeforeEach
     public void setUp() {
@@ -43,11 +47,11 @@ class ProductRepositoryTest {
     void testFindAll() {
         product1.validate();
         product2.validate();
-        List<Product> products = productRepository.findAll();
+        Page<Product> products = productRepository.findAll(pageable);
         assertAll(
-            () -> assertThat(products.size()).isEqualTo(2),
-            () -> assertThat(products.get(0).getId()).isEqualTo(product1.getId()),
-            () -> assertThat(products.get(1).getId()).isEqualTo(product2.getId())
+            () -> assertThat(products.getTotalElements()).isEqualTo(2),
+            () -> assertThat(products.getContent().get(0).getId()).isEqualTo(product1.getId()),
+            () -> assertThat(products.getContent().get(1).getId()).isEqualTo(product2.getId())
         );
     }
 
