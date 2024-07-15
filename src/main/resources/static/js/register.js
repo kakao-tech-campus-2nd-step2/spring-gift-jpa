@@ -24,7 +24,6 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     }
 
     const responseData = await response.json();
-    console.log('Success:', responseData);
     alert('회원가입에 성공하였습니다.');
 
     // 토큰을 로컬 스토리지에 저장

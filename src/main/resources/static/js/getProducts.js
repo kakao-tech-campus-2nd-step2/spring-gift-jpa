@@ -20,8 +20,10 @@ window.onload = function () {
   }
 }
 
-function getRequestWithToken(event) {
-  fetch('/api/products/wishes', {
+function getRequestWithToken(uri) {
+  let getUri = (uri === undefined) ? '/api/products/wishes' : uri;
+
+  fetch(getUri, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -37,15 +39,15 @@ function getRequestWithToken(event) {
     document.open();
     document.write(html);
     document.close();
-    window.history.pushState({}, '', '/api/products/wishes');
+    window.history.pushState({}, '', getUri);
   })
   .catch(error => {
-    if (error.message === '400') {
+    if (error.message === '401') {
       alert('회원이 아닙니다.');
       localStorage.removeItem('token');
       window.location.href = '/members/register';
     } else {
-      console.error('Unknown Error', error);
+      alert('확인되지 않은 에러입니다. 관리자에게 연락해주시기 바랍니다.');
     }
   });
 }
@@ -326,4 +328,45 @@ function savePutProductRow(button) {
       }
     }
   });
+}
+
+function autoAddProduct(button){
+
+  for (let i = 1; i < 1001; i++) {
+
+    const requestJson = {
+      "name": "커피" + i,
+      "price": 10000 + i,
+      "imageUrl": "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg"
+    };
+
+    $.ajax({
+      type: 'POST',
+      url: '/api/products',
+      dataType: 'json',
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(requestJson),
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('Authorization', "Bearer " + localStorage.getItem('token'));
+      },
+      success: function () {
+
+      },
+      error: function (xhr) {
+        if (xhr.responseJSON && xhr.responseJSON.isError
+            && xhr.responseJSON.message) {
+          alert('오류: ' + xhr.responseJSON.message);
+        } else if (xhr.status == 401) {
+          alert('상품 추가, 삭제, 수정은 로그인을 해야 가능합니다.');
+          localStorage.removeItem('token');
+          window.location.href = '/members/login';
+        } else {
+          alert('상품 추가를 실패하였습니다. 값을 제대로 입력했는지 확인해주세요');
+        }
+      }
+    });
+  }
+
+  alert('상품 추가를 성공하였습니다.');
+  window.location.href = '/api/products';
 }

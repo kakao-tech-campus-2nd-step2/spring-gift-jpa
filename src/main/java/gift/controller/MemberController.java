@@ -34,7 +34,7 @@ public class MemberController {
     }
 
     @GetMapping("/register")
-    public String register() {
+    public String register(){
         return "register";
     }
 
@@ -44,17 +44,16 @@ public class MemberController {
         try {
             memberService.register(memberDTO);
             token = jwtUtil.generateToken(memberDTO);
-        } catch (Exception e) {
-            if (e instanceof EmailAlreadyHereException) {
+        } catch (RuntimeException e) {
+            if(e instanceof EmailAlreadyHereException)
                 return responseError(e, HttpStatus.CONFLICT);
-            }
             return responseError(e);
         }
         return new ResponseEntity<>(new JwtDTO(token), HttpStatus.OK);
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(){
         return "login";
     }
 
@@ -64,7 +63,7 @@ public class MemberController {
         try {
             memberService.login(memberDTO);
             token = jwtUtil.generateToken(memberDTO);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return responseError(e, HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(new JwtDTO(token), HttpStatus.OK);

@@ -9,6 +9,7 @@
   <link rel="stylesheet" type="text/css" th:href="@{/css/getWishes.css}">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="/js/getWishes.js"></script>
+  <script src="/js/wishPage.js"></script>
 </head>
 <body>
 <div class="productListBox">
@@ -31,24 +32,36 @@
 <table id="wishListTable">
   <thead>
   <tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Price</th>
+    <th>ID
+    <a id="idAsc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.getWishList().number} + '&sort=product.id,asc\')'">▲</a>
+    <a id="idDesc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.getWishList().number} + '&sort=product.id,desc\')'">▼</a>
+  </th>
+    <th>Name
+      <a id="nameAsc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.getWishList().number} + '&sort=product.name,asc\')'">▲</a>
+      <a id="nameDesc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.getWishList().number} + '&sort=product.name,desc\')'">▼</a>
+    </th>
+    <th>Price
+      <a id="priceAsc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.getWishList().number} + '&sort=product.price,asc\')'">▲</a>
+      <a id="priceDesc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.getWishList().number} + '&sort=product.price,desc\')'">▼</a>
+    </th>
     <th>ImageUrl</th>
-    <th>수량</th>
+    <th>수량
+      <a id="quantityAsc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.getWishList().number} + '&sort=quantity,asc\')'">▲</a>
+      <a id="quantityDesc" th:onclick="'getRequestWithToken(\'/api/products/wishes?page=' + ${wishListDTO.getWishList().number} + '&sort=quantity,desc\')'">▼</a>
+    </th>
     <th>편집</th>
     <th>삭제</th>
   </tr>
   </thead>
   <tbody>
-  <tr th:each="wish : ${wishListDTO.wishList()}">
-    <td th:text="${wish.product().getId()}" id="productId" class = "productId">1</td>
-    <td th:text="${wish.product().getName()}" id="productName" class="productName">Product Name</td>
-    <td th:text="${wish.product().getPrice()}" id="productPrice" class="productPrice">1000</td>
+  <tr th:each="wish : ${wishListDTO.getWishList().getContent()}">
+    <td th:text="${wish.getProduct().getId()}" id="productId" class = "productId">1</td>
+    <td th:text="${wish.getProduct().getName()}" id="productName" class="productName">Product Name</td>
+    <td th:text="${wish.getProduct().getPrice()}" id="productPrice" class="productPrice">1000</td>
     <td id="productImage" class="productImage">
-      <img th:src="${wish.product().getImageUrl()}" alt="Image" style="width:100px;height:auto;">
+      <img th:src="${wish.getProduct().getImageUrl()}" alt="Image" style="width:100px;height:auto;">
     </td>
-    <td th:text="${wish.quantity()}" id="productQuantity" class="productQuantity"></td>
+    <td th:text="${wish.getQuantity()}" id="productQuantity" class="productQuantity"></td>
     <td>
       <img th:src="@{/image/edit.png}" id ="productEdit" class="productEdit" alt="edit" style="width:100px;height: auto"  onclick="editQuantity(this)">
     </td>
@@ -58,6 +71,20 @@
   </tr>
   </tbody>
 </table>
+
+<div class="wishPagination"
+     th:data-number="${wishListDTO.getWishList().number}"
+     th:data-size="${wishListDTO.getWishList().size}"
+     th:data-total-elements="${wishListDTO.getWishList().totalElements}"
+     th:data-has-next="${wishListDTO.getWishList().hasNext()}"
+     th:data-has-previous="${wishListDTO.getWishList().hasPrevious()}"
+     th:data-total-pages="${wishListDTO.getWishList().totalPages}">
+  <a id="firstPage" style="display:none"><<</a>
+  <a id="previousPage" style="display:none"><</a>
+  <div class="pages"></div>
+  <a id="nextPage" style="display:none">></a>
+  <a id="lastPage" style="display:none">>></a>
+</div>
 
 </body>
 </html>

@@ -41,7 +41,7 @@ function saveQuantity(event) {
   let quantity = quantityInput ? quantityInput.value : '';
   if (quantity === '') {
     alert('상품 개수를 입력해주세요');
-    getRequestWithToken();
+    getRequestWithToken('/api/products/wishes');
     return;
   }
   quantity = quantity.trim();
@@ -69,7 +69,7 @@ function saveQuantity(event) {
     },
     success: function () {
       alert('위시리스트 제품 개수가 수정되었습니다.');
-      getRequestWithToken();
+      getRequestWithToken('/api/products/wishes');
     },
     error: function (xhr) {
       console.log(xhr.responseJSON);
@@ -99,7 +99,7 @@ function deleteWish(button) {
     },
     success: function () {
       alert('위시리스트에서 제품이 삭제되었습니다.');
-      getRequestWithToken();
+      getRequestWithToken('/api/products/wishes');
     },
     error: function (xhr) {
       if (xhr.responseJSON && xhr.responseJSON.isError && xhr.responseJSON.message) {

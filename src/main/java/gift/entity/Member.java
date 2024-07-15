@@ -1,31 +1,31 @@
 package gift.entity;
 
+import gift.exception.BadRequestExceptions.BadRequestException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 @Entity
 public class Member {
+    private final Pattern EMAIL_PATTERN = Pattern.compile(
+            "^[A-Za-z0-9+_.-]+@(.+)$"
+    );
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
-    @Email(message = "올바른 이메일 형식이 아닙니다.")
     @Column(nullable = false, unique = true)
     @Size(max = 255)
     private String email;
 
-    @NotBlank(message = "비밀번호를 입력해주세요.")
     @Size(max = 255)
     @Column(nullable = false)
     private String password;
@@ -38,18 +38,16 @@ public class Member {
     @Column(nullable = false)
     private String role;
 
-    @OneToMany(mappedBy = "member")
-    private List<Wish> wishList;
-
     protected Member() {
     }
 
-    public Member(String email, String password, String name, String role, List<Wish> wishList) {
+    public Member(String email, String password, String name, String role) {
+        validateEmail(email);
+        validatePassword(password);
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
-        this.wishList = wishList;
     }
 
     public String getEmail() {
@@ -63,9 +61,6 @@ public class Member {
     }
     public String getRole() {
         return role;
-    }
-    public List<Wish> getWishList() {
-        return wishList;
     }
     public Long getId() {
         return id;
@@ -90,4 +85,17 @@ public class Member {
     public int hashCode() {
         return Objects.hash(email, password, name, role);
     }
+
+    private void validateEmail(String email) {
+        if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
+            throw new BadRequestException("올바른 이메일 형식이 아닙니다.");
+        }
+    }
+
+    private void validatePassword(String password) {
+        if (password == null || password.isBlank()) {
+            throw new BadRequestException("비밀번호를 입력해주세요.");
+        }
+    }
+
 }

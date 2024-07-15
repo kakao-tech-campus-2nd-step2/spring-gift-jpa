@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -35,17 +37,18 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("")
-    public String getProducts(Model model) {
-        model.addAttribute("productList", productService.getProductList());
+    @GetMapping
+    public String getProducts(Model model, Pageable pageable) {
+        Page<ProductDTO> productPage = productService.getProductList(pageable);
+        model.addAttribute("productPage", productPage);
         return "getProducts";
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<ResponseDTO> addProduct(@RequestBody @Valid ProductDTO productDTO) {
         try {
             productService.addProduct(productDTO);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return responseError(e);
         }
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE),
@@ -57,7 +60,7 @@ public class ProductController {
     public ResponseEntity<ResponseDTO> deleteProduct(@PathVariable @Min(1) @NotNull Long id) {
         try {
             productService.deleteProduct(id);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return responseError(e);
         }
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE),
@@ -71,7 +74,7 @@ public class ProductController {
         try {
             productService.updateProduct(id, productDTO);
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return responseError(e);
         }
         return new ResponseEntity<>(new ResponseDTO(false, ResponseMsgConstants.WELL_DONE_MESSAGE),

@@ -10,6 +10,7 @@
   <link rel="stylesheet" type="text/css" th:href="@{/css/getProducts.css}">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="/js/getProducts.js"></script>
+  <script src="/js/productPage.js"></script>
 
 </head>
 <body>
@@ -18,14 +19,18 @@
   <a href="/api/products">
     <h1>제품 리스트</h1>
   </a>
-  <img src="/image/add.png" alt="add" id="addButton" style="width:100px; height: auto"
-       onclick="addProductRow(this)">
+  <div class="productAddBox">
+    <img src="/image/autoAdd.png" alt="add" id="autoAddProduct" onclick="autoAddProduct(this)">
+    <img src="/image/add.png" alt="add" id="addButton" style="width:100px; height: auto"
+         onclick="addProductRow(this)">
+  </div>
+
 </div>
 
 <div id="userbox">
   <div id="userInfo" style="display: none;">
     <span id="username"></span>
-    <button id="wishList" style="display:none;" onclick="getRequestWithToken(this)"> 장바구니</button>
+    <button id="wishList" style="display:none;" onclick="getRequestWithToken('/api/products/wishes')"> 장바구니</button>
     <button id="logoutButton" style="display: none;">로그아웃</button>
   </div>
   <a href="/members/login" id="loginLink" style="display:none;">
@@ -37,9 +42,19 @@
 <table id="productTable">
   <thead>
   <tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Price</th>
+    <th>ID
+      <a id="idAsc" th:href="@{/api/products(page=${productPage.number}, sort='id,asc')}">▲</a>
+      <a id="idDesc" th:href="@{/api/products(page=${productPage.number}, sort='id,desc')}">▼</a>
+    </th>
+    <th>Name
+      <a id="nameAsc" th:href="@{/api/products(page=${productPage.number}, sort='name,asc')}">▲</a>
+      <a id="nameDesc" th:href="@{/api/products(page=${productPage.number}, sort='name,desc')}">▼</a>
+    </th>
+    <th>Price
+      <a id="priceAsc" th:href="@{/api/products(page=${productPage.number}, sort='price,asc')}">▲</a>
+      <a id="priceDesc" th:href="@{/api/products(page=${productPage.number}, sort='price,desc')}">▼</a>
+    </th>
+
     <th>ImageUrl</th>
     <th>저장/수정</th>
     <th>취소/삭제</th>
@@ -47,7 +62,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:each="product : ${productList}" th:attr="data-id=${product.id}">
+  <tr th:each="product : ${productPage.getContent()}" th:attr="data-id=${product.id}">
     <td th:text="${product.id}" class="productId">1</td>
     <td th:text="${product.name}" class="productName">Product Name</td>
     <td th:text="${product.price}" class="productPrice">1000</td>
@@ -71,6 +86,20 @@
   </tr>
   </tbody>
 </table>
+
+<div class="pagination"
+     th:data-number="${productPage.number}"
+     th:data-size="${productPage.size}"
+     th:data-total-elements="${productPage.totalElements}"
+     th:data-has-next="${productPage.hasNext()}"
+     th:data-has-previous="${productPage.hasPrevious()}"
+     th:data-total-pages="${productPage.totalPages}">
+  <a id="firstPage" style="display:none"><<</a>
+  <a id="previousPage" style="display:none"><</a>
+  <div class="pages"></div>
+  <a id="nextPage" style="display:none">></a>
+  <a id="lastPage" style="display:none">>></a>
+</div>
 
 </body>
 </html>
