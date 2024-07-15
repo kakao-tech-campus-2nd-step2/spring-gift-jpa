@@ -24,6 +24,25 @@
 </form>
 
 <a href="/view/admin/products">Cancel</a>
+<script>
+    const getProducts = {
+            init: function () {
+                authSetup.setAuthorizationHeader();
+                $.ajax({
+                    type: "GET",
+                    url: '/api/admin/products/add',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=UTF-8',
+                }).done(function (response) {
+                    });
+                }).fail(function () {
+                    alert('로그인 후 상품 등록 가능합니다');
+                    location.href = "/members/login";
+                });
+            }
+        };
+        getProducts.init();
 
+</script>
 </body>
 </html>

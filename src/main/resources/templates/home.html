@@ -10,14 +10,4 @@
 <button type="button" onclick="location.href='/view/admin/products'">상품 등록하기</button>
 <button type="button" onclick="location.href='/view/wishlist'">위시리스트 보기</button>
 </body>
-<script>
-    window.onload = function() {
-        console.log("home onload 실행 확인");
-        const token = localStorage.getItem("token");
-        if (!token) {
-            alert("Please log in first");
-            location.href = "/members/login";
-        }
-    }
-</script>
 </html>

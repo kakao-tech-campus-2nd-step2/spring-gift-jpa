@@ -2,77 +2,102 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wishlist</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .wishlist-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        .wishlist-item img {
+            max-width: 100px;
+            margin-right: 20px;
+        }
+        .wishlist-item .info {
+            flex: 1;
+        }
+        .wishlist-item .actions {
+            margin-left: 20px;
+        }
+    </style>
 </head>
 <body>
-<h1>Wishlist</h1>
-<table id="wishlistTable" border="1">
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Image</th>
-        <th>Actions</th>
-    </tr>
-</table>
+<h1>Your Wishlist</h1>
+<div id="wishlist"></div>
+
 <script>
-    window.onload = function() {
-        console.log("wishlist onload 실행 확인");
-        const token = localStorage.getItem("token");
+    document.addEventListener('DOMContentLoaded', function () {
+        const token = localStorage.getItem('token');
         if (!token) {
-            alert("Please log in first");
-            location.href = "/login";
+            alert('You need to log in first.');
             return;
         }
 
-        $.ajax({
-            type: 'GET',
-            url: '/api/wishlist',
-            dataType: 'json',
-            contentType: 'application/json; charset=UTF-8',
+        fetch('/api/wishlist', {
+            method: 'GET',
             headers: {
-                "Authorization": "Bearer " + token
+                'Authorization': 'Bearer ' + token
             }
-        }).done(function(data) {
-            const wishlistTable = document.getElementById('wishlistTable');
-            data.forEach(function(item) {
-                const row = wishlistTable.insertRow();
-                row.insertCell(0).innerText = item.id;
-                row.insertCell(1).innerText = item.name;
-                row.insertCell(2).innerText = item.price;
-                const imgCell = row.insertCell(3);
-                const img = document.createElement('img');
-                img.src = item.imageUrl;
-                img.style.maxWidth = "100px";
-                img.style.maxHeight = "100px";
-                imgCell.appendChild(img);
-                const actionsCell = row.insertCell(4);
-                const deleteButton = document.createElement('button');
-                deleteButton.innerText = "Delete";
-                deleteButton.onclick = function() {
-                    deleteWishlistItem(item.id);
-                };
-                actionsCell.appendChild(deleteButton);
-            });
-        }).fail(function() {
-            alert('Failed to load wishlist');
-        });
-    };
+        })
+        .then(response => response.json())
+        .then(data => {
+            const wishlistContainer = document.getElementById('wishlist');
+            wishlistContainer.innerHTML = '';
 
-    function deleteWishlistItem(itemId) {
-        const token = localStorage.getItem("token");
-        $.ajax({
-            type: 'DELETE',
-            url: '/api/wishlist/' + itemId,
-            headers: {
-                "Authorization": "Bearer " + token
+            if (data.length === 0) {
+                wishlistContainer.innerHTML = '<p>Your wishlist is empty.</p>';
+            } else {
+                data.forEach(product => {
+                    const item = document.createElement('div');
+                    item.className = 'wishlist-item';
+
+                    item.innerHTML = `
+                        <img src="${product.imageUrl}" alt="${product.name}">
+                        <div class="info">
+                            <h2>${product.name}</h2>
+                            <p>Price: $${product.price}</p>
+                        </div>
+                        <div class="actions">
+                            <button onclick="removeFromWishlist(${product.id})">Remove</button>
+                        </div>
+                    `;
+
+                    wishlistContainer.appendChild(item);
+                });
             }
-        }).done(function() {
-            alert('Item deleted');
-            location.reload();
-        }).fail(function() {
-            alert('Failed to delete item');
+        })
+        .catch(error => {
+            console.error('Error fetching wishlist:', error);
+        });
+    });
+
+    function removeFromWishlist(productId) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('You need to log in first.');
+            return;
+        }
+
+        fetch(`/api/wishlist/${productId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        })
+        .then(() => {
+            // 성공적으로 삭제되었을 때 UI에서 항목을 제거
+            const item = document.querySelector(`.wishlist-item button[onclick="removeFromWishlist(${productId})"]`).parentElement.parentElement;
+            item.remove();
+        })
+        .catch(error => {
+            console.error('Error removing wishlist item:', error);
         });
     }
 </script>

@@ -17,4 +17,11 @@ public class HomeController {
     public String productListForm() {
         return "products";
     }
+
+    @GetMapping("/wishlist")
+    public String wishlistForm() {
+        return "wishlist";
+    }
+
+
 }

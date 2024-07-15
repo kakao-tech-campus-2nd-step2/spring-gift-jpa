@@ -12,6 +12,7 @@
 
     <label for="name">Name:</label><br>
     <input type="text" id="name" th:field="*{name}"><br>
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div><br>
 
     <label for="price">Price:</label><br>
     <input type="number" id="price" th:field="*{price}"><br>

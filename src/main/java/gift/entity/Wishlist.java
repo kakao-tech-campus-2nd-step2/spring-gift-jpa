@@ -1,9 +1,8 @@
-package gift.model;
+package gift.entity;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "wishes")
 public class Wishlist {
 
     @Id
@@ -18,7 +17,6 @@ public class Wishlist {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    // Getters와 Setters
     public Long getId() {
         return id;
     }
