@@ -31,4 +31,4 @@
 
 - Pagination 구현 및 적용
   - [x] Product
-  - [ ] Wish
+  - [x] Wish
