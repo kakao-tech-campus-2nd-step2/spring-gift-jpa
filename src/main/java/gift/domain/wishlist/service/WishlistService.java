@@ -7,6 +7,7 @@ import gift.domain.wishlist.dao.WishlistJpaRepository;
 import gift.domain.wishlist.dto.WishItemDto;
 import gift.domain.wishlist.entity.WishItem;
 import gift.exception.InvalidProductInfoException;
+import gift.util.dto.PageRequestDto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,8 +39,9 @@ public class WishlistService {
         return savedWishItem;
     }
 
-    public Page<WishItem> readAll(int page, String sortingCriteria, String orderingCriteria, int size, User user) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(orderingCriteria), sortingCriteria));
+    public Page<WishItem> readAll(PageRequestDto pageRequestDto, User user) {
+        Pageable pageable = PageRequest.of(pageRequestDto.page(), pageRequestDto.size(),
+                    Sort.by(Sort.Direction.fromString(pageRequestDto.orderBy()), pageRequestDto.sortBy()));
         return wishlistJpaRepository.findAllByUserId(user.getId(), pageable);
     }
 

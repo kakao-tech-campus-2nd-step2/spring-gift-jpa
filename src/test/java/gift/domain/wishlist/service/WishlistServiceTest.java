@@ -16,6 +16,7 @@ import gift.domain.wishlist.dao.WishlistJpaRepository;
 import gift.domain.wishlist.dto.WishItemDto;
 import gift.domain.wishlist.entity.WishItem;
 import gift.exception.InvalidProductInfoException;
+import gift.util.dto.PageRequestDto;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -98,7 +99,7 @@ class WishlistServiceTest {
             .willReturn(new PageImpl<>(wishItemList));
 
         // when
-        Page<WishItem> wishItems = wishlistService.readAll(0, "id", "asc", 5, user);
+        Page<WishItem> wishItems = wishlistService.readAll(new PageRequestDto(0, "id", "asc", 5), user);
 
         // then
         assertAll(
@@ -120,7 +121,7 @@ class WishlistServiceTest {
         wishlistService.delete(1L);
 
         // then
-        Page<WishItem> wishlist = wishlistService.readAll(0, "id", "asc", 5, user);
+        Page<WishItem> wishlist = wishlistService.readAll(new PageRequestDto(0, "id", "asc", 5), user);
         assertThat(wishlist).isNull();
     }
 
@@ -148,7 +149,7 @@ class WishlistServiceTest {
         wishlistService.deleteAllByUserId(user);
 
         // then
-        Page<WishItem> wishlist = wishlistService.readAll(0, "id", "asc", 5, user);
+        Page<WishItem> wishlist = wishlistService.readAll(new PageRequestDto(0, "id", "asc", 5), user);
         assertThat(wishlist).isEmpty();
     }
 }

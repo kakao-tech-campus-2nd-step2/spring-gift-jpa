@@ -5,6 +5,7 @@ import gift.domain.wishlist.dto.WishItemDto;
 import gift.domain.wishlist.entity.WishItem;
 import gift.domain.wishlist.service.WishlistService;
 import gift.config.LoginUser;
+import gift.util.dto.PageRequestDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,14 +35,8 @@ public class WishlistRestController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<WishItem>> readAll(
-        @RequestParam(required = false, defaultValue = "0", value = "page") int page,
-        @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortingCriteria,
-        @RequestParam(required = false, defaultValue = "asc", value = "orderBy") String orderingCriteria,
-        @RequestParam(required = false, defaultValue = "10", value = "size") int size,
-        @LoginUser User user
-    ) {
-        return ResponseEntity.status(HttpStatus.OK).body(wishlistService.readAll(page, sortingCriteria, orderingCriteria, size, user));
+    public ResponseEntity<Page<WishItem>> readAll(PageRequestDto pageRequestDto, @LoginUser User user) {
+        return ResponseEntity.status(HttpStatus.OK).body(wishlistService.readAll(pageRequestDto, user));
     }
 
     @DeleteMapping("/{wishItemId}")

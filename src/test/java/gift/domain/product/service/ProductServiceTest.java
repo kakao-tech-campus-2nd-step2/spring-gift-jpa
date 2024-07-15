@@ -10,6 +10,7 @@ import static org.mockito.BDDMockito.willDoNothing;
 import gift.domain.product.dao.ProductJpaRepository;
 import gift.domain.product.dto.ProductDto;
 import gift.domain.product.entity.Product;
+import gift.util.dto.PageRequestDto;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -103,7 +104,7 @@ class ProductServiceTest {
             new PageImpl<>(products, PageRequest.of(0, 5), products.size()));
 
         // when
-        Page<Product> actual = productService.readAll(0, "id", "asc", 5);
+        Page<Product> actual = productService.readAll(new PageRequestDto(0, "id", "asc", 5));
         List<String> actualNames = actual.getContent().stream().map(Product::getName).toList();
 
         // then
@@ -171,7 +172,7 @@ class ProductServiceTest {
         productService.delete(1L);
 
         // then
-        Page<Product> productList = productService.readAll(0, "id", "asc", 10);
+        Page<Product> productList = productService.readAll(new PageRequestDto(0, "id", "asc", 10));
         assertThat(productList).isNull();
     }
 }

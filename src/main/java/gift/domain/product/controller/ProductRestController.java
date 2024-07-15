@@ -3,6 +3,7 @@ package gift.domain.product.controller;
 import gift.domain.product.dto.ProductDto;
 import gift.domain.product.entity.Product;
 import gift.domain.product.service.ProductService;
+import gift.util.dto.PageRequestDto;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -35,13 +36,8 @@ public class ProductRestController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Product>> readAll(
-        @RequestParam(required = false, defaultValue = "0", value = "page") int page,
-        @RequestParam(required = false, defaultValue = "id", value = "sortBy") String sortingCriteria,
-        @RequestParam(required = false, defaultValue = "asc", value = "orderBy") String orderingCriteria,
-        @RequestParam(required = false, defaultValue = "10", value = "size") int size
-    ) {
-        Page<Product> productList = productService.readAll(page, sortingCriteria, orderingCriteria, size);
+    public ResponseEntity<Page<Product>> readAll(PageRequestDto pageRequestDto) {
+        Page<Product> productList = productService.readAll(pageRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
 

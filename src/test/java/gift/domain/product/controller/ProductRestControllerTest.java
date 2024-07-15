@@ -13,6 +13,7 @@ import gift.domain.product.dto.ProductDto;
 import gift.domain.product.entity.Product;
 import gift.domain.product.service.ProductService;
 import gift.exception.InvalidProductInfoException;
+import gift.util.dto.PageRequestDto;
 import java.util.List;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.DisplayName;
@@ -110,7 +111,7 @@ class ProductRestControllerTest {
         );
         Page<Product> expectedPage = new PageImpl<>(productList, PageRequest.of(0, 5), productList.size());
 
-        given(productService.readAll(anyInt(), anyString(), anyString(), anyInt())).willReturn(expectedPage);
+        given(productService.readAll(any(PageRequestDto.class))).willReturn(expectedPage);
         String expectedResult = objectMapper.writeValueAsString(expectedPage);
 
         // when & then
