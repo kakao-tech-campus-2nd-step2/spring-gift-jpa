@@ -15,11 +15,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "members", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class Member {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Member extends BaseEntity {
 
     @Column(nullable = false)
     private String email;
@@ -34,12 +30,9 @@ public class Member {
     }
 
     public Member(String email, String password) {
+        super();
         this.email = email;
         this.password = password;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getEmail() {
@@ -48,6 +41,10 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public Set<Wish> getWishes() {
+        return wishes;
     }
 }
 

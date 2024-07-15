@@ -38,9 +38,7 @@ public class WishService {
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
         if (!wishRepository.existsByMemberAndProduct(member, product)) {
-            Wish wish = new Wish();
-            wish.setMember(member);
-            wish.setProduct(product);
+            Wish wish = new Wish(member, product);
             wishRepository.save(wish);
         }
     }

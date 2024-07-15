@@ -10,11 +10,7 @@ import jakarta.persistence.GenerationType;
 
 @Entity
 @Table(name = "products")
-public class Product {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Product extends BaseEntity {
 
     @Column(nullable = false, length = 15)
     private String name;
@@ -28,15 +24,11 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id,String name, int price, String imageUrl) {
-        this.id = id;
+    public Product(String name, int price, String imageUrl) {
+        super();
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getName() {
@@ -78,7 +70,9 @@ public class Product {
         }
 
         public Product build() {
-            return new Product(id, name, price, imageUrl);
+            Product product = new Product(name, price, imageUrl);
+            product.id = this.id;
+            return product;
         }
     }
 }

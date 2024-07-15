@@ -12,11 +12,7 @@ import jakarta.persistence.FetchType;
 
 @Entity
 @Table(name = "wishes")
-public class Wish {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Wish extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -29,10 +25,11 @@ public class Wish {
     public Wish() {
     }
 
-    public Long getId() {
-        return id;
+    public Wish(Member member, Product product) {
+        super();
+        this.member = member;
+        this.product = product;
     }
-
 
     public Member getMember() {
         return member;
