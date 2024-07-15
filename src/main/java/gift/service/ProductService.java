@@ -48,7 +48,7 @@ public class ProductService {
         Product product = productRepository.findById(id)
             .orElseThrow(NoSuchElementException::new);
 
-        product.update(request);
+        product.update(request.toEntity());
         return UpdateProductResponse.from(product);
     }
 
