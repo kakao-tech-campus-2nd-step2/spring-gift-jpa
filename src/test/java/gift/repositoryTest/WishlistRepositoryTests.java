@@ -28,11 +28,11 @@ public class WishlistRepositoryTests {
 
     @Test
     void testSaveAndFindWishList() {
-        Member member = new Member(null, "jiu@gmail.com", "password123", null);
+        Member member = new Member("jiu@gmail.com", "password123");
         memberRepository.save(member);
-        Product product = new Product(null, "지우", 1000, "http://example.com/image.jpg");
+        Product product = new Product("지우", 1000, "http://example.com/image.jpg");
         productRepository.save(product);
-        Wishlist wishList = new Wishlist(null, member, product);
+        Wishlist wishList = new Wishlist(member, product);
         wishListRepository.save(wishList);
 
         Pageable pageable = PageRequest.of(0, 10);
@@ -43,11 +43,11 @@ public class WishlistRepositoryTests {
 
     @Test
     void testRemoveProductFromWishList() {
-        Member member = new Member(null, "jiu@gmail.com", "password123", null);
+        Member member = new Member("jiu@gmail.com", "password123");
         memberRepository.save(member);
-        Product product = new Product(null, "지우", 1000, "http://example.com/image.jpg");
+        Product product = new Product("지우", 1000, "http://example.com/image.jpg");
         productRepository.save(product);
-        Wishlist wishList = new Wishlist(null, member, product);
+        Wishlist wishList = new Wishlist(member, product);
         wishListRepository.save(wishList);
 
         wishListRepository.deleteByMemberIdAndProductId(member.getId(), product.getId());

@@ -34,6 +34,9 @@ public class Product {
     }
 
     public Product(String name, int price, String imageUrl) {
+        if (name.contains("카카오") || name.equalsIgnoreCase("kakao")) {
+            throw new IllegalArgumentException("\"카카오\"가 포함된 문구는 담당 MD와 협의한 경우에 사용 가능합니다.");
+        }
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;

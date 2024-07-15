@@ -17,7 +17,7 @@ class ProductRepositoryTests {
 
     @Test
     void testSaveAndFindProduct() {
-        Product product = new Product(null, "상품1", 1000, "http://example.com/image.jpg");
+        Product product = new Product("상품1", 1000, "http://example.com/image.jpg");
         productRepository.save(product);
 
         Optional<Product> foundProduct = productRepository.findById(product.getId());
@@ -28,16 +28,16 @@ class ProductRepositoryTests {
     @Test
     void testSaveValidNameProduct() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Product product = new Product(null, "카카오", 1000, "http://example.com/image.jpg");
+            Product product = new Product("카카오", 1000, "http://example.com/image.jpg");
             productRepository.save(product);
         });
 
         assertThrows(IllegalArgumentException.class, () -> {
-            Product product = new Product(null, "kakao", 1000, "http://example.com/image.jpg");
+            Product product = new Product("kakao", 1000, "http://example.com/image.jpg");
             productRepository.save(product);
         });
 
-        Product validProduct = new Product(null, "상품2", 2000, "http://example.com/image2.jpg");
+        Product validProduct = new Product("상품2", 2000, "http://example.com/image2.jpg");
         productRepository.save(validProduct);
         Optional<Product> foundProduct = productRepository.findById(validProduct.getId());
         assertThat(foundProduct).isPresent();

@@ -16,7 +16,7 @@ class MemberRepositoryTests {
 
     @Test
     void testSaveAndFindMember() {
-        Member member = new Member(null, "테스트1@example.com", "password", null);
+        Member member = new Member("테스트1@example.com", "password");
         memberRepository.save(member);
 
         Optional<Member> foundMember = memberRepository.findByEmail("테스트1@example.com");
@@ -26,7 +26,7 @@ class MemberRepositoryTests {
 
     @Test
     void testFindByActiveToken() {
-        Member member = new Member(null, "테스트2@example.com", "password", "activeToken123");
+        Member member = new Member("테스트2@example.com", "password", "activeToken123");
         memberRepository.save(member);
 
         Optional<Member> foundMember = memberRepository.findByActiveToken("activeToken123");
