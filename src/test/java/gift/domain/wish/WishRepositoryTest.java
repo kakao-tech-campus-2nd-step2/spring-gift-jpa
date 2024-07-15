@@ -25,7 +25,7 @@ class WishRepositoryTest {
     private EntityManager entityManager;
 
     @Test
-    @DisplayName("멤버 ID,상품 ID로 wish 삭제 메서드")
+    @DisplayName("delete 메서드 테스트")
     void deleteByMemberIdAndProductId() {
         //given
         Member member = createMember();
@@ -43,6 +43,7 @@ class WishRepositoryTest {
     }
 
     @Test
+    @DisplayName("findByMemberIdAndProductId 메서드 테스트")
     void findByMemberIdAndProductId() {
         //given
         Member member = createMember();
@@ -57,11 +58,6 @@ class WishRepositoryTest {
                 () -> assertThat(actual).isNotNull(),
                 () -> assertThat(actual.get().getId()).isEqualTo(expected.getId())
         );
-    }
-
-    @Test
-    void findAllByMemberId() {
-
     }
 
     private Member createMember() {
