@@ -58,7 +58,7 @@ public class ProductService {
       throw new RuntimeException("ID가 " + id + "인 상품을 삭제하는 중에 오류가 발생했습니다.", e);
     }
   }
-  
+
   private void validateProduct(Product product) {
     if (product.getName() == null || product.getName().trim().isEmpty()) {
       throw new IllegalArgumentException("상품 이름은 비어 있을 수 없습니다.");

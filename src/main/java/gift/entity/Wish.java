@@ -9,11 +9,14 @@ public class Wish {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
-  private String memberEmail;
+  @ManyToOne
+  @JoinColumn(name = "member_id", nullable = false)
+  private Member member;
 
-  @Column(nullable = false)
-  private Long productId;
+  @ManyToOne
+  @JoinColumn(name = "product_id", nullable = false)
+  private Product product;
+
 
   public Long getId() {
     return id;
@@ -23,19 +26,21 @@ public class Wish {
     this.id = id;
   }
 
-  public String getMemberEmail() {
-    return memberEmail;
+  public Member getMember() {
+    return member;
   }
 
-  public void setMemberEmail(String memberEmail) {
-    this.memberEmail = memberEmail;
+  public void setMember(Member member) {
+    this.member = member;
   }
 
-  public Long getProductId() {
-    return productId;
+  public Product getProduct() {
+    return product;
   }
 
-  public void setProductId(Long productId) {
-    this.productId = productId;
+  public void setProduct(Product product) {
+    this.product = product;
   }
 }
+
+

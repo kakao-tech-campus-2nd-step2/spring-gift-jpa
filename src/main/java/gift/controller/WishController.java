@@ -29,7 +29,7 @@ public class WishController {
 
   @PostMapping
   public ResponseEntity<Wish> addWish(@RequestBody Wish wish, @LoginMember Member member) {
-    wish.setMemberEmail(member.getEmail());
+    wish.setMember(member);
     Wish createdWish = wishService.addWish(wish);
     return ResponseEntity.ok(createdWish);
   }
