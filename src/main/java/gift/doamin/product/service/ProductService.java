@@ -9,8 +9,10 @@ import gift.doamin.product.repository.JpaProductRepository;
 import gift.doamin.user.entity.User;
 import gift.doamin.user.exception.UserNotFoundException;
 import gift.doamin.user.repository.JpaUserRepository;
-import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,12 +42,14 @@ public class ProductService {
         return new ProductParam(product);
     }
 
-    public List<ProductParam> readAll() {
-        List<Product> productList = productRepository.findAll();
-        return productList.stream().map(ProductParam::new).toList();
+    public Page<ProductParam> getPage(int pageNum) {
+
+        Pageable pageable = PageRequest.of(pageNum, 5);
+        return productRepository.findAll(pageable).map(ProductParam::new);
     }
 
     public ProductParam readOne(Long id) {
+
         Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
 
         return new ProductParam(product);

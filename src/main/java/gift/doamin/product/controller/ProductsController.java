@@ -6,7 +6,7 @@ import gift.doamin.product.service.ProductService;
 import gift.doamin.user.entity.UserRole;
 import jakarta.validation.Valid;
 import java.security.Principal;
-import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,8 +41,9 @@ public class ProductsController {
     }
 
     @GetMapping
-    public List<ProductParam> getAllProducts() {
-        return productService.readAll();
+    public Page<ProductParam> getProducts(
+        @RequestParam(required = false, defaultValue = "0", name = "page") int pageNum) {
+        return productService.getPage(pageNum);
     }
 
     @GetMapping("/{id}")
