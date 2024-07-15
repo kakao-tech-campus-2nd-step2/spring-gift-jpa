@@ -6,7 +6,6 @@ import gift.exception.user.InvalidCredentialsException;
 import gift.exception.user.UserAlreadyExistsException;
 import gift.exception.user.UserNotFoundException;
 import gift.repository.user.UserRepository;
-import gift.util.JwtResponse;
 import gift.util.JwtTokenUtil;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +36,9 @@ public class UserService {
         return jwtTokenUtil.generateAccessToken(email);
     }
 
-
     public Optional<User> findByEmail(String email) {
-        // 이메일을 기반으로 사용자 정보를 조회
         return userRepository.findByEmail(email);
     }
-
 
     public String generateRefreshToken(String email) {
         return jwtTokenUtil.generateRefreshToken(email);
@@ -65,54 +61,3 @@ public class UserService {
         userRepository.save(newUser);
     }
 }
-
-
-/*
-@Service
-public class UserService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenUtil jwtTokenUtil) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtTokenUtil = jwtTokenUtil;
-    }
-
-    public String login(String email, String password) throws UserNotFoundException, InvalidCredentialsException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new InvalidCredentialsException("Invalid credentials");
-        }
-
-        return jwtTokenUtil.generateAccessToken(email);
-    }
-
-    public String generateRefreshToken(String email) {
-        //System.out.println("token: " + jwtTokenUtil.generateRefreshToken(email));
-        return jwtTokenUtil.generateRefreshToken(email);
-    }
-
-    public void blacklistToken(String token) {
-        jwtTokenUtil.blacklistToken(token);
-    }
-
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
-    }
-
-    public void registerUser(String email, String password) throws UserAlreadyExistsException {
-        if (userRepository.existsByEmail(email)) {
-            throw new UserAlreadyExistsException("User already exists");
-        }
-        String encodedPassword = passwordEncoder.encode(password);
-        User newUser = new User(email, encodedPassword); // ID 없이 생성
-        userRepository.save(newUser);
-    }
-}
-
- */

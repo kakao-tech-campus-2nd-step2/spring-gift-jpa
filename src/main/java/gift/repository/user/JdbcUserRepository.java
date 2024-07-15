@@ -1,5 +1,8 @@
 package gift.repository.user;
 
+
+
+/*
 import gift.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+
+
 
 @Repository
 public class JdbcUserRepository implements UserRepository {
@@ -82,3 +87,6 @@ public class JdbcUserRepository implements UserRepository {
         return count > 0;
     }
 }
+
+
+ */

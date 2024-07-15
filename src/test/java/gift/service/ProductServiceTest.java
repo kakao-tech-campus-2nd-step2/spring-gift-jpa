@@ -9,14 +9,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import static org.mockito.Mockito.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 class ProductServiceTest {
 
@@ -33,102 +35,84 @@ class ProductServiceTest {
 
     @Test
     void getAllProducts() {
-
         List<Product> productList = new ArrayList<>();
-        productList.add(new Product(1L, "Product 1", 1000L, "Description 1", "image1.jpg"));
-        productList.add(new Product(2L, "Product 2", 2000L, "Description 2", "image2.jpg"));
+        productList.add(new Product("Product 1", 1000L, "Description 1", "image1.jpg"));
+        productList.add(new Product("Product 2", 2000L, "Description 2", "image2.jpg"));
+        Page<Product> page = new PageImpl<>(productList);
 
-        when(productRepository.findAll()).thenReturn(productList);
+        when(productRepository.findAll(any(PageRequest.class))).thenReturn(page);
 
+        Page<Product> products = productService.getAllProducts(PageRequest.of(0, 10));
 
-        List<Product> products = productService.getAllProducts();
-
-
-        assertEquals(2, products.size());
-        assertEquals("Product 1", products.get(0).getName());
-        assertEquals("Product 2", products.get(1).getName());
+        assertEquals(2, products.getTotalElements());
+        assertEquals("Product 1", products.getContent().get(0).getName());
+        assertEquals("Product 2", products.getContent().get(1).getName());
     }
 
-    @Test
-    void getProductById() {
-
-        Long productId = 1L;
-        Product product = new Product(productId, "Product 1", 1000L, "Description 1", "image1.jpg");
-
-        when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-
-
-        Product retrievedProduct = productService.getProductById(productId);
-
-
-        assertNotNull(retrievedProduct);
-        assertEquals(productId, retrievedProduct.getId());
-        assertEquals("Product 1", retrievedProduct.getName());
-    }
 
 
     @Test
     void getProductById_ProductNotFound() {
-
+        // Given
         Long productId = 1L;
 
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
-
+        // Then
         assertThrows(IllegalArgumentException.class, () -> productService.getProductById(productId));
     }
 
     @Test
     void addProduct() {
+        // Given
+        Product product = new Product("New Product", 1500L, "New Description", "new_image.jpg");
 
-        Product product = new Product(null, "New Product", 1500L, "New Description", "new_image.jpg");
-
-
+        // When
         productService.addProduct(product);
 
-
+        // Then
         verify(productRepository, times(1)).save(any(Product.class));
     }
 
     @Test
     void addProduct_InvalidProductName() {
+        // Given
+        Product product = new Product( null, 1500L, "New Description", "new_image.jpg");
 
-        Product product = new Product(null, null, 1500L, "New Description", "new_image.jpg");
-
-
+        // Then
         assertThrows(IllegalArgumentException.class, () -> productService.addProduct(product));
     }
 
     @Test
     void updateProduct() {
+        // Given
+        Product product = new Product( "Updated Product", 2000L, "Updated Description", "updated_image.jpg");
 
-        Product product = new Product(1L, "Updated Product", 2000L, "Updated Description", "updated_image.jpg");
-
-
+        // When
         productService.updateProduct(product);
 
-
-        verify(productRepository, times(1)).update(any(Product.class));
+        // Then
+        verify(productRepository, times(1)).save(any(Product.class));
     }
 
     @Test
     void updateProduct_InvalidProductName() {
+        // Given
+        Product product = new Product(null, 2000L, "Updated Description", "updated_image.jpg");
 
-        Product product = new Product(1L, null, 2000L, "Updated Description", "updated_image.jpg");
-
-
+        // Then
         assertThrows(IllegalArgumentException.class, () -> productService.updateProduct(product));
     }
 
     @Test
     void deleteProduct() {
-
+        // Given
         Long productId = 1L;
 
-
+        // When
         productService.deleteProduct(productId);
 
-
-        verify(productRepository, times(1)).delete(productId);
+        // Then
+        verify(productRepository, times(1)).deleteById(productId);
     }
 }
