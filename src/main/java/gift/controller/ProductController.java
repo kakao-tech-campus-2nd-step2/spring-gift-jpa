@@ -72,7 +72,12 @@ public class ProductController {
             return "productForm";
         }
 
-        Product product = convertToEntity(productRequestDTO);
+        Product product = new Product.Builder()
+                .name(productRequestDTO.getName())
+                .price(productRequestDTO.getPrice())
+                .imageUrl(productRequestDTO.getImageUrl())
+                .build();
+
         productRepository.save(product);
         return "redirect:/api/products"; // 리디렉션 설정
     }
@@ -98,8 +103,13 @@ public class ProductController {
             return "productForm";
         }
 
-        updatedProductDTO.setId(id);
-        Product updatedProduct = convertToEntity(updatedProductDTO);
+        Product updatedProduct = new Product.Builder()
+                .id(id)
+                .name(updatedProductDTO.getName())
+                .price(updatedProductDTO.getPrice())
+                .imageUrl(updatedProductDTO.getImageUrl())
+                .build();
+
         productRepository.save(updatedProduct);
         return "redirect:/api/products"; // 리디렉션 설정
     }
@@ -110,22 +120,13 @@ public class ProductController {
         return "redirect:/api/products"; // 리디렉션 설정
     }
 
-    private Product convertToEntity(ProductRequestDTO productRequestDTO) {
-        Product product = new Product();
-        product.setId(productRequestDTO.getId());
-        product.setName(productRequestDTO.getName());
-        product.setPrice(productRequestDTO.getPrice());
-        product.setImageUrl(productRequestDTO.getImageUrl());
-        return product;
-    }
-
     private ProductRequestDTO convertToRequestDTO(Product product) {
-        ProductRequestDTO productRequestDTO = new ProductRequestDTO();
-        productRequestDTO.setId(product.getId());
-        productRequestDTO.setName(product.getName());
-        productRequestDTO.setPrice(product.getPrice());
-        productRequestDTO.setImageUrl(product.getImageUrl());
-        return productRequestDTO;
+        return new ProductRequestDTO(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getImageUrl()
+        );
     }
 
     private ProductResponseDTO convertToResponseDTO(Product product) {
