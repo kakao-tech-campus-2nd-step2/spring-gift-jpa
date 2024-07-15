@@ -1,7 +1,5 @@
 package gift.repository;
-
 import static org.assertj.core.api.Assertions.assertThat;
-
 import gift.product.entity.Product;
 import gift.product.repository.ProductRepository;
 import gift.wish.repository.WishRepository;
@@ -13,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
 
 @DataJpaTest
 public class ProductRepositoryTest {
@@ -47,6 +46,7 @@ public class ProductRepositoryTest {
 
     // then
     assertThat(foundProduct).isPresent();
+
     foundProduct.ifPresent(p -> {
       assertThat(p.getName()).isEqualTo("딸기 아사이");
       assertThat(p.getPrice()).isEqualTo(5900);

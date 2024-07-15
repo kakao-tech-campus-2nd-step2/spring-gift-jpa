@@ -1,5 +1,4 @@
 package gift.product.service;
-
 import gift.product.dto.ProductDto;
 import gift.product.entity.Product;
 import gift.product.repository.ProductRepository;
@@ -82,5 +81,24 @@ public class ProductService {
     if (product.getImageUrl() == null || product.getImageUrl().trim().isEmpty()) {
       throw new IllegalArgumentException("상품 이미지 URL은 비어 있을 수 없습니다.");
     }
+  }
+
+
+  private Product convertToEntity(ProductDto productDto) {
+    Product product = new Product();
+    product.setId(productDto.getId());
+    product.setName(productDto.getName());
+    product.setPrice(productDto.getPrice());
+    product.setImageUrl(productDto.getImageUrl());
+    return product;
+  }
+
+  private ProductDto convertToDto(Product product) {
+    return new ProductDto(
+        product.getId(),
+        product.getName(),
+        product.getPrice(),
+        product.getImageUrl()
+    );
   }
 }

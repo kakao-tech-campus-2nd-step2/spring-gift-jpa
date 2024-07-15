@@ -1,7 +1,6 @@
 package gift.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
 import gift.user.entity.User;
 import gift.user.repository.UserRepository;
 import java.util.Optional;
@@ -11,21 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class MemberRepositoryTest {
+public class UserRepositoryTest {
 
   @Autowired
-  private UserRepository memberRepository;
+  private UserRepository userRepository;
 
   @BeforeEach
   public void setUp() {
-    memberRepository.deleteAll();
+    userRepository.deleteAll();
   }
 
   private User createAndSaveUser(String email, String password) {
     User user = new User();
     user.setEmail(email);
     user.setPassword(password);
-    return memberRepository.save(user);
+    return userRepository.save(user);
   }
 
   @Test
@@ -34,7 +33,7 @@ public class MemberRepositoryTest {
     User member = createAndSaveUser("test@example.com", "password");
 
     // when
-    Optional<User> foundMember = memberRepository.findByEmail("test@example.com");
+    Optional<User> foundMember = userRepository.findByEmail("test@example.com");
 
     // then
     assertThat(foundMember).isPresent();
@@ -47,8 +46,8 @@ public class MemberRepositoryTest {
 
     // when
     member.setPassword("updatedPassword");
-    memberRepository.save(member);
-    Optional<User> updatedMember = memberRepository.findByEmail("update@example.com");
+    userRepository.save(member);
+    Optional<User> updatedMember = userRepository.findByEmail("update@example.com");
 
     // then
     assertThat(updatedMember).isPresent();
@@ -61,8 +60,8 @@ public class MemberRepositoryTest {
     User member = createAndSaveUser("delete@example.com", "password");
 
     // when
-    memberRepository.deleteByEmail("delete@example.com");
-    Optional<User> deletedMember = memberRepository.findByEmail("delete@example.com");
+    userRepository.deleteByEmail("delete@example.com");
+    Optional<User> deletedMember = userRepository.findByEmail("delete@example.com");
 
     // then
     assertThat(deletedMember).isNotPresent();
@@ -71,7 +70,7 @@ public class MemberRepositoryTest {
   @Test
   public void testFindByNonExistingEmail() {
     // when
-    Optional<User> foundMember = memberRepository.findByEmail("nonexistent@example.com");
+    Optional<User> foundMember = userRepository.findByEmail("nonexistent@example.com");
 
     // then
     assertThat(foundMember).isNotPresent();

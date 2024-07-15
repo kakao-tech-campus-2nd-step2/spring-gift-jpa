@@ -18,3 +18,4 @@ VALUES ((SELECT id FROM users WHERE email = 'user1@example.com'),
        ((SELECT id FROM users WHERE email = 'user3@example.com'),
         (SELECT id FROM product WHERE name = '딸기 아사이'));
 
+
