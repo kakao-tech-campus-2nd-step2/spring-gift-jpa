@@ -7,7 +7,6 @@ import gift.util.ImageStorageUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -15,7 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 @RestController
 @RequestMapping("/api/products")
@@ -28,8 +30,8 @@ public class ProductController {
 
     // 모든 상품 조회
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
+    public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
+        Page<Product> products = productService.getAllProducts(pageable);
         return ResponseEntity.ok(products);
     }
 
