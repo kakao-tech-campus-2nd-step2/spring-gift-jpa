@@ -1,14 +1,20 @@
 package gift.service;
 
 import gift.exception.ForbiddenWordException;
+import gift.exception.NonIntegerPriceException;
 import gift.exception.ProductNotFoundException;
 import gift.model.Product;
 import gift.repository.ProductRepository;
 import jakarta.validation.Valid;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,35 +38,40 @@ public class ProductService {
         return product.orElse(null);
     }
 
-
-    public boolean createProduct(@Valid Product product) {
+    public Product createProduct(@Valid Product product) throws NonIntegerPriceException {
         if (product.getName().contains("카카오")) {
             throw new ForbiddenWordException("상품 이름에 '카카오'가 포함된 경우 담당 MD와 협의가 필요합니다.");
         }
-        return productRepository.save(product) != null;
+        var priceValue = new BigDecimal(product.getPrice());
+        if (priceValue.scale() > 0 && priceValue.stripTrailingZeros().scale() > 0) {
+            throw new NonIntegerPriceException("상품 가격은 소수점이 없어야 합니다");
+        }
+        return productRepository.save(product);
     }
 
-    public boolean updateProduct(Long id, @Valid Product product) {
-        if (product.getName().contains("카카오")) {
+    public Product updateProduct(@Valid Product updatedProduct) {
+        Optional<Product> existingProduct = productRepository.findById(updatedProduct.getId());
+        if (updatedProduct.getName().contains("카카오")) {
             throw new ForbiddenWordException("상품 이름에 '카카오'가 포함된 경우 담당 MD와 협의가 필요합니다.");
         }
-        Optional<Product> existingProduct = productRepository.findById(id);
-        if (existingProduct.isPresent()) {
-            existingProduct.get().setName(product.getName());
-            existingProduct.get().setPrice(product.getPrice());
-            existingProduct.get().setImageUrl(product.getImageUrl());
-            return productRepository.save(existingProduct.get()) != null;
+        if (existingProduct.isEmpty()) {
+            throw new ProductNotFoundException("수정할 상품이 존재하지 않습니다");
         }
-        return false;
+
+        var product = existingProduct.get();
+        product.setName(updatedProduct.getName());
+        product.setPrice(updatedProduct.getPrice());
+        product.setImageUrl(updatedProduct.getImageUrl());
+        return productRepository.save(product);
     }
 
-    public boolean patchProduct(Long id, Map<String, Object> updates) {
+    public Product patchProduct(Long id, Map<String, Object> updates) {
         Optional<Product> existingProduct = productRepository.findById(id);
-        if (existingProduct.isPresent()) {
-            applyUpdates(existingProduct.orElse(null), updates);
-            return productRepository.save(existingProduct.get()) != null;
+        if (existingProduct.isEmpty()) {
+            throw new ProductNotFoundException("수정할 상품이 존재하지 않습니다.");
         }
-        return false;
+        applyUpdates(existingProduct.orElse(null), updates);
+        return productRepository.save(existingProduct.get());
     }
 
     public List<Optional<Product>> patchProducts(List<Map<String, Object>> updatesList) {
@@ -68,7 +79,7 @@ public class ProductService {
         for (Map<String, Object> updates : updatesList) {
             try {
                 Long id = ((Number) updates.get("id")).longValue();
-                if (patchProduct(id, updates)) {
+                if (patchProduct(id, updates) != null) {
                     updatedProducts.add(productRepository.findById(id));
                 }
             } catch (ProductNotFoundException | ForbiddenWordException ignored) {
@@ -108,5 +119,27 @@ public class ProductService {
     public boolean deleteProduct(Long id) {
         productRepository.deleteById(id);
         return productRepository.findById(id).isEmpty();
+    }
+
+    public Product updateProductByName(String name, @Valid Product updatedProduct) {
+        var existingProduct = productRepository.findByName(name);
+        if (existingProduct.isEmpty()) {
+            throw new ProductNotFoundException("수정할 상품이 존재하지 않습니다!");
+        }
+        var product = existingProduct.get();
+        product.setName(updatedProduct.getName());
+        product.setPrice(updatedProduct.getPrice());
+        product.setImageUrl(updatedProduct.getImageUrl());
+        return productRepository.save(product);
+    }
+
+    public Page<Product> getProductPages(int pageNumber) {
+        var pageable = PageRequest.of(pageNumber, 5, Sort.by("id"));
+        return productRepository.findAll(pageable);
+    }
+
+    public Page<Product> getProductList(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        return productRepository.findAll(pageable);
     }
 }

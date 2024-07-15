@@ -1,11 +1,10 @@
 package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import gift.model.Member;
+import gift.model.Product;
 import gift.model.Wish;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,57 +19,67 @@ class WishRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @BeforeEach
-    public void saveMember() {
-        var member = new Member("test@email.com", "test");
-        var savedMember = memberRepository.save(member);
-    }
+    @Autowired
+    private ProductRepository productRepository;
 
+    private Member member;
+    private Product product;
+
+    @BeforeEach
+    public void setUp() {
+        member = memberRepository.save(new Member("test@email.com", "test1234"));
+        product = productRepository.save(new Product("productName", 10000, "image.jpg"));
+    }
 
     @Test
     void saveWishTest() {
-        var expected = new Wish(memberRepository.findAll().getFirst().getId(), "상품명");
+        // given
+        Wish wish = new Wish(product, member);
 
-        var actual = wishRepository.save(expected);
-        assertAll(
-            () -> assertThat(actual).isNotNull(),
-            () -> assertThat(actual.getId()).isEqualTo(expected.getId())
-        );
+        // when
+        Wish savedWish = wishRepository.save(wish);
+
+        // then
+        assertThat(savedWish).isNotNull();
+        assertThat(savedWish).isEqualTo(wish);
     }
 
     @Test
-    void findWishByIdTest() {
-        var expected = new Wish(memberRepository.findAll().getFirst().getId(), "상품명");
+    void findWishByProductIdTest() {
+        // given
+        Wish wish = wishRepository.save(new Wish(product, member));
 
-        var actual = wishRepository.save(expected);
+        // when
+        var wishList = wishRepository.findByProductId(product.getId());
 
-        assertAll(
-            () -> {
-                assertTrue(wishRepository.findById(expected.getId()).isPresent());
-                assertThat(wishRepository.findById(expected.getId()).get()).isEqualTo(expected);
-            }
-        );
+        // then
+        assertThat(wishList).hasSize(1);
+        assertThat(wishList.getFirst()).isEqualTo(wish);
     }
 
     @Test
-    void findWishByMemberIdTest() {
-        var expected = new Wish(memberRepository.findAll().getFirst().getId(), "상품명");
-        wishRepository.save(expected);
+    void findWishByMemberTest() {
+        // given
+        Wish wish = wishRepository.save(new Wish(product, member));
 
-        var actual = wishRepository.findByMemberId(
-            memberRepository.findAll().getFirst().getId());
+        // when
+        var wishList = wishRepository.findByMember(member);
 
-        assertThat(actual.getFirst()).isEqualTo(expected);
+        // then
+        assertThat(wishList).hasSize(1);
+        assertThat(wishList.getFirst()).isEqualTo(wish);
     }
 
     @Test
-    void deleteWishByMemberIdAndId() {
-        var expected = new Wish(memberRepository.findAll().getFirst().getId(), "상품명");
-        var savedWish = wishRepository.save(expected);
+    void deleteWishByMemberIdAndIdTest() {
+        // given
+        Wish wish = wishRepository.save(new Wish(product, member));
 
-        var b = wishRepository.deleteByIdAndMemberId(savedWish.getId(),
-            memberRepository.findAll().getFirst().getId());
-        System.out.println(wishRepository.findAll());
-        assertTrue(wishRepository.findAll().isEmpty());
+        // when
+        int deletedCount = wishRepository.deleteByIdAndMember(wish.getId(), member);
+
+        // then
+        assertThat(deletedCount).isEqualTo(1);
+        assertThat(wishRepository.findById(wish.getId())).isEmpty();
     }
 }

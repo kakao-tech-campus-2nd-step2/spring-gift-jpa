@@ -1,43 +1,72 @@
 package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+
 import gift.model.Member;
-import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 public class MemberRepositoryTest {
+
     @Autowired
     private MemberRepository memberRepository;
-    @Test
-    void save() {
-        var expected = new Member("test@email.com", "mypassword");
-        var actual = memberRepository.save(expected);
-        assertThat(actual.getId()).isEqualTo(expected.getId());
+
+    private final String email = "test@email.com";
+    private final String password = "mypassword";
+
+    @BeforeEach
+    void setUp() {
+        memberRepository.deleteAll();
     }
 
     @Test
-    void findByEmail() {
-        var expected = new Member("test@email.com", "mypassword");
-        var savedMember = memberRepository.save(expected);
+    void save() {
+        // Given
+        var member = new Member(email, password);
 
-        var actual = memberRepository.findByEmail(savedMember.getEmail());
+        // When
+        memberRepository.save(member);
+
+        // Then
+        var savedMember = memberRepository.findAll().getFirst();
+        assertThat(savedMember).isNotNull();
         assertAll(
-            () -> {assertTrue(actual.isPresent());
-            assertThat(actual.get()).isEqualTo(expected);}
+            () -> assertThat(savedMember.getEmail()).isEqualTo(email),
+            () -> assertThat(savedMember.getPassword()).isEqualTo(password)
         );
     }
 
     @Test
-    void deleteTest(){
-        var expected = new Member("test@email.com", "mypassword");
-        var actual = memberRepository.save(expected);
-        memberRepository.delete(actual);
-        assertThat(memberRepository.findById(actual.getId())).isEqualTo(Optional.empty());
+    void findByEmail() {
+        // Given
+        var member = new Member(email, password);
+        memberRepository.save(member);
+
+        // When
+        var foundMember = memberRepository.findByEmail(email);
+
+        // Then
+        assertThat(foundMember).isPresent();
+        assertAll(
+            () -> assertThat(foundMember.get().getEmail()).isEqualTo(email),
+            () -> assertThat(foundMember.get().getPassword()).isEqualTo(password)
+        );
+    }
+
+    @Test
+    void deleteTest() {
+        // Given
+        var member = new Member(email, password);
+        memberRepository.save(member);
+
+        // When
+        memberRepository.delete(member);
+
+        // Then
+        assertThat(memberRepository.findAll()).isEmpty();
     }
 }

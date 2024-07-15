@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import gift.model.Product;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -14,52 +15,57 @@ class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
+    private String name = "product";
+    private int price = 10000;
+    private String imageUrl = "image.jpg";
 
-
-    @Test
-    void saveProductTest() {
-        var expected = new Product("newSample", 10000, "productNew.jpg");
-        var actual = productRepository.save(expected);
-        assertAll(
-            () -> assertThat(actual.getId()).isNotNull(),
-            () -> assertThat(actual.getName()).isEqualTo(expected.getName()),
-            () -> assertThat(actual.getPrice()).isEqualTo(expected.getPrice()),
-            () -> assertThat(actual.getImageUrl()).isEqualTo(expected.getImageUrl())
-        );
-        assertThat(actual).isEqualTo(expected);
+    @BeforeEach
+    void setUp() {
+        productRepository.deleteAll();
     }
 
     @Test
-    void findByIdTest() {
-        var expected = new Product("sampleName", 10000, "product.jpg");
-        var actual = productRepository.save(expected);
-        assertAll(
-            () -> assertThat(productRepository.findById(expected.getId()).isPresent()).isEqualTo(
-                true),
-            () -> {
-                var present = productRepository.findById(expected.getId()).isPresent();
-                if (present) {
-                    assertThat(productRepository.findById(expected.getId()).get()).isEqualTo(
-                        expected);
-                }
-            }
-        );
+    void saveProductTest() {
+        // Given
+        var product = new Product(name, price, imageUrl);
+
+        // When
+        productRepository.save(product);
+
+        // Then
+        var savedProduct = productRepository.findAll().getFirst();
+        assertThat(savedProduct).isEqualTo(product);
+    }
+
+    @Test
+    void findProductByName() {
+        // Given
+        var product = new Product(name, price, imageUrl);
+        productRepository.save(product);
+
+        // When
+        var foundProduct = productRepository.findByName(name);
+
+        // Then
+        assertTrue(foundProduct.isPresent());
+        assertThat(foundProduct.get()).isEqualTo(product);
     }
 
     @Test
     void deleteProductByIdTest() {
-        var expected = new Product("sampleName", 10000, "product.jpg");
-        var sample2 = new Product("sample2", 10200, "product2.jpg");
+        // Given
+        var product1 = new Product("sampleName", 10000, "product.jpg");
+        var product2 = new Product("sample2", 10200, "product2.jpg");
+        productRepository.save(product1);
+        productRepository.save(product2);
 
-        productRepository.save(expected);
-        productRepository.save(sample2);
+        // When
+        productRepository.deleteById(product1.getId());
 
-        productRepository.deleteById(expected.getId());
-
+        // Then
         assertAll(
-            () -> assertThat(productRepository.findById(expected.getId()).isPresent()).isFalse(),
-            ()->assertThat(productRepository.findAll().isEmpty()).isFalse()
+            () -> assertThat(productRepository.findById(product1.getId()).isPresent()).isFalse(),
+            () -> assertThat(productRepository.findAll().isEmpty()).isFalse()
         );
-
     }
 }
