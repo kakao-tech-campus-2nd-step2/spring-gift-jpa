@@ -7,6 +7,7 @@ import gift.model.Product;
 import gift.annotation.LoginMember;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -41,7 +42,7 @@ public class WishlistController {
     }
 
     @GetMapping
-    public String getWishlist(@LoginMember Member member, Model model, Pageable pageable) {
+    public String getWishlist(@LoginMember Member member, Model model, @PageableDefault(size = 5) Pageable pageable) {
         if (member == null) {
             return "redirect:/members/login";
         }

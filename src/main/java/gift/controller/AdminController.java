@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,7 +30,7 @@ public class AdminController {
     }
 
     @GetMapping
-    public String listProducts(Model model, Pageable pageable) {
+    public String listProducts(Model model, @PageableDefault(size = 5) Pageable pageable) {
         Page<Product> products = productService.findAllProducts(pageable);
         model.addAttribute("products", products);
         return "product_list";
