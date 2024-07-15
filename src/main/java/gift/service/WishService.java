@@ -11,6 +11,9 @@ import gift.repository.JpaUserRepository;
 import gift.repository.JpaWishRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +35,16 @@ public class WishService {
     @Transactional(readOnly = true)
     public WishListResponseDTO getAllWishes(Long userId) {
         List<WishResponseDTO> wishResponseDTOList = jpaWishRepository.findAllByUserId(userId)
+            .stream()
+            .map(WishResponseDTO::of)
+            .toList();
+        return new WishListResponseDTO(wishResponseDTOList);
+    }
+
+    @Transactional(readOnly = true)
+    public WishListResponseDTO getAllWishes(Long userId, int page, int size, String criteria) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(criteria));
+        List<WishResponseDTO> wishResponseDTOList = jpaWishRepository.findAllByUser(userId, pageable)
             .stream()
             .map(WishResponseDTO::of)
             .toList();

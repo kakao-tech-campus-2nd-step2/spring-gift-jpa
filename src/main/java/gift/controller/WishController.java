@@ -9,6 +9,7 @@ import gift.dto.responseDTO.WishListResponseDTO;
 import gift.dto.responseDTO.WishResponseDTO;
 import gift.service.AuthService;
 import gift.service.WishService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,6 +35,15 @@ public class WishController {
     @GetMapping()
     public ResponseEntity<SuccessBody<WishListResponseDTO>> getAllWishes(@LoginUser User user) {
         WishListResponseDTO wishListResponseDTO = wishService.getAllWishes(user.getId());
+        return ApiResponseGenerator.success(HttpStatus.OK, "위시리스트를 조회했습니다.", wishListResponseDTO);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<SuccessBody<WishListResponseDTO>> getAllWishPages(@LoginUser User user,
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "size", defaultValue = "0") int size,
+        @RequestParam(value = "criteria", defaultValue = "id") String criteria) {
+        WishListResponseDTO wishListResponseDTO = wishService.getAllWishes(user.getId(), page, size, criteria);
         return ApiResponseGenerator.success(HttpStatus.OK, "위시리스트를 조회했습니다.", wishListResponseDTO);
     }
 
