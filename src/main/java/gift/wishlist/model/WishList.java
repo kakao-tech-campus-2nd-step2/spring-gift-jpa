@@ -9,12 +9,14 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class WishList {
+public class WishList extends Product {
 
     @Id
-    private String wishlist_id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wishlist_seq")
+    @SequenceGenerator(name = "wishlist_seq", sequenceName = "wishlist_sequence", allocationSize = 1)
+    private Long wishListId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
@@ -25,10 +27,9 @@ public class WishList {
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> products = new ArrayList<>();
+    private String wishlist_id;
 
-    // 기본 생성자 (JPA에서 필요로 함)
     protected WishList() {
-        this.wishlist_id = UUID.randomUUID().toString();
     }
 
     // 생성자
@@ -57,7 +58,7 @@ public class WishList {
         return products;
     }
 
-    public void addProduct(Product product) {
+    public void addProduct(WishList product) {
         products.add(product);
     }
 

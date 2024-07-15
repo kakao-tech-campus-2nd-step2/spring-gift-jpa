@@ -5,6 +5,7 @@ import gift.wishlist.model.WishList;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -20,40 +21,36 @@ public class Member {
     @Column(nullable = false, columnDefinition = "BINARY(16)")
     private String password;
 
-    // member 와 wishlist 간의 일대다 관계 매핑
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<WishList> wishLists = new ArrayList<>();
+    // 일대일로 수정
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private WishList wishList;
 
     public Member(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public Member() {
-    }
-
     public void addWishList(String name, String wishlist_id) {
         Product product = new Product(name); // Product 객체 생성
         WishList wishList = new WishList(this, product);
-        wishLists.add(wishList);
+        wishList.addProduct(wishList);
     }
 
     public List<WishList> getWishLists() {
-        return new ArrayList<>(wishLists);
+        return new ArrayList<>(Collections.singleton(wishList));
     }
 
     public Long getMemberId() {
         return member_id;
     }
 
-    // 새 이메일로 업데이트된 Member 인스턴스를 반환
-    public void withEmail(String newEmail) {
-        new Member(newEmail, this.password);
+    /* (동사로 시작) 컨벤션에 맞게 메소드명 수정 */
+    public Member updateEmail(String newEmail) {
+        return new Member(newEmail, this.password); // 새 이메일로 업데이트된 Member 인스턴스를 반환
     }
 
-    // 새 비밀번호로 업데이트된 Member 인스턴스를 반환
-    public void withPassword(String newPassword) {
-        new Member(this.email, newPassword);
+    public Member updatePassword(String newPassword) {
+        return new Member(this.email, newPassword); // 새 비밀번호로 업데이트된 Member 인스턴스를 반환
     }
 
     public String getPassword() {
@@ -62,5 +59,9 @@ public class Member {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setWishList(WishList wishList) {
+        this.wishList = wishList;
     }
 }

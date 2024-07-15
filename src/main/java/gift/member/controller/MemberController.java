@@ -23,8 +23,8 @@ public class MemberController {
     }
 
     @GetMapping("/{member_id}")
-    public Member getMemberById(@PathVariable Long id) {
-        return memberService.findById(id).orElseThrow(() -> new IllegalArgumentException("Member not found"));
+    public Member getMemberById(@PathVariable Long member_id) {
+        return memberService.findById(member_id).orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
     }
 
     @PutMapping("/{product_id}/email")

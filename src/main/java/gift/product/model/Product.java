@@ -9,8 +9,13 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long product_id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private int price;
+
+    @Column(nullable = true)
     private String imgUrl;
 
     // JPA에서 필요로 하는 기본 생성자
@@ -44,10 +49,6 @@ public class Product {
         return imgUrl;
     }
 
-    // 업데이트 메서드
-    public void update(String name, int price, String imgUrl) {
-        this.name = name;
-        this.price = price;
-        this.imgUrl = imgUrl;
+    public void update(String name, int price, String s) {
     }
 }
