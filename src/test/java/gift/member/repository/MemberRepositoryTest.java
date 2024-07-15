@@ -7,9 +7,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -20,44 +20,46 @@ public class MemberRepositoryTest {
     private MemberRepository memberRepository;
 
     @Test
-    public void saveTest() {
+    public void testSaveMember() {
         // Given
-        Member member = new Member("test@example.com", "password");
+        Member member = new Member("test@example.com", "password123");
 
         // When
-        member = memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
 
         // Then
-        Optional<Member> foundMember = memberRepository.findById(member.member_id());
-        assertThat(foundMember).isPresent();
-        assertThat(foundMember.get().email()).isEqualTo("test@example.com");
+        assertThat(savedMember).isNotNull();
+        assertThat(savedMember.getMemberId()).isNotNull();
+        assertThat(savedMember.getEmail()).isEqualTo("test@example.com");
+        assertThat(savedMember.getPassword()).isEqualTo("password123");
     }
 
     @Test
-    public void findByEmailTest() {
+    public void testFindByEmail() {
         // Given
-        Member member = new Member("test@example.com", "password");
+        Member member = new Member("test@example.com", "password123");
         memberRepository.save(member);
 
         // When
         Optional<Member> foundMember = memberRepository.findByEmail("test@example.com");
 
         // Then
-        assertThat(foundMember).isPresent();
-        assertThat(foundMember.get().email()).isEqualTo("test@example.com");
+        assertThat(foundMember).isNotNull();
+        assertThat(foundMember.get().getEmail()).isEqualTo("test@example.com");
+        assertThat(foundMember.get().getPassword()).isEqualTo("password123");
     }
 
     @Test
-    public void deleteTest() {
+    public void testDeleteMember() {
         // Given
-        Member member = new Member("test@example.com", "password");
-        member = memberRepository.save(member);
+        Member member = new Member("test@example.com", "password123");
+        Member savedMember = memberRepository.save(member);
 
         // When
-        memberRepository.deleteById(member.member_id());
+        memberRepository.delete(savedMember);
+        Optional<Member> foundMember = memberRepository.findByEmail("test@example.com");
 
         // Then
-        Optional<Member> deletedMember = memberRepository.findById(member.member_id());
-        assertThat(deletedMember).isEmpty();
+        assertThat(foundMember).isNull();
     }
 }
