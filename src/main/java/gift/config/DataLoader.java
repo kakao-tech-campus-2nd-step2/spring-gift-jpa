@@ -17,7 +17,7 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        for (int i = 3; i <= 10; i++) {
+        for (int i = 3; i <= 15; i++) {
             Product product = new Product.ProductBuilder()
                 .name("Product" + i)
                 .price(BigDecimal.valueOf(10.00 * i))
