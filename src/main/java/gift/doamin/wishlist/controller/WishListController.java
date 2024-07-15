@@ -2,7 +2,6 @@ package gift.doamin.wishlist.controller;
 
 import gift.doamin.wishlist.dto.WishForm;
 import gift.doamin.wishlist.dto.WishParam;
-import gift.doamin.wishlist.entity.Wish;
 import gift.doamin.wishlist.service.WishListService;
 import jakarta.validation.Valid;
 import java.security.Principal;

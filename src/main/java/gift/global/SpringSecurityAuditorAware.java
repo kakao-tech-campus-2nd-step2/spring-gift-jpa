@@ -1,6 +1,5 @@
 package gift.global;
 
-import java.security.Principal;
 import java.util.Optional;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
