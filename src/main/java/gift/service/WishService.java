@@ -42,8 +42,8 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public WishListResponseDTO getAllWishes(Long userId, int page, String criteria) {
-        Pageable pageable = PageRequest.of(page, 8, Sort.by(criteria));
+    public WishListResponseDTO getAllWishes(Long userId, int page, int size, String criteria) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(criteria));
         List<WishResponseDTO> wishResponseDTOList = jpaWishRepository.findAllByUser(userId, pageable)
             .stream()
             .map(WishResponseDTO::of)

@@ -34,8 +34,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductListResponseDTO getAllProducts(int page, String criteria) {
-        Pageable pageable = PageRequest.of(page, 8, Sort.by(criteria));
+    public ProductListResponseDTO getAllProducts(int page, int size, String criteria) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(criteria));
         List<ProductResponseDTO> productResponseDTOList = jpaProductRepository.findAll(pageable)
             .stream()
             .map(ProductResponseDTO::of)
