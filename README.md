@@ -24,3 +24,11 @@
 ## step 2
 
 - JPA test 진행
+
+---
+
+## step 3
+
+- Pagination 구현 및 적용
+  - [x] Product
+  - [x] Wish

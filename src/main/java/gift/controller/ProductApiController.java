@@ -3,11 +3,13 @@ package gift.controller;
 import gift.domain.model.dto.ProductAddRequestDto;
 import gift.domain.model.dto.ProductResponseDto;
 import gift.domain.model.dto.ProductUpdateRequestDto;
+import gift.domain.model.enums.ProductSortBy;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,8 +45,10 @@ public class ProductApiController {
     //    전체 상품 조회
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponseDto> getAllProducts() {
-        return productService.getAllProduct();
+    public Page<ProductResponseDto> getAllProducts(
+        @RequestParam(defaultValue = "0") @Min(value = 0, message = "페이지 번호는 0 이상이어야 합니다.") int page,
+        @RequestParam(defaultValue = "ID_DESC") ProductSortBy sortBy) {
+        return productService.getAllProducts(page, sortBy);
     }
 
     //    상품 추가

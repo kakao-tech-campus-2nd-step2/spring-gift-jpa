@@ -5,13 +5,16 @@ import gift.domain.model.dto.WishUpdateRequestDto;
 import gift.domain.model.entity.Product;
 import gift.domain.model.entity.User;
 import gift.domain.model.entity.Wish;
+import gift.domain.model.enums.WishSortBy;
 import gift.domain.repository.WishRepository;
 import gift.exception.DuplicateWishItemException;
 import gift.exception.NoSuchWishException;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.stream.Collectors;
 
 @Service
 public class WishService {
@@ -19,6 +22,7 @@ public class WishService {
     private final WishRepository wishRepository;
     private final ProductService productService;
     private final UserService userService;
+    private static final int PAGE_SIZE = 10;
 
     public WishService(WishRepository wishRepository, ProductService productService,
         UserService userService) {
@@ -28,10 +32,13 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public List<WishResponseDto> getProductsByUserEmail(String email) {
-        return wishRepository.findByUserEmail(email).stream()
-            .map(this::convertToWishResponseDto)
-            .collect(Collectors.toList());
+    public Page<WishResponseDto> getWishes(String email, int page, WishSortBy sortBy) {
+        Sort sort = sortBy.getSort();
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
+
+        Page<Wish> wishPage = wishRepository.findByUserEmail(email, pageable);
+
+        return wishPage.map(this::convertToWishResponseDto);
     }
 
     @Transactional
@@ -49,14 +56,14 @@ public class WishService {
     }
 
     @Transactional
-    public void deleteWishProduct(String email, Long productId) {
+    public void deleteWish(String email, Long productId) {
         productService.validateExistProductId(productId);
         validateExistWishProduct(email, productId);
         wishRepository.deleteByUserEmailAndProductId(email, productId);
     }
 
     @Transactional
-    public WishResponseDto updateWishProduct(String email,
+    public WishResponseDto updateWish(String email,
         WishUpdateRequestDto wishUpdateRequestDto) {
         productService.validateExistProductId(wishUpdateRequestDto.getProductId());
         Wish wish = validateExistWishProduct(email, wishUpdateRequestDto.getProductId());

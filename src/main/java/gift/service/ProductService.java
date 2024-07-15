@@ -3,20 +3,24 @@ package gift.service;
 import gift.domain.model.dto.ProductAddRequestDto;
 import gift.domain.model.dto.ProductResponseDto;
 import gift.domain.model.dto.ProductUpdateRequestDto;
+import gift.domain.model.enums.ProductSortBy;
 import gift.domain.repository.ProductRepository;
 import gift.domain.model.entity.Product;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private static final int PAGE_SIZE = 10;
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -30,10 +34,13 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getAllProduct() {
-        return productRepository.findAll().stream()
-            .map(this::convertToResponseDto)
-            .collect(Collectors.toList());
+    public Page<ProductResponseDto> getAllProducts(int page, ProductSortBy sortBy) {
+        Sort sort = sortBy.getSort();
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
+
+        Page<Product> productPage = productRepository.findAllProducts(pageable);
+
+        return productPage.map(this::convertToResponseDto);
     }
 
     @Transactional

@@ -4,11 +4,13 @@ import gift.config.auth.LoginUser;
 import gift.domain.model.entity.User;
 import gift.domain.model.dto.WishResponseDto;
 import gift.domain.model.dto.WishUpdateRequestDto;
+import gift.domain.model.enums.WishSortBy;
 import gift.service.WishService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,8 +36,10 @@ public class WishController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<WishResponseDto> getWishes(@LoginUser User user) {
-        return wishService.getProductsByUserEmail(user.getEmail());
+    public Page<WishResponseDto> getWishes(@LoginUser User user,
+        @RequestParam(defaultValue = "0") @Min(value = 0, message = "페이지 번호는 0 이상이어야 합니다.") int page,
+        @RequestParam(defaultValue = "ID_DESC") WishSortBy sortBy) {
+        return wishService.getWishes(user.getEmail(), page, sortBy);
     }
 
     @PostMapping("/{productId}")
@@ -51,9 +56,9 @@ public class WishController {
     }
 
     @PutMapping
-    public ResponseEntity<Map<String, Object>> updateWishProduct(
+    public ResponseEntity<Map<String, Object>> updateWish(
         @Valid @RequestBody WishUpdateRequestDto wishUpdateRequestDto, @LoginUser User user) {
-        WishResponseDto wishedProduct = wishService.updateWishProduct(user.getEmail(),
+        WishResponseDto wishedProduct = wishService.updateWish(user.getEmail(),
             wishUpdateRequestDto);
 
         Map<String, Object> response = new HashMap<>();
@@ -66,7 +71,7 @@ public class WishController {
 
     @DeleteMapping("/{productId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteWishProduct(@PathVariable Long productId, @LoginUser User user) {
-        wishService.deleteWishProduct(user.getEmail(), productId);
+    public void deleteWish(@PathVariable Long productId, @LoginUser User user) {
+        wishService.deleteWish(user.getEmail(), productId);
     }
 }
