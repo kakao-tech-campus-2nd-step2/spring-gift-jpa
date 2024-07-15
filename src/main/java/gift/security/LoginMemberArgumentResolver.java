@@ -1,7 +1,6 @@
 package gift.security;
 
-import gift.entity.Member;
-import gift.service.MemberService;
+import gift.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -12,10 +11,10 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-  private final MemberService memberService;
+  private final UserService memberService;
 
   @Autowired
-  public LoginMemberArgumentResolver(MemberService memberService) {
+  public LoginMemberArgumentResolver(UserService memberService) {
     this.memberService = memberService;
   }
 

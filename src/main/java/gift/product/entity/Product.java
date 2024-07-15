@@ -1,10 +1,10 @@
 package gift.product.entity;
+import gift.product.dto.ProductDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -30,10 +30,26 @@ public class Product {
   @Min(value = 1, message = "가격은 양수여야 합니다.")
   @Column(name = "price", nullable = false)
   private int price;
-
-  @NotBlank(message = "이미지 URL을 입력해야 합니다.")
-  @Column(name = "imageUrl", nullable = false)
+  @Column(name = "image_url", nullable = false)
   private String imageUrl;
+
+  public static Product fromDto(ProductDto productDto) {
+    Product product = new Product();
+    product.setId(productDto.getId());
+    product.setName(productDto.getName());
+    product.setPrice(productDto.getPrice());
+    product.setImageUrl(productDto.getImageUrl());
+    return product;
+  }
+
+  public ProductDto toDto() {
+    return new ProductDto(
+        this.getId(),
+        this.getName(),
+        this.getPrice(),
+        this.getImageUrl()
+    );
+  }
 
 
   public Long getId() {

@@ -12,7 +12,7 @@ public class Wish {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @NotNull
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
