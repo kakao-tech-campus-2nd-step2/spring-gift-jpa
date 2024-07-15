@@ -7,6 +7,8 @@ import gift.model.Product;
 import gift.model.Wish;
 import gift.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +27,9 @@ public class WishService {
         this.productService = productService;
     }
 
-    public List<WishDTO> getWishesByMemberId(Long memberId) {
-        return wishRepository.findByMemberId(memberId).stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public Page<WishDTO> getWishesByMemberId(Long memberId, Pageable pageable) {
+        return wishRepository.findByMemberId(memberId, pageable)
+                .map(this::convertToDTO);
     }
 
     @Transactional
