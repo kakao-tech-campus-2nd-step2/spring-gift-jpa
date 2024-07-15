@@ -14,10 +14,10 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long member_id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     private String password;
 
     // member 와 wishlist 간의 일대다 관계 매핑
