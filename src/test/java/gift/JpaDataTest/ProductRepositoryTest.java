@@ -1,12 +1,12 @@
 package gift.JpaDataTest;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import gift.domain.product.JpaProductRepository;
 import gift.domain.product.Product;
 import gift.domain.product.ProductService;
-import gift.domain.product.JpaProductRepository;
-
 import gift.global.exception.BusinessException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -18,9 +18,12 @@ import jdk.jfr.Description;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,7 +69,8 @@ public class ProductRepositoryTest {
         Product product = new Product("아이스 카카오 라떼 T", 4500, "https://example.com/image.jpg");
 
         // when, then
-        assertThrows(ConstraintViolationException.class, () -> productRepository.saveAndFlush(product));
+        assertThrows(ConstraintViolationException.class,
+            () -> productRepository.saveAndFlush(product));
     }
 
     @Test
@@ -116,13 +120,13 @@ public class ProductRepositoryTest {
     @Test
     @Description("상품 삭제")
     void delete() {
-            // when
-            Product savedProduct = productRepository.saveAndFlush(product1);
-            productRepository.deleteById(savedProduct.getId());
+        // when
+        Product savedProduct = productRepository.saveAndFlush(product1);
+        productRepository.deleteById(savedProduct.getId());
 
-            // then
-            Optional<Product> findProduct = productRepository.findById(savedProduct.getId());
-            assertThat(findProduct.isEmpty()).isEqualTo(true);
+        // then
+        Optional<Product> findProduct = productRepository.findById(savedProduct.getId());
+        assertThat(findProduct.isEmpty()).isEqualTo(true);
     }
 
     @Test
@@ -142,9 +146,32 @@ public class ProductRepositoryTest {
         assertThat(products.size()).isEqualTo(0);
     }
 
+    @Test
+    @Description("정상 페이징 확인")
+    void testPagingSuccess() {
+        // given
+        productRepository.saveAndFlush(product1);
+        productRepository.saveAndFlush(product2);
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Direction.ASC, "price"));
+        clear();
+
+        // when
+        Page<Product> products = productRepository.findAll(pageRequest);
+        System.out.println("products = " + products);
+
+        // then
+        assertAll(
+            () -> assertThat(products.getTotalElements()).isEqualTo(2), // 전체 Product 개수
+            () -> assertThat(products.getTotalPages()).isEqualTo(1), // 전체 페이지 개수
+            () -> assertThat(products.getNumber()).isEqualTo(pageRequest.getPageNumber()), // 현재 페이지 번호
+            () -> assertThat(products.getSize()).isEqualTo(pageRequest.getPageSize()) // 페이지당 보여지는 Product 개수
+        );
+    }
+
     private void flush() {
         entityManager.flush();
     }
+
     private void clear() {
         entityManager.clear();
     }
