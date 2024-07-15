@@ -86,4 +86,13 @@ public class CartItemService {
         cartItemRepository.deleteByUserIdAndProductId(userId, productId);
     }
 
+    /**
+     * 장바구니 상품 수량 수정
+     */
+    @Transactional
+    public int updateCartItem(Long userId, Long productId, int count) {
+        CartItem findCartItem = cartItemRepository.findByUserIdAndProductId(userId, productId).orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, "해당 상품이 존재하지 않습니다."));
+        findCartItem.updateCount(count); // 수량 수정
+        return count;
+    }
 }

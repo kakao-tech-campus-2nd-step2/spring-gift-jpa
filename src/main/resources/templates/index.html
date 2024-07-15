@@ -287,10 +287,11 @@
       }
     })
     .then(function (response) {
-      alert(response.data.message);
+      alert("장바구니에 추가되었습니다. 현재 장바구니에 담긴 개수: " + response.data.data);
     })
     .catch(function (error) {
-      alert(error.response.data.message);
+      alert("로그인이 필요합니다.");
+      window.location.href = "/users/login";
     });
   }
 
