@@ -28,19 +28,10 @@ public class ProductService {
         this.userRepository = userRepository;
     }
 
-    public List<ProductResponce> getProducts() {
-        List<ProductResponce> productResponces = productRepository.findAll()
-                .stream()
-                .map(product -> new ProductResponce(product)) //스트림 요소를 다른 형태로 바꾸는 메서드
-                .collect(Collectors.toList()); //변환된 요소 각각을 리스트로~!
 
-        return productResponces;
-    }
-
-    public Page<ProductResponce> getProductPage(int pageNum,int productNum) {
-        Pageable pageable = PageRequest.of(pageNum, productNum);
+    public Page<ProductResponce> getProductPage(Pageable pageable) {
         Page<ProductResponce> productPage = productRepository.findAll(pageable)
-                .map(product -> new ProductResponce(product));
+                .map(ProductResponce::new);
         return productPage;
     }
 

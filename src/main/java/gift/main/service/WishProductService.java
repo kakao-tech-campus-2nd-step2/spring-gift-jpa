@@ -31,20 +31,9 @@ public class WishProductService {
         this.userRepository = userRepository;
     }
 
-    public List<WishProductResponce> getWishProducts(Long userId) {
-        List<WishProductResponce> wishProducts = wishProductRepository.findAllByUserId(userId)
-                .orElseGet(() -> List.of())
-                .stream()
-                .map((wishProduct) -> new WishProductResponce(wishProduct))
-                .collect(Collectors.toList());
 
-        return wishProducts;
-
-    }
-
-    public Page<WishProductResponce> getWishProductPage(Long userId, int pageNum,int productNum) {
-        Pageable pageable = PageRequest.of(pageNum, productNum);
-        Page<WishProductResponce> wishProductResponcePage = wishProductRepository.findAllByUserId(userId, pageable)
+    public Page<WishProductResponce> getWishProductPage(UserVo sessionUser,Pageable pageable) {
+        Page<WishProductResponce> wishProductResponcePage = wishProductRepository.findAllByUserId(sessionUser.getId(), pageable)
                 .map(wishProduct -> new WishProductResponce(wishProduct));
 
         return wishProductResponcePage;
