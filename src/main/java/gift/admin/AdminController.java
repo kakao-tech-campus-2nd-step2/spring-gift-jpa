@@ -4,12 +4,14 @@ import gift.product.dto.ProductDto;
 import gift.product.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -22,15 +24,26 @@ public class AdminController {
     }
 
     @GetMapping("/products/list")
-    public String listProducts(Model model) {
-        List<ProductDto> products = productService.findAll();
-        model.addAttribute("products", products);
+    public String listProducts(
+            @RequestParam(defaultValue = "0") int page, // 쿼리 파라미터 page를 받아 페이지 번호 설정, 기본값은 0
+            @RequestParam(defaultValue = "10") int size, // 쿼리 파라미터 size를 받아 페이지 크기 설정, 기본값은 10
+            @RequestParam(defaultValue = "name,asc") String[] sort, Model model) // 뷰에 데이터를 전달하기 위한 모델 객체
+    {
+        Sort.Direction direction = Sort.Direction.fromString(sort[1]); // sort 배열의 두 번째 요소 정렬 방향을 Sort.Direction 객체로 변환
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0])); // 페이지 번호, 페이지 크기, 정렬 기준 및 방향 -> Pageable 객체 생성
+
+        Page<ProductDto> productPage = productService.findAll(pageable);
+        model.addAttribute("상품 목록", productPage.getContent()); // 현재 페이지의 상품 목록을 모델에 추가
+        model.addAttribute("현재 페이지", page); // 현재 페이지 번호를 모델에 추가
+        model.addAttribute("전체 페이지", productPage.getTotalPages()); // 총 페이지 수를 모델에 추가
+        model.addAttribute("전체 항목", productPage.getTotalElements()); // 총 항목 수를 모델에 추가
+
         return "list"; // list.html 파일 보여주기
     }
 
     @GetMapping("/products/view/{product_id}")
-    public String viewProduct(@PathVariable Long id, Model model) {
-        ProductDto product = productService.findById(id);
+    public String viewProduct(@PathVariable Long product_id, Model model) {
+        ProductDto product = productService.findById(product_id);
         model.addAttribute("product", product);
         return "view"; // view.html 파일 보여주기
     }
