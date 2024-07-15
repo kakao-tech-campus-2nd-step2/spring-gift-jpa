@@ -3,6 +3,9 @@ package gift.controller;
 import gift.dto.ProductDTO;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,8 +22,10 @@ public class ProductPageController {
     }
 
     @GetMapping
-    public String viewHomePage(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
+    public String viewHomePage(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, Model model) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> productPage = productService.getAllProducts(pageable);
+        model.addAttribute("productPage", productPage);
         return "index";
     }
 
