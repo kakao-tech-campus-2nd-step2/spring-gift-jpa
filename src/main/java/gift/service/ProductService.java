@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,9 +48,9 @@ public class ProductService {
             .collect(Collectors.toList());
     }
 
-    public List<ProductDTO> getAllProducts(Pageable pageable) {
-        var productEntities = productRepository.findAll(pageable).toList();
-        return productEntities.stream().map(this::toProductDTO).toList();
+    public Page<ProductDTO> getAllProducts(Pageable pageable) {
+        Page<ProductEntity> productEntities = productRepository.findAll(pageable);
+        return productEntities.map(this::toProductDTO);
     }
 
     // Read(단일 상품) - getProduct()

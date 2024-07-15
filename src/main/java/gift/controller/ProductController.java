@@ -6,6 +6,7 @@ import gift.service.ProductService.ProductServiceStatus;
 import java.util.Collection;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -37,11 +38,11 @@ public class ProductController {
 
     // 전체 상품 조회(Read)
     @GetMapping
-    public ResponseEntity<Collection<ProductDTO>> selectAllProducts(
+    public ResponseEntity<Page<ProductDTO>> selectAllProducts(
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Collection<ProductDTO> products = productService.getAllProducts(pageable);
+        Page<ProductDTO> products = productService.getAllProducts(pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
