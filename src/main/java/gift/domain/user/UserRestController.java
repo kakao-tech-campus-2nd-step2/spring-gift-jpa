@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserRestController {
 
     private final UserService userService;
@@ -25,7 +25,7 @@ public class UserRestController {
     /**
      * 회원 가입
      */
-    @PostMapping("/users")
+    @PostMapping
     public ResponseEntity<SimpleResultResponseDto> join(@Valid @ModelAttribute UserDTO userDTO) {
         userService.join(userDTO);
 
@@ -35,7 +35,7 @@ public class UserRestController {
     /**
      * 회원 로그인
      */
-    @PostMapping("/users/login")
+    @PostMapping("/login")
     public ResponseEntity<SimpleResultResponseDto> login(@Valid @RequestBody UserDTO userDTO) {
         String jwt = userService.login(userDTO);
 
