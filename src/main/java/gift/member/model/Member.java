@@ -64,4 +64,5 @@ public class Member {
     public void setWishList(WishList wishList) {
         this.wishList = wishList;
     }
+
 }

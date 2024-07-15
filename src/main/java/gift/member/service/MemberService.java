@@ -46,28 +46,28 @@ public class MemberService {
     }
 
     // READ (FIND BY ID)
-    public Optional<Member> findById(Long memberId) {
-        return memberRepository.findById(memberId);
+    public Optional<Member> findById(Long member_id) {
+        return memberRepository.findById(member_id);
     }
 
     // UPDATE EMAIL
-    public Member updateEmail(Long memberId, String newEmail) {
-        Member member = memberRepository.findById(memberId)
+    public Member updateEmail(Long member_id, String newEmail) {
+        Member member = memberRepository.findById(member_id)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
-        member.withEmail(newEmail);
+        member.updateEmail(newEmail);
         return memberRepository.save(member);
     }
 
-    // UPDATE PASSWORD
-    public Member updatePassword(Long memberId, String newPassword) {
-        Member member = memberRepository.findById(memberId)
+    // 패스워드 update
+    public Member updatePassword(Long member_id, String newPassword) {
+        Member member = memberRepository.findById(member_id)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
-        member.withPassword(passwordEncoder.encode(newPassword));
+        member.updatePassword(passwordEncoder.encode(newPassword));
         return memberRepository.save(member);
     }
 
-    // DELETE
-    public void deleteMember(Long memberId) {
-        memberRepository.deleteById(memberId);
+    // 회원 삭제
+    public void deleteMember(Long member_id) {
+        memberRepository.deleteById(member_id);
     }
 }
