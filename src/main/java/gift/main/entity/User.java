@@ -20,7 +20,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-//    @Enumerated(EnumType.ORDINAL)
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -55,7 +54,7 @@ public class User {
         this.name = userJoinRequest.name();
         this.email = userJoinRequest.email();
         this.password = userJoinRequest.password();
-        this.role = Role.valueOf(userJoinRequest.role());
+        this.role = userJoinRequest.role();
     }
 
     public User(String name, String email, String password, String role) {
