@@ -2,6 +2,8 @@ package gift.service;
 
 import gift.domain.Product;
 import gift.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -16,6 +18,10 @@ public class ProductService {
 
     public List<Product> findAllProducts() {
         return productRepository.findAll();
+    }
+
+    public Page<Product> findAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     public Product createProduct(Product product) {
