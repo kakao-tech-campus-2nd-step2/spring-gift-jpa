@@ -51,18 +51,11 @@ public class ProductService {
         String searchValue,
         Pageable pageable
     ) {
-        Page<Product> productPage;
-        switch (searchType) {
-            case NAME:
-                productPage = productRepository.findByNameContaining(searchValue, pageable);
-                break;
-            case PRICE:
-                productPage = productRepository.findAllOrderByPrice(pageable);
-                break;
-            case ALL:
-            default:
-                productPage = productRepository.findAll(pageable);
-        }
+        Page<Product> productPage = switch (searchType) {
+            case NAME -> productRepository.findByNameContaining(searchValue, pageable);
+            case PRICE -> productRepository.findAllOrderByPrice(pageable);
+            default -> productRepository.findAll(pageable);
+        };
 
         var content = productPage.getContent().stream()
             .map(ProductResponse.Info::from)
