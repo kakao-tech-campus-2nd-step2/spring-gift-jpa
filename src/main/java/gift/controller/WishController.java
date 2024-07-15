@@ -9,6 +9,8 @@ import gift.service.WishService;
 import gift.util.LoginMember;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,12 @@ public class WishController {
     @GetMapping
     public ResponseEntity<List<Wish>> getWishes(@LoginMember Member member) {
         List<Wish> wishes = wishService.getWishesByMemberId(member.getId());
+        return ResponseEntity.ok(wishes);
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<Page<Wish>> getPagedWishes(@LoginMember Member member, Pageable pageable) {
+        Page<Wish> wishes = wishService.getWishesByMemberId(member.getId(), pageable);
         return ResponseEntity.ok(wishes);
     }
 
