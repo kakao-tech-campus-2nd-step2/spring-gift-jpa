@@ -1,7 +1,6 @@
-package gift.util;
+package gift.config;
 
 import gift.auth.jwt.JwtProvider;
-import gift.domain.user.dao.UserDao;
 import gift.domain.user.dao.UserJpaRepository;
 import gift.domain.user.entity.User;
 import gift.exception.InvalidAuthException;

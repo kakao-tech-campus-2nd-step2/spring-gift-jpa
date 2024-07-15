@@ -16,6 +16,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -73,7 +76,7 @@ class WishlistJpaRepositoryTest {
         WishItem savedWishItem2 = wishlistJpaRepository.save(wishItem2);
 
         // when
-        List<WishItem> wishlist = wishlistJpaRepository.findAllByUserId(savedUser.getId());
+        List<WishItem> wishlist = wishlistJpaRepository.findAllByUserId(savedUser.getId(), PageRequest.of(0, 5)).getContent();
 
         // then
         assertAll(
@@ -130,5 +133,55 @@ class WishlistJpaRepositoryTest {
         // then
         Optional<WishItem> deletedProduct = wishlistJpaRepository.findById(saved.getId());
         assertThat(deletedProduct).isEmpty();
+    }
+
+    @Test
+    @DisplayName("위시리스트 사용자 ID로 삭제 테스트")
+    void deleteAllByUserId() {
+        // given
+        User user = new User(null, "testUser", "test@test.com", "test123", Role.USER);
+        Product product1 = new Product(null, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+        Product product2 = new Product(null, "탕종종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+
+        User savedUser = userJpaRepository.save(user);
+        Product savedProduct1 = productJpaRepository.save(product1);
+        Product savedProduct2 = productJpaRepository.save(product2);
+
+        WishItem wishItem1 = new WishItem(null, savedUser, savedProduct1);
+        WishItem saved1 = wishlistJpaRepository.save(wishItem1);
+        WishItem wishItem2 = new WishItem(null, savedUser, savedProduct2);
+        WishItem saved2 = wishlistJpaRepository.save(wishItem2);
+
+        // when
+        wishlistJpaRepository.deleteAllByUserId(savedUser.getId());
+
+        // then
+        List<WishItem> deletedProduct = wishlistJpaRepository.findAllByUserId(savedUser.getId(), PageRequest.of(0, 5)).getContent();
+        assertThat(deletedProduct).isEmpty();
+    }
+
+    @Test
+    @DisplayName("위시리스트 상품 ID로 삭제 테스트")
+    void deleteAllByProductId() {
+        // given
+        User user = new User(null, "testUser", "test@test.com", "test123", Role.USER);
+        Product product1 = new Product(null, "탕종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+        Product product2 = new Product(null, "탕종종 블루베리 베이글", 3500, "https://image.istarbucks.co.kr/upload/store/skuimg/2023/09/[9300000004823]_20230911131337469.jpg");
+
+        User savedUser = userJpaRepository.save(user);
+        Product savedProduct1 = productJpaRepository.save(product1);
+        Product savedProduct2 = productJpaRepository.save(product2);
+
+        WishItem wishItem1 = new WishItem(null, savedUser, savedProduct1);
+        WishItem saved1 = wishlistJpaRepository.save(wishItem1);
+        WishItem wishItem2 = new WishItem(null, savedUser, savedProduct2);
+        WishItem saved2 = wishlistJpaRepository.save(wishItem2);
+
+        // when
+        wishlistJpaRepository.deleteAllByProductId(savedProduct2.getId());
+
+        // then
+        List<WishItem> deletedProduct = wishlistJpaRepository.findAllByUserId(savedUser.getId(), PageRequest.of(0, 5)).getContent();
+        assertThat(deletedProduct.size()).isEqualTo(1);
     }
 }

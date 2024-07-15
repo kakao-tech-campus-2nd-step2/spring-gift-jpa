@@ -6,7 +6,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,7 +35,7 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishItem> wishlist = new ArrayList<>();
 
     public User() {
@@ -83,6 +82,10 @@ public class User {
         return this.wishlist;
     }
 
+    public void removeWishlist() {
+        this.wishlist.clear();
+    }
+
     public void addWishItem(WishItem wishItem) {
         wishlist.add(wishItem);
         wishItem.setUser(this);
@@ -90,6 +93,5 @@ public class User {
 
     public void removeWishItem(WishItem wishItem) {
         wishlist.remove(wishItem);
-        wishItem.setUser(null);
     }
 }

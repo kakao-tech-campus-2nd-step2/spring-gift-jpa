@@ -29,6 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -91,13 +95,15 @@ class WishlistRestControllerTest {
     void readAll_success() throws Exception {
         // given
         List<WishItem> wishItems = List.of(new WishItem(1L, user, product));
-        given(wishlistService.readAll(any(User.class))).willReturn(wishItems);
+        Page<WishItem> expectedPage = new PageImpl<>(wishItems, PageRequest.of(0, 5),wishItems.size());
+
+        given(wishlistService.readAll(any(Pageable.class), any(User.class))).willReturn(expectedPage);
 
         // when & then
         mockMvc.perform(get(DEFAULT_URL)
             .header("Authorization", "Bearer token"))
             .andExpect(status().isOk())
-            .andExpect(content().json(objectMapper.writeValueAsString(wishItems)));
+            .andExpect(content().json(objectMapper.writeValueAsString(expectedPage)));
     }
 
 
@@ -110,6 +116,18 @@ class WishlistRestControllerTest {
         // when & then
         mockMvc.perform(delete(DEFAULT_URL + "/" + 1L)
             .header("Authorization", "Bearer token"))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("위시리스트 사용자 ID로 삭제")
+    void deleteAllByUserId_success() throws Exception {
+        // given
+        willDoNothing().given(wishlistService).deleteAllByUserId(user);
+
+        // when & then
+        mockMvc.perform(delete(DEFAULT_URL)
+                .header("Authorization", "Bearer token"))
             .andExpect(status().isNoContent());
     }
 }

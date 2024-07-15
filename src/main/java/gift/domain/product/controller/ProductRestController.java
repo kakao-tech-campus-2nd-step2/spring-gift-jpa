@@ -4,7 +4,8 @@ import gift.domain.product.dto.ProductDto;
 import gift.domain.product.entity.Product;
 import gift.domain.product.service.ProductService;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,8 +35,8 @@ public class ProductRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> readAll() {
-        List<Product> productList = productService.readAll();
+    public ResponseEntity<Page<Product>> readAll(Pageable pageable) {
+        Page<Product> productList = productService.readAll(pageable);
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
 
