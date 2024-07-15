@@ -33,7 +33,7 @@ public class WishService {
 
     @Transactional(readOnly = true)
     public Page<WishResponseDto> getWishesByUserEmail(String email, int page, WishSortBy sortBy) {
-        Sort sort = getSort(sortBy);
+        Sort sort = sortBy.getSort();
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
         Page<Wish> wishPage = wishRepository.findByUserEmail(email, pageable);
@@ -45,19 +45,6 @@ public class WishService {
         }
 
         return wishPage.map(this::convertToWishResponseDto);
-    }
-
-    private Sort getSort(WishSortBy sortBy) {
-        return switch (sortBy) {
-            case PRODUCT_NAME_ASC -> Sort.by("product.name").ascending();
-            case PRODUCT_NAME_DESC -> Sort.by("product.name").descending();
-            case PRODUCT_PRICE_ASC -> Sort.by("product.price").ascending();
-            case PRODUCT_PRICE_DESC -> Sort.by("product.price").descending();
-            case COUNT_ASC -> Sort.by("count").ascending();
-            case COUNT_DESC -> Sort.by("count").descending();
-            case ID_ASC -> Sort.by("id").ascending();
-            case ID_DESC -> Sort.by("id").descending();
-        };
     }
 
     @Transactional

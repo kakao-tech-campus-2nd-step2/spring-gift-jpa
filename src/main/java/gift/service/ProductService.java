@@ -35,43 +35,18 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductResponseDto> getAllProducts(int page, ProductSortBy sortBy) {
-        String sortField = getSortField(sortBy);
-        Sort.Direction direction = getSortDirection(sortBy);
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        Sort sort = sortBy.getSort();
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        Page<Product> productPage;
-        if (direction == Sort.Direction.ASC) {
-            productPage = productRepository.findAllWithSortAsc(sortField, pageable);
-        } else {
-            productPage = productRepository.findAllWithSortDesc(sortField, pageable);
-        }
+        Page<Product> productPage = productRepository.findAllProducts(pageable);
 
         // 존재하지 않는 페이지를 요청한 경우 처리
         if (page > productPage.getTotalPages() - 1 && page != 0) {
-            pageable = PageRequest.of(productPage.getTotalPages() - 1, PAGE_SIZE);
-            if (direction == Sort.Direction.ASC) {
-                productPage = productRepository.findAllWithSortAsc(sortField, pageable);
-            } else {
-                productPage = productRepository.findAllWithSortDesc(sortField, pageable);
-            }
+            pageable = PageRequest.of(productPage.getTotalPages() - 1, PAGE_SIZE, sort);
+            productPage = productRepository.findAllProducts(pageable);
         }
 
         return productPage.map(this::convertToResponseDto);
-    }
-
-    private String getSortField(ProductSortBy sortBy) {
-        return switch (sortBy) {
-            case PRICE_DESC, PRICE_ASC -> "price";
-            case NAME_DESC, NAME_ASC -> "name";
-            default -> "id";
-        };
-    }
-
-    private Sort.Direction getSortDirection(ProductSortBy sortBy) {
-        return switch (sortBy) {
-            case ID_ASC, PRICE_ASC, NAME_ASC -> Sort.Direction.ASC;
-            default -> Sort.Direction.DESC;
-        };
     }
 
     @Transactional
