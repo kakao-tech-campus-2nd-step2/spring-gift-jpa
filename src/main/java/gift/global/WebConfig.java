@@ -3,7 +3,7 @@ package gift.global;
 import gift.global.auth.interceptor.AuthenticationInterceptor;
 import gift.global.auth.interceptor.AuthorizationInterceptor;
 import gift.global.auth.resolver.LoginInfoArgumentResolver;
-import gift.global.converter.StringToSearchTypeConverter;
+import gift.global.converter.SearchTypeConverter;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -16,16 +16,16 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final AuthorizationInterceptor authorizationInterceptor;
     private final AuthenticationInterceptor authenticationInterceptor;
-    private final StringToSearchTypeConverter stringToSearchTypeConverter;
+    private final SearchTypeConverter searchTypeConverter;
 
     public WebConfig(
         AuthorizationInterceptor authorizationInterceptor,
         AuthenticationInterceptor authenticationInterceptor,
-        StringToSearchTypeConverter stringToSearchTypeConverter
+        SearchTypeConverter searchTypeConverter
     ) {
         this.authorizationInterceptor = authorizationInterceptor;
         this.authenticationInterceptor = authenticationInterceptor;
-        this.stringToSearchTypeConverter = stringToSearchTypeConverter;
+        this.searchTypeConverter = searchTypeConverter;
     }
 
     @Override
@@ -43,6 +43,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(stringToSearchTypeConverter);
+        registry.addConverter(searchTypeConverter);
     }
 }
