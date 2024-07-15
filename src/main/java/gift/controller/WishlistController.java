@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/wishlist")
 public class WishlistController {
@@ -28,8 +30,8 @@ public class WishlistController {
   }
 
   @PostMapping
-  public ResponseEntity<Wishlist> addWishlistItem(@RequestBody Wishlist wishlist, @RequestParam Long productId, @LoginMember Member member) {
-    Wishlist savedWishlist = wishlistService.addWishlistItem(wishlist, member, productId);
+  public ResponseEntity<Wishlist> addWishlistItem(@RequestBody Map<String, Object> body, @LoginMember Member member) {
+    Wishlist savedWishlist = wishlistService.addWishlistItem(member, body);
     return ResponseEntity.ok(savedWishlist);
   }
 

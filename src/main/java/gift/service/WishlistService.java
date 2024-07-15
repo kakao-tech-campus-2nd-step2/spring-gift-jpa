@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -29,10 +30,21 @@ public class WishlistService {
     this.productRepository = productRepository;
   }
 
-  public Wishlist addWishlistItem(Wishlist wishlist, Member member, Long productId) {
-    Product product = productService.findProductById(productId);
-    wishlist.setProduct(product);
+
+  public Wishlist addWishlistItem(Member member, Map<String, Object> body) {
+    Map<String, Object> product = (Map<String, Object>) body.get("product");
+    Object idObject = product.get("id");
+    Long productId;
+    if (idObject instanceof Integer) {
+      productId = Long.valueOf((Integer) idObject);
+    } else {
+      productId = (Long) idObject;
+    }
+    Product productEntity = productRepository.findById(productId)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid product Id:" + productId));
+    Wishlist wishlist = new Wishlist();
     wishlist.setMember(member);
+    wishlist.setProduct(productEntity);
     return wishlistRepository.save(wishlist);
   }
 
