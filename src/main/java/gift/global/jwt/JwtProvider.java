@@ -2,9 +2,9 @@ package gift.global.jwt;
 
 import gift.domain.user.User;
 import gift.domain.user.dto.UserInfo;
-import gift.global.exception.BusinessException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.PrematureJwtException;
@@ -12,7 +12,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import java.util.Date;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -45,17 +44,17 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody();
         } catch (SignatureException e) {
-            throw new BusinessException(HttpStatus.UNAUTHORIZED, "JWT 서명이 올바르지 않습니다.");
+            throw new JwtException("JWT 서명이 올바르지 않습니다.");
         } catch (MalformedJwtException e) {
-            throw new BusinessException(HttpStatus.UNAUTHORIZED, "JWT 토큰 형식이 잘못되었습니다.");
+            throw new JwtException("JWT 토큰 형식이 잘못되었습니다.");
         } catch (ExpiredJwtException e) {
-            throw new BusinessException(HttpStatus.UNAUTHORIZED, "JWT 유효기간이 만료되었습니다.");
+            throw new JwtException("JWT 유효기간이 만료되었습니다.");
         } catch (UnsupportedJwtException e) {
-            throw new BusinessException(HttpStatus.UNAUTHORIZED, "지원되지 않는 JWT 형식입니다.");
+            throw new JwtException("지원되지 않는 JWT 형식입니다.");
         } catch (IllegalArgumentException e) {
-            throw new BusinessException(HttpStatus.UNAUTHORIZED, "JWT 문자열이 올바르지 않습니다.");
+            throw new JwtException("JWT 문자열이 올바르지 않습니다.");
         } catch (PrematureJwtException e) {
-            throw new BusinessException(HttpStatus.UNAUTHORIZED, "JWT 가 아직 활성화 되지 않았습니다.");
+            throw new JwtException("JWT 가 아직 활성화 되지 않았습니다.");
         }
     }
 
