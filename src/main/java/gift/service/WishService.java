@@ -2,6 +2,8 @@ package gift.service;
 
 import gift.domain.Wish;
 import gift.repository.WishRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,11 @@ public class WishService {
     @Transactional(readOnly = true)
     public List<Wish> getWishesByMemberId(Long memberId) {
         return wishRepository.findAllByMemberId(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Wish> getWishesByMemberId(Long memberId, Pageable pageable) {
+        return wishRepository.findAllByMemberId(memberId, pageable);
     }
 
     @Transactional
