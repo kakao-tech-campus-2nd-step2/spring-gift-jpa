@@ -36,7 +36,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
             String errors = bindingResult.getAllErrors().stream()
