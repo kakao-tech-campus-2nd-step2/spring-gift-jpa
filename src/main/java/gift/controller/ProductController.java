@@ -5,6 +5,8 @@ import gift.model.Product;
 
 import gift.service.ProductService;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,8 +38,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<Product> getAllProduct() {
-        return productService.findAllProducts();
+    public Page<Product> getAllProduct(Pageable pageable) {
+        return productService.findAllProducts(pageable);
     }
 
     @DeleteMapping("/{id}")
