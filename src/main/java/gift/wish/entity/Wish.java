@@ -1,6 +1,9 @@
-package gift.entity;
+package gift.wish.entity;
 
+import gift.product.entity.Product;
+import gift.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Wish {
@@ -10,13 +13,14 @@ public class Wish {
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "member_id", nullable = false)
-  private Member member;
+  @NotNull
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
   @ManyToOne
+  @NotNull
   @JoinColumn(name = "product_id", nullable = false)
   private Product product;
-
 
   public Long getId() {
     return id;
@@ -26,12 +30,12 @@ public class Wish {
     this.id = id;
   }
 
-  public Member getMember() {
-    return member;
+  public User getUser() {
+    return user;
   }
 
-  public void setMember(Member member) {
-    this.member = member;
+  public void setUser(User user) {
+    this.user = user;
   }
 
   public Product getProduct() {

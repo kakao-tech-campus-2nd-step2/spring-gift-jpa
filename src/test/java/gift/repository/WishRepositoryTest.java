@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import gift.entity.Wish;
 import gift.entity.Member;
 import gift.entity.Product;
+
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,7 @@ public class WishRepositoryTest {
     Wish wish = new Wish();
     wish.setMember(member);
     wish.setProduct(product);
+
     wishRepository.save(wish);
 
     Optional<Wish> foundWish = wishRepository.findById(wish.getId());
@@ -46,6 +48,7 @@ public class WishRepositoryTest {
     assertThat(foundWish).isPresent();
     assertThat(foundWish.get().getMember().getEmail()).isEqualTo("test@example.com");
     assertThat(foundWish.get().getProduct().getId()).isEqualTo(product.getId());
+
   }
 
   @Test
@@ -78,6 +81,7 @@ public class WishRepositoryTest {
     wishRepository.save(wish2);
 
     List<Wish> wishes = wishRepository.findByMember(member);
+
 
     assertThat(wishes).isNotEmpty();
     assertThat(wishes.size()).isEqualTo(2);
@@ -123,6 +127,7 @@ public class WishRepositoryTest {
     Wish wish = new Wish();
     wish.setMember(member);
     wish.setProduct(product);
+
     wishRepository.save(wish);
 
     Long wishId = wish.getId();

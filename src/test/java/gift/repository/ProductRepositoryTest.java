@@ -70,5 +70,4 @@ public class ProductRepositoryTest {
     Optional<Product> foundProduct = productRepository.findById(productId);
 
     assertThat(foundProduct).isNotPresent();
-  }
 }

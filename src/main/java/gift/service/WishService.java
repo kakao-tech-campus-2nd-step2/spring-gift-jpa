@@ -5,6 +5,7 @@ import gift.entity.Product;
 import gift.entity.Wish;
 import gift.repository.MemberRepository;
 import gift.repository.ProductRepository;
+
 import gift.repository.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,5 +50,6 @@ public class WishService {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new RuntimeException("상품 정보를 찾을 수 없습니다."));
     wishRepository.deleteByMemberAndProduct(member, product);
+
   }
 }
