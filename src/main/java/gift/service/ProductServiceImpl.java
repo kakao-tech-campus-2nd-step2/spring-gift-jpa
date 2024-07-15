@@ -17,14 +17,12 @@ public class ProductServiceImpl implements ProductService {
 
     public ProductServiceImpl(JpaProductRepository jpaProductRepository) {
         this.jpaProductRepository = jpaProductRepository;
-
     }
 
     @Override
     public List<ProductDTO> readAll() {
 
         return jpaProductRepository.findAll().stream().map(product -> new ProductDTO(product.getId(),product.getName(),product.getPrice(),product.getImageUrl())).toList();
-
     }
 
     //새로운 상품 추가
@@ -39,10 +37,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void updateName(long id, String name) {
-
         var prod = getProduct(id);
         prod.setName(name);
-
     }
 
     @Override
@@ -54,16 +50,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void updateImageUrl(long id, String url) {
-
         var prod = getProduct(id);
         prod.setImageUrl(url);
     }
 
     @Override
     public void delete(long id) {
-
         jpaProductRepository.deleteById(id);
-
     }
 
     private void checkKakao(String productName) {

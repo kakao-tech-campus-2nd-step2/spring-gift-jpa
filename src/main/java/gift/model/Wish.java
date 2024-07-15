@@ -30,8 +30,10 @@ public class Wish {
     @JoinColumn(name="PRODUCT_ID")
     private Product product;
 
+
     @Column(name = "PRODUCT_COUNT",nullable = false)
     private Integer productCount;
+
 
     public Wish() {
     }
@@ -64,6 +66,7 @@ public class Wish {
         this.productCount = productCount;
     }
 
+
     public String getProductName(){
         return product.getName();
     }
@@ -92,6 +95,7 @@ public class Wish {
         result = 31 * result + product.hashCode();
         result = 31 * result + productCount.hashCode();
         return result;
+
 
     }
 }

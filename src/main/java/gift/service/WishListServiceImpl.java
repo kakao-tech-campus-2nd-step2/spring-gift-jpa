@@ -1,5 +1,6 @@
 package gift.service;
 
+
 import gift.database.JpaMemberRepository;
 import gift.database.JpaProductRepository;
 import gift.database.JpaWishRepository;
@@ -27,14 +28,15 @@ public class WishListServiceImpl implements WishListService {
         this.jpaMemberRepository = jpaMemberRepository;
         this.jpaWishRepository = jpaWishRepository;
         this.jpaProductRepository = jpaProductRepository;
+
     }
 
     @Override
     public void addProduct(long memberId, long productId) {
+
         Member member = jpaMemberRepository.findById(memberId).orElseThrow(MemberNoSuchException::new);
         Product product = jpaProductRepository.findById(productId).orElseThrow();
         member.addProduct(product);
-
     }
 
     @Override
@@ -44,14 +46,14 @@ public class WishListServiceImpl implements WishListService {
         Product product = jpaProductRepository.findById(productId).orElseThrow();
         member.delProduct(product);
 
+
     }
 
     @Override
     public void updateProduct(long memberId, long productId, int productValue) {
-
         Wish wish = jpaWishRepository.findByMemberIdAndProductId(memberId,productId).orElseThrow();
-
         wish.setValue(productValue);
+
 
     }
 
@@ -60,6 +62,7 @@ public class WishListServiceImpl implements WishListService {
        Member member = jpaMemberRepository.findById(memberId).orElseThrow();
        Map<String,Integer> wishList = member.getWishList().stream().collect(Collectors.toMap(Wish::getProductName,Wish::getProductCount));
        return new WishListDTO(member.getId(),wishList);
+
     }
 
 }

@@ -7,6 +7,7 @@ import gift.dto.MemberDTO;
 import gift.exceptionAdvisor.MemberServiceException;
 import gift.model.Member;
 import java.util.NoSuchElementException;
+import gift.model.MemberRole;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,6 @@ public class MemberServiceImpl implements MemberService {
     public MemberServiceImpl(JpaMemberRepository jpaMemberRepository,
         AuthenticationTool authenticationTool) {
         this.jpaMemberRepository = jpaMemberRepository;
-
         this.authenticationTool = authenticationTool;
     }
 
@@ -31,7 +31,6 @@ public class MemberServiceImpl implements MemberService {
         if (checkEmailDuplication(memberDTO.getEmail())) {
             throw new MemberServiceException("이메일이 중복됩니다", HttpStatus.FORBIDDEN);
         }
-
         Member member = new Member(null, memberDTO.getEmail(), memberDTO.getPassword(), memberDTO.getRole());
         jpaMemberRepository.save(member);
 
@@ -61,7 +60,6 @@ public class MemberServiceImpl implements MemberService {
         Member member = jpaMemberRepository.findById(id).orElseThrow(()->
             new MemberServiceException("잘못된 로그인 시도입니다",HttpStatus.FORBIDDEN));
 
-
         return new MemberDTO(member.getEmail(), member.getPassword(), member.getRole());
     }
 
@@ -81,7 +79,6 @@ public class MemberServiceImpl implements MemberService {
         try {
             return jpaMemberRepository.findByEmail(email).orElseThrow();
         } catch (NoSuchElementException e) {
-
             throw new MemberServiceException("잘못된 로그인 시도입니다.", HttpStatus.FORBIDDEN);
         }
     }
