@@ -31,6 +31,9 @@ public class MemberEntity {
     @OneToMany(mappedBy = "memberEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishListEntity> wishListEntities;
 
+    public MemberEntity() {
+    }
+
     public List<WishListEntity> getWishListEntities() {
         return wishListEntities;
     }
@@ -39,16 +42,12 @@ public class MemberEntity {
         this.wishListEntities = wishListEntities;
     }
 
-
-    public MemberEntity() {
+    public Long getId() {
+        return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getEmail() {

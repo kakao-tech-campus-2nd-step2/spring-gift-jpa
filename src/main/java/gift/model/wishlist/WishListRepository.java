@@ -1,6 +1,7 @@
 package gift.model.wishlist;
 
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface WishListRepository extends JpaRepository<WishListEntity, Long> {
+
+    List<WishListEntity> findAllByMemberEntityId(Long userId, Pageable pageable);
 
     List<WishListEntity> findAllByMemberEntityId(Long userId);
 

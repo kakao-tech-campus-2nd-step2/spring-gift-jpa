@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginService {
 
+    private final JwtToken jwtToken = new JwtToken();
     @Autowired
     private MemberService memberService;
-    private final JwtToken jwtToken = new JwtToken();
 
     /**
      * 사용자의 로그인 정보를 확인하고 JWT 토큰을 생성함
