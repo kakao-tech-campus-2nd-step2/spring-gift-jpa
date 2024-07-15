@@ -12,7 +12,7 @@ public class TokenAuth {
     @Column(nullable = false, length = 255)
     private String token;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
