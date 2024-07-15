@@ -51,8 +51,8 @@ public class AdminController {
     }
 
     @GetMapping("/products/edit/{product_id}")
-    public String showEditProductForm(@PathVariable Long id, Model model) {
-        ProductDto product = productService.findById(id); // productService를 사용하여 id로 상품 찾기
+    public String showEditProductForm(@PathVariable Long product_id, Model model) {
+        ProductDto product = productService.findById(product_id); // productService를 사용하여 id로 상품 찾기
 
         model.addAttribute("product", product); // 모델에 상품 추가
 
@@ -60,11 +60,11 @@ public class AdminController {
     }
 
     @PostMapping("/products/edit/{product_id}")
-    public String editProduct(@PathVariable Long id, @Valid @ModelAttribute("productDto") ProductDto productDto, BindingResult result) {
+    public String editProduct(@PathVariable Long product_id, @Valid @ModelAttribute("productDto") ProductDto productDto, BindingResult result) {
         if (result.hasErrors()) {
             return "edit"; // 에러가 있으면 다시 edit.html 보여주기
         }
-        productService.update(id, productDto);
+        productService.update(product_id, productDto);
         return "redirect:/admin/products/list";
     }
 }

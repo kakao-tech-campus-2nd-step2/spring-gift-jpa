@@ -38,7 +38,7 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("옳지 않은 이메일이나 비밀번호 입니다."));
 
-        if (!passwordEncoder.matches(password, member.password())) {
+        if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new IllegalArgumentException("옳지 않은 이메일이나 비밀번호 입니다.");
         }
 
@@ -53,7 +53,7 @@ public class MemberService {
     // UPDATE EMAIL
     public Member updateEmail(Long memberId, String newEmail) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
         member.withEmail(newEmail);
         return memberRepository.save(member);
     }
@@ -61,7 +61,7 @@ public class MemberService {
     // UPDATE PASSWORD
     public Member updatePassword(Long memberId, String newPassword) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
         member.withPassword(passwordEncoder.encode(newPassword));
         return memberRepository.save(member);
     }

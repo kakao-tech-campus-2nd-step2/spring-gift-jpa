@@ -25,7 +25,7 @@ public class TokenService {
     // JWT 토큰 생성
     public String generateToken(Member member) {
         return Jwts.builder()
-                .setSubject(member.email())
+                .setSubject(member.getEmail())
                 .signWith(SignatureAlgorithm.HS256, secretKeyBytes)
                 .compact();
     }
@@ -35,14 +35,14 @@ public class TokenService {
         try {
             String[] parts = token.split("\\.");
             if (parts.length != 3) {
-                throw new UnauthorizedException("Invalid token format");
+                throw new UnauthorizedException("옳지않은 토큰 포맷입니다,");
             }
 
             String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
             String email = payload.substring(payload.indexOf(":") + 2, payload.indexOf("\"", payload.indexOf(":") + 2));
             return email;
         } catch (Exception e) {
-            throw new UnauthorizedException("Invalid token format", e);
+            throw new UnauthorizedException("옳지않은 토큰 포맷입니다,", e);
         }
     }
 

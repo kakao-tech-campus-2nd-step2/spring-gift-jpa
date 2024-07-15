@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long product_id;
 
     private String name;
@@ -36,11 +36,11 @@ public class Product {
         return name;
     }
 
-    public int price() {
+    public int getPrice() {
         return price;
     }
 
-    public String imgUrl() {
+    public String getImgUrl() {
         return imgUrl;
     }
 

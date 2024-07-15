@@ -11,7 +11,7 @@ import java.util.List;
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long member_id;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(255)")
@@ -24,7 +24,12 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<WishList> wishLists = new ArrayList<>();
 
-    public Member(String email, String encode) {
+    public Member(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public Member() {
     }
 
     public void addWishList(String name, String wishlist_id) {
@@ -37,25 +42,25 @@ public class Member {
         return new ArrayList<>(wishLists);
     }
 
-    public Long member_id() {
+    public Long getMemberId() {
         return member_id;
     }
 
     // 새 이메일로 업데이트된 Member 인스턴스를 반환
-    public Member withEmail(String newEmail) {
-        return new Member(newEmail, this.password);
+    public void withEmail(String newEmail) {
+        new Member(newEmail, this.password);
     }
 
     // 새 비밀번호로 업데이트된 Member 인스턴스를 반환
-    public Member withPassword(String newPassword) {
-        return new Member(this.email, newPassword);
+    public void withPassword(String newPassword) {
+        new Member(this.email, newPassword);
     }
 
-    public String password() {
+    public String getPassword() {
         return password;
     }
 
-    public String email() {
+    public String getEmail() {
         return email;
     }
 }

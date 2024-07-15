@@ -28,8 +28,8 @@ public class ProductService {
                 new ProductDto(
                         rs.getLong("product_id"),
                         rs.getString("name"),
-                        rs.getInt("price"),
-                        rs.getString("imgUrl")
+                        rs.getInt("getPrice"),
+                        rs.getString("getImgUrl")
                 ));
     }
 
@@ -39,8 +39,8 @@ public class ProductService {
                 new ProductDto(
                         rs.getLong("product_id"),
                         rs.getString("name"),
-                        rs.getInt("price"),
-                        rs.getString("imgUrl")
+                        rs.getInt("getPrice"),
+                        rs.getString("getImgUrl")
                 ));
     }
 

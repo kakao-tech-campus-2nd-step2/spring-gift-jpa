@@ -91,7 +91,7 @@
 //        Optional<Product> updatedProduct = productRepository.findById(product.product_id());
 //        assertThat(updatedProduct).isPresent();
 //        assertThat(updatedProduct.get().name()).isEqualTo("Updated Product 6");
-//        assertThat(updatedProduct.get().price()).isEqualTo(70);
-//        assertThat(updatedProduct.get().imgUrl()).isEqualTo("http://www.google.com");
+//        assertThat(updatedProduct.get().getPrice()).isEqualTo(70);
+//        assertThat(updatedProduct.get().getImgUrl()).isEqualTo("http://www.google.com");
 //    }
 //}
