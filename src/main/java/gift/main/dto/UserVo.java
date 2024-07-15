@@ -1,4 +1,5 @@
 package gift.main.dto;
+import gift.main.entity.Role;
 
 public class UserVo {
 
@@ -6,7 +7,7 @@ public class UserVo {
 
     private final String name;
     private final String email;
-    private final String role;
+    private final Role role;
 
 
     public Long getId() {
@@ -21,15 +22,21 @@ public class UserVo {
         return email;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
+    }
+
+    public UserVo(Long id, String name, String email, Role role) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.role = role;
     }
 
     public UserVo(Long id, String name, String email, String role) {
         this.id = id;
-
         this.name = name;
         this.email = email;
-        this.role = role;
+        this.role = Role.toRole(role);
     }
 }
