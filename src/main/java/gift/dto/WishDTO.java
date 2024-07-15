@@ -1,9 +1,15 @@
 package gift.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 public class WishDTO {
 
     private Long id;
+
+    @NotNull
     private Long memberId;
+
+    @NotNull
     private Long productId;
 
     public Long getId() {
