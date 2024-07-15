@@ -6,8 +6,9 @@ public class UserLogin {
 
         private String email;
         private String password;
-
+      
         public Request(){}
+
 
         public Request(String email, String password) {
             this.email = email;

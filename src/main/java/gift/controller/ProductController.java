@@ -11,10 +11,12 @@ import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,7 +29,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class ProductController {
@@ -40,6 +44,7 @@ public class ProductController {
 
     // 상품 모두 조회
     @GetMapping("/api/products")
+
     public String responseAllProducts(Model model,
         @RequestParam(name = "page", defaultValue = "0") Integer page,
         @RequestParam(name = "size", defaultValue = "10") Integer size,
@@ -53,6 +58,7 @@ public class ProductController {
         model.addAttribute("sort", sort);
         return "index";
     }
+
 
     // 상품 추가 폼
     @GetMapping("/api/products/new-form")
@@ -106,7 +112,9 @@ public class ProductController {
         productService.findById(id);
 
         productService.deleteById(id);
+
         return "redirect:/api/products";
+
     }
 
     // 선택된 상품 삭제

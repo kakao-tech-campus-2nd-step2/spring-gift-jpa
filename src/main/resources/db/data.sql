@@ -16,3 +16,4 @@ INSERT INTO wish_tb (user_id, product_name, quantity) VALUES(1, 'a3', 4);
 INSERT INTO wish_tb (user_id, product_name, quantity) VALUES(1, 'a4', 2);
 INSERT INTO wish_tb (user_id, product_name, quantity) VALUES(1, 'a5', 3);
 INSERT INTO wish_tb (user_id, product_name, quantity) VALUES(1, 'a6', 4);
+

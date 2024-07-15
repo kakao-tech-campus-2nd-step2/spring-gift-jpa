@@ -30,6 +30,7 @@
         </select>
         <button class="btn btn-primary" onclick="applyFilters()">Apply</button>
       </div>
+
       <table class="table table-striped">
         <thead>
         <tr>
@@ -43,6 +44,7 @@
         </thead>
         <tbody>
         <tr th:each="product : ${productPage.content}">
+
           <td><input type="checkbox" class="product-checkbox" th:value="${product.id}"></td>
           <td th:text="${product.id}">ID</td>
           <td th:text="${product.name}">Name</td>
@@ -99,6 +101,7 @@
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
         success: function () {
+
           window.location.href = "/api/products";
         },
         error: function (xhr, status, error) {
@@ -133,6 +136,7 @@
     const sortOrder = document.getElementById('sortOrder').value;
     window.location.href = `/api/products?page=0&size=${pageSize}&sort=${sortOrder}`;
   }
+
 </script>
 </body>
 </html>

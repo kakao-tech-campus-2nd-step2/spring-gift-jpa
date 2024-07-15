@@ -7,7 +7,9 @@ public class UserSignUp {
         private String email;
         private String password;
 
+
         public Request(){}
+
         public Request(String email, String password) {
             this.email = email;
             this.password = password;
