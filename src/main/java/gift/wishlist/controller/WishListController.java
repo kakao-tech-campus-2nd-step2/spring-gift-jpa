@@ -1,6 +1,8 @@
-package gift.wishlist;
+package gift.wishlist.controller;
 
-import gift.product.Product;
+import gift.product.model.Product;
+import gift.wishlist.service.WishListService;
+import gift.wishlist.model.WishList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

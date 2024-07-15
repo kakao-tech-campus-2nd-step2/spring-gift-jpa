@@ -1,4 +1,4 @@
-package gift.member;
+package gift.member.dto;
 
 public class MemberDto {
     private final String email;
