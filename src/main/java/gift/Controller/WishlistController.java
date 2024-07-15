@@ -3,14 +3,17 @@ package gift.Controller;
 import gift.Annotation.LoginMemberResolver;
 import gift.Entity.Wishlist;
 import gift.Model.MemberDto;
+import gift.Model.ProductDto;
 import gift.Model.WishlistDto;
 import gift.Service.WishlistService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -24,9 +27,14 @@ public class WishlistController {
     }
 
     @GetMapping("/wishlist")
-    public String getWishlist(@LoginMemberResolver MemberDto memberDto, Model model) {
-        List<Wishlist> wishlist = wishlistService.getWishlist(memberDto.getId());
-        model.addAttribute("wishlist", wishlist);
+    public String getWishlist(@LoginMemberResolver MemberDto memberDto, Model model,
+                                       @RequestParam(value="page", defaultValue="0") int page,
+                                       @RequestParam(value="size", defaultValue="10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<WishlistDto> paging = wishlistService.getWishlistByPage(memberDto, pageable);
+        model.addAttribute("paging", paging);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", paging.getTotalPages());
         return "wishlist";
     }
 

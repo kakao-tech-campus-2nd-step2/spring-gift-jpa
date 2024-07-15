@@ -5,8 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class ProductDto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private long id;
     @Size(min = 1, max = 15, message = "글자 수는 1자 이상, 15자 이하여야 합니다.")
     @Pattern(regexp = "^[\\w\\s()+\\-/&_\\[\\]가-힣]*$", message = "( ), [ ], +, -, &, /, _" +

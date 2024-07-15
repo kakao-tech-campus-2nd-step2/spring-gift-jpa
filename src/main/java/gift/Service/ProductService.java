@@ -37,6 +37,7 @@ public class ProductService {
     public Page<ProductDto> getAllProductsByPage(Pageable pageable) {
         Page<Product> products = productJpaRepository.findByisDeletedFalse(pageable);
         return products.map(mapper::productToDto);
+
     }
 
     public Optional<ProductDto> getProductById(Long id) {
