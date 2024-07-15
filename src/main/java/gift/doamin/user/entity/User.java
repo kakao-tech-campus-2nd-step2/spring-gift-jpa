@@ -2,6 +2,7 @@ package gift.doamin.user.entity;
 
 import gift.doamin.product.entity.Product;
 import gift.doamin.wishlist.entity.Wish;
+import gift.global.AuditingEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends AuditingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
