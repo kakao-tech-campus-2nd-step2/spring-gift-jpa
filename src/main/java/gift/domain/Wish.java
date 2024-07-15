@@ -1,41 +1,50 @@
 package gift.domain;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "wish")
 public class Wish {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
-    private Long productId;
-    private LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    public Long getUserId() {
-        return userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    private boolean isDeleted = false;
+
+    public Member getMember() {
+        return member;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setMember(Member member) {
+        this.member = member;
     }
 
-    public Long getProductId() {
-        return productId;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public Product getProduct() {
+        return product;
     }
 
     public void setId(long id) {
         this.id = id;
     }
 
-    public void setProductId(long productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt == null ? null : createdAt;
+    public boolean isDeleted() {
+        return this.isDeleted;
+    }
+
+    public void setDeleted(boolean b) {
+        this.isDeleted = b;
     }
 }

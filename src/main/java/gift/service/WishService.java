@@ -1,11 +1,12 @@
 package gift.service;
 
+import gift.domain.Member;
+import gift.domain.Product;
 import gift.domain.Wish;
 import gift.repository.WishRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class WishService{
@@ -14,20 +15,19 @@ public class WishService{
         this.wishRepository = wishRepository;
     }
 
-    public List<Wish> getWishList(Long memberId) {
-        return wishRepository.findByUserId(memberId);
+    public Page<Wish> getWishPage(Member member, Pageable pageable) {
+        return wishRepository.findByMember(member, pageable);
     }
 
-    public void addToWishList(Long userId, Long productId) {
+    public void addWish(Member member, Product product) {
         Wish wish = new Wish();
-        wish.setUserId(userId);
-        wish.setProductId(productId);
-        wish.setCreatedAt(LocalDateTime.now());
+        wish.setMember(member);
+        wish.setProduct(product);
         wishRepository.save(wish);
     }
 
-
-    public void removeFromWishList(Long userId, Long productId) {
-        wishRepository.deleteByUserIdAndProductId(userId, productId);
+    public void deleteWish(Product product) {
+        Wish wish = wishRepository.findByProduct(product);
+        wish.setDeleted(true);
     }
 }

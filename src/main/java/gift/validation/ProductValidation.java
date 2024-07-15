@@ -12,7 +12,7 @@ public class ProductValidation {
     private static final String ALLOWED_SPECIAL_CHARACTERS = "()[]+\\-&/_.";
 
     public void validateProductDto(CreateProductDto productDto) {
-        if (productDto.getName() == null || productDto.getDescription() == null || productDto.getPrice() == null || productDto.getImageUrl() == null) {
+        if (productDto.getName() == null || productDto.getPrice() == null || productDto.getImageUrl() == null) {
             throw new IllegalArgumentException("상품의 이름, 가격, 설명을 모두 입력해야합니다.");
         }
     }

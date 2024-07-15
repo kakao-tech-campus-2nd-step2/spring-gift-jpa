@@ -1,6 +1,6 @@
 package gift.exception;
 
-import gift.validation.ProductValidation;
+import gift.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -13,15 +13,18 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        if (e.getMessage().equals("상품의 이름, 가격, 설명을 모두 입력해야합니다.")) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } else if (e.getMessage().equals("일치하는 상품이 없습니다.")) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        HttpStatus httpStatus;
+        if (e.getMessage().equals(ErrorMessage.PRODUCT_MISSING_FIELDS)) {
+            httpStatus = HttpStatus.BAD_REQUEST;
+        } else if (e.getMessage().equals(ErrorMessage.PRODUCT_NOT_FOUND)) {
+            httpStatus = HttpStatus.NOT_FOUND;
         } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버에 문제가 발생했습니다.");
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         }
+        return ResponseEntity.status(httpStatus).body(e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -33,5 +36,11 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Internal Server Error", "서버에 문제가 발생했습니다."));
     }
 }

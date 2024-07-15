@@ -8,7 +8,7 @@ public class MemberRequest {
         return email;
     }
 
-    public CharSequence getPassword() {
+    public String getPassword() {
         return password;
     }
 }

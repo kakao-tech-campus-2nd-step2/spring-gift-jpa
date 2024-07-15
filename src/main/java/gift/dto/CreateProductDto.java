@@ -12,8 +12,6 @@ public class CreateProductDto {
     @Pattern(regexp = "^(?!.*카카오).*$", message = "\"카카오\"가 포함된 상품명은 사용할 수 없습니다.")
     String name;
     @NotBlank
-    String description;
-    @NotBlank
     @Min(0)
     Integer price;
     @NotBlank
@@ -25,10 +23,6 @@ public class CreateProductDto {
 
     public Integer getPrice() {
         return this.price;
-    }
-
-    public String getDescription() {
-        return this.description;
     }
 
     public String getImageUrl() { return this.imageUrl; }
