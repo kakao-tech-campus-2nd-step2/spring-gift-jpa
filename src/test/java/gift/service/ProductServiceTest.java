@@ -1,27 +1,36 @@
-package gift;
+package gift.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import gift.product.dto.ClientProductDto;
 import gift.product.model.Product;
 import gift.product.service.ProductService;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
-class ClientProductTest {
+class ProductServiceTest {
 
     final ProductService productService;
 
     @Autowired
-    ClientProductTest(ProductService productService) {
+    ProductServiceTest(ProductService productService) {
         this.productService = productService;
     }
 
@@ -34,7 +43,7 @@ class ClientProductTest {
     }
 
     @Test
-    void 상품_추가_테스트() {
+    void 상품_추가() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
         Product product = productService.insertProduct(productDTO);
 
@@ -46,7 +55,7 @@ class ClientProductTest {
     }
 
     @Test
-    void 상품_조회_테스트() {
+    void 상품_조회() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
         Product insertedProduct = productService.insertProduct(productDTO);
 
@@ -61,7 +70,7 @@ class ClientProductTest {
     }
 
     @Test
-    void 상품_전체_조회_테스트() {
+    void 상품_전체_조회() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
         productService.insertProduct(productDTO);
 
@@ -75,7 +84,32 @@ class ClientProductTest {
     }
 
     @Test
-    void 상품_수정_테스트() {
+    void 상품_전체_조회_페이지() {
+        int PRODUCT_COUNT = 9;
+        int PAGE = 1;
+        int SIZE = 4;
+        String SORT = "name";
+        String DIRECTION = "desc";
+
+        for (int i = 1; i <= PRODUCT_COUNT; i++) {
+            productService.insertProduct(new ClientProductDto("테스트" + i, 1000 + i, "테스트주소" + i));
+        }
+
+        Pageable pageable = PageRequest.of(PAGE, SIZE, Sort.Direction.fromString(DIRECTION), SORT);
+        Page<Product> products = productService.getProductAll(pageable);
+
+        assertSoftly(softly -> {
+            assertThat(products.getTotalPages()).isEqualTo(
+                (int) Math.ceil((double) PRODUCT_COUNT / SIZE));
+            assertThat(products.getTotalElements()).isEqualTo(PRODUCT_COUNT);
+            assertThat(products.getSize()).isEqualTo(SIZE);
+            assertThat(products.getContent().get(0).getName()).isEqualTo(
+                "테스트" + (PRODUCT_COUNT - SIZE));
+        });
+    }
+
+    @Test
+    void 상품_수정() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
         Product product = productService.insertProduct(productDTO);
 
@@ -91,7 +125,7 @@ class ClientProductTest {
     }
 
     @Test
-    void 상품_삭제_테스트() {
+    void 상품_삭제() {
         ClientProductDto productDTO = new ClientProductDto("사과", 3000, "사진링크");
         productService.insertProduct(productDTO);
 
@@ -102,5 +136,11 @@ class ClientProductTest {
 
         List<Product> productAll = productService.getProductAll();
         assertThat(productAll).hasSize(1);
+    }
+
+    @Test
+    void 존재하지_않는_상품_조회() {
+        assertThatThrownBy(() -> productService.getProduct(-1L)).isInstanceOf(
+            NoSuchElementException.class);
     }
 }

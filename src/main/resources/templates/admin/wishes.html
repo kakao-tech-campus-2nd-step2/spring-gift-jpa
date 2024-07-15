@@ -30,6 +30,9 @@
         <th class="text-center">위시 ID</th>
         <th class="text-center">회원 ID</th>
         <th class="text-center">상품 ID</th>
+        <th class="text-center">상품명</th>
+        <th class="text-center">상품 가격</th>
+        <th class="text-center">상품 이미지 주소</th>
         <th class="text-center"></th>
         <th class="text-center"></th>
       </tr>
@@ -40,10 +43,19 @@
           <span th:text="${wish.id}">위시 ID tmp</span>
         </td>
         <td class="text-center">
-          <span th:text="${wish.memberId}">회원 ID tmp</span>
+          <span th:text="${wish.member.id}">회원 ID tmp</span>
         </td>
         <td class="text-center">
-          <span th:text="${wish.productId}">상품 ID tmp</span>
+          <span th:text="${wish.product.id}">상품 ID tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${wish.product.name}">상품명 tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${wish.product.price}">상품 가격 tmp</span>
+        </td>
+        <td class="text-center">
+          <span th:text="${wish.product.imageUrl}">상품 이미지 주소 tmp</span>
         </td>
         <td class="text-center">
           <form th:action="@{/admin/wishes/delete/{wishId}(wishId=${wish.id})}"

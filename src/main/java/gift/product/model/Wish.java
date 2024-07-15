@@ -1,10 +1,13 @@
 package gift.product.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 public class Wish {
@@ -13,35 +16,38 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final Long id;
 
-    @Column(nullable = false)
-    private final Long memberId;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private final Member member;
 
-    @Column(nullable = false)
-    private final Long productId;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private final Product product;
 
     protected Wish() {
         this(null, null, null);
     }
 
-    public Wish(Long id, Long memberId, Long productId) {
+    public Wish(Long id, Member member, Product product) {
         this.id = id;
-        this.memberId = memberId;
-        this.productId = productId;
+        this.member = member;
+        this.product = product;
     }
 
-    public Wish(Long memberId, Long productId) {
-        this(null, memberId, productId);
+    public Wish(Member member, Product product) {
+        this(null, member, product);
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMember() {
+        return member;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 }

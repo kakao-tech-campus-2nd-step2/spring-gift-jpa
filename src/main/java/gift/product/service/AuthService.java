@@ -1,7 +1,6 @@
 package gift.product.service;
 
 import gift.product.dto.JwtResponse;
-import gift.product.dto.LoginMember;
 import gift.product.dto.MemberDto;
 import gift.product.exception.LoginFailedException;
 import gift.product.model.Member;
@@ -15,7 +14,7 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(readOnly = true)
 public class AuthService {
 
     private final AuthRepository authRepository;
@@ -27,6 +26,7 @@ public class AuthService {
         this.authRepository = authRepository;
     }
 
+    @Transactional
     public void register(MemberDto memberDto) {
         validateMemberExist(memberDto);
 
@@ -42,10 +42,6 @@ public class AuthService {
         String accessToken = getAccessToken(member);
 
         return new JwtResponse(accessToken);
-    }
-
-    public boolean existsMember(LoginMember loginMember) {
-        return authRepository.existsById(loginMember.id());
     }
 
     private String getAccessToken(Member member) {
