@@ -30,15 +30,11 @@ public class MemberController {
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@Valid @RequestBody MemberDTO memberDTO) {
-        try {
-            Member member = memberDTO.toEntity();
-            Member savedMember = memberService.createMember(member);
-            Map<String, String> response = new HashMap<>();
-            response.put("token", jwtService.generateToken(savedMember));
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            throw new RuntimeException("Error during registration: " + e.getMessage(), e);
-        }
+        Member member = memberDTO.toEntity();
+        Member savedMember = memberService.createMember(member);
+        Map<String, String> response = new HashMap<>();
+        response.put("token", jwtService.generateToken(savedMember));
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
