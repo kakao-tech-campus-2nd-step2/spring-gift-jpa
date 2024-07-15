@@ -5,6 +5,8 @@ import gift.model.Member;
 import gift.service.WishlistService;
 import gift.model.Product;
 import gift.annotation.LoginMember;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
@@ -39,11 +41,11 @@ public class WishlistController {
     }
 
     @GetMapping
-    public String getWishlist(@LoginMember Member member, Model model) {
+    public String getWishlist(@LoginMember Member member, Model model, Pageable pageable) {
         if (member == null) {
             return "redirect:/members/login";
         }
-        List<Product> wishlist = wishlistService.getWishlist(member.getEmail());
+        Page<Product> wishlist = wishlistService.getWishlist(member.getEmail(), pageable);
         model.addAttribute("wishlist", wishlist);
         return "wishlist";
     }
