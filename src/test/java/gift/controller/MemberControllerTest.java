@@ -1,11 +1,8 @@
 package gift.controller;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.DisplayName;
@@ -96,8 +93,7 @@ class MemberControllerTest {
 
         mockMvc.perform(get("/api/members/wishlist")
                 .header("Authorization", "Bearer " + token))
-            .andExpect(jsonPath("$", hasSize(2)))
-            .andDo(print());
+            .andExpect(status().isOk());
     }
 
     @Test

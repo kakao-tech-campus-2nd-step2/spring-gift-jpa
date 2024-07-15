@@ -1,20 +1,15 @@
 package gift.controller;
 
 import gift.constants.SuccessMessage;
-import gift.dto.ProductDto;
 import gift.entity.Member;
 import gift.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -49,16 +44,6 @@ public class MemberController {
 
         return ResponseEntity.ok().header("token", token)
             .body(SuccessMessage.LOGIN_MEMBER_SUCCESS_MSG);
-    }
-
-    /**
-     * 위치 리스트에 담겨진 상품들을 조회
-     */
-    @GetMapping("/wishlist")
-    @ResponseBody
-    public List<ProductDto> wishlist(Model model, HttpServletRequest request) {
-        String email = (String) request.getAttribute("email");
-        return memberService.getAllWishlist(email);
     }
 
     /**
