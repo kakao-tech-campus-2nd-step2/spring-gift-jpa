@@ -1,13 +1,13 @@
 package gift.main.repository;
 
-import gift.main.entity.Product;
 import gift.main.entity.User;
+import gift.main.entity.Role;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +19,13 @@ class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Test
+    public void ENUM값이_잘들어가는지_조회() {
+        User user = userRepository.save(new User("testuser", "email", "1234", "admin"));
+        System.out.println("Role.ADMIN.equals(user.getRole()) = " + Role.ADMIN.equals(user.getRole()));
+        //Role.ADMIN.equals(user.getRole()) = true
+        Assertions.assertEquals(Role.ADMIN, user.getRole());
+    }
 
     @Test
     public void 모두조회() {
