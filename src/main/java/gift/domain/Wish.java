@@ -39,4 +39,22 @@ public class Wish extends BaseEntity {
         return product;
     }
 
+    public static class Builder {
+        private Member member;
+        private Product product;
+
+        public Builder member(Member member) {
+            this.member = member;
+            return this;
+        }
+
+        public Builder product(Product product) {
+            this.product = product;
+            return this;
+        }
+
+        public Wish build() {
+            return new Wish(member, product);
+        }
+    }
 }
