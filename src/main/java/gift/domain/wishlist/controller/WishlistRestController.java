@@ -1,12 +1,12 @@
 package gift.domain.wishlist.controller;
 
+import gift.config.LoginUser;
 import gift.domain.user.entity.User;
 import gift.domain.wishlist.dto.WishItemDto;
 import gift.domain.wishlist.entity.WishItem;
 import gift.domain.wishlist.service.WishlistService;
-import gift.config.LoginUser;
-import gift.util.dto.PageRequestDto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,8 +34,8 @@ public class WishlistRestController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<WishItem>> readAll(PageRequestDto pageRequestDto, @LoginUser User user) {
-        return ResponseEntity.status(HttpStatus.OK).body(wishlistService.readAll(pageRequestDto, user));
+    public ResponseEntity<Page<WishItem>> readAll(Pageable pageable, @LoginUser User user) {
+        return ResponseEntity.status(HttpStatus.OK).body(wishlistService.readAll(pageable, user));
     }
 
     @DeleteMapping("/{wishItemId}")

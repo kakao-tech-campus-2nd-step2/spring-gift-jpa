@@ -5,11 +5,8 @@ import gift.domain.product.dto.ProductDto;
 import gift.domain.product.entity.Product;
 import gift.domain.wishlist.service.WishlistService;
 import gift.exception.InvalidProductInfoException;
-import gift.util.dto.PageRequestDto;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,9 +26,7 @@ public class ProductService {
         return productJpaRepository.save(product);
     }
 
-    public Page<Product> readAll(PageRequestDto pageRequestDto) {
-        Pageable pageable = PageRequest.of(pageRequestDto.page(), pageRequestDto.size(),
-                        Sort.by(Sort.Direction.fromString(pageRequestDto.orderBy()), pageRequestDto.sortBy()));
+    public Page<Product> readAll(Pageable pageable) {
         return productJpaRepository.findAll(pageable);
     }
 

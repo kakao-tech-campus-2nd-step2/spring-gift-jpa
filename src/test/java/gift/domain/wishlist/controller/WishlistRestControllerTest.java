@@ -1,8 +1,6 @@
 package gift.domain.wishlist.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -20,7 +18,6 @@ import gift.domain.user.entity.User;
 import gift.domain.wishlist.dto.WishItemDto;
 import gift.domain.wishlist.entity.WishItem;
 import gift.domain.wishlist.service.WishlistService;
-import gift.util.dto.PageRequestDto;
 import io.jsonwebtoken.Claims;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +32,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -99,7 +97,7 @@ class WishlistRestControllerTest {
         List<WishItem> wishItems = List.of(new WishItem(1L, user, product));
         Page<WishItem> expectedPage = new PageImpl<>(wishItems, PageRequest.of(0, 5),wishItems.size());
 
-        given(wishlistService.readAll(any(PageRequestDto.class), any(User.class))).willReturn(expectedPage);
+        given(wishlistService.readAll(any(Pageable.class), any(User.class))).willReturn(expectedPage);
 
         // when & then
         mockMvc.perform(get(DEFAULT_URL)

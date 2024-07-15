@@ -2,10 +2,16 @@ package gift.domain.product.controller;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.domain.product.dao.ProductJpaRepository;
@@ -13,7 +19,6 @@ import gift.domain.product.dto.ProductDto;
 import gift.domain.product.entity.Product;
 import gift.domain.product.service.ProductService;
 import gift.exception.InvalidProductInfoException;
-import gift.util.dto.PageRequestDto;
 import java.util.List;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +30,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -111,7 +117,7 @@ class ProductRestControllerTest {
         );
         Page<Product> expectedPage = new PageImpl<>(productList, PageRequest.of(0, 5), productList.size());
 
-        given(productService.readAll(any(PageRequestDto.class))).willReturn(expectedPage);
+        given(productService.readAll(any(Pageable.class))).willReturn(expectedPage);
         String expectedResult = objectMapper.writeValueAsString(expectedPage);
 
         // when & then
