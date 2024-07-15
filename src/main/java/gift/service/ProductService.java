@@ -1,11 +1,12 @@
 package gift.service;
 
-import gift.dto.ProductDto;
 import gift.entity.Product;
 import gift.repository.ProductRepositoryInterface;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -20,8 +21,8 @@ public class ProductService {
         this.productRepositoryInterface = productRepositoryInterface;
     }
 
-    public Product createProduct(ProductDto productDto) {
-        Product newProduct = new Product(productDto.getName(), productDto.getPrice(), productDto.getUrl());
+    public Product createProduct(String name, Long price, String url) {
+        Product newProduct = new Product(name, price, url);
         return productRepositoryInterface.save(newProduct);
     }
 
@@ -33,10 +34,9 @@ public class ProductService {
         return productRepositoryInterface.findById(id).get();
     }
 
-    public void update(Long id, ProductDto productDto) {
+    public void update(Long id, String name, Long price, String url) {
         Product actualProduct = productRepositoryInterface.findById(id).orElseThrow(() -> new RuntimeException("상품을 찾지 못했습니다."));
-
-        actualProduct.update(productDto);
+        actualProduct.update(name, price, url);
     }
 
     public void delete(Long id) {
@@ -46,5 +46,9 @@ public class ProductService {
 
     public Product findProductByName(String name) {
         return productRepositoryInterface.findByName(name);
+    }
+
+    public Page<Product> getProducts(Pageable pageable) {
+        return productRepositoryInterface.findAll(pageable);
     }
 }

@@ -16,7 +16,7 @@ public class ApiUserListController {
     }
 
     @GetMapping("/user/list")
-    public List<UserDto> UserList() {
+    public List<UserDto.Response> UserList() {
         return userService.getAll();
     }
 }

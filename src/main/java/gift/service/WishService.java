@@ -2,10 +2,16 @@ package gift.service;
 
 import gift.dto.TokenDto;
 import gift.dto.WishDto;
+import gift.entity.Product;
+import gift.entity.User;
 import gift.entity.Wish;
 import gift.repository.ProductRepositoryInterface;
+import gift.repository.UserRepositoryInterface;
 import gift.repository.WishRepositoryInterface;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -13,33 +19,37 @@ import java.util.List;
 public class WishService {
     private final WishRepositoryInterface wishRepositoryInterface;
     private final ProductRepositoryInterface productRepositoryInterface;
+    private final UserRepositoryInterface userRepositoryInterface;
     private final TokenService tokenService;
 
     public WishService(WishRepositoryInterface wishRepositoryInterface,
                        ProductRepositoryInterface productRepositoryInterface,
+                       UserRepositoryInterface userRepositoryInterface,
                        TokenService tokenService) {
 
         this.wishRepositoryInterface = wishRepositoryInterface;
         this.productRepositoryInterface = productRepositoryInterface;
+        this.userRepositoryInterface = userRepositoryInterface;
         this.tokenService = tokenService;
 
     }
 
-    public WishDto save(WishDto wishDto) {
+    public WishDto.Response save(Long productId, String tokenValue) {
 
-        Long userId = translateIdFrom(wishDto.getTokenValue());
-        Long productId = wishDto.getProductId();
-        Wish newWish = new Wish(userId, productId);
+        Long userId = translateIdFrom(tokenValue);
+        User user = userRepositoryInterface.findById(userId).get();
+        Product product =productRepositoryInterface.findById(productId).get();
+        Wish newWish = new Wish(product,user);
 
-        return WishDto.fromEntity(wishRepositoryInterface.save(newWish));
+        return WishDto.Response.fromEntity(wishRepositoryInterface.save(newWish));
     }
 
-    public List<WishDto> getAll(TokenDto tokenDto) {
+    public List<WishDto.Response> getAll(TokenDto tokenDto) {
 
         Long userId = translateIdFrom(tokenDto);
         List<Wish> wishes = wishRepositoryInterface.findAllByUserId(userId);
 
-        List<WishDto> wishDtos = wishes.stream().map(WishDto::fromEntity).toList();
+        List<WishDto.Response> wishDtos = wishes.stream().map(WishDto.Response::fromEntity).toList();
         return wishDtos;
     }
 
@@ -71,5 +81,9 @@ public class WishService {
         String userId = userInfo[1];
 
         return Long.parseLong(userId);
+    }
+
+    public Page<Wish> getWishes(Pageable pageable) {
+        return wishRepositoryInterface.findAll(pageable);
     }
 }

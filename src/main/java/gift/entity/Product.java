@@ -1,23 +1,20 @@
 package gift.entity;
 
 
-import gift.dto.ProductDto;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
-import java.util.List;
+import jakarta.persistence.Table;
+
 
 @Entity
-@Table(name = "products")
+@Table(name = "product")
 public class Product {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
     private String name;
@@ -32,23 +29,10 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long id, String name, Long price, String url) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.url = url;
-    }
-
     public Product(String name, Long price, String url) {
         this.name = name;
         this.price = price;
         this.url = url;
-    }
-
-    public void update(ProductDto productDto) {
-        this.name = productDto.getName();
-        this.price = productDto.getPrice();
-        this.url = productDto.getUrl();
     }
 
     public Long getId() {
@@ -67,11 +51,10 @@ public class Product {
         return url;
     }
 
-    public List<Wish> getWishes(){
-        return wishes;
+    public void update(String name, Long price, String url) {
+        this.name = name;
+        this.price = price;
+        this.url = url;
     }
 
-    public void setWished(List<Wish> wishes) {
-        this.wishes =wishes;
-    }
 }

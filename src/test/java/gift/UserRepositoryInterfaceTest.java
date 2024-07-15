@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
-public class UserRepositoryTest {
+public class UserRepositoryInterfaceTest {
     private UserRepositoryInterface users;
 
-    public UserRepositoryTest(UserRepositoryInterface userRepository) {
-        users= userRepository;
+    public UserRepositoryInterfaceTest(UserRepositoryInterface userRepositoryInterface) {
+        users= userRepositoryInterface;
     }
 
     @Test

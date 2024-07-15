@@ -1,11 +1,18 @@
 package gift.controller;
 
-import gift.dto.CreateProduct;
-import gift.dto.EditProduct;
 import gift.dto.ProductDto;
 import gift.entity.Product;
 import gift.service.ProductService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -20,17 +27,11 @@ public class productController {
     }
 
     @PostMapping("")
-    public ProductDto createProduct(@RequestBody CreateProduct.Request request) {
+    public ProductDto.Request createProduct(@RequestBody ProductDto.Request request) {
 
-        Product newProduct = productService.createProduct(
-                new ProductDto(
-                        request.getName(),
-                        request.getPrice(),
-                        request.getUrl()
-                )
-        );
+        Product newProduct = productService.createProduct(request.getName(), request.getPrice(), request.getUrl());
 
-        return new ProductDto(
+        return new ProductDto.Request(
                 newProduct.getId(),
                 newProduct.getName(),
                 newProduct.getPrice(),
@@ -39,19 +40,19 @@ public class productController {
     }
 
     @GetMapping("")
-    public List<ProductDto> getAll() {
-        return productService.getAll().stream().map(ProductDto::fromEntity).toList();
+    public List<ProductDto.Response> getAll() {
+        return productService.getAll().stream().map(ProductDto.Response::fromEntity).toList();
     }
 
     @GetMapping("/{id}")
-    public ProductDto getOneById(@PathVariable("id") Long id) {
+    public ProductDto.Response getOneById(@PathVariable("id") Long id) {
         Product product = productService.getOneById(id);
-        return new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getUrl());
+        return new ProductDto.Response(product.getId(), product.getName(), product.getPrice(), product.getUrl());
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable("id") Long id, @RequestBody EditProduct.Request request) {
-        productService.update(id, new ProductDto(request.getName(), request.getPrice(), request.getUrl()));
+    public void update(@PathVariable("id") Long id, @RequestBody ProductDto.Request request) {
+        productService.update(id, request.getName(), request.getPrice(), request.getUrl());
     }
 
     @DeleteMapping("/{id}")
@@ -60,7 +61,12 @@ public class productController {
     }
 
     @GetMapping("/{name}")
-    public ProductDto getOneByName(@PathVariable("name") String name) {
-        return ProductDto.fromEntity(productService.findProductByName(name));
+    public ProductDto.Response getOneByName(@PathVariable("name") String name) {
+        return ProductDto.Response.fromEntity(productService.findProductByName(name));
+    }
+
+    @GetMapping("/products")
+    public Page<Product> getProducts(Pageable pageable) {
+        return productService.getProducts(pageable);
     }
 }

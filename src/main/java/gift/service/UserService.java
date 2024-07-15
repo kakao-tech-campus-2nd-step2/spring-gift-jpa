@@ -19,17 +19,17 @@ public class UserService {
         this.tokenService = tokenService;
     }
 
-    public TokenDto save(UserDto.Request request) {
+    public TokenDto save(String email, String password) {
 
-        User newUser = new User(request.getEmail(), request.getPassword());
+        User newUser = new User(email, password);
 
         User actualUser = userRepositoryInterface.save(newUser);
         return generateTokenDtoFrom(actualUser.getEmail());
     }
 
 
-    public List<UserDto> getAll() {
-        return userRepositoryInterface.findAll().stream().map(UserDto::fromEntity).toList();
+    public List<UserDto.Response> getAll() {
+        return userRepositoryInterface.findAll().stream().map(UserDto.Response::fromEntity).toList();
     }
 
     public TokenDto generateTokenDtoFrom(String userEmail) {
@@ -41,15 +41,16 @@ public class UserService {
         return userRepositoryInterface.findByEmail(userEmail).getId();
     }
 
-    public UserDto login(UserDto inputInfo) throws AuthenticationException {
-        UserDto dbUserDto = UserDto.fromEntity(userRepositoryInterface.findByEmail(inputInfo.getEmail()));
-        return validatePassword(inputInfo, dbUserDto);
+    public boolean login(String email, String password) throws AuthenticationException {
+        UserDto.Response dbUserDto = UserDto.Response.fromEntity(userRepositoryInterface.findByEmail(email));
+
+        return validatePassword(password, dbUserDto.getPassword());
     }
 
-    private UserDto validatePassword(UserDto inputInfo, UserDto dbUserDto) throws AuthenticationException {
+    private boolean validatePassword(String inputPassword, String dbUserPassword) throws AuthenticationException {
 
-        if (inputInfo.getPassword().equals(dbUserDto.getPassword())) {
-            return dbUserDto;
+        if (inputPassword.equals(dbUserPassword)) {
+            return true;
         }
         throw new AuthenticationException("Invalid password");
     }
