@@ -3,9 +3,15 @@ package gift.product.application;
 import gift.product.domain.Product;
 import gift.product.domain.WishList;
 import gift.product.domain.WishListProduct;
+import gift.product.exception.ProductException;
 import gift.product.infra.ProductRepository;
 import gift.product.infra.WishListRepository;
+import gift.util.ErrorCode;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,8 +30,15 @@ public class WishListService {
     }
 
 
-    public WishList getProductsInWishList(Long userId) {
-        return wishListRepository.findByUserId(userId);
+    public Page<WishList> getProductsInWishList(Long userId, int page, int size, String sortBy, String direction) {
+        Sort sort = direction.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+            : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        if (wishListRepository.findByUserId(userId, pageable).isEmpty()) {
+            throw new ProductException(ErrorCode.WISHLIST_NOT_FOUND);
+        }
+        return wishListRepository.findByUserId(userId, pageable);
     }
 
 

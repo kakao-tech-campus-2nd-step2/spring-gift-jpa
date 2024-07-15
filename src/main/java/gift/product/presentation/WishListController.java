@@ -7,12 +7,14 @@ import gift.product.exception.ProductException;
 import gift.util.CommonResponse;
 import gift.util.ErrorCode;
 import gift.util.JwtAuthenticated;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,13 +29,13 @@ public class WishListController {
 
     @JwtAuthenticated
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getWishList(@PathVariable Long userId) {
-        WishList products = wishListService.getProductsInWishList(userId);
-        if (products != null) {
-            return ResponseEntity.ok(new CommonResponse<>(products, "위시리스트 조회 성공", true));
-        } else {
-            throw new ProductException(ErrorCode.WISHLIST_NOT_FOUND);
-        }
+    public ResponseEntity<?> getWishList(@PathVariable Long userId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "id") String sortBy,
+        @RequestParam(defaultValue = "asc") String direction) {
+        Page<WishList> products = wishListService.getProductsInWishList(userId, page, size, sortBy, direction);
+        return ResponseEntity.ok(new CommonResponse<>(products, "위시리스트 조회 성공", true));
     }
 
     @JwtAuthenticated
