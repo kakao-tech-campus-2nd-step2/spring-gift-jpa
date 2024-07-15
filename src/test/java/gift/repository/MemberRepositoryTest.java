@@ -27,7 +27,6 @@ class MemberRepositoryTest {
 
     @Test
     void testSave() {
-        member.validate();
         assertAll(
             () -> assertThat(savedMember.getId()).isNotNull(),
             () -> assertThat(savedMember.getName()).isEqualTo(member.getName()),
@@ -39,7 +38,6 @@ class MemberRepositoryTest {
 
     @Test
     void testFindByEmail() {
-        member.validate();
         Member foundMember = memberRepository.findByEmail(member.getEmail());
         assertAll(
             () -> assertThat(foundMember).isNotNull(),
@@ -51,7 +49,6 @@ class MemberRepositoryTest {
     void testSaveWithNullName() {
         try {
             Member nullNameMember = new Member(1L, null, "kbm@kbm.com", "mbk", "user");
-            nullNameMember.validate();
             memberRepository.save(nullNameMember);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
@@ -62,7 +59,6 @@ class MemberRepositoryTest {
     void testSaveWithEmptyName() {
         try {
             Member emptyNameMember = new Member(1L, "", "kbm@kbm.com", "mbk", "user");
-            emptyNameMember.validate();
             memberRepository.save(emptyNameMember);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
@@ -73,7 +69,6 @@ class MemberRepositoryTest {
     void testSaveWithNullEmail() {
         try {
             Member nullEmailMember = new Member(1L, "kbm", null, "mbk", "user");
-            nullEmailMember.validate();
             memberRepository.save(nullEmailMember);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
@@ -84,7 +79,6 @@ class MemberRepositoryTest {
     void testSaveWithEmptyEmail() {
         try {
             Member emptyEmailMember = new Member(1L, "kbm", "", "mbk", "user");
-            emptyEmailMember.validate();
             memberRepository.save(emptyEmailMember);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
@@ -95,7 +89,6 @@ class MemberRepositoryTest {
     void testSaveWithInvalidName() {
         try {
             Member invalidEmailMember = new Member(1L, "kbm", "kbm", "mbk", "user");
-            invalidEmailMember.validate();
             memberRepository.save(invalidEmailMember);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
@@ -106,7 +99,6 @@ class MemberRepositoryTest {
     void testSaveWithNullPassword() {
         try {
             Member nullPasswordMember = new Member(1L, "kbm", "kbm@kbm.com", null, "user");
-            nullPasswordMember.validate();
             memberRepository.save(nullPasswordMember);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
@@ -117,7 +109,6 @@ class MemberRepositoryTest {
     void testSaveWithEmptyPassword() {
         try {
             Member emptyPasswordMember = new Member(1L, "kbm", "kbm@kbm.com", "", "user");
-            emptyPasswordMember.validate();
             memberRepository.save(emptyPasswordMember);
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
