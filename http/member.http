@@ -29,7 +29,7 @@ Content-Type: application/json
 Authorization: {{authorizationToken}}
 
 {
-  "productId": 1,
+  "productId": 8,
   "quantity": 10
 }
 
@@ -38,13 +38,12 @@ DELETE http://localhost:8080/api/members/wishes/1
 Authorization: {{authorizationToken}}
 
 ### 5. wish 조회
-GET http://localhost:8080/api/members/wishes
+GET http://localhost:8080/api/members/wishes?page=4&size=2
 Authorization: {{authorizationToken}}
 
 ### 6. wish 업데이트
 PUT http://localhost:8080/api/members/wishes/1
-Content-Type: application/json
-Authorization: {{authorizationToken}}
+çAuthorization: {{authorizationToken}}
 
 {
   "quantity" : 1
