@@ -68,18 +68,18 @@
 //        assertFalse(products.stream().anyMatch(product -> product.getId().equals(1L)));
 //    }
 //}
-
-        Product product = productService.getProductById(1L);
-        assertEquals("Updated Product", product.getName());
-        assertEquals(1500, product.getPrice());
-    }
-
-    @Test
-    void deleteProduct() {
-        productService.deleteProduct(1L);
-
-        List<Product> products = productService.getAllProducts();
-        assertEquals(1, products.size());
-        assertFalse(products.stream().anyMatch(product -> product.getId().equals(1L)));
-    }
-}
+//
+//        Product product = productService.getProductById(1L);
+//        assertEquals("Updated Product", product.getName());
+//        assertEquals(1500, product.getPrice());
+//    }
+//
+//    @Test
+//    void deleteProduct() {
+//        productService.deleteProduct(1L);
+//
+//        List<Product> products = productService.getAllProducts();
+//        assertEquals(1, products.size());
+//        assertFalse(products.stream().anyMatch(product -> product.getId().equals(1L)));
+//    }
+//}
