@@ -5,6 +5,7 @@ import gift.web.dto.MemberDto;
 import gift.web.dto.WishDto;
 import gift.web.jwt.AuthUser;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +28,13 @@ public class WishController {
     }
 
     @GetMapping("/admin")
-    public ResponseEntity<List<WishDto>> getWishes(@AuthUser MemberDto memberDto) {
+    public ResponseEntity<Page<WishDto>> getWishes(@AuthUser MemberDto memberDto, Pageable pageable) {
         // todo : 관리자 권한 검증 로직 구현
-        return new ResponseEntity<>(wishService.getWishes(), HttpStatus.OK);
+        return new ResponseEntity<>(wishService.getWishes(pageable), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<WishDto>> getWishesByEmail(@AuthUser MemberDto memberDto, Pageable pageable) {
+    public ResponseEntity<Page<WishDto>> getWishesByEmail(@AuthUser MemberDto memberDto, Pageable pageable) {
         return new ResponseEntity<>(wishService.getWishesByEmail(memberDto.email(), pageable), HttpStatus.OK);
     }
 
