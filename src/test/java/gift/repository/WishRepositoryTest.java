@@ -1,14 +1,16 @@
 package gift.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import gift.domain.Member;
 import gift.domain.Product;
 import gift.domain.Wish;
+import gift.repository.fixture.MemberFixture;
+import gift.repository.fixture.ProductFixture;
+import gift.repository.fixture.WishFixture;
 import jakarta.persistence.EntityManager;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,52 +28,49 @@ class WishRepositoryTest {
     private ProductRepository productRepository;
 
     @Autowired
-    private EntityManager entityManager;
+    private EntityManager em;
 
     @Test
     @DisplayName("Find Wishes By Member ID Test")
-    void findByMember() {
+    void findByMemberId() {
         // given
-        Member member = new Member("user@example.com", "password");
-        Product product = new Product("test",100,"kkk");
+        Member member = MemberFixture.createMember("user@example.com", "password");
         memberRepository.save(member);
+        Product product = ProductFixture.createProduct("test",100,"kkk");
         productRepository.save(product);
 
-        Wish wish = new Wish(member,product,5);
-        wishRepository.save(wish);
+        Wish expected = WishFixture.createWish(member,product,5);
+        wishRepository.save(expected);
 
         // when
-        Optional<List<Wish>> wishes = wishRepository.findByMemberId(member.getId());
+        List<Wish> actuals = wishRepository.findByMemberId(member.getId()).get();
 
         // then
-        List<Wish> wishList = wishes.get();
         assertAll(
-            () -> assertThat(wishList.size()).isEqualTo(1),
-            () -> assertThat(wishList.get(0).getProduct().getName()).isEqualTo(wish.getProduct().getName())
+            () -> assertThat(actuals.size()).isEqualTo(1),
+            () -> assertThat(actuals.get(0).getProduct().getName()).isEqualTo(expected.getProduct().getName())
         );
     }
 
     @Test
     @DisplayName("Find Wish By Member ID And Product Name Test")
-    void findByMemberAndProduct() {
+    void findByMemberIdAndProductName() {
         // given
-        Member member = new Member("user@example.com", "password");
-        Product product = new Product("test",100,"kkk");
+        Member member = MemberFixture.createMember("user@example.com", "password");
         memberRepository.save(member);
+        Product product = ProductFixture.createProduct("test",100,"kkk");
         productRepository.save(product);
 
-        Wish wish = new Wish(member,product,5);
-        wishRepository.save(wish);
-        entityManager.flush();
-        entityManager.clear();
+        Wish expected = WishFixture.createWish(member,product,5);
+        wishRepository.save(expected);
 
         // when
-        Optional<Wish> expectedWish = wishRepository.findByMemberIdAndProductId(member.getId(),product.getId());
+        Wish actual = wishRepository.findByMemberIdAndProductId(member.getId(),product.getId()).get();
 
         // then
-        Wish expected = expectedWish.get();
         assertAll(
-            () -> assertThat(expected.getProduct().getName()).isEqualTo(wish.getProduct().getName())
+            () -> assertThat(actual.getMember().getId()).isEqualTo(expected.getMember().getId()),
+            () -> assertThat(actual.getProduct().getName()).isEqualTo(expected.getProduct().getName())
         );
     }
 }
