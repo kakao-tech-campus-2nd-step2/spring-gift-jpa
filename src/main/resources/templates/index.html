@@ -278,8 +278,8 @@
 
   function addToCart(productId) {
     const jwt = getCookie("jwt");
-
-    axios.post('/api/products/cart/' + productId, {}, {
+    console.log(jwt);
+    axios.post('/api/users/cart/' + productId, {}, {
       headers: {
         'Authorization': `${jwt}`
       }

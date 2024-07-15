@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CartItemService {
@@ -35,18 +36,23 @@ public class CartItemService {
     /**
      * 장바구니에 상품 ID 추가
      */
-    public void addCartItem(Long userId, Long productId) {
+    @Transactional
+    public int addCartItem(Long userId, Long productId) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, "사용자를 찾을 수 없습니다"));
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new BusinessException(HttpStatus.BAD_REQUEST, "상품을 찾을 수 없습니다"));
 
+        // 기존에 존재하면 update
         if (cartItemRepository.existsByUserAndProduct(user, product)) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "해당 상품이 장바구니에 이미 존재합니다.");
+            CartItem existsCartItem = cartItemRepository.findByUserIdAndProductId(userId, productId).get();
+            existsCartItem.addOneMore();
+            return existsCartItem.getCount();
         }
-
+        // 기존에 없었으면 new
         CartItem cartItem = new CartItem(user, product);
         cartItemRepository.save(cartItem);
+        return cartItem.getCount();
     }
 
     /**

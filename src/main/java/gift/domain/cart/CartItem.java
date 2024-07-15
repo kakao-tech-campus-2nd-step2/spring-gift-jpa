@@ -25,6 +25,8 @@ public class CartItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    private int count = 1;
+
     protected CartItem() {
     }
 
@@ -57,6 +59,10 @@ public class CartItem {
         this.product = product;
     }
 
+    public int getCount() {
+        return count;
+    }
+
     @Override
     public String toString() {
         return "CartItem{" +
@@ -64,5 +70,9 @@ public class CartItem {
                ", user=" + user +
                ", product=" + product +
                '}';
+    }
+
+    public void addOneMore() {
+        this.count += 1;
     }
 }

@@ -6,7 +6,6 @@ import gift.global.resolver.LoginInfo;
 import gift.global.response.ResponseMaker;
 import gift.global.response.ResultResponseDto;
 import gift.global.response.SimpleResultResponseDto;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -38,15 +37,15 @@ public class CartItemController {
     public ResponseEntity<SimpleResultResponseDto> addCartItem(
         @PathVariable("id") Long productId, @LoginInfo UserInfo userInfo) {
 
-        cartItemService.addCartItem(userInfo.getId(), productId);
+        int currentCount = cartItemService.addCartItem(userInfo.getId(), productId);
 
-        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "상품이 장바구니에 추가되었습니다.");
+        return ResponseMaker.createSimpleResponse(HttpStatus.OK, "상품이 장바구니에 추가되었습니다. 총 개수: " + currentCount);
     }
 
     /**
      * 장바구니 조회 - 페이징(매개변수별)
      */
-    @GetMapping(path = "/cart", params = "page")
+    @GetMapping(path = "/cart")
     public ResponseEntity<ResultResponseDto<Page<Product>>> getProductsInCartByUserIdAndPageAndSort(
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "sort", defaultValue = "id_asc") String sort,
