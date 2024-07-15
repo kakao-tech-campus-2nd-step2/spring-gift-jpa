@@ -13,9 +13,24 @@
     </div>
     <div class="card-body">
       <div class="mb-3">
-        <button class="btn btn-danger" th:onclick="deleteSelectedProducts()">Delete</button>
+        <button class="btn btn-danger" onclick="deleteSelectedProducts()">Delete</button>
         <a class="btn btn-success" href="/api/products/new-form">Add New Product</a>
       </div>
+      <div class="mb-3">
+        <label for="pageSize">Page Size: </label>
+        <select id="pageSize" class="custom-select" style="width: auto; display: inline-block;">
+          <option th:value="5" th:text="'5'" th:selected="${size == 5}">5</option>
+          <option th:value="10" th:text="'10'" th:selected="${size == 10}">10</option>
+          <option th:value="20" th:text="'20'" th:selected="${size == 20}">20</option>
+        </select>
+        <label for="sortOrder">Sort Order: </label>
+        <select id="sortOrder" class="custom-select" style="width: auto; display: inline-block;">
+          <option th:value="asc" th:text="'Ascending'" th:selected="${sort == 'asc'}">Ascending</option>
+          <option th:value="desc" th:text="'Descending'" th:selected="${sort == 'desc'}">Descending</option>
+        </select>
+        <button class="btn btn-primary" onclick="applyFilters()">Apply</button>
+      </div>
+
       <table class="table table-striped">
         <thead>
         <tr>
@@ -28,7 +43,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="product : ${products}">
+        <tr th:each="product : ${productPage.content}">
+
           <td><input type="checkbox" class="product-checkbox" th:value="${product.id}"></td>
           <td th:text="${product.id}">ID</td>
           <td th:text="${product.name}">Name</td>
@@ -41,6 +57,25 @@
         </tr>
         </tbody>
       </table>
+      <div>
+        <nav aria-label="Page navigation">
+          <ul class="pagination">
+            <li class="page-item" th:classappend="${productPage.hasPrevious()} ? '' : 'disabled'">
+              <a class="page-link" th:href="@{/api/products(page=${productPage.number - 1}, size=${productPage.size}, sort=${sort})}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, productPage.totalPages)}" th:classappend="${pageNum == productPage.number + 1} ? 'active'">
+              <a class="page-link" th:href="@{/api/products(page=${pageNum - 1}, size=${productPage.size}, sort=${sort})}" th:text="${pageNum}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${productPage.hasNext()} ? '' : 'disabled'">
+              <a class="page-link" th:href="@{/api/products(page=${productPage.number + 1}, size=${productPage.size}, sort=${sort})}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </div>
   </div>
 </div>
@@ -66,7 +101,7 @@
         contentType: 'application/json',
         data: JSON.stringify(selectedIds),
         success: function () {
-          // location.reload();
+
           window.location.href = "/api/products";
         },
         error: function (xhr, status, error) {
@@ -77,18 +112,31 @@
       alert('Please select at least one product to delete.');
     }
   }
+
   function deleteProduct(id) {
     $.ajax({
       url: '/api/products/' + id,
       type: 'DELETE',
       success: function (){
-        location.reload();
+        // location.reload();
+        const pageSize = document.getElementById('pageSize').value;
+        const sortOrder = document.getElementById('sortOrder').value;
+        window.location.href = `/api/products?page=0&size=${pageSize}&sort=${sortOrder}`;
       },
       error: function (xhr, status, error) {
-        alert("An error occurred" + error);
+        location.reload();
+        console.log("An error occurred" + error)
+        // alert("An error occurred" + error);
       }
     });
   }
+
+  function applyFilters() {
+    const pageSize = document.getElementById('pageSize').value;
+    const sortOrder = document.getElementById('sortOrder').value;
+    window.location.href = `/api/products?page=0&size=${pageSize}&sort=${sortOrder}`;
+  }
+
 </script>
 </body>
 </html>

@@ -37,6 +37,13 @@ public class Wish {
         this.quantity = quantity;
     }
 
+
+    public Wish(String productName, int quantity) {
+        this.productName = productName;
+        this.quantity = quantity;
+    }
+
+
     public long getId() {
         return id;
     }

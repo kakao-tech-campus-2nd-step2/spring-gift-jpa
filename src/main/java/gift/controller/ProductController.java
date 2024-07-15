@@ -11,6 +11,12 @@ import gift.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,6 +30,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
+
 @Controller
 public class ProductController {
 
@@ -35,10 +44,18 @@ public class ProductController {
 
     // 상품 모두 조회
     @GetMapping("/api/products")
-    public String responseAllProducts(Model model){
 
-        List<Product> productsList = productService.findAll();
-        model.addAttribute("products", productsList);
+    public String responseAllProducts(Model model,
+        @RequestParam(name = "page", defaultValue = "0") Integer page,
+        @RequestParam(name = "size", defaultValue = "10") Integer size,
+        @RequestParam(name = "sort", defaultValue = "asc") String sort){
+
+        Sort.Direction sortDirection = sort.equals("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "id"));
+        Page<Product> productPage = productService.findPage(pageable);
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("size", size);
+        model.addAttribute("sort", sort);
         return "index";
     }
 
@@ -95,7 +112,9 @@ public class ProductController {
         productService.findById(id);
 
         productService.deleteById(id);
-        return "index";
+
+        return "redirect:/api/products";
+
     }
 
     // 선택된 상품 삭제

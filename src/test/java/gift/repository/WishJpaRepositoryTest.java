@@ -1,12 +1,10 @@
 package gift.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import gift.domain.User;
 import gift.domain.Wish;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +35,9 @@ class WishJpaRepositoryTest {
     void findByUser() {
         User user = userJpaRepository.findByEmailAndPassword(email, password).get();
 //        User user = new User(1L,email, password, accessToken);
-        List<Wish> wishList = wishJpaRepository.findByUser(user);
+
+        List<Wish> wishList = wishJpaRepository.findByUser(user, pageable);
+
         for(Wish wish : wishList){
             assertThat(wish.getProductName()).isEqualTo("product1");
         }
