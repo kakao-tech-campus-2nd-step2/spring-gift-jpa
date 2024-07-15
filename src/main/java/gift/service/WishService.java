@@ -10,6 +10,7 @@ import gift.dto.WishAddRequestDto;
 import gift.dto.WishResponseDto;
 import gift.exception.CustomException;
 import gift.exception.ErrorCode;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,20 +30,19 @@ public class WishService {
 
     @Transactional
     public void addWish(Long memberId, WishAddRequestDto request) {
-        //기존에 존재하는 wish면 quantity 업데이트
         Member member = getMember(memberId);
         wishRepository.findByMemberIdAndProductId(memberId, request.getProductId())
                 .ifPresentOrElse(
                         wish -> wish.addQuantity(request.getQuantity()),
                         () -> {
-                            Wish newWish = new Wish(member,getProduct(request.getProductId()), request.getQuantity());
+                            Wish newWish = new Wish(member, getProduct(request.getProductId()), request.getQuantity());
                             wishRepository.save(newWish);
                         }
                 );
     }
 
-    public List<WishResponseDto> getAllWishes(Long id) {
-        List<Wish> wishList = wishRepository.findAllByMemberId(id);
+    public List<WishResponseDto> getAllWishes(Long id, Pageable pageable) {
+        List<Wish> wishList = wishRepository.findAllByMemberId(id, pageable);
         return wishList.stream().map(WishResponseDto::new).toList();
     }
 
@@ -61,7 +61,7 @@ public class WishService {
     public void deleteWish(Long memberId, Long productId) {
         checkMemberValidation(memberId);
         checkProductValidation(productId);
-        wishRepository.deleteByMemberIdAndProductId(memberId,productId);
+        wishRepository.deleteByMemberIdAndProductId(memberId, productId);
     }
 
     private void checkProductValidation(Long productId) {

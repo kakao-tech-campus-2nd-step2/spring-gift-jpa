@@ -5,6 +5,9 @@ import gift.authentication.UserDetails;
 import gift.dto.*;
 import gift.service.MemberService;
 import gift.service.WishService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,16 +37,20 @@ public class MemberController {
     }
 
     @PostMapping("/wishes")
-    public ResponseEntity<ApiResponse> addNewWish(
-            @LoginMember UserDetails userDetails,
-            @RequestBody WishAddRequestDto request) {
+    public ResponseEntity<ApiResponse> addNewWish(@LoginMember UserDetails userDetails,
+                                                  @RequestBody WishAddRequestDto request) {
         wishService.addWish(userDetails.id(), request);
         return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, "위시 리스트 등록에 성공하였습니다."));
     }
 
     @GetMapping("/wishes")
-    public ResponseEntity<List<WishResponseDto>> getMemberWishList(@LoginMember UserDetails userDetails) {
-        return ResponseEntity.ok(wishService.getAllWishes(userDetails.id()));
+    public ResponseEntity<List<WishResponseDto>> getMemberWishList(
+            @LoginMember UserDetails userDetails,
+            @RequestParam(required = false, defaultValue = "0", value = "page") int pageNum,
+            @RequestParam(required = false, defaultValue = "10", value = "size") int size,
+            @RequestParam(required = false, defaultValue = "id", value = "criteria") String criteria) {
+        Pageable pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Direction.ASC, criteria));
+        return ResponseEntity.ok(wishService.getAllWishes(userDetails.id(), pageable));
     }
 
     @PutMapping("/wishes/{id}")
@@ -51,7 +58,7 @@ public class MemberController {
             @LoginMember UserDetails userDetails,
             @PathVariable("id") Long id,
             @RequestBody WishUpdateRequestDto requestDto) {
-        wishService.updateWish(userDetails.id(),id,requestDto.quantity());
+        wishService.updateWish(userDetails.id(), id, requestDto.quantity());
         return ResponseEntity.ok(new ApiResponse(HttpStatus.OK, "수량이 성공적으로 수정되었습니다."));
     }
 
