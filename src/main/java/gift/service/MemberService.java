@@ -35,7 +35,7 @@ public class MemberService {
             Member member = memberOptional.get();
             return jwtUtil.generateToken(member);
         } else {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "이메일 혹은 비밀번호가 일치하지 않습니다");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "이메일 혹은 비밀번호가 일치하지 않습니다");
         }
     }
 }
