@@ -1,10 +1,13 @@
 package gift.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static gift.domain.Role.ADMIN;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import gift.classes.RequestState.RequestStateDTO;
 import gift.classes.RequestState.RequestStatus;
 import gift.classes.RequestState.SecureRequestStateDTO;
+import gift.domain.Role;
 import gift.dto.MemberDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,7 @@ class MemberControllerTest {
     @Transactional
     void registerTest() {
         var url = "http://localhost:" + port + "/api/member/register";
-        MemberDto memberDto = new MemberDto(null, "testemail", "password", "admin");
+        MemberDto memberDto = new MemberDto(null, "testemail", "password", Role.ADMIN);
 
         HttpEntity<MemberDto> request = new HttpEntity<>(memberDto);
 
@@ -48,7 +51,7 @@ class MemberControllerTest {
     @Transactional
     void loginTest() {
         var registerUrl = "http://localhost:" + port + "/api/member/register";
-        MemberDto memberDto = new MemberDto(null, "testemail2", "password", "admin");
+        MemberDto memberDto = new MemberDto(null, "testemail2", "password", Role.ADMIN);
 
         HttpEntity<MemberDto> registerRequest = new HttpEntity<>(memberDto);
         ResponseEntity<RequestStateDTO> registerResponse = restTemplate.exchange(registerUrl,
