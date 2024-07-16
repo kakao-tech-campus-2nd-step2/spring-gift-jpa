@@ -53,6 +53,7 @@ public class WishProductService {
             return CreateWishProductResponse.fromEntity(wishProduct);
         }
 
+        //새로운 위시 상품을 추가
         WishProduct wishProduct = new Builder()
             .member(memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("Member not found")))
