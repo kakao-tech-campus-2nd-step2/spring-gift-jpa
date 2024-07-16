@@ -1,6 +1,5 @@
 # spring-gift-jpa
 
-## step 0 초기 세팅
 
 # JPA - ORM : step 1
 
@@ -22,6 +21,7 @@ spring data jpa 를 사용하도록 한다.
 
 - [X] : WishList와 member를 수정하여 정상 동작할 수 있도록 만들기
 - [X] : wishlist 테스트 코드 작성
+
 
 # step 3 페이지 구현하기
 

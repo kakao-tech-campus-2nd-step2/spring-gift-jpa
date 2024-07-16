@@ -14,10 +14,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "MEMBER_TABLE")
+
 public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name="MEMBER_ID")
     private Long id;
 
@@ -28,14 +30,15 @@ public class Member {
     private String password;
 
     @Column(name="MEMBER_ROLE",nullable = false)
+
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
     private String token;
 
+
     @OneToMany(mappedBy = "member")
     private List<Wish> wishList = new ArrayList<>();
-
     public Member(Long id, String email, String password, MemberRole role) {
         this.id = id;
         this.email = email;

@@ -1,5 +1,6 @@
 package gift.service;
 
+
 import gift.database.JpaProductRepository;
 import gift.dto.ProductDTO;
 import gift.exceptionAdvisor.ProductServiceException;
@@ -21,6 +22,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> readAll() {
+
         return jpaProductRepository.findAll().stream().map(
             product -> new ProductDTO(product.getId(), product.getName(), product.getPrice(),
                 product.getImageUrl())).toList();
@@ -32,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
         checkKakao(dto.getName());
         Product product = new Product(null, dto.getName(), dto.getPrice(), dto.getImageUrl());
         jpaProductRepository.save(product);
+
     }
 
 
@@ -39,12 +42,11 @@ public class ProductServiceImpl implements ProductService {
     public void updateName(long id, String name) {
         var prod = getProduct(id);
         prod.setName(name);
-
-
     }
 
     @Override
     public void updatePrice(long id, int price) {
+
         var prod = getProduct(id);
         prod.setPrice(price);
 
@@ -54,7 +56,6 @@ public class ProductServiceImpl implements ProductService {
     public void updateImageUrl(long id, String url) {
         var prod = getProduct(id);
         prod.setImageUrl(url);
-
     }
 
     @Override
@@ -72,6 +73,7 @@ public class ProductServiceImpl implements ProductService {
     private Product getProduct(long id) {
         var prod = jpaProductRepository.findById(id).orElseThrow(
             () -> new ProductServiceException("상품이 존재하지 않습니다", HttpStatus.BAD_REQUEST));
+
         checkKakao(prod.getName());
         return prod;
     }
@@ -83,4 +85,5 @@ public class ProductServiceImpl implements ProductService {
             new ProductDTO(product.getId(), product.getName(), product.getPrice(), product.getImageUrl()))
             .toList();
     }
+
 }

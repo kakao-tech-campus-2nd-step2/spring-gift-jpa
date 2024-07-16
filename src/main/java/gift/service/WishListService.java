@@ -16,4 +16,5 @@ public interface WishListService {
 
     WishListDTO getWishListPage(long memberId, int pageNumber, int pageSize);
 
+
 }

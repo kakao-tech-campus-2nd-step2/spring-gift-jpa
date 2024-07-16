@@ -12,10 +12,12 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "WISH_TABLE")
+
 public class Wish {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "WISH_ID")
     private Long id;
 
@@ -29,7 +31,6 @@ public class Wish {
 
     @Column(name = "PRODUCT_COUNT",nullable = false)
     private Integer productCount;
-
     public Wish() {
     }
 

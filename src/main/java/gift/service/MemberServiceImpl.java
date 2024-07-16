@@ -6,6 +6,7 @@ import gift.dto.MemberDTO;
 import gift.exceptionAdvisor.MemberServiceException;
 import gift.model.Member;
 import java.util.NoSuchElementException;
+import gift.model.MemberRole;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class MemberServiceImpl implements MemberService {
         }
         Member member = new Member(null, memberDTO.getEmail(), memberDTO.getPassword(), memberDTO.getRole());
         jpaMemberRepository.save(member);
+
     }
 
     @Override
@@ -60,10 +62,11 @@ public class MemberServiceImpl implements MemberService {
 
 
     private boolean checkEmailDuplication(String email) {
-        try {
+
             jpaMemberRepository.findByEmail(email).orElseThrow(NoSuchElementException::new);
             return true;
         } catch (NoSuchElementException e) {
+
             return false;
         }
     }

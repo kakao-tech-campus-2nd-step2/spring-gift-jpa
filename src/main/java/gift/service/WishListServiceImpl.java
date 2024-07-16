@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,10 +32,12 @@ public class WishListServiceImpl implements WishListService {
         this.jpaMemberRepository = jpaMemberRepository;
         this.jpaWishRepository = jpaWishRepository;
         this.jpaProductRepository = jpaProductRepository;
+
     }
 
     @Override
     public void addProduct(long memberId, long productId) {
+
         Member member = jpaMemberRepository.findById(memberId).orElseThrow(MemberNoSuchException::new);
         Product product = jpaProductRepository.findById(productId).orElseThrow();
         member.addProduct(product);
@@ -42,15 +45,16 @@ public class WishListServiceImpl implements WishListService {
 
     @Override
     public void deleteProduct(long memberId, long productId) {
+
         Member member = jpaMemberRepository.findById(memberId).orElseThrow(MemberNoSuchException::new);
         Product product = jpaProductRepository.findById(productId).orElseThrow();
         member.delProduct(product);
+
     }
 
     @Override
     public void updateProduct(long memberId, long productId, int productValue) {
         Wish wish = jpaWishRepository.findByMemberIdAndProductId(memberId,productId).orElseThrow();
-
         wish.setValue(productValue);
 
     }
@@ -70,4 +74,5 @@ public class WishListServiceImpl implements WishListService {
         ));
         return new WishListDTO(memberId,wishlist);
     }
+
 }

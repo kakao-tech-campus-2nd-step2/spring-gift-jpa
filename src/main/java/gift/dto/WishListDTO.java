@@ -1,5 +1,6 @@
 package gift.dto;
 
+
 import gift.model.Wish;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,8 +11,10 @@ public class WishListDTO {
     private Map<String,Integer> wishList;
 
 
+
     public WishListDTO() {
     }
+
 
     public WishListDTO(Wish wish,Map<String,Integer> wishList){
         this.memberId = wish.getMember().getId();
@@ -21,6 +24,7 @@ public class WishListDTO {
     public WishListDTO(Long memberId, Map<String, Integer> wishList) {
         this.memberId = memberId;
         this.wishList = wishList;
+
     }
 
     public Long getMemberId() {
@@ -30,6 +34,7 @@ public class WishListDTO {
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
+
 
     public Map<String, Integer> getWishList() {
         return wishList;
