@@ -7,9 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import javax.ws.rs.core.MediaType;
 
 import java.util.Optional;
 
@@ -38,6 +37,7 @@ public class MemberControllerTest {
         member.setPassword("testPassword");
 
         given(memberService.save(any(Member.class))).willReturn(member);
+
 
         mockMvc.perform(post("/member/register")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -69,7 +69,6 @@ public class MemberControllerTest {
 
         given(jwtUtil.extractEmail(anyString())).willReturn("testemail@example.com");
         given(memberService.findByEmail(anyString())).willReturn(Optional.of(member));
-
         mockMvc.perform(post("/member/current")
                 .header("Authorization", "Bearer fakeToken"))
                 .andExpect(status().isOk())
