@@ -1,11 +1,9 @@
 package gift.member.model;
 
-import gift.product.model.Product;
 import gift.wishlist.model.WishList;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Entity
