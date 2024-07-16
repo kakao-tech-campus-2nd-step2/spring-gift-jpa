@@ -1,4 +1,4 @@
-package gift.domain.controller;
+package gift.integrationTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Transactional
-class MemberControllerTest {
+class MemberDomainTest {
 
     @LocalServerPort
     private int port;
