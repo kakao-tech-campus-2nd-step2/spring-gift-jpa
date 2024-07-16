@@ -1,5 +1,7 @@
 package gift.domain.WishList;
 
+import gift.domain.member.Member;
+import gift.domain.product.Product;
 import jakarta.validation.constraints.Min;
 
 public record WishListRequest(
@@ -8,6 +10,6 @@ public record WishListRequest(
 ) {
 
     public WishList toWishList(Long memberId) {
-        return new WishList(memberId, productId);
+        return new WishList(new Member(memberId), new Product(productId));
     }
 }

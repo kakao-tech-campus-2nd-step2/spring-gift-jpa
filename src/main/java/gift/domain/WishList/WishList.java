@@ -1,10 +1,13 @@
 package gift.domain.WishList;
 
-import jakarta.persistence.Column;
+import gift.domain.member.Member;
+import gift.domain.product.Product;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class WishList {
@@ -13,30 +16,32 @@ public class WishList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long memberId;
+    @JoinColumn(nullable = false)
+    @ManyToOne
+    private Member member;
 
-    @Column(nullable = false)
-    private Long productId;
+    @JoinColumn(nullable = false)
+    @ManyToOne
+    private Product product;
 
     public WishList() {
-        
+
     }
 
-    public WishList(Long memberId, long productId) {
-        this.memberId = memberId;
-        this.productId = productId;
+    public WishList(Member member, Product product) {
+        this.member = member;
+        this.product = product;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Member getMemberId() {
+        return member;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProductId() {
+        return product;
     }
 }

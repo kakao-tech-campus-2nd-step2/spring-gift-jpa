@@ -2,8 +2,8 @@ package gift.service;
 
 import gift.domain.WishList.WishList;
 import gift.domain.WishList.WishListRequest;
+import gift.domain.member.Member;
 import gift.domain.product.Product;
-import gift.repository.ProductRepository;
 import gift.repository.WishListRepository;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -14,20 +14,16 @@ import org.springframework.web.server.ResponseStatusException;
 public class WishListService {
 
     private final WishListRepository wishListRepository;
-    private final ProductRepository productRepository;
 
-    public WishListService(WishListRepository wishListRepository,
-        ProductRepository productRepository) {
+    public WishListService(WishListRepository wishListRepository) {
         this.wishListRepository = wishListRepository;
-        this.productRepository = productRepository;
     }
 
     public List<Product> findByMemberId(Long memberId) {
-        List<Long> productIdList = wishListRepository.findByMemberId(memberId)
+        return wishListRepository.findByMember(new Member(memberId))
             .stream()
             .map(WishList::getProductId)
             .toList();
-        return productRepository.findByIdIn(productIdList);
     }
 
     public void save(Long memberId, WishListRequest wishListRequest) {
@@ -35,8 +31,8 @@ public class WishListService {
     }
 
     public void delete(Long memberId, WishListRequest wishListRequest) {
-        WishList wishList = wishListRepository.findByMemberIdAndProductId(memberId,
-            wishListRequest.productId()).orElseThrow(() -> new ResponseStatusException(
+        WishList wishList = wishListRepository.findByMemberAndProduct(new Member(memberId),
+            new Product(wishListRequest.productId())).orElseThrow(() -> new ResponseStatusException(
             HttpStatus.NOT_FOUND, "해당 위시 리스트를 찾을 수 없습니다"));
         wishListRepository.delete(wishList);
     }

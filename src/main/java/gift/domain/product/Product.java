@@ -26,6 +26,10 @@ public class Product {
 
     }
 
+    public Product(Long id) {
+        this.id = id;
+    }
+
     public Product(String name, long price, String imageUrl) {
         this.name = name;
         this.price = price;
