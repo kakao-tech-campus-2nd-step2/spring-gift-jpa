@@ -16,7 +16,6 @@ public class Product {
     private String imageUrl;
 
     public Product() {
-        // 기본 생성자
     }
 
     private Product(Builder builder) {

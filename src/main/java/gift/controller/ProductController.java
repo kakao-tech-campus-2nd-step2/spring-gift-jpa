@@ -60,10 +60,6 @@ public class ProductController {
             return ResponseEntity.badRequest().body(errors);
         }
         Product product = new Product();
-        product.setId(id);
-        product.setName(productRequest.getName());
-        product.setPrice(productRequest.getPrice());
-        product.setImageUrl(productRequest.getImageUrl());
         return ResponseEntity.ok(productService.save(product));
     }
 
