@@ -18,20 +18,18 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 @DataJpaTest
 class WishlistRepositoryTest {
 
+    @Autowired
     private WishlistRepository wishlistRepository;
+
+    @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
     private ProductRepository productRepository;
 
     private Member savedMember;
     private Product savedProduct;
-
-    @Autowired
-    public WishlistRepositoryTest(WishlistRepository wishlistRepository,
-        MemberRepository memberRepository, ProductRepository productRepository) {
-        this.wishlistRepository = wishlistRepository;
-        this.memberRepository = memberRepository;
-        this.productRepository = productRepository;
-    }
+    private Wishlist savedWishlist;
 
     @BeforeEach
     public void setUp() {
@@ -39,40 +37,34 @@ class WishlistRepositoryTest {
         savedMember = memberRepository.save(member);
         Product product = new Product(1L, "상품", "100", "https://kakao");
         savedProduct = productRepository.save(product);
+        savedWishlist = new Wishlist(1L, savedMember, savedProduct);
     }
 
     @Test
     public void testSaveWishlist() {
-
-        Wishlist wishlist = new Wishlist(1L, savedMember.getEmail(), savedProduct.getId());
-
-        Wishlist saved = wishlistRepository.save(wishlist);
-
+        Wishlist saved = wishlistRepository.save(savedWishlist);
         assertAll(
             () -> assertThat(saved.getId()).isNotNull(),
-            () -> assertThat(saved.getMemberEmail()).isEqualTo("kbm@kbm"),
-            () -> assertThat(saved.getProductId()).isEqualTo(1L)
+            () -> assertThat(saved.getMember().getEmail()).isEqualTo("kbm@kbm"),
+            () -> assertThat(saved.getProduct().getId()).isEqualTo(1L)
         );
     }
 
     @Test
     public void testFindByMemberEmail() {
-        Wishlist wishlist = new Wishlist(1L, savedMember.getEmail(), savedProduct.getId());
-        wishlistRepository.save(wishlist);
-        List<Wishlist> found = wishlistRepository.findByMemberEmail(savedMember.getEmail());
+        wishlistRepository.save(savedWishlist);
+        List<Wishlist> found = wishlistRepository.findByMember(savedMember);
         assertAll(
             () -> assertThat(found.size()).isEqualTo(1),
-            () -> assertThat(found.get(0).getMemberEmail()).isEqualTo(savedMember.getEmail())
+            () -> assertThat(found.get(0).getMember().getEmail()).isEqualTo(savedMember.getEmail())
         );
     }
 
     @Test
     void testDeleteByMemberEmailAndProductId() {
-        Wishlist wishlist = new Wishlist(1L, savedMember.getEmail(), savedProduct.getId());
-        wishlistRepository.save(wishlist);
-        wishlistRepository.deleteByMemberEmailAndProductId(savedMember.getEmail(),
-            savedProduct.getId());
-        List<Wishlist> result = wishlistRepository.findByMemberEmail(savedMember.getEmail());
+        wishlistRepository.save(savedWishlist);
+        wishlistRepository.deleteByMemberAndProduct(savedMember, savedProduct);
+        List<Wishlist> result = wishlistRepository.findByMember(savedMember);
         assertThat(result.size()).isEqualTo(0);
     }
 }

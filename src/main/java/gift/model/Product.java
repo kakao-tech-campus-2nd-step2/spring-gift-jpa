@@ -1,14 +1,14 @@
 package gift.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -26,6 +26,9 @@ public class Product {
 
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private List<Wishlist> wishlists;
 
     protected Product() {
     }
@@ -54,7 +57,16 @@ public class Product {
     }
 
     public void validate() {
-        if (name == null || name.trim().isEmpty()) {
+        validateName();
+        validatePrice();
+        validateImageUrl();
+    }
+
+    private void validateName() {
+        if (name == null) {
+            throw new IllegalArgumentException("상품 이름은 최소 1자 이상이어야 합니다.");
+        }
+        if (name.trim().isEmpty()) {
             throw new IllegalArgumentException("상품 이름은 최소 1자 이상이어야 합니다.");
         }
         if (name.length() > 15) {
@@ -66,13 +78,25 @@ public class Product {
         if (name.contains("카카오")) {
             throw new IllegalArgumentException("'카카오'가 포함된 문구는 담당 MD와 협의 후 사용 바랍니다.");
         }
-        if (price == null || price.trim().isEmpty()) {
+    }
+
+    private void validatePrice() {
+        if (price == null) {
+            throw new IllegalArgumentException("가격을 입력해야 합니다.");
+        }
+        if (price.trim().isEmpty()) {
             throw new IllegalArgumentException("가격을 입력해야 합니다.");
         }
         if (!price.matches("^\\d+$")) {
             throw new IllegalArgumentException("가격은 0이상의 숫자만 입력 가능합니다.");
         }
-        if (imageUrl == null || imageUrl.trim().isEmpty()) {
+    }
+
+    private void validateImageUrl() {
+        if (imageUrl == null) {
+            throw new IllegalArgumentException("이미지 URL을 입력해야 합니다.");
+        }
+        if (imageUrl.trim().isEmpty()) {
             throw new IllegalArgumentException("이미지 URL을 입력해야 합니다.");
         }
         if (!imageUrl.matches("^(http|https)://.*$")) {

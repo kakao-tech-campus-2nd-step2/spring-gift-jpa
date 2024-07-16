@@ -3,10 +3,11 @@ package gift.service;
 import gift.dto.MemberDTO;
 import gift.model.Member;
 import gift.repository.MemberRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
