@@ -28,9 +28,6 @@ public class Product {
    @Column(nullable = false, length = 255)
    private String imageUrl;
 
-    public Product() {
-    }
-
     public Product(Long id, String name, int price, String imageUrl) {
         this.id = id;
         this.price = price;

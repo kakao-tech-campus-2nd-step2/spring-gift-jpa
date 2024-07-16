@@ -72,9 +72,8 @@ public class MemberControllerTest {
 
         given(jwtUtil.extractEmail(anyString())).willReturn("testemail@example.com");
         given(memberService.findByEmail(anyString())).willReturn(Optional.of(member));
-
-        mockMvc.perform(post("/members/current")
-                        .header("Authorization", "Bearer fakeToken"))
+        mockMvc.perform(post("/member/current")
+                .header("Authorization", "Bearer fakeToken"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("testemail@example.com"));
     }

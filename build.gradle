@@ -38,10 +38,3 @@ tasks.withType(JavaCompile) {
 tasks.named('test') {
     useJUnitPlatform()
 }
-
-
-
-
-//war {
-//    archiveName 'jakarta-ee-getting-started.war'
-//}

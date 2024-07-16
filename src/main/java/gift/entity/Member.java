@@ -14,8 +14,6 @@ public class Member {
     @Column(nullable = false, length = 255)
     private String password;
 
-    public Member() {}
-
     public Long getId() {
         return id;
     }
