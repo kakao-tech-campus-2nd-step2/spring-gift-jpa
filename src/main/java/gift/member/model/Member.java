@@ -49,8 +49,4 @@ public class Member {
         return email;
     }
 
-    public void setWishList(WishList wishList) {
-        this.wishList = wishList;
-    }
-
 }
