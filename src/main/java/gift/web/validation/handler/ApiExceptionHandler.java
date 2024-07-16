@@ -1,21 +1,17 @@
 package gift.web.validation.handler;
 
-import static gift.web.validation.exception.code.ErrorCode.INCORRECT_EMAIL;
-import static gift.web.validation.exception.code.ErrorCode.INCORRECT_PASSWORD;
 import static gift.web.validation.exception.code.ErrorCode.INTERNAL_SERVER_ERROR;
 import static gift.web.validation.exception.code.ErrorCode.INVALID_PARAMETER;
 import static gift.web.validation.exception.code.ErrorCode.NOT_FOUND;
-import static gift.web.validation.exception.code.ErrorCode.UNAUTHORIZED_INVALID_CREDENTIALS;
 
 import gift.web.dto.response.ErrorResponse;
-import gift.web.validation.exception.IncorrectEmailException;
-import gift.web.validation.exception.IncorrectPasswordException;
-import gift.web.validation.exception.InvalidCredentialsException;
+import gift.web.validation.exception.client.ClientException;
+import gift.web.validation.exception.server.InternalServerException;
+import gift.web.validation.exception.server.ServerException;
 import java.util.NoSuchElementException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,51 +20,41 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
-    private final Logger log = LoggerFactory.getLogger(ApiExceptionHandler.class);
-
-    //todo: handleMethodArgumentNotValidException 메서드 구현
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-//        BindingResult bindingResult = e.getBindingResult();
-//        ErrorResponse errorResponse = ErrorResponse.from(bindingResult);
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        BindingResult bindingResult = exception.getBindingResult();
+        ErrorResponse errorResponse = ErrorResponse.from(bindingResult);
 
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException e) {
-        ErrorResponse errorResponse = ErrorResponse.from(INVALID_PARAMETER);
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidCredentialsException(InvalidCredentialsException e) {
-        ErrorResponse errorResponse = ErrorResponse.from(UNAUTHORIZED_INVALID_CREDENTIALS);
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(IncorrectEmailException.class)
-    public ResponseEntity<ErrorResponse> handleIncorrectEmailException(IncorrectEmailException e) {
-        ErrorResponse errorResponse = ErrorResponse.from(INCORRECT_EMAIL);
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(IncorrectPasswordException.class)
-    public ResponseEntity<ErrorResponse> handleIncorrectPasswordException(IncorrectPasswordException e) {
-        ErrorResponse errorResponse = ErrorResponse.from(INCORRECT_PASSWORD);
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<ErrorResponse> handleNoSuchElementException(NoSuchElementException exception) {
+        ErrorResponse errorResponse = ErrorResponse.of(INVALID_PARAMETER, "해당 자원을 찾을 수 없습니다.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException e) {
-        ErrorResponse errorResponse = ErrorResponse.from(NOT_FOUND);
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(NoResourceFoundException exception) {
+        ErrorResponse errorResponse = ErrorResponse.of(NOT_FOUND, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(ClientException.class)
+    public ResponseEntity<ErrorResponse> handleClientException(ClientException exception) {
+        ErrorResponse errorResponse = ErrorResponse.from(exception);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(ServerException.class)
+    public ResponseEntity<ErrorResponse> handleInternalServerException(InternalServerException exception) {
+        ErrorResponse errorResponse = ErrorResponse.from(exception);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception e) {
-        ErrorResponse errorResponse = ErrorResponse.from(INTERNAL_SERVER_ERROR);
-        log.info("handle Exception", e);
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ErrorResponse> handleException(Exception exception) {
+        ErrorResponse errorResponse = ErrorResponse.of(INTERNAL_SERVER_ERROR, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 }
