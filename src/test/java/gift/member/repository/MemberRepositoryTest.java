@@ -31,13 +31,13 @@ public class MemberRepositoryTest {
         assertThat(savedMember).isNotNull();
         assertThat(savedMember.getMemberId()).isNotNull();
         assertThat(savedMember.getEmail()).isEqualTo("test@example.com");
-        assertThat(savedMember.getPassword()).isEqualTo("password123");
+        assertThat(savedMember.getPassword()).isEqualTo("password");
     }
 
     @Test
     public void testFindByEmail() {
         // Given
-        Member member = new Member("test@example.com", "password123");
+        Member member = new Member("test@example.com", "password");
         memberRepository.save(member);
 
         // When
@@ -46,13 +46,13 @@ public class MemberRepositoryTest {
         // Then
         assertThat(foundMember).isNotNull();
         assertThat(foundMember.get().getEmail()).isEqualTo("test@example.com");
-        assertThat(foundMember.get().getPassword()).isEqualTo("password123");
+        assertThat(foundMember.get().getPassword()).isEqualTo("password");
     }
 
     @Test
     public void testDeleteMember() {
         // Given
-        Member member = new Member("test@example.com", "password123");
+        Member member = new Member("test@example.com", "password");
         Member savedMember = memberRepository.save(member);
 
         // When

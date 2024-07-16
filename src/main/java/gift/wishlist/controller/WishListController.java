@@ -28,7 +28,7 @@ public class WishListController {
     }
 
     /** 페이지네이션된 위시리스트 데이터를 반환
-     * 특정 페이지와 크기 요청: /api/products/paged?page=1&size=5
+     * 특정 페이지와 크기 요청: /wishlist/{member_id}/paged?page=1&size=5
      * 페이지 번호: 1
      * 페이지 크기: 5
      * 정렬: 이름을 기준으로 오름차순 정렬 (기본값) **/

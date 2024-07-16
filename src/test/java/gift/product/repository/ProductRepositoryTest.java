@@ -29,7 +29,7 @@ public class ProductRepositoryTest {
     @Test
     public void saveTest() {
         // Given
-        Product product = new Product("Product 1", 10, "http://www.google.com/img1");
+        Product product = new Product("Product 1", 10, "http://www.google.com");
 
         // When
         Product savedProduct = productRepository.save(product);
@@ -43,7 +43,7 @@ public class ProductRepositoryTest {
     @Test
     public void findByIdTest() {
         // Given
-        Product product = new Product("Product 2", 20, "http://www.google.com/img2");
+        Product product = new Product("Product 2", 20, "hhttp://www.google.com");
         productRepository.save(product);
 
         // When
@@ -57,7 +57,7 @@ public class ProductRepositoryTest {
     @Test
     public void deleteTest() {
         // Given
-        Product product = new Product("Product 3", 30, "http://www.google.com/img3");
+        Product product = new Product("Product 3", 30, "hhttp://www.google.com");
         productRepository.save(product);
 
         // When
@@ -71,8 +71,8 @@ public class ProductRepositoryTest {
     @Test
     public void findAllTest() {
         // Given
-        Product product1 = new Product("Product 4", 40, "http://www.google.com/img4");
-        Product product2 = new Product("Product 5", 50, "http://www.google.com/img5");
+        Product product1 = new Product("Product 4", 40, "http://www.google.com");
+        Product product2 = new Product("Product 5", 50, "http://www.google.com");
         productRepository.save(product1);
         productRepository.save(product2);
 
@@ -87,18 +87,18 @@ public class ProductRepositoryTest {
     @Test
     public void updateTest() {
         // Given
-        Product product = new Product("Product 6", 60, "http://www.google.com/img6");
+        Product product = new Product("Product 6", 60, "http://www.google.com");
         product = productRepository.save(product);
 
         // When
-        product.update("Updated Product 6", 70, "http://www.google.com/updated_img6");
+        product.update("변경된 Product 6", 70, "http://www.google.com");
         product = productRepository.save(product);
 
         // Then
         Optional<Product> updatedProduct = productRepository.findById(product.product_id());
         assertThat(updatedProduct).isPresent();
-        assertThat(updatedProduct.get().name()).isEqualTo("Updated Product 6");
+        assertThat(updatedProduct.get().name()).isEqualTo("변경된 Product 6");
         assertThat(updatedProduct.get().getPrice()).isEqualTo(70);
-        assertThat(updatedProduct.get().getImgUrl()).isEqualTo("http://www.google.com/updated_img6");
+        assertThat(updatedProduct.get().getImgUrl()).isEqualTo("http://www.google.com");
     }
 }

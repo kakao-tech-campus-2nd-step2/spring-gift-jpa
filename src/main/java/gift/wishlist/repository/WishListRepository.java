@@ -10,11 +10,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface WishListRepository extends JpaRepository<WishList, String> {
     WishList findByMemberId(Long member_id);
+    Optional<WishList> findByMemberIdAndProductId(Long member_id, Long produc_id);
 
-    Page<WishList> findByMemberId(Long userId, Pageable pageable);
+    Page<WishList> findByMemberId(Long member_id, Pageable pageable);
 
     @Modifying
     @Query("update WishList w set w.products = concat(w.products, :product) where w.member.member_id = :member_id")
