@@ -28,6 +28,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     providedCompile 'jakarta.platform:jakarta.jakartaee-api:8.0.0'
+    developmentOnly('org.springframework.boot:spring-boot-devtools')
 }
 
 tasks.withType(JavaCompile) {
@@ -37,4 +38,3 @@ tasks.withType(JavaCompile) {
 tasks.named('test') {
     useJUnitPlatform()
 }
-
