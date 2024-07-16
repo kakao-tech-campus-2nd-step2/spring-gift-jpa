@@ -81,7 +81,6 @@
 └── src
     └── main
         ├── java
-            └── gift    
-               ├── MemberRepositoryTest.java
-               ├── ProductRepositoryTest.java
-               └── WishListService.java
+            └── gift   
+                └── member.service   
+                    └── MemberServiceTest.java
