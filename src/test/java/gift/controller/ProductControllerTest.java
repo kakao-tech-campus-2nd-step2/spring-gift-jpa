@@ -1,26 +1,25 @@
 package gift.controller;
 
-import gift.model.Product;
+import gift.entity.Product;
 import gift.service.ProductService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductController.class)
-class ProductControllerTest {
+public class ProductControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -28,70 +27,46 @@ class ProductControllerTest {
     @MockBean
     private ProductService productService;
 
-    private Product product;
-
-    @BeforeEach
-    void setUp() {
-        product = new Product.Builder()
-                .id(1L)
-                .name("Sample Product 1")
-                .price(1000)
-                .imageUrl("https://example.com/sample1.jpg")
-                .build();
-    }
-
     @Test
-    void getAllProducts() throws Exception {
-        when(productService.getAllProducts()).thenReturn(Collections.singletonList(product));
+    public void getAllProducts() throws Exception {
+        given(productService.findAll()).willReturn(Arrays.asList(
+                new Product(1L, 100, "Product1", "url1"),
+                new Product(2L, 200, "Product2", "url2")
+        ));
 
-        mockMvc.perform(get("/products"))
+        mockMvc.perform(get("/api/product"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_HTML))
-                .andExpect(view().name("products"))
-                .andExpect(model().attributeExists("products"))
-                .andExpect(model().attribute("products", Collections.singletonList(product)));
+                .andExpect(jsonPath("$[0].name").value("Product1"))
+                .andExpect(jsonPath("$[1].name").value("Product2"));
     }
 
     @Test
-    void addProduct() throws Exception {
-        doNothing().when(productService).addProduct(any(Product.class));
+    public void addProduct() throws Exception {
+        Product product = new Product(1L, 100, "Product1", "url1");
+        given(productService.save(any(Product.class))).willReturn(product);
 
-        mockMvc.perform(post("/products")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("name", "New Product")
-                        .param("price", "3000")
-                        .param("imageUrl", "https://example.com/newproduct.jpg"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/products"));
-
-        verify(productService, times(1)).addProduct(any(Product.class));
+        mockMvc.perform(post("/api/product")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"price\":100,\"name\":\"Product1\",\"imageUrl\":\"url1\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Product1"));
     }
 
     @Test
-    void updateProduct() throws Exception {
-        doNothing().when(productService).updateProduct(eq(1L), any(Product.class));
+    public void updateProduct() throws Exception {
+        Product product = new Product(1L, 100, "Product1", "url1");
+        given(productService.save(any(Product.class))).willReturn(product);
 
-        mockMvc.perform(post("/products/edit/1")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("name", "Updated Product")
-                        .param("price", "1500")
-                        .param("imageUrl", "https://example.com/updatedproduct.jpg"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/products"));
-
-        verify(productService, times(1)).updateProduct(eq(1L), any(Product.class));
+        mockMvc.perform(put("/api/product/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"price\":100,\"name\":\"Product1\",\"imageUrl\":\"url1\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Product1"));
     }
 
     @Test
-    void deleteProduct() throws Exception {
-        doNothing().when(productService).deleteProduct(1L);
-
-        mockMvc.perform(get("/products/delete/1"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/products"));
-
-        verify(productService, times(1)).deleteProduct(1L);
+    public void deleteProduct() throws Exception {
+        mockMvc.perform(delete("/api/product/1"))
+                .andExpect(status().isNoContent());
     }
 }
-
-

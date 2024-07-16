@@ -6,12 +6,12 @@ import jakarta.validation.constraints.Size;
 
 public class MemberDTO {
 
-    @Email(message = "?�효???�메??주소�??�력?�주?�요.")
-    @NotEmpty(message = "?�메?��? ?�수 ??��?�니??")
+    @Email(message = "유효한 이메일 주소를 입력해주세요.")
+    @NotEmpty(message = "이메일은 필수 항목입니다.")
     public String email;
 
-    @Size(min = 6, message = "비�?번호??최소 6???�상?�어???�니??")
-    @NotEmpty(message = "비�?번호???�수 ??��?�니??")
+    @Size(min = 6, message = "비밀번호는 최소 6자 이상이어야 합니다.")
+    @NotEmpty(message = "비밀번호는 필수 항목입니다.")
     public String password;
 
     public String getEmail() {
@@ -30,4 +30,3 @@ public class MemberDTO {
         this.password = password;
     }
 }
-
