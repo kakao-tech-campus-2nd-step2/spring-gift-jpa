@@ -21,7 +21,7 @@ public class ProductViewController {
         this.productService = productService;
     }
 
-    @GetMapping()
+    @GetMapping
     public String readAdminPage(Model model) {
         ReadAllProductsResponse allProductsResponse = productService.readAllProducts();
         List<ReadProductResponse> products = allProductsResponse.getProducts();

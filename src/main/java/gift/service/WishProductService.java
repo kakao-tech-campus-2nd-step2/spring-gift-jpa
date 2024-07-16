@@ -14,19 +14,22 @@ import gift.web.dto.response.wishproduct.UpdateWishProductResponse;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class WishProductService {
 
-    private final WishProductRepository wishProductRepository;
     private final ProductRepository productRepository;
     private final MemberRepository memberRepository;
+    private final WishProductRepository wishProductRepository;
 
-    public WishProductService(WishProductRepository wishProductRepository,
-        ProductRepository productRepository, MemberRepository memberRepository) {
-        this.wishProductRepository = wishProductRepository;
+    public WishProductService(ProductRepository productRepository,
+        MemberRepository memberRepository,
+        WishProductRepository wishProductRepository) {
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
+        this.wishProductRepository = wishProductRepository;
     }
 
     /**
@@ -36,16 +39,17 @@ public class WishProductService {
      * @param request 상품 정보
      * @return 생성된 WishProduct ID
      */
+    @Transactional
     public CreateWishProductResponse createWishProduct(Long memberId, CreateWishProductRequest request) {
 
         // 이미 존재하는 WishProduct인 경우 수량만 추가
-        Optional<WishProduct> existingWishProduct = wishProductRepository.findByMemberIdAndProductId(memberId, request.getProductId());
+        Optional<WishProduct> existingWishProduct = wishProductRepository.findByMemberIdAndProductId(
+            memberId, request.getProductId());
         if (existingWishProduct.isPresent()) {
             WishProduct wishProduct = existingWishProduct.get();
             wishProduct.addQuantity(request.getQuantity());
-            wishProductRepository.updateQuantity(wishProduct);
 
-            return new CreateWishProductResponse(wishProduct.getId());
+            return CreateWishProductResponse.fromEntity(wishProduct);
         }
 
         WishProduct wishProduct = new Builder()
@@ -55,31 +59,31 @@ public class WishProductService {
                 .orElseThrow(() -> new NoSuchElementException("Product not found")))
             .quantity(request.getQuantity()).build();
 
-        return new CreateWishProductResponse(wishProductRepository.save(wishProduct));
+        return CreateWishProductResponse.fromEntity(wishProductRepository.save(wishProduct));
     }
 
     public ReadAllWishProductsResponse readAllWishProducts(Long memberId) {
         return new ReadAllWishProductsResponse(
-            wishProductRepository
-                .findByMemberId(memberId)
+            wishProductRepository.findByMemberId(memberId)
                 .stream()
                 .map(ReadWishProductResponse::fromEntity)
                 .toList()
         );
     }
 
+    @Transactional
     public UpdateWishProductResponse updateWishProduct(Long wishProductId, UpdateWishProductRequest request) {
         WishProduct wishProduct = wishProductRepository.findById(wishProductId)
-            .orElseThrow(() -> new NoSuchElementException(wishProductId + "에 해당하는 위시 상품이 없습니다."));
+            .orElseThrow(NoSuchElementException::new);
         wishProduct.updateQuantity(request.getQuantity());
-        wishProductRepository.updateQuantity(wishProduct);
+
         return UpdateWishProductResponse.fromEntity(wishProduct);
     }
 
+    @Transactional
     public void deleteWishProduct(Long wishProductId) {
-        boolean isSuccessful = wishProductRepository.deleteById(wishProductId);
-        if (!isSuccessful) {
-            throw new NoSuchElementException(wishProductId + "에 해당하는 위시 상품이 없습니다.");
-        }
+        WishProduct wishProduct = wishProductRepository.findById(wishProductId)
+            .orElseThrow(NoSuchElementException::new);
+        wishProductRepository.delete(wishProduct);
     }
 }

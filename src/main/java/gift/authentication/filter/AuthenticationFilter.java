@@ -2,6 +2,7 @@ package gift.authentication.filter;
 
 import gift.authentication.token.JwtResolver;
 import gift.authentication.token.Token;
+import gift.authentication.token.TokenContext;
 import gift.web.validation.exception.InvalidCredentialsException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,22 +28,23 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
 
-        //검증이 필요없는 요청
-        if (ignorePaths.contains(request.getRequestURI())) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        //검증이 필요한 요청
         String authorization = request.getHeader(AUTHORIZATION_HEADER);
         if(Objects.nonNull(authorization) && authorization.startsWith(BEARER)) {
             String token = authorization.substring(BEARER.length());
-            jwtResolver.resolve(Token.from(token));
+
+            Long memberId = jwtResolver.resolveId(Token.from(token)).orElseThrow(InvalidCredentialsException::new);
+            TokenContext.addCurrentMemberId(memberId);
 
             filterChain.doFilter(request, response);
+            TokenContext.clear();
             return;
         }
 
         throw new InvalidCredentialsException();
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return ignorePaths.contains(request.getRequestURI());
     }
 }

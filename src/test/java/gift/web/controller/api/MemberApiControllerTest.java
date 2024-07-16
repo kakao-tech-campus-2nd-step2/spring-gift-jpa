@@ -7,10 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import gift.authentication.token.Token;
 import gift.domain.Member;
-import gift.domain.vo.Email;
-import gift.domain.vo.Password;
+import gift.repository.MemberRepository;
 import gift.service.MemberService;
 import gift.service.WishProductService;
+import gift.utils.DatabaseCleanup;
+import gift.utils.MemberDummyDataProvider;
+import gift.utils.ProductDummyDataProvider;
+import gift.utils.WishProductDummyDataProvider;
 import gift.web.dto.request.LoginRequest;
 import gift.web.dto.request.member.CreateMemberRequest;
 import gift.web.dto.request.wishproduct.UpdateWishProductRequest;
@@ -19,6 +22,7 @@ import gift.web.dto.response.member.CreateMemberResponse;
 import gift.web.dto.response.member.ReadMemberResponse;
 import gift.web.dto.response.wishproduct.ReadAllWishProductsResponse;
 import gift.web.dto.response.wishproduct.UpdateWishProductResponse;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +35,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class MemberApiControllerTest {
 
@@ -42,7 +48,22 @@ class MemberApiControllerTest {
     private TestRestTemplate restTemplate;
 
     @Autowired
+    private MemberDummyDataProvider memberDummyDataProvider;
+
+    @Autowired
+    private ProductDummyDataProvider productDummyDataProvider;
+
+    @Autowired
+    private WishProductDummyDataProvider wishProductDummyDataProvider;
+
+    @Autowired
+    private DatabaseCleanup databaseCleanup;
+
+    @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
     private WishProductService wishProductService;
@@ -53,14 +74,37 @@ class MemberApiControllerTest {
 
     @BeforeEach
     void setUp() {
-        member = new Member(1L, Email.from("member01@gmail.com"), Password.from("member010101"), "member01");
-        String email = member.getEmail().getValue();
-        String password = member.getPassword().getValue();
+        insertDummyData(100);
+        member = getTestMember(1L);
+        token = getAccessToken();
+    }
 
-        LoginRequest loginRequest = new LoginRequest(email, password);
+    private Member getTestMember(Long id) {
+        return memberRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("ID: " + id +"인 회원이 존재하지 않습니다."));
+    }
+
+    private Token getAccessToken() {
+        LoginRequest loginRequest = new LoginRequest(
+            member.getEmail().getValue(),
+            member.getPassword().getValue()
+        );
         LoginResponse loginResponse = memberService.login(loginRequest);
+        return loginResponse.getToken();
+    }
 
-        token = loginResponse.getToken();
+    private void insertDummyData(int quantity) {
+        if (quantity < 2) {
+            throw new IllegalArgumentException("quantity는 2 이상이어야 합니다.");
+        }
+        memberDummyDataProvider.run(quantity);
+        productDummyDataProvider.run(quantity);
+        wishProductDummyDataProvider.run(quantity);
+    }
+
+    @AfterEach
+    void tearDown() {
+        databaseCleanup.execute();
     }
 
     @Test
@@ -134,7 +178,7 @@ class MemberApiControllerTest {
         String url = "http://localhost:" + port + "/api/members/wishlist/" + wishProductId;
         HttpHeaders httpHeaders = getHttpHeaders();
 
-        UpdateWishProductRequest request = new UpdateWishProductRequest(wishProductId, 3);
+        UpdateWishProductRequest request = new UpdateWishProductRequest(3);
 
         HttpEntity httpEntity = new HttpEntity(request, httpHeaders);
 
@@ -159,7 +203,8 @@ class MemberApiControllerTest {
         HttpEntity httpEntity = new HttpEntity(httpHeaders);
 
         //when
-        ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, httpEntity, Void.class);
+        ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, httpEntity,
+            Void.class);
 
         //then
         assertTrue(response.getStatusCode().is2xxSuccessful());

@@ -12,21 +12,25 @@ import gift.web.dto.response.member.CreateMemberResponse;
 import gift.web.dto.response.member.ReadMemberResponse;
 import gift.web.validation.exception.IncorrectEmailException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
 
-    public MemberService(MemberRepository memberRepository, JwtProvider jwtProvider) {
+    public MemberService(MemberRepository memberRepository,
+        JwtProvider jwtProvider) {
         this.memberRepository = memberRepository;
         this.jwtProvider = jwtProvider;
     }
 
+    @Transactional
     public CreateMemberResponse createMember(CreateMemberRequest request) {
         Member member = request.toEntity();
-        return new CreateMemberResponse(memberRepository.save(member));
+        return CreateMemberResponse.fromEntity(memberRepository.save(member));
     }
 
     public ReadMemberResponse readMember(Long id) {

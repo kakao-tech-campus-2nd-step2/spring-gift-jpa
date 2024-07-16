@@ -1,10 +1,27 @@
 package gift.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+@Entity
 public class WishProduct extends BaseEntity {
 
-    private final Member member;
-    private final Product product;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @Column(nullable = false)
     private Integer quantity;
+
+    protected WishProduct() {
+    }
 
     public static class Builder extends BaseEntity.Builder<WishProduct.Builder> {
 

@@ -1,7 +1,7 @@
 package gift.service;
 
-import gift.web.dto.MemberDetails;
 import gift.repository.MemberRepository;
+import gift.web.dto.MemberDetails;
 import org.springframework.stereotype.Service;
 
 @Service

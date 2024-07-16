@@ -23,14 +23,17 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public FilterRegistrationBean authenticationExceptionHandlerFilter() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new AuthenticationExceptionHandlerFilter());
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.setFilter(new AuthenticationExceptionHandlerFilter());
         filterRegistrationBean.setOrder(1);
         return filterRegistrationBean;
     }
 
     @Bean
     public FilterRegistrationBean authenticationFilter() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new AuthenticationFilter(jwtResolver));
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.setFilter(new AuthenticationFilter(jwtResolver));
+        filterRegistrationBean.addUrlPatterns("/api/*");
         filterRegistrationBean.setOrder(2);
         return filterRegistrationBean;
     }

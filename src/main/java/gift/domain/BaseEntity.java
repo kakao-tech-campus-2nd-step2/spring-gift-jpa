@@ -1,52 +1,28 @@
 package gift.domain;
 
-import java.util.Objects;
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-public abstract class BaseEntity {
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+public abstract class BaseEntity extends BaseTimeEntity {
 
-    protected final Long id;
+    @CreatedBy
+    @Column(nullable = false, updatable = false)
+    private Long createdBy;
 
-    protected BaseEntity(Long id) {
-        this.id = id;
-    }
+    @LastModifiedBy
+    @Column(nullable = false)
+    private Long modifiedBy;
 
-    abstract static class Builder<T extends Builder<T>> {
-
-        Long id;
-
-        public T id(Long id) {
-            this.id = id;
-            return self();
-        }
-
-        abstract BaseEntity build();
-
-        protected abstract T self();
+    protected BaseEntity() {
     }
 
     protected BaseEntity(Builder<?> builder) {
-        id = builder.id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        BaseEntity baseEntity = (BaseEntity) o;
-        return Objects.equals(id, baseEntity.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+        super(builder);
     }
 }

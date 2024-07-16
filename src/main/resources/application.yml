@@ -1,24 +1,19 @@
 spring:
-  config:
-    import: application-secret.yml
   application:
     name: spring-gift
-    datasource:
-      driver-class-name: org.h2.Driver
 
-  h2:
-    console:
-      enabled: true
-
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:sql/schema.sql
-      data-locations: classpath:sql/data.sql
-
-jwt:
-  expiration: 3600000 #1시간
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
 
 logging:
   level:
-    gift.authentication: debug
+    org:
+      hibernate:
+        SQL: debug
+        orm:
+          jdbc:
+            bind: trace

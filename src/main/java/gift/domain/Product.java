@@ -1,12 +1,34 @@
 package gift.domain;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
+@DynamicInsert
+@Entity
 public class Product extends BaseEntity {
 
-    private final String name;
-    private final Integer price;
-    private final URL imageUrl;
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private Integer price;
+
+    @Column(nullable = false)
+    @ColumnDefault("'https://gift-s3.s3.ap-northeast-2.amazonaws.com/default-image.png'")
+    private URL imageUrl;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private List<WishProduct> wishProducts = new ArrayList<>();
+
+    protected Product() {
+    }
 
     public static class Builder extends BaseEntity.Builder<Builder> {
 
@@ -46,6 +68,13 @@ public class Product extends BaseEntity {
         name = builder.name;
         price = builder.price;
         imageUrl = builder.imageUrl;
+    }
+
+    public Product update(Product product) {
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.imageUrl = product.getImageUrl();
+        return this;
     }
 
     public String getName() {
