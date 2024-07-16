@@ -3,12 +3,11 @@ package gift.DTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import java.util.Optional;
 
 public class MemberDto {
 
   private Long id;
-  @NotBlank(message = "Email을 필수입니다.")
+  @NotBlank(message = "Email은 필수입니다.")
   @Email(message = "Email형식으로 제출해주십오.")
   private String email;
   @NotBlank(message = "비밀번호는 필수입니다.")
@@ -35,11 +34,6 @@ public class MemberDto {
 
   public String getPassword() {
     return this.password;
-  }
-
-  public boolean matchLoginInfo(Optional<UserEntity> userByEmail) {
-    return this.email.equals(userByEmail.get().getEmail()) && this.password.equals(
-      userByEmail.get().getPassword());
   }
 
 }

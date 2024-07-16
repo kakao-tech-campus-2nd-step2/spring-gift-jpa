@@ -1,4 +1,4 @@
-package gift;
+package gift.Controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -12,7 +12,6 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
-import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,14 +19,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-@AutoConfigureTestDatabase(replace = Replace.NONE)
 @ActiveProfiles("test")
 public class ProductControllerTest {
 
@@ -35,8 +35,6 @@ public class ProductControllerTest {
   private ProductService productService;
   @Autowired
   private ProductController productController;
-  @Autowired
-  private JdbcTemplate jdbcTemplate;
 
   @BeforeEach
   public void setUp() {
@@ -47,6 +45,8 @@ public class ProductControllerTest {
   @DirtiesContext
   @Test
   public void testGetAllProducts() {
+    Pageable pageable= PageRequest.of(0,5);
+    
     // 제품 추가
     ProductDto productDto1 = new ProductDto(1L, "Coffee", 100,
       "https://st.kakaocdn.net/product/gift/product/20231010111814_9a667f9eccc943648797925498bdd8a3.jpg");
@@ -56,18 +56,20 @@ public class ProductControllerTest {
     ProductDto addedProduct1 = productController.addProduct(productDto1);
     ProductDto addedProduct2 = productController.addProduct(productDto2);
 
-    List<ProductDto> returnedProductEntities = productController.getAllProducts();
+    Page<ProductDto> returnedProductEntities = productController.getAllProducts(pageable).getBody();
 
     // 반환된 제품 리스트 검증
-    assertEquals(2, returnedProductEntities.size());
-    assertEquals(productDto1.getId(), returnedProductEntities.get(0).getId());
-    assertEquals(productDto1.getName(), returnedProductEntities.get(0).getName());
-    assertEquals(productDto1.getPrice(), returnedProductEntities.get(0).getPrice());
-    assertEquals(productDto1.getImageUrl(), returnedProductEntities.get(0).getImageUrl());
-    assertEquals(productDto2.getId(), returnedProductEntities.get(1).getId());
-    assertEquals(productDto2.getName(), returnedProductEntities.get(1).getName());
-    assertEquals(productDto2.getPrice(), returnedProductEntities.get(1).getPrice());
-    assertEquals(productDto2.getImageUrl(), returnedProductEntities.get(1).getImageUrl());
+    assertEquals(2, returnedProductEntities.getContent().size());
+    assertEquals(productDto1.getId(), returnedProductEntities.getContent().get(0).getId());
+    assertEquals(productDto1.getName(), returnedProductEntities.getContent().get(0).getName());
+    assertEquals(productDto1.getPrice(), returnedProductEntities.getContent().get(0).getPrice());
+    assertEquals(productDto1.getImageUrl(),
+      returnedProductEntities.getContent().get(0).getImageUrl());
+    assertEquals(productDto2.getId(), returnedProductEntities.getContent().get(1).getId());
+    assertEquals(productDto2.getName(), returnedProductEntities.getContent().get(1).getName());
+    assertEquals(productDto2.getPrice(), returnedProductEntities.getContent().get(1).getPrice());
+    assertEquals(productDto2.getImageUrl(),
+      returnedProductEntities.getContent().get(1).getImageUrl());
   }
 
   @DirtiesContext
@@ -153,7 +155,6 @@ public class ProductControllerTest {
   }
 
   @DirtiesContext
-
   @Test
   public void testValidate() {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();

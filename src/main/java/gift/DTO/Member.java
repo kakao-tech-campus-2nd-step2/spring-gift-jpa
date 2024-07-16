@@ -1,6 +1,5 @@
 package gift.DTO;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +14,7 @@ import java.util.List;
 @Table
 public class Member {
 
-  @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "member")
   private final List<WishList> wishLists = new ArrayList<>();
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

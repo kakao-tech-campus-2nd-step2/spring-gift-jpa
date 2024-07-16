@@ -4,6 +4,7 @@ import gift.DTO.Product;
 import gift.DTO.ProductDto;
 import gift.Service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +24,8 @@ public class ProductAdminController {
   }
 
   @GetMapping
-  public String listProducts(Model model) {
-    model.addAttribute("products", productService.getAllProducts());
+  public String listProducts(Model model, Pageable pageable) {
+    model.addAttribute("products", productService.getAllProducts(pageable));
     return "product-list";
   }
 

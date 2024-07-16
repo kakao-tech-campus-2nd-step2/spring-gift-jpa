@@ -4,9 +4,9 @@ import gift.ConverterToDto;
 import gift.DTO.Product;
 import gift.DTO.ProductDto;
 import gift.Repository.ProductRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -19,11 +19,9 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
-  public List<ProductDto> getAllProducts() {
-    List<Product> product = productRepository.findAll();
-    List<ProductDto> productDtos = product.stream()
-      .map(ConverterToDto::convertToProductDto)
-      .collect(Collectors.toList());
+  public Page<ProductDto> getAllProducts(Pageable pageable) {
+    Page<Product> products = productRepository.findAll(pageable);
+    Page<ProductDto> productDtos = products.map(ConverterToDto::convertToProductDto);
 
     return productDtos;
   }
