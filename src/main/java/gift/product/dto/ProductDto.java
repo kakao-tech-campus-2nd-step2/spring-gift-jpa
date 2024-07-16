@@ -1,15 +1,17 @@
 package gift.product.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.hibernate.validator.constraints.URL;
 
 public class ProductDto {
     private Long product_id;
 
+    @NotBlank(message = "상품명을 입력하세요.")
     private String name;
 
-    @Positive(message = "올바른 가격을 입력하세요.")
+    @NotNull(message = "가격을 입력하세요.")
     private int price;
 
     @NotBlank(message = "이미지 URL을 입력하세요.")

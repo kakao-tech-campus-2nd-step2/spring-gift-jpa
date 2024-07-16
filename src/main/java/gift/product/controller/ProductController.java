@@ -26,13 +26,13 @@ public class ProductController {
     }
 
     @PutMapping("/edit/{product_id}")
-    public void editProduct(@PathVariable Long id, @Valid @RequestBody ProductDto productDto) {
-        productService.update(id, productDto);
+    public void editProduct(@PathVariable Long product_id, @Valid @RequestBody ProductDto productDto) {
+        productService.update(product_id, productDto);
     }
 
     @DeleteMapping("/delete/{product_id}")
-    public void deleteProduct(@PathVariable Long id) {
-        productService.deleteById(id);
+    public void deleteProduct(@PathVariable Long product_id) {
+        productService.deleteById(product_id);
     }
 
     /** 페이지네이션을 위한 새로운 엔드포인트
@@ -50,5 +50,15 @@ public class ProductController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
 
         return productService.findAll(pageable);
+    }
+
+    @GetMapping("/{id}")
+    public ProductDto getProductById(@PathVariable Long id) {
+        return productService.findById(id);
+    }
+
+    @PutMapping("/{id}")
+    public void updateProduct(@PathVariable Long id, @RequestBody @Valid ProductDto productDto) {
+        productService.update(id, productDto);
     }
 }

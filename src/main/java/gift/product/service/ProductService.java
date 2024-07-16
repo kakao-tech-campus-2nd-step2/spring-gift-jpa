@@ -54,4 +54,10 @@ public class ProductService {
     public void deleteById(Long productId) {
         productRepository.deleteById(productId);
     }
+
+    private void validateProductName(String name) {
+        if (name != null && name.contains("카카오")) {
+            System.out.println("상품명에 '카카오'가 포함된 경우 담당 MD에게 문의하세요.");
+        }
+    }
 }
