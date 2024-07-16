@@ -1,6 +1,5 @@
 package gift.web.validation.constraints;
 
-import static gift.web.validation.exception.code.ErrorCode.DESCRIPTION.INVALID_PASSWORD_FORMAT;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import gift.web.validation.validator.PasswordValidator;
@@ -14,7 +13,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = PasswordValidator.class)
 public @interface Password {
 
-    String message() default INVALID_PASSWORD_FORMAT;
+    String message() default "비밀번호는 영문 대소문자, 숫자를 포함하여 8자 이상 15자 이하로 입력해주세요.";
 
     Class<?>[] groups() default {};
 
