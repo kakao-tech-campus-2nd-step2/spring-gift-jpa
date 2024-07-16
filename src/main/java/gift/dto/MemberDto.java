@@ -1,15 +1,17 @@
 package gift.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import gift.domain.Role;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MemberDto {
+
     private Long id;
     private String email;
     private String password;
-    private String role;
+    private Role role;
 
-    public MemberDto(Long id, String email, String password, String role) {
+    public MemberDto(Long id, String email, String password, Role role) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -28,7 +30,7 @@ public class MemberDto {
         return password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 }
