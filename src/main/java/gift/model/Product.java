@@ -31,11 +31,13 @@ public class Product {
     }
 
     public Product(Long id, String name, String price, String imageUrl) {
+        validateName(name);
+        validatePrice(price);
+        validateImageUrl(imageUrl);
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
-        validate();
     }
 
     public Long getId() {
@@ -54,13 +56,7 @@ public class Product {
         return imageUrl;
     }
 
-    private void validate() {
-        validateName();
-        validatePrice();
-        validateImageUrl();
-    }
-
-    private void validateName() {
+    private void validateName(String name) {
         if (name == null) {
             throw new IllegalArgumentException("상품 이름은 최소 1자 이상이어야 합니다.");
         }
@@ -78,7 +74,7 @@ public class Product {
         }
     }
 
-    private void validatePrice() {
+    private void validatePrice(String price) {
         if (price == null) {
             throw new IllegalArgumentException("가격을 입력해야 합니다.");
         }
@@ -90,7 +86,7 @@ public class Product {
         }
     }
 
-    private void validateImageUrl() {
+    private void validateImageUrl(String imageUrl) {
         if (imageUrl == null) {
             throw new IllegalArgumentException("이미지 URL을 입력해야 합니다.");
         }
