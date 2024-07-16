@@ -13,6 +13,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
+
     private final MemberService memberService;
 
     public LoginMemberArgumentResolver(MemberService memberService) {
@@ -27,19 +28,23 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     }
 
     @Override
-    public MemberDto resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public MemberDto resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String auth = request.getHeader("authorization");
-        if (auth == null)
+        if (auth == null) {
             throw new AuthException("Authorization header is missing");
+        }
 
         String[] splitted = auth.split(" ");
-        if (splitted.length < 2)
+        if (splitted.length < 2) {
             throw new AuthException("Invalid token format");
+        }
 
-        if (!splitted[0].equals("Bearer"))
+        if (!splitted[0].equals("Bearer")) {
             throw new AuthException("Invalid token type");
+        }
         String token = splitted[1];
 
         return memberService.getLoginUser(token);

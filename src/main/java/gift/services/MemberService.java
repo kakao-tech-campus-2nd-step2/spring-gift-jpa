@@ -2,9 +2,9 @@ package gift.services;
 
 
 import gift.JWTUtil;
+import gift.classes.Exceptions.EmailAlreadyExistsException;
 import gift.domain.Member;
 import gift.dto.MemberDto;
-import gift.classes.Exceptions.EmailAlreadyExistsException;
 import gift.repositories.MemberRepository;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
-    private long currentMemberId =1;
+
+    private long currentMemberId = 1;
     private final MemberRepository memberRepository;
     private final JWTUtil jwtUtil;
 
@@ -55,7 +56,8 @@ public class MemberService {
         Member existingMember = memberRepository.findByEmail(memberDto.getEmail());
 
         // 회원이 존재하지 않거나 비밀번호가 일치하지 않을 경우 예외 발생
-        if (existingMember == null || !existingMember.getPassword().equals(memberDto.getPassword())) {
+        if (existingMember == null || !existingMember.getPassword()
+            .equals(memberDto.getPassword())) {
             throw new NoSuchElementException("이메일이 존재하지 않거나 비밀번호가 일치하지 않습니다.");
         }
 
@@ -65,7 +67,7 @@ public class MemberService {
 
     }
 
-    public MemberDto getLoginUser(String token){
+    public MemberDto getLoginUser(String token) {
         String email = jwtUtil.getLoginEmail(token);
         Member existingMember = memberRepository.findByEmail(email);
         MemberDto memberDto = new MemberDto(existingMember.getId(),
