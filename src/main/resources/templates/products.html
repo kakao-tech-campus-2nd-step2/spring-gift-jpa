@@ -46,9 +46,10 @@
                         // tbody에 행 추가
                         $('#product-table tbody').append(row);
                     });
-                }).fail(function () {
-                    alert('이동 불가');
-                });
+                }).fail(function (xhr, status, error) {
+                console.error('Request failed:', status, error);
+                alert('Unable to load product list. Please try again later.');
+            });
             }
         };
         getProducts.init();
