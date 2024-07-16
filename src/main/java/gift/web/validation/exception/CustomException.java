@@ -7,19 +7,19 @@ import gift.web.validation.exception.code.ErrorCode;
  */
 public abstract class CustomException extends RuntimeException {
 
-    public CustomException() {
+    protected CustomException() {
         super();
     }
 
-    public CustomException(String message) {
+    protected CustomException(String message) {
         super(message);
     }
 
-    public CustomException(String message, Throwable cause) {
+    protected CustomException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public CustomException(Throwable cause) {
+    protected CustomException(Throwable cause) {
         super(cause);
     }
 
