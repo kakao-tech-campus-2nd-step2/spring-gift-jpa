@@ -37,8 +37,8 @@ public class ProductController {
 
     /** 페이지네이션을 위한 새로운 엔드포인트
      * 특정 페이지와 크기 요청: /api/products/paged?page=1&size=5
-     * 페이지 번호: 1
-     * 페이지 크기: 5
+     * 페이지 번호: 0
+     * 페이지 크기: 10
      * 정렬: 이름을 기준으로 오름차순 정렬 (기본값) **/
     @GetMapping("/paged")
     public Page<ProductDto> getProducts(
