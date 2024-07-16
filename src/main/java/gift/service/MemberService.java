@@ -2,7 +2,7 @@ package gift.service;
 
 import gift.dto.LoginResultDto;
 import gift.dto.MemberDto;
-import gift.jwt.JwtUtil;
+import gift.jwt.JwtTokenProvider;
 import gift.model.member.Member;
 import gift.repository.MemberRepository;
 import org.springframework.stereotype.Service;
@@ -14,10 +14,10 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public MemberService(MemberRepository memberRepository, JwtUtil jwtUtil){
-        this.jwtUtil = jwtUtil;
+    public MemberService(MemberRepository memberRepository, JwtTokenProvider jwtTokenProvider){
+        this.jwtTokenProvider = jwtTokenProvider;
         this.memberRepository = memberRepository;
     }
 
@@ -32,14 +32,15 @@ public class MemberService {
 
     public String returnToken(MemberDto memberDto){
         Member member = new Member(memberDto.email(),memberDto.password());
-        return jwtUtil.generateToken(member);
+        return jwtTokenProvider.generateToken(member);
     }
 
     public LoginResultDto loginMember(MemberDto memberDto) {
         Member member = new Member(memberDto.email(),memberDto.password());
         Optional<Member> registeredMember = memberRepository.findByEmail(member.getEmail());
         if (registeredMember.isPresent() && member.isPasswordEqual(registeredMember.get().getPassword())) {
-            String token = jwtUtil.generateToken(member);
+            String token = jwtTokenProvider.generateToken(member);
+
             return new LoginResultDto(token, true);
         }
         return new LoginResultDto(null, false);

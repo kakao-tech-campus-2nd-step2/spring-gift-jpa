@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>상품 관리 페이지</title>
+    <title>Manage Products</title>
     <style>
         .product {
             border: 1px solid #ccc;
@@ -22,6 +22,10 @@
     <input type="button" value="Login" onClick="location.href='/members/login'">
     <input type="button" value="WishList" id="wishlistButton">
 </div>
+<div class="pagination">
+    <button th:if="${currentPage > 0}" th:attr="onclick='location.href=\'/api/products?page=' + (${currentPage} - 1) + '\''">Previous</button>
+    <button th:attr="onclick='location.href=\'/api/products?page=' + (${currentPage} + 1) + '\''">Next</button>
+</div>
 <div th:each="product : ${products}" class="product" th:attr="data-id=${product.id},, data-name=${product.name}">
     <h3>Product ID: <span th:text="${product.id}"></span></h3>
     <h3>Name:  <span th:text="${product.name.name}"></span></h3>
@@ -34,6 +38,7 @@
     <button th:attr="data-id=${product.id}" class="purchase-button">Purchase</button>
     <button th:attr="data-id=${product.id}" class="add-wish-button">Add to WishList</button>
 </div>
+
 <script>
     document.querySelectorAll('.edit-button').forEach(button => {
         button.addEventListener('click', function() {
@@ -100,7 +105,8 @@
 
     document.getElementById('wishlistButton').addEventListener('click', function() {
         console.log("button click");
-        const token = localStorage.getItem('token');
+        const token = getCookie('token');
+
         console.log(token);
         fetch('/wishlist', {
             method: 'GET',
@@ -109,17 +115,28 @@
                 'Authorization': 'Bearer ' + token
             },
         })
-        .then(response => {
-            if (response.ok) {
-                location.href = '/wishlist';
-            } else {
-                throw new Error('Failed to retrieve wish list.');
-            }
+        .then(response => response.text())
+        .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
         })
         .catch(error => {
             alert(error.message);
         });
     });
+
+    function getCookie(name) {
+        const cookieString = document.cookie;
+        const cookies = cookieString.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return '';
+    }
 </script>
 </body>
 </html>

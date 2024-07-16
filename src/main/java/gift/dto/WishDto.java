@@ -1,22 +1,34 @@
 package gift.dto;
 
+import gift.model.member.Member;
+import gift.model.product.Product;
+
 public class WishDto {
-    private Long productId;
-    private Long memberId;
+    private Product product;
+    private Member member;
     private int amount;
 
-    public WishDto(Long productId,Long memberId, int amount){
-        this.productId = productId;
-        this.memberId = memberId;
+    public WishDto(Product product,Member member, int amount){
+        this.product = product;
+        this.member = member;
         this.amount = amount;
     }
 
     public Long getProductId(){
-        return productId;
+        return product.getId();
     }
 
     public Long getMemberId(){
-        return memberId;
+        return member.getId();
+    }
+
+    public Product getProduct(){
+        return product;
+    }
+
+    public Member getMember(){
+        return member;
+
     }
 
     public int getAmount(){

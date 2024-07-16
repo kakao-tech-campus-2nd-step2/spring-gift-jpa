@@ -1,6 +1,7 @@
 package gift.config;
 
-import gift.jwt.JwtUtil;
+import gift.dto.MemberDto;
+import gift.jwt.JwtTokenProvider;
 import gift.model.member.LoginMember;
 import gift.model.member.Member;
 import gift.service.MemberService;
@@ -22,14 +23,14 @@ import java.util.Optional;
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final MemberService memberService;
-    private final JwtUtil jwtUtil;
+    private final JwtTokenProvider jwtTokenProvider;
 
     private static final Logger logger = LoggerFactory.getLogger(LoginMemberArgumentResolver.class);
 
 
-    public LoginMemberArgumentResolver(MemberService memberService, JwtUtil jwtUtil) {
+    public LoginMemberArgumentResolver(MemberService memberService, JwtTokenProvider jwtTokenProvider) {
         this.memberService = memberService;
-        this.jwtUtil = jwtUtil;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -38,12 +39,13 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
     }
 
     @Override
-    public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+    public MemberDto resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         AuthorizationHeader authHeader = new AuthorizationHeader(request.getHeader("Authorization"));
+        Member authMember =  getAuthenticatedMember(authHeader);
 
-        return getAuthenticatedMember(authHeader);
+        return new MemberDto(authMember.getEmail(),authMember.getPassword());
     }
 
     private Member getAuthenticatedMember(AuthorizationHeader authHeader) {
@@ -52,13 +54,13 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         }
 
         String token = authHeader.getToken();
-        if (!jwtUtil.validateToken(token)) {
+        if (!jwtTokenProvider.validateToken(token)) {
             throw new IllegalStateException("Invalid or missing JWT token");
         }
 
-        String email = jwtUtil.getEmailFromToken(token);
+        String email = jwtTokenProvider.getEmailFromToken(token);
         Optional<Member> member = memberService.findByEmail(email);
-
+      
         return member.orElseThrow(() -> new IllegalStateException("Authenticated member not found in the database."));
     }
 }

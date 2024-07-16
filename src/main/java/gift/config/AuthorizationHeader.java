@@ -1,25 +1,19 @@
 package gift.config;
 
 public class AuthorizationHeader {
-    private String authHeader;
+    private final String authHeader;
+
 
     public AuthorizationHeader(String authHeader) {
         this.authHeader = authHeader;
     }
 
     public boolean isValid() {
-        if(authHeader != null && authHeader.startsWith("Bearer ")){
-            return true;
-        }
-        return false;
+        return authHeader != null && authHeader.startsWith("Bearer ");
     }
 
     public String getToken() {
-        if (isValid()) {
-            return authHeader.substring(7);
-        } else {
-            return null;
-        }
+        return authHeader.substring(7);
     }
 
     @Override

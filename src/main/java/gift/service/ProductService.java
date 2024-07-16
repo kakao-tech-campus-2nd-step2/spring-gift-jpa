@@ -5,9 +5,9 @@ import gift.dto.ProductDto;
 import gift.model.product.Product;
 import gift.model.product.ProductName;
 import gift.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ProductService {
@@ -29,9 +29,9 @@ public class ProductService {
     }
 
     public boolean updateProduct(Long id, ProductDto productDto) {
-        Product product = new Product(new ProductName(productDto.name()),productDto.price(),productDto.imageUrl(),productDto.amount());
         if (productRepository.existsById(id)) {
-            product.setId(id);
+            Product product = productRepository.findById(id).get();
+            product.updateProduct(productDto);
             productRepository.save(product);
             return true;
         }
@@ -51,8 +51,8 @@ public class ProductService {
         return productRepository.findById(id).get();
     }
 
-    public List<Product> selectAllProducts(){
-        return productRepository.findAll();
+    public Page<Product> selectAllProducts(Pageable pageable){
+        return productRepository.findAll(pageable);
     }
 
     public void DeleteProduct(Long id){

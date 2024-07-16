@@ -13,7 +13,7 @@ import javax.crypto.SecretKey;
 
 @Component
 @ConfigurationProperties(prefix = "jwt")
-public class JwtUtil {
+public class JwtTokenProvider {
     private String secretKey;
     private SecretKey key;
 

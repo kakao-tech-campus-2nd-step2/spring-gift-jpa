@@ -3,7 +3,6 @@ package gift.controller;
 
 import gift.dto.LoginResultDto;
 import gift.dto.MemberDto;
-import gift.model.member.Member;
 import gift.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

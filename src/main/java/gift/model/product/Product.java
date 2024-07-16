@@ -1,6 +1,10 @@
 package gift.model.product;
 
+import gift.dto.ProductDto;
+import gift.model.wish.Wish;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -22,19 +26,23 @@ public class Product {
     public Product(){
     }
 
+    @OneToMany(mappedBy = "product")
+    private List<Wish> wishes;
+
     public Product(ProductName name, int price, String imageUrl, int amount){
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
         this.amount = amount;
     }
-
+    public void updateProduct(ProductDto productDto){
+        this.name = new ProductName(productDto.name());
+        this.price = productDto.price();
+        this.imageUrl = productDto.imageUrl();
+        this.amount = productDto.amount();
+    }
     public long getId() {
         return id;
-    }
-
-    public void setId(long id){
-        this.id = id;
     }
 
     public ProductName getName() {
