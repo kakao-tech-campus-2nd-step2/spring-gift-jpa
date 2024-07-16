@@ -1,35 +1,41 @@
 package gift.service;
 
 import gift.controller.GlobalMapper;
-import gift.controller.auth.LoginResponse;
+import gift.controller.auth.LoginRequest;
 import gift.controller.member.MemberRequest;
 import gift.controller.member.MemberResponse;
-import gift.controller.auth.LoginRequest;
 import gift.domain.Member;
 import gift.exception.MemberAlreadyExistsException;
 import gift.exception.MemberNotExistsException;
 import gift.repository.MemberRepository;
+import gift.repository.ProductRepository;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
-    private final MemberRepository memberRepository;
 
-    public MemberService(MemberRepository memberRepository) {
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
+
+    public MemberService(MemberRepository memberRepository, ProductRepository productRepository) {
         this.memberRepository = memberRepository;
+        this.productRepository = productRepository;
     }
 
-    public List<MemberResponse> findAll() {
-        return memberRepository.findAll().stream()
-            .map(GlobalMapper::toMemberResponse)
-            .toList();
+    public Page<MemberResponse> findAll(Pageable pageable) {
+        Page<Member> memberPage = memberRepository.findAll(pageable);
+        List<MemberResponse> memberResponses = memberPage.stream()
+            .map(GlobalMapper::toMemberResponse).toList();
+        return new PageImpl<>(memberResponses, pageable, memberPage.getTotalElements());
     }
 
     public MemberResponse findById(UUID id) {
-        Member member =  memberRepository.findById(id)
-        .orElseThrow(MemberNotExistsException::new);
+        Member member = memberRepository.findById(id).orElseThrow(MemberNotExistsException::new);
         return GlobalMapper.toMemberResponse(member);
     }
 

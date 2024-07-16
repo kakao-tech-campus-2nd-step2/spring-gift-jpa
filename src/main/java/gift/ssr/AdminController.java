@@ -8,8 +8,10 @@ import gift.controller.product.ProductResponse;
 import gift.service.MemberService;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
-import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/admin")
@@ -31,8 +34,10 @@ public class AdminController {
     }
 
     @GetMapping("/members")
-    public String listMembers(Model model) {
-        List<MemberResponse> members = memberService.findAll();
+    public String listMembers(Model model, @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<MemberResponse> members = memberService.findAll(pageable);
         model.addAttribute("members", members);
         return "members";
     }
@@ -69,9 +74,15 @@ public class AdminController {
     }
 
     @GetMapping("/products")
-    public String listProducts(Model model) {
-        List<ProductResponse> products = productService.findAll();
-        model.addAttribute("products", products);
+    public String listProducts(Model model, @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductResponse> products = productService.findAll(pageable);
+        model.addAttribute("products", products.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", products.getTotalPages());
+        model.addAttribute("totalItems", products.getTotalElements());
+        model.addAttribute("pageSize", size);
         return "products";
     }
 

@@ -4,12 +4,13 @@ import gift.controller.auth.AuthController;
 import gift.controller.auth.LoginRequest;
 import gift.controller.auth.LoginResponse;
 import gift.controller.auth.Token;
-import gift.exception.UnauthorizedException;
 import gift.login.LoginMember;
 import gift.service.AuthService;
 import gift.service.MemberService;
-import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,9 +36,11 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MemberResponse>> getAllMembers(@LoginMember LoginResponse member) {
+    public ResponseEntity<Page<MemberResponse>> getAllMembers(@LoginMember LoginResponse member,
+        @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
         AuthController.validateAdmin(member);
-        return ResponseEntity.status(HttpStatus.OK).body(memberService.findAll());
+        Pageable pageable = PageRequest.of(page, size);
+        return ResponseEntity.status(HttpStatus.OK).body(memberService.findAll(pageable));
     }
 
     @GetMapping("/{memberId}")
