@@ -30,9 +30,6 @@ public class Member {
     @Column(name = "role")
     private String role;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<Wishlist> wishlists;
-
     protected Member() {
     }
 
