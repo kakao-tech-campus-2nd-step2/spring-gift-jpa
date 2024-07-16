@@ -1,13 +1,14 @@
 package gift.service;
 
 import gift.dto.MemberDto;
-import gift.util.JwtUtility;
-import gift.util.TokenBlacklist;
 import gift.model.Member;
 import gift.repository.MemberRepository;
+import gift.util.JwtUtility;
+import gift.util.TokenBlacklist;
 import jakarta.validation.Valid;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+
 import java.util.NoSuchElementException;
 
 @Service
@@ -21,16 +22,18 @@ public class MemberService {
     }
 
     public String register(@Valid MemberDto memberDto) {
+        validateNewMember(memberDto);
+        String token = JwtUtility.generateToken(memberDto.getEmail());
+        Member member = new Member(memberDto.getEmail(), memberDto.getPassword(), token);
+        memberRepository.save(member);
+        return token;
+    }
+
+    private void validateNewMember(MemberDto memberDto) {
         memberRepository.findByEmail(memberDto.getEmail())
                 .ifPresent(existingMember -> {
                     throw new DuplicateKeyException("이미 존재하는 이메일입니다.");
                 });
-        Member member = new Member(null, memberDto.getEmail(), memberDto.getPassword(), null);
-        Member savedMember = memberRepository.save(member);
-        String token = JwtUtility.generateToken(savedMember.getEmail());
-        Member updatedMember = new Member(savedMember, token);
-        memberRepository.save(updatedMember);
-        return token;
     }
 
     public String login(MemberDto memberDto) {
@@ -48,12 +51,17 @@ public class MemberService {
     public void logout(String token) {
         Member member = memberRepository.findByActiveToken(token)
                 .orElseThrow(() -> new NoSuchElementException("유효하지 않은 토큰입니다."));
-        Member updatedMember = new Member(member, null);
+        Member updatedMember = new Member(member);
         memberRepository.save(updatedMember);
         tokenBlacklist.add(token);
     }
 
     public boolean isTokenBlacklisted(String token) {
         return tokenBlacklist.contains(token);
+    }
+
+    public Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 이메일입니다."));
     }
 }

@@ -3,6 +3,7 @@ package gift.util;
 import gift.service.MemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
