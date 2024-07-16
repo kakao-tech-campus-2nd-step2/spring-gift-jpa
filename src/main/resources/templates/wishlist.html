@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wishlist</title>
     <style>
@@ -30,6 +31,7 @@
 <body>
 <h1>Your Wishlist</h1>
 <div id="wishlist"></div>
+
 <div id="pagination">
     <button id="prev-page" disabled>Previous</button>
     <span id="current-page">1</span>
@@ -41,6 +43,7 @@
     const pageSize = 10;
 
     function fetchWishlist(page, size) {
+
         const token = localStorage.getItem('token');
         if (!token) {
             alert('You need to log in first.');
@@ -89,6 +92,7 @@
         });
     }
 
+
     function removeFromWishlist(productId) {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -103,7 +107,9 @@
             }
         })
         .then(() => {
+
             fetchWishlist(currentPage, pageSize);  // Reload wishlist after removal
+
         })
         .catch(error => {
             console.error('Error removing wishlist item:', error);

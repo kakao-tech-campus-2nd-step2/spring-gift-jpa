@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <title>Product List</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <script type="text/javascript" src="/js/authSetup.js"></script>
+
 </head>
 <body>
 <h1>Product List</h1>
@@ -19,6 +21,7 @@
     </tr>
     </thead>
     <tbody>
+
     </tbody>
 </table>
 <div id="pagination">
@@ -31,6 +34,7 @@
     const pageSize = 10;
 
     const getProducts = {
+
         init: function () {
             this.loadProducts(currentPage, pageSize);
             this.setupEventHandlers();
@@ -78,8 +82,10 @@
         }
     };
     getProducts.init();
+
 </script>
 <br>
 <a href="/api/admin/products/add">Add Product</a>
 </body>
 </html>
+

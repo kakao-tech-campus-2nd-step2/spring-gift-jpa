@@ -49,6 +49,7 @@ public class HomeController {
         return response;
     }
 
+
     @GetMapping("/wishlist")
     public String wishlistForm() {
         return "wishlist";
