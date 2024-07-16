@@ -10,7 +10,7 @@ import gift.web.dto.request.member.CreateMemberRequest;
 import gift.web.dto.response.LoginResponse;
 import gift.web.dto.response.member.CreateMemberResponse;
 import gift.web.dto.response.member.ReadMemberResponse;
-import gift.web.validation.exception.IncorrectEmailException;
+import gift.web.validation.exception.client.IncorrectEmailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +42,7 @@ public class MemberService {
 
     public LoginResponse login(LoginRequest request) {
         Email email = Email.from(request.getEmail());
-        Member member = memberRepository.findByEmail(email).orElseThrow(IncorrectEmailException::new);
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new IncorrectEmailException(email.getValue()));
 
         member.matchPassword(request.getPassword());
 
