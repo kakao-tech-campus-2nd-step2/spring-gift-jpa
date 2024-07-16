@@ -91,13 +91,13 @@
 <footer>
   <div th:text="'Showing ' + ${products.size()} + ' out of ' + ${productsCnt} + ' entries'"></div>
   <div>
-    <a th:if="${page>1}" th:href="@{/api/products/admin(page=${page - 1})}">Previous</a>
+    <a th:if="${page>1}" th:href="@{/admin(page=${page - 1})}">Previous</a>
     <span th:if="${page<=1}">Previous</span>
     <th:block th:each="num : ${#numbers.sequence(startPage, lastPage)}">
-      <a th:if="${page != num}" th:href="@{/api/products/admin(page=${num})}" th:text="${num}"></a>
+      <a th:if="${page != num}" th:href="@{/admin(page=${num})}" th:text="${num}"></a>
       <strong th:if="${page == num}" th:text="${num}"></strong>
     </th:block>
-    <a th:if="${page<lastPage}" th:href="@{/api/products/admin(page=${page + 1})}">Next</a>
+    <a th:if="${page<lastPage}" th:href="@{/admin(page=${page + 1})}">Next</a>
     <span th:if="${page>=lastPage}">Next</span>
   </div>
 </footer>

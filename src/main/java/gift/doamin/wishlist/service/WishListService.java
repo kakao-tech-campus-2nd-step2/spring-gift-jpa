@@ -12,25 +12,24 @@ import gift.doamin.wishlist.entity.Wish;
 import gift.doamin.wishlist.exception.InvalidWishFormException;
 import gift.doamin.wishlist.exception.WishListNotFoundException;
 import gift.doamin.wishlist.repository.JpaWishListRepository;
-import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 public class WishListService {
 
     private final JpaWishListRepository wishListRepository;
-    private final JpaUserRepository jpaUserRepository;
+    private final JpaUserRepository UserRepository;
     private final JpaProductRepository productRepository;
-    private final JpaProductRepository jpaProductRepository;
 
     public WishListService(JpaWishListRepository wishListRepository,
-        JpaUserRepository jpaUserRepository, JpaProductRepository productRepository,
-        JpaProductRepository jpaProductRepository) {
+        JpaUserRepository UserRepository, JpaProductRepository productRepository) {
         this.wishListRepository = wishListRepository;
-        this.jpaUserRepository = jpaUserRepository;
+        this.UserRepository = UserRepository;
         this.productRepository = productRepository;
-        this.jpaProductRepository = jpaProductRepository;
     }
 
     public void create(Long userId, WishForm wishForm) {
@@ -43,17 +42,18 @@ public class WishListService {
             throw new InvalidWishFormException("위시리스트에 상품 0개를 넣을수는 없습니다");
         }
 
-        User user = jpaUserRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        User user = UserRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         Product product = productRepository.findById(productId).orElseThrow(
             ProductNotFoundException::new);
 
         wishListRepository.save(new Wish(user, product, wishForm.getQuantity()));
     }
 
-    public List<WishParam> read(Long userId) {
-        return wishListRepository.findAllByUserId(userId)
-            .stream().map(WishParam::new)
-            .toList();
+    public Page<WishParam> getPage(Long userId, int pageNum) {
+
+        Pageable pageable = PageRequest.of(pageNum, 5);
+
+        return wishListRepository.findAllByUserId(userId, pageable).map(WishParam::new);
     }
 
     public void update(Long userId, WishForm wishForm) {

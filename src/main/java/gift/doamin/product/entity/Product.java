@@ -2,23 +2,22 @@ package gift.doamin.product.entity;
 
 import gift.doamin.product.dto.ProductForm;
 import gift.doamin.user.entity.User;
+import gift.global.AuditingEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Product {
+public class Product extends AuditingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
+    @ManyToOne(optional = false)
     private User user;
 
     @Column(nullable = false)
