@@ -1,18 +1,19 @@
 package gift.main.dto;
 
+import gift.main.entity.Role;
 
 public class UserDto {
     private final String name;
     private final String email;
     private final String password;
-    private final String role;
+    private final Role role;
 
 
     public UserDto(String name, String email, String password, String role) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.role = Role.toRole(role);
     }
 
     public UserDto(UserJoinRequest userJoinRequest) {
@@ -34,8 +35,7 @@ public class UserDto {
         return password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
-
 }

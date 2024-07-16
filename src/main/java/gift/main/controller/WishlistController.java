@@ -1,34 +1,28 @@
 package gift.main.controller;
 
 import gift.main.annotation.SessionUser;
-import gift.main.dto.ProductResponce;
 import gift.main.dto.UserVo;
-import gift.main.entity.Product;
-import gift.main.entity.WishProduct;
+import gift.main.dto.WishProductResponce;
 import gift.main.service.ProductService;
 import gift.main.service.WishProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/product")
-public class WishProductController {
+public class WishlistController {
 
     private final WishProductService wishProductService;
     private final ProductService productService;
 
-    public WishProductController(WishProductService wishProductService, ProductService productService) {
+    public WishlistController(WishProductService wishProductService, ProductService productService) {
         this.wishProductService = wishProductService;
         this.productService = productService;
-    }
-
-    @GetMapping
-    public ResponseEntity<?> getProducts() {
-        List<ProductResponce> products = productService.getProducts();
-        return ResponseEntity.ok(products);
     }
 
     @DeleteMapping("/wishlist/{productId}")
@@ -38,10 +32,11 @@ public class WishProductController {
         return ResponseEntity.ok("successfully deleted the item to your wishlist");
     }
 
-    @GetMapping("/wishlist")
-    public ResponseEntity<?> getWishProduct(@SessionUser UserVo sessionUser) {
-        List<WishProduct> wishProducts = wishProductService.getWishProducts(sessionUser.getId());
-        return ResponseEntity.ok(wishProducts);    }
+    @GetMapping("/wishlists")
+    public ResponseEntity<?> getWishProductPage(@SessionUser UserVo sessionUserVo, Pageable pageable) {
+        Page<WishProductResponce> wishProductPage = wishProductService.getWishProductPage(sessionUserVo,pageable);
+        return ResponseEntity.ok(wishProductPage);
+    }
 
     @Transactional
     @PostMapping("/wishlist/{productId}")

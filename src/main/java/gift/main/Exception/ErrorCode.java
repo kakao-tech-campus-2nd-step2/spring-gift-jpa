@@ -19,7 +19,9 @@ public enum ErrorCode {
     ERROR_LOGIN(HttpStatus.BAD_REQUEST, "이메일과 비밀번호를 정확히 입력해주세요"),
     USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "이메일과 비밀번호를 정확히 입력해주세요"),
 
+    //제품관련
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 제품을 찾을 수 없습니다."),
+    ALREADY_EXISTING_WISH_LIST(HttpStatus.BAD_REQUEST, "해당 제품은 이미 담겨있습니다."),
     ;
     //이메일과 비밀번호 코드가 401이 아닌 400인 이유: 코드를 보고 해당 유저가 있다고 판단할 것 같아서
 

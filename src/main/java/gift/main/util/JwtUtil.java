@@ -2,6 +2,7 @@ package gift.main.util;
 
 import gift.main.dto.UserDto;
 import gift.main.entity.User;
+import gift.main.entity.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -15,6 +16,7 @@ import java.util.Date;
 public class JwtUtil {
     private final SecretKey secretKey;
     private final String BEARER = "Bearer ";
+    private final String AUTHORIZATION = "Authorization";
 
     public JwtUtil(@Value("${spring.jwt.secret}") String secret) {
         this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
@@ -62,7 +64,7 @@ public class JwtUtil {
                 .signWith(secretKey) // 시그니처~!
                 .compact();
 
-        return "Bearer " + token;
+        return BEARER + token;
 
     }
 
@@ -103,12 +105,12 @@ public class JwtUtil {
                 .get("name", String.class);
     }
 
-    public String getRole(String token) {
-        return Jwts.parser()
+    public Role getRole(String token) {
+        return Role.toRole(Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
-                .getPayload().get("role", String.class);
+                .getPayload().get("role", String.class));
     }
 
     private Boolean isExpired(String token) {

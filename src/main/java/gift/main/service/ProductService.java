@@ -9,6 +9,9 @@ import gift.main.entity.Product;
 import gift.main.entity.User;
 import gift.main.repository.ProductRepository;
 import gift.main.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +28,11 @@ public class ProductService {
         this.userRepository = userRepository;
     }
 
-    public List<ProductResponce> getProducts() {
-        List<ProductResponce> productResponces = productRepository.findAll()
-                .stream()
-                .map(product -> new ProductResponce(product)) //스트림 요소를 다른 형태로 바꾸는 메서드
-                .collect(Collectors.toList()); //변환된 요소 각각을 리스트로~!
 
-        return productResponces;
+    public Page<ProductResponce> getProductPage(Pageable pageable) {
+        Page<ProductResponce> productPage = productRepository.findAll(pageable)
+                .map(ProductResponce::new);
+        return productPage;
     }
 
     @Transactional

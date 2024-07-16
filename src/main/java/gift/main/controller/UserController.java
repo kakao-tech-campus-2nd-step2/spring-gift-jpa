@@ -23,7 +23,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/members/register")
+    @PostMapping("/members/join")
     public ResponseEntity<?> joinMember(@Valid @RequestBody UserJoinRequest userJoinRequest, HttpServletResponse response) {
         Map<String, Object> responseBody = new HashMap<>();
         String token = userService.joinUser(userJoinRequest);

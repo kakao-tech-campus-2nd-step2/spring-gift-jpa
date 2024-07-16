@@ -17,6 +17,7 @@ public class WishProduct {
     @JoinColumn(name = "user_id")
     public User user;
 
+
     public WishProduct() {
 
     }
@@ -36,6 +37,5 @@ public class WishProduct {
 
     public User getUser() {
         return user;
-
     }
 }

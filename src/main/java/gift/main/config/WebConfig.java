@@ -13,7 +13,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebMvc
-//@EnableAspectJAutoProxy(proxyTargetClass=true)
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class WebConfig implements WebMvcConfigurer {
 
     private final AuthInterceptor authLoginInterceptor;
@@ -32,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
         // 인터셉터를 등록하는 메서드/members/register
         // CustomInterceptor를 등록하고, 모든 URL에 대해 인터셉터를 적용하도록 설정
         registry.addInterceptor(authLoginInterceptor)
-                .excludePathPatterns("/members/login", "/members/register", "", "/").addPathPatterns("/**");
+                .excludePathPatterns("/members/login", "/members/join", "", "/").addPathPatterns("/**");
     }
 
 }
