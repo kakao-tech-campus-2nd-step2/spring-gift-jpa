@@ -36,6 +36,7 @@ create table wish
  - 지금까지 작성한 JdbcTemplate 기반 코드를 JPA로 리팩터링하고 실제 도메인 모델을 어떻게 구성하고 객체와 테이블을 어떻게 매핑해야 하는지 알아본다.
    - 객체의 참조와 테이블의 외래 키를 매핑해서 객체에서는 참조를 사용하고 테이블에서는 외래 키를 사용할 수 있도록 한다.
 
+
 ### 힌트
 Spring Data JPA 사용 시 아래 옵션은 동작 쿼리를 로그로 확인할 수 있게 해준다.
 ```dtd
@@ -103,7 +104,6 @@ create table member
         alter table member
         add constraint uk_member unique (email)
 ```
-+) 2단계 추가 사항
 ### 힌트
 이전 단계에서 엔티티 설계가 이상하다는 생각이 들었다면 객체 지향 설계를 의식하는 개발자고, 그렇지 않고 자연스러웠다면 데이터 중심의 개발자일 것이다. 객체 지향 설계는 각각의 객체가 맡은 역할과 책임이 있고 관련 있는 객체끼리 참조하도록 설계해야 한다.
 ```dtd
@@ -142,3 +142,4 @@ alter table wish
             references product (id)
 
 ```
+
