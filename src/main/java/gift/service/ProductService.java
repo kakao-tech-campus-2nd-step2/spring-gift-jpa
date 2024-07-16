@@ -3,6 +3,7 @@ package gift.service;
 import gift.model.Product;
 import gift.dto.ProductDTO;
 import gift.repository.ProductRepository;
+import gift.repository.WishlistRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final WishlistRepository wishlistRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository,
+        WishlistRepository wishlistRepository) {
         this.productRepository = productRepository;
+        this.wishlistRepository = wishlistRepository;
     }
 
     public Page<Product> findAllProducts(Pageable pageable) {
@@ -37,8 +41,10 @@ public class ProductService {
     }
 
     @Transactional
-    public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+    public void deleteProductAndWishlist(Long id) {
+        Product product = productRepository.findById(id).orElse(null);
+        wishlistRepository.deleteByProduct(product);
+        productRepository.delete(product);
     }
 
     public static ProductDTO toDTO(Product product) {

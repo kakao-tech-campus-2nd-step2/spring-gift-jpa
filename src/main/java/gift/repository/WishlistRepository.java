@@ -19,4 +19,6 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
     Page<Wishlist> findByMember(Member member, Pageable pageable);
 
     void deleteByMemberAndProduct(Member member, Product product);
+
+    void deleteByProduct(Product product);
 }
