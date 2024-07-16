@@ -21,15 +21,15 @@ public class MemberController {
   }
 
   @PostMapping("/signup")
-  public ResponseEntity<MemberDto> memberSignUp(@Valid @RequestBody MemberDto memberDtoInfo) {
-    MemberDto memberDto = memberService.userSignUp(memberDtoInfo);
+  public ResponseEntity<MemberDto> SignUp(@Valid @RequestBody MemberDto memberDtoInfo) {
+    MemberDto memberDto = memberService.SignUp(memberDtoInfo);
     return ResponseEntity.ok(memberDto);
   }
 
   @PostMapping("/login")
-  public ResponseEntity<JwtToken> memberLogin(
+  public ResponseEntity<JwtToken> Login(
     @Valid @RequestBody MemberDto memberDtoInfo) {
-    JwtToken jwtToken = memberService.userLogin(memberDtoInfo);
+    JwtToken jwtToken = memberService.Login(memberDtoInfo);
     return ResponseEntity.ok(jwtToken);
   }
 }

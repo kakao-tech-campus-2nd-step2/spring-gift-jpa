@@ -20,14 +20,14 @@ public class MemberService {
     this.jwtService = jwtService;
   }
 
-  public MemberDto userSignUp(MemberDto memberDtoInfo) {
+  public MemberDto SignUp(MemberDto memberDtoInfo) {
     Member member = new Member(memberDtoInfo.getId(), memberDtoInfo.getEmail(),
       memberDtoInfo.getPassword());
     memberRepository.save(member);
     return memberDtoInfo;
   }
 
-  public JwtToken userLogin(MemberDto memberDtoInfo) {
+  public JwtToken Login(MemberDto memberDtoInfo) {
     String email = memberDtoInfo.getEmail();
     Member userByEmail = memberRepository.findByEmail(email)
       .orElseThrow(() -> new EmptyResultDataAccessException("해당 유저가 없습니다.", 1));
