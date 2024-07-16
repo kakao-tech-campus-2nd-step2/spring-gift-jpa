@@ -25,6 +25,7 @@ public class Member {
     private String role;
 
     public Member() {
+    protected Member() {
     }
 
     public Member(Long id, String email, String password, String role) {
