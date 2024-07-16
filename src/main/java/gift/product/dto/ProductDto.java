@@ -1,20 +1,17 @@
-package gift.product;
+package gift.product.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.URL;
 
 public class ProductDto {
-    private Long id;
+    private Long product_id;
 
     @NotBlank(message = "상품명을 입력하세요.")
-    @Size(max = 15, message = "상품명은 공백 포함 최대 15자")
-    @Pattern(regexp = "^[\\w\\s()\\[\\]+\\-&/]*$", message = "상품명에 잘못된 문자가 있습니다.")
     private String name;
 
-    @Positive(message = "올바른 가격을 입력하세요.")
+    @NotNull(message = "가격을 입력하세요.")
     private int price;
 
     @NotBlank(message = "이미지 URL을 입력하세요.")
@@ -23,19 +20,14 @@ public class ProductDto {
 
     public ProductDto() {}
 
-    public ProductDto(Long id, String name, int price, String imgUrl) {
-        this.id = id;
+    public ProductDto(Long product_id, String name, int price, String imgUrl) {
+        this.product_id = product_id;
         this.name = name;
         this.price = price;
         this.imgUrl = imgUrl;
     }
 
-    public Long id() {
-        return id;
-    }
-
-    public void id(Long id) {
-        this.id = id;
+    public void product_id() {
     }
 
     public String name() {

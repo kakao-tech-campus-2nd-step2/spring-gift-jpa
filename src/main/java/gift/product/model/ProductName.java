@@ -1,8 +1,15 @@
-package gift.product;
+package gift.product.model;
 
 import gift.exception.KakaoProductException;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public class ProductName {
+
+    @NotBlank(message = "상품명을 입력하세요.")
+    @Size(max = 15, message = "상품명은 공백 포함 최대 15자")
+    @Pattern(regexp = "^[\\w\\s()\\[\\]+\\-&/]*$", message = "상품명에 잘못된 문자가 있습니다.")
     private String value;
 
     public ProductName(String value) {
