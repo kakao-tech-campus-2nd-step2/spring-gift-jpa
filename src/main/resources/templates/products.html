@@ -5,14 +5,13 @@
     <title>Product List</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <script type="text/javascript" src="/js/authSetup.js"></script> 
+    <script type="text/javascript" src="/js/authSetup.js"></script>
+
 </head>
 <body>
 <h1>Product List</h1>
 <table border="1" id="product-table">
-
     <thead>
-
     <tr>
         <th>ID</th>
         <th>Name</th>
@@ -20,43 +19,73 @@
         <th>Image</th>
         <th>Actions</th>
     </tr>
-
     </thead>
-    <tbody> <!-- tbody 추가 -->
+    <tbody>
+
     </tbody>
 </table>
+<div id="pagination">
+    <button id="prev-page" disabled>Previous</button>
+    <span id="current-page">1</span>
+    <button id="next-page">Next</button>
+</div>
 <script>
-    const getProducts = {
-            init: function () {
-                authSetup.setAuthorizationHeader();
-                $.ajax({
-                    type: "GET",
-                    url: '/api/admin/products',
-                    dataType: 'json',
-                    contentType: 'application/json; charset=UTF-8',
-                }).done(function (response) {
-                    $.each(response, function (index, product) {
-                        let row = $('<tr>');
-                        row.append($('<td>').text(product.id));
-                        row.append($('<td>').text(product.name));
-                        row.append($('<td>').text(product.price));
-                        row.append($('<td>').append($('<img>').attr('src', product.imageUrl).css({'max-width': '100px', 'max-height': '100px'})));
-                        row.append($('<td>').html('<a href="/api/admin/products/edit/' + product.id + '">Edit</a> | <a href="/api/admin/products/delete/' + product.id + '">Delete</a>'));
+    let currentPage = 1;
+    const pageSize = 10;
 
-                        // tbody에 행 추가
-                        $('#product-table tbody').append(row);
-                    });
-                }).fail(function () {
-                    alert('이동 불가');
+    const getProducts = {
+
+        init: function () {
+            this.loadProducts(currentPage, pageSize);
+            this.setupEventHandlers();
+        },
+        loadProducts: function (page, size) {
+            authSetup.setAuthorizationHeader();
+            $.ajax({
+                type: "GET",
+                url: '/view/admin/products/data?page=' + (page - 1) + '&size=' + size,
+                dataType: 'json',
+                contentType: 'application/json; charset=UTF-8',
+            }).done(function (response) {
+                $('#product-table tbody').empty();
+                $.each(response.content, function (index, product) {
+                    let row = $('<tr>');
+                    row.append($('<td>').text(product.id));
+                    row.append($('<td>').text(product.name));
+                    row.append($('<td>').text(product.price));
+                    row.append($('<td>').append($('<img>').attr('src', product.imageUrl).css({'max-width': '100px', 'max-height': '100px'})));
+                    row.append($('<td>').html('<a href="/api/admin/products/edit/' + product.id + '">Edit</a> | <a href="/api/admin/products/delete/' + product.id + '">Delete</a>'));
+
+                    $('#product-table tbody').append(row);
                 });
-            }
-        };
-        getProducts.init();
+
+                $('#current-page').text(page);
+                $('#prev-page').prop('disabled', !response.hasPrevious);
+                $('#next-page').prop('disabled', !response.hasNext);
+            }).fail(function (xhr, status, error) {
+                console.error('Request failed:', status, error);
+                alert('Unable to load product list. Please try again later.');
+            });
+        },
+        setupEventHandlers: function () {
+            $('#prev-page').click(function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    getProducts.loadProducts(currentPage, pageSize);
+                }
+            });
+
+            $('#next-page').click(function () {
+                currentPage++;
+                getProducts.loadProducts(currentPage, pageSize);
+            });
+        }
+    };
+    getProducts.init();
 
 </script>
 <br>
 <a href="/api/admin/products/add">Add Product</a>
 </body>
-
 </html>
 

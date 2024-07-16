@@ -27,6 +27,9 @@ public class Product {
     )
     private String imageUrl;
 
+    public Product(){
+    }
+
 
     public Product(String name, int price, String imageUrl) {
         this.name = name;

@@ -3,10 +3,13 @@ package gift.controller;
 import gift.entity.Product;
 import gift.service.WishlistService;
 import gift.util.JwtTokenProvider;
-
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +28,19 @@ public class WishlistController {
 
 
     @GetMapping
-    public ResponseEntity<List<Product>> getWishlistItems(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<Map<String, Object>> getWishlistItems(
+            @RequestHeader("Authorization") String token,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         String email = jwtTokenProvider.getEmail(token.substring(7));
-        List<Product> items = wishlistService.getWishlistByEmail(email);
-        return ResponseEntity.ok(items);
+        Page<Product> items = wishlistService.getWishlistByEmail(email, page, size);
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", items.getContent());
+        response.put("currentPage", items.getNumber() + 1);
+        response.put("totalPages", items.getTotalPages());
+        response.put("hasNext", items.hasNext());
+        response.put("hasPrevious", items.hasPrevious());
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{productId}")

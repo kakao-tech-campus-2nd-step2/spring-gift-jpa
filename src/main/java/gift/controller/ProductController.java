@@ -4,6 +4,7 @@ import gift.dto.ProductDto;
 import gift.service.ProductService;
 import gift.entity.Product;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,8 +24,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> listProducts() {
-        return ResponseEntity.ok().body(productService.getAllProducts());
+    public Page<Product> getProducts(@RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "10") int size) {
+        return productService.getProducts(page, size);
     }
 
     @GetMapping("/add")
