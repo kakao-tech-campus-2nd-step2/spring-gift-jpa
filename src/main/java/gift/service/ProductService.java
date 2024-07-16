@@ -4,6 +4,8 @@ import gift.domain.product.Product;
 import gift.domain.product.ProductRequest;
 import gift.repository.ProductRepository;
 import java.util.List;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,6 +21,11 @@ public class ProductService {
 
     public List<Product> findAll() {
         return productRepository.findAll();
+    }
+
+    public List<Product> findAll(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        return productRepository.findAll(pageable).getContent();
     }
 
     public Product findById(Long id) {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,10 +29,12 @@ public class WishListController {
 
     @GetMapping
     @AuthenticatedMember
-    public List<Product> readWishList(HttpServletRequest httpServletRequest) {
+    public List<Product> readWishList(HttpServletRequest httpServletRequest,
+        @RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+        @RequestParam(required = false, defaultValue = "10", value = "size") int pageSize) {
         MemberResponse member = (MemberResponse) httpServletRequest.getAttribute(
             AuthAspect.ATTRIBUTE_NAME_AUTH_MEMBER);
-        return wishListService.findByMemberId(member.id());
+        return wishListService.findByMemberId(member.id(), pageNo, pageSize);
     }
 
     @PutMapping
