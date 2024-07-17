@@ -40,5 +40,4 @@ public class WishListDTO {
         return wishList;
     }
 
-
 }

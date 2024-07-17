@@ -2,7 +2,6 @@ package gift.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,19 +21,16 @@ public class Wish {
     @Column(name = "WISH_ID")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="PRODUCT_ID")
     private Product product;
 
-
     @Column(name = "PRODUCT_COUNT",nullable = false)
     private Integer productCount;
-
-
     public Wish() {
     }
 
@@ -50,6 +46,7 @@ public class Wish {
         this.product = product;
         this.productCount = productCount;
     }
+
     public Long getId() {
         return id;
     }
@@ -65,7 +62,6 @@ public class Wish {
     public void setValue(Integer productCount) {
         this.productCount = productCount;
     }
-
 
     public String getProductName(){
         return product.getName();
@@ -95,7 +91,5 @@ public class Wish {
         result = 31 * result + product.hashCode();
         result = 31 * result + productCount.hashCode();
         return result;
-
-
     }
 }

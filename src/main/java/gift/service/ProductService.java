@@ -6,7 +6,8 @@ import java.util.List;
 public interface ProductService {
 
     List<ProductDTO> readAll();
-
+    List<ProductDTO> readProduct(int pageNumber, int pageSize);
+  
     void create(ProductDTO prod);
 
     void updateName(long id, String name);

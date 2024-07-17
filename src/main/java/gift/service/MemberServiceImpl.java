@@ -1,6 +1,5 @@
 package gift.service;
 
-
 import gift.database.JpaMemberRepository;
 import gift.dto.LoginMemberToken;
 import gift.dto.MemberDTO;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MemberServiceImpl implements MemberService {
-
 
     private JpaMemberRepository jpaMemberRepository;
 
@@ -56,7 +54,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public MemberDTO getLoginUser(String token) {
         long id = authenticationTool.parseToken(token);
-
         Member member = jpaMemberRepository.findById(id).orElseThrow(()->
             new MemberServiceException("잘못된 로그인 시도입니다",HttpStatus.FORBIDDEN));
 
@@ -65,7 +62,6 @@ public class MemberServiceImpl implements MemberService {
 
 
     private boolean checkEmailDuplication(String email) {
-        try {
 
             jpaMemberRepository.findByEmail(email).orElseThrow(NoSuchElementException::new);
             return true;

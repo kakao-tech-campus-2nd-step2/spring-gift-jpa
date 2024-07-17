@@ -1,9 +1,11 @@
 package gift.service;
 
 
+
 import gift.database.JpaMemberRepository;
 import gift.database.JpaProductRepository;
 import gift.database.JpaWishRepository;
+import gift.dto.ProductDTO;
 import gift.dto.WishListDTO;
 import gift.exceptionAdvisor.MemberNoSuchException;
 import gift.model.Member;
@@ -13,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
 
@@ -46,14 +50,12 @@ public class WishListServiceImpl implements WishListService {
         Product product = jpaProductRepository.findById(productId).orElseThrow();
         member.delProduct(product);
 
-
     }
 
     @Override
     public void updateProduct(long memberId, long productId, int productValue) {
         Wish wish = jpaWishRepository.findByMemberIdAndProductId(memberId,productId).orElseThrow();
         wish.setValue(productValue);
-
 
     }
 
@@ -62,7 +64,15 @@ public class WishListServiceImpl implements WishListService {
        Member member = jpaMemberRepository.findById(memberId).orElseThrow();
        Map<String,Integer> wishList = member.getWishList().stream().collect(Collectors.toMap(Wish::getProductName,Wish::getProductCount));
        return new WishListDTO(member.getId(),wishList);
+    }
 
+    @Override
+    public WishListDTO getWishListPage(long memberId, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Map<String,Integer> wishlist = jpaWishRepository.findByMemberId(memberId,pageable).stream().collect(Collectors.toMap(
+             Wish::getProductName,Wish::getProductCount
+        ));
+        return new WishListDTO(memberId,wishlist);
     }
 
 }

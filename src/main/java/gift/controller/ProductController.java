@@ -80,5 +80,9 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/products/{page}")
+    public List<ProductDTO> getPage(@PathVariable int page) {
+        return productService.readProduct(page,10);
+    }
 
 }
