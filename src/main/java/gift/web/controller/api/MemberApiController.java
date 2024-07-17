@@ -13,6 +13,8 @@ import gift.web.dto.response.wishproduct.ReadAllWishProductsResponse;
 import gift.web.dto.response.wishproduct.UpdateWishProductResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -53,8 +55,8 @@ public class MemberApiController {
     }
 
     @GetMapping("/wishlist")
-    public ResponseEntity<ReadAllWishProductsResponse> readWishProduct(@LoginMember MemberDetails memberDetails) {
-        ReadAllWishProductsResponse response = wishProductService.readAllWishProducts(memberDetails.getId());
+    public ResponseEntity<ReadAllWishProductsResponse> readWishProduct(@LoginMember MemberDetails memberDetails, @PageableDefault Pageable pageable) {
+        ReadAllWishProductsResponse response = wishProductService.readAllWishProducts(memberDetails.getId(), pageable);
         return ResponseEntity.ok(response);
     }
 

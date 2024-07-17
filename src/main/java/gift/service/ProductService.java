@@ -10,6 +10,7 @@ import gift.web.dto.response.product.ReadProductResponse;
 import gift.web.dto.response.product.UpdateProductResponse;
 import java.util.List;
 import java.util.NoSuchElementException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,14 @@ public class ProductService {
 
     public ReadAllProductsResponse readAllProducts() {
         List<ReadProductResponse> products = productRepository.findAll()
+            .stream()
+            .map(ReadProductResponse::fromEntity)
+            .toList();
+        return ReadAllProductsResponse.from(products);
+    }
+
+    public ReadAllProductsResponse readAllProducts(Pageable pageable) {
+        List<ReadProductResponse> products = productRepository.findAll(pageable)
             .stream()
             .map(ReadProductResponse::fromEntity)
             .toList();

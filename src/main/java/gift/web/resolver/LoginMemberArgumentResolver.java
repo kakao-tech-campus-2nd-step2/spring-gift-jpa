@@ -5,7 +5,7 @@ import gift.authentication.token.JwtResolver;
 import gift.web.dto.MemberDetails;
 import gift.authentication.token.Token;
 import gift.service.MemberDetailsService;
-import gift.web.validation.exception.InvalidCredentialsException;
+import gift.web.validation.exception.client.InvalidCredentialsException;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;

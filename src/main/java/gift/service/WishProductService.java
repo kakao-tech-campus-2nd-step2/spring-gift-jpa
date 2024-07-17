@@ -13,6 +13,7 @@ import gift.web.dto.response.wishproduct.ReadWishProductResponse;
 import gift.web.dto.response.wishproduct.UpdateWishProductResponse;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +53,7 @@ public class WishProductService {
             return CreateWishProductResponse.fromEntity(wishProduct);
         }
 
+        //새로운 위시 상품을 추가
         WishProduct wishProduct = new Builder()
             .member(memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("Member not found")))
@@ -62,9 +64,9 @@ public class WishProductService {
         return CreateWishProductResponse.fromEntity(wishProductRepository.save(wishProduct));
     }
 
-    public ReadAllWishProductsResponse readAllWishProducts(Long memberId) {
+    public ReadAllWishProductsResponse readAllWishProducts(Long memberId, Pageable pageable) {
         return new ReadAllWishProductsResponse(
-            wishProductRepository.findByMemberId(memberId)
+            wishProductRepository.findByMemberId(memberId, pageable)
                 .stream()
                 .map(ReadWishProductResponse::fromEntity)
                 .toList()

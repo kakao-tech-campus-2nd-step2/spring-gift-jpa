@@ -24,7 +24,7 @@ public class MemberDummyDataProvider {
     }
 
     private void doRun(int quantity) {
-        String sql = "insert into member (name, email, password, created_at, modified_at) values (?, ?, ?, ?, ?)";
+        String sql = "insert into member (name, email, password, created_at, updated_at) values (?, ?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(quantity));
     }
 

@@ -3,7 +3,7 @@ package gift.authentication.filter;
 import gift.authentication.token.JwtResolver;
 import gift.authentication.token.Token;
 import gift.authentication.token.TokenContext;
-import gift.web.validation.exception.InvalidCredentialsException;
+import gift.web.validation.exception.client.InvalidCredentialsException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

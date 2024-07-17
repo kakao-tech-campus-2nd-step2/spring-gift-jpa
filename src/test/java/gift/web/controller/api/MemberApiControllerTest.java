@@ -31,6 +31,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -157,7 +158,9 @@ class MemberApiControllerTest {
         HttpHeaders httpHeaders = getHttpHeaders();
         HttpEntity httpEntity = new HttpEntity(httpHeaders);
 
-        ReadAllWishProductsResponse expectedWishProducts = wishProductService.readAllWishProducts(member.getId());
+        PageRequest defaultPageRequest = PageRequest.of(0, 10);
+        ReadAllWishProductsResponse expectedWishProducts = wishProductService.readAllWishProducts(member.getId(),
+            defaultPageRequest);
 
         //when
         ResponseEntity<ReadAllWishProductsResponse> response = restTemplate.exchange(url,

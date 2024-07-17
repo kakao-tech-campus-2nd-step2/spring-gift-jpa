@@ -24,7 +24,7 @@ public class ProductDummyDataProvider {
     }
 
     private void doRun(int quantity) {
-        String sql = "insert into product (name, price, created_at, created_by, modified_at, modified_by) values (?, ?, ?, ?, ?, ?)";
+        String sql = "insert into product (name, price, created_at, created_by, updated_at, updated_by) values (?, ?, ?, ?, ?, ?)";
         jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(quantity));
     }
 

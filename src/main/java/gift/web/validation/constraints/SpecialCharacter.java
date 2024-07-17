@@ -1,6 +1,5 @@
 package gift.web.validation.constraints;
 
-import static gift.web.validation.exception.code.ErrorCode.DESCRIPTION.SPECIAL_CHARACTER_NOT_ALLOWED;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import gift.web.validation.validator.SpecialCharacterValidator;
@@ -16,7 +15,8 @@ public @interface SpecialCharacter {
 
     String allowed();
 
-    String message() default SPECIAL_CHARACTER_NOT_ALLOWED;
+    String message() default "'(', ')', '[', ']', '+', '-', '&', '/', '_' 외의 특수문자는 사용할 수 없습니다.";
+
 
     Class<?>[] groups() default {};
 
