@@ -67,7 +67,7 @@ class ProductTest {
     @Test
     void testCreateWithNullPrice() {
         try {
-            Product nullPriceProduct = new Product(1L, "상품",null, "https://kakao");
+            Product nullPriceProduct = new Product(1L, "상품", null, "https://kakao");
         } catch (IllegalArgumentException e) {
             assertThat(e).isInstanceOf(IllegalArgumentException.class);
         }

@@ -59,7 +59,8 @@ class WishlistRepositoryTest {
         Page<Wishlist> found = wishlistRepository.findByMember(savedMember, pageable);
         assertAll(
             () -> assertThat(found.getTotalElements()).isEqualTo(1),
-            () -> assertThat(found.getContent().get(0).getMember().getEmail()).isEqualTo(savedMember.getEmail())
+            () -> assertThat(found.getContent().get(0).getMember().getEmail()).isEqualTo(
+                savedMember.getEmail())
         );
     }
 
