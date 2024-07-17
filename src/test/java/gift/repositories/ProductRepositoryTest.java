@@ -1,7 +1,6 @@
 package gift.repositories;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import gift.domain.Product;
 import java.util.List;
@@ -28,6 +27,7 @@ class ProductRepositoryTest {
         assertThat(savedProduct.getName()).isEqualTo("Test Product");
         assertThat(savedProduct.getPrice()).isEqualTo(1000);
         assertThat(savedProduct.getImageUrl()).isEqualTo("http://example.com/test.jpg");
+//        assertThat(savedProduct.getCreateDateTime()).isNotNull();
     }
 
     @Test
@@ -45,15 +45,18 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("모든 제품 조회 테스트")
     public void testFindAll() {
-        Product product1 = new Product(null, "Test Product 1", 1000, "http://example.com/test1.jpg");
-        Product product2 = new Product(null, "Test Product 2", 2000, "http://example.com/test2.jpg");
+        Product product1 = new Product(null, "Test Product 1", 1000,
+            "http://example.com/test1.jpg");
+        Product product2 = new Product(null, "Test Product 2", 2000,
+            "http://example.com/test2.jpg");
         productRepository.save(product1);
         productRepository.save(product2);
 
         List<Product> products = productRepository.findAll();
 
         assertThat(products).hasSize(2);
-        assertThat(products).extracting(Product::getName).containsExactlyInAnyOrder("Test Product 1", "Test Product 2");
+        assertThat(products).extracting(Product::getName)
+            .containsExactlyInAnyOrder("Test Product 1", "Test Product 2");
     }
 
     @Test

@@ -12,9 +12,6 @@ import gift.repositories.MemberRepository;
 import gift.repositories.ProductRepository;
 import gift.repositories.WishRepository;
 import jakarta.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class WishService {
+
     private final WishRepository wishRepository;
     private ProductRepository productRepository;
     private MemberRepository memberRepository;
@@ -40,7 +38,9 @@ public class WishService {
     @Transactional
     public Page<WishDto> getWishListById(Long memberId, int page, int size) {
         if (page < 0 || size <= 0) {
-            throw new WishException("Page must be non-negative and size must be greater than zero. ");
+            throw new WishException(
+                "Page must be non-negative and size must be greater than zero. ");
+
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
@@ -52,20 +52,22 @@ public class WishService {
         ));
     }
 
-//    Wish 추가
+    //    Wish 추가
     @Transactional
-    public void addWish(MemberDto memberDto, Long productId){
+    public void addWish(MemberDto memberDto, Long productId) {
         Member member = memberRepository.findByEmail(memberDto.getEmail());
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ProductException("Product with ID " + productId + " not found"));;
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new ProductException("Product with ID " + productId + " not found"));
+        ;
 
-        Wish wish = new Wish();
+        Wish wish = new Wish(member, product);
         wish.setMember(member);
         wish.setProduct(product);
         wishRepository.save(wish);
 
     }
 
-//    Wish 삭제
+    //    Wish 삭제
     @Transactional
     public void deleteWish(Long memberId, Long productId) {
         wishRepository.deleteByMemberIdAndProductId(memberId, productId);

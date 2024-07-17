@@ -2,16 +2,15 @@ package gift.classes.Exceptions;
 
 import gift.classes.RequestState.RequestStateDTO;
 import gift.classes.RequestState.RequestStatus;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import jakarta.validation.ConstraintViolationException;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -20,6 +19,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleWishException(WishException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
+    // Wish 예외처리
+    @ExceptionHandler(WishException.class)
+    public ResponseEntity<String> handleWishException(WishException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<Object> handleAuthorizationHeaderNotFoundException(AuthException e) {
@@ -34,7 +40,8 @@ public class GlobalExceptionHandler {
 
     // 유효성 검증 실패 예외 처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(
+        MethodArgumentNotValidException e) {
         Map<String, String> errors = new HashMap<>();
         e.getBindingResult().getFieldErrors().forEach(error -> {
             errors.put(error.getField(), error.getDefaultMessage());
@@ -44,7 +51,8 @@ public class GlobalExceptionHandler {
 
     // 제약 조건 위반 예외 처리
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException e) {
+    public ResponseEntity<Map<String, String>> handleConstraintViolationException(
+        ConstraintViolationException e) {
         Map<String, String> errors = new HashMap<>();
         e.getConstraintViolations().forEach(violation -> {
             errors.put(violation.getPropertyPath().toString(), violation.getMessage());
@@ -54,7 +62,8 @@ public class GlobalExceptionHandler {
 
     // 이메일 중복 예외 처리
     @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<RequestStateDTO> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
+    public ResponseEntity<RequestStateDTO> handleEmailAlreadyExistsException(
+        EmailAlreadyExistsException e) {
         RequestStateDTO response = new RequestStateDTO(
             RequestStatus.failed,
             e.getMessage()

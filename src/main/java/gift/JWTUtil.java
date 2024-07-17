@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JWTUtil {
+
     private Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private static final long expiredMs = 3600000; // 1시간 (1시간 = 60분 * 60초 * 1000밀리초)
 

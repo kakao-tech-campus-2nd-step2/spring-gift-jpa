@@ -1,6 +1,5 @@
 package gift.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,7 +24,13 @@ public class Wish {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public Wish() {}
+    protected Wish() {
+    }
+
+    public Wish(Member member, Product product) {
+        this.member = member;
+        this.product = product;
+    }
 
     public Wish(Long id, Member member, Product product) {
         this.id = id;

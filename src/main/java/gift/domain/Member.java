@@ -3,6 +3,8 @@ package gift.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,12 +24,14 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
-    private String role;
-
-    public Member() {
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+    
+    protected Member() {
     }
 
-    public Member(Long id, String email, String password, String role) {
+    public Member(Long id, String email, String password, Role role) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -46,8 +50,7 @@ public class Member {
         return password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
-
 }

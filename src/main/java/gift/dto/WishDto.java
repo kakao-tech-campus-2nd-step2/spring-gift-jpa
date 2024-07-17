@@ -1,6 +1,7 @@
 package gift.dto;
 
 public class WishDto {
+
     private Long memberId;
     private Long productId;
 

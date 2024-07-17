@@ -1,9 +1,9 @@
 package gift.controller;
 
-import gift.dto.MemberDto;
 import gift.classes.RequestState.RequestStateDTO;
 import gift.classes.RequestState.RequestStatus;
 import gift.classes.RequestState.SecureRequestStateDTO;
+import gift.dto.MemberDto;
 import gift.services.MemberService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/member")
 public class MemberController {
+
     private final MemberService memberService;
 
     public MemberController(MemberService memberService) {

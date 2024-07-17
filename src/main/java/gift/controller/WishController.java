@@ -9,7 +9,6 @@ import gift.dto.RequestWishDto;
 import gift.dto.WishDto;
 import gift.services.MemberService;
 import gift.services.WishService;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/wishlist")
 public class WishController {
+
     public final WishService wishService;
     public final MemberService memberService;
 
@@ -33,9 +33,10 @@ public class WishController {
         this.memberService = memberService;
     }
 
-//    Wish 추가
+    //    Wish 추가
     @PostMapping
-    public ResponseEntity<RequestStateDTO> addWish(@LoginMember MemberDto memberDto, @RequestBody RequestWishDto requestWishDto) {
+    public ResponseEntity<RequestStateDTO> addWish(@LoginMember MemberDto memberDto,
+        @RequestBody RequestWishDto requestWishDto) {
 
         wishService.addWish(memberDto, requestWishDto.getProductId());
         return ResponseEntity.ok().body(new RequestStateDTO(
@@ -44,9 +45,11 @@ public class WishController {
         ));
     }
 
-//    Wishlist 조회
+    //    Wishlist 조회
     @GetMapping
-    public ResponseEntity<WishListRequestStateDTO> getWishlistById(@LoginMember MemberDto memberDto, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<WishListRequestStateDTO> getWishlistById(@LoginMember MemberDto memberDto,
+        @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+
         Page<WishDto> wishes = wishService.getWishListById(memberDto.getId(), page, size);
         return ResponseEntity.ok().body(new WishListRequestStateDTO(
             RequestStatus.success,
@@ -55,9 +58,10 @@ public class WishController {
         ));
     }
 
-//    Wish 삭제
+    //    Wish 삭제
     @DeleteMapping
-    public void deleteWish(@LoginMember MemberDto memberDto, @RequestBody RequestWishDto requestWishDto){
+    public void deleteWish(@LoginMember MemberDto memberDto,
+        @RequestBody RequestWishDto requestWishDto) {
         wishService.deleteWish(memberDto.getId(), requestWishDto.getProductId());
 
     }

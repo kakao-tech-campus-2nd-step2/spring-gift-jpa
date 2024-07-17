@@ -1,4 +1,5 @@
 package gift.services;
+
 import gift.domain.Product;
 import gift.dto.ProductDto;
 import gift.repositories.ProductRepository;
@@ -36,7 +37,9 @@ public class ProductService {
     }
 
     //Page 반환, 모든 제품 조회
-    public Page<ProductDto> getAllProducts(Pageable pageable){
+
+    public Page<ProductDto> getAllProducts(Pageable pageable) {
+
         Page<Product> products = productRepository.findAll(pageable);
         Page<ProductDto> productDtos = products.map(product -> new ProductDto(
             product.getId(),
@@ -54,8 +57,9 @@ public class ProductService {
         if (product.isEmpty()) {
             throw new NoSuchElementException("Product not found with id " + id);
         }
-        ProductDto productDto = new ProductDto(product.get().getId(), product.get().getName(), product.get()
-            .getPrice(), product.get().getImageUrl());
+        ProductDto productDto = new ProductDto(product.get().getId(), product.get().getName(),
+            product.get()
+                .getPrice(), product.get().getImageUrl());
         return productDto;
     }
 
@@ -67,36 +71,27 @@ public class ProductService {
             productDto.getPrice(),
             productDto.getImageUrl()
         );
-//        validationService.checkValid(product);
 
         if (product.getId() == null) {
             product.setId(currentId++);
         }
         productRepository.save(product);
 
-        ProductDto savedProductDto = new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        ProductDto savedProductDto = new ProductDto(product.getId(), product.getName(),
+            product.getPrice(), product.getImageUrl());
 
         return savedProductDto;
     }
 
     // 제품 수정
     public ProductDto updateProduct(@Valid ProductDto productDto) {
-        Optional<Product> existingProduct = productRepository.findById(productDto.getId());
-        if (existingProduct.isEmpty()) {
-            throw new NoSuchElementException("Product not found with id " + productDto.getId());
-        }
 
-        Product product = new Product(
-            productDto.getId(),
-            productDto.getName(),
-            productDto.getPrice(),
-            productDto.getImageUrl()
-        );
-
-        productRepository.save(product);
-        ProductDto updatedProductDto = new ProductDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
-
-        return updatedProductDto;
+        Product product = productRepository.findById(productDto.getId())
+            .orElseThrow(() -> new NoSuchElementException(
+                "Product not found with id " + productDto.getId()));
+        product.update(productDto.getName(), productDto.getPrice(), productDto.getImageUrl());
+        return new ProductDto(product.getId(), product.getName(), product.getPrice(),
+            product.getImageUrl());
     }
 
     // 제품 삭제
