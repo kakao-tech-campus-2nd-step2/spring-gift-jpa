@@ -69,4 +69,14 @@ public class Product {
         this.price = request.price();
         this.imageUrl = request.imageUrl();
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", price=" + price +
+            ", imageUrl='" + imageUrl + '\'' +
+            '}';
+    }
 }

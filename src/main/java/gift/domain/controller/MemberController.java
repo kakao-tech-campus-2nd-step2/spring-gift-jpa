@@ -23,12 +23,12 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<MemberRegisterApiResponse> registerUser(@RequestBody MemberRequest requestDto) {
+    public ResponseEntity<MemberRegisterApiResponse> registerMember(@RequestBody MemberRequest requestDto) {
         return SuccessApiResponse.ok(new MemberRegisterApiResponse(HttpStatus.OK, memberService.registerUser(requestDto).token()));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<MemberLoginApiResponse> loginUser(@RequestBody MemberRequest requestDto) {
+    public ResponseEntity<MemberLoginApiResponse> loginMember(@RequestBody MemberRequest requestDto) {
         return SuccessApiResponse.ok(new MemberLoginApiResponse(HttpStatus.OK, memberService.loginUser(requestDto).token()));
     }
 }

@@ -25,6 +25,11 @@ public class WishService {
         this.productService = productService;
     }
 
+    public Wish findWishByMemberAndProduct(Member member, Product product) {
+        return wishRepository.findWishByMemberAndProduct(member, product)
+            .orElseThrow(ProductNotIncludedInWishlistException::new);
+    }
+
     @Transactional(readOnly = true)
     public List<WishResponse> getWishlist(Member member) {
         return wishRepository.findWishesByMember(member).stream()
@@ -64,8 +69,7 @@ public class WishService {
     @Transactional
     public WishResponse updateWishlist(Member member, WishRequest wishRequest) {
         Product product = productService.getProductById(wishRequest.productId());
-        Wish wish = wishRepository.findWishByMemberAndProduct(member, product)
-            .orElseThrow(ProductNotIncludedInWishlistException::new);
+        Wish wish = findWishByMemberAndProduct(member, product);
         wish.set(wishRequest);
         return WishResponse.of(wish.getQuantity(), product);
     }
@@ -73,6 +77,7 @@ public class WishService {
     @Transactional
     public void deleteWishlist(Member member, WishDeleteRequest deleteRequestDto) {
         Product product = productService.getProductById(deleteRequestDto.productId());
+        findWishByMemberAndProduct(member, product);
         wishRepository.deleteByMemberAndProduct(member, product);
     }
 }
