@@ -1,6 +1,7 @@
 package gift.domain.member;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -22,6 +23,7 @@ class MemberRepositoryTest {
 
 
     @Test
+    @DisplayName("save 메서드 테스트")
     void save() {
         Member expected = new Member("test@gmail.com","영식","password",1);
 
@@ -32,6 +34,7 @@ class MemberRepositoryTest {
         );
     }
     @Test
+    @DisplayName("findByEmail 테스트")
     void findByEmail() {
         Member expected = new Member("tester@gmail.com","더미","password",1);
 
@@ -40,9 +43,5 @@ class MemberRepositoryTest {
                 () -> assertThat(actual).isNotNull(),
                 () -> assertThat(actual.getEmail()).isEqualTo(expected.getEmail())
         );
-    }
-
-    @Test
-    void findById() {
     }
 }

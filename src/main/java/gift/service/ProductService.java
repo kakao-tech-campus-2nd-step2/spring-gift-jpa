@@ -6,6 +6,7 @@ import gift.dto.ProductChangeRequestDto;
 import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
 import gift.exception.CustomException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +28,8 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public List<ProductResponseDto> findAll() {
-        return productRepository.findAll()
+    public List<ProductResponseDto> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable)
                 .stream()
                 .map(ProductResponseDto::new)
                 .toList();

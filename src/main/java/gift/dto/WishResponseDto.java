@@ -3,12 +3,11 @@ package gift.dto;
 import gift.domain.wish.Wish;
 
 public class WishResponseDto {
-    private final Long wishId;
-    private final Long memberId;
-    private final Long productId;
+    private final long wishId;
+    private final long memberId;
+    private final long productId;
     private final String productName;
-
-    private final Integer quantity;
+    private final int quantity;
 
     public WishResponseDto(Wish wish) {
         this.wishId = wish.getId();

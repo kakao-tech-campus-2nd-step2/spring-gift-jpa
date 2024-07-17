@@ -1,15 +1,15 @@
 package gift.dto;
 
 public class WishAddRequestDto {
-    private final Long productId;
+    private final long productId;
     private int quantity = 1;
 
-    public WishAddRequestDto(Long productId, int quantity) {
+    public WishAddRequestDto(long productId, int quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }
 
-    public Long getProductId() {
+    public long getProductId() {
         return productId;
     }
 

@@ -3,29 +3,32 @@ package gift.domain.wish;
 import gift.domain.member.Member;
 import gift.domain.product.Product;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Wish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    @ManyToOne
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-    private Integer quantity;
-
-    public Wish() {
-    }
+    private int quantity;
 
     public Wish(Member member, Product product, Integer quantity) {
         this.member = member;
         this.product = product;
         this.quantity = quantity;
+    }
+
+    protected Wish() {
     }
 
     public Long getId() {
@@ -40,11 +43,15 @@ public class Wish {
         return product;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void updateQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public void addQuantity(int quantity) {
+        this.quantity = this.quantity + quantity;
     }
 }
