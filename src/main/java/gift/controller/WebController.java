@@ -1,10 +1,13 @@
 package gift.controller;
 
 import gift.dto.ProductChangeRequestDto;
-import gift.service.ProductService;
 import gift.dto.ProductRequestDto;
 import gift.dto.ProductResponseDto;
+import gift.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,8 +24,12 @@ public class WebController {
     }
 
     @GetMapping("/")
-    public String itemList(Model model) {
-        List<ProductResponseDto> products = productService.findAll();
+    public String itemList(Model model,
+                           @RequestParam(required = false, defaultValue = "0", value = "page") int pageNum,
+                           @RequestParam(required = false, defaultValue = "10", value = "size") int size,
+                           @RequestParam(required = false, defaultValue = "id", value = "criteria") String criteria) {
+        Pageable pageable = PageRequest.of(pageNum, size, Sort.by(Sort.Direction.ASC, criteria));
+        List<ProductResponseDto> products = productService.findAll(pageable);
         model.addAttribute("products", products);
         return "items";
     }
