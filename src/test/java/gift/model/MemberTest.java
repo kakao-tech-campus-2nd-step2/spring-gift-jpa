@@ -56,7 +56,7 @@ class MemberTest {
     }
 
     @Test
-    void testCreateWithInvalidName() {
+    void testCreateWithInvalidEmail() {
         try {
             Member invalidEmailMember = new Member(1L, "kbm", "kbm", "mbk", "user");
         } catch (IllegalArgumentException e) {
