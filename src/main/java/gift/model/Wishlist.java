@@ -17,7 +17,7 @@ public class Wishlist {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_email", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @ManyToOne

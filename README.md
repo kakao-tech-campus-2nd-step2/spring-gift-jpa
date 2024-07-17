@@ -26,3 +26,16 @@
 - WishlistRepository 수정
 - WishlistService 수정
 - Test 코드 수정
+---
+## 3단계 - 페이지네이션
+- WishlistRepository 수정
+  - 조회할 때 Page 사용하도록 수정
+- Repository 수정으로 인한 Service 수정
+  - ProductService 수정
+  - WishlistService 수정
+- Controller 수정
+  - AdminController
+  - ProductController
+  - WishlistController
+- Test 코드 수정
+- HTML 수정

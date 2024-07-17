@@ -4,7 +4,9 @@ import gift.dto.ProductDTO;
 import gift.model.Product;
 import gift.service.ProductService;
 import jakarta.validation.Valid;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,8 +29,8 @@ public class AdminController {
     }
 
     @GetMapping
-    public String listProducts(Model model) {
-        List<Product> products = productService.findAllProducts();
+    public String listProducts(Model model, @PageableDefault(size = 5) Pageable pageable) {
+        Page<Product> products = productService.findAllProducts(pageable);
         model.addAttribute("products", products);
         return "product_list";
     }
@@ -72,7 +74,7 @@ public class AdminController {
 
     @DeleteMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") long id) {
-        productService.deleteProduct(id);
+        productService.deleteProductAndWishlist(id);
         return "redirect:/admin/products";
     }
 

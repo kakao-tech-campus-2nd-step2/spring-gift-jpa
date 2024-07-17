@@ -7,12 +7,14 @@ import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wishlist;
 
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DataJpaTest
@@ -30,6 +32,8 @@ class WishlistRepositoryTest {
     private Member savedMember;
     private Product savedProduct;
     private Wishlist savedWishlist;
+    private Wishlist saved;
+    private Pageable pageable = PageRequest.of(0, 10);
 
     @BeforeEach
     public void setUp() {
@@ -38,11 +42,11 @@ class WishlistRepositoryTest {
         Product product = new Product(1L, "상품", "100", "https://kakao");
         savedProduct = productRepository.save(product);
         savedWishlist = new Wishlist(1L, savedMember, savedProduct);
+        saved = wishlistRepository.save(savedWishlist);
     }
 
     @Test
     public void testSaveWishlist() {
-        Wishlist saved = wishlistRepository.save(savedWishlist);
         assertAll(
             () -> assertThat(saved.getId()).isNotNull(),
             () -> assertThat(saved.getMember().getEmail()).isEqualTo("kbm@kbm"),
@@ -52,19 +56,18 @@ class WishlistRepositoryTest {
 
     @Test
     public void testFindByMemberEmail() {
-        wishlistRepository.save(savedWishlist);
-        List<Wishlist> found = wishlistRepository.findByMember(savedMember);
+        Page<Wishlist> found = wishlistRepository.findByMember(savedMember, pageable);
         assertAll(
-            () -> assertThat(found.size()).isEqualTo(1),
-            () -> assertThat(found.get(0).getMember().getEmail()).isEqualTo(savedMember.getEmail())
+            () -> assertThat(found.getTotalElements()).isEqualTo(1),
+            () -> assertThat(found.getContent().get(0).getMember().getEmail()).isEqualTo(
+                savedMember.getEmail())
         );
     }
 
     @Test
     void testDeleteByMemberEmailAndProductId() {
-        wishlistRepository.save(savedWishlist);
         wishlistRepository.deleteByMemberAndProduct(savedMember, savedProduct);
-        List<Wishlist> result = wishlistRepository.findByMember(savedMember);
-        assertThat(result.size()).isEqualTo(0);
+        Page<Wishlist> result = wishlistRepository.findByMember(savedMember, pageable);
+        assertThat(result.getTotalElements()).isEqualTo(0);
     }
 }

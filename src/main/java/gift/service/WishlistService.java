@@ -4,9 +4,10 @@ import gift.model.Member;
 import gift.model.Product;
 import gift.model.Wishlist;
 import gift.repository.WishlistRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -24,12 +25,10 @@ public class WishlistService {
         this.productService = productService;
     }
 
-    public List<Product> getWishlist(String email) {
+    public Page<Product> getWishlist(String email, Pageable pageable) {
         Member member = memberService.findMemberByEmail(email);
-        List<Wishlist> wishlistItems = wishlistRepository.findByMember(member);
-        return wishlistItems.stream()
-            .map(Wishlist::getProduct)
-            .toList();
+        Page<Wishlist> wishlistItems = wishlistRepository.findByMember(member, pageable);
+        return wishlistItems.map(Wishlist::getProduct);
     }
 
     @Transactional

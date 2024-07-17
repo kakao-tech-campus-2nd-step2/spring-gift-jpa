@@ -30,6 +30,35 @@
         alert("로그인이 필요합니다.");
       }
     }
+
+    function addTokenToLinks() {
+      const token = localStorage.getItem("authToken");
+      if (token) {
+        document.querySelectorAll('.pagination-link').forEach(link => {
+          link.addEventListener('click', function (event) {
+            event.preventDefault();
+            fetch(this.href, {
+              method: 'GET',
+              headers: {
+                'Authorization': 'Bearer ' + token
+              }
+            })
+            .then(response => response.text())
+            .then(html => {
+              document.open();
+              document.write(html);
+              document.close();
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert("페이지를 불러올 수 없습니다. 다시 시도해주세요.");
+            });
+          });
+        });
+      }
+    }
+
+    window.onload = addTokenToLinks;
   </script>
 </head>
 <body>
@@ -56,6 +85,15 @@
   </tr>
   </tbody>
 </table>
+<div>
+  <ul>
+    <li th:each="pageNum : ${#numbers.sequence(0, wishlist.totalPages - 1)}">
+      <a th:if="${pageNum != wishlist.number}" th:href="@{/wishlist(page=${pageNum})}"
+         th:text="${pageNum + 1}" class="pagination-link">1</a>
+      <span th:if="${pageNum == wishlist.number}" th:text="${pageNum + 1}">1</span>
+    </li>
+  </ul>
+</div>
 <a th:href="@{/admin/products}">상품 목록으로 이동</a>
 </body>
 </html>
