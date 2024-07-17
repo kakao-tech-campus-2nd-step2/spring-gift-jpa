@@ -75,8 +75,10 @@ class WishRepositoryTest {
         wishRepository.save(wish);
 
         // then
+
         List<Wish> wishList = wishRepository.findAllByMemberId(member.getId(), Pageable.unpaged())
             .getContent();
+
         assertThat(wishList).hasSize(1);
         assertThat(wishList.get(0).getProduct().getId()).isEqualTo(product.getId());
     }
@@ -100,6 +102,7 @@ class WishRepositoryTest {
         // then
         List<Wish> wishList = wishRepository.findAllByMemberId(member.getId(), Pageable.unpaged())
             .getContent();
+
         assertThat(wishList).isEmpty();
     }
 }

@@ -30,6 +30,7 @@ public class PageController {
     @GetMapping("/") // 주소 매핑
     public String indexPageGet(Model model,
         @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.DESC) Pageable pageable) {
+
         Page<ProductDto> products = productService.getAllProducts(pageable);
         int totalPages = products.getTotalPages();
 
@@ -40,6 +41,7 @@ public class PageController {
         int nowPage = products.getPageable().getPageNumber() + 1;
         int startPage = Math.max(nowPage - 4, 1);
         int endPage = Math.min(nowPage + 5, totalPages);
+
 
         model.addAttribute("products", products);
         model.addAttribute("nowPage", nowPage);

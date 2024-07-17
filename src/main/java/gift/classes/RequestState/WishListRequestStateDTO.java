@@ -9,6 +9,7 @@ public class WishListRequestStateDTO extends RequestStateDTO {
 
     public WishListRequestStateDTO(RequestStatus requestStatus, String details,
         Page<WishDto> wishes) {
+
         super(requestStatus, details);
         this.wishes = wishes;
     }

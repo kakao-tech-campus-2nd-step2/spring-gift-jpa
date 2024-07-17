@@ -40,6 +40,7 @@ public class WishService {
         if (page < 0 || size <= 0) {
             throw new WishException(
                 "Page must be non-negative and size must be greater than zero. ");
+
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
