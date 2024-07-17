@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/admin")
 public class AdminPageController {
+
     private final ProductService productService;
 
     public AdminPageController(ProductService productService) {
@@ -17,7 +18,7 @@ public class AdminPageController {
 
     @GetMapping("/products")
     public String products(Model model) {
-        model.addAttribute("products", productService.readProductAll());
+        model.addAttribute("products", productService.findAll());
         return "products";
     }
 }

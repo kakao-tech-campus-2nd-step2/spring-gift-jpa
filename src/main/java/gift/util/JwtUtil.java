@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class JwtUtil {
+
     @Value("${jwt.secret-key}")
     private String secretKey;
 
@@ -21,8 +22,8 @@ public class JwtUtil {
     private Long accessExpiration;
 
     public String generateToken(Member member) {
-        return Jwts.builder().subject(String.valueOf(member.id()))
-            .claim("email", member.email())
+        return Jwts.builder().subject(String.valueOf(member.getId()))
+            .claim("email", member.getEmail())
             .issuedAt(new Date())
             .expiration(new Date(System.currentTimeMillis() + accessExpiration))
             .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
@@ -35,7 +36,8 @@ public class JwtUtil {
                 .verifyWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
                 .build()
                 .parseSignedClaims(token).getPayload();
-            return new MemberResponse(Long.parseLong(claims.getSubject()), claims.get("email", String.class));
+            return new MemberResponse(Long.parseLong(claims.getSubject()),
+                claims.get("email", String.class));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 인증 정보입니다");
         }

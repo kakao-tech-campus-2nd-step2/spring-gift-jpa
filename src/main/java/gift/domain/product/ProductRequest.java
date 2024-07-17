@@ -19,7 +19,7 @@ public record ProductRequest(
     String imageUrl
 ) {
 
-    public Product toProduct(long id) {
-        return new Product(id, name, price, imageUrl);
+    public Product toProduct() {
+        return new Product(name, price, imageUrl);
     }
 }

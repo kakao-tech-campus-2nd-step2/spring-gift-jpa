@@ -4,33 +4,47 @@ import gift.domain.product.Product;
 import gift.domain.product.ProductRequest;
 import gift.repository.ProductRepository;
 import java.util.List;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class ProductService {
+
     private final ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    public List<Product> readProductAll() {
+    public List<Product> findAll() {
         return productRepository.findAll();
     }
 
-    public Product readProductById(Long id) {
-        return productRepository.findById(id);
+    public List<Product> findAll(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        return productRepository.findAll(pageable).getContent();
     }
 
-    public Product createProduct(ProductRequest productRequest) {
-        return productRepository.insert(productRequest);
+    public Product findById(Long id) {
+        return productRepository.findById(id).orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 상품을 찾을 수 없습니다"));
     }
 
-    public Product updateProduct(Long id, ProductRequest productRequest) {
-        return productRepository.update(id, productRequest);
+    public Product save(ProductRequest productRequest) {
+        return productRepository.save(productRequest.toProduct());
     }
 
-    public void deleteProduct(Long id) {
-        productRepository.delete(id);
+    public Product update(Long id, ProductRequest productRequest) {
+        Product product = productRepository.findById(id).orElseThrow(
+            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 상품을 찾을 수 없습니다"));
+        product.update(productRequest);
+        return productRepository.save(product);
+    }
+
+    public void delete(Long id) {
+        productRepository.deleteById(id);
     }
 }

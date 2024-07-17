@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
 
@@ -20,20 +21,21 @@ public class MemberService {
     }
 
     public Member register(MemberRequest memberRequest) {
-        if (memberRepository.findByEmail(memberRequest.email()).isPresent()){
+        if (memberRepository.findByEmail(memberRequest.email()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 가입된 이메일입니다");
         }
-        return memberRepository.insert(memberRequest);
+        return memberRepository.save(memberRequest.toMember());
     }
 
-    public String  login(MemberRequest memberRequest) {
-        Optional<Member> memberOptional = memberRepository.findByEmailAndPassword(memberRequest);
+    public String login(MemberRequest memberRequest) {
+        Optional<Member> memberOptional = memberRepository.findByEmailAndPassword(
+            memberRequest.email(), memberRequest.password());
 
         if (memberOptional.isPresent()) {
             Member member = memberOptional.get();
             return jwtUtil.generateToken(member);
         } else {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "이메일 혹은 비밀번호가 일치하지 않습니다");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "이메일 혹은 비밀번호가 일치하지 않습니다");
         }
     }
 }

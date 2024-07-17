@@ -10,4 +10,7 @@ public record MemberRequest(
     String password
 ) {
 
+    public Member toMember() {
+        return new Member(email, password);
+    }
 }
